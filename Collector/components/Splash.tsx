@@ -15,7 +15,7 @@ const Splash: React.FC<SplashProps> = ({ navigation }) => {
   useEffect(() => {
     // Timer to navigate after 5 seconds
     const timer = setTimeout(() => {
-      navigation.navigate('ChangePassword'); // Correct route name
+      navigation.navigate('Lanuage'); // Correct route name
     }, 5000);
 
     // Cleanup function to clear the timer

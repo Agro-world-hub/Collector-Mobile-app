@@ -1,9 +1,10 @@
-import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import React, { useState } from 'react';
-import { RootStackParamList } from './types';
 import { StackNavigationProp } from '@react-navigation/stack';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { RootStackParamList } from './types';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Import the icon library
 import { ScrollView } from 'react-native-gesture-handler';
+import axios from 'axios';
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
@@ -11,32 +12,51 @@ interface LoginProps {
     navigation: LoginNavigationProp;
 }
 
-const login = require('@/assets/images/login.png');
+const loginImage = require('@/assets/images/login.png');
 
 const Login: React.FC<LoginProps> = ({ navigation }) => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [secureTextEntry, setSecureTextEntry] = useState(true);
 
+    const handleLogin = async () => {
+        try {
+            const response = await axios.post('http://10.0.2.2:3001/api/collection-officer/login', {
+                email,
+                password,
+            });
+
+            if (response.data.passwordUpdateRequired) {
+                // Navigate to Change Password Screen
+                navigation.navigate('ChangePassword', { email } as any);
+            } else {
+                // Navigate to the dashboard if password update is not required
+                navigation.navigate('Dashboard');
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Invalid email or password.');
+        }
+    };
+
     return (
-        <ScrollView className='flex-1 w-full bg-white'>
-            <View className='items-center pt-[10%]'>
-                <Image source={login} />
-                <Text className='font-bold text-2xl pt-[7%]'>Welcome Back!</Text>
+        <ScrollView className="flex-1 w-full bg-white">
+            <View className="items-center pt-[10%]">
+                <Image source={loginImage} />
+                <Text className="font-bold text-2xl pt-[7%]">Welcome Back!</Text>
             </View>
 
-            <View className='ml-[10%] mr-[10%] pt-[12%]'>
-              <Text className='text-base pb-[2%] font-light'>User Name</Text>
+            <View className="ml-[10%] mr-[10%] pt-[12%]">
+                <Text className="text-base pb-[2%] font-light">Email</Text>
                 <View className="flex-row items-center border rounded-3xl w-full h-[53px] mb-5 bg-white px-3">
-                    <Icon name="account" size={24} color="green" />
+                    <Icon name="email" size={24} color="green" />
                     <TextInput
                         className="flex-1 h-[40px] text-base pl-2"
-                        placeholder="Username"
-                        onChangeText={setUsername}
-                        value={username}
+                        placeholder="Email"
+                        onChangeText={setEmail}
+                        value={email}
                     />
                 </View>
-                <Text className='text-base pb-[2%] font-light'>Password</Text>
+                <Text className="text-base pb-[2%] font-light">Password</Text>
                 <View className="flex-row items-center border rounded-3xl w-full h-[53px] mb-5 bg-white px-3">
                     <Icon name="lock" size={24} color="green" />
                     <TextInput
@@ -51,8 +71,11 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity className='bg-[#2AAD7A] w-full h-[50px] rounded-3xl shadow-2xl items-center justify-center'>
-                    <Text className='text-center text-xl font-light text-white'>Sign In</Text>
+                <TouchableOpacity
+                    className="bg-[#2AAD7A] w-full h-[50px] rounded-3xl shadow-2xl items-center justify-center"
+                    onPress={handleLogin}
+                >
+                    <Text className="text-center text-xl font-light text-white">Sign In</Text>
                 </TouchableOpacity>
             </View>
         </ScrollView>
