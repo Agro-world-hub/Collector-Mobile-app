@@ -32,6 +32,11 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ navigation, route }) =>
             return;
         }
 
+        if (newPassword.length < 6) {
+            Alert.alert('Error', 'New password must be at least 6 characters long.');
+            return;
+        }
+
         try {
             const response = await axios.post('http://10.0.2.2:3001/api/collection-officer/change-password', {
                 email,

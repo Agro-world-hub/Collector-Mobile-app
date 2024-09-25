@@ -107,7 +107,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
             {/* View My QR Code */}
             <TouchableOpacity
                 style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 12 }}
-            // onPress={() => navigation.navigate('EngQRcode')}
+            onPress={() => navigation.navigate('QRScanner')}
             >
                 <Ionicons name="qr-code" size={20} color="black" />
                 <Text className="flex-1 text-lg ml-2">View My QR Code</Text>
@@ -119,7 +119,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
             {/* Plant Care Help */}
             <TouchableOpacity className="flex-row items-center py-3" onPress={() => setModalVisible(true)}>
                 <Ionicons name="lock-closed-outline" size={20} color="black" />
-                <Text className="flex-1 text-lg ml-2">Change Password</Text>
+                <Text className="flex-1 text-lg ml-2" onPress={()=>navigation.navigate('ChangePassword')}>Change Password</Text>
             </TouchableOpacity>
 
 

@@ -43,7 +43,7 @@ const index = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="ChangePassword" component={ChangePassword}/>
+      <Stack.Screen name="ChangePassword" component={ChangePassword as any}/>
       <Stack.Screen name="Registeredfarmer" component={Registeredfarmer}/>
       <Stack.Screen name="Ufarmercropdetails" component={Ufarmercropdetails}/>
       <Stack.Screen name="Dashboard" component={Dashboard} />
