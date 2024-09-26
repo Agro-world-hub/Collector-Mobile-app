@@ -34,7 +34,7 @@ const Registeredfarmer: React.FC<RegisteredfarmerProps> = ({ navigation }) => {
 
       <View className='ml-[10%] mr-[10%] flex-1'>
         <ScrollView contentContainerStyle={{ paddingBottom: 20 }}> 
-          <Text className='text-base pb-[2%] font-medium'>User Name</Text>
+          <Text className='text-base pb-[2%] font-medium'>First Name</Text>
           <View className="flex-row items-center border w-full h-[40px] mb-5 bg-white px-3">
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"

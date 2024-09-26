@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types'; // Adjust the path according to your project structure
 import CountryPicker, { CountryCode } from 'react-native-country-picker-modal';
@@ -13,10 +13,47 @@ interface UnregisteredFarmerDetailsProps {
 
 const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ navigation }) => {
     const [countryCode, setCountryCode] = useState<CountryCode>('US');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [NICnumber, setNICnumber] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [address, setAddress] = useState('');
+    const [accNumber, setAccNumber] = useState('');
+    const [accHolderName, setAccHolderName] = useState('');
+    const [bankName, setBankName] = useState('');
+    const [branchName, setBranchName] = useState('');
 
-    const handleNext = () => {
-        navigation.navigate('UnregisteredCropDetails', { cropCount: 1 });
+    const handleNext = async () => {
+        try {
+            const response = await fetch('http://10.0.2.2:3001/api/farmer/register-farmer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    NICnumber,
+                    phoneNumber,
+                    address,
+                    accNumber,
+                    accHolderName,
+                    bankName,
+                    branchName,
+                }),
+            });
+
+            const result = await response.json();
+            
+            if (response.ok) {
+                Alert.alert("Success", result.message);
+                navigation.navigate('UnregisteredCropDetails', { cropCount: 1 });
+            } else {
+                Alert.alert("Error", result.error);
+            }
+        } catch (error) {
+            Alert.alert("Error", "Failed to connect to the server");
+        }
     };
 
     return (
@@ -40,6 +77,8 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
                     <TextInput 
                         placeholder="First Name" 
                         className="border p-3 rounded" 
+                        value={firstName}
+                        onChangeText={setFirstName}
                     />
                 </View>
 
@@ -49,15 +88,19 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
                     <TextInput 
                         placeholder="Last Name" 
                         className="border p-3 rounded" 
+                        value={lastName}
+                        onChangeText={setLastName}
                     />
                 </View>
 
                 {/* NIC Number */}
                 <View className="mb-4">
-                    <Text className="text-gray-600 mb-2">NIC Number</Text>
+                    <Text className="text-gray-600 mb-2">NIC Numbers</Text>
                     <TextInput 
                         placeholder="NIC Number" 
                         className="border p-3 rounded" 
+                        value={NICnumber}
+                        onChangeText={setNICnumber}
                     />
                 </View>
 
@@ -70,7 +113,6 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
                             withFilter 
                             withFlag 
                             onSelect={(country) => setCountryCode(country.cca2 as CountryCode)} 
-                            // className="mr-2"
                         />
                         <TextInput 
                             placeholder="Phone Number" 
@@ -88,6 +130,8 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
                     <TextInput 
                         placeholder="Address" 
                         className="border p-3 rounded" 
+                        value={address}
+                        onChangeText={setAddress}
                     />
                 </View>
 
@@ -97,6 +141,8 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
                     <TextInput 
                         placeholder="Account Number" 
                         className="border p-3 rounded" 
+                        value={accNumber}
+                        onChangeText={setAccNumber}
                     />
                 </View>
 
@@ -106,6 +152,8 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
                     <TextInput 
                         placeholder="Account Holder's Name" 
                         className="border p-3 rounded" 
+                        value={accHolderName}
+                        onChangeText={setAccHolderName}
                     />
                 </View>
 
@@ -115,6 +163,8 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
                     <TextInput 
                         placeholder="Bank Name" 
                         className="border p-3 rounded" 
+                        value={bankName}
+                        onChangeText={setBankName}
                     />
                 </View>
 
@@ -124,6 +174,8 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
                     <TextInput 
                         placeholder="Branch Name" 
                         className="border p-3 rounded" 
+                        value={branchName}
+                        onChangeText={setBranchName}
                     />
                 </View>
             </ScrollView>
@@ -131,12 +183,13 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
             {/* Next Button */}
             <TouchableOpacity 
                 className="bg-green-500 p-3 rounded-full items-center mt-5"
-                onPress={(handleNext)}
+                onPress={handleNext}
             >
                 <Text className="text-white text-lg">Next</Text>
             </TouchableOpacity>
+
             <View className='mt-4'>
-            <NavBar/>
+                <NavBar/>
             </View>
         </View>
     );

@@ -5,6 +5,7 @@ import { RootStackParamList } from './types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Import the icon library
 import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
@@ -26,7 +27,18 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
                 password,
             });
 
-            if (response.data.passwordUpdateRequired) {
+            // Assuming the token is part of the response
+            const { token, passwordUpdateRequired } = response.data;
+
+            // Store token in AsyncStorage
+            if (token) {
+                await AsyncStorage.setItem('token', token);
+                console.log('Token stored:', token); // Log token storage for debugging
+            } else {
+                console.error('No token received from the server.');
+            }
+
+            if (passwordUpdateRequired) {
                 // Navigate to Change Password Screen
                 navigation.navigate('ChangePassword', { email } as any);
             } else {
@@ -34,6 +46,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
                 navigation.navigate('Dashboard');
             }
         } catch (error) {
+            console.error('Login error:', error); // Log error for debugging
             Alert.alert('Error', 'Invalid email or password.');
         }
     };
