@@ -8,8 +8,8 @@ export type RootStackParamList = {
     QRScanner:undefined;
     FormScreen: { scannedData: any };
     EngProfile:undefined;
-    UnregisteredFarmerDetails:undefined;
-    UnregisteredCropDetails: { cropCount: number };
+    UnregisteredFarmerDetails:{ cropCount: 1, userId:number };
+    UnregisteredCropDetails: { cropCount: number, userId:number };
     SinChangePassword:undefined;
     SinLogin:undefined;
     Lanuage:undefined;

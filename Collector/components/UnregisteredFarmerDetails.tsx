@@ -42,12 +42,14 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
                     branchName,
                 }),
             });
-
+    
             const result = await response.json();
             
             if (response.ok) {
                 Alert.alert("Success", result.message);
-                navigation.navigate('UnregisteredCropDetails', { cropCount: 1 });
+                // Capture userId from the result and navigate to the crop details screen
+                const userId = result.userId;
+                navigation.navigate('UnregisteredCropDetails', { userId }as any);
             } else {
                 Alert.alert("Error", result.error);
             }
