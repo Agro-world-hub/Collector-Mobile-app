@@ -27,5 +27,6 @@ export type RootStackParamList = {
     TamUnregisteredCropDetails:{ cropCount: number };
     SinProfile:undefined;
     TamProfile:undefined;
+    SearchFarmer:undefined;
 
 };

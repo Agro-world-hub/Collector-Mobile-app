@@ -83,7 +83,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
             className={`bg-green-500 h-[100px] rounded-lg p-4 shadow-lg ${selectedNav === 'registered' ? 'scale-105' : ''}`}
             onPress={() => {
               setSelectedNav('registered');
-              navigation.navigate('QRScanner');
+              navigation.navigate('SearchFarmer');
             }}
           >
             <Text className="text-white text-center mt-2 text-xl font-semibold">
@@ -95,7 +95,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
             className={`bg-green-500 h-[100px] rounded-lg p-4 shadow-lg ${selectedNav === 'unregistered' ? 'scale-105' : ''}`}
             onPress={() => {
               setSelectedNav('unregistered');
-              navigation.navigate('UnregisteredFarmerDetails');
+              navigation.navigate('UnregisteredFarmerDetails' as any);
             }}
           >
             <Text className="text-white text-center mt-2 text-xl font-semibold">

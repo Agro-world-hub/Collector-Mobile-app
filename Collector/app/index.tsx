@@ -31,6 +31,7 @@ import TamUnregisteredFarmerDetails from '@/components/Tamil/TamUnregisteredFarm
 import TamUnregisteredCropDetails from '@/components/Tamil/TamUnregisteredCropdetails';
 import SinProfile from '@/components/Sinhala/SinProfile';
 import TamProfile from '@/components/Tamil/TamProfile';
+import SearchFarmer from '@/components/SearchFarmer';
 
 
 
@@ -69,6 +70,7 @@ const index = () => {
       <Stack.Screen name="TamUnregisteredCropDetails" component={TamUnregisteredCropDetails as any} />
       <Stack.Screen name="SinProfile" component={SinProfile} />
       <Stack.Screen name="TamProfile" component={TamProfile} />
+      <Stack.Screen name="SearchFarmer" component={SearchFarmer} />
       
       
     </Stack.Navigator>
