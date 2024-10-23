@@ -49,7 +49,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
     // Start loading animation
     Animated.timing(progress, {
       toValue: 100, // Animate to 100%
-      duration: 2000, // Duration of the loading bar animation
+      duration: 5000, // Duration of the loading bar animation
       useNativeDriver: false, // Set to false for width animation
     }).start();
 
@@ -71,8 +71,8 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
         const userId = response.data.userId; // Capture userId
         const cropCount = response.data.cropCount || 0; // Ensure you have a cropCount value
 
-        // Navigate to UnregisteredCropDetails with both userId and cropCount
-        navigation.navigate('UnregisteredCropDetails', { userId, cropCount });
+        // Navigate to FarmerQr with both userId and cropCount
+        navigation.navigate('FarmerQr', { userId, cropCount });
       }
     } catch (error: any) {
       console.error(error); // Log for debugging

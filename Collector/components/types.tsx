@@ -28,5 +28,6 @@ export type RootStackParamList = {
     SinProfile:undefined;
     TamProfile:undefined;
     SearchFarmer:undefined;
+    FarmerQr:{ cropCount: number,userId:any };
 
 };
