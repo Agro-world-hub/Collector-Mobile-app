@@ -6,6 +6,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Import t
 import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import environment from '../environment';
+
+const api = axios.create({
+  baseURL: environment.API_BASE_URL,
+});
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
@@ -22,7 +27,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://10.0.2.2:3001/api/collection-officer/login', {
+            const response = await api.post(`api/collection-officer/login`, {
                 email,
                 password,
             });

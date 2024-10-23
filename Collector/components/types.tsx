@@ -24,7 +24,7 @@ export type RootStackParamList = {
     TamRegisteredfarmer:undefined;
     TamUfarmercropdetails:undefined;
     TamUnregisteredFarmerDetails:undefined;
-    TamUnregisteredCropDetails:{ cropCount: number };
+    TamUnregisteredCropDetails:{ cropCount: number,userId:any };
     SinProfile:undefined;
     TamProfile:undefined;
     SearchFarmer:undefined;

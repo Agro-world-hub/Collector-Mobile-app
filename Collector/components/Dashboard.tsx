@@ -5,6 +5,11 @@ import { RootStackParamList } from './types';
 import { useRouter } from 'expo-router';
 import axios from 'axios';  // Axios for API calls
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import environment from '../environment';
+
+const api = axios.create({
+  baseURL: environment.API_BASE_URL,
+});
 
 type DashboardNavigationPrps = StackNavigationProp<RootStackParamList, 'Dashboard'>;
 
@@ -24,7 +29,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
         const token = await AsyncStorage.getItem('token');
         console.log('Token:', token);  // Log the token
         if (token) {
-          const response = await axios.get('http://10.0.2.2:3001/api/collection-officer/user-profile', {
+          const response = await api.get(`api/collection-officer/user-profile`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           console.log('API Response:', response.data);  // Log the response
