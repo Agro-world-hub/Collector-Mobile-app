@@ -3,7 +3,7 @@ import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import { useRouter } from 'expo-router';
-import axios from 'axios';  // Axios for API calls
+import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import environment from '../environment';
 
@@ -18,130 +18,114 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
-  const [selectedNav, setSelectedNav] = useState<string | null>(null);
-  const [firstName, setFirstName] = useState<string>('');  // State for first name
+  const [firstName, setFirstName] = useState<string>(''); 
+  const [lastName, setLastName] = useState<string>('');  
   const route = useRouter();
 
   useEffect(() => {
-    console.log('Fetching user profile...'); // Log to confirm useEffect runs
     const fetchUserProfile = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
-        console.log('Token:', token);  // Log the token
         if (token) {
           const response = await api.get(`api/collection-officer/user-profile`, {
             headers: { Authorization: `Bearer ${token}` }
           });
-          console.log('API Response:', response.data);  // Log the response
           const { user } = response.data;
           setFirstName(user.firstName);
-        } else {
-          console.log('Token is null.'); // Log if the token is null
+          setLastName(user.lastName);
         }
       } catch (error) {
         console.error('Failed to fetch user profile:', error);
       }
     };
 
-    fetchUserProfile();  // Call the function when the component mounts
+    fetchUserProfile();
   }, []);
 
   return (
-    <View className="flex-1">
-      {/* Header */}
-      <View className="bg-green-500 p-4 rounded-b-3xl w-full h-[100px] flex-row justify-between items-center">
-        <Text className="text-white text-xl ml-5 font-bold">
-          {`Hi, ${firstName}!`} {/* Display loading text or first name */}
-        </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('EngProfile')}>
+    <View className="flex-1 bg-white">
+      {/* Combined Section for Header and Daily Target */}
+      <View className="bg-green-500 rounded-b-3xl p-5">
+        {/* Profile Image and Name on the Same Line */}
+        <View className="flex-row items-center justify-left">
+          <TouchableOpacity onPress={() => navigation.navigate('EngProfile')} className="flex-row items-center">
           <Image
             source={require('@/assets/images/profile.png')}
-            className="w-16 h-16 rounded-full"
+            className="w-20 h-20 rounded-full"
           />
+        <Text className="text-white text-xl ml-6 font-bold">{firstName} {lastName}</Text>
         </TouchableOpacity>
-      </View>
+        </View>
 
-      {/* Main Content */}
-      <ScrollView contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 30 }}>
-        <View className="mt-10">
-          <Text className="text-lg font-semibold">Market Price</Text>
-          <View className="border-b border-gray-300 mt-2 mb-4" />
+        {/* Daily Target Section */}
+        <View className="bg-white  ml-[20px]  w-[90%] rounded-[35px] mt-3 p-4">
+          <Text className="text-center text-yellow-600 font-bold">🚀 Keep Going!</Text>
+          <Text className="text-center text-gray-500">You haven't achieved your daily target today</Text>
+        </View>
 
-          <View className="relative rounded-xl overflow-hidden shadow-lg">
-            <Image
-              source={require('@/assets/images/dash.webp')}
-              className="w-full h-40"
-            />
-            <View className="absolute inset-0 p-5 mt-5 flex justify-end items-end">
-              <View className="bg-transparent bg-opacity-70 p-2 rounded-md">
-                <Text className="text-white font-semibold text-sm">📅 July 2024</Text>
-                <Text className="font-semibold text-white mt-1">Carrot 1kg Price changes</Text>
-                <Text className="text-white font-semibold mt-2">Rs. 250</Text>
+        {/* Total Weight and Total Farmers Sections */}
+        <ScrollView contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 20 }}>
+          {/* Total Weight Section */}
+          <View className="mt-2 w-full bg-green-500 rounded-xl p-4">
+            <Text className="text-center font-semibold text-lg text-white">Total weight</Text>
+            <View className="border-b border-gray-300 my-2" />
+            <View className="flex-row justify-between bg-green-300 p-5 rounded-[35px] w-full">
+              <View className="items-center">
+                <Text className="text-white text-xl font-bold">20</Text>
+                <Text className="text-white">Collection</Text>
+              </View>
+              <View className="items-center">
+                <Text className="text-white text-xl font-bold">10</Text>
+                <Text className="text-white">Yet to Achieve</Text>
               </View>
             </View>
           </View>
-        </View>
 
-        {/* Buttons */}
-        <View className="mt-20 space-y-4">
+          {/* Total Farmers Section */}
+          <View className="mt-1 w-full bg-green-500 rounded-xl p-4">
+            <Text className="text-center font-semibold text-lg text-white">Total farmers</Text>
+            <View className="border-b border-gray-300 my-2 " />
+            <View className="flex-row justify-between bg-green-300 p-5  rounded-[35px] w-full">
+              <View className="items-center ">
+                <Text className="text-white text-xl font-bold">30</Text>
+                <Text className="text-white">Collection</Text>
+              </View>
+              <View className="items-center">
+                <Text className="text-white text-xl font-bold">2</Text>
+                <Text className="text-white">Yet to Achieve</Text>
+              </View>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+
+      {/* Buttons Section with White Background */}
+      <View className="bg-white p-10 rounded-t-3xl shadow-lg">
+        <View className="flex-row justify-between">
           <TouchableOpacity
-            className={`bg-green-500 h-[100px] rounded-lg p-4 shadow-lg ${selectedNav === 'registered' ? 'scale-105' : ''}`}
-            onPress={() => {
-              setSelectedNav('registered');
-              navigation.navigate('SearchFarmer');
-            }}
+            className="bg-green-500 w-[150px] h-32 rounded-xl flex items-center justify-center shadow-lg"
+            onPress={() => navigation.navigate('QRScanner')}
           >
-            <Text className="text-white text-center mt-2 text-xl font-semibold">
-              Registered{'\n'}Farmer {/* Ensure this text is wrapped in Text */}
-            </Text>
+            <Image
+              source={require('@/assets/images/scan-qr.png')}
+              className="w-12 h-12"
+              resizeMode="contain"
+            />
+            <Text className="text-white mt-2 font-semibold">Scan QR</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            className={`bg-green-500 h-[100px] rounded-lg p-4 shadow-lg ${selectedNav === 'unregistered' ? 'scale-105' : ''}`}
-            onPress={() => {
-              setSelectedNav('unregistered');
-              navigation.navigate('UnregisteredFarmerDetails' as any);
-            }}
+            className="bg-green-500 w-[150px] h-32  rounded-xl flex items-center justify-center shadow-lg"
+            onPress={() => navigation.navigate('SearchFarmer' as any)}
           >
-            <Text className="text-white text-center mt-2 text-xl font-semibold">
-              Unregistered{'\n'}Farmer {/* Ensure this text is wrapped in Text */}
-            </Text>
+            <Image
+              source={require('@/assets/images/search-icon.png')}
+              className="w-12 h-12"
+              resizeMode="contain"
+            />
+            <Text className="text-white mt-2 font-semibold">Search</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
-
-      {/* Bottom Navigation */}
-      <View className="flex-row justify-around items-center py-4 border-t border-gray-300 h-16">
-        <TouchableOpacity
-          onPress={() => setSelectedNav('first')}
-          style={{ transform: [{ scale: selectedNav === 'first' ? 1.5 : 1 }] }}
-        >
-          <Image
-            source={require('@/assets/images/first-image.png')}
-            style={{ width: 35, height: 35 }}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setSelectedNav('second')}
-          style={{ transform: [{ scale: selectedNav === 'second' ? 1.5 : 1 }] }}
-        >
-          <Image
-            source={require('@/assets/images/second-image.png')}
-            style={{ width: 35, height: 35 }}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setSelectedNav('third')}
-          style={{ transform: [{ scale: selectedNav === 'third' ? 1.5 : 1 }] }}
-        >
-          <Image
-            source={require('@/assets/images/third-image.png')}
-            style={{ width: 35, height: 35 }}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
       </View>
     </View>
   );

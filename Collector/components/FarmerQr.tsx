@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, Alert, PermissionsAndroid, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import axios from 'axios';
 import environment from '../environment';
@@ -7,6 +7,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
+import * as MediaLibrary from 'expo-media-library';
+// import { decode as atob } from 'base-64'; // To decode base64 string
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -24,9 +26,11 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
   const [farmerName, setFarmerName] = useState('');
   const [farmerNIC, setFarmerNIC] = useState('');
   const [farmerQRCode, setFarmerQRCode] = useState(''); // Base64 QR code image
+  const [permissionsGranted, setPermissionsGranted] = useState(false);
 
   const route = useRoute<FarmerQrRouteProp>();
   const { userId } = route.params;
+  console.log('-----user Id ----',userId)
 
   useEffect(() => {
     const fetchFarmerData = async () => {
@@ -42,29 +46,54 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
     };
 
     fetchFarmerData();
+
+    // Request permissions for saving images
+    const getPermissions = async () => {
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      setPermissionsGranted(status === 'granted');
+    };
+
+    getPermissions();
   }, [userId]);
 
   const downloadImage = async () => {
-    const fileUri = FileSystem.documentDirectory + `farmer_qr_${userId}.png`;
+    if (!permissionsGranted) {
+      Alert.alert('Permission Denied', 'You need to grant permission to save images');
+      return;
+    }
 
-    const { uri } = await FileSystem.downloadAsync(farmerQRCode, fileUri);
-    Alert.alert('Download Success', `QR Code saved to gallery as ${uri}`);
+    try {
+      // Decode base64 image
+      const base64Code = farmerQRCode.replace(/^data:image\/png;base64,/, '');
+      const fileUri = FileSystem.documentDirectory + `farmer_qr_${userId}.png`;
+
+      // Save the base64 image as a file
+      await FileSystem.writeAsStringAsync(fileUri, base64Code, { encoding: FileSystem.EncodingType.Base64 });
+
+      // Save to gallery
+      const asset = await MediaLibrary.createAssetAsync(fileUri);
+      await MediaLibrary.createAlbumAsync('Download', asset, false);
+      Alert.alert('Download Success', 'QR Code saved to your gallery!');
+    } catch (error) {
+      console.log('Error =>', error);
+      Alert.alert('Error', 'Failed to download the QR Code');
+    }
   };
 
   const shareImage = async () => {
     try {
+      // Decode base64 image
+      const base64Code = farmerQRCode.replace(/^data:image\/png;base64,/, '');
       const fileUri = FileSystem.documentDirectory + `farmer_qr_${userId}.png`;
 
-      // Download the image to the local file system
-      await FileSystem.downloadAsync(farmerQRCode, fileUri);
+      // Save the base64 image as a file
+      await FileSystem.writeAsStringAsync(fileUri, base64Code, { encoding: FileSystem.EncodingType.Base64 });
 
-      // Share the image without the message in the options
+      // Share the image
       await Sharing.shareAsync(fileUri, {
         dialogTitle: 'Share QR Code',
-        UTI: '.png', // Specify the file type if necessary
+        UTI: 'image/png', // Ensure correct UTI
       });
-
-      Alert.alert('Success', 'QR Code shared successfully!');
     } catch (error) {
       console.log('Error =>', error);
       Alert.alert('Error', 'Failed to share the QR Code');
@@ -72,7 +101,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
   };
 
   return (
-    <View className="flex-1 items-center justify-center bg-white p-5">
+    <View className="flex-1 bg-white p-5">
       {/* Header with Back Icon */}
       <View className="flex-row items-center mb-4">
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -81,48 +110,54 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
             style={{ width: 24, height: 24 }}
           />
         </TouchableOpacity>
-        <Text className="text-lg font-bold ml-3">Farmer Details</Text>
+        <Text className="text-xl font-bold ml-[27%]">Farmer Details</Text>
       </View>
 
       {/* Farmer Name and NIC */}
-      <Text className="text-xl font-bold mb-2">{farmerName}</Text>
-      <Text className="text-gray-500 mb-4">{farmerNIC}</Text>
+      <View className="items-center mt-[10%]">
+        <Text className="text-lg font-bold mb-2">{farmerName}</Text>
+        <Text className="text-gray-500 mb-9">{farmerNIC}</Text>
 
-      {/* QR Code */}
-      {farmerQRCode ? (
-        <Image
-          source={{ uri: farmerQRCode }} // Display the Base64 QR code image
-          style={{ width: 200, height: 200, borderWidth: 1, borderColor: '#00C853' }} // Adding border and dimensions
-        />
-      ) : (
-        <Text className="text-red-500">QR Code not available</Text>
-      )}
+        {/* QR Code */}
+        {farmerQRCode ? (
+          <Image
+            source={{ uri: farmerQRCode }} // Display the Base64 QR code image
+            style={{ width: 300, height: 300, borderWidth: 1, borderColor: '#00C853' }} // Adding border and dimensions
+          />
+        ) : (
+          <Text className="text-red-500">QR Code not available</Text>
+        )}
+      </View>
 
-      {/* Buttons */}
-      <TouchableOpacity className="bg-green-500 w-full mt-8 py-3 rounded-full items-center">
-        <Text className="text-white text-lg">Collect</Text>
-      </TouchableOpacity>
+      {/* Buttons Wrapper */}
+      <View className="items-center mt-8">
+        {/* Collect Button */}
+        <TouchableOpacity className="bg-[#2AAD7A] w-[300px] py-3 rounded-full items-center"  >
+          <Text className="text-white text-lg">Collect</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity className="border border-gray-400 w-full mt-4 py-3 rounded-full items-center">
-        <Text className="text-gray-700 text-lg">Complain</Text>
-      </TouchableOpacity>
+        {/* Complain Button */}
+        <TouchableOpacity className="border border-gray-400 w-[300px] mt-4 py-3 rounded-full items-center" onPress={() => navigation.navigate('ComplainPage' as any)}>
+          <Text className="text-gray-700 text-lg">Complain</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Download and Share buttons */}
       <View className="flex-row justify-around w-full mt-6">
-        <TouchableOpacity className="bg-gray-200 p-4 rounded-lg items-center" onPress={downloadImage}>
+        <TouchableOpacity className="bg-gray-600 p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={downloadImage}>
           <Image
             source={require('../assets/images/download.png')} // Path to download icon
             style={{ width: 24, height: 24 }}
           />
-          <Text className="text-sm">Download</Text>
+          <Text className="text-sm text-cyan-50">Download</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="bg-gray-200 p-4 rounded-lg items-center" onPress={shareImage}>
+        <TouchableOpacity className="bg-gray-600 p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={shareImage}>
           <Image
             source={require('../assets/images/Share.png')} // Path to share icon
             style={{ width: 24, height: 24 }}
           />
-          <Text className="text-sm">Share</Text>
+          <Text className="text-sm text-cyan-50">Share</Text>
         </TouchableOpacity>
       </View>
     </View>

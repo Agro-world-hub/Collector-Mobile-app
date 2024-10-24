@@ -33,6 +33,7 @@ import SinProfile from '@/components/Sinhala/SinProfile';
 import TamProfile from '@/components/Tamil/TamProfile';
 import SearchFarmer from '@/components/SearchFarmer';
 import FarmerQr from '@/components/FarmerQr';
+import ComplainPage from '@/components/Complainpage';
 
 
 
@@ -73,6 +74,7 @@ const index = () => {
       <Stack.Screen name="TamProfile" component={TamProfile} />
       <Stack.Screen name="SearchFarmer" component={SearchFarmer} />
       <Stack.Screen name="FarmerQr" component={FarmerQr} />
+      <Stack.Screen name="ComplainPage" component={ComplainPage} />
       
       
     </Stack.Navigator>

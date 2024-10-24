@@ -45,14 +45,14 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
   const handleNext = async () => {
     setLoading(true); // Start loading
     setIsModalVisible(true); // Show the modal
-
+  
     // Start loading animation
     Animated.timing(progress, {
       toValue: 100, // Animate to 100%
-      duration: 5000, // Duration of the loading bar animation
+      duration: 4000, // Duration of the loading bar animation (8 seconds to match your animation)
       useNativeDriver: false, // Set to false for width animation
     }).start();
-
+  
     try {
       const response = await api.post(`api/farmer/register-farmer`, {
         firstName,
@@ -65,14 +65,17 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
         bankName,
         branchName,
       });
-
+  
       if (response.status === 201) {
-        Alert.alert("Success", response.data.message);
+        // Alert.alert("Success", response.data.message);
         const userId = response.data.userId; // Capture userId
         const cropCount = response.data.cropCount || 0; // Ensure you have a cropCount value
-
-        // Navigate to FarmerQr with both userId and cropCount
-        navigation.navigate('FarmerQr', { userId, cropCount });
+  
+        // Modal is visible for 6 seconds before navigating
+        setTimeout(() => {
+          setIsModalVisible(false); // Close the modal
+          navigation.navigate('FarmerQr' as any, { userId, cropCount }); // Navigate to FarmerQr
+        }, 6000); // Wait for 6 seconds before redirecting
       }
     } catch (error: any) {
       console.error(error); // Log for debugging
@@ -85,14 +88,14 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
       }
     } finally {
       setLoading(false); // End loading
-      setTimeout(() => setIsModalVisible(false), 1000); // Close modal after a delay
     }
   };
+  
 
   // Interpolating the animated value for width
   const loadingBarWidth = progress.interpolate({
     inputRange: [0, 100],
-    outputRange: ['0%', '100%'],
+    outputRange: ['100%', '0%'],
   });
 
   return (
@@ -121,158 +124,143 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
           />
         </View>
 
-                       {/* Last Name */}
-                       <View className="mb-4">
-                    <Text className="text-gray-600 mb-2">Last Name</Text>
-                    <TextInput 
-                        placeholder="Last Name" 
-                        className="border p-3 rounded" 
-                        value={lastName}
-                        onChangeText={setLastName}
-                    />
-                </View>
+        {/* Last Name */}
+        <View className="mb-4">
+          <Text className="text-gray-600 mb-2">Last Name</Text>
+          <TextInput
+            placeholder="Last Name"
+            className="border p-3 rounded"
+            value={lastName}
+            onChangeText={setLastName}
+          />
+        </View>
 
-                {/* NIC Number */}
-                <View className="mb-4">
-                    <Text className="text-gray-600 mb-2">NIC Numbers</Text>
-                    <TextInput 
-                        placeholder="NIC Number" 
-                        className="border p-3 rounded" 
-                        value={NICnumber}
-                        onChangeText={setNICnumber}
-                    />
-                </View>
+        {/* NIC Number */}
+        <View className="mb-4">
+          <Text className="text-gray-600 mb-2">NIC Number</Text>
+          <TextInput
+            placeholder="NIC Number"
+            className="border p-3 rounded"
+            value={NICnumber}
+            onChangeText={setNICnumber}
+          />
+        </View>
 
-                {/* Phone Number */}
-                <View className="mb-4">
-                    <Text className="text-gray-600 mb-2">Phone Number</Text>
-                    <View className="flex-row items-center border p-3 rounded">
-                        <CountryPicker 
-                            countryCode={countryCode} 
-                            withFilter 
-                            withFlag 
-                            onSelect={(country) => setCountryCode(country.cca2 as CountryCode)} 
-                        />
-                        <TextInput 
-                            placeholder="Phone Number" 
-                            keyboardType="phone-pad" 
-                            value={phoneNumber} 
-                            onChangeText={setPhoneNumber} 
-                            className="flex-1" 
-                        />
-                    </View>
-                </View>
+        {/* Phone Number */}
+        <View className="mb-4">
+          <Text className="text-gray-600 mb-2">Phone Number</Text>
+          <View className="flex-row items-center border p-3 rounded">
+            <CountryPicker
+              countryCode={countryCode}
+              withFilter
+              withFlag
+              onSelect={(country) => setCountryCode(country.cca2 as CountryCode)}
+            />
+            <TextInput
+              placeholder="Phone Number"
+              keyboardType="phone-pad"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+              className="flex-1"
+            />
+          </View>
+        </View>
 
-                {/* Address */}
-                <View className="mb-4">
-                    <Text className="text-gray-600 mb-2">Address</Text>
-                    <TextInput 
-                        placeholder="Address" 
-                        className="border p-3 rounded" 
-                        value={address}
-                        onChangeText={setAddress}
-                    />
-                </View>
+        {/* Address */}
+        <View className="mb-4">
+          <Text className="text-gray-600 mb-2">Address</Text>
+          <TextInput
+            placeholder="Address"
+            className="border p-3 rounded"
+            value={address}
+            onChangeText={setAddress}
+          />
+        </View>
 
-                {/* Account Number */}
-                <View className="mb-4">
-                    <Text className="text-gray-600 mb-2">Account Number</Text>
-                    <TextInput 
-                        placeholder="Account Number" 
-                        className="border p-3 rounded" 
-                        value={accNumber}
-                        onChangeText={setAccNumber}
-                    />
-                </View>
+        {/* Account Number */}
+        <View className="mb-4">
+          <Text className="text-gray-600 mb-2">Account Number</Text>
+          <TextInput
+            placeholder="Account Number"
+            className="border p-3 rounded"
+            value={accNumber}
+            onChangeText={setAccNumber}
+          />
+        </View>
 
-                {/* Account Holder's Name */}
-                <View className="mb-4">
-                    <Text className="text-gray-600 mb-2">Account Holder's Name</Text>
-                    <TextInput 
-                        placeholder="Account Holder's Name" 
-                        className="border p-3 rounded" 
-                        value={accHolderName}
-                        onChangeText={setAccHolderName}
-                    />
-                </View>
+        {/* Account Holder's Name */}
+        <View className="mb-4">
+          <Text className="text-gray-600 mb-2">Account Holder's Name</Text>
+          <TextInput
+            placeholder="Account Holder's Name"
+            className="border p-3 rounded"
+            value={accHolderName}
+            onChangeText={setAccHolderName}
+          />
+        </View>
 
-                {/* Bank Name */}
-                <View className="mb-4">
-                    <Text className="text-gray-600 mb-2">Bank Name</Text>
-                    <TextInput 
-                        placeholder="Bank Name" 
-                        className="border p-3 rounded" 
-                        value={bankName}
-                        onChangeText={setBankName}
-                    />
-                </View>
+        {/* Bank Name */}
+        <View className="mb-4">
+          <Text className="text-gray-600 mb-2">Bank Name</Text>
+          <TextInput
+            placeholder="Bank Name"
+            className="border p-3 rounded"
+            value={bankName}
+            onChangeText={setBankName}
+          />
+        </View>
 
-                {/* Branch Name */}
-                <View className="mb-8">
-                    <Text className="text-gray-600 mb-2">Branch Name</Text>
-                    <TextInput 
-                        placeholder="Branch Name" 
-                        className="border p-3 rounded" 
-                        value={branchName}
-                        onChangeText={setBranchName}
-                    />
-                </View>
+        {/* Branch Name */}
+        <View className="mb-8">
+          <Text className="text-gray-600 mb-2">Branch Name</Text>
+          <TextInput
+            placeholder="Branch Name"
+            className="border p-3 rounded"
+            value={branchName}
+            onChangeText={setBranchName}
+          />
+        </View>
       </ScrollView>
 
-        {/* Next Button */}
-        <TouchableOpacity
-          className="bg-green-500 p-3 rounded-full items-center mt-5"
-          onPress={handleNext}
-        >
-          <Text className="text-white text-lg">Next</Text>
-        </TouchableOpacity>
+      {/* Next Button */}
+      <TouchableOpacity
+        className="bg-green-500 p-3 rounded-full items-center mt-5"
+        onPress={handleNext}
+      >
+        <Text className="text-white text-lg">Submit</Text>
+      </TouchableOpacity>
 
       {/* Success Modal */}
       <Modal
-        visible={isModalVisible}
         transparent={true}
+        visible={isModalVisible}
         animationType="slide"
-        onRequestClose={() => setIsModalVisible(false)}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text className="text-xl font-bold mb-3">Loading...</Text>
-            <Animated.View style={[styles.loadingBar, { width: loadingBarWidth }]}>
-              <View style={styles.loadingBarInner} />
-            </Animated.View>
-            {loading && <Text>Processing...</Text>}
+      >
+        <View className="flex-1 justify-center items-center bg-gray-900 bg-opacity-50">
+          <View className="bg-white rounded-lg w-72 p-6 items-center">
+            {/* Success Header */}
+            <Text className="text-xl font-bold mb-4">Success!</Text>
+
+            {/* Success Icon */}
+            <View className="mb-4">
+              <Image
+                source={require('../assets/images/tick.png')} // Replace with your own checkmark image
+                className="w-24 h-24"
+              />
+            </View>
+
+            {/* Registration Successful Text */}
+            <Text className="text-gray-700">Registration Successful</Text>
+
+            {/* Progress Bar at the Bottom */}
+            <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
+              <Animated.View className="h-full bg-green-500" style={{ width: loadingBarWidth }} />
+            </View>
           </View>
         </View>
       </Modal>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    padding: 20,
-    borderRadius: 10,
-    backgroundColor: 'white',
-    alignItems: 'center',
-  },
-  loadingBar: {
-    height: 20,
-    borderRadius: 5,
-    backgroundColor: 'lightgray',
-    overflow: 'hidden',
-    marginTop: 10,
-    width: '100%', // Full width for the outer container
-  },
-  loadingBarInner: {
-    height: '100%',
-    backgroundColor: 'green', // Color of the loading bar
-  },
-});
 
 export default UnregisteredFarmerDetails;

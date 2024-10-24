@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
+import environment from '../environment';
+
+const api = axios.create({
+  baseURL: environment.API_BASE_URL,
+});
 
 type SearchFarmerNavigationProp = StackNavigationProp<RootStackParamList, 'SearchFarmer'>;
 
@@ -12,36 +17,58 @@ interface SearchFarmerProps {
 }
 
 const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
-  const [nicNumber, setNicNumber] = useState('');
+  const [NICnumber, setNICnumber] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const [noResults, setNoResults] = useState(false); // State to track if search returned no results
-  const [farmer, setFarmer] = useState<{ nic: string; name: string } | null>(null); // State to store farmer data
+  const [noResults, setNoResults] = useState(false);
+  const [farmers, setFarmers] = useState<{ NICnumber: string; firstName: string; lastName: string; phoneNumber: string; userId: string }[]>([]);
 
-  // Function to handle search action and make a request to the backend
-  const handleSearch = async () => {
-    if (nicNumber.trim().length === 0) return; // Prevent search if the NIC is empty
+  // Fetch all farmers' data when the component mounts
+  useEffect(() => {
+    const fetchFarmers = async () => {
+      try {
+        const response = await api.get(`api/auth/getall`);
+        if (response.status === 200 && response.data) {
+          // Map id as userId to match the SQL structure
+          const mappedFarmers = response.data.map((farmer: any) => ({
+            NICnumber: farmer.NICnumber,
+            firstName: farmer.firstName,
+            lastName: farmer.lastName,
+            phoneNumber: farmer.phoneNumber,
+            userId: farmer.id, // Map `id` to `userId`
+          }));
+          setFarmers(mappedFarmers);
+        }
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          console.error('Failed to fetch farmers:', error.response?.data || error.message);
+          Alert.alert('Error', error.response?.data?.message || 'Failed to fetch farmers data.');
+        } else {
+          console.error('An unexpected error occurred:', error);
+          Alert.alert('Error', 'An unexpected error occurred.');
+        }
+      }
+    };
+
+    fetchFarmers();
+  }, []);
+
+  // Function to handle the search action
+  const handleSearch = () => {
+    if (NICnumber.trim().length === 0) return; // Prevent search if the NIC is empty
 
     setIsSearching(true);
     setNoResults(false); // Reset no results state
-    setFarmer(null); // Reset farmer data before search
 
-    try {
-      const response = await axios.get(`http://10.0.2.2:3001/api/auth/search`, {
-        params: { nic: nicNumber },
-      });
-      console.log(nic);
+    // Search for the farmer by NIC number in the fetched farmers data
+    const foundFarmer = farmers.find(f => f.NICnumber === NICnumber.trim());
 
-      if (response.status === 200 && response.data) {
-        setFarmer(response.data); // Set the farmer data if found
-        setNoResults(false);
-      } else {
-        setNoResults(true); // Set no results if not found
-      }
-    } catch (error) {
-      setNoResults(true); // Set no results on error
-      Alert.alert('Error', 'There was an issue with the search request');
-    } finally {
-      setIsSearching(false); // Stop the search indicator
+    setIsSearching(false); // Stop the search indicator after the search is complete
+
+    if (foundFarmer) {
+      // Redirect to the FarmerQR page with both NICnumber and userId
+      navigation.navigate('FarmerQr' as any, { NICnumber: foundFarmer.NICnumber, userId: foundFarmer.userId });
+    } else {
+      setNoResults(true); // Set no results if not found
     }
   };
 
@@ -64,8 +91,8 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
 
         <View className="flex-row justify-center items-center border rounded-full mt-10 px-4 py-2 bg-gray-100">
           <TextInput
-            value={nicNumber}
-            onChangeText={setNicNumber}
+            value={NICnumber}
+            onChangeText={setNICnumber}
             placeholder="Enter NIC number"
             className="flex-1 text-center"
           />
@@ -77,11 +104,11 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
         </View>
 
         {/* Display search image when no NIC is entered */}
-        {!isSearching && nicNumber.length === 0 && (
+        {!isSearching && NICnumber.length === 0 && (
           <View className="mt-10 items-center">
             <Image
               source={require('../assets/images/search.png')}
-              className="h-[400px] w-[350px]  rounded-lg"
+              className="h-[400px] w-[350px] rounded-lg"
               resizeMode="contain"
             />
           </View>
@@ -95,29 +122,21 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
         )}
 
         {/* No Results Found */}
-        {!isSearching && noResults && nicNumber.length > 0 && (
+        {!isSearching && noResults && NICnumber.length > 0 && (
           <View className="mt-10 items-center">
             <Image
               source={require('../assets/images/notfound.png')}
-              className="h-[400px] w-[350px] rounded-lg"
+              className="h-[350px] w-[350px] rounded-lg"
               resizeMode="contain"
             />
             <Text className="text-center text-lg mt-4">No registered farmer found</Text>
 
             <TouchableOpacity
-              onPress={() => navigation.navigate('RegisterFarmer' as any)}
+              onPress={() => navigation.navigate('UnregisteredFarmerDetails' as any)}
               className="mt-6 bg-green-500 rounded-lg px-6 py-3"
             >
               <Text className="text-white text-lg">Register Farmer</Text>
             </TouchableOpacity>
-          </View>
-        )}
-
-        {/* Farmer Details Display */}
-        {!isSearching && farmer && (
-          <View className="mt-10 items-center">
-            <Text className="text-lg">NIC: {farmer.nic}</Text>
-            <Text className="text-lg">Name: {farmer.name}</Text>
           </View>
         )}
       </View>
