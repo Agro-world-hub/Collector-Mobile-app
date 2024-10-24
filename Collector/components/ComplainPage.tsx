@@ -46,7 +46,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
       <View className="items-center mb-6">
         <Image
           source={require('../assets/images/complain.png')} // Replace with your image path
-          style={{ width: 160, height: 160 }} // Adjusted for a more prominent image size
+          style={{ width: 160, height: 160,marginTop:30 }} // Adjusted for a more prominent image size
         />
       </View>
 
@@ -57,11 +57,11 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
         </Text>
 
         {/* Dropdown for Language Selection */}
-        <View className="border rounded-full bg-gray-100 mb-4 px-4">
+        <View className="border rounded-full bg-gray-100 mb-2 px-4">
           <Picker
             selectedValue={selectedLanguage}
             onValueChange={(itemValue) => setSelectedLanguage(itemValue)}
-            style={{ height: 50, width: '100%' }}
+            style={{ height: 55, width: '100%' }}
           >
             <Picker.Item label="Select Farmer’s Preferred Language" value="" />
             <Picker.Item label="English" value="english" />
@@ -81,8 +81,8 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
           onChangeText={setComplainText}
           placeholder="Add the Complaint here..."
           multiline
-          numberOfLines={8}
-          className="bg-gray-100 h-[150px] rounded-lg p-4 text-black"
+          numberOfLines={10}
+          className="bg-gray-100 h-[200px] rounded-lg p-4 text-black"
         />
 
         {/* Submit Button */}

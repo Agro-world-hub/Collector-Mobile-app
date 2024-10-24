@@ -33,7 +33,7 @@ import SinProfile from '@/components/Sinhala/SinProfile';
 import TamProfile from '@/components/Tamil/TamProfile';
 import SearchFarmer from '@/components/SearchFarmer';
 import FarmerQr from '@/components/FarmerQr';
-import ComplainPage from '@/components/Complainpage';
+import ComplainPage from '@/components/ComplainPage';
 
 
 
