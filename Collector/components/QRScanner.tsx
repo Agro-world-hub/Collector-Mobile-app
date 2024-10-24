@@ -13,6 +13,8 @@ interface QRScannerProps {
 const { width } = Dimensions.get('window');
 const scanningAreaSize = width * 0.8; // Adjust scanning area size
 
+
+//code for checking push requests
 const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
