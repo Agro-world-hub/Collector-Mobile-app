@@ -31,8 +31,8 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
             headers: { Authorization: `Bearer ${token}` }
           });
           const { user } = response.data;
-          setFirstName(user.firstName);
-          setLastName(user.lastName);
+          setFirstName(user.firstNameEnglish);
+          setLastName(user.lastNameEnglish);
         }
       } catch (error) {
         console.error('Failed to fetch user profile:', error);
@@ -104,7 +104,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
         <View className="flex-row justify-between">
           <TouchableOpacity
             className="bg-green-500 w-[150px] h-32 rounded-xl flex items-center justify-center shadow-lg"
-            onPress={() => navigation.navigate('QRScanner')}
+            onPress={() => navigation.navigate('QRScanner' as any)}
           >
             <Image
               source={require('@/assets/images/scan-qr.png')}

@@ -12,7 +12,7 @@ import {
   Animated,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './types'; // Adjust the path according to your project structure
+import { RootStackParamList } from './types';
 import CountryPicker, { CountryCode } from 'react-native-country-picker-modal';
 import axios from 'axios';
 import environment from '../environment';
@@ -38,18 +38,20 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
   const [accHolderName, setAccHolderName] = useState('');
   const [bankName, setBankName] = useState('');
   const [branchName, setBranchName] = useState('');
-  const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
+  const [isModalVisible, setIsModalVisible] = useState(false); // Success modal visibility state
+  const [isUnsuccessfulModalVisible, setIsUnsuccessfulModalVisible] = useState(false); // Unsuccessful modal visibility state
   const [loading, setLoading] = useState(false); // Loading state for the progress bar
   const [progress] = useState(new Animated.Value(0)); // Animated value for progress
+  const [unsuccessfulProgress] = useState(new Animated.Value(0)); // Animated value for unsuccessful loading bar
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for error messages
 
   const handleNext = async () => {
     setLoading(true); // Start loading
-    setIsModalVisible(true); // Show the modal
   
     // Start loading animation
     Animated.timing(progress, {
       toValue: 100, // Animate to 100%
-      duration: 4000, // Duration of the loading bar animation (8 seconds to match your animation)
+      duration: 4000, // Duration of the loading bar animation (4 seconds)
       useNativeDriver: false, // Set to false for width animation
     }).start();
   
@@ -67,35 +69,53 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
       });
   
       if (response.status === 201) {
-        // Alert.alert("Success", response.data.message);
         const userId = response.data.userId; // Capture userId
         const cropCount = response.data.cropCount || 0; // Ensure you have a cropCount value
   
+        // Show success modal
+        setIsModalVisible(true);
+  
         // Modal is visible for 6 seconds before navigating
         setTimeout(() => {
-          setIsModalVisible(false); // Close the modal
+          setIsModalVisible(false); // Close the success modal
           navigation.navigate('FarmerQr' as any, { userId, cropCount }); // Navigate to FarmerQr
         }, 6000); // Wait for 6 seconds before redirecting
       }
     } catch (error: any) {
       console.error(error); // Log for debugging
+      setLoading(false); // End loading
+      setIsUnsuccessfulModalVisible(true); // Show the unsuccessful modal
+
+      // Start unsuccessful loading animation
+      unsuccessfulProgress.setValue(100); // Reset the animated value
+      Animated.timing(unsuccessfulProgress, {
+        toValue: 0, // Animate to 0%
+        duration: 4000, // Duration of the loading bar animation (4 seconds)
+        useNativeDriver: false, // Set to false for width animation
+      }).start();
+
+      // Set error message based on the error
       if (error.response) {
-        Alert.alert("Error", error.response.data.error || "An error occurred");
+        setErrorMessage(error.response.data.error || "An error occurred");
       } else if (error.request) {
-        Alert.alert("Error", "Failed to connect to the server");
+        setErrorMessage("Failed to connect to the server");
       } else {
-        Alert.alert("Error", error.message);
+        setErrorMessage(error.message);
       }
     } finally {
       setLoading(false); // End loading
     }
   };
   
-
   // Interpolating the animated value for width
   const loadingBarWidth = progress.interpolate({
     inputRange: [0, 100],
-    outputRange: ['100%', '0%'],
+    outputRange: ['0%', '100%'],
+  });
+
+  const unsuccessfulLoadingBarWidth = unsuccessfulProgress.interpolate({
+    inputRange: [0, 100],
+    outputRange: ['0%', '100%'],
   });
 
   return (
@@ -238,27 +258,61 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({ n
       >
         <View className="flex-1 justify-center items-center bg-gray-900 bg-opacity-50">
           <View className="bg-white rounded-lg w-72 p-6 items-center">
-            {/* Success Header */}
             <Text className="text-xl font-bold mb-4">Success!</Text>
-
-            {/* Success Icon */}
             <View className="mb-4">
               <Image
                 source={require('../assets/images/tick.png')} // Replace with your own checkmark image
                 className="w-24 h-24"
               />
             </View>
-
-            {/* Registration Successful Text */}
             <Text className="text-gray-700">Registration Successful</Text>
-
-            {/* Progress Bar at the Bottom */}
             <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
               <Animated.View className="h-full bg-green-500" style={{ width: loadingBarWidth }} />
             </View>
           </View>
         </View>
       </Modal>
+
+     
+  <Modal
+    transparent={true}
+    visible={isUnsuccessfulModalVisible}
+    animationType="slide"
+  >
+    <View className="flex-1 justify-center items-center bg-gray-900 bg-opacity-50">
+      <View className="bg-white rounded-lg w-72 p-6 items-center">
+        <Text className="text-xl font-bold mb-4">Oops!</Text>
+        <View className="mb-4">
+          <Image
+            source={require('../assets/images/error.png')} // Replace with your own error image
+            className="w-24 h-24"
+          />
+        </View>
+        <Text className="text-gray-700">Registration Unsuccessful</Text>
+
+        {/* Display error message */}
+        {errorMessage && (
+          <Text className="text-red-600 text-center mt-2">{errorMessage}</Text>
+        )}
+
+        {/* Red Loading Bar */}
+        <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
+          <Animated.View className="h-full bg-red-500" style={{ width: unsuccessfulLoadingBarWidth }} />
+        </View>
+
+        <TouchableOpacity
+          className="bg-red-500 p-2 rounded-full mt-4"
+          onPress={() => {
+            setIsUnsuccessfulModalVisible(false);
+            setErrorMessage(null); // Clear error message when closing
+            unsuccessfulProgress.setValue(0); // Reset animation value when closing
+          }}
+        >
+          <Text className="text-white">Close</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </Modal>
     </View>
   );
 };

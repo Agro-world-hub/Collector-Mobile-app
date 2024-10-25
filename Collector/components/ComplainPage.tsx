@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { Picker } from '@react-native-picker/picker'; // For dropdown
+import { Picker } from '@react-native-picker/picker';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import axios from 'axios';
@@ -21,16 +21,42 @@ interface ComplainPageProps {
 
 const ComplainPage: React.FC<ComplainPageProps> = () => {
   const navigation = useNavigation();
+  const route = useRoute<RouteProp<RootStackParamList, 'ComplainPage'>>();
+  const { farmerName, farmerPhone } = route.params;
+
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [complainText, setComplainText] = useState('');
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedLanguage || !complainText) {
       Alert.alert('Error', 'Please select a language and add your complaint.');
       return;
     }
-    // Handle form submission logic here
-    Alert.alert('Submitted', 'Your complaint has been submitted successfully!');
+
+    try {
+      const token = await AsyncStorage.getItem('token'); // Retrieve token if using authentication
+      const response = await api.post(
+        'api/auth/farmer-complaint', // Adjust this endpoint based on your backend route
+        {
+          farmerName,
+          farmerPhone,
+          complain: complainText,
+          language: selectedLanguage,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      // Handle successful response
+      Alert.alert('Submitted', `Your complaint has been registered with reference: ${response.data.refNo}`);
+      setComplainText('');
+      setSelectedLanguage('');
+      navigation.goBack();
+    } catch (error) {
+      console.error('Error submitting complaint:', error);
+      Alert.alert('Error', 'Failed to submit complaint. Please try again.');
+    }
   };
 
   return (
@@ -45,8 +71,8 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
       {/* Image at the Top */}
       <View className="items-center mb-6">
         <Image
-          source={require('../assets/images/complain.png')} // Replace with your image path
-          style={{ width: 160, height: 160,marginTop:30 }} // Adjusted for a more prominent image size
+          source={require('../assets/images/complain.png')} 
+          style={{ width: 160, height: 160, marginTop: 30 }}
         />
       </View>
 
@@ -55,6 +81,11 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
         <Text className="text-center text-xl font-semibold text-black mb-4">
           Tell us the <Text className="text-red-600">problem</Text>
         </Text>
+
+        {/* Display Farmer Name and Phone
+        <Text className="text-center text-gray-600 mb-2">
+          Farmer: {farmerName} | Phone: {farmerPhone}
+        </Text> */}
 
         {/* Dropdown for Language Selection */}
         <View className="border rounded-full bg-gray-100 mb-2 px-4">

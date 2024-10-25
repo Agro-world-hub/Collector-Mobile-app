@@ -5,7 +5,7 @@ export type RootStackParamList = {
     Registeredfarmer:undefined;
     Ufarmercropdetails:undefined;
     Dashboard:undefined;
-    QRScanner:undefined;
+    QRScanner:{userId:any};
     FormScreen: { scannedData: any };
     EngProfile:undefined;
     UnregisteredFarmerDetails:{ cropCount: 1, userId:number };
@@ -29,6 +29,6 @@ export type RootStackParamList = {
     TamProfile:undefined;
     SearchFarmer:{NICnumber: string; userId: any;};
     FarmerQr:{ cropCount: number,userId:any,NICnumber: string; };
-    ComplainPage:undefined;
+    ComplainPage:{farmerName:any, farmerPhone:any};
 
 };

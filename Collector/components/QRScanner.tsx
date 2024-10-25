@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, Alert, Dimensions, Modal, TouchableOpacity } from 'react-native';
-import { BarCodeScanner } from 'expo-barcode-scanner'; // For Expo QR code scanner
+import { BarCodeScanner } from 'expo-barcode-scanner';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 
@@ -11,10 +11,8 @@ interface QRScannerProps {
 }
 
 const { width } = Dimensions.get('window');
-const scanningAreaSize = width * 0.8; // Adjust scanning area size
+const scanningAreaSize = width * 0.8;
 
-
-//code for checking push requests
 const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
@@ -34,17 +32,32 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
     getCameraPermission();
   }, []);
 
+  const extractUserId = (data: string): string | null => {
+    const lines = data.split('\n');
+    const idLine = lines.find(line => line.trim().startsWith("ID:"));
+    if (idLine) {
+      const userId = idLine.split(":")[1].trim();
+      return userId;
+    }
+    return null;
+  };
+
   const handleBarCodeScanned = ({ type, data }: { type: string; data: string }) => {
     setScanned(true);
-    Alert.alert('QR Code Scanned', data);
-    // Optionally, navigate to a different screen with scanned data
-    // navigation.navigate('FormScreen', { scannedData: { qrData: data } });
+    const userId = extractUserId(data);
+
+    if (userId) {
+      navigation.navigate('FarmerQr' as any, { userId });
+    } else {
+      Alert.alert('Invalid QR Code', 'The scanned QR code does not contain a valid user ID.');
+      setScanned(false); // Reset scanned state if the QR code is invalid
+    }
   };
 
   if (hasPermission === null) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <Text className="text-lg text-gray-800">Requesting for camera permission</Text>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ fontSize: 18, color: '#333' }}>Requesting for camera permission</Text>
       </View>
     );
   }
@@ -57,20 +70,20 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
         animationType="slide"
         onRequestClose={() => setShowPermissionModal(false)}
       >
-        <View className="flex-1 justify-center items-center bg-gray-800 bg-opacity-70">
-          <View className="bg-white p-6 rounded-lg shadow-lg w-4/5 max-w-sm">
-            <Text className="text-lg font-bold mb-4">Camera Permission Required</Text>
-            <Text className="text-gray-700 mb-4">
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.7)' }}>
+          <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, shadowColor: 'black', width: '80%' }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Camera Permission Required</Text>
+            <Text style={{ color: '#555', marginBottom: 20 }}>
               We need camera access to scan QR codes. Please enable camera permissions in your device settings.
             </Text>
             <TouchableOpacity
-              className="bg-green-500 p-4 rounded-lg"
+              style={{ backgroundColor: '#34D399', padding: 10, borderRadius: 8 }}
               onPress={() => {
                 setShowPermissionModal(false);
-                navigation.navigate('Dashboard'); // Navigate to 'Dashboard' when permissions are denied
+                navigation.navigate('Dashboard');
               }}
             >
-              <Text className="text-white text-center text-lg">Close</Text>
+              <Text style={{ color: 'white', textAlign: 'center', fontSize: 16 }}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -79,29 +92,25 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
   }
 
   return (
-    <View className="flex-1 relative">
+    <View style={{ flex: 1, position: 'relative' }}>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={{ flex: 1 }}
       />
-      <View className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+      <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' }}>
         <View
-          className="relative"
           style={{
             width: scanningAreaSize,
             height: scanningAreaSize,
+            borderColor: '#34D399',
+            borderWidth: 2,
+            borderRadius: 10,
           }}
-        >
-          <View className="absolute top-0 left-0 w-full h-[30px] border-t-2 border-green-500 rounded-t-lg" />
-          <View className="absolute bottom-0 left-0 w-full h-[30px] border-b-2 border-green-500 rounded-b-lg" />
-          <View className="absolute top-0 left-0 w-[30px] h-full border-l-2 border-green-500 rounded-tl-lg rounded-bl-lg" />
-          <View className="absolute top-0 right-0 w-[30px] h-full border-r-2 border-green-500 rounded-tr-lg rounded-br-lg" />
-          <View className="absolute inset-0 border-2 border-green-500 rounded-lg" />
-        </View>
+        />
       </View>
       {scanned && (
-        <View className="p-4">
-          <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
+        <View style={{ padding: 16, alignItems: 'center' }}>
+          <Button title="Tap to Scan Again" onPress={() => setScanned(false)} />
         </View>
       )}
     </View>

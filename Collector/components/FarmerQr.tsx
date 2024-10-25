@@ -27,6 +27,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
   const [farmerNIC, setFarmerNIC] = useState('');
   const [farmerQRCode, setFarmerQRCode] = useState(''); // Base64 QR code image
   const [permissionsGranted, setPermissionsGranted] = useState(false);
+  const [farmerPhone, setFarmerPhone] = useState('');
 
   const route = useRoute<FarmerQrRouteProp>();
   const { userId } = route.params;
@@ -36,10 +37,11 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
     const fetchFarmerData = async () => {
       try {
         const response = await api.get(`api/farmer/register-farmer/${userId}`);
-        const { firstName, lastName, NICnumber, qrCode } = response.data;
+        const { firstName, lastName, NICnumber, qrCode,phoneNumber } = response.data;
         setFarmerName(`${firstName} ${lastName}`);
         setFarmerNIC(NICnumber);
         setFarmerQRCode(qrCode);
+        setFarmerPhone(phoneNumber); 
       } catch (error) {
         Alert.alert('Error', 'Failed to fetch farmer details');
       }
@@ -137,9 +139,16 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
         </TouchableOpacity>
 
         {/* Complain Button */}
-        <TouchableOpacity className="border border-gray-400 w-[300px] mt-4 py-3 rounded-full items-center" onPress={() => navigation.navigate('ComplainPage' as any)}>
-          <Text className="text-gray-700 text-lg">Complain</Text>
-        </TouchableOpacity>
+        <TouchableOpacity 
+          className="border border-gray-400 w-[300px] mt-4 py-3 rounded-full items-center" 
+          onPress={() => navigation.navigate('ComplainPage' as any, {
+            farmerName,
+            farmerPhone
+          })}
+        >
+  <Text className="text-gray-700 text-lg">Report a Complain</Text>
+</TouchableOpacity>
+
       </View>
 
       {/* Download and Share buttons */}
