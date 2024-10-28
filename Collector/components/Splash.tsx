@@ -28,7 +28,7 @@ const Splash: React.FC<SplashProps> = ({ navigation }) => {
       <Image source={phone} className='mt-[50%]' /> 
       </View> 
       <View className='items-center pb-[10%]'>
-      <Text className='text-white text-2xl'>Powered By PlantCare</Text>
+      <Text className='text-white text-2xl'>Powered By Agro World</Text>
       </View>
     </View>
   );

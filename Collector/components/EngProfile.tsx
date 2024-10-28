@@ -107,7 +107,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
             {/* View My QR Code */}
             <TouchableOpacity
                 style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 12 }}
-            onPress={() => navigation.navigate('QRScanner')}
+            onPress={() => navigation.navigate('OfficerQr')}
             >
                 <Ionicons name="qr-code" size={20} color="black" />
                 <Text className="flex-1 text-lg ml-2">View My QR Code</Text>
