@@ -73,16 +73,19 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
   };
 
   return (
-    <View className="flex-1 bg-white">
-      {/* Header Section */}
-      <View className="flex-row items-center justify-between p-4">
-        <TouchableOpacity onPress={() => navigation.goBack()} className="mr-4">
-          <FontAwesome name="arrow-left" size={24} color="black" />
-        </TouchableOpacity>
+    <View className="flex-1 p-5 bg-white">
 
+      <View className="flex-row items-center mb-4">
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image
+            source={require('../assets/images/back.png')} // Path to your back icon
+            style={{ width: 24, height: 24 }}
+          />
+        </TouchableOpacity>
         <Text className="text-xl font-bold text-center flex-1">Search</Text>
 
         <View style={{ width: 24 }} />
+       
       </View>
 
       {/* Search Form */}

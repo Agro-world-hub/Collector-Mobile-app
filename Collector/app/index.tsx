@@ -35,6 +35,7 @@ import SearchFarmer from '@/components/SearchFarmer';
 import FarmerQr from '@/components/FarmerQr';
 import ComplainPage from '@/components/ComplainPage';
 import OfficerQr from '@/components/OfficerQr';
+import Profile from '@/components/Profile';
 
 
 
@@ -77,6 +78,7 @@ const index = () => {
       <Stack.Screen name="FarmerQr" component={FarmerQr} />
       <Stack.Screen name="OfficerQr" component={OfficerQr} />
       <Stack.Screen name="ComplainPage" component={ComplainPage} />
+      <Stack.Screen name="Profile" component={Profile} />
       
       
     </Stack.Navigator>

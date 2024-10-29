@@ -69,7 +69,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
           <View className="mt-2 w-full bg-green-500 rounded-xl p-4">
             <Text className="text-center font-semibold text-lg text-white">Total weight</Text>
             <View className="border-b border-gray-300 my-2" />
-            <View className="flex-row justify-between bg-green-300 p-5 rounded-[35px] w-full">
+            <View className="flex-row justify-between bg-green-400 p-5 rounded-[35px] w-full">
               <View className="items-center">
                 <Text className="text-white text-xl font-bold">20</Text>
                 <Text className="text-white">Collection</Text>
@@ -85,7 +85,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
           <View className="mt-1 w-full bg-green-500 rounded-xl p-4">
             <Text className="text-center font-semibold text-lg text-white">Total farmers</Text>
             <View className="border-b border-gray-300 my-2 " />
-            <View className="flex-row justify-between bg-green-300 p-5  rounded-[35px] w-full">
+            <View className="flex-row justify-between bg-green-400 p-5  rounded-[35px] w-full">
               <View className="items-center ">
                 <Text className="text-white text-xl font-bold">30</Text>
                 <Text className="text-white">Collection</Text>

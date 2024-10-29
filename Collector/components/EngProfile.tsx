@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, Modal, Linking, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import environment from '../environment';
 
 type EngProfileNavigationProp = StackNavigationProp<RootStackParamList, 'EngProfile'>;
 
@@ -10,10 +13,37 @@ interface EngProfileProps {
     navigation: EngProfileNavigationProp;
 }
 
+const api = axios.create({
+    baseURL: environment.API_BASE_URL,
+});
+
 const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
     const [isLanguageDropdownOpen, setLanguageDropdownOpen] = useState<boolean>(false);
     const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
     const [isModalVisible, setModalVisible] = useState<boolean>(false);
+    const [firstName, setFirstName] = useState<string>('');
+    const [lastName, setLastName] = useState<string>('');
+    const [companyName, setCompanyName] = useState<string>('');
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const token = await AsyncStorage.getItem('token');
+                if (token) {
+                    const response = await api.get('api/collection-officer/profile-details', {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                    setFirstName(response.data.firstName);
+                    setLastName(response.data.lastName);
+                    setCompanyName(response.data.companyName);
+                }
+            } catch (error) {
+                console.error('Failed to fetch user profile:', error);
+            }
+        };
+
+        fetchUserProfile();
+    }, []);
 
     const handleLanguageSelect = (language: string) => {
         setSelectedLanguage(language);
@@ -36,10 +66,8 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
     const handleLogout = async () => {
         try {
-            // Handle logout logic
-            // For example, clear authentication tokens or session data
-            // Redirect to the login screen
-            // navigation.navigate('Signin');
+            await AsyncStorage.removeItem('token');
+            navigation.navigate('Login');
         } catch (error) {
             console.error('An error occurred during logout:', error);
             Alert.alert('Error', 'Failed to log out.');
@@ -47,28 +75,39 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
     };
 
     const handleEditClick = () => {
-        // navigation.navigate('EngEditProfile');
+        navigation.navigate('Profile');
     };
 
     return (
-        <View className="flex-1 bg-white p-10 mt-2.5">
+        <View className="flex-1 bg-white p-8 mt-2.5">
+            {/* Back Button */}
+     <View className="flex-row items-center mb-4">
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image
+            source={require('../assets/images/back.png')} // Path to your back icon
+            style={{ width: 24, height: 24 }}
+          />
+        </TouchableOpacity>
+       
+      </View>
+
             {/* Profile Card */}
-            <View className="flex-row items-center mb-4">
+            <View className="flex-row items-center p-3  mb-4">
                 <Image
                     source={require('../assets/images/profile.png')}
-                    className="w-12 h-12 rounded-full mr-3"
+                    className="w-16 h-16 rounded-full mr-3"
                 />
                 <View className="flex-1">
-                    <Text className="text-lg mb-1">John Doe</Text>
-                    <Text className="text-sm text-gray-500">Company Name</Text>
+                    <Text className="text-lg mb-1">{firstName} {lastName}</Text>
+                    <Text className="text-sm text-gray-500">{companyName}</Text>
                 </View>
                 <TouchableOpacity onPress={handleEditClick}>
-                    <Ionicons name="pencil" size={30} color="#2fcd46" />
+                    <Ionicons name="create-outline" size={30} color="#2fcd46" /> 
                 </TouchableOpacity>
             </View>
 
             {/* Horizontal Line */}
-            <View className="h-0.5 bg-black my-2 mt-10" />
+            <View className="h-0.5 bg-black my-2 mt-5" />
 
             {/* Language Settings */}
             <TouchableOpacity
@@ -107,7 +146,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
             {/* View My QR Code */}
             <TouchableOpacity
                 style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 12 }}
-            onPress={() => navigation.navigate('OfficerQr')}
+                onPress={() => navigation.navigate('OfficerQr')}
             >
                 <Ionicons name="qr-code" size={20} color="black" />
                 <Text className="flex-1 text-lg ml-2">View My QR Code</Text>
@@ -116,12 +155,11 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
             {/* Horizontal Line */}
             <View className="h-0.5 bg-black my-4" />
 
-            {/* Plant Care Help */}
-            <TouchableOpacity className="flex-row items-center py-3" onPress={() => setModalVisible(true)}>
+            {/* Change Password */}
+            <TouchableOpacity className="flex-row items-center py-3" onPress={() => navigation.navigate('ChangePassword')}>
                 <Ionicons name="lock-closed-outline" size={20} color="black" />
-                <Text className="flex-1 text-lg ml-2" onPress={()=>navigation.navigate('ChangePassword')}>Change Password</Text>
+                <Text className="flex-1 text-lg ml-2">Change Password</Text>
             </TouchableOpacity>
-
 
             {/* Horizontal Line */}
             <View className="h-0.5 bg-black my-4" />
