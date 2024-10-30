@@ -1,13 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios'; // Import axios
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
-import { RootStackParamList } from './types'; // Adjust the path according to your project structure
-import NavBar from './BottomNav';
+import { RootStackParamList } from './types';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import { Picker } from '@react-native-picker/picker';
+import axios from 'axios';
+import environment from '../environment';
 
+const api = axios.create({
+  baseURL: environment.API_BASE_URL,
+});
+
+interface Crop {
+    id: string;
+    cropName: string;
+}
+
+// Define navigation and route props
 type UnregisteredCropDetailsNavigationProp = StackNavigationProp<RootStackParamList, 'UnregisteredCropDetails'>;
 type UnregisteredCropDetailsRouteProp = RouteProp<RootStackParamList, 'UnregisteredCropDetails'>;
 
@@ -16,152 +26,205 @@ interface UnregisteredCropDetailsProps {
     route: UnregisteredCropDetailsRouteProp;
 }
 
-const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navigation, route }) => {
-    const { cropCount, userId } = route.params; // Get userId from params
-    const [currentCrop, setCurrentCrop] = useState(cropCount);
-    const [image, setImage] = useState<string | null>(null);
+const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navigation }) => {
+    const [cropCount, setCropCount] = useState(1);
+    const [cropNames, setCropNames] = useState<Crop[]>([]);
+    const [selectedCrop, setSelectedCrop] = useState<{ id: string; name: string } | null>(null);
+    const [varieties, setVarieties] = useState<{ id: string; variety: string }[]>([]);
+    const [selectedVariety, setSelectedVariety] = useState<string | null>(null);
+    const [unitPrices, setUnitPrices] = useState<{ [key: string]: number | null }>({ A: null, B: null, C: null });
+    const [quantities, setQuantities] = useState<{ [key: string]: number }>({ A: 0, B: 0, C: 0 });
+    const [total, setTotal] = useState<number>(0);
+    const [image, setImage] = useState<any>(null); // For image uploading
 
-    // State for crop details
-    const [cropName, setCropName] = useState(''); // Added for crop name
-    const [quality, setQuality] = useState(''); // Added for quality
-    const [quantity, setQuantity] = useState('');
-    const [unitPrice, setUnitPrice] = useState('');
-    const [total, setTotal] = useState('');
-
-    // Automatically calculate total whenever quantity or unitPrice changes
     useEffect(() => {
-        const quantityValue = parseFloat(quantity) || 0;
-        const unitPriceValue = parseFloat(unitPrice) || 0;
-        const calculatedTotal = quantityValue * unitPriceValue;
-        setTotal(calculatedTotal.toFixed(2)); // Ensures two decimal places
-    }, [quantity, unitPrice]);
-
-    const handleAddMore = () => {
-        setCurrentCrop(prevCrop => prevCrop + 1);
-        navigation.push('UnregisteredCropDetails', { cropCount: currentCrop + 1, userId });
-    };
-
-    // New function to handle form submission
-    const handleDone = async () => {
-        // Prepare crop data
-        const cropData = {
-            userId, // Include the userId
-            cropName,
-            quality,
-            quantity: parseFloat(quantity),
-            unitPrice: parseFloat(unitPrice),
-            image,
-            total: parseFloat(total),
+        // Fetch crop names on component mount
+        const fetchCropNames = async () => {
+            try {
+                const response = await api.get<Crop[]>('api/unregisteredfarmercrop/get-crop-names');
+                const uniqueCropNames = response.data.reduce((acc: Crop[], crop: Crop) => {
+                    if (!acc.some((item: Crop) => item.cropName === crop.cropName)) {
+                        acc.push(crop);
+                    }
+                    return acc;
+                }, []);
+                setCropNames(uniqueCropNames);
+            } catch (error) {
+                console.error('Error fetching crop names:', error);
+            }
         };
 
+        fetchCropNames();
+    }, []);
+
+    const handleCropChange = async (crop: { id: string; name: string }) => {
+        setSelectedCrop(crop);
+        setSelectedVariety(null);
+        setUnitPrices({ A: null, B: null, C: null });
+        setQuantities({ A: 0, B: 0, C: 0 }); // Reset quantities
+
         try {
-            // Retrieve the token from AsyncStorage
-            const token = await AsyncStorage.getItem('token'); // Adjust the key as per your implementation
-
-            // Set up the request headers
-            const headers = {
-                Authorization: `Bearer ${token}`, // Add token to headers
-                'Content-Type': 'application/json',
-            };
-
-            // Replace with your actual backend endpoint
-            const response = await axios.post('http://10.0.2.2:3001/api/unregisteredfarmercrop/unregister-farmercrop', cropData, { headers });
-            console.log('Crop details submitted successfully:', response.data);
-            navigation.navigate('Dashboard' as any); // Or navigate to some confirmation page
+            const varietiesResponse = await api.get(`api/unregisteredfarmercrop/crops/varieties/${crop.name}`);
+            setVarieties(varietiesResponse.data);
         } catch (error) {
-            console.error('Error submitting crop details:', error);
-            alert('Failed to submit crop details. Please try again.');
+            console.error('Error fetching varieties:', error);
         }
     };
 
-    const selectImage = async () => {
-        // Request permission to access the image library
-        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const handleVarietyChange = async (varietyId: string) => {
+        setSelectedVariety(varietyId);
 
-        if (!permissionResult.granted) {
-            alert('Permission to access the gallery is required!');
+        try {
+            const pricesResponse = await api.get(`api/unregisteredfarmercrop/unitPrices/${varietyId}`);
+            const prices = pricesResponse.data.reduce((acc: any, curr: any) => {
+                acc[curr.grade] = curr.price;
+                return acc;
+            }, {});
+            setUnitPrices(prices);
+        } catch (error) {
+            console.error('Error fetching unit prices for selected variety:', error);
+        }
+    };
+
+    const incrementCropCount = () => {
+        setCropCount(cropCount + 1);
+    };
+
+    const handleQuantityChange = (grade: string, value: string) => {
+        const quantity = parseInt(value) || 0;
+        setQuantities(prev => ({ ...prev, [grade]: quantity }));
+        calculateTotal();
+    };
+
+    const calculateTotal = () => {
+        const totalPrice = Object.keys(unitPrices).reduce((acc, grade) => {
+            const price = unitPrices[grade] || 0;
+            const quantity = quantities[grade] || 0;
+            return acc + (price * quantity);
+        }, 0);
+        setTotal(totalPrice);
+    };
+
+    const handleSubmit = async () => {
+        if (!selectedCrop || !selectedVariety) {
+            alert("Please select both crop and variety");
             return;
         }
 
-        // Open the image picker
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
+        const payload = {
+            userId: 1, // Assuming you have a way to get the current user ID
+            collectionOfficerId: 1, // Assuming you have a way to get the officer ID
+            cropName: selectedCrop.name,
+            quality: selectedVariety, // Assuming this is the correct mapping for quality
+            unitPrice: unitPrices['A'] || 0, // Change according to your requirement
+            weight: quantities['A'] || 0, // Change according to your requirement
+            total,
+            image: image ? image : null, // If you have an image to upload
+        };
 
-        if (!result.canceled && result.assets) {
-            setImage(result.assets[0].uri); // Set the image URI
+        try {
+            const response = await api.post('api/registeredfarmerpayments', payload);
+            console.log('Data submitted successfully:', response.data);
+            alert("Payment details submitted successfully!");
+            // Navigate back or to another screen
+            navigation.goBack();
+        } catch (error) {
+            console.error('Error submitting data:', error);
+            alert("There was an error submitting your details.");
         }
     };
 
     return (
-        <ScrollView className="flex-1 p-5 bg-white">
-            <Text className="text-xl font-bold mb-4">Fill Crop details</Text>
-            <Text className="text-lg mb-4 ml-[150px]">Crop {currentCrop}</Text>
-
-            <TextInput
-                placeholder="Crop Name"
-                className="border mb-3 p-3 rounded"
-                value={cropName} // Bind to cropName state
-                onChangeText={setCropName} // Handle crop name changes
-            />
-            
-            <TextInput
-                placeholder="Quality"
-                className="border mb-3 p-3 rounded"
-                value={quality} // Bind to quality state
-                onChangeText={setQuality} // Handle quality changes
-            />
-            
-            <TextInput
-                placeholder="Quantity"
-                className="border mb-3 p-3 rounded"
-                keyboardType="numeric"
-                value={quantity}
-                onChangeText={setQuantity}
-            />
-            
-            <TextInput
-                placeholder="Unit Price (Rs.)"
-                className="border mb-3 p-3 rounded"
-                keyboardType="numeric"
-                value={unitPrice}
-                onChangeText={setUnitPrice}
-            />
-
-            {image ? (
-                <Image source={{ uri: image }} style={{ width: 200, height: 200, marginBottom: 10 }} />
-            ) : (
-                <TouchableOpacity 
-                    className="bg-gray-800 p-3 ml-[40px] w-[250px] h-[50px] items-center mb-3"
-                    onPress={selectImage}>
-                    <Text className="text-white text-lg">Add Product Image</Text>
+        <ScrollView className="flex-1 bg-gray-50 px-6 py-4">
+            <View className="flex-row items-center mt-1 mb-6">
+                <TouchableOpacity onPress={() => navigation.goBack()} className="p-2">
+                    <AntDesign name="left" size={24} color="#000" />
                 </TouchableOpacity>
-            )}
+                <Text className="text-center ml-[26%] text-lg font-semibold">Fill Details</Text>
+            </View>
 
-            <TextInput
-                placeholder="Total (Rs.)"
-                className="border mb-3 p-3 rounded"
-                value={total}
-                editable={false} // Total should not be manually editable
-            />
+            <Text className="text-center text-md font-medium mt-2">Crop {cropCount}</Text>
+            <View className="mb-6 border-b p-2 border-gray-200 pb-6">
+                <Text className="text-gray-600 mt-4">Crop Name</Text>
+                <View className="border border-gray-300 rounded-md mt-2 p-2">
+                    <Picker
+                        selectedValue={selectedCrop?.name || null}
+                        onValueChange={(itemValue: any) => {
+                            const crop = cropNames.find(c => c.cropName === itemValue);
+                            if (crop) handleCropChange({ id: crop.id, name: crop.cropName });
+                        }}
+                        style={{ height: 50, width: '100%' }}
+                    >
+                        <Picker.Item label="Select Crop" value={null} />
+                        {cropNames.map((crop) => (
+                            <Picker.Item key={crop.id} label={crop.cropName} value={crop.cropName} />
+                        ))}
+                    </Picker>
+                </View>
 
-            <TouchableOpacity 
-                className="bg-green-500 p-3 rounded-full items-center mt-5"
-                onPress={handleAddMore}>
-                <Text className="text-white text-lg">Add More</Text>
-            </TouchableOpacity>
+                <Text className="text-gray-600 mt-4">Variety</Text>
+                <View className="border border-gray-300 rounded-md mt-2 p-2">
+                    <Picker
+                        selectedValue={selectedVariety || null}
+                        onValueChange={(itemValue: any) => handleVarietyChange(itemValue)}
+                        style={{ height: 50, width: '100%' }}
+                        enabled={!!selectedCrop}
+                    >
+                        <Picker.Item label="Select Variety" value={null} />
+                        {varieties.map((variety) => (
+                            <Picker.Item key={variety.id} label={variety.variety} value={variety.id} /> 
+                        ))}
+                    </Picker>
+                </View>
 
-            <TouchableOpacity 
-                className="border border-black p-3 rounded-full items-center mt-3"
-                onPress={handleDone}>
-                <Text className="text-black text-lg">Done</Text>
-            </TouchableOpacity>
+                {/* Unit Prices according to Grades */}
+                <Text className="text-gray-600 mt-4">Unit Prices according to Grades</Text>
+                <View className="border border-gray-300 rounded-lg mt-2 p-4">
+                    {['A', 'B', 'C'].map((grade) => (
+                        <View key={grade} className="flex-row items-center mb-3">
+                            <Text className="w-8 text-gray-600">{grade}</Text>
+                            <TextInput
+                                placeholder="Rs."
+                                keyboardType="numeric"
+                                className="flex-1 border border-gray-300 rounded-md p-2 mx-2 text-gray-600"
+                                value={unitPrices[grade]?.toString() || ''}
+                                editable={false}
+                            />
+                            <TextInput
+                                placeholder="kg"
+                                keyboardType="numeric"
+                                className="flex-1 border border-gray-300 rounded-md p-2 text-gray-600"
+                                value={quantities[grade].toString()}
+                                onChangeText={value => handleQuantityChange(grade, value)}
+                            />
+                        </View>
+                    ))}
+                </View>
 
-            <View className='mt-[60px]'>
-                <NavBar />
+                <TouchableOpacity className="mt-4 py-2 bg-black rounded-md">
+                    <Text className="text-center text-white">Add Image</Text>
+                </TouchableOpacity>
+
+                {/* Total Display */}
+                <Text className="text-gray-600 mt-4">Total (Rs.)</Text>
+                <View className="border border-gray-300 rounded-md mt-2 p-2">
+                    <TextInput 
+                        placeholder="--Auto Fill--" 
+                        editable={false} 
+                        value={total.toString()} 
+                        className="text-gray-600" 
+                    />
+                </View>
+
+                {/* Add More Button */}
+                <TouchableOpacity onPress={incrementCropCount} className="bg-green-500 rounded-md p-4 mt-2">
+                    <Text className="text-center text-white font-semibold">Add more</Text>
+                </TouchableOpacity>
+
+                {/* Done Button */}
+                <TouchableOpacity onPress={handleSubmit} className="border border-black rounded-md p-4 mt-4">
+                    <Text className="text-center text-black font-semibold">Done</Text>
+                </TouchableOpacity>
             </View>
         </ScrollView>
     );

@@ -117,9 +117,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
 
   return (
     <View className="flex-1 bg-white">
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }}>
-        {/* Header */}
-        <View className="flex-row items-center mt-4 mb-6">
+     <View className="flex-row items-center mt-4 mb-6">
           <TouchableOpacity onPress={() => navigation.goBack()} className="p-2">
             <AntDesign name="left" size={24} color="#000" />
           </TouchableOpacity>
@@ -133,6 +131,9 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             className="w-28 h-28 rounded-full"
           />
         </View>
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }}>
+        {/* Header */}
+       
 
         {/* Profile Fields */}
         <View className="space-y-4 p-5">

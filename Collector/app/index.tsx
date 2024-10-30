@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{ useEffect } from 'react'
 import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -36,6 +36,7 @@ import FarmerQr from '@/components/FarmerQr';
 import ComplainPage from '@/components/ComplainPage';
 import OfficerQr from '@/components/OfficerQr';
 import Profile from '@/components/Profile';
+import * as ScreenCapture from 'expo-screen-capture';
 
 
 
@@ -43,6 +44,10 @@ import Profile from '@/components/Profile';
 
 const Stack = createNativeStackNavigator(); // Create Stack navigator instance
 const index = () => {
+  
+    // Prevent screenshots and screen recording
+    ScreenCapture.usePreventScreenCapture()
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
     <Stack.Navigator screenOptions={{ headerShown: false }}>
