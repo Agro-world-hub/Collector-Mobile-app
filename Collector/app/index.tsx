@@ -37,6 +37,7 @@ import ComplainPage from '@/components/ComplainPage';
 import OfficerQr from '@/components/OfficerQr';
 import Profile from '@/components/Profile';
 import * as ScreenCapture from 'expo-screen-capture';
+import ReportPage from '@/components/ReportPage';
 
 
 
@@ -46,7 +47,7 @@ const Stack = createNativeStackNavigator(); // Create Stack navigator instance
 const index = () => {
   
     // Prevent screenshots and screen recording
-    ScreenCapture.usePreventScreenCapture()
+    // ScreenCapture.usePreventScreenCapture()
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -84,6 +85,8 @@ const index = () => {
       <Stack.Screen name="OfficerQr" component={OfficerQr} />
       <Stack.Screen name="ComplainPage" component={ComplainPage} />
       <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="ReportPage" component={ReportPage} />
+
       
       
     </Stack.Navigator>

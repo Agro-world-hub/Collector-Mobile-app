@@ -32,6 +32,6 @@ export type RootStackParamList = {
     ComplainPage:{farmerName:any, farmerPhone:any};
     OfficerQr:undefined;
     Profile:undefined;
-    ReportPage:undefined;
+    ReportPage:{userId:string};
 
 };
