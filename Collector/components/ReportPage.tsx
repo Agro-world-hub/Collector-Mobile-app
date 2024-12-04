@@ -51,12 +51,18 @@ interface Crop {
   total: number;
 }
 
+interface Officer {
+  QRcode: string;
+  // Include any other properties that the officer object may have
+}
+
 
 const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
   const [details, setDetails] = useState<PersonalAndBankDetails | null>(null);
   const route = useRoute<ReportPageRouteProp>();
   const { userId } = route.params || {};
   const [crops, setCrops] = useState<Crop[]>([]);
+  const [officer, setOfficer] = useState<Officer | null>(null);
 
   useEffect(() => {
     fetchDetails();
@@ -70,9 +76,12 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
         return;
       }
 
-      const [detailsResponse, cropsResponse] = await Promise.all([
+      const [detailsResponse, cropsResponse , officerResponse] = await Promise.all([
         api.get(`api/farmer/report-user-details/${userId}`),
-        api.get(`api/unregisteredfarmercrop/user-crops/today/${userId}`)
+        api.get(`api/unregisteredfarmercrop/user-crops/today/${userId}`),
+        api.get(`api/collection-officer/get-officer-Qr`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
       ]);
 
       const data = detailsResponse.data;
@@ -90,8 +99,19 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
         bankName: data.bankName ?? "",
         branchName: data.branchName ?? "",
       });
+      
+      const officerData = officerResponse.data;
+      
+    setOfficer({
+      QRcode: officerData.QRcode ?? "", // Ensure officer's QR code is assigned
+    });
+
+      
+      setOfficer(officerResponse.data);
+      console.log(officerResponse.data);
 
       setCrops(cropsResponse.data);
+      console.log(cropsResponse.data)
 
     } catch (error) {
       console.error('Error fetching details:', error);
@@ -100,8 +120,8 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
   };
 
   const generatePDF = async () => {
-    if (!details) {
-      Alert.alert('Error', 'Details are missing for generating PDF');
+    if (!details || !officer) {
+      Alert.alert('Error', 'Details or Officer data are missing for generating PDF');
       return '';
     }
   
@@ -129,83 +149,94 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
     }, 0);
   
     const html = `
-      <html>
-        <head>
-          <style>
-            body { font-family: Arial; margin: 20px; }
-            h1 { text-align: center; }
-            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-            th, td { border: 1px solid black; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
-            .qr-section { display: flex; flex-direction: column; align-items: flex-start; margin-top: 20px; }
-            .qr-code { margin-bottom: 10px; }
-            .total-row { font-weight: bold; margin-top: 10px; }
-          </style>
-        </head>
-        <body>
-          <h1>Purchase Report</h1>
-          
-          <h2>Personal Details</h2>
-          <table>
-            <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>NIC Number</th>
-              <th>Phone Number</th>
-              <th>Address</th>
-            </tr>
-            <tr>
-              <td>${details.firstName}</td>
-              <td>${details.lastName}</td>
-              <td>${details.NICnumber}</td>
-              <td>${details.phoneNumber}</td>
-              <td>${details.address}</td>
-            </tr>
-          </table>
+    <html>
+      <head>
+        <style>
+          body { font-family: Arial; margin: 20px; }
+          h1 { text-align: center; }
+          table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+          th, td { border: 1px solid black; padding: 8px; text-align: left; }
+          th { background-color: #f2f2f2; }
+          .qr-section { display: flex; justify-content: flex-start; align-items: center; gap: 20px; margin-top: 20px; }
+          .qr-item { text-align: center; }
+          .qr-code { margin-bottom: 10px; }
+          .total-row { font-weight: bold; margin-top: 10px; }
+        </style>
+      </head>
+      <body>
+        <h1>Purchase Report</h1>
+        
+        <h2>Personal Details</h2>
+        <table>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>NIC Number</th>
+            <th>Phone Number</th>
+            <th>Address</th>
+          </tr>
+          <tr>
+            <td>${details.firstName}</td>
+            <td>${details.lastName}</td>
+            <td>${details.NICnumber}</td>
+            <td>${details.phoneNumber}</td>
+            <td>${details.address}</td>
+          </tr>
+        </table>
     
-          <h2>Bank Details</h2>
-          <table>
-            <tr>
-              <th>Account Number</th>
-              <th>Account Holder's Name</th>
-              <th>Bank Name</th>
-              <th>Branch Name</th>
-            </tr>
-            <tr>
-              <td>${details.accNumber}</td>
-              <td>${details.accHolderName}</td>
-              <td>${details.bankName}</td>
-              <td>${details.branchName}</td>
-            </tr>
-          </table>
-          
-          <h2>Crop Details</h2>
-          <table>
-            <tr>
-              <th>Crop Name</th>
-              <th>Variety</th>
-              <th>Unit Price A</th>
-              <th>Weight A</th>
-              <th>Unit Price B</th>
-              <th>Weight B</th>
-              <th>Unit Price C</th>
-              <th>Weight C</th>
-              <th>Total</th>
-            </tr>
-            ${cropsTableRows}
-          </table>
+        <h2>Bank Details</h2>
+        <table>
+          <tr>
+            <th>Account Number</th>
+            <th>Account Holder's Name</th>
+            <th>Bank Name</th>
+            <th>Branch Name</th>
+          </tr>
+          <tr>
+            <td>${details.accNumber}</td>
+            <td>${details.accHolderName}</td>
+            <td>${details.bankName}</td>
+            <td>${details.branchName}</td>
+          </tr>
+        </table>
+        
+        <h2>Crop Details</h2>
+        <table>
+          <tr>
+            <th>Crop Name</th>
+            <th>Variety</th>
+            <th>Unit Price A</th>
+            <th>Weight A</th>
+            <th>Unit Price B</th>
+            <th>Weight B</th>
+            <th>Unit Price C</th>
+            <th>Weight C</th>
+            <th>Total</th>
+          </tr>
+          ${cropsTableRows}
+        </table>
     
-          <div class="total-row">
-            <strong>Total Price:</strong> ${totalSum.toFixed(2)}
-          </div>
-    
-          <div class="qr-section">
-            <img src="${details.qrCode}" alt="QR Code" width="200" height="200" class="qr-code" />
+        <div class="total-row">
+          <strong>Total Price:</strong> ${totalSum.toFixed(2)}
+        </div>
+  
+        <!-- QR Code Section with Horizontal Alignment -->
+        <div class="qr-section">
+          <div class="qr-item">
+            <img src="${details.qrCode}" alt="Farmer's QR Code" width="200" height="200" class="qr-code" />
             <h2>Farmer's QR Code</h2>
           </div>
-        </body>
-      </html>
-    `;
+  
+          <div class="qr-item">
+            <img src="${officer.QRcode}" alt="Officer's QR Code" width="200" height="200" class="qr-code" />
+            <h2>Officer's QR Code</h2>
+          </div>
+        </div>
+  
+      </body>
+    </html>
+  `;
+  
     
     try {
       const { uri } = await Print.printToFileAsync({ html });
@@ -366,13 +397,20 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
 )}
 
       {/* QR Code Section */}
-      {details && details.qrCode && (
-        <View className="mb-4">
-          
+      {details && details.qrCode && officer && officer.QRcode && (
+      <View className="mb-4 flex-row items-center justify-start">
+        <View className="mr-4">
           <Image source={{ uri: details.qrCode }} style={{ width: 150, height: 150 }} />
-          <Text className="font-bold ml-5  text-sm mb-2">farmers Qr Code</Text>
+          <Text className="font-bold ml-5 text-sm mb-2">Farmer's QR Code</Text>
         </View>
-      )}
+
+        <View>
+          <Image source={{ uri: officer.QRcode }} style={{ width: 150, height: 150 }} />
+          <Text className="font-bold ml-5 text-sm mb-2">Officer's QR Code</Text>
+        </View>
+      </View>
+    )}
+
 
 
       <View className="flex-row justify-around w-full mb-7">

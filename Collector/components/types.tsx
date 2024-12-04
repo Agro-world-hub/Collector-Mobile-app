@@ -33,5 +33,6 @@ export type RootStackParamList = {
     OfficerQr:undefined;
     Profile:undefined;
     ReportPage:{userId:string};
+    SearchPriceScreen:undefined;
 
 };
