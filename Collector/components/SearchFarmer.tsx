@@ -5,6 +5,7 @@ import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import environment from '../environment';
+import BottomNav from './BottomNav';
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -73,7 +74,8 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
   };
 
   return (
-    <View className="flex-1 p-5 bg-white">
+    <>
+    <View className="flex-1 p-3 bg-white">
 
       <View className="flex-row items-center mb-4">
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -143,7 +145,14 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
           </View>
         )}
       </View>
+
+
     </View>
+    <View className="flex-1 justify-end w-full">
+        <BottomNav navigation={navigation} activeTab={'Dashboard'} />
+    </View>
+    </>
+    
   );
 };
 

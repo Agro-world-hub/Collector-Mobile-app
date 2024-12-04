@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import environment from '../environment';
+import BottomNav from './BottomNav';
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -66,7 +67,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
         {/* Total Weight and Total Farmers Sections */}
         <ScrollView contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 20 }}>
           {/* Total Weight Section */}
-          <View className="mt-2 w-full bg-green-500 rounded-xl p-4">
+          <View className=" w-full bg-green-500 rounded-xl p-4">
             <Text className="text-center font-semibold text-lg text-white">Total weight</Text>
             <View className="border-b border-gray-300 my-2" />
             <View className="flex-row justify-between bg-green-400 p-5 rounded-[35px] w-full">
@@ -100,10 +101,10 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
       </View>
 
       {/* Buttons Section with White Background */}
-      <View className="bg-white p-10 rounded-t-3xl shadow-lg">
-        <View className="flex-row justify-between">
+      <View className="bg-white p-10 rounded-t-3xl shadow-lg ">
+        <View className="flex-row justify-between ">
           <TouchableOpacity
-            className="bg-green-500 w-[150px] h-32 rounded-xl flex items-center justify-center shadow-lg"
+            className="bg-green-500 w-[120px] h-24 rounded-xl flex items-center justify-center shadow-lg"
             onPress={() => navigation.navigate('QRScanner' as any)}
           >
             <Image
@@ -115,7 +116,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            className="bg-green-500 w-[150px] h-32  rounded-xl flex items-center justify-center shadow-lg"
+            className="bg-green-500 w-[120px] h-24  rounded-xl flex items-center justify-center shadow-lg"
             onPress={() => navigation.navigate('SearchFarmer' as any)}
           >
             <Image
@@ -127,6 +128,9 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
+      <View className="flex-1 justify-end w-full">
+        <BottomNav navigation={navigation} activeTab={'Dashboard'} />
+    </View>
     </View>
   );
 };

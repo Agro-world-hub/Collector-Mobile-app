@@ -10,6 +10,22 @@ interface QRScannerProps {
   navigation: QRScannerNavigationProp;
 }
 
+interface QRData {
+  userInfo: {
+      id: string;        // or number, depending on your backend
+      name: string;
+      nic: string;
+      phone: string;
+  };
+  bankInfo: {
+      accountHolder: string;
+      accountNumber: string;
+      bank: string;
+      branch: string;
+  };
+}
+
+
 const { width } = Dimensions.get('window');
 const scanningAreaSize = width * 0.8;
 
@@ -17,6 +33,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
   const [showPermissionModal, setShowPermissionModal] = useState<boolean>(false);
+  const [error, setError] = useState<string>('')
 
   useEffect(() => {
     const getCameraPermission = async () => {
@@ -32,29 +49,69 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
     getCameraPermission();
   }, []);
 
-  const extractUserId = (data: string): string | null => {
-    const lines = data.split('\n');
-    const idLine = lines.find(line => line.trim().startsWith("ID:"));
-    if (idLine) {
-      const userId = idLine.split(":")[1].trim();
-      return userId;
+  // const extractUserId = (data: string): string | null => {
+  //   const lines = data.split('\n');
+  //   const idLine = lines.find(line => line.trim().startsWith("ID:"));
+  //   if (idLine) {
+  //     const userId = idLine.split(":")[1].trim();
+  //     return userId;
+  //   }
+  //   return null;
+  // };
+
+  // const handleBarCodeScanned = ({ type, data }: { type: string; data: string }) => {
+  //   setScanned(true);
+  //   const userId = extractUserId(data);
+
+  //   if (userId) {
+  //     navigation.navigate('FarmerQr' as any, { userId });
+  //   } else {
+  //     Alert.alert('Invalid QR Code', 'The scanned QR code does not contain a valid user ID.');
+  //     setScanned(false); // Reset scanned state if the QR code is invalid
+  //   }
+  // };
+
+  // QR scanning handler
+  const handleBarCodeScanned = async ({ data }: { type: string; data: string }) => {
+    setScanned(true); // Set the scanned flag to true
+
+    try {
+        console.log('Scanned Data:', data);
+        console.log('Data Type:', typeof data);
+
+        // Parse the QR code data as a JSON object
+        const qrData = JSON.parse(data); // Parse the JSON string into a JS object
+
+        console.log('Parsed QR Code Data:', qrData);
+        console.log('Parsed Type:', typeof qrData);
+
+        // Access the user information (userId in this case)
+        const userId = qrData.userInfo?.id; // Ensure userInfo and id are available
+
+        // Log the userId to verify
+        console.log('User ID:', userId);
+
+        if (!userId) {
+            throw new Error('User ID not found in QR code');
+        }
+
+        // Navigate to the desired screen and pass the userId
+        navigation.navigate('FarmerQr' as any, { userId });
+
+    } catch (error) {
+        console.error('QR Parsing Error:', error);
+        Alert.alert('Invalid QR Code', 'There was an error parsing the QR code.');
+        setScanned(false); // Reset scanned flag on error
     }
-    return null;
-  };
+};
 
-  const handleBarCodeScanned = ({ type, data }: { type: string; data: string }) => {
-    setScanned(true);
-    const userId = extractUserId(data);
+const handleError = (err: any) => {
+    console.error('QR Reader Error:', err);
+    setError('Error reading QR code');
+};
 
-    if (userId) {
-      navigation.navigate('FarmerQr' as any, { userId });
-    } else {
-      Alert.alert('Invalid QR Code', 'The scanned QR code does not contain a valid user ID.');
-      setScanned(false); // Reset scanned state if the QR code is invalid
-    }
-  };
 
-  if (hasPermission === null) {
+if (hasPermission === null) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ fontSize: 18, color: '#333' }}>Requesting for camera permission</Text>
