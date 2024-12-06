@@ -15,7 +15,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import CountryPicker, { CountryCode } from 'react-native-country-picker-modal';
 import axios from 'axios';
-import environment from '../environment';
+import environment from '../environment/environment';
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,

@@ -5,7 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import environment from '../environment';
+import environment from '../environment/environment';
 
 type EngProfileNavigationProp = StackNavigationProp<RootStackParamList, 'EngProfile'>;
 

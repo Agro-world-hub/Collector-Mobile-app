@@ -8,7 +8,7 @@ import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import environment from '../environment';
+import environment from '../environment/environment';
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,

@@ -5,6 +5,8 @@ import { RootStackParamList } from './types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Import the icon library
 import axios from 'axios';
 import { ScrollView } from 'react-native-gesture-handler';
+import environment  from "@/environment/environment";
+
 
 type ChangePasswordNavigationProp = StackNavigationProp<RootStackParamList, 'ChangePassword'>;
 
@@ -12,13 +14,13 @@ interface ChangePasswordProps {
     navigation: ChangePasswordNavigationProp;
     route: {
         params: {
-            email: string;
+            empid: string;
         };
     };
 }
 
 const ChangePassword: React.FC<ChangePasswordProps> = ({ navigation, route }) => {
-    const { email } = route.params;
+    const { empid } = route.params;
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -27,6 +29,9 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ navigation, route }) =>
     const [secureConfirm, setSecureConfirm] = useState(true);
 
     const handleChangePassword = async () => {
+        console.log('Empid:', empid);
+        console.log('Current Password:', currentPassword);
+        console.log('New Password:', newPassword);
         if (newPassword !== confirmPassword) {
             Alert.alert('Error', 'New password and confirm password do not match.');
             return;
@@ -38,12 +43,13 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ navigation, route }) =>
         }
 
         try {
-            const response = await axios.post('http://10.0.2.2:3001/api/collection-officer/change-password', {
-                email,
+            const response = await axios.post(`${environment.API_BASE_URL}api/collection-officer/change-password`, {
+                empid,
                 currentPassword,
                 newPassword,
             });
 
+            console.log('Password update response:', response.data);
             Alert.alert('Success', 'Password updated successfully');
             navigation.navigate('Login');
         } catch (error) {

@@ -5,7 +5,7 @@ import { RootStackParamList } from './types';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import environment from '../environment';
+import environment from '../environment/environment';
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,

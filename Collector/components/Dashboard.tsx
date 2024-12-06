@@ -5,7 +5,7 @@ import { RootStackParamList } from './types';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import environment from '../environment';
+import environment from '../environment/environment';
 import BottomNav from './BottomNav';
 
 const api = axios.create({

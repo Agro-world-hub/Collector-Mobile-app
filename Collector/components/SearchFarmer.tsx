@@ -4,7 +4,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
-import environment from '../environment';
+import environment from '../environment/environment';
 import BottomNav from './BottomNav';
 
 const api = axios.create({

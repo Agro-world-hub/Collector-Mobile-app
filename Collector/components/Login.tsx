@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Import t
 import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
-import environment from '../environment';
+import environment from '../environment/environment';
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -21,41 +21,55 @@ interface LoginProps {
 const loginImage = require('@/assets/images/login.png');
 
 const Login: React.FC<LoginProps> = ({ navigation }) => {
-    const [email, setEmail] = useState('');
+    const [empid, setEmapid] = useState('');
     const [password, setPassword] = useState('');
     const [secureTextEntry, setSecureTextEntry] = useState(true);
 
     const handleLogin = async () => {
         try {
-            const response = await api.post(`api/collection-officer/login`, {
-                email,
-                password,
+            // Replace `api.post` with `fetch` and pass the request payload as JSON
+            
+            const response = await fetch(`${environment.API_BASE_URL}api/collection-officer/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    empid,
+                    password,
+                }),
             });
-
-            // Assuming the token is part of the response
-            const { token, passwordUpdateRequired } = response.data;
-
-            // Store token in AsyncStorage
+    
+            // Check if the response is successful
+            if (!response.ok) {
+                throw new Error('Invalid email or password.');
+            }
+    
+            // Parse the response data
+            const data = await response.json();
+            const { token, passwordUpdateRequired , payload} = data;
+    
+            // Store token in AsyncStorage if received
             if (token) {
                 await AsyncStorage.setItem('token', token);
                 console.log('Token stored:', token); // Log token storage for debugging
             } else {
                 console.error('No token received from the server.');
             }
-
-            if (passwordUpdateRequired) {
-                // Navigate to Change Password Screen
-                navigation.navigate('ChangePassword', { email } as any);
+    
+            // Navigate to the appropriate screen based on password update requirement
+            if (passwordUpdateRequired === true) {
+                navigation.navigate('ChangePassword', { empid } as any);
             } else {
-                // Navigate to the dashboard if password update is not required
                 navigation.navigate('Dashboard');
             }
         } catch (error) {
-            console.error('Login error:', error); // Log error for debugging
+            // Log any error that occurs
+            console.error('Login error:', error);
             Alert.alert('Error', 'Invalid email or password.');
         }
     };
-
+    
     return (
         <ScrollView className="flex-1 w-full bg-white">
             <View className="items-center pt-[10%]">
@@ -64,14 +78,14 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
             </View>
 
             <View className="ml-[10%] mr-[10%] pt-[12%]">
-                <Text className="text-base pb-[2%] font-light">Email</Text>
+                <Text className="text-base pb-[2%] font-light">Employee ID</Text>
                 <View className="flex-row items-center border rounded-3xl w-full h-[53px] mb-5 bg-white px-3">
                     <Icon name="email" size={24} color="green" />
                     <TextInput
                         className="flex-1 h-[40px] text-base pl-2"
                         placeholder="Email"
-                        onChangeText={setEmail}
-                        value={email}
+                        onChangeText={setEmapid}
+                        value={empid}
                     />
                 </View>
                 <Text className="text-base pb-[2%] font-light">Password</Text>
