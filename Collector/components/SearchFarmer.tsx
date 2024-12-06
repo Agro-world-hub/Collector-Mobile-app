@@ -149,7 +149,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
 
     </View>
     <View className="flex-1 justify-end w-full">
-        <BottomNav navigation={navigation} activeTab={'Dashboard'} />
+        <BottomNav navigation={navigation} activeTab={'SearchFarmer'} />
     </View>
     </>
     
