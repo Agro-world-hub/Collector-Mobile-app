@@ -1,5 +1,5 @@
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Import the icon library
@@ -27,6 +27,18 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ navigation, route }) =>
     const [secureCurrent, setSecureCurrent] = useState(true);
     const [secureNew, setSecureNew] = useState(true);
     const [secureConfirm, setSecureConfirm] = useState(true);
+
+
+    useEffect(() => {
+     const fetchEmpid = async () => {
+        try {
+            const response = await axios.get(`${environment.API_BASE_URL}api/collection-officer/empid/`);
+            console.log('Empid response:', response.data);
+        } catch (error) {
+            Alert.alert('Error', 'Failed to fetch empid.');
+        }
+     }
+    }, []);
 
     const handleChangePassword = async () => {
         console.log('Empid:', empid);

@@ -58,7 +58,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
             }
     
             // Navigate to the appropriate screen based on password update requirement
-            if (passwordUpdateRequired === true) {
+            if (passwordUpdateRequired === 0) {
                 navigation.navigate('ChangePassword', { empid } as any);
             } else {
                 navigation.navigate('Dashboard');

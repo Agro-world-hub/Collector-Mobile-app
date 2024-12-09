@@ -24,6 +24,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
     const [companyName, setCompanyName] = useState<string>('');
+    const [empid, setEmpid] = useState<string>('');
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -36,6 +37,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
                     setFirstName(response.data.firstName);
                     setLastName(response.data.lastName);
                     setCompanyName(response.data.companyName);
+                    setEmpid(response.data.empid);
                 }
             } catch (error) {
                 console.error('Failed to fetch user profile:', error);
@@ -156,7 +158,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
             <View className="h-0.5 bg-black my-4" />
 
             {/* Change Password */}
-            <TouchableOpacity className="flex-row items-center py-3" onPress={() => navigation.navigate('ChangePassword')}>
+            <TouchableOpacity className="flex-row items-center py-3" onPress={() => navigation.navigate('ChangePassword', { empid } as any)}>
                 <Ionicons name="lock-closed-outline" size={20} color="black" />
                 <Text className="flex-1 text-lg ml-2">Change Password</Text>
             </TouchableOpacity>
