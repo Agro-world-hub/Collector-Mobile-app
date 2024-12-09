@@ -53,6 +53,7 @@
     "react-native": "0.74.5",
     "react-native-country-picker-modal": "^2.0.0",
     "react-native-dropdown-picker": "^5.4.6",
+    "react-native-dropdown-select-list": "^2.0.5",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-heroicons": "^4.0.0",

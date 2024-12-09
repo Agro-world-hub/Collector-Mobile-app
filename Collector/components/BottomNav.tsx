@@ -9,7 +9,7 @@ const BottomNav = ({ navigation, activeTab }: { navigation: any; activeTab: stri
   const tabs = [
     { name: 'QRScanner', icon: qrIcon, focusedIcon: qrIcon },  // You can replace these with focused images if you have them
     { name: 'Dashboard', icon: homeIcon, focusedIcon: homeIcon }, 
-    { name: 'SearchFarmer', icon: searchIcon, focusedIcon: searchIcon },
+    { name: 'SearchPriceScreen', icon: searchIcon, focusedIcon: searchIcon },
   ];
 
   return (
