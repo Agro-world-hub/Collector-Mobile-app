@@ -40,6 +40,10 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     const [image, setImage] = useState<any>(null);
     const [crops, setCrops] = useState<any[]>([]);
     const [selectedVarietyName, setSelectedVarietyName] = useState<string | null>(null);
+    const [donebutton1visibale, setdonebutton1visibale] = useState(true);
+    const [donebutton2visibale, setdonebutton2visibale] = useState(false);
+    const [donebutton2disabale, setdonebutton2disabale] = useState(false);
+    const [addbutton, setaddbutton] = useState(true);
    
     const route = useRoute<UnregisteredCropDetailsRouteProp>();
     const { userId } = route.params;
@@ -97,9 +101,6 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
         }
     };
     
-    
-
-   
 
     const handleVarietyChange = async (varietyId: string) => {
         setSelectedVariety(varietyId);  // Set the selected variety ID
@@ -131,13 +132,11 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                 return;  // Do not proceed with setting prices or calculating the total
             }
     
-            // Process the prices data (map it by grade)
             const prices = pricesResponse.data.reduce((acc: any, curr: any) => {
                 acc[curr.grade] = curr.price;
                 return acc;
             }, {});
     
-            // Set the unit prices
             setUnitPrices(prices);
             calculateTotal();  // Recalculate total after setting prices
         } catch (error) {
@@ -148,16 +147,12 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     };
     
     
-    
-    
-    
     const handleQuantityChange = (grade: string, value: string) => {
         const quantity = parseInt(value) || 0;
         setQuantities(prev => ({ ...prev, [grade]: quantity }));
-        calculateTotal(); // Calculate total after updating quantities
+        calculateTotal(); 
     };
     
-        // useEffect to recalculate total when unitPrices or quantities change
         useEffect(() => {
             calculateTotal();
         }, [unitPrices, quantities]);
@@ -169,21 +164,28 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                 return acc + (price * quantity);
             }, 0);
             setTotal(totalPrice);
+            if(totalPrice!=0){
+            setdonebutton2disabale(true);
+            setaddbutton(false);
+        }    
         };
-    
 
-      // Modify the new crop structure in the incrementCropCount function
-      const incrementCropCount = () => {
+      const incrementCropCount = async() => {
+        setaddbutton(true);
+        setdonebutton2disabale(false)
+        console.log('Incrementing crop count');
+        setdonebutton1visibale(false);
+        setdonebutton2visibale(true);
         if (!selectedCrop || !selectedVariety) {
             alert("Please select both a crop and a variety before adding.");
             return;
         }
     
         const newCrop = {
-            cropId: selectedCrop.id || '', // Include crop ID
-            varietyId: selectedVariety || '', // Include the varietyId for the selected variety
-            gradeAprice: unitPrices.A || 0,  // Updated field names for backend alignment
-            gradeAquan: quantities.A || 0,   // Updated field names for backend alignment
+            cropId: selectedCrop.id || '', 
+            varietyId: selectedVariety || '', 
+            gradeAprice: unitPrices.A || 0,  
+            gradeAquan: quantities.A || 0,   
             gradeBprice: unitPrices.B || 0,
             gradeBquan: quantities.B || 0,
             gradeCprice: unitPrices.C || 0,
@@ -191,14 +193,13 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
             image: image?.assets[0]?.base64 || null,
         };
     
-        // Append new crop to the existing array
         setCrops(prevCrops => {
             console.log('Adding new crop:', newCrop);
             return [...prevCrops, newCrop];
         });
     
-        // Reset input fields
         resetCropEntry();
+        setCropCount(prevCount => prevCount + 1);
     };
     
     
@@ -225,7 +226,9 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     };
     
     const handleSubmit = async () => {
+
         try {
+            
             // Retrieve the token from AsyncStorage
             const token = await AsyncStorage.getItem('token');
     
@@ -266,7 +269,47 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
         }
     };
     
+    const handelsubmit2 = async () => {
+        try {
+            // Retrieve the token from AsyncStorage
+            const token = await AsyncStorage.getItem('token');
     
+            // Construct the payload using the selected variety ID
+            const payload = {
+                farmerId: userId, // Farmer ID
+                crops: {
+                    varietyId: selectedVariety || '', // Include variety ID (ensure this is stored in the state for each crop)
+                    gradeAprice: unitPrices.A || 0,
+                    gradeAquan: quantities.A || 0,
+                    gradeBprice: unitPrices.B || 0,
+                    gradeBquan: quantities.B || 0,
+                    gradeCprice: unitPrices.C || 0,
+                    gradeCquan: quantities.C || 0,
+                    image: image?.assets[0]?.base64 || null, // Include image if provided
+                },
+            };
+    
+            console.log('Payload before sending:', payload);
+    
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+    
+            // Make the API call to submit crop data
+            await api.post('api/unregisteredfarmercrop/add-crops2', payload, config);
+    
+            console.log('Crops added successfully', payload);
+            alert('All crop details submitted successfully!');
+            
+            // Navigate to the ReportPage
+            navigation.navigate('ReportPage' as any, { userId });
+        } catch (error) {
+            console.error('Error submitting crop data:', error);
+            alert('Failed to submit crop details. Please try again.');
+        }
+    }
 
     return (
         <ScrollView className="flex-1 bg-gray-50 px-6 py-4">
@@ -363,13 +406,19 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                     />
                 </View>
 
-                <TouchableOpacity onPress={incrementCropCount} className="bg-green-500 rounded-md p-4 mt-2">
+                <TouchableOpacity onPress={incrementCropCount} disabled={addbutton==true} className={`bg-green-500 rounded-md p-4 mt-2 ${addbutton ? 'opacity-50' : ''}`}>
                     <Text className="text-center text-white font-semibold">Add more</Text>
                 </TouchableOpacity>
-
-                <TouchableOpacity onPress={handleSubmit} className="border border-black rounded-md p-4 mt-4">
+               {donebutton1visibale && 
+                <TouchableOpacity onPress={handelsubmit2} className="border border-black rounded-md p-4 mt-4">
                     <Text className="text-center text-black font-semibold">Done</Text>
                 </TouchableOpacity>
+                }
+                {donebutton2visibale &&
+                <TouchableOpacity onPress={handleSubmit} disabled={donebutton2disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton2disabale ? 'opacity-50' : ''}`}>
+                   <Text className="text-center text-black font-semibold">Done</Text>
+                </TouchableOpacity>
+                }  
             </View>
         </ScrollView>
     );

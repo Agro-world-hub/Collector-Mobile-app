@@ -1,9 +1,11 @@
-import React from 'react';
+import React,{useEffect, useState, useContext} from 'react';
 import { View, Text, Image, TouchableOpacity,  } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 const lg = require('../assets/images/lang1.png');
 import { RootStackParamList } from './types';
+import { LanguageContext } from '@/context/LanguageContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type LanuageScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Lanuage'>;
 
@@ -13,6 +15,33 @@ interface LanuageProps {
 
 const Lanuage: React.FC<LanuageProps> = ({ navigation }) => {
   
+  const { changeLanguage } = useContext(LanguageContext);
+
+
+  useEffect(() => {
+    const checkLanguagePreference = async () => {
+      try {
+        const storedLanguage = await AsyncStorage.getItem("@user_language");
+        if (storedLanguage) {
+          handleLanguageSelect(storedLanguage);
+        }
+      } catch (error) {
+        console.error("Failed to retrieve language preference:", error);
+      }
+    };
+
+    checkLanguagePreference();
+  }, []); // Empty dependency array means this effect runs only once
+
+  const handleLanguageSelect = async (language: string) => {
+    try {
+      await AsyncStorage.setItem("@user_language", language);
+      changeLanguage(language);
+      navigation.navigate("Login"); // Navigate to SignupForum
+    } catch (error) {
+      console.error("Failed to save language preference:", error);
+    }
+  };
 
   return (
     <View className="flex-1 bg-white items-center">
@@ -23,13 +52,13 @@ const Lanuage: React.FC<LanuageProps> = ({ navigation }) => {
 
       {/* TouchableOpacity Buttons */}
       <View className="flex-1 justify-center w-64 px-4 mt-0 pt-0">
-        <TouchableOpacity className="bg-[#2AAD7A] p-4 rounded-3xl mb-6" onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity className="bg-[#2AAD7A] p-4 rounded-3xl mb-6"  onPress={() => handleLanguageSelect("en")}>
           <Text className="text-white text-lg text-center">ENGLISH</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="bg-[#2AAD7A] p-4 rounded-3xl mb-6 "  onPress={() => navigation.navigate('SinChangePassword')}>
+        <TouchableOpacity className="bg-[#2AAD7A] p-4 rounded-3xl mb-6 " onPress={() => handleLanguageSelect("si")} >
           <Text className="text-white text-2xl text-center">සිංහල</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="bg-[#2AAD7A] p-4 rounded-3xl mb-12"  onPress={()=>navigation.navigate('TamChangePassword')}>
+        <TouchableOpacity className="bg-[#2AAD7A] p-4 rounded-3xl mb-12"  onPress={() => handleLanguageSelect("ta")}>
           <Text className="text-white text-2xl text-center ">தமிழ்</Text>
         </TouchableOpacity>
       </View>
@@ -38,3 +67,5 @@ const Lanuage: React.FC<LanuageProps> = ({ navigation }) => {
 };
 
 export default Lanuage;
+
+

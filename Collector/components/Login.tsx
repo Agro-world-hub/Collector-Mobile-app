@@ -7,6 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import environment from '../environment/environment';
+import { useTranslation } from "react-i18next";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -24,7 +25,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     const [empid, setEmapid] = useState('');
     const [password, setPassword] = useState('');
     const [secureTextEntry, setSecureTextEntry] = useState(true);
-
+    const { t } = useTranslation();
     const handleLogin = async () => {
         try {
             // Replace `api.post` with `fetch` and pass the request payload as JSON
@@ -74,7 +75,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
         <ScrollView className="flex-1 w-full bg-white">
             <View className="items-center pt-[10%]">
                 <Image source={loginImage} />
-                <Text className="font-bold text-2xl pt-[7%]">Welcome Back!</Text>
+                <Text className="font-bold text-2xl pt-[7%]">{t('SignIn.Wellcome')}</Text>
             </View>
 
             <View className="ml-[10%] mr-[10%] pt-[12%]">
@@ -83,7 +84,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
                     <Icon name="email" size={24} color="green" />
                     <TextInput
                         className="flex-1 h-[40px] text-base pl-2"
-                        placeholder="Email"
+                        placeholder="Employee ID"
                         onChangeText={setEmapid}
                         value={empid}
                     />

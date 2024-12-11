@@ -39,6 +39,7 @@ import Profile from '@/components/Profile';
 import * as ScreenCapture from 'expo-screen-capture';
 import ReportPage from '@/components/ReportPage';
 import SearchPriceScreen from '@/components/SearchPriceScreen';
+import { LanguageProvider } from '@/context/LanguageContext';
 
 
 
@@ -51,6 +52,7 @@ const index = () => {
     // ScreenCapture.usePreventScreenCapture()
 
   return (
+    <LanguageProvider>
     <GestureHandlerRootView style={{ flex: 1 }}>
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Splash" component={Splash} />
@@ -92,7 +94,8 @@ const index = () => {
       
       
     </Stack.Navigator>
-   </GestureHandlerRootView> 
+   </GestureHandlerRootView>
+    </LanguageProvider>
   )
 }
 
