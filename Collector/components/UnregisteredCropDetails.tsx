@@ -42,6 +42,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     const [selectedVarietyName, setSelectedVarietyName] = useState<string | null>(null);
     const [donebutton1visibale, setdonebutton1visibale] = useState(true);
     const [donebutton2visibale, setdonebutton2visibale] = useState(false);
+    const [donebutton1disabale, setdonebutton1disabale] = useState(true);
     const [donebutton2disabale, setdonebutton2disabale] = useState(false);
     const [addbutton, setaddbutton] = useState(true);
    
@@ -166,7 +167,9 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
             setTotal(totalPrice);
             if(totalPrice!=0){
             setdonebutton2disabale(true);
+            setdonebutton1disabale(false);
             setaddbutton(false);
+                
         }    
         };
 
@@ -228,7 +231,10 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     const handleSubmit = async () => {
 
         try {
-            
+            if (crops.length === 0) {
+                alert("Please add at least one crop to proceed.");
+                return;
+            }
             // Retrieve the token from AsyncStorage
             const token = await AsyncStorage.getItem('token');
     
@@ -410,7 +416,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                     <Text className="text-center text-white font-semibold">Add more</Text>
                 </TouchableOpacity>
                {donebutton1visibale && 
-                <TouchableOpacity onPress={handelsubmit2} className="border border-black rounded-md p-4 mt-4">
+                <TouchableOpacity onPress={handelsubmit2} disabled={donebutton1disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton1disabale ? 'opacity-50' : ''}`}>
                     <Text className="text-center text-black font-semibold">Done</Text>
                 </TouchableOpacity>
                 }
