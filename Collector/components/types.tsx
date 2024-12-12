@@ -34,5 +34,10 @@ export type RootStackParamList = {
     Profile:undefined;
     ReportPage:{userId:string};
     SearchPriceScreen:undefined;
+    PriceChart: {
+        varietyId: string;
+        cropName: string;
+        varietyName: string;
+      };
 
 };

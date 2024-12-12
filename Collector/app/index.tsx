@@ -39,6 +39,7 @@ import Profile from '@/components/Profile';
 import * as ScreenCapture from 'expo-screen-capture';
 import ReportPage from '@/components/ReportPage';
 import SearchPriceScreen from '@/components/SearchPriceScreen';
+import PriceChart from '@/components/PriceChart';
 import { LanguageProvider } from '@/context/LanguageContext';
 
 
@@ -89,7 +90,11 @@ const index = () => {
       <Stack.Screen name="ComplainPage" component={ComplainPage} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="ReportPage" component={ReportPage} />
-     <Stack.Screen name="SearchPriceScreen" component={SearchPriceScreen} /> 
+      <Stack.Screen name="SearchPriceScreen" component={SearchPriceScreen} /> 
+      <Stack.Screen name="PriceChart" component={PriceChart as any}/>
+     
+      
+      
 
       
       
