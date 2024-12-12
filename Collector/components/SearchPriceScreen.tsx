@@ -4,7 +4,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
-import environment from '../environment';
+import environment from '../environment/environment';
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,

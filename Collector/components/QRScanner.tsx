@@ -259,7 +259,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
       setTimeout(() => {
         setIsUnsuccessfulModalVisible(false);
         setErrorMessage(null);
-        navigation.navigate('SearchFarmer'); // Navigate to SearchFarmer
+        navigation.navigate('SearchFarmer' as any); // Navigate to SearchFarmer
       }, 5000);
     }
   };

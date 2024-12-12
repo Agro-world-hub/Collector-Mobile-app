@@ -246,7 +246,7 @@ import { View, Text, TextInput, TouchableOpacity, SafeAreaView, ActivityIndicato
 import axios from "axios";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types"; 
-import environment from "@/environment";
+import environment from '../environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const api = axios.create({
