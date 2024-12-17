@@ -9,7 +9,10 @@ import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import environment from '../environment/environment';
-
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp,
+  } from "react-native-responsive-screen";
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
@@ -318,13 +321,19 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     }
 
     return (
-        <ScrollView className="flex-1 bg-gray-50 px-6 py-4">
-            <View className="flex-row items-center mt-1 mb-6">
+        <ScrollView className="flex-1 bg-gray-50 px-6 py-4" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
+            {/* <View className="flex-row items-center mt-1 mb-6">
                 <TouchableOpacity onPress={() => navigation.goBack()} className="p-2">
                     <AntDesign name="left" size={24} color="#000" />
                 </TouchableOpacity>
                 <Text className="text-center ml-[26%] text-lg font-semibold">Fill Details</Text>
-            </View>
+            </View> */}
+                 <View className="flex-row items-center  mb-6">
+                      <TouchableOpacity onPress={() => navigation.goBack()} className="">
+                        <AntDesign name="left" size={24} color="#000" />
+                      </TouchableOpacity>
+                      <Text className="flex-1 text-center text-xl font-bold text-black">Fill Details</Text>
+                    </View>
 
             <Text className="text-center text-md font-medium mt-2">Crop {cropCount}</Text>
             <View className="mb-6 border-b p-2 border-gray-200 pb-6">

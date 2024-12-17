@@ -177,7 +177,7 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert, BackHandler, ScrollView } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import axios from 'axios';
 import environment from '../environment/environment';
@@ -186,6 +186,13 @@ import { RootStackParamList } from './types';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
+import FarmerQrSkeletonLoader from './Skeleton/FarmerQrSkeletonLoader';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { useFocusEffect } from '@react-navigation/native';
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 // Create API instance
 const api = axios.create({
@@ -206,6 +213,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
   const [farmerQRCode, setFarmerQRCode] = useState<string | null>(null);
   const [permissionsGranted, setPermissionsGranted] = useState(false);
   const [farmerPhone, setFarmerPhone] = useState('');
+  const [loading, setLoading] = useState<boolean>(true);
 
   const route = useRoute<FarmerQrRouteProp>();
   const { userId } = route.params;
@@ -217,21 +225,25 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
         const { firstName, lastName, NICnumber, qrCode, phoneNumber } = response.data;
         console.log(response.data);  // Log the response to check
 
-        setFarmerName(`${firstName} ${lastName}`);
-        setFarmerNIC(NICnumber);
+      
+          setFarmerName(`${firstName} ${lastName}`);
+          setFarmerNIC(NICnumber);
+          if (qrCode) {
+            console.log('QR Code Data:', qrCode);  // Log the qrCode Base64 string
+            setFarmerQRCode(qrCode);  // Set the QR code as a base64 string
+          } else {
+            console.log('No QR Code data found');
+          }
 
-        // Check qrCode data before proceeding
-        if (qrCode) {
-          console.log('QR Code Data:', qrCode);  // Log the qrCode Base64 string
-          setFarmerQRCode(qrCode);  // Set the QR code as a base64 string
-        } else {
-          console.log('No QR Code data found');
-        }
-
-        setFarmerPhone(phoneNumber);
+          setFarmerPhone(phoneNumber);
+          setTimeout(() => {
+          setLoading(false); // Stop loading after data is ready
+        }, 2000);
+      
       } catch (error) {
         Alert.alert('Error', 'Failed to fetch farmer details');
-      }
+        setLoading(false);
+      } 
     };
 
     fetchFarmerData();
@@ -299,20 +311,45 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
     }
   };
 
+//  if (loading) {
+//     return <FarmerQrSkeletonLoader />;
+//   }
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        navigation.navigate('Dashboard');
+        return true; // Prevent the default behavior
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+      };
+    }, [navigation])
+  );
+
+
   return (
-    <View className="flex-1 bg-white p-5">
+    <ScrollView className='bg-white ' style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}>
+    <View className="flex-1 " >
       {/* Header with Back Icon */}
-      <View className="flex-row items-center mb-4">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={require('../assets/images/back.png')} // Path to your back icon
-            style={{ width: 24, height: 24 }}
-          />
-        </TouchableOpacity>
-        <Text className="text-xl font-bold ml-[27%]">Farmer Details</Text>
-      </View>
+          <View className="flex-row items-center  mb-6">
+               <TouchableOpacity onPress={() => navigation.goBack()} className="">
+                 <AntDesign name="left" size={24} color="#000" />
+               </TouchableOpacity>
+               <Text className="flex-1 text-center text-xl font-bold text-black">Farmer Details</Text>
+             </View>
+
 
       {/* Farmer Name and NIC */}
+      {loading ? (
+        <View className="items-center mt-[10%]" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <FarmerQrSkeletonLoader />
+      </View>
+      
+      ) : (
+        <>
       <View className="items-center mt-[10%]">
         <Text className="text-lg font-bold mb-2">{farmerName}</Text>
         <Text className="text-gray-500 mb-9">{farmerNIC}</Text>
@@ -365,7 +402,10 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
           <Text className="text-sm text-cyan-50">Share</Text>
         </TouchableOpacity>
       </View>
+      </>
+      )}
     </View>
+    </ScrollView>
   );
 };
 

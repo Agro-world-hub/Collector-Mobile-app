@@ -177,7 +177,7 @@
 // export default QRScanner;
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, Dimensions, Modal, TouchableOpacity, Animated, Image } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, Animated, Image, Dimensions } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
@@ -215,7 +215,17 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
     };
 
     getCameraPermission();
-  }, []);
+
+    // Reset scanner when the screen is focused again
+    const unsubscribe = navigation.addListener('focus', () => {
+      setScanned(false); // Reset scanned state when the screen is focused
+      setErrorMessage(null); // Clear error message
+      setIsUnsuccessfulModalVisible(false); // Close the unsuccessful modal
+    });
+
+    // Cleanup the listener on component unmount
+    return unsubscribe;
+  }, [navigation]);
 
   // Handle QR scan
   const handleBarCodeScanned = async ({ data }: { type: string; data: string }) => {
@@ -242,7 +252,6 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
 
       // Navigate to the desired screen and pass the userId
       navigation.navigate('FarmerQr' as any, { userId });
-
     } catch (error) {
       console.error('QR Parsing Error:', error);
       setErrorMessage('The scanned QR code does not contain a valid user ID or is damaged.');
@@ -251,11 +260,11 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
       // Start the decreasing animation
       Animated.timing(unsuccessfulLoadingBarWidth, {
         toValue: 0,  // Animate to 0 (empty bar)
-        duration: 5000, // 3 seconds to empty the bar
+        duration: 5000, // 5 seconds to empty the bar
         useNativeDriver: false,  // We are animating width, not a transform property
       }).start();
 
-      // After 3 seconds (for the bar animation), close the modal and navigate
+      // After 5 seconds (for the bar animation), close the modal and navigate
       setTimeout(() => {
         setIsUnsuccessfulModalVisible(false);
         setErrorMessage(null);
@@ -307,7 +316,9 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1, position: 'relative' }}>
+      {/* Add a key prop to BarCodeScanner to force it to re-render when 'scanned' state changes */}
       <BarCodeScanner
+        key={scanned ? 'scanned' : 'reset'} // Force reset when 'scanned' is true
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={{ flex: 1 }}
       />
@@ -322,9 +333,23 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
           }}
         />
       </View>
+
+      {/* "Tap to Scan Again" button */}
       {scanned && (
-        <View style={{ padding: 16, alignItems: 'center' }}>
-          <Button title="Tap to Scan Again" onPress={() => setScanned(false)} />
+        <View style={{ position: 'absolute', bottom: 50, alignSelf: 'center' }}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#34D399',
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              borderRadius: 8,
+            }}
+            onPress={() => {
+              setScanned(false); // Reset the scanned state
+            }}
+          >
+            <Text style={{ color: '#fff', fontSize: 16 }}>Tap to Scan Again</Text>
+          </TouchableOpacity>
         </View>
       )}
 
@@ -344,11 +369,6 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
               />
             </View>
             <Text className="text-gray-700">Search by User’s NIC number</Text>
-
-            {/* Display error message
-            {errorMessage && (
-              <Text className="text-red-600 text-center mt-2">{errorMessage}</Text>
-            )} */}
 
             {/* Red Loading Bar */}
             <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
@@ -372,3 +392,4 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
 };
 
 export default QRScanner;
+

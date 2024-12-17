@@ -6,7 +6,10 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import environment from '../environment/environment';
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
@@ -116,9 +119,9 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
   
 
   return (
-    <View className="flex-1 bg-white">
-     <View className="flex-row items-center mt-4 mb-6">
-          <TouchableOpacity onPress={() => navigation.goBack()} className="p-2">
+    <View className="flex-1 bg-white" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
+     <View className="flex-row items-center  mb-6">
+          <TouchableOpacity onPress={() => navigation.goBack()} className="">
             <AntDesign name="left" size={24} color="#000" />
           </TouchableOpacity>
           <Text className="flex-1 text-center text-xl font-bold text-black">My Profile</Text>
@@ -136,7 +139,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
        
 
         {/* Profile Fields */}
-        <View className="space-y-4 p-5">
+        <View className="space-y-4 ">
           {/* First Name */}
           <View>
             <Text className="text-gray-500">First Name</Text>

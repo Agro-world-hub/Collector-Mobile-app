@@ -1,23 +1,29 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, Alert } from 'react-native';
-import QRCode from 'react-native-qrcode-svg';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import { captureRef } from 'react-native-view-shot';
-import * as FileSystem from 'expo-file-system';
-import * as MediaLibrary from 'expo-media-library';
-import * as Sharing from 'expo-sharing';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './types';
-import axios from 'axios';
-import environment from '../environment/environment';
-
+import React, { useRef, useState, useEffect } from "react";
+import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
+import QRCode from "react-native-qrcode-svg";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import { captureRef } from "react-native-view-shot";
+import * as FileSystem from "expo-file-system";
+import * as MediaLibrary from "expo-media-library";
+import * as Sharing from "expo-sharing";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "./types";
+import axios from "axios";
+import environment from "../environment/environment";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
 
-type OfficerQrNavigationProps = StackNavigationProp<RootStackParamList, 'OfficerQr'>;
+type OfficerQrNavigationProps = StackNavigationProp<
+  RootStackParamList,
+  "OfficerQr"
+>;
 
 interface OfficerQrProps {
   navigation: OfficerQrNavigationProps;
@@ -25,20 +31,20 @@ interface OfficerQrProps {
 
 const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
   const qrCodeRef = useRef<any>(null);
-  const [qrValue, setQrValue] = useState<string>('');
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
+  const [qrValue, setQrValue] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
   const companyName = "Your Company Name";
 
   const fetchRegistrationDetails = async () => {
     try {
-      const token = await AsyncStorage.getItem('token');
+      const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert('Error', 'No token found');
+        Alert.alert("Error", "No token found");
         return;
       }
 
-      const response = await api.get('api/collection-officer/user-profile', {
+      const response = await api.get("api/collection-officer/user-profile", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -46,18 +52,18 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
 
       const data = response.data;
       console.log(data);
-      if (data.status === 'success') {
+      if (data.status === "success") {
         const registrationDetails = data.user;
         const qrData = JSON.stringify(registrationDetails);
-        setQrValue(qrData); 
-        setFirstName(registrationDetails.firstNameEnglish || '');
-        setLastName(registrationDetails.lastNameEnglish || '');
+        setQrValue(qrData);
+        setFirstName(registrationDetails.firstNameEnglish || "");
+        setLastName(registrationDetails.lastNameEnglish || "");
       } else {
-        Alert.alert('Error', data.message);
+        Alert.alert("Error", data.message);
       }
     } catch (error) {
-      console.error('Error fetching registration details:', error);
-      Alert.alert('Error', 'Failed to fetch details');
+      console.error("Error fetching registration details:", error);
+      Alert.alert("Error", "Failed to fetch details");
     }
   };
 
@@ -70,13 +76,16 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
 
     try {
       const uri = await captureRef(qrCodeRef.current, {
-        format: 'png',
+        format: "png",
         quality: 1.0,
       });
 
       const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission Denied', 'Gallery access is required to save QR Code.');
+      if (status !== "granted") {
+        Alert.alert(
+          "Permission Denied",
+          "Gallery access is required to save QR Code."
+        );
         return;
       }
 
@@ -90,10 +99,10 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
 
       await MediaLibrary.saveToLibraryAsync(fileUri);
 
-      Alert.alert('Success', 'QR Code saved to gallery');
+      Alert.alert("Success", "QR Code saved to gallery");
     } catch (error) {
       console.error(error);
-      Alert.alert('Error', 'Failed to save QR Code');
+      Alert.alert("Error", "Failed to save QR Code");
     }
   };
 
@@ -102,38 +111,55 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
 
     try {
       const uri = await captureRef(qrCodeRef.current, {
-        format: 'png',
+        format: "png",
         quality: 1.0,
       });
 
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(uri, {
-          mimeType: 'image/png',
-          dialogTitle: 'Share QR Code',
+          mimeType: "image/png",
+          dialogTitle: "Share QR Code",
         });
       } else {
-        Alert.alert('Sharing Unavailable', 'Sharing is not available on this device.');
+        Alert.alert(
+          "Sharing Unavailable",
+          "Sharing is not available on this device."
+        );
       }
     } catch (error) {
       console.error(error);
-      Alert.alert('Error', 'Failed to share QR Code');
+      Alert.alert("Error", "Failed to share QR Code");
     }
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <View
+      className="flex-1 bg-white"
+      style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
+    >
       {/* Header */}
-      <View className="relative w-full h-16  flex-row items-center justify-between px-4">
+      {/* <View className="relative w-full h-16  flex-row items-center justify-between px-4">
         <TouchableOpacity onPress={() => navigation.navigate('EngProfile')}>
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
         <Text className="text-xl font-bold text-black">QR Code</Text>
         <View style={{ width: 24 }} />
+      </View> */}
+      <View className="flex-row items-center  mb-6">
+        <TouchableOpacity onPress={() => navigation.goBack()} className="">
+          <AntDesign name="left" size={24} color="#000" />
+        </TouchableOpacity>
+        <Text className="flex-1 text-center text-xl font-bold text-black">
+          QR Code
+        </Text>
       </View>
 
       {/* QR Code Display */}
       <View className="items-center  my-6">
-        <View ref={qrCodeRef} className="bg-white p-4 mt-[90px] rounded-xl border-2 border-[#2AAD7A]">
+        <View
+          ref={qrCodeRef}
+          className="bg-white p-4 mt-[90px] rounded-xl border-2 border-[#2AAD7A]"
+        >
           {qrValue ? (
             <QRCode value={qrValue} size={200} />
           ) : (
@@ -145,7 +171,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
       {/* Profile Info */}
       <View className="flex-row items-center justify-center mb-4 px-4">
         <Image
-          source={require('../assets/images/profile.png')}
+          source={require("../assets/images/profile.png")}
           className="w-20 h-20 rounded-full border-2 border-gray-300 mr-4"
         />
         <View>

@@ -6,7 +6,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import environment from '../environment/environment';
 import BottomNav from './BottomNav';
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import AntDesign from "react-native-vector-icons/AntDesign";
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
@@ -75,9 +79,9 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
 
   return (
     <>
-    <View className="flex-1 p-3 bg-white">
+    <View className="flex-1  bg-white" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
 
-      <View className="flex-row items-center mb-4">
+      {/* <View className="flex-row items-center mb-4">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
             source={require('../assets/images/back.png')} // Path to your back icon
@@ -88,7 +92,14 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
 
         <View style={{ width: 24 }} />
        
-      </View>
+      </View> */}
+                <View className="flex-row items-center  mb-6">
+                     <TouchableOpacity onPress={() => navigation.goBack()} className="">
+                       <AntDesign name="left" size={24} color="#000" />
+                     </TouchableOpacity>
+                     <Text className="flex-1 text-center text-xl font-bold text-black">Search</Text>
+                   </View>
+      
 
       {/* Search Form */}
       <View className="p-4">
@@ -147,9 +158,6 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
       </View>
 
 
-    </View>
-    <View className="flex-1 justify-end w-full">
-        <BottomNav navigation={navigation} activeTab={'SearchFarmer'} />
     </View>
     </>
     

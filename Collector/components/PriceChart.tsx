@@ -242,12 +242,17 @@
 
 // export default PriceChart;
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, SafeAreaView, ActivityIndicator, Image, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, SafeAreaView, ActivityIndicator, Image, Alert, ScrollView } from "react-native";
 import axios from "axios";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types"; 
 import environment from '../environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -358,20 +363,17 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
+    <SafeAreaView className="flex-1 bg-gray-100" >
       {/* Header */}
-      <View className="bg-[#2AAD7A] h-20 flex-row items-center px-4">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={require('../assets/images/back2.png')} 
-            style={{ width: 34, height: 24 }}
-          />
-        </TouchableOpacity>
-        <Text className="text-white text-lg font-bold text-center mr-[15%] flex-1">Price Chart</Text>
+      <View className="bg-[#2AAD7A] h-20 flex-row items-center " style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
+              <TouchableOpacity onPress={() => navigation.goBack()} className="">
+                 <AntDesign name="left" size={24} color="#fff" />
+               </TouchableOpacity>
+        <Text className="text-white text-lg font-bold text-center  flex-1">Price Chart</Text>
       </View>
 
       {/* Content */}
-      <View className="flex-1 p-8 bg-white">
+      <ScrollView className="flex-1" style={{ paddingHorizontal: wp(8), paddingVertical: hp(8) }}>
         {/* Crop Name */}
         <View className="mb-4">
           <Text className="text-gray-600 text-sm mb-1">Crop Name</Text>
@@ -433,7 +435,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
 
         {/* Request/Submit Button */}
         <TouchableOpacity
-          className="bg-[#2AAD7A] rounded-[45px] py-3 h-12 mt-6 w-3/4 mx-auto"
+          className="bg-[#2AAD7A] rounded-[45px] py-3 h-12 mt-4 w-3/4 mx-auto"
           onPress={handleButtonClick}
         >
           <Text className="text-center text-base text-white font-semibold">
@@ -450,7 +452,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
             <Text className="text-gray-700 text-base font-semibold">Go Back</Text>
           </TouchableOpacity>
         )}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

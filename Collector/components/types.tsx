@@ -39,5 +39,5 @@ export type RootStackParamList = {
         cropName: string;
         varietyName: string;
       };
-
+    Main:undefined;
 };
