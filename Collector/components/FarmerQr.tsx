@@ -377,7 +377,8 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
           className="border border-gray-400 w-[300px] mt-4 py-3 rounded-full items-center" 
           onPress={() => navigation.navigate('ComplainPage' as any, {
             farmerName,
-            farmerPhone
+            farmerPhone,
+            userId
           })}
         >
           <Text className="text-gray-700 text-lg">Report a Complain</Text>
