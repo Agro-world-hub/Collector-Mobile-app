@@ -40,4 +40,8 @@ export type RootStackParamList = {
         varietyName: string;
       };
     Main:undefined;
+    CollectionOfficersList:undefined;
+    OfficerSummary: { officerId: string; officerName: string };
+    ReportGenerator:undefined;
+
 };

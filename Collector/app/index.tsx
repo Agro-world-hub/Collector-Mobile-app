@@ -153,7 +153,9 @@ import { LanguageProvider } from '@/context/LanguageContext';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import BottomNav from '@/components/BottomNav';
-
+import CollectionOfficersList from '@/components/ManagerScreens/CollectionOfficersList';
+import OfficerSummary from '@/components/ManagerScreens/OfficerSummary';
+import ReportGenerator from '@/components/ManagerScreens/ReportGenerator';
 
 
 
@@ -225,7 +227,10 @@ const index = () => {
       <Stack.Screen name="ReportPage" component={ReportPage} />
       {/* <Stack.Screen name="SearchPriceScreen" component={SearchPriceScreen} />  */}
       {/* <Stack.Screen name="PriceChart" component={PriceChart as any}/> */}
-     
+      <Stack.Screen name="CollectionOfficersList" component={CollectionOfficersList }/>
+      <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} />
+      <Stack.Screen name="ReportGenerator" component={ReportGenerator} />
+      
       <Stack.Screen name='Main' component={MainTabNavigator} options={{ headerShown: false }} />
       
 

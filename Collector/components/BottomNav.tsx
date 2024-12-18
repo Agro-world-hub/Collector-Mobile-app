@@ -102,7 +102,7 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
       { name: "Dashboard", icon: homeIcon, focusedIcon: homeIcon },
       { name: "QRScanner", icon: qrIcon, focusedIcon: qrIcon },
       { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
-      { name: "AdminPanel", icon: adminIcon, focusedIcon: adminIcon },
+      { name: "CollectionOfficersList", icon: adminIcon, focusedIcon: adminIcon },
     ];
   }
 
