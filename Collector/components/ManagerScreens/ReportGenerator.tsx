@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
+import { handleGeneratePDF } from './ReportPDFGenerator';
+import * as Sharing from 'expo-sharing';
+
 
 type ReportGeneratorNavigationProp = StackNavigationProp<RootStackParamList, 'ReportGenerator'>;
 
@@ -17,8 +20,33 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation }) => {
   const [reportGenerated, setReportGenerated] = useState(false);
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
+  
 
-  const handleGenerate = () => setReportGenerated(true);
+  const handleGenerate = async () => {
+    const fileUri = await handleGeneratePDF();
+    if (fileUri) {
+      Alert.alert('Success', 'PDF Generated Successfully!');
+      setReportGenerated(true);
+    } else {
+      Alert.alert('Error', 'Failed to generate PDF');
+    }
+  };
+
+  const handleDownload = async () => {
+    const fileUri = await handleGeneratePDF();
+    if (fileUri) {
+      Alert.alert('Downloaded', `File saved at: ${fileUri}`);
+    }
+  };
+
+  const handleShare = async () => {
+    const fileUri = await handleGeneratePDF();
+    if (fileUri && (await Sharing.isAvailableAsync())) {
+      await Sharing.shareAsync(fileUri, { mimeType: 'application/pdf' });
+    } else {
+      Alert.alert('Error', 'Sharing is not available on this device.');
+    }
+  };
 
   const handleReset = () => {
     setStartDate(undefined);
@@ -119,11 +147,11 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation }) => {
 
           {/* Download and Share Buttons */}
           <View className="flex-row space-x-8">
-            <TouchableOpacity className="bg-gray-200 p-5 rounded-lg items-center">
+            <TouchableOpacity  onPress={handleDownload} className="bg-[#A4A4A4] p-5 rounded-lg items-center">
               <Ionicons name="download" size={24} color="#6B7280" />
               <Text className="text-sm text-gray-600 mt-1">Download</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="bg-gray-200 p-5 rounded-lg items-center">
+            <TouchableOpacity onPress={handleShare} className="bg-[#A4A4A4] p-5 rounded-lg items-center">
               <Ionicons name="share-social" size={24} color="#6B7280" />
               <Text className="text-sm text-gray-600 mt-1">Share</Text>
             </TouchableOpacity>
