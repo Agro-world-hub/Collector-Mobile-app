@@ -120,7 +120,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
   
       let response;
   
-      if (userRole === "Collection Officer") {
+      if (userId === 0) {
         response = await api.post(
           "api/auth/officer-complaint", // Adjust this endpoint based on your backend route
           {
