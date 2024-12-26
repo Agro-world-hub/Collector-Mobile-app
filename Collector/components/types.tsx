@@ -46,7 +46,8 @@ export type RootStackParamList = {
       officerName: string;
       phoneNumber1: string;
       phoneNumber2: string;
+      collectionOfficerId:number;
     };
-    ReportGenerator:undefined;
+    ReportGenerator:{officerId:string,collectionOfficerId:number};
 
 };

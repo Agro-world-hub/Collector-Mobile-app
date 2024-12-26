@@ -1,9 +1,116 @@
 // ReportPDFGenerator.ts
 import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
+import axios from 'axios';
+import environment from "@/environment/environment";
 
-export const handleGeneratePDF = async () => {
+
+//sending the correct date format in to the pdf(correcting the date in the response)
+const normalizeResponseDate = (dateString: string): string => {
+  const [month, day, year] = dateString.split('/');
+  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`; // Convert to YYYY-MM-DD
+};
+
+interface PaymentDataItem {
+  date: string;
+  TCount: number;
+  total: number;
+}
+
+
+// sending the correct date form to the backend
+const normalizeDate = (dateString: string): string => {
+  // Replace slashes with dashes to normalize the format
+  return dateString.replace(/\//g, '-');
+};
+
+const validateAndFormatDate = (dateString: string): string | null => {
+  const normalizedDate = normalizeDate(dateString);
+  const date = new Date(normalizedDate);
+  if (isNaN(date.getTime())) {
+    console.error(`Invalid date: ${dateString}`);
+    return null;
+  }
+  return date.toISOString().split('T')[0]; // Format as 'YYYY-MM-DD'
+};
+
+
+//generating the report id
+const reportCounters: { [key: string]: number } = {}; 
+
+const generateReportId = (officerId: string): string => {
+  // Initialize the counter for the officer if not already present
+  if (!reportCounters[officerId]) {
+    reportCounters[officerId] = 1;
+  } else {
+    reportCounters[officerId] += 1; // Increment the counter
+  }
+
+  // Format the report ID
+  const paddedCount = reportCounters[officerId].toString().padStart(3, '0'); // Pads the count to 3 digits
+  return `${officerId}M${paddedCount}`;
+};
+
+export const handleGeneratePDF = async (
+  fromDate: string,
+  toDate: string,
+  officerId: string,
+  collectionOfficerId: number
+) => {
   try {
+    const formattedFromDate = validateAndFormatDate(fromDate);
+    const formattedToDate = validateAndFormatDate(toDate);
+    
+    if (!formattedFromDate || !formattedToDate) {
+      console.error('Invalid date input. Unable to generate PDF.');
+      return null;
+    }
+
+    // Generate the report ID
+    const reportId = generateReportId(officerId);
+
+    // Fetch officer details
+    const officerResponse = await axios.get(`${environment.API_BASE_URL}api/collection-manager/employee/${officerId}`);
+    if (officerResponse.data.status !== 'success') {
+      console.error('Failed to fetch officer details:', officerResponse.data.message);
+      return null;
+    }
+    const { firstName, lastName, jobRole } = officerResponse.data.data;
+
+    // Fetch farmer payment summary with correctly formatted dates
+    const farmerPaymentsResponse = await axios.get(
+      `${environment.API_BASE_URL}api/collection-manager/farmer-payments-summary`, {
+        params: { collectionOfficerId, fromDate: formattedFromDate, toDate: formattedToDate },
+      }
+    );
+
+    if (farmerPaymentsResponse.data.status !== 'success') {
+      console.error('Failed to fetch farmer payments summary:', farmerPaymentsResponse.data.message);
+      return null;
+    }
+
+    const paymentData: PaymentDataItem[] = farmerPaymentsResponse.data.data;
+
+    // Normalize and format the response data
+    const formattedData = paymentData.map((item: PaymentDataItem) => ({
+      ...item,
+      date: normalizeResponseDate(item.date),
+    }));
+
+    console.log('Formatted Payment Data:', formattedData);
+
+    // Calculate totals
+    const totalWeight = paymentData.reduce((sum: number, item: { total: number }) => sum + item.total, 0);
+    const totalFarmers = paymentData.reduce((sum: number, item: { TCount: number }) => sum + item.TCount, 0);
+
+   // Generate table rows
+   const tableRows = formattedData.length
+   ? formattedData.map(
+       item =>
+         `<tr><td>${item.date}</td><td>${item.total}kg</td><td>${item.TCount}</td></tr>`
+     ).join('')
+   : `<tr><td colspan="3" style="text-align: center; font-style: italic;">No transactions occurred between ${fromDate} and ${toDate}</td></tr>`;
+
   const htmlContent = `
       <!DOCTYPE html>
       <html lang="en">
@@ -76,30 +183,25 @@ export const handleGeneratePDF = async () => {
       <body>
         <div class="container">
           <h1>Collection Officer Report</h1>
-          <p style="text-align: center; font-weight: bold;">ID NO : COO00127M012</p>
+          <p style="text-align: center; font-weight: bold;">ID NO : ${reportId}</p>
           
           <div class="header">
-            <div class="header-item"><span>From</span><span>2024/01/05</span></div>
-            <div class="header-item"><span>To</span><span>2024/01/10</span></div>
-            <div class="header-item"><span>EMP ID</span><span>COO0125</span></div>
-            <div class="header-item"><span>Role</span><span>Collection Officer</span></div>
-            <div class="header-item"><span>First Name</span><span>Sam</span></div>
-            <div class="header-item"><span>Last Name</span><span>Perera</span></div>
-            <div class="header-item"><span>Weight</span><span>255kg</span></div>
-            <div class="header-item"><span>Farmers</span><span>56</span></div>
+            <div class="header-item"><span>From</span><span>${fromDate}</span></div>
+            <div class="header-item"><span>To</span><span>${toDate}</span></div>
+            <div class="header-item"><span>EMP ID</span><span>${officerId}</span></div>
+             <div class="header-item"><span>Role</span><span>${jobRole}</span></div>
+            <div class="header-item"><span>First Name</span><span>${firstName}</span></div>
+            <div class="header-item"><span>Last Name</span><span>${lastName}</span></div>
+            <div class="header-item"><span>Weight</span><span>${totalWeight}kg</span></div>
+            <div class="header-item"><span>Farmers</span><span>${totalFarmers}</span></div>
           </div>
 
           <table>
-            <tr><th>Date</th><th>Total Weight</th><th>Total Farmers</th></tr>
-            <tr><td>2024/01/05</td><td>97kg</td><td>17</td></tr>
-            <tr><td>2024/01/06</td><td>88kg</td><td>11</td></tr>
-            <tr><td>2024/01/07</td><td>55kg</td><td>08</td></tr>
-            <tr><td>2024/01/08</td><td>-No Data-</td><td>-No Data-</td></tr>
-            <tr><td>2024/01/09</td><td>80kg</td><td>20</td></tr>
-            <tr><td>2024/01/10</td><td>40kg</td><td>05</td></tr>
+          <tr><th>Date</th><th>Total Weight</th><th>Total Farmers</th></tr>
+          ${tableRows}
           </table>
 
-          <div class="footer">This report is generated on 2024/02/01 at 11.45 AM</div>
+           <div class="footer">This report is generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</div>
         </div>
       </body>
       </html>
@@ -111,7 +213,7 @@ export const handleGeneratePDF = async () => {
 });
 
 // Move the file to app document directory for easier access
-const fileUri = `${FileSystem.documentDirectory}report.pdf`;
+const fileUri = `${FileSystem.documentDirectory}report_${officerId}.pdf`;
 await FileSystem.moveAsync({
   from: uri,
   to: fileUri,

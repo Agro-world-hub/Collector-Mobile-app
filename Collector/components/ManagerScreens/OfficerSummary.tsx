@@ -20,7 +20,8 @@ interface OfficerSummaryProps {
 }
 
 const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) => {
-  const { officerId, officerName, phoneNumber1, phoneNumber2 } = route.params;
+  const { officerId, officerName, phoneNumber1, phoneNumber2,collectionOfficerId } = route.params;
+  console.log(route.params);
 
   const handleDial = (phoneNumber: string) => {
     const phoneUrl = `tel:${phoneNumber}`;
@@ -90,7 +91,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
           )}
 
           {/* Report Button */}
-          <TouchableOpacity className="items-center mt-5" onPress={() => navigation.navigate('ReportGenerator')}>
+          <TouchableOpacity className="items-center mt-5" onPress={() => navigation.navigate('ReportGenerator' as any,{ officerId,collectionOfficerId })}>
             <View className="w-12 h-12 bg-[#FFFFFF66] rounded-full items-center justify-center shadow-md">
               <MaterialIcons name="description" size={24} color="white" />
             </View>

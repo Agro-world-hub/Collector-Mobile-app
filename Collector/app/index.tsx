@@ -229,7 +229,7 @@ const index = () => {
       {/* <Stack.Screen name="PriceChart" component={PriceChart as any}/> */}
       <Stack.Screen name="CollectionOfficersList" component={CollectionOfficersList }/>
       <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} />
-      <Stack.Screen name="ReportGenerator" component={ReportGenerator} />
+      <Stack.Screen name="ReportGenerator" component={ReportGenerator as any} />
       
       <Stack.Screen name='Main' component={MainTabNavigator} options={{ headerShown: false }} />
       

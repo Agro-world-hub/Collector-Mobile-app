@@ -6,41 +6,108 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
 import { handleGeneratePDF } from './ReportPDFGenerator';
 import * as Sharing from 'expo-sharing';
+import { RouteProp } from '@react-navigation/native';
+import * as MediaLibrary from 'expo-media-library';
+import {  Platform } from 'react-native';
+
 
 
 type ReportGeneratorNavigationProp = StackNavigationProp<RootStackParamList, 'ReportGenerator'>;
 
+type ReportGeneratorRouteProp = RouteProp<RootStackParamList, 'ReportGenerator'>;
+
 interface ReportGeneratorProps {
   navigation: ReportGeneratorNavigationProp;
+  route: ReportGeneratorRouteProp;
 }
 
-const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation }) => {
+const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) => {
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [reportGenerated, setReportGenerated] = useState(false);
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
+  const [generatedReportId, setGeneratedReportId] = useState<string | null>(null);
+  
+  const { officerId,collectionOfficerId } = route.params;
+  console.log(officerId);
   
 
   const handleGenerate = async () => {
-    const fileUri = await handleGeneratePDF();
+    if (!startDate || !endDate) {
+      Alert.alert('Error', 'Please select both start and end dates.');
+      return;
+    }
+  
+    const fileUri = await handleGeneratePDF(formatDate(startDate), formatDate(endDate), officerId,collectionOfficerId);
     if (fileUri) {
-      Alert.alert('Success', 'PDF Generated Successfully!');
+      const reportIdMatch = fileUri.match(/report_(.+)\.pdf/);
+      const reportId = reportIdMatch ? reportIdMatch[1] : null;
+
+      setGeneratedReportId(reportId); // Store the report ID to display in the UI
       setReportGenerated(true);
+      Alert.alert('Success', 'PDF Generated Successfully!');
     } else {
       Alert.alert('Error', 'Failed to generate PDF');
     }
   };
-
+  
   const handleDownload = async () => {
-    const fileUri = await handleGeneratePDF();
-    if (fileUri) {
-      Alert.alert('Downloaded', `File saved at: ${fileUri}`);
+    if (!startDate || !endDate) {
+      Alert.alert('Error', 'Please select both start and end dates.');
+      return;
+    }
+  
+    try {
+      // Request permissions
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission Denied', 'You need to grant storage permissions to save the file.');
+        return;
+      }
+  
+      // Generate the PDF
+      const fileUri = await handleGeneratePDF(
+        formatDate(startDate),
+        formatDate(endDate),
+        officerId,
+        collectionOfficerId
+      );
+  
+      if (!fileUri) {
+        Alert.alert('Error', 'Failed to generate PDF.');
+        return;
+      }
+  
+      if (Platform.OS === 'android') {
+        // Save to Media Library (Downloads folder)
+        const asset = await MediaLibrary.createAssetAsync(fileUri);
+        const album = await MediaLibrary.getAlbumAsync('Download');
+  
+        if (!album) {
+          await MediaLibrary.createAlbumAsync('Download', asset, false);
+        } else {
+          await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+        }
+  
+        Alert.alert('Success', 'File saved to Downloads folder.');
+      } else {
+        // For iOS, inform the user about the app's document directory
+        Alert.alert('Success', `File saved to app's directory: ${fileUri}`);
+      }
+    } catch (error) {
+      console.error('Failed to save file:', error);
+      Alert.alert('Error', 'An error occurred while saving the file.');
     }
   };
-
+  
   const handleShare = async () => {
-    const fileUri = await handleGeneratePDF();
+    if (!startDate || !endDate) {
+      Alert.alert('Error', 'Please select both start and end dates.');
+      return;
+    }
+  
+    const fileUri = await handleGeneratePDF(formatDate(startDate), formatDate(endDate), officerId,collectionOfficerId);
     if (fileUri && (await Sharing.isAvailableAsync())) {
       await Sharing.shareAsync(fileUri, { mimeType: 'application/pdf' });
     } else {
@@ -82,7 +149,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-6 left-4">
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
-        <Text className="text-lg font-bold text-gray-800">COO0127</Text>
+        <Text className="text-lg font-bold text-gray-800">{officerId}</Text>
       </View>
 
       {/* Form Section */}
@@ -142,18 +209,27 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation }) => {
           <View className="w-24 h-24 bg-orange-100 rounded-full items-center justify-center mb-4">
             <Ionicons name="document-text-outline" size={50} color="#F59E0B" />
           </View>
-          <Text className="text-lg font-semibold text-gray-800">ID NO : COO0127M012</Text>
+          <Text className="text-lg font-semibold text-gray-800">ID NO : {generatedReportId}</Text>
           <Text className="text-sm text-gray-500 italic mb-6">- Report has been generated -</Text>
 
           {/* Download and Share Buttons */}
           <View className="flex-row space-x-8">
-            <TouchableOpacity  onPress={handleDownload} className="bg-[#A4A4A4] p-5 rounded-lg items-center">
-              <Ionicons name="download" size={24} color="#6B7280" />
-              <Text className="text-sm text-gray-600 mt-1">Download</Text>
+            <TouchableOpacity
+              onPress={handleDownload}
+              className="bg-[#A4A4A4] rounded-lg items-center justify-center"
+              style={{ width: 100, height: 80 }} // Explicit width and height
+            >
+              <Ionicons name="download" size={24} color="white" />
+              <Text className="text-sm text-white mt-1">Download</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleShare} className="bg-[#A4A4A4] p-5 rounded-lg items-center">
-              <Ionicons name="share-social" size={24} color="#6B7280" />
-              <Text className="text-sm text-gray-600 mt-1">Share</Text>
+
+            <TouchableOpacity
+              onPress={handleShare}
+              className="bg-[#A4A4A4] rounded-lg items-center justify-center"
+              style={{ width: 100, height: 80 }} // Explicit width and height
+            >
+              <Ionicons name="share-social" size={24} color="white" />
+              <Text className="text-sm text-white mt-1">Share</Text>
             </TouchableOpacity>
           </View>
         </View>

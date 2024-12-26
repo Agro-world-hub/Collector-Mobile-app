@@ -23,6 +23,8 @@ interface Officer {
   fullName: string;
   phoneNumber1: string;
   phoneNumber2: string;
+  collectionOfficerId:number;
+  
 }
 
 const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigation }) => {
@@ -43,6 +45,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
 
       if (response.data.status === 'success') {
         setOfficers(response.data.data);
+        console.log(response.data.data)
       } else {
         console.error('Failed to fetch officers:', response.data.message);
       }
@@ -66,6 +69,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
           officerName: item.fullName,
           phoneNumber1: item.phoneNumber1,
           phoneNumber2: item.phoneNumber2,
+          collectionOfficerId:item.collectionOfficerId,
         })
       }
     >
