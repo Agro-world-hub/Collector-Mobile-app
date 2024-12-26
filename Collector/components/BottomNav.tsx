@@ -53,7 +53,7 @@
 // export default BottomNav;
 
 import React, {useState, useEffect} from 'react';
-import { View, TouchableOpacity, Image,  Animated } from 'react-native';
+import { View, TouchableOpacity, Image,  Animated, Keyboard  } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const homeIcon = require('../assets/images/homee.png');
@@ -68,6 +68,21 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
     { name: 'SearchPriceScreen', icon: searchIcon, focusedIcon: searchIcon },
   ];
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true);
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -106,8 +121,9 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
     ];
   }
 
+  if (isKeyboardVisible) return null;
   return (
-    <View className="flex-row justify-between items-center bg-[#21202B] py-3 px-6 rounded-t-3xl w-full">
+    <View className="flex-row  justify-between items-center bg-[#21202B] py-3 px-6 rounded-t-3xl w-full">
       {tabs.map((tab, index) => {
         // Check if the current tab is focused
         const isFocused = currentTabName === tab.name;

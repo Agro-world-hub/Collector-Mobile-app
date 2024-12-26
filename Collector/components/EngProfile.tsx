@@ -15,10 +15,13 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import environment from "../environment/environment";
 import {
-    widthPercentageToDP as wp,
-    heightPercentageToDP as hp,
-  } from "react-native-responsive-screen";
-  import AntDesign from "react-native-vector-icons/AntDesign";
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import { useTranslation } from "react-i18next";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+
 type EngProfileNavigationProp = StackNavigationProp<
   RootStackParamList,
   "EngProfile"
@@ -41,6 +44,24 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const [lastName, setLastName] = useState<string>("");
   const [companyName, setCompanyName] = useState<string>("");
   const [empid, setEmpid] = useState<string>("");
+  const [selectedComplaint, setSelectedComplaint] = useState<string | null>(
+    null
+  );
+  const [isComplaintDropdownOpen, setComplaintDropdownOpen] =
+    useState<boolean>(false);
+  const { t } = useTranslation();
+
+  const complaintOptions = [t("Report Complaint"), t("View Complaint History")];
+
+  const handleComplaintSelect = (complaint: string) => {
+    setComplaintDropdownOpen(false);
+
+    if (complaint === t("Report Complaint")) {
+      navigation.navigate("ComplainPage" as any, { userId: 0 });
+    } else if (complaint === t("View Complaint History")) {
+      navigation.navigate("ComplainHistory");
+    }
+  };
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -100,11 +121,14 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   };
 
   return (
-    <View className="flex-1 bg-white " style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
+    <View
+      className="flex-1 bg-white "
+      style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
+    >
       {/* Back Button */}
       <TouchableOpacity onPress={() => navigation.goBack()} className="">
-          <AntDesign name="left" size={24} color="#000502" />
-        </TouchableOpacity>
+        <AntDesign name="left" size={24} color="#000502" />
+      </TouchableOpacity>
 
       {/* Profile Card */}
       <View className="flex-row items-center p-2 mt-4  mb-4">
@@ -124,128 +148,186 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       </View>
 
       <View className="flex-1 p-4">
+        {/* Horizontal Line */}
+        <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
-      {/* Horizontal Line */}
-      <View className="h-0.5 bg-black my-2 mt-5" />
+        {/* Language Settings */}
+        <TouchableOpacity
+          onPress={() => setLanguageDropdownOpen(!isLanguageDropdownOpen)}
+          className="flex-row items-center py-3"
+        >
+          <Ionicons name="globe-outline" size={20} color="black" />
+          <Text className="flex-1 text-lg ml-2">Language Settings</Text>
+          <Ionicons
+            name={isLanguageDropdownOpen ? "chevron-up" : "chevron-down"}
+            size={20}
+            color="black"
+          />
+        </TouchableOpacity>
 
-      {/* Language Settings */}
-      <TouchableOpacity
-        onPress={() => setLanguageDropdownOpen(!isLanguageDropdownOpen)}
-        className="flex-row items-center py-3"
-      >
-        <Ionicons name="globe-outline" size={20} color="black" />
-        <Text className="flex-1 text-lg ml-2">Language Settings</Text>
-        <Ionicons
-          name={isLanguageDropdownOpen ? "chevron-up" : "chevron-down"}
-          size={20}
-          color="black"
-        />
-      </TouchableOpacity>
-
-      {isLanguageDropdownOpen && (
-        <View className="pl-8">
-          {["English", "Tamil", "Sinhala"].map((language) => (
-            <TouchableOpacity
-              key={language}
-              onPress={() => handleLanguageSelect(language)}
-              className={`flex-row items-center py-2 px-4 rounded-lg my-1 ${selectedLanguage === language ? "bg-green-100" : "bg-transparent"}`}
-            >
-              <Text
-                className={`text-base ${selectedLanguage === language ? "text-black" : "text-gray-500"}`}
+        {isLanguageDropdownOpen && (
+          <View className="pl-8">
+            {["English", "Tamil", "Sinhala"].map((language) => (
+              <TouchableOpacity
+                key={language}
+                onPress={() => handleLanguageSelect(language)}
+                className={`flex-row items-center py-2 px-4 rounded-lg my-1 ${selectedLanguage === language ? "bg-green-100" : "bg-transparent"}`}
               >
-                {language}
-              </Text>
-              {selectedLanguage === language && (
-                <View className="absolute right-4">
-                  <Ionicons name="checkmark" size={20} color="black" />
+                <Text
+                  className={`text-base ${selectedLanguage === language ? "text-black" : "text-gray-500"}`}
+                >
+                  {language}
+                </Text>
+                {selectedLanguage === language && (
+                  <View className="absolute right-4">
+                    <Ionicons name="checkmark" size={20} color="black" />
+                  </View>
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
+        {/* Horizontal Line */}
+        <View className="h-0.5 bg-[#D2D2D2] my-4" />
+
+        {/* View My QR Code */}
+        <TouchableOpacity
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            paddingVertical: 12,
+          }}
+          onPress={() => navigation.navigate("OfficerQr")}
+        >
+          <Ionicons name="qr-code" size={20} color="black" />
+          <Text className="flex-1 text-lg ml-2">View My QR Code</Text>
+        </TouchableOpacity>
+
+        {/* Horizontal Line */}
+        <View className="h-0.5 bg-[#D2D2D2] my-4" />
+
+        {/* Change Password */}
+        <TouchableOpacity
+          className="flex-row items-center py-3"
+          onPress={() =>
+            navigation.navigate("ChangePassword", { empid } as any)
+          }
+        >
+          <Ionicons name="lock-closed-outline" size={20} color="black" />
+          <Text className="flex-1 text-lg ml-2">Change Password</Text>
+        </TouchableOpacity>
+
+        {/* Horizontal Line */}
+
+        {/* <View className="h-0.5 bg-[#D2D2D2] my-4" />
+
+<TouchableOpacity
+  className="flex-row items-center py-3"
+  onPress={() => setModalVisible(true)}
+>
+  <Ionicons name="person" size={20} color="black" />
+  <Text className="flex-1 text-lg ml-2">
+    {t("Profile.PlantCareHelp")}
+  </Text>
+</TouchableOpacity> */}
+
+        <View className="h-0.5 bg-[#D2D2D2] my-4" />
+
+        <TouchableOpacity
+          onPress={() => setComplaintDropdownOpen(!isComplaintDropdownOpen)}
+          className="flex-row items-center py-3"
+        >
+          <AntDesign name="warning" size={20} color="black" />
+          <Text className="flex-1 text-lg ml-2">{t("Complaints")}</Text>
+          <Ionicons
+            name={isComplaintDropdownOpen ? "chevron-up" : "chevron-down"}
+            size={20}
+            color="black"
+          />
+        </TouchableOpacity>
+
+        {isComplaintDropdownOpen && (
+          <View className="pl-8">
+            {complaintOptions.map((complaint) => (
+              <TouchableOpacity
+                key={complaint}
+                onPress={() => handleComplaintSelect(complaint)}
+                className={`flex-row items-center py-2 px-4 rounded-lg my-1 ${
+                  selectedComplaint === complaint ? "bg-green-200" : ""
+                }`}
+              >
+                <Text
+                  className={`text-base ${
+                    selectedComplaint === complaint
+                      ? "text-black"
+                      : "text-gray-700"
+                  }`}
+                >
+                  {complaint}
+                </Text>
+                {selectedComplaint === complaint && (
+                  <View className="absolute right-4">
+                    <Ionicons name="checkmark" size={20} color="black" />
+                  </View>
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
+        <View className="h-0.5 bg-[#D2D2D2] my-4" />
+
+        {/* Logout */}
+        <TouchableOpacity
+          className="flex-row items-center py-3"
+          onPress={handleLogout}
+        >
+          <Ionicons name="log-out-outline" size={20} color="red" />
+          <Text className="flex-1 text-lg ml-2 text-red-500">Logout</Text>
+        </TouchableOpacity>
+
+        {/* Modal for Call */}
+        <Modal
+          transparent={true}
+          visible={isModalVisible}
+          animationType="fade"
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View className="flex-1 justify-center items-center bg-black opacity-50">
+            <View className="bg-white p-6 rounded-lg shadow-lg w-80">
+              <View className="flex-row justify-center mb-4">
+                <View className="bg-gray-200 rounded-full p-4">
+                  <Image
+                    source={require("../assets/images/ringer.png")} // Replace with your call ringing PNG path
+                    className="w-16 h-16"
+                  />
                 </View>
-              )}
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-
-      {/* Horizontal Line */}
-      <View className="h-0.5 bg-black my-4" />
-
-      {/* View My QR Code */}
-      <TouchableOpacity
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          paddingVertical: 12,
-        }}
-        onPress={() => navigation.navigate("OfficerQr")}
-      >
-        <Ionicons name="qr-code" size={20} color="black" />
-        <Text className="flex-1 text-lg ml-2">View My QR Code</Text>
-      </TouchableOpacity>
-
-      {/* Horizontal Line */}
-      <View className="h-0.5 bg-black my-4" />
-
-      {/* Change Password */}
-      <TouchableOpacity
-        className="flex-row items-center py-3"
-        onPress={() => navigation.navigate("ChangePassword", { empid } as any)}
-      >
-        <Ionicons name="lock-closed-outline" size={20} color="black" />
-        <Text className="flex-1 text-lg ml-2">Change Password</Text>
-      </TouchableOpacity>
-
-      {/* Horizontal Line */}
-      <View className="h-0.5 bg-black my-4" />
-
-      {/* Logout */}
-      <TouchableOpacity
-        className="flex-row items-center py-3"
-        onPress={handleLogout}
-      >
-        <Ionicons name="log-out-outline" size={20} color="red" />
-        <Text className="flex-1 text-lg ml-2 text-red-500">Logout</Text>
-      </TouchableOpacity>
-
-      {/* Modal for Call */}
-      <Modal
-        transparent={true}
-        visible={isModalVisible}
-        animationType="fade"
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View className="flex-1 justify-center items-center bg-black opacity-50">
-          <View className="bg-white p-6 rounded-lg shadow-lg w-80">
-            <View className="flex-row justify-center mb-4">
-              <View className="bg-gray-200 rounded-full p-4">
-                <Image
-                  source={require("../assets/images/ringer.png")} // Replace with your call ringing PNG path
-                  className="w-16 h-16"
-                />
+              </View>
+              <Text className="text-xl font-bold text-center mb-2">
+                Need Help?
+              </Text>
+              <Text className="text-lg text-center mb-4">
+                Need PlantCare help? Tap Call for instant support from our Help
+                Center.
+              </Text>
+              <View className="flex-row justify-around">
+                <TouchableOpacity
+                  onPress={() => setModalVisible(false)}
+                  className="bg-gray-200 p-3 rounded-full flex-1 mx-2"
+                >
+                  <Text className="text-center">Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleCall}
+                  className="bg-green-500 p-3 rounded-full flex-1 mx-2"
+                >
+                  <Text className="text-center text-white">Call</Text>
+                </TouchableOpacity>
               </View>
             </View>
-            <Text className="text-xl font-bold text-center mb-2">
-              Need Help?
-            </Text>
-            <Text className="text-lg text-center mb-4">
-              Need PlantCare help? Tap Call for instant support from our Help
-              Center.
-            </Text>
-            <View className="flex-row justify-around">
-              <TouchableOpacity
-                onPress={() => setModalVisible(false)}
-                className="bg-gray-200 p-3 rounded-full flex-1 mx-2"
-              >
-                <Text className="text-center">Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleCall}
-                className="bg-green-500 p-3 rounded-full flex-1 mx-2"
-              >
-                <Text className="text-center text-white">Call</Text>
-              </TouchableOpacity>
-            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
       </View>
     </View>
   );

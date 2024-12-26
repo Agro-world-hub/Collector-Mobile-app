@@ -156,7 +156,7 @@ import BottomNav from '@/components/BottomNav';
 import CollectionOfficersList from '@/components/ManagerScreens/CollectionOfficersList';
 import OfficerSummary from '@/components/ManagerScreens/OfficerSummary';
 import ReportGenerator from '@/components/ManagerScreens/ReportGenerator';
-
+import ComplainHistory from '@/components/ComplainHistory';
 
 
 const Stack = createNativeStackNavigator(); 
@@ -177,6 +177,7 @@ function MainTabNavigator() {
       <Tab.Screen name="PriceChart" component={PriceChart as any}/>
      <Tab.Screen name="UnregisteredCropDetails" component={UnregisteredCropDetails as any} />
      <Tab.Screen name="SearchFarmer" component={SearchFarmer} />
+      <Tab.Screen name="ComplainHistory" component={ComplainHistory} />
     </Tab.Navigator>
   );
 }
