@@ -5,7 +5,6 @@ import axios from 'axios';
 import environment from "@/environment/environment";
 
 
-//sending the correct date format in to the pdf(correcting the date in the response)
 const normalizeResponseDate = (dateString: string): string => {
   const [month, day, year] = dateString.split('/');
   return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`; // Convert to YYYY-MM-DD
