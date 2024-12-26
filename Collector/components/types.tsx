@@ -41,6 +41,15 @@ export type RootStackParamList = {
       };
     Main:undefined;
     CollectionOfficersList:undefined;
+
+    OfficerSummary: {
+      officerId: string;
+      officerName: string;
+      phoneNumber1: string;
+      phoneNumber2: string;
+      collectionOfficerId:number;
+    };
+
     OfficerSummary: { officerId: string; officerName: string };
     ReportGenerator:undefined;
     ComplainHistory:undefined;
