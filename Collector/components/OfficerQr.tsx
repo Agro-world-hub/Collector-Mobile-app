@@ -8,14 +8,15 @@ import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import * as Sharing from "expo-sharing";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "./types";
-import axios from "axios";
-import environment from "../environment/environment";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import axios from "axios";
+import environment from "../environment/environment";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "./types";
+
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
@@ -34,7 +35,8 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
   const [qrValue, setQrValue] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
-  const companyName = "Your Company Name";
+  const [companyName, setCompanyName] = useState<string>("");
+  const [jobRole, setJobRole] = useState<string>("");
 
   const fetchRegistrationDetails = async () => {
     try {
@@ -50,16 +52,27 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
         },
       });
 
-      const data = response.data;
+      const data = response.data.data;
       console.log(data);
-      if (data.status === "success") {
-        const registrationDetails = data.user;
+
+      if (response.data.status === "success") {
+        const registrationDetails = {
+          empId: data.empId,
+          firstNameEnglish: data.firstNameEnglish,
+          lastNameEnglish: data.lastNameEnglish,
+          companyName: data.companyName,
+          jobRole: data.jobRole,
+          phoneNumber: data.phoneNumber01,
+        };
+
         const qrData = JSON.stringify(registrationDetails);
         setQrValue(qrData);
-        setFirstName(registrationDetails.firstNameEnglish || "");
-        setLastName(registrationDetails.lastNameEnglish || "");
+        setFirstName(data.firstNameEnglish || "");
+        setLastName(data.lastNameEnglish || "");
+        setCompanyName(data.companyName || "");
+        setJobRole(data.jobRole || "");
       } else {
-        Alert.alert("Error", data.message);
+        Alert.alert("Error", response.data.message);
       }
     } catch (error) {
       console.error("Error fetching registration details:", error);
@@ -138,14 +151,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
     >
       {/* Header */}
-      {/* <View className="relative w-full h-16  flex-row items-center justify-between px-4">
-        <TouchableOpacity onPress={() => navigation.navigate('EngProfile')}>
-          <AntDesign name="left" size={24} color="#000" />
-        </TouchableOpacity>
-        <Text className="text-xl font-bold text-black">QR Code</Text>
-        <View style={{ width: 24 }} />
-      </View> */}
-      <View className="flex-row items-center  mb-6">
+      <View className="flex-row items-center mb-6">
         <TouchableOpacity onPress={() => navigation.goBack()} className="">
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
@@ -155,7 +161,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
       </View>
 
       {/* QR Code Display */}
-      <View className="items-center  my-6">
+      <View className="items-center my-6">
         <View
           ref={qrCodeRef}
           className="bg-white p-4 mt-[90px] rounded-xl border-2 border-[#2AAD7A]"
@@ -177,6 +183,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
         <View>
           <Text className="text-lg font-semibold">{`${firstName} ${lastName}`}</Text>
           <Text className="text-gray-600">{companyName}</Text>
+          <Text className="text-gray-500">{jobRole}</Text>
         </View>
       </View>
 

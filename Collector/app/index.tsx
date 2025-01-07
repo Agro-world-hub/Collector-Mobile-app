@@ -157,6 +157,7 @@ import CollectionOfficersList from '@/components/ManagerScreens/CollectionOffice
 import OfficerSummary from '@/components/ManagerScreens/OfficerSummary';
 import ReportGenerator from '@/components/ManagerScreens/ReportGenerator';
 import ComplainHistory from '@/components/ComplainHistory';
+import DailyTargetList from '@/components/DailyTargetList';
 
 
 const Stack = createNativeStackNavigator(); 
@@ -231,6 +232,7 @@ const index = () => {
       <Stack.Screen name="CollectionOfficersList" component={CollectionOfficersList }/>
       <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} />
       <Stack.Screen name="ReportGenerator" component={ReportGenerator as any} />
+      <Stack.Screen name="DailyTargetList" component={DailyTargetList} />
       
       <Stack.Screen name='Main' component={MainTabNavigator} options={{ headerShown: false }} />
       

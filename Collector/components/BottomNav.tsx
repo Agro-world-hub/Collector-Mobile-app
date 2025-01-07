@@ -63,7 +63,7 @@ const adminIcon = require('../assets/images/People.png');
 
 const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
   let tabs = [
-    { name: 'QRScanner', icon: qrIcon, focusedIcon: qrIcon },
+    { name: 'DailyTargetList', icon: qrIcon, focusedIcon: qrIcon },
     { name: 'Dashboard', icon: homeIcon, focusedIcon: homeIcon },
     { name: 'SearchPriceScreen', icon: searchIcon, focusedIcon: searchIcon },
   ];

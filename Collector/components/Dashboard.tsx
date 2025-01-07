@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, BackHandler } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
-import { useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import environment from '../environment/environment';
-import BottomNav from './BottomNav';
-import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
+import DashboardSkeleton from '../components/Skeleton/DashboardSkeleton';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import DashboardSkeleton from '../components/Skeleton/DashboardSkeleton';
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -28,44 +26,54 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
   const [firstName, setFirstName] = useState<string>(''); 
   const [lastName, setLastName] = useState<string>('');  
   const [loading, setLoading] = useState<boolean>(true); // Loading state for skeleton screen
-  const route = useRouter();
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const token = await AsyncStorage.getItem('token');
+        const token = await AsyncStorage.getItem("token");
         if (token) {
           const response = await api.get(`api/collection-officer/user-profile`, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
           });
-          const { user } = response.data;
-          setFirstName(user.firstNameEnglish);
-          setLastName(user.lastNameEnglish);
-          
-          // Wait for 2 seconds after data is fetched before rendering the real content
+          const userData = response.data.data;
+          setUser(userData);
+
+          // Set first name and last name from response
+          setFirstName(userData.firstNameEnglish);
+          setLastName(userData.lastNameEnglish);
+
           setTimeout(() => {
-            setLoading(false); // Data is fetched, set loading to false after delay
+            setLoading(false); 
           }, 2000);
         }
       } catch (error) {
-        console.error('Failed to fetch user profile:', error);
-        setLoading(false); // If error occurs, stop loading
+        console.error("Failed to fetch user profile:", error);
+        setLoading(false);
       }
     };
 
     fetchUserProfile();
   }, []);
 
+  // Disable hardware back button on this screen
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => true; // Disable back button by returning true
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
+
   return (
     <View className="flex-1 bg-white">
-      {/* Show skeleton screen if still loading */}
       {loading ? (
         <DashboardSkeleton /> 
       ) : (
         <>
-          {/* Combined Section for Header and Daily Target */}
           <View className="bg-green-500 rounded-b-3xl p-5">
-            {/* Profile Image and Name on the Same Line */}
             <View className="flex-row items-center justify-left">
               <TouchableOpacity onPress={() => navigation.navigate('EngProfile')} className="flex-row items-center">
                 <Image
@@ -76,16 +84,13 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
               </TouchableOpacity>
             </View>
 
-            {/* Daily Target Section */}
-            <View className="bg-white  ml-[20px]  w-[90%] rounded-[35px] mt-3 p-4">
+            <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4">
               <Text className="text-center text-yellow-600 font-bold">🚀 Keep Going!</Text>
               <Text className="text-center text-gray-500">You haven't achieved your daily target today</Text>
             </View>
 
-            {/* Total Weight and Total Farmers Sections */}
             <ScrollView contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 20 }}>
-              {/* Total Weight Section */}
-              <View className=" w-full bg-green-500 rounded-xl p-4">
+              <View className="w-full bg-green-500 rounded-xl p-4">
                 <Text className="text-center font-semibold text-lg text-white">Total weight</Text>
                 <View className="border-b border-gray-300 my-2" />
                 <View className="flex-row justify-between bg-green-400 p-5 rounded-[35px] w-full">
@@ -100,7 +105,6 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
                 </View>
               </View>
 
-              {/* Total Farmers Section */}
               <View className="mt-1 w-full bg-green-500 rounded-xl p-4">
                 <Text className="text-center font-semibold text-lg text-white">Total farmers</Text>
                 <View className="border-b border-gray-300 my-2 " />
@@ -118,7 +122,6 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
             </ScrollView>
           </View>
 
-          {/* Buttons Section with White Background */}
           <View className="bg-white p-10 rounded-t-3xl shadow-lg ">
             <View className="flex-row justify-between ">
               <TouchableOpacity
@@ -146,9 +149,6 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          {/* <View className="flex-1 justify-end w-full">
-            <BottomNav navigation={navigation} activeTab={'Dashboard'} />
-          </View> */}
         </>
       )}
     </View>

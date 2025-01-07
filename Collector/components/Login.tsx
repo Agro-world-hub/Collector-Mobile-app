@@ -50,7 +50,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            empid,
+            empId:empid,
             password,
           }),
         }

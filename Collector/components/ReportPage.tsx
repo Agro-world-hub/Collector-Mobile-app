@@ -51,18 +51,11 @@ interface Crop {
   total: number;
 }
 
-interface Officer {
-  QRcode: string;
-  // Include any other properties that the officer object may have
-}
-
-
 const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
   const [details, setDetails] = useState<PersonalAndBankDetails | null>(null);
   const route = useRoute<ReportPageRouteProp>();
   const { userId } = route.params || {};
   const [crops, setCrops] = useState<Crop[]>([]);
-  const [officer, setOfficer] = useState<Officer | null>(null);
 
   useEffect(() => {
     fetchDetails();
@@ -76,12 +69,13 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
         return;
       }
 
-      const [detailsResponse, cropsResponse , officerResponse] = await Promise.all([
+      const [detailsResponse, cropsResponse] = await Promise.all([
         api.get(`api/farmer/report-user-details/${userId}`),
         api.get(`api/unregisteredfarmercrop/user-crops/today/${userId}`),
-        api.get(`api/collection-officer/get-officer-Qr`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
+        // Commented out officer QR code fetching
+        // api.get(`api/collection-officer/get-officer-Qr`, {
+        //   headers: { Authorization: `Bearer ${token}` },
+        // }),
       ]);
 
       const data = detailsResponse.data;
@@ -99,19 +93,9 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
         bankName: data.bankName ?? "",
         branchName: data.branchName ?? "",
       });
-      
-      const officerData = officerResponse.data;
-      
-    setOfficer({
-      QRcode: officerData.QRcode ?? "", // Ensure officer's QR code is assigned
-    });
-
-      
-      setOfficer(officerResponse.data);
-      console.log(officerResponse.data);
 
       setCrops(cropsResponse.data);
-      console.log(cropsResponse.data)
+      console.log(cropsResponse.data);
 
     } catch (error) {
       console.error('Error fetching details:', error);
@@ -120,8 +104,8 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
   };
 
   const generatePDF = async () => {
-    if (!details || !officer) {
-      Alert.alert('Error', 'Details or Officer data are missing for generating PDF');
+    if (!details) {
+      Alert.alert('Error', 'Details are missing for generating PDF');
       return '';
     }
   
@@ -157,10 +141,6 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
           table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
           th, td { border: 1px solid black; padding: 8px; text-align: left; }
           th { background-color: #f2f2f2; }
-          .qr-section { display: flex; justify-content: flex-start; align-items: center; gap: 20px; margin-top: 20px; }
-          .qr-item { text-align: center; }
-          .qr-code { margin-bottom: 10px; }
-          .total-row { font-weight: bold; margin-top: 10px; }
         </style>
       </head>
       <body>
@@ -216,28 +196,14 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
           ${cropsTableRows}
         </table>
     
-        <div class="total-row">
+        <div>
           <strong>Total Price:</strong> ${totalSum.toFixed(2)}
-        </div>
-  
-        <!-- QR Code Section with Horizontal Alignment -->
-        <div class="qr-section">
-          <div class="qr-item">
-            <img src="${details.qrCode}" alt="Farmer's QR Code" width="200" height="200" class="qr-code" />
-            <h2>Farmer's QR Code</h2>
-          </div>
-  
-          <div class="qr-item">
-            <img src="${officer.QRcode}" alt="Officer's QR Code" width="200" height="200" class="qr-code" />
-            <h2>Officer's QR Code</h2>
-          </div>
         </div>
   
       </body>
     </html>
   `;
   
-    
     try {
       const { uri } = await Print.printToFileAsync({ html });
       return uri;
@@ -247,7 +213,6 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
       return '';
     }
   };
-  
   
   const handleDownloadPDF = async () => {
     const uri = await generatePDF();
@@ -396,7 +361,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
   </View>
 )}
 
-      {/* QR Code Section */}
+      {/* QR Code Section
       {details && details.qrCode && officer && officer.QRcode && (
       <View className="mb-4 flex-row items-center justify-start">
         <View className="mr-4">
@@ -409,7 +374,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
           <Text className="font-bold ml-5 text-sm mb-2">Officer's QR Code</Text>
         </View>
       </View>
-    )}
+    )} */}
 
 
 

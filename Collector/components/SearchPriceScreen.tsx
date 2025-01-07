@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from './types';
 import environment from '../environment/environment';
 
@@ -20,49 +21,61 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
   const [cropOptions, setCropOptions] = useState<{ key: string; value: string }[]>([]);
   const [varietyOptions, setVarietyOptions] = useState<{ key: string; value: string }[]>([]);
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
-  const [selectedVariety, setSelectedVariety] = useState<string | null>(null); // Add this state
+  const [selectedVariety, setSelectedVariety] = useState<string | null>(null);
   const [loadingCrops, setLoadingCrops] = useState(false);
   const [loadingVarieties, setLoadingVarieties] = useState(false);
 
-  // Fetch crop names
-  useEffect(() => {
-    const fetchCropNames = async () => {
-      setLoadingCrops(true);
-      try {
-        const response = await api.get('api/unregisteredfarmercrop/get-crop-names');
-        const formattedData = response.data.map((crop: any) => ({
-          key: crop.id.toString(),
-          value: crop.cropNameEnglish,
-        }));
-        setCropOptions(formattedData);
-      } catch (error) {
-        console.error('Failed to fetch crop names:', error);
-      } finally {
-        setLoadingCrops(false);
-      }
-    };
-    fetchCropNames();
-  }, []);
+  // Function to fetch crop names
+  const fetchCropNames = async () => {
+    setLoadingCrops(true);
+    try {
+      const response = await api.get('api/unregisteredfarmercrop/get-crop-names');
+      const formattedData = response.data.map((crop: any) => ({
+        key: crop.id.toString(),
+        value: crop.cropNameEnglish,
+      }));
+      setCropOptions(formattedData);
+    } catch (error) {
+      console.error('Failed to fetch crop names:', error);
+    } finally {
+      setLoadingCrops(false);
+    }
+  };
 
-  // Fetch varieties based on selected crop
-  useEffect(() => {
+  // Function to fetch varieties based on the selected crop
+  const fetchVarieties = async () => {
     if (!selectedCrop) return;
 
-    const fetchVarieties = async () => {
-      setLoadingVarieties(true);
-      try {
-        const response = await api.get(`api/unregisteredfarmercrop/crops/varieties/${selectedCrop}`);
-        const formattedData = response.data.map((variety: any) => ({
-          key: variety.id.toString(),
-          value: variety.varietyNameEnglish,
-        }));
-        setVarietyOptions(formattedData);
-      } catch (error) {
-        console.error('Failed to fetch varieties:', error);
-      } finally {
-        setLoadingVarieties(false);
-      }
-    };
+    setLoadingVarieties(true);
+    try {
+      const response = await api.get(`api/unregisteredfarmercrop/crops/varieties/${selectedCrop}`);
+      const formattedData = response.data.map((variety: any) => ({
+        key: variety.id.toString(),
+        value: variety.varietyNameEnglish,
+      }));
+      setVarietyOptions(formattedData);
+    } catch (error) {
+      console.error('Failed to fetch varieties:', error);
+    } finally {
+      setLoadingVarieties(false);
+    }
+  };
+
+  // Reload data when the screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      // Reset the selected values and variety options
+      setSelectedCrop(null);
+      setSelectedVariety(null);
+      setVarietyOptions([]);
+
+      // Fetch crops again
+      fetchCropNames();
+    }, [])
+  );
+
+  // Fetch varieties when selectedCrop changes
+  useEffect(() => {
     fetchVarieties();
   }, [selectedCrop]);
 
@@ -103,7 +116,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
           <ActivityIndicator size="small" color="#2AAD7A" />
         ) : (
           <SelectList
-            setSelected={(val: any) => setSelectedVariety(val)} // Set selected variety
+            setSelected={(val: any) => setSelectedVariety(val)}
             data={varietyOptions}
             placeholder="Select Variety"
             boxStyles={{
@@ -122,17 +135,13 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
         className="bg-[#2AAD7A] w-full py-3 rounded-[35px] items-center"
         onPress={() => {
           if (selectedCrop && selectedVariety) {
-            // Find the selected crop's name based on the crop ID
             const cropName = cropOptions.find(option => option.key === selectedCrop)?.value || '';
-
-            // Find the selected variety's name based on the variety ID
             const varietyName = varietyOptions.find(option => option.key === selectedVariety)?.value || '';
 
-            // Now pass the varietyId and cropName to the 'PriceChart' screen
             navigation.navigate('PriceChart', {
-              cropName: cropName,    // Send cropName
-              varietyId: selectedVariety, // Send varietyId
-              varietyName: varietyName,   // Send varietyName
+              cropName: cropName,
+              varietyId: selectedVariety,
+              varietyName: varietyName,
             });
           }
         }}

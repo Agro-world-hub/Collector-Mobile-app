@@ -74,7 +74,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
       const response = await axios.post(
         `${environment.API_BASE_URL}api/collection-officer/change-password`,
         {
-          empid,
+          empId:empid,
           currentPassword,
           newPassword,
         }

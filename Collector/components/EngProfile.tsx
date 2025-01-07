@@ -35,14 +35,19 @@ const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
 
+interface UserProfile {
+  firstNameEnglish: string;
+  lastNameEnglish: string;
+  companyName: string;
+}
+
+
 const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const [isLanguageDropdownOpen, setLanguageDropdownOpen] =
     useState<boolean>(false);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
-  const [firstName, setFirstName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
-  const [companyName, setCompanyName] = useState<string>("");
   const [empid, setEmpid] = useState<string>("");
   const [selectedComplaint, setSelectedComplaint] = useState<string | null>(
     null
@@ -59,7 +64,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
     if (complaint === t("Report Complaint")) {
       navigation.navigate("ComplainPage" as any, { userId: 0 });
     } else if (complaint === t("View Complaint History")) {
-      navigation.navigate("ComplainHistory");
+      navigation.navigate("ComplainHistory" as  any);
     }
   };
 
@@ -68,16 +73,11 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       try {
         const token = await AsyncStorage.getItem("token");
         if (token) {
-          const response = await api.get(
-            "api/collection-officer/profile-details",
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-          setFirstName(response.data.firstName);
-          setLastName(response.data.lastName);
-          setCompanyName(response.data.companyName);
-          setEmpid(response.data.empid);
+          const response = await api.get("api/collection-officer/user-profile", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setProfile(response.data.data);
+          console.log("Profile data:", response.data.data);
         }
       } catch (error) {
         console.error("Failed to fetch user profile:", error);
@@ -138,9 +138,9 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
         />
         <View className="flex-1">
           <Text className="text-lg mb-1">
-            {firstName} {lastName}
+          {profile?.firstNameEnglish} {profile?.lastNameEnglish}
           </Text>
-          <Text className="text-sm text-gray-500">{companyName}</Text>
+          <Text className="text-sm text-gray-500">{profile?.companyName}</Text>
         </View>
         <TouchableOpacity onPress={handleEditClick}>
           <Ionicons name="create-outline" size={30} color="#2fcd46" />

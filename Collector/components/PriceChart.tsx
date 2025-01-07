@@ -241,10 +241,11 @@
 // };
 
 // export default PriceChart;
-import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, SafeAreaView, ActivityIndicator, Image, Alert, ScrollView } from "react-native";
+import React, { useEffect, useState, useCallback } from "react";
+import { View, Text, TextInput, TouchableOpacity, SafeAreaView, ActivityIndicator, Alert, ScrollView } from "react-native";
 import axios from "axios";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useFocusEffect } from "@react-navigation/native";
 import { RootStackParamList } from "./types"; 
 import environment from '../environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -268,20 +269,21 @@ interface PriceChartProps {
 const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
   const { varietyId, cropName, varietyName } = route.params;
 
-  const [priceData, setPriceData] = useState<any[]>([]); 
+  const [priceData, setPriceData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [editedPrices, setEditedPrices] = useState<any[]>([]); 
-  const [isEditable, setIsEditable] = useState(false); 
+  const [editedPrices, setEditedPrices] = useState<any[]>([]);
+  const [isEditable, setIsEditable] = useState(false);
   const [buttonText, setButtonText] = useState("Request Price Update");
 
-  // Fetch prices when the component mounts
+  // Fetch prices
   const fetchPrices = async () => {
     setLoading(true);
+    setError(null);
     try {
       const response = await api.get(`api/unregisteredfarmercrop/unitPrices/${varietyId}`);
-      setPriceData(response.data); 
-      setEditedPrices(response.data); 
+      setPriceData(response.data);
+      setEditedPrices(response.data);
     } catch (error) {
       setError("Failed to fetch prices");
     } finally {
@@ -289,35 +291,28 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
     }
   };
 
-  useEffect(() => {
-    fetchPrices();
-  }, [varietyId]);
+  // Fetch prices whenever the screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      fetchPrices();
+    }, [varietyId])
+  );
 
   const handlePriceChange = (index: number, newPrice: string) => {
     const cleanedPrice = newPrice.replace(/[^0-9.]/g, ''); // Remove non-numeric characters
-    
-    let formattedPrice = cleanedPrice;
-    if (!cleanedPrice.includes('.')) {
-      formattedPrice = `${cleanedPrice}.00`; // Ensure 2 decimal places if missing
-    } else {
-      const [integerPart, decimalPart] = cleanedPrice.split('.');
-      formattedPrice = `${integerPart}.${decimalPart.length === 1 ? `${decimalPart}0` : decimalPart}`;
-    }
-  
     const updatedPrices = [...editedPrices];
-    updatedPrices[index].price = formattedPrice;
-    setEditedPrices(updatedPrices);  // Update state with the new price list
+    updatedPrices[index].price = cleanedPrice;
+    setEditedPrices(updatedPrices);
   };
-  
+
   const handleButtonClick = async () => {
     if (isEditable) {
       try {
-        const token = await AsyncStorage.getItem('token');
+        const token = await AsyncStorage.getItem("token");
         if (!token) {
-          throw new Error('No authentication token found.');
+          throw new Error("No authentication token found.");
         }
 
-        // Send the request data directly without comparing prices
         const requestData = editedPrices.map((priceItem) => ({
           varietyId,
           grade: priceItem.grade,
@@ -325,55 +320,55 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
         }));
 
         if (requestData.length === 0) {
-          Alert.alert('No prices to update', 'Please edit the prices before submitting.');
+          Alert.alert("No prices to update", "Please edit the prices before submitting.");
           return;
         }
-  
-        // Send the request to the API
-        const response = await api.post('api/auth/marketpricerequest', { prices: requestData }, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-  
-        Alert.alert('Success', 'The price request was sent successfully!');
-  
-        // Refetch the prices after submitting
-        await fetchPrices();
-  
+
+        const response = await api.post(
+          "api/auth/marketpricerequest",
+          { prices: requestData },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        Alert.alert("Success", "The price request was sent successfully!");
+
+        await fetchPrices(); // Refetch prices after submitting
+
         setIsEditable(false);
         setButtonText("Request Price Update");
       } catch (error) {
         console.error("Error submitting price request:", error);
         setError("Failed to submit price update.");
-        Alert.alert('Error', 'Failed to submit price update.');
+        Alert.alert("Error", "Failed to submit price update.");
       }
     } else {
       setIsEditable(true);
       setButtonText("Submit Request");
     }
   };
-  
-  const handleBackButton = async () => {
-    setIsEditable(false);
-    setButtonText("Request Price Update");
-
-    // Refetch the prices after clicking the Go Back button
-    await fetchPrices();
-  };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100" >
+    <SafeAreaView className="flex-1 bg-gray-100">
       {/* Header */}
-      <View className="bg-[#2AAD7A] h-20 flex-row items-center " style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
-              <TouchableOpacity onPress={() => navigation.goBack()} className="">
-                 <AntDesign name="left" size={24} color="#fff" />
-               </TouchableOpacity>
-        <Text className="text-white text-lg font-bold text-center  flex-1">Price Chart</Text>
+      <View
+        className="bg-[#2AAD7A] h-20 flex-row items-center"
+        style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
+      >
+        <TouchableOpacity onPress={() => navigation.goBack()} className="">
+          <AntDesign name="left" size={24} color="#fff" />
+        </TouchableOpacity>
+        <Text className="text-white text-lg font-bold text-center flex-1">Price Chart</Text>
       </View>
 
       {/* Content */}
-      <ScrollView className="flex-1" style={{ paddingHorizontal: wp(8), paddingVertical: hp(8) }}>
+      <ScrollView
+        className="flex-1"
+        style={{ paddingHorizontal: wp(8), paddingVertical: hp(8) }}
+      >
         {/* Crop Name */}
         <View className="mb-4">
           <Text className="text-gray-600 text-sm mb-1">Crop Name</Text>
@@ -423,9 +418,9 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
                     placeholder={`Rs.${priceItem.price}`}
                     className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-gray-800"
                     value={editedPrices[index]?.price}
-                    editable={isEditable} 
+                    editable={isEditable}
                     onChangeText={(newPrice) => handlePriceChange(index, newPrice)}
-                    keyboardType="numeric" 
+                    keyboardType="numeric"
                   />
                 </View>
               ))}
@@ -447,7 +442,11 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
         {isEditable && (
           <TouchableOpacity
             className="border border-gray-400 w-[300px] mt-4 py-3 h-12 rounded-full items-center w-3/4 mx-auto"
-            onPress={handleBackButton}
+            onPress={() => {
+              setIsEditable(false);
+              setButtonText("Request Price Update");
+              fetchPrices();
+            }}
           >
             <Text className="text-gray-700 text-base font-semibold">Go Back</Text>
           </TouchableOpacity>

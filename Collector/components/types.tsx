@@ -52,5 +52,7 @@ export type RootStackParamList = {
       collectionOfficerId:number;
     };
     ReportGenerator:{officerId:string,collectionOfficerId:number};
+    DailyTargetList:undefined;
+    ComplainHistory:undefined;
 
 };
