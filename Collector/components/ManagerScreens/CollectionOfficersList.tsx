@@ -6,8 +6,8 @@ import { RootStackParamList } from '../types';
 import axios from 'axios';
 import environment from "@/environment/environment";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// Get screen dimensions
-const { width, height } = Dimensions.get('window');
+
+const { width } = Dimensions.get('window');
 
 // Dynamic scaling function
 const scale = (size: number) => (width / 375) * size;
@@ -23,16 +23,21 @@ interface Officer {
   fullName: string;
   phoneNumber1: string;
   phoneNumber2: string;
-  collectionOfficerId:number;
-  
+  collectionOfficerId: number;
 }
 
 const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigation }) => {
   const [officers, setOfficers] = useState<Officer[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showMenu, setShowMenu] = useState(false);
+
 
   const fetchOfficers = async () => {
     try {
+      setLoading(true);
+      setErrorMessage(null); // Reset error message before fetching
+
       const token = await AsyncStorage.getItem('token');
       const response = await axios.get(
         `${environment.API_BASE_URL}api/collection-manager/collection-officers`,
@@ -45,12 +50,15 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
 
       if (response.data.status === 'success') {
         setOfficers(response.data.data);
-        console.log(response.data.data)
       } else {
-        console.error('Failed to fetch officers:', response.data.message);
+        setErrorMessage('Failed to fetch officers.');
       }
-    } catch (error) {
-      console.error('Error fetching officers:', error);
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        setErrorMessage('No officers available.');
+      } else {
+        setErrorMessage('An error occurred while fetching officers.');
+      }
     } finally {
       setLoading(false);
     }
@@ -69,7 +77,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
           officerName: item.fullName,
           phoneNumber1: item.phoneNumber1,
           phoneNumber2: item.phoneNumber2,
-          collectionOfficerId:item.collectionOfficerId,
+          collectionOfficerId: item.collectionOfficerId,
         })
       }
     >
@@ -96,14 +104,36 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
   return (
     <View className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-green-600 py-6 px-4 rounded-b-2xl">
-        <Text
-          style={{ fontSize: scale(18) }}
-          className="text-white text-center font-bold"
-        >
-          Collection Officers
-        </Text>
-      </View>
+      <View className="bg-green-600 py-6 px-4 rounded-b-2xl relative">
+      {/* Header Title */}
+      <Text
+        style={{ fontSize: 18 }}
+        className="text-white text-center font-bold"
+      >
+        Collection Officers
+      </Text>
+
+      {/* Three-Dots Icon */}
+      <TouchableOpacity
+        className="absolute top-6 right-4"
+        onPress={() => setShowMenu((prev) => !prev)}
+      >
+        <Ionicons name="ellipsis-vertical" size={24} color="#fff" />
+      </TouchableOpacity>
+
+      {/* Dropdown Menu */}
+      {showMenu && (
+        <View className="absolute top-14 right-4 bg-white shadow-lg rounded-lg">
+          <TouchableOpacity
+            className="px-4 py-2 bg-white rounded-lg shadow-lg"
+            onPress={() => navigation.navigate('ClaimOfficer') // Replace with actual functionality
+            }
+          >
+            <Text className="text-gray-700 font-semibold">Claim Officer</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
 
       {/* Officers List Header */}
       <View className="px-4 mt-4">
@@ -115,21 +145,33 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
         </Text>
       </View>
 
-      {/* FlatList or Loader */}
+      {/* Loader, Error Message, or List */}
       {loading ? (
         <ActivityIndicator size="large" color="#16A34A" className="flex-1 justify-center items-center" />
+      ) : errorMessage ? (
+        <View className="flex-1 justify-center items-center">
+          <Text className="text-gray-500 text-lg">{errorMessage}</Text>
+        </View>
       ) : (
         <FlatList
           data={officers}
           keyExtractor={(item) => item.empId}
           renderItem={renderOfficer}
           contentContainerStyle={{
-            paddingBottom: scale(20),
+            paddingBottom: scale(80), // Add extra padding to avoid overlapping with the button
             paddingTop: scale(10),
           }}
           showsVerticalScrollIndicator={true}
         />
       )}
+
+      {/* Floating Button */}
+      <TouchableOpacity
+        className="absolute bottom-5 right-5 bg-black w-14 h-14 rounded-full justify-center items-center shadow-lg"
+        onPress={() => navigation.navigate('AddOfficerBasicDetails' as any)}
+      >
+        <Ionicons name="add" size={scale(24)} color="#fff" />
+      </TouchableOpacity>
     </View>
   );
 };

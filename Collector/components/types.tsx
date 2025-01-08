@@ -54,5 +54,33 @@ export type RootStackParamList = {
     ReportGenerator:{officerId:string,collectionOfficerId:number};
     DailyTargetList:undefined;
     ComplainHistory:undefined;
+    AddOfficerBasicDetails:undefined;
+    AddOfficerAddressDetails: {
+      formData: OfficerBasicDetailsFormData;
+      type: 'Permanent' | 'Temporary';
+      preferredLanguages: {
+        Sinhala: boolean;
+        English: boolean;
+        Tamil: boolean;
+      };
+      jobRole: string;
+    };
+    ClaimOfficer:undefined;
+    
+    
 
+};
+
+export type OfficerBasicDetailsFormData = {
+  userId: string;
+  firstNameEnglish: string;
+  lastNameEnglish: string;
+  firstNameSinhala: string;
+  lastNameSinhala: string;
+  firstNameTamil: string;
+  lastNameTamil: string;
+  phoneNumber1: string;
+  phoneNumber2: string;
+  nicNumber: string;
+  email: string;
 };
