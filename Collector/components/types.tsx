@@ -66,6 +66,7 @@ export type RootStackParamList = {
       jobRole: string;
     };
     ClaimOfficer:undefined;
+    TransactionList:undefined
     
     
 
@@ -79,8 +80,7 @@ export type OfficerBasicDetailsFormData = {
   lastNameSinhala: string;
   firstNameTamil: string;
   lastNameTamil: string;
-  phoneNumber1: string;
-  phoneNumber2: string;
+
   nicNumber: string;
   email: string;
 };

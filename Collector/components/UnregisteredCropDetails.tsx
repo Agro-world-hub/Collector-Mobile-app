@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView,Image, Alert } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp,useRoute } from '@react-navigation/native';
+import { RouteProp,useFocusEffect,useRoute } from '@react-navigation/native';
 import { RootStackParamList } from './types';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { Picker } from '@react-native-picker/picker';
@@ -53,27 +53,29 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     const { userId } = route.params;
     console.log(userId)
 
-    useEffect(() => {
-        const fetchCropNames = async () => {
-            try {
-                const response = await api.get('api/unregisteredfarmercrop/get-crop-names');
-                
-                console.log(response.data);
-                const uniqueCropNames = response.data.reduce((acc: { cropNameEnglish: any; }[], crop: { cropNameEnglish: any; }) => {
-                    if (!acc.some((item: { cropNameEnglish: any; }) => item.cropNameEnglish === crop.cropNameEnglish)) {
-                        acc.push(crop); // Push unique crop names
-                    }
-                    return acc;
-                }, []);
-                
-                setCropNames(uniqueCropNames);
-            } catch (error) {
-                console.error('Error fetching crop names:', error);
-            }
-        };
+    useFocusEffect(
+        React.useCallback(() => {
+            const fetchCropNames = async () => {
+                try {
+                    const response = await axios.get(`${environment.API_BASE_URL}api/unregisteredfarmercrop/get-crop-names`);
+                    
+                    console.log(response.data);
+                    const uniqueCropNames = response.data.reduce((acc: { cropNameEnglish: any; }[], crop: { cropNameEnglish: any; }) => {
+                        if (!acc.some((item: { cropNameEnglish: any; }) => item.cropNameEnglish === crop.cropNameEnglish)) {
+                            acc.push(crop); // Push unique crop names
+                        }
+                        return acc;
+                    }, []);
+                    
+                    setCropNames(uniqueCropNames);
+                } catch (error) {
+                    console.error('Error fetching crop names:', error);
+                }
+            };
     
-        fetchCropNames();
-    }, []);
+            fetchCropNames();
+        }, []) // Empty dependency array to ensure the effect only depends on screen focus
+    );
     
     const handleCropChange = async (crop: { id: string; cropNameEnglish: string }) => {
         // Update the selected crop state

@@ -43,6 +43,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
             userId: farmer.id,
           }));
           setFarmers(mappedFarmers);
+          console.log('Farmers:', mappedFarmers);
         }
       } catch (error: unknown) {
         if (axios.isAxiosError(error)) {

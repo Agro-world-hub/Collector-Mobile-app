@@ -89,6 +89,19 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
               <Text className="text-white mt-2 text-xs">Num 2</Text>
             </TouchableOpacity>
           )}
+          
+          <TouchableOpacity
+            className="items-center mt-5"
+            onPress={() => navigation.navigate('TransactionList' as any, { officerId, collectionOfficerId })}
+          >
+            <View className="w-12 h-12 bg-[#FFFFFF66] rounded-full items-center justify-center shadow-md">
+              <Image
+                source={require('../../assets/images/lf.png')} // Replace with your image path
+                style={{ width: 28, height: 28, resizeMode: 'contain' }} // Adjust dimensions as needed
+              />
+            </View>
+            <Text className="text-white mt-2 text-xs">Collection</Text>
+          </TouchableOpacity>
 
           {/* Report Button */}
           <TouchableOpacity className="items-center mt-5" onPress={() => navigation.navigate('ReportGenerator' as any,{ officerId,collectionOfficerId })}>

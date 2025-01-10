@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -16,6 +16,8 @@ import { RootStackParamList } from '../types';
 import { useNavigation } from '@react-navigation/native';
 import { OfficerBasicDetailsFormData } from '../types'; 
 import environment from '@/environment/environment';
+import countryCodes from './countryCodes.json';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 type AddOfficerBasicDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -32,7 +34,12 @@ const AddOfficerBasicDetails: React.FC = () => {
     Tamil: false,
   });
   const [jobRole, setJobRole] = useState<string>('Select Job Role');
-  
+  const [phoneCode1, setPhoneCode1] = useState<string>('+94'); // Default Sri Lanka calling code
+  const [phoneCode2, setPhoneCode2] = useState<string>('+94'); // Default Sri Lanka calling code
+  const [phoneNumber1, setPhoneNumber1] = useState('');
+  const [phoneNumber2, setPhoneNumber2] = useState('');
+
+
   const [formData, setFormData] = useState<OfficerBasicDetailsFormData>({
     userId: '',
     firstNameEnglish: '',
@@ -41,8 +48,6 @@ const AddOfficerBasicDetails: React.FC = () => {
     lastNameSinhala: '',
     firstNameTamil: '',
     lastNameTamil: '',
-    phoneNumber1: '',
-    phoneNumber2: '',
     nicNumber: '',
     email: '',
   });
@@ -53,6 +58,7 @@ const AddOfficerBasicDetails: React.FC = () => {
       [language]: !prev[language],
     }));
   };
+  
 
   const fetchEmpId = async (role: string) => {
     try {
@@ -84,7 +90,7 @@ const AddOfficerBasicDetails: React.FC = () => {
       !formData.userId ||
       !formData.firstNameEnglish ||
       !formData.lastNameEnglish ||
-      !formData.phoneNumber1 ||
+      !phoneNumber1 || // Ensure phone number 1 is provided
       !formData.nicNumber ||
       !formData.email
     ) {
@@ -92,48 +98,58 @@ const AddOfficerBasicDetails: React.FC = () => {
       return;
     }
   
-    // Construct the userId with the prefix
+    // Update formData with separate phone codes and numbers
+    const updatedFormData = {
+      ...formData,
+      phoneCode1: phoneCode1,
+      phoneNumber1: phoneNumber1,
+      phoneCode2: phoneCode2,
+      phoneNumber2: phoneNumber2,
+    };
+  
+    console.log('Form Data:', updatedFormData, preferredLanguages, type, jobRole);
+  
     const prefixedUserId =
       jobRole === 'Collection Officer' ? `CCO${formData.userId}` : formData.userId;
   
-    console.log('Form Data:', formData, preferredLanguages, type, jobRole);
-  
-    // Pass the data to the next screen
+    // Navigate to the next screen with the updated data
     navigation.navigate('AddOfficerAddressDetails', {
-      formData: { ...formData, userId: prefixedUserId }, // Include the prefixed userId
+      formData: { ...updatedFormData, userId: prefixedUserId },
       type,
       preferredLanguages,
       jobRole,
     });
   };
+  
+  
   return (
     <ScrollView className="flex-1 bg-white">
       {/* Header */}
       <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
         <TouchableOpacity onPress={() => navigation.goBack()} className="pr-4">
-          <Ionicons name="arrow-back" size={24} color="#000" />
+           <AntDesign name="left" size={24} color="#000502" />
         </TouchableOpacity>
         <Text className="text-lg font-bold ml-[25%]">Add Officer</Text>
       </View>
 
       {/* Profile Avatar */}
       <View className="justify-center items-center my-4 relative">
-  {/* Profile Image */}
-  <Image
-    source={require('../../assets/images/user1.png')}
-    className="w-24 h-24 rounded-full"
-  />
+        {/* Profile Image */}
+        <Image
+          source={require('../../assets/images/user1.png')}
+          className="w-24 h-24 rounded-full"
+        />
 
-  {/* Edit Icon (Pen Icon) */}
-  <TouchableOpacity
-    className="absolute bottom-0 right-4 bg-[#3980C0] p-1 rounded-full mr-[35%] shadow-md"
-    style={{
-      elevation: 5, // For shadow effect
-    }}
-  >
-    <Ionicons name="pencil" size={18} color="white" />
-  </TouchableOpacity>
-</View>
+        {/* Edit Icon (Pen Icon) */}
+        <TouchableOpacity
+          className="absolute bottom-0 right-4 bg-[#3980C0] p-1 rounded-full mr-[35%] shadow-md"
+          style={{
+            elevation: 5, // For shadow effect
+          }}
+        >
+          <Ionicons name="pencil" size={18} color="white" />
+        </TouchableOpacity>
+      </View>
 
 
       {/* Type Selector */}
@@ -199,7 +215,7 @@ const AddOfficerBasicDetails: React.FC = () => {
             onValueChange={(itemValue) => handleJobRoleChange(itemValue)}
             style={{ height: 40, width: '100%' }}
           >
-            <Picker.Item label="Select Job Role" value="Select Job Role" />
+            <Picker.Item label="--Select Job Role--" value="Select Job Role" />
             <Picker.Item label="Manager" value="Manager" />
             <Picker.Item label="Supervisor" value="Supervisor" />
             <Picker.Item label="Collection Officer" value="Collection Officer" />
@@ -208,34 +224,34 @@ const AddOfficerBasicDetails: React.FC = () => {
       </View>
 
    
-{/* User ID Field */}
-<View className="flex-row items-center border border-gray-300 rounded-lg mb-4 bg-gray-100">
-  {/* Prefix (30% width) */}
-  <View
-    className="bg-gray-300 justify-center items-center"
-    style={{
-      flex: 3,
-      height: 40, // Set the height to match the TextInput field
-    }}
-  >
-    <Text className="text-gray-700 text-center">
-      {jobRole === 'Collection Officer' ? 'CCO' : ''}
-    </Text>
-  </View>
+      {/* User ID Field */}
+      <View className="flex-row items-center border border-gray-300 rounded-lg mb-4 bg-gray-100">
+        {/* Prefix (30% width) */}
+        <View
+          className="bg-gray-300 justify-center items-center"
+          style={{
+            flex: 3,
+            height: 40, // Set the height to match the TextInput field
+          }}
+        >
+          <Text className="text-gray-700 text-center">
+            {jobRole === 'Collection Officer' ? 'CCO' : ''}
+          </Text>
+        </View>
 
-  {/* User ID (remaining 70% width) */}
-  <View style={{ flex: 7 }}>
-    <TextInput
-      placeholder="--User ID--"
-      value={formData.userId}
-      editable={false} // Make this field read-only
-      className="px-3 py-2 text-gray-700 bg-gray-100"
-      style={{
-        height: 40, // Ensure the height matches the grey part
-      }}
-    />
-  </View>
-</View>
+        {/* User ID (remaining 70% width) */}
+        <View style={{ flex: 7 }}>
+          <TextInput
+            placeholder="--User ID--"
+            value={formData.userId}
+            editable={false} // Make this field read-only
+            className="px-3 py-2 text-gray-700 bg-gray-100"
+            style={{
+              height: 40, // Ensure the height matches the grey part
+            }}
+          />
+        </View>
+      </View>
 
         <TextInput
           placeholder="--First Name in English--"
@@ -274,33 +290,73 @@ const AddOfficerBasicDetails: React.FC = () => {
           className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
         />
 
-        {/* Phone Number Inputs */}
-        <View className="flex-row items-center mb-4">
-          <TextInput
-            placeholder="+94"
-            editable={false}
-            className="border border-gray-300 rounded-l-lg px-3 py-2 text-gray-700 w-16"
+
+           {/* Phone Number 1 */}
+<View className="mb-4">
+  {/* Phone Number 1 */}
+  <View className="flex-row items-center border border-gray-300 rounded-lg">
+    <View style={{ flex: 4, alignItems: 'center' }}>
+      <Picker
+        selectedValue={phoneCode1}
+        onValueChange={(itemValue) => setPhoneCode1(itemValue)}
+        style={{
+          width: '100%',
+        }}
+      >
+        {countryCodes.map((country) => (
+          <Picker.Item
+            key={country.code}
+            label={`${country.code} (${country.dial_code})`}
+            value={country.dial_code}
           />
-          <TextInput
-            placeholder="Phone Number 1"
-            value={formData.phoneNumber1}
-            onChangeText={(text) => setFormData({ ...formData, phoneNumber1: text })}
-            className="border border-gray-300 rounded-r-lg px-3 py-2 flex-1 text-gray-700"
+        ))}
+      </Picker>
+    </View>
+    <View style={{ flex: 7 }}>
+      <TextInput
+        placeholder="--Phone Number 1--"
+        keyboardType="phone-pad"
+        value={phoneNumber1}
+        onChangeText={setPhoneNumber1}
+        className="px-3 py-2 text-gray-700"
+      />
+    </View>
+  </View>
+</View>
+
+{/* Phone Number 2 */}
+<View className="mb-4">
+  <View className="flex-row items-center border border-gray-300 rounded-lg">
+    <View style={{ flex: 4, alignItems: 'center' }}>
+      <Picker
+        selectedValue={phoneCode2}
+        onValueChange={(itemValue) => setPhoneCode2(itemValue)}
+        style={{
+          width: '100%',
+        }}
+      >
+        {countryCodes.map((country) => (
+          <Picker.Item
+            key={country.code}
+            label={`${country.code} (${country.dial_code})`}
+            value={country.dial_code}
           />
-        </View>
-        <View className="flex-row items-center mb-4">
-          <TextInput
-            placeholder="+94"
-            editable={false}
-            className="border border-gray-300 rounded-l-lg px-3 py-2 text-gray-700 w-16"
-          />
-          <TextInput
-            placeholder="Phone Number 2"
-            value={formData.phoneNumber2}
-            onChangeText={(text) => setFormData({ ...formData, phoneNumber2: text })}
-            className="border border-gray-300 rounded-r-lg px-3 py-2 flex-1 text-gray-700"
-          />
-        </View>
+        ))}
+      </Picker>
+    </View>
+    <View style={{ flex: 7 }}>
+      <TextInput
+        placeholder="--Phone Number 2--"
+        keyboardType="phone-pad"
+        value={phoneNumber2}
+        onChangeText={setPhoneNumber2}
+        className="px-3 py-2 text-gray-700"
+      />
+    </View>
+  </View>
+</View>
+
+     
 
         <TextInput
           placeholder="--NIC Number--"
@@ -326,7 +382,7 @@ const AddOfficerBasicDetails: React.FC = () => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={handleNext}
-          className="bg-green-600 px-8 py-3 rounded-full"
+          className="bg-[#2AAD7A] px-8 py-3 rounded-full"
         >
           <Text className="text-white text-center">Next</Text>
         </TouchableOpacity>
