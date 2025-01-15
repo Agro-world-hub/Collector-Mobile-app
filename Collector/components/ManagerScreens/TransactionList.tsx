@@ -15,9 +15,19 @@ type TranscationListRouteProp = RouteProp<RootStackParamList, 'OfficerSummary'>;
 interface TransactionListProps {
   navigation: TransactionListNavigationProp;
   route: TranscationListRouteProp;
+  
 }
 
 interface Transaction {
+  registeredFarmerId: number;
+  userId: number;
+  phoneNumber: string;
+  address: string;
+  bankAddress: string | null;
+  accountNumber: string | null;
+  accountHolderName: string | null;
+  bankName: string | null;
+  branchName: string | null;
   id: number;
   firstName: string;
   lastName: string;
@@ -25,7 +35,7 @@ interface Transaction {
   totalAmount: number;
 }
 
-const TransactionList: React.FC<TransactionListProps> = ({ route }) => {
+const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) => {
   const { officerId, collectionOfficerId } = route.params;
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -49,15 +59,25 @@ const TransactionList: React.FC<TransactionListProps> = ({ route }) => {
       );
       const data = await response.json();
       console.log('Transactions:', data);
-
+  
       if (response.ok) {
         const formattedData = data.map((transaction: any) => ({
-          id: transaction.id ?? Math.random(),
+          id: transaction.registeredFarmerId ?? Math.random(), // Unique ID (fallback to random)
+          registeredFarmerId: transaction.registeredFarmerId || 0,
+          userId: transaction.userId || 0,
           firstName: transaction.firstName || '',
           lastName: transaction.lastName || '',
+          phoneNumber: transaction.phoneNumber || '',
+          address: transaction.address || '',
           NICnumber: transaction.NICnumber || '',
-          totalAmount: transaction.totalAmount || 0,
+          totalAmount: parseFloat(transaction.totalAmount) || 0,
+          bankAddress: transaction.bankAddress || null,
+          accountNumber: transaction.accountNumber || null,
+          accountHolderName: transaction.accountHolderName || null,
+          bankName: transaction.bankName || null,
+          branchName: transaction.branchName || null,
         }));
+  
         setTransactions(formattedData);
         setFilteredTransactions(formattedData);
       } else {
@@ -67,6 +87,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route }) => {
       console.error('Error fetching transactions:', error);
     }
   };
+  
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -144,7 +165,27 @@ const TransactionList: React.FC<TransactionListProps> = ({ route }) => {
         keyExtractor={(item) => (item.id ? item.id.toString() : Math.random().toString())}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}
         renderItem={({ item }) => (
-          <TouchableOpacity className="flex-row items-center p-4 mb-3 rounded-[35px] bg-gray-100 shadow-sm">
+          <TouchableOpacity
+            className="flex-row items-center p-4 mb-3 rounded-[35px] bg-gray-100 shadow-sm"
+            onPress={() => {
+              navigation.navigate('FarmerReport', {
+                registeredFarmerId: item.registeredFarmerId,
+                userId: item.userId,
+                firstName: item.firstName,
+                lastName: item.lastName,
+                phoneNumber: item.phoneNumber,
+                address: item.address,
+                NICnumber: item.NICnumber,
+                totalAmount: item.totalAmount,
+                bankAddress: item.bankAddress,
+                accountNumber: item.accountNumber,
+                accountHolderName: item.accountHolderName,
+                bankName: item.bankName,
+                branchName: item.branchName,
+                selectedDate: selectedDate.toISOString().split('T')[0],
+              });
+            }}
+          >
             <View className="w-14 h-14 rounded-full overflow-hidden justify-center items-center mr-4 shadow-md">
               <Image
                 source={require('../../assets/images/ava.webp')}
@@ -152,7 +193,6 @@ const TransactionList: React.FC<TransactionListProps> = ({ route }) => {
                 resizeMode="cover"
               />
             </View>
-
             <View className="flex-1">
               <Text className="text-[18px] font-semibold text-gray-900">
                 {item.firstName} {item.lastName}
@@ -162,7 +202,6 @@ const TransactionList: React.FC<TransactionListProps> = ({ route }) => {
                 Total: Rs.{item.totalAmount ? item.totalAmount.toLocaleString() : 'N/A'}
               </Text>
             </View>
-
             <Ionicons name="chevron-forward" size={scale(20)} color="#9CA3AF" />
           </TouchableOpacity>
         )}

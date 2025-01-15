@@ -162,6 +162,7 @@ import AddOfficerBasicDetails from '@/components/ManagerScreens/AddOfficerBasicD
 import AddOfficerAddressDetails from '@/components/ManagerScreens/AddOfficerAddressDetails';
 import ClaimOfficer from '@/components/ManagerScreens/ClaimOfficer';
 import TransactionList from '@/components/ManagerScreens/TransactionList';
+import FarmerReport from '@/components/ManagerScreens/FarmerReport';
 
 
 const Stack = createNativeStackNavigator(); 
@@ -241,6 +242,7 @@ const index = () => {
       <Stack.Screen name="AddOfficerAddressDetails" component={AddOfficerAddressDetails} />
       <Stack.Screen name="ClaimOfficer" component={ClaimOfficer} />
       <Stack.Screen name="TransactionList" component={TransactionList as any} />
+      <Stack.Screen name="FarmerReport" component={FarmerReport as any} />
       
       <Stack.Screen name='Main' component={MainTabNavigator} options={{ headerShown: false }} />
       

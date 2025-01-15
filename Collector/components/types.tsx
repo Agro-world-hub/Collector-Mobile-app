@@ -66,7 +66,23 @@ export type RootStackParamList = {
       jobRole: string;
     };
     ClaimOfficer:undefined;
-    TransactionList:undefined
+    TransactionList:undefined;
+    FarmerReport:{
+      registeredFarmerId: number;
+      userId: number;
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+      address: string;
+      NICnumber: string;
+      totalAmount: number;
+      bankAddress: string | null;
+      accountNumber: string | null;
+      accountHolderName: string | null;
+      bankName: string | null;
+      branchName: string | null;
+      selectedDate: string;
+    };
     
     
 
