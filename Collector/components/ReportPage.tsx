@@ -54,7 +54,7 @@ interface Crop {
 const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
   const [details, setDetails] = useState<PersonalAndBankDetails | null>(null);
   const route = useRoute<ReportPageRouteProp>();
-  const { userId } = route.params || {};
+  const { userId,registeredFarmerId } = route.params || {};
   const [crops, setCrops] = useState<Crop[]>([]);
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
 
       const [detailsResponse, cropsResponse] = await Promise.all([
         api.get(`api/farmer/report-user-details/${userId}`),
-        api.get(`api/unregisteredfarmercrop/user-crops/today/${userId}`),
+        api.get(`api/unregisteredfarmercrop/user-crops/today/${userId}/${registeredFarmerId}`),
         // Commented out officer QR code fetching
         // api.get(`api/collection-officer/get-officer-Qr`, {
         //   headers: { Authorization: `Bearer ${token}` },

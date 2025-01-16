@@ -235,7 +235,7 @@ const AddOfficerBasicDetails: React.FC = () => {
           }}
         >
           <Text className="text-gray-700 text-center">
-            {jobRole === 'Collection Officer' ? 'CCO' : ''}
+            {jobRole === 'Collection Officer' ? 'COO' : ''}
           </Text>
         </View>
 

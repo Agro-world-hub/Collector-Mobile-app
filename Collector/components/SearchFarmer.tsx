@@ -33,7 +33,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
   useEffect(() => {
     const fetchFarmers = async () => {
       try {
-        const response = await api.get(`api/auth/getall`);
+        const response = await api.get('api/auth/getall');
         if (response.status === 200 && response.data) {
           const mappedFarmers = response.data.map((farmer: any) => ({
             NICnumber: farmer.NICnumber,
@@ -71,10 +71,15 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
     setIsSearching(false);
 
     if (foundFarmer) {
+      // Navigate to Farmer QR code screen and pass the required params
       navigation.navigate('FarmerQr' as any, { NICnumber: foundFarmer.NICnumber, userId: foundFarmer.userId });
     } else {
       setNoResults(true);
     }
+
+    // Reset the NIC number and noResults after the search is completed
+    setNICnumber('');
+    setNoResults(false); // Optionally hide the "No results" message immediately after resetting
   };
 
   return (

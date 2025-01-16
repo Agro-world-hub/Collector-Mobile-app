@@ -233,94 +233,123 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
         }
     };
     
+    const refreshCropForms = () => {
+        setSelectedCrop(null);
+        setSelectedVariety(null);
+        setUnitPrices({ A: null, B: null, C: null });
+        setQuantities({ A: 0, B: 0, C: 0 });
+        setTotal(0);
+        setImage(null);
+        setCrops([]);
+        setdonebutton1visibale(true);
+        setdonebutton2visibale(false);
+        setdonebutton1disabale(true);
+        setdonebutton2disabale(false);
+        setaddbutton(true);
+        setCropCount(1);
+      };
+    
     const handleSubmit = async () => {
-
         try {
-            if (crops.length === 0) {
-                alert("Please add at least one crop to proceed.");
-                return;
-            }
-            // Retrieve the token from AsyncStorage
-            const token = await AsyncStorage.getItem('token');
-    
-            // Construct the payload using the selected variety ID
-            const payload = {
-                farmerId: userId, // Farmer ID
-                crops: crops.map(crop => ({
-                    varietyId: crop.varietyId || '', // Include variety ID (ensure this is stored in the state for each crop)
-                    gradeAprice: crop.gradeAprice || 0,
-                    gradeAquan: crop.gradeAquan || 0,
-                    gradeBprice: crop.gradeBprice || 0,
-                    gradeBquan: crop.gradeBquan || 0,
-                    gradeCprice: crop.gradeCprice || 0,
-                    gradeCquan: crop.gradeCquan || 0,
-                    image: crop.image || null, // Include image if provided
-                })),
-            };
-    
-            console.log('Payload before sending:', payload);
-    
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            };
-    
-            // Make the API call to submit crop data
-            await api.post('api/unregisteredfarmercrop/add-crops', payload, config);
-    
-            console.log('Crops added successfully', payload);
-            alert('All crop details submitted successfully!');
-            
-            // Navigate to the ReportPage
-            navigation.navigate('ReportPage' as any, { userId });
+          if (crops.length === 0) {
+            alert("Please add at least one crop to proceed.");
+            return;
+          }
+          // Retrieve the token from AsyncStorage
+          const token = await AsyncStorage.getItem('token');
+      
+          // Construct the payload using the selected variety ID
+          const payload = {
+            farmerId: userId, // Farmer ID
+            crops: crops.map(crop => ({
+              varietyId: crop.varietyId || '', // Include variety ID (ensure this is stored in the state for each crop)
+              gradeAprice: crop.gradeAprice || 0,
+              gradeAquan: crop.gradeAquan || 0,
+              gradeBprice: crop.gradeBprice || 0,
+              gradeBquan: crop.gradeBquan || 0,
+              gradeCprice: crop.gradeCprice || 0,
+              gradeCquan: crop.gradeCquan || 0,
+              image: crop.image || null, // Include image if provided
+            })),
+          };
+      
+          console.log('Payload before sending:', payload);
+      
+          const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+      
+          // Make the API call to submit crop data
+          const response = await api.post('api/unregisteredfarmercrop/add-crops', payload, config);
+      
+          // Capture the registeredFarmerId from the response
+          const { registeredFarmerId } = response.data;
+          console.log('registeredFarmerId:', registeredFarmerId);
+      
+          console.log('Crops added successfully', payload);
+          alert('All crop details submitted successfully!');
+          
+          refreshCropForms();
+      
+          // Navigate to the ReportPage, passing registeredFarmerId and userId
+          navigation.navigate('ReportPage' as any, { userId, registeredFarmerId });
         } catch (error) {
-            console.error('Error submitting crop data:', error);
-            alert('Failed to submit crop details. Please try again.');
+          console.error('Error submitting crop data:', error);
+          alert('Failed to submit crop details. Please try again.');
         }
-    };
+      };
+      
     
-    const handelsubmit2 = async () => {
+      const handelsubmit2 = async () => {
         try {
-            // Retrieve the token from AsyncStorage
-            const token = await AsyncStorage.getItem('token');
-    
-            // Construct the payload using the selected variety ID
-            const payload = {
-                farmerId: userId, // Farmer ID
-                crops: {
-                    varietyId: selectedVariety || '', // Include variety ID (ensure this is stored in the state for each crop)
-                    gradeAprice: unitPrices.A || 0,
-                    gradeAquan: quantities.A || 0,
-                    gradeBprice: unitPrices.B || 0,
-                    gradeBquan: quantities.B || 0,
-                    gradeCprice: unitPrices.C || 0,
-                    gradeCquan: quantities.C || 0,
-                    image: image?.assets[0]?.base64 || null, // Include image if provided
-                },
-            };
-    
-            console.log('Payload before sending:', payload);
-    
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            };
-    
-            // Make the API call to submit crop data
-            await api.post('api/unregisteredfarmercrop/add-crops2', payload, config);
-    
-            console.log('Crops added successfully', payload);
-            alert('All crop details submitted successfully!');
-            
-            // Navigate to the ReportPage
-            navigation.navigate('ReportPage' as any, { userId });
+          // Retrieve the token from AsyncStorage
+          const token = await AsyncStorage.getItem('token');
+      
+          // Construct the payload using the selected variety ID
+          const payload = {
+            farmerId: userId, // Farmer ID
+            crops: {
+              varietyId: selectedVariety || '', // Include variety ID (ensure this is stored in the state for each crop)
+              gradeAprice: unitPrices.A || 0,
+              gradeAquan: quantities.A || 0,
+              gradeBprice: unitPrices.B || 0,
+              gradeBquan: quantities.B || 0,
+              gradeCprice: unitPrices.C || 0,
+              gradeCquan: quantities.C || 0,
+              image: image?.assets[0]?.base64 || null, // Include image if provided
+            },
+          };
+      
+          console.log('Payload before sending:', payload);
+      
+          const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+      
+          // Make the API call to submit crop data
+          const response = await api.post('api/unregisteredfarmercrop/add-crops2', payload, config);
+      
+          // Capture the registeredFarmerId from the response
+          const { registeredFarmerId } = response.data;
+          console.log('registeredFarmerId:', registeredFarmerId);
+      
+          console.log('Crops added successfully', payload);
+          alert('All crop details submitted successfully!');
+          
+          refreshCropForms();
+      
+          // Navigate to the ReportPage, passing registeredFarmerId and userId
+          navigation.navigate('ReportPage' as any, { userId, registeredFarmerId });
         } catch (error) {
-            console.error('Error submitting crop data:', error);
-            alert('Failed to submit crop details. Please try again.');
+          console.error('Error submitting crop data:', error);
+          alert('Failed to submit crop details. Please try again.');
         }
-    }
+      };
+      
 
     return (
         <ScrollView className="flex-1 bg-gray-50 px-6 py-4" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>

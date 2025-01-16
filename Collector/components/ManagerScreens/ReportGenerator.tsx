@@ -32,6 +32,15 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
   const { officerId,collectionOfficerId } = route.params;
   console.log(officerId);
   
+  const getTodayInColombo = () => {
+    const now = new Date();
+    const colomboOffset = 330; // Colombo is UTC+5:30
+    const utcOffset = now.getTimezoneOffset();
+    const colomboTime = new Date(now.getTime() + (colomboOffset - utcOffset) * 60 * 1000);
+    colomboTime.setHours(0, 0, 0, 0); // Normalize to midnight
+    return colomboTime;
+  };
+  
 
   const handleGenerate = async () => {
     if (!startDate || !endDate) {
@@ -39,11 +48,20 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
       return;
     }
   
-    const fileUri = await handleGeneratePDF(formatDate(startDate), formatDate(endDate), officerId,collectionOfficerId);
+    
+    
+    
+    if (endDate < startDate) {
+      Alert.alert('Error', 'End date cannot be earlier than the start date.');
+      return;
+    }
+    
+    // Proceed with PDF generation
+    const fileUri = await handleGeneratePDF(formatDate(startDate), formatDate(endDate), officerId, collectionOfficerId);
     if (fileUri) {
       const reportIdMatch = fileUri.match(/report_(.+)\.pdf/);
       const reportId = reportIdMatch ? reportIdMatch[1] : null;
-
+  
       setGeneratedReportId(reportId); // Store the report ID to display in the UI
       setReportGenerated(true);
       Alert.alert('Success', 'PDF Generated Successfully!');
@@ -51,6 +69,8 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
       Alert.alert('Error', 'Failed to generate PDF');
     }
   };
+  
+  
   
   const handleDownload = async () => {
     if (!startDate || !endDate) {
@@ -164,12 +184,13 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
             <Text className="text-gray-500">{formatDate(startDate)}</Text>
           </TouchableOpacity>
           {showStartPicker && (
-            <DateTimePicker
-              value={startDate || new Date()}
-              mode="date"
-              display="default"
-              onChange={(event, date) => handleDateChange(event, date, 'start')}
-            />
+           <DateTimePicker
+           value={startDate || new Date()}
+           mode="date"
+           display="default"
+           maximumDate={getTodayInColombo()} // Disallow future dates
+           onChange={(event, date) => handleDateChange(event, date, 'start')}
+         />
           )}
         </View>
 
@@ -184,11 +205,13 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
           </TouchableOpacity>
           {showEndPicker && (
             <DateTimePicker
-              value={endDate || new Date()}
-              mode="date"
-              display="default"
-              onChange={(event, date) => handleDateChange(event, date, 'end')}
-            />
+            value={endDate || new Date()}
+            mode="date"
+            display="default"
+            maximumDate={getTodayInColombo()} // Disallow future dates 
+            minimumDate={startDate} // End date must not be earlier than the start date
+            onChange={(event, date) => handleDateChange(event, date, 'end')}
+          />
           )}
         </View>
 

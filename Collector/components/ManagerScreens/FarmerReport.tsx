@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import environment from '../../environment/environment';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import { RootStackParamList } from '../types';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
@@ -324,7 +322,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
               <Text className="w-32 p-2 border-r border-gray-300">{accountHolderName || 'N/A'}</Text>
               <Text className="w-32 p-2 border-r border-gray-300">{bankName || 'N/A'}</Text>
               <Text className="w-32 p-2">{branchName || 'N/A'}</Text>
-
+            
               </View>
             </View>
           </ScrollView>
@@ -333,7 +331,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
 
        {/* Crop Details Section */}
        {crops.length > 0 && (
-  <View className="mb-4 p-4">
+    <View className="mb-4 p-4">
     <Text className="font-bold text-sm mb-2">Crop Details</Text>
     <ScrollView horizontal className="border border-gray-300 rounded-lg">
       <View>

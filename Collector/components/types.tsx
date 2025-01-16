@@ -32,7 +32,7 @@ export type RootStackParamList = {
     ComplainPage:{farmerName:any, farmerPhone:any, userId:number};
     OfficerQr:undefined;
     Profile:undefined;
-    ReportPage:{userId:string};
+    ReportPage:{userId:string,registeredFarmerId:Number};
     SearchPriceScreen:undefined;
     PriceChart: {
         varietyId: string;
