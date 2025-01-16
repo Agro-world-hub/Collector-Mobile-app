@@ -83,7 +83,7 @@ export type RootStackParamList = {
       branchName: string | null;
       selectedDate: string;
     };
-    
+    SetTargetScreen:undefined;
     
 
 };

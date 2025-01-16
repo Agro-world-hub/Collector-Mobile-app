@@ -9,6 +9,7 @@ import * as Sharing from 'expo-sharing';
 import { RouteProp } from '@react-navigation/native';
 import * as MediaLibrary from 'expo-media-library';
 import {  Platform } from 'react-native';
+import * as FileSystem from 'expo-file-system';
 
 
 
@@ -70,7 +71,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
     }
   };
   
-  
+
   
   const handleDownload = async () => {
     if (!startDate || !endDate) {
@@ -99,9 +100,20 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
         return;
       }
   
+      // Define the new file name
+      const date = new Date().toISOString().slice(0, 10); // Get the current date (YYYY-MM-DD)
+      const fileName = `Report_${officerId}_${date}.pdf`; // Example file name
+      const tempUri = `${FileSystem.cacheDirectory}${fileName}`;
+  
+      // Copy the file to a new path with the desired name
+      await FileSystem.copyAsync({
+        from: fileUri, // Original URI
+        to: tempUri, // New URI with the desired file name
+      });
+  
       if (Platform.OS === 'android') {
         // Save to Media Library (Downloads folder)
-        const asset = await MediaLibrary.createAssetAsync(fileUri);
+        const asset = await MediaLibrary.createAssetAsync(tempUri);
         const album = await MediaLibrary.getAlbumAsync('Download');
   
         if (!album) {
@@ -110,16 +122,17 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
           await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
         }
   
-        Alert.alert('Success', 'File saved to Downloads folder.');
+        Alert.alert('Success', `File saved as ${fileName} in the Downloads folder.`);
       } else {
         // For iOS, inform the user about the app's document directory
-        Alert.alert('Success', `File saved to app's directory: ${fileUri}`);
+        Alert.alert('Success', `File saved to app's directory: ${tempUri}`);
       }
     } catch (error) {
       console.error('Failed to save file:', error);
       Alert.alert('Error', 'An error occurred while saving the file.');
     }
   };
+  
   
   const handleShare = async () => {
     if (!startDate || !endDate) {
