@@ -67,6 +67,18 @@ export type RootStackParamList = {
     };
     ClaimOfficer:undefined;
     TransactionList:undefined
+
+    OTPE:{
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+      NICnumber: string;
+      district: string;
+      accNumber: string;
+      accHolderName: string;
+      bankName: string;
+      branchName: string
+    }
     
     
 

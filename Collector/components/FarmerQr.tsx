@@ -257,57 +257,59 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
     getPermissions();
   }, [userId]);
 
-  const downloadImage = async () => {
-    if (!permissionsGranted) {
-      Alert.alert('Permission Denied', 'You need to grant permission to save images');
-      return;
-    }
-
+  const downloadQRCode = async () => {
     try {
       if (!farmerQRCode) {
-        Alert.alert('Error', 'No QR Code available');
+        Alert.alert(("Main.error"), ("QRcode.noQRCodeAvailable"));
         return;
       }
 
-      // Decode base64 image
-      const base64Code = farmerQRCode.replace(/^data:image\/png;base64,/, '');
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          ("QRcode.permissionDeniedTitle"),
+          ("QRcode.permissionDeniedMessage")
+        );
+        return;
+      }
 
-      // Save the base64 image as a file
-      const fileUri = FileSystem.documentDirectory + `farmer_qr_${userId}.png`;
-      await FileSystem.writeAsStringAsync(fileUri, base64Code, { encoding: FileSystem.EncodingType.Base64 });
+      const fileUri = `${FileSystem.documentDirectory}QRCode_${Date.now()}.png`;
+      const response = await FileSystem.downloadAsync(farmerQRCode, fileUri);
 
-      // Save to gallery
-      const asset = await MediaLibrary.createAssetAsync(fileUri);
-      await MediaLibrary.createAlbumAsync('Download', asset, false);
-      Alert.alert('Download Success', 'QR Code saved to your gallery!');
+      const asset = await MediaLibrary.createAssetAsync(response.uri);
+      await MediaLibrary.createAlbumAsync("Download", asset, false);
+
+      Alert.alert(("QRcode.successTitle"), ("QRcode.savedToGallery"));
     } catch (error) {
-      console.log('Error =>', error);
-      Alert.alert('Error', 'Failed to download the QR Code');
+      console.error("Download error:", error);
+      Alert.alert(("Main.error"), ("QRcode.failedSaveQRCode"));
     }
   };
 
-  const shareImage = async () => {
+  const shareQRCode = async () => {
     try {
       if (!farmerQRCode) {
-        Alert.alert('Error', 'No QR Code available');
+        Alert.alert(("Main.error"), ("QRcode.noQRCodeAvailable"));
         return;
       }
 
-      // Decode base64 image
-      const base64Code = farmerQRCode.replace(/^data:image\/png;base64,/, '');
+      const fileUri = `${FileSystem.documentDirectory}QRCode_${Date.now()}.png`;
+      const response = await FileSystem.downloadAsync(farmerQRCode, fileUri);
 
-      // Save the base64 image as a file
-      const fileUri = FileSystem.documentDirectory + `farmer_qr_${userId}.png`;
-      await FileSystem.writeAsStringAsync(fileUri, base64Code, { encoding: FileSystem.EncodingType.Base64 });
-
-      // Share the image
-      await Sharing.shareAsync(fileUri, {
-        dialogTitle: 'Share QR Code',
-        UTI: 'image/png', // Ensure correct UTI
-      });
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(response.uri, {
+          mimeType: "image/png",
+          dialogTitle: "Share QR Code",
+        });
+      } else {
+        Alert.alert(
+          ("QRcode.sharingUnavailableTitle"),
+          ("QRcode.sharingUnavailableMessage")
+        );
+      }
     } catch (error) {
-      console.log('Error =>', error);
-      Alert.alert('Error', 'Failed to share the QR Code');
+      console.error("Share error:", error);
+      Alert.alert(("Main.error"), ("QRcode.failedShareQRCode"));
     }
   };
 
@@ -387,7 +389,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
 
       {/* Download and Share buttons */}
       <View className="flex-row justify-around w-full mt-6">
-        <TouchableOpacity className="bg-gray-600 p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={downloadImage}>
+        <TouchableOpacity className="bg-gray-600 p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={downloadQRCode}>
           <Image
             source={require('../assets/images/download.png')} // Path to download icon
             style={{ width: 24, height: 24 }}
@@ -395,7 +397,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
           <Text className="text-sm text-cyan-50">Download</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="bg-gray-600 p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={shareImage}>
+        <TouchableOpacity className="bg-gray-600 p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={shareQRCode}>
           <Image
             source={require('../assets/images/Share.png')} // Path to share icon
             style={{ width: 24, height: 24 }}
