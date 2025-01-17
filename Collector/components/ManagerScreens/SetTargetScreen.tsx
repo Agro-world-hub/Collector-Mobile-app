@@ -10,7 +10,7 @@ interface SetTargetScreenProps {
   navigation: SetTargetScreenNavigationProps;
 }
 
-
+//this is the screen where the manager can set the target for the collector
 const SetTargetScreen: React.FC<SetTargetScreenProps> = ({ navigation }) => {
   const [selectedCrop, setSelectedCrop] = useState("");
   const [selectedVariety, setSelectedVariety] = useState("");
