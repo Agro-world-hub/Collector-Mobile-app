@@ -1,13 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView,Image, Alert } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp,useFocusEffect,useRoute } from '@react-navigation/native';
+import { RootStackParamList } from './types';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import { Picker } from '@react-native-picker/picker';
+import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios'; // Import axios
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
-import { RootStackParamList } from './types'; // Adjust the path according to your project structure
-import NavBar from './BottomNav';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import environment from '../environment/environment';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp,
+  } from "react-native-responsive-screen";
+const api = axios.create({
+  baseURL: environment.API_BASE_URL,
+});
 
+interface Crop {
+    id: string;
+    cropNameEnglish: string;
+}
+
+// Define navigation and route props
 type UnregisteredCropDetailsNavigationProp = StackNavigationProp<RootStackParamList, 'UnregisteredCropDetails'>;
 type UnregisteredCropDetailsRouteProp = RouteProp<RootStackParamList, 'UnregisteredCropDetails'>;
 
@@ -16,152 +31,411 @@ interface UnregisteredCropDetailsProps {
     route: UnregisteredCropDetailsRouteProp;
 }
 
-const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navigation, route }) => {
-    const { cropCount, userId } = route.params; // Get userId from params
-    const [currentCrop, setCurrentCrop] = useState(cropCount);
-    const [image, setImage] = useState<string | null>(null);
+const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navigation }) => {
+    const [cropCount, setCropCount] = useState(1);
+    const [cropNames, setCropNames] = useState<Crop[]>([]);
+    const [selectedCrop, setSelectedCrop] = useState<{ id: string; name: string } | null>(null);
+    const [varieties, setVarieties] = useState<{ id: string; variety: string }[]>([]);
+    const [selectedVariety, setSelectedVariety] = useState<string | null>(null);
+    const [unitPrices, setUnitPrices] = useState<{ [key: string]: number | null }>({ A: null, B: null, C: null });
+    const [quantities, setQuantities] = useState<{ [key: string]: number }>({ A: 0, B: 0, C: 0 });
+    const [total, setTotal] = useState<number>(0);
+    const [image, setImage] = useState<any>(null);
+    const [crops, setCrops] = useState<any[]>([]);
+    const [selectedVarietyName, setSelectedVarietyName] = useState<string | null>(null);
+    const [donebutton1visibale, setdonebutton1visibale] = useState(true);
+    const [donebutton2visibale, setdonebutton2visibale] = useState(false);
+    const [donebutton1disabale, setdonebutton1disabale] = useState(true);
+    const [donebutton2disabale, setdonebutton2disabale] = useState(false);
+    const [addbutton, setaddbutton] = useState(true);
+   
+    const route = useRoute<UnregisteredCropDetailsRouteProp>();
+    const { userId } = route.params;
+    console.log(userId)
 
-    // State for crop details
-    const [cropName, setCropName] = useState(''); // Added for crop name
-    const [quality, setQuality] = useState(''); // Added for quality
-    const [quantity, setQuantity] = useState('');
-    const [unitPrice, setUnitPrice] = useState('');
-    const [total, setTotal] = useState('');
-
-    // Automatically calculate total whenever quantity or unitPrice changes
-    useEffect(() => {
-        const quantityValue = parseFloat(quantity) || 0;
-        const unitPriceValue = parseFloat(unitPrice) || 0;
-        const calculatedTotal = quantityValue * unitPriceValue;
-        setTotal(calculatedTotal.toFixed(2)); // Ensures two decimal places
-    }, [quantity, unitPrice]);
-
-    const handleAddMore = () => {
-        setCurrentCrop(prevCrop => prevCrop + 1);
-        navigation.push('UnregisteredCropDetails', { cropCount: currentCrop + 1, userId });
+    useFocusEffect(
+        React.useCallback(() => {
+            const fetchCropNames = async () => {
+                try {
+                    const response = await axios.get(`${environment.API_BASE_URL}api/unregisteredfarmercrop/get-crop-names`);
+                    
+                    console.log(response.data);
+                    const uniqueCropNames = response.data.reduce((acc: { cropNameEnglish: any; }[], crop: { cropNameEnglish: any; }) => {
+                        if (!acc.some((item: { cropNameEnglish: any; }) => item.cropNameEnglish === crop.cropNameEnglish)) {
+                            acc.push(crop); // Push unique crop names
+                        }
+                        return acc;
+                    }, []);
+                    
+                    setCropNames(uniqueCropNames);
+                } catch (error) {
+                    console.error('Error fetching crop names:', error);
+                }
+            };
+    
+            fetchCropNames();
+        }, []) // Empty dependency array to ensure the effect only depends on screen focus
+    );
+    
+    const handleCropChange = async (crop: { id: string; cropNameEnglish: string }) => {
+        // Update the selected crop state
+        setSelectedCrop({ id: crop.id, name: crop.cropNameEnglish });
+        console.log(crop.cropNameEnglish);  // Log the selected crop name
+    
+        // Reset other states
+        setSelectedVariety(null);
+        setUnitPrices({ A: null, B: null, C: null });
+        setQuantities({ A: 0, B: 0, C: 0 });
+    
+        try {
+            // Use the crop ID to fetch varieties from the API
+            const varietiesResponse = await api.get(`api/unregisteredfarmercrop/crops/varieties/${crop.id}`);
+            console.log('Varieties response:', varietiesResponse.data);  // Log to verify the response structure
+    
+            // Ensure the response is valid and has data
+            if (varietiesResponse.data && Array.isArray(varietiesResponse.data)) {
+                // Update the varieties state with the response data
+                setVarieties(varietiesResponse.data.map((variety: { id: string, varietyNameEnglish: string }) => ({
+                    id: variety.id,  // Use the actual variety ID
+                    variety: variety.varietyNameEnglish
+                })));
+            } else {
+                console.error('Varieties response is not an array or is empty.');
+            }
+        } catch (error) {
+            console.error('Error fetching varieties:', error); // Log any errors
+        }
     };
+    
 
-    // New function to handle form submission
-    const handleDone = async () => {
-        // Prepare crop data
-        const cropData = {
-            userId, // Include the userId
-            cropName,
-            quality,
-            quantity: parseFloat(quantity),
-            unitPrice: parseFloat(unitPrice),
-            image,
-            total: parseFloat(total),
+    const handleVarietyChange = async (varietyId: string) => {
+        setSelectedVariety(varietyId);  // Set the selected variety ID
+    
+        // Find the selected variety name by the ID
+        const selectedVariety = varieties.find(variety => variety.id === varietyId);
+        if (selectedVariety) {
+            setSelectedVarietyName(selectedVariety.variety); // Store the name of the selected variety
+        }
+    
+        try {
+            // Send the selected varietyId to fetch unit prices
+            const pricesResponse = await api.get(`api/unregisteredfarmercrop/unitPrices/${varietyId}`);
+    
+            // Check if the response status is 404 (Not Found)
+            if (pricesResponse.status === 404) {
+                Alert.alert('No Prices Available', 'Prices for the selected variety were not found.');
+                setUnitPrices({});  // Clear any previously set prices
+                return;  // Stop further execution
+            }
+    
+            console.log(pricesResponse.data);  // Log the response to verify the data
+    
+            // Check if there are no prices in the response body
+            if (pricesResponse.data && pricesResponse.data.length === 0) {
+                // Show an alert if no prices are available
+                Alert.alert('No Prices Available', 'No prices are available for the selected variety.');
+                setUnitPrices({});  // Clear any previously set prices
+                return;  // Do not proceed with setting prices or calculating the total
+            }
+    
+            const prices = pricesResponse.data.reduce((acc: any, curr: any) => {
+                acc[curr.grade] = curr.price;
+                return acc;
+            }, {});
+    
+            setUnitPrices(prices);
+            calculateTotal();  // Recalculate total after setting prices
+        } catch (error) {
+            console.error('Error fetching unit prices for selected variety:', error);
+            // You can handle other error cases here, for example:
+            Alert.alert('Error', 'no any prices found !');
+        }
+    };
+    
+    
+    const handleQuantityChange = (grade: string, value: string) => {
+        const quantity = parseInt(value) || 0;
+        setQuantities(prev => ({ ...prev, [grade]: quantity }));
+        calculateTotal(); 
+    };
+    
+        useEffect(() => {
+            calculateTotal();
+        }, [unitPrices, quantities]);
+
+        const calculateTotal = () => {
+            const totalPrice = Object.keys(unitPrices).reduce((acc, grade) => {
+                const price = unitPrices[grade] || 0; // default to 0 if price is null
+                const quantity = quantities[grade] || 0; // default to 0 if quantity is 0
+                return acc + (price * quantity);
+            }, 0);
+            setTotal(totalPrice);
+            if(totalPrice!=0){
+            setdonebutton2disabale(true);
+            setdonebutton1disabale(false);
+            setaddbutton(false);
+                
+        }    
         };
 
-        try {
-            // Retrieve the token from AsyncStorage
-            const token = await AsyncStorage.getItem('token'); // Adjust the key as per your implementation
-
-            // Set up the request headers
-            const headers = {
-                Authorization: `Bearer ${token}`, // Add token to headers
-                'Content-Type': 'application/json',
-            };
-
-            // Replace with your actual backend endpoint
-            const response = await axios.post('http://10.0.2.2:3001/api/unregisteredfarmercrop/unregister-farmercrop', cropData, { headers });
-            console.log('Crop details submitted successfully:', response.data);
-            navigation.navigate('Dashboard' as any); // Or navigate to some confirmation page
-        } catch (error) {
-            console.error('Error submitting crop details:', error);
-            alert('Failed to submit crop details. Please try again.');
-        }
-    };
-
-    const selectImage = async () => {
-        // Request permission to access the image library
-        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-        if (!permissionResult.granted) {
-            alert('Permission to access the gallery is required!');
+      const incrementCropCount = async() => {
+        setaddbutton(true);
+        setdonebutton2disabale(false)
+        console.log('Incrementing crop count');
+        setdonebutton1visibale(false);
+        setdonebutton2visibale(true);
+        if (!selectedCrop || !selectedVariety) {
+            alert("Please select both a crop and a variety before adding.");
             return;
         }
-
-        // Open the image picker
+    
+        const newCrop = {
+            cropId: selectedCrop.id || '', 
+            varietyId: selectedVariety || '', 
+            gradeAprice: unitPrices.A || 0,  
+            gradeAquan: quantities.A || 0,   
+            gradeBprice: unitPrices.B || 0,
+            gradeBquan: quantities.B || 0,
+            gradeCprice: unitPrices.C || 0,
+            gradeCquan: quantities.C || 0,
+            image: image?.assets[0]?.base64 || null,
+        };
+    
+        setCrops(prevCrops => {
+            console.log('Adding new crop:', newCrop);
+            return [...prevCrops, newCrop];
+        });
+    
+        resetCropEntry();
+        setCropCount(prevCount => prevCount + 1);
+    };
+    
+    
+    const resetCropEntry = () => {
+        setSelectedCrop(null);
+        setSelectedVariety(null);
+        setUnitPrices({ A: null, B: null, C: null });
+        setQuantities({ A: 0, B: 0, C: 0 });
+        setImage(null);
+    };
+    
+    const handleImagePick = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
+            base64: true,
         });
-
-        if (!result.canceled && result.assets) {
-            setImage(result.assets[0].uri); // Set the image URI
+    
+        if (!result.canceled) {
+            setImage(result);
         }
     };
+    
+    const handleSubmit = async () => {
+
+        try {
+            if (crops.length === 0) {
+                alert("Please add at least one crop to proceed.");
+                return;
+            }
+            // Retrieve the token from AsyncStorage
+            const token = await AsyncStorage.getItem('token');
+    
+            // Construct the payload using the selected variety ID
+            const payload = {
+                farmerId: userId, // Farmer ID
+                crops: crops.map(crop => ({
+                    varietyId: crop.varietyId || '', // Include variety ID (ensure this is stored in the state for each crop)
+                    gradeAprice: crop.gradeAprice || 0,
+                    gradeAquan: crop.gradeAquan || 0,
+                    gradeBprice: crop.gradeBprice || 0,
+                    gradeBquan: crop.gradeBquan || 0,
+                    gradeCprice: crop.gradeCprice || 0,
+                    gradeCquan: crop.gradeCquan || 0,
+                    image: crop.image || null, // Include image if provided
+                })),
+            };
+    
+            console.log('Payload before sending:', payload);
+    
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+    
+            // Make the API call to submit crop data
+            await api.post('api/unregisteredfarmercrop/add-crops', payload, config);
+    
+            console.log('Crops added successfully', payload);
+            alert('All crop details submitted successfully!');
+            
+            // Navigate to the ReportPage
+            navigation.navigate('ReportPage' as any, { userId });
+        } catch (error) {
+            console.error('Error submitting crop data:', error);
+            alert('Failed to submit crop details. Please try again.');
+        }
+    };
+    
+    const handelsubmit2 = async () => {
+        try {
+            // Retrieve the token from AsyncStorage
+            const token = await AsyncStorage.getItem('token');
+    
+            // Construct the payload using the selected variety ID
+            const payload = {
+                farmerId: userId, // Farmer ID
+                crops: {
+                    varietyId: selectedVariety || '', // Include variety ID (ensure this is stored in the state for each crop)
+                    gradeAprice: unitPrices.A || 0,
+                    gradeAquan: quantities.A || 0,
+                    gradeBprice: unitPrices.B || 0,
+                    gradeBquan: quantities.B || 0,
+                    gradeCprice: unitPrices.C || 0,
+                    gradeCquan: quantities.C || 0,
+                    image: image?.assets[0]?.base64 || null, // Include image if provided
+                },
+            };
+    
+            console.log('Payload before sending:', payload);
+    
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+    
+            // Make the API call to submit crop data
+            await api.post('api/unregisteredfarmercrop/add-crops2', payload, config);
+    
+            console.log('Crops added successfully', payload);
+            alert('All crop details submitted successfully!');
+            
+            // Navigate to the ReportPage
+            navigation.navigate('ReportPage' as any, { userId });
+        } catch (error) {
+            console.error('Error submitting crop data:', error);
+            alert('Failed to submit crop details. Please try again.');
+        }
+    }
 
     return (
-        <ScrollView className="flex-1 p-5 bg-white">
-            <Text className="text-xl font-bold mb-4">Fill Crop details</Text>
-            <Text className="text-lg mb-4 ml-[150px]">Crop {currentCrop}</Text>
-
-            <TextInput
-                placeholder="Crop Name"
-                className="border mb-3 p-3 rounded"
-                value={cropName} // Bind to cropName state
-                onChangeText={setCropName} // Handle crop name changes
-            />
-            
-            <TextInput
-                placeholder="Quality"
-                className="border mb-3 p-3 rounded"
-                value={quality} // Bind to quality state
-                onChangeText={setQuality} // Handle quality changes
-            />
-            
-            <TextInput
-                placeholder="Quantity"
-                className="border mb-3 p-3 rounded"
-                keyboardType="numeric"
-                value={quantity}
-                onChangeText={setQuantity}
-            />
-            
-            <TextInput
-                placeholder="Unit Price (Rs.)"
-                className="border mb-3 p-3 rounded"
-                keyboardType="numeric"
-                value={unitPrice}
-                onChangeText={setUnitPrice}
-            />
-
-            {image ? (
-                <Image source={{ uri: image }} style={{ width: 200, height: 200, marginBottom: 10 }} />
-            ) : (
-                <TouchableOpacity 
-                    className="bg-gray-800 p-3 ml-[40px] w-[250px] h-[50px] items-center mb-3"
-                    onPress={selectImage}>
-                    <Text className="text-white text-lg">Add Product Image</Text>
+        <ScrollView className="flex-1 bg-gray-50 px-6 py-4" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
+            {/* <View className="flex-row items-center mt-1 mb-6">
+                <TouchableOpacity onPress={() => navigation.goBack()} className="p-2">
+                    <AntDesign name="left" size={24} color="#000" />
                 </TouchableOpacity>
-            )}
+                <Text className="text-center ml-[26%] text-lg font-semibold">Fill Details</Text>
+            </View> */}
+                 <View className="flex-row items-center  mb-6">
+                      <TouchableOpacity onPress={() => navigation.goBack()} className="">
+                        <AntDesign name="left" size={24} color="#000" />
+                      </TouchableOpacity>
+                      <Text className="flex-1 text-center text-xl font-bold text-black">Fill Details</Text>
+                    </View>
 
-            <TextInput
-                placeholder="Total (Rs.)"
-                className="border mb-3 p-3 rounded"
-                value={total}
-                editable={false} // Total should not be manually editable
-            />
+            <Text className="text-center text-md font-medium mt-2">Crop {cropCount}</Text>
+            <View className="mb-6 border-b p-2 border-gray-200 pb-6">
+            <Text className="text-gray-600 mt-4">Crop Name</Text>               
+              <View className="border border-gray-300 rounded-md mt-2 p-2">                 
+                
+              <Picker
+                    selectedValue={selectedCrop?.id || null} // Use the crop's id for selection
+                    onValueChange={(itemValue: string | null) => {
+                        const crop = cropNames.find(c => c.id === itemValue); // Find the crop by id
+                        if (crop) handleCropChange({ id: crop.id, cropNameEnglish: crop.cropNameEnglish }); // Pass the correct object structure
+                    }}
+                    style={{ height: 50, width: '100%' }}
+                >
+                    <Picker.Item label="Select Crop" value={null} />
+                    {cropNames.map((crop) => (
+                        <Picker.Item key={crop.id} label={crop.cropNameEnglish} value={crop.id} /> // Use id as the value
+                    ))}
+                </Picker>
 
-            <TouchableOpacity 
-                className="bg-green-500 p-3 rounded-full items-center mt-5"
-                onPress={handleAddMore}>
-                <Text className="text-white text-lg">Add More</Text>
-            </TouchableOpacity>
+                </View>
 
-            <TouchableOpacity 
-                className="border border-black p-3 rounded-full items-center mt-3"
-                onPress={handleDone}>
-                <Text className="text-black text-lg">Done</Text>
-            </TouchableOpacity>
+                <Text className="text-gray-600 mt-4">Variety</Text>
+                <View className="border border-gray-300 rounded-md mt-2 p-2">
+                <Picker
+                    selectedValue={selectedVariety || null}
+                    onValueChange={(itemValue: any) => handleVarietyChange(itemValue)}
+                    style={{ height: 50, width: '100%' }}
+                    enabled={!!selectedCrop}  // Ensure Picker is only enabled after selecting a crop
+                >
+                    <Picker.Item label="Select Variety" value={null} />
+                    {varieties.map((variety) => (
+                        <Picker.Item key={variety.id} label={variety.variety} value={variety.id} />
+                    ))}
+                </Picker>
 
-            <View className='mt-[60px]'>
-                <NavBar />
+
+                </View>
+
+                <Text className="text-gray-600 mt-4">Unit Prices according to Grades</Text>
+                <View className="border border-gray-300 rounded-lg mt-2 p-4">
+                    {['A', 'B', 'C'].map((grade) => (
+                        <View key={grade} className="flex-row items-center mb-3">
+                            <Text className="w-8 text-gray-600">{grade}</Text>
+                            <TextInput
+                                placeholder="Rs."
+                                keyboardType="numeric"
+                                className="flex-1 border border-gray-300 rounded-md p-2 mx-2 text-gray-600"
+                                value={unitPrices[grade]?.toString() || ''}
+                                editable={false}
+                            />
+                            <TextInput
+                                placeholder="kg"
+                                keyboardType="numeric"
+                                className="flex-1 border border-gray-300 rounded-md p-2 text-gray-600"
+                                value={quantities[grade].toString()}
+                                onChangeText={value => handleQuantityChange(grade, value)}
+                            />
+                        </View>
+                    ))}
+                </View>
+
+                <View>
+                <TouchableOpacity onPress={handleImagePick} className="mt-4 py-2 bg-black rounded-md">
+                    <Text className="text-center text-white">Add Image</Text>
+
+                </TouchableOpacity>
+                {image && (
+                    <Image
+                        source={{ uri: `data:image/jpeg;base64,${image.assets[0].base64}` }}
+                        style={{ width: 200, height: 200, marginTop: 10 ,marginLeft:70 }}
+                    />
+                )}
+                </View>
+
+
+                {/* Total and Buttons */}
+                <Text className="text-gray-600 mt-4">Total (Rs.)</Text>
+                <View className="border border-gray-300 rounded-md mt-2 p-2">
+                    <TextInput 
+                        placeholder="--Auto Fill--" 
+                        editable={false} 
+                        value={total.toString()} 
+                        className="text-gray-600" 
+                    />
+                </View>
+
+                <TouchableOpacity onPress={incrementCropCount} disabled={addbutton==true} className={`bg-green-500 rounded-md p-4 mt-2 ${addbutton ? 'opacity-50' : ''}`}>
+                    <Text className="text-center text-white font-semibold">Add more</Text>
+                </TouchableOpacity>
+               {donebutton1visibale && 
+                <TouchableOpacity onPress={handelsubmit2} disabled={donebutton1disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton1disabale ? 'opacity-50' : ''}`}>
+                    <Text className="text-center text-black font-semibold">Done</Text>
+                </TouchableOpacity>
+                }
+                {donebutton2visibale &&
+                <TouchableOpacity onPress={handleSubmit} disabled={donebutton2disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton2disabale ? 'opacity-50' : ''}`}>
+                   <Text className="text-center text-black font-semibold">Done</Text>
+                </TouchableOpacity>
+                }  
             </View>
         </ScrollView>
     );

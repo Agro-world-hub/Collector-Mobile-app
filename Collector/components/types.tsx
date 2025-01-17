@@ -5,7 +5,7 @@ export type RootStackParamList = {
     Registeredfarmer:undefined;
     Ufarmercropdetails:undefined;
     Dashboard:undefined;
-    QRScanner:undefined;
+    QRScanner:{userId:any};
     FormScreen: { scannedData: any };
     EngProfile:undefined;
     UnregisteredFarmerDetails:{ cropCount: 1, userId:number };
@@ -24,8 +24,75 @@ export type RootStackParamList = {
     TamRegisteredfarmer:undefined;
     TamUfarmercropdetails:undefined;
     TamUnregisteredFarmerDetails:undefined;
-    TamUnregisteredCropDetails:{ cropCount: number };
+    TamUnregisteredCropDetails:{ cropCount: number,userId:any };
     SinProfile:undefined;
     TamProfile:undefined;
+    SearchFarmer:{NICnumber: string; userId: any;};
+    FarmerQr:{ cropCount: number,userId:any,NICnumber: string; };
+    ComplainPage:{farmerName:any, farmerPhone:any, userId:number};
+    OfficerQr:undefined;
+    Profile:undefined;
+    ReportPage:{userId:string};
+    SearchPriceScreen:undefined;
+    PriceChart: {
+        varietyId: string;
+        cropName: string;
+        varietyName: string;
+      };
+    Main:undefined;
+    CollectionOfficersList:undefined;
 
+
+
+    OfficerSummary: {
+      officerId: string;
+      officerName: string;
+      phoneNumber1: string;
+      phoneNumber2: string;
+      collectionOfficerId:number;
+    };
+    ReportGenerator:{officerId:string,collectionOfficerId:number};
+    DailyTargetList:undefined;
+    ComplainHistory:undefined;
+    AddOfficerBasicDetails:undefined;
+    AddOfficerAddressDetails: {
+      formData: OfficerBasicDetailsFormData;
+      type: 'Permanent' | 'Temporary';
+      preferredLanguages: {
+        Sinhala: boolean;
+        English: boolean;
+        Tamil: boolean;
+      };
+      jobRole: string;
+    };
+    ClaimOfficer:undefined;
+    TransactionList:undefined
+
+    OTPE:{
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+      NICnumber: string;
+      district: string;
+      accNumber: string;
+      accHolderName: string;
+      bankName: string;
+      branchName: string
+    }
+    
+    
+
+};
+
+export type OfficerBasicDetailsFormData = {
+  userId: string;
+  firstNameEnglish: string;
+  lastNameEnglish: string;
+  firstNameSinhala: string;
+  lastNameSinhala: string;
+  firstNameTamil: string;
+  lastNameTamil: string;
+
+  nicNumber: string;
+  email: string;
 };
