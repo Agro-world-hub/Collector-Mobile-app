@@ -13,13 +13,13 @@ import { useTranslation } from "react-i18next";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import environment from '../environment/environment';
+import environment from "../environment/environment";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
-
+import { useFocusEffect } from "@react-navigation/native";
 
 interface complainItem {
   id: number;
@@ -64,7 +64,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
         }
       );
       setComplains(res.data);
-      console.log(res.data)
+      console.log(res.data);
     } catch (err) {
       Alert.alert(t("ReportHistory.sorry"), t("ReportHistory.noData"));
     } finally {
@@ -72,9 +72,11 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    fetchComplaints();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchComplaints(); // Fetch data every time the screen is focused
+    }, [])
+  );
 
   const formatDateTime = (isoDate: string) => {
     const date = new Date(isoDate);
@@ -107,19 +109,20 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
         className="flex-row justify-between"
         style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
       >
-      <TouchableOpacity onPress={() => navigation.navigate('EngProfile')}>
-  <AntDesign name="left" size={24} color="#000502" />
-</TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("EngProfile")}>
+          <AntDesign name="left" size={24} color="#000502" />
+        </TouchableOpacity>
 
-        <Text className="font-bold text-lg">
-          {t("Complaints")}
-        </Text>
+        <Text className="font-bold text-lg">{t("Complaints")}</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView
         className="p-4 flex-1"
-        contentContainerStyle={{ paddingBottom: hp(4),paddingHorizontal: wp(2) }}
+        contentContainerStyle={{
+          paddingBottom: hp(4),
+          paddingHorizontal: wp(2),
+        }}
       >
         {complains.map((complain) => (
           <View
@@ -150,9 +153,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
                       : "bg-green-100 text-green-800"
                   }`}
                 >
-                  {complain.status === "Opened"
-                    ? t(".Opened")
-                    : t("Closed")}
+                  {complain.status === "Opened" ? t(".Opened") : t("Closed")}
                 </Text>
               </View>
             </View>
@@ -171,9 +172,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
           style={{ padding: wp(4) }}
         >
           <View className="p-4 bg-white rounded-xl w-full">
-            <Text className="text-lg font-bold">
-              {t("Thank You")}
-            </Text>
+            <Text className="text-lg font-bold">{t("Thank You")}</Text>
             <ScrollView className="mt-8 h-[80%] pt-2">
               <Text className="pb-4">{complainReply || "Loading..."}</Text>
             </ScrollView>
@@ -184,9 +183,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
               className="bg-black py-4 rounded-lg items-center"
               onPress={() => setModalVisible(false)}
             >
-              <Text className="text-white text-lg">
-                {t("Closed")}
-              </Text>
+              <Text className="text-white text-lg">{t("Closed")}</Text>
             </TouchableOpacity>
           </View>
         </View>

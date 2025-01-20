@@ -90,7 +90,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
 
       {/* Crop Name Dropdown */}
       <View className="w-full mb-4">
-        <Text className="text-base mb-2">Crop Name</Text>
+        <Text className="text-base mb-2 text-center">Crop Name</Text>
         {loadingCrops ? (
           <ActivityIndicator size="small" color="#2AAD7A" />
         ) : (
@@ -111,7 +111,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
 
       {/* Variety Dropdown */}
       <View className="w-full mb-8">
-        <Text className="text-base mb-2">Variety</Text>
+        <Text className="text-base mb-2 text-center">Variety</Text>
         {loadingVarieties ? (
           <ActivityIndicator size="small" color="#2AAD7A" />
         ) : (

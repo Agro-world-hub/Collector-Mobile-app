@@ -96,6 +96,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     <ScrollView
       className="flex-1 w-full bg-white"
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
+      keyboardShouldPersistTaps="handled"
     >
       <TouchableOpacity onPress={() => navigation.goBack()} className="">
         <AntDesign name="left" size={24} color="#000502" />

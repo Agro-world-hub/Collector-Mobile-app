@@ -291,7 +291,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
     }
   };
 
-  // Fetch prices whenever the screen comes into focus
   useFocusEffect(
     useCallback(() => {
       fetchPrices();
@@ -299,7 +298,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
   );
 
   const handlePriceChange = (index: number, newPrice: string) => {
-    const cleanedPrice = newPrice.replace(/[^0-9.]/g, ''); // Remove non-numeric characters
+    const cleanedPrice = newPrice.replace(/[^0-9.]/g, ''); 
     const updatedPrices = [...editedPrices];
     updatedPrices[index].price = cleanedPrice;
     setEditedPrices(updatedPrices);
@@ -307,6 +306,15 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
 
   const handleButtonClick = async () => {
     if (isEditable) {
+
+      const hasPriceChanged = editedPrices.some(
+        (priceItem, index) => priceItem.price !== priceData[index].price
+      );
+  
+      if (!hasPriceChanged) {
+        Alert.alert("No Changes", "No prices were updated. Please edit the prices before submitting.");
+        return; // Exit early if no changes
+      }
       try {
         const token = await AsyncStorage.getItem("token");
         if (!token) {
@@ -343,6 +351,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
       } catch (error) {
         console.error("Error submitting price request:", error);
         setError("Failed to submit price update.");
+
         Alert.alert("Error", "Failed to submit price update.");
       }
     } else {
@@ -428,7 +437,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
           </View>
         )}
 
-        {/* Request/Submit Button */}
+        
         <TouchableOpacity
           className="bg-[#2AAD7A] rounded-[45px] py-3 h-12 mt-4 w-3/4 mx-auto"
           onPress={handleButtonClick}
@@ -438,7 +447,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
           </Text>
         </TouchableOpacity>
 
-        {/* Conditional Back Button */}
         {isEditable && (
           <TouchableOpacity
             className="border border-gray-400 w-[300px] mt-4 py-3 h-12 rounded-full items-center w-3/4 mx-auto"

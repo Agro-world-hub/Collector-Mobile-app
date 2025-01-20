@@ -68,7 +68,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
   );
 
   return (
-    <View className="flex-1 bg-white">
+    <ScrollView className="flex-1 bg-white">
       {loading ? (
         <DashboardSkeleton /> 
       ) : (
@@ -89,7 +89,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
               <Text className="text-center text-gray-500">You haven't achieved your daily target today</Text>
             </View>
 
-            <ScrollView contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 20 }}>
+            <View >
               <View className="w-full bg-green-500 rounded-xl p-4">
                 <Text className="text-center font-semibold text-lg text-white">Total weight</Text>
                 <View className="border-b border-gray-300 my-2" />
@@ -119,7 +119,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
                   </View>
                 </View>
               </View>
-            </ScrollView>
+            </View>
           </View>
 
           <View className="bg-white p-10 rounded-t-3xl shadow-lg ">
@@ -151,7 +151,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
           </View>
         </>
       )}
-    </View>
+    </ScrollView>
   );
 };
 
