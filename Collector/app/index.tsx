@@ -163,6 +163,9 @@ import AddOfficerAddressDetails from '@/components/ManagerScreens/AddOfficerAddr
 import ClaimOfficer from '@/components/ManagerScreens/ClaimOfficer';
 import TransactionList from '@/components/ManagerScreens/TransactionList';
 import FarmerReport from '@/components/ManagerScreens/FarmerReport';
+import SetTargetScreen from '@/components/ManagerScreens/SetTargetScreen';
+import DailyTarget from '@/components/ManagerScreens/DailyTarget';
+import TargetValidPeriod from '@/components/ManagerScreens/TargetValidPeriod';
 
 
 const Stack = createNativeStackNavigator(); 
@@ -243,6 +246,9 @@ const index = () => {
       <Stack.Screen name="ClaimOfficer" component={ClaimOfficer} />
       <Stack.Screen name="TransactionList" component={TransactionList as any} />
       <Stack.Screen name="FarmerReport" component={FarmerReport as any} />
+      <Stack.Screen name="SetTargetScreen" component={SetTargetScreen as any} />
+      <Stack.Screen name="DailyTarget" component={DailyTarget as any} />
+      <Stack.Screen name="TargetValidPeriod" component={TargetValidPeriod as any} />
       
       <Stack.Screen name='Main' component={MainTabNavigator} options={{ headerShown: false }} />
       

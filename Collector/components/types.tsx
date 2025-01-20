@@ -83,7 +83,9 @@ export type RootStackParamList = {
       branchName: string | null;
       selectedDate: string;
     };
-    SetTargetScreen:undefined;
+    SetTargetScreen:{fromDate:string,toDate:string,fromTime:string,toTime:string};
+    DailyTarget:undefined;
+    TargetValidPeriod:undefined;
     
 
 };
