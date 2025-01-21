@@ -108,6 +108,7 @@
 
 import React,{ useEffect } from 'react'
 import { View, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -166,6 +167,10 @@ import FarmerReport from '@/components/ManagerScreens/FarmerReport';
 import SetTargetScreen from '@/components/ManagerScreens/SetTargetScreen';
 import DailyTarget from '@/components/ManagerScreens/DailyTarget';
 import TargetValidPeriod from '@/components/ManagerScreens/TargetValidPeriod';
+import NoCollectionCenterScreen from '@/components/NoCollectionCenterScreen ';
+import environment from '@/environment/environment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 
 const Stack = createNativeStackNavigator(); 
@@ -248,8 +253,8 @@ const index = () => {
       <Stack.Screen name="FarmerReport" component={FarmerReport as any} />
       <Stack.Screen name="SetTargetScreen" component={SetTargetScreen as any} />
       <Stack.Screen name="DailyTarget" component={DailyTarget as any} />
-      <Stack.Screen name="TargetValidPeriod" component={TargetValidPeriod as any} />
-      
+      <Stack.Screen name="TargetValidPeriod" component={TargetValidPeriod as any} /> 
+      <Stack.Screen name="NoCollectionCenterScreen" component={NoCollectionCenterScreen} />
       <Stack.Screen name='Main' component={MainTabNavigator} options={{ headerShown: false }} />
       
 

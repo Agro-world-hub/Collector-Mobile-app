@@ -40,7 +40,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
   const { t } = useTranslation();
   const handleLogin = async () => {
     try {
-      // Replace `api.post` with `fetch` and pass the request payload as JSON
+      // Replace api.post with fetch and pass the request payload as JSON
 
       const response = await fetch(
         `${environment.API_BASE_URL}api/collection-officer/login`,
@@ -71,6 +71,8 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       // Parse the response data
   
       const { token, passwordUpdateRequired, payload, jobRole } = data;
+      
+      
       // Store token in AsyncStorage if received
       console.log("passwordUpdateRequired", passwordUpdateRequired);
       await AsyncStorage.setItem("jobRole", jobRole);
@@ -96,6 +98,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     <ScrollView
       className="flex-1 w-full bg-white"
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
+      keyboardShouldPersistTaps="handled"
     >
       <TouchableOpacity onPress={() => navigation.goBack()} className="">
         <AntDesign name="left" size={24} color="#000502" />
@@ -155,4 +158,4 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
   );
 };
 
-export default Login;
+export default Login;

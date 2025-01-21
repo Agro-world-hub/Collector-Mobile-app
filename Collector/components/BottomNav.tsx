@@ -55,6 +55,8 @@
 import React, {useState, useEffect} from 'react';
 import { View, TouchableOpacity, Image,  Animated, Keyboard  } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import environment from '@/environment/environment';
 
 const homeIcon = require('../assets/images/homee.png');
 const searchIcon = require('../assets/images/searchh.png');
@@ -97,6 +99,36 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
 
     fetchUserRole();
   }, []);
+  
+  
+  useEffect(() => {
+    const checkClaimStatus = async () => {
+      try {
+        // const userId = await AsyncStorage.getItem('userId');
+        // if (!userId) {
+        //   console.error('User ID is missing from AsyncStorage');
+        //   navigation.navigate('Login');
+        //   return;
+        // }
+
+        const response = await axios.get(`${environment.API_BASE_URL}api/collection-officer/get-claim-status`, {
+          headers: {
+            Authorization: `Bearer ${await AsyncStorage.getItem('token')}`,
+          },
+        });
+
+        if (response.data.claimStatus === 0) {
+          navigation.navigate('NoCollectionCenterScreen');
+        }
+      } catch (error) {
+        console.error('Error checking claim status:', error);
+        navigation.navigate('Login');
+      }
+    };
+
+    checkClaimStatus();
+  }, [navigation]);
+
   // Get the name of the currently focused tab from the state
   let currentTabName = state.routes[state.index]?.name;
   console.log('Current tab:', currentTabName);

@@ -44,6 +44,8 @@ interface DailyTargetProps {
 const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
   
   const [editMode, setEditMode] = useState(false); // Track whether edit mode is active
+  const [selectedToggle, setSelectedToggle] = useState('All'); // Track selected toggle
+
   const handleDelete = (id: string) => {
     // Implement delete functionality here
     console.log(`Deleted record with ID: ${id}`);
@@ -78,21 +80,93 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
         </View>
       </View>
 
+    
       {/* Toggle Buttons */}
-      <View className="flex-row justify-center items-center py-4 bg-black">
-        <TouchableOpacity className="px-4 py-2 bg-gray-300 rounded-full mx-2">
-          <Text className="text-black font-bold">All</Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="px-4 py-2 bg-gray-300 rounded-full mx-2">
-          <Text className="text-black font-bold">To do</Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="px-4 py-2 bg-green-500 rounded-full mx-2 flex-row items-center">
-          <Text className="text-white font-bold mr-2">Completed</Text>
-          <View className="bg-white rounded-full px-2">
-            <Text className="text-green-500 font-bold text-xs">11</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+<View className="flex-row justify-center items-center py-4 bg-black">
+  {editMode ? (
+    <>
+      {/* All Button */}
+      <TouchableOpacity
+        className={`px-4 py-2 rounded-full mx-2 ${
+          selectedToggle === 'All' ? 'bg-[#2AAD7A]' : 'bg-white'
+        }`}
+        onPress={() => setSelectedToggle('All')}
+      >
+        <Text className={`font-bold ${selectedToggle === 'All' ? 'text-white' : 'text-black'}`}>
+          All
+        </Text>
+      </TouchableOpacity>
+
+      {/* Active Button */}
+      <TouchableOpacity
+        className={`px-4 py-2 rounded-full mx-2 ${
+          selectedToggle === 'Active' ? 'bg-[#2AAD7A]' : 'bg-white'
+        }`}
+        onPress={() => setSelectedToggle('Active')}
+      >
+        <Text className={`font-bold ${selectedToggle === 'Active' ? 'text-white' : 'text-black'}`}>
+          Active
+        </Text>
+      </TouchableOpacity>
+
+      {/* Expired Button */}
+      <TouchableOpacity
+        className={`px-4 py-2 rounded-full mx-2 ${
+          selectedToggle === 'Expired' ? 'bg-[#2AAD7A]' : 'bg-white'
+        }`}
+        onPress={() => setSelectedToggle('Expired')}
+      >
+        <Text className={`font-bold ${selectedToggle === 'Expired' ? 'text-white' : 'text-black'}`}>
+          Expired
+        </Text>
+      </TouchableOpacity>
+    </>
+  ) : (
+    <>
+      {/* All Button */}
+      <TouchableOpacity
+        className={`px-4 py-2 rounded-full mx-2 ${
+          selectedToggle === 'All' ? 'bg-[#2AAD7A]' : 'bg-white'
+        }`}
+        onPress={() => setSelectedToggle('All')}
+      >
+        <Text className={`font-bold ${selectedToggle === 'All' ? 'text-white' : 'text-black'}`}>
+          All
+        </Text>
+      </TouchableOpacity>
+
+      {/* To Do Button */}
+      <TouchableOpacity
+        className={`px-4 py-2 rounded-full mx-2 ${
+          selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
+        }`}
+        onPress={() => setSelectedToggle('ToDo')}
+      >
+        <Text className={`font-bold ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
+          To do
+        </Text>
+      </TouchableOpacity>
+
+      {/* Completed Button */}
+      <TouchableOpacity
+        className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
+          selectedToggle === 'Completed' ? 'bg-[#2AAD7A]' : 'bg-white'
+        }`}
+        onPress={() => setSelectedToggle('Completed')}
+      >
+        <Text
+          className={`font-bold mr-2 ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
+        >
+          Completed
+        </Text>
+        <View className="bg-white rounded-full px-2">
+          <Text className="text-green-500 font-bold text-xs">11</Text>
+        </View>
+      </TouchableOpacity>
+    </>
+  )}
+</View>
+
 
       {/* Table Header */}
       <View className="flex-row bg-green-500 py-2 px-2 rounded-t-lg">
