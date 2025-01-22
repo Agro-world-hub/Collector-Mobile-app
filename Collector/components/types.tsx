@@ -86,7 +86,10 @@ export type RootStackParamList = {
     SetTargetScreen:{fromDate:string,toDate:string,fromTime:string,toTime:string};
     DailyTarget:undefined;
     TargetValidPeriod:undefined;
-    NoCollectionCenterScreen:undefined
+    NoCollectionCenterScreen:undefined;
+    EditTargetScreen:undefined;
+    PassTargetScreen:undefined;
+    RecieveTargetScreen:undefined;
     
     
 

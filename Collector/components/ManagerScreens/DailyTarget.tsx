@@ -1,9 +1,8 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Install expo/vector-icons
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { RootStackParamList } from '../types';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const data = [
   { no: "01", variety: "Variety #1", grade: "A", target: 20, completed: 10 },
@@ -42,141 +41,54 @@ interface DailyTargetProps {
 
 // Daily Target List Screen
 const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
-  
-  const [editMode, setEditMode] = useState(false); // Track whether edit mode is active
-  const [selectedToggle, setSelectedToggle] = useState('All'); // Track selected toggle
+  const [selectedToggle, setSelectedToggle] = useState('ToDo'); // Track selected toggle
 
-  const handleDelete = (id: string) => {
-    // Implement delete functionality here
-    console.log(`Deleted record with ID: ${id}`);
-  };
-  
-  const toggleEditMode = () => {
-    setEditMode(!editMode);
-  };
   return (
     <View className="flex-1 bg-black p-4">
       {/* Header */}
       <View className="bg-black px-4 py-3 flex-row justify-between items-center">
-        <Text className="text-white text-lg font-bold ml-[27%]">Daily Target</Text>
-        <View className="flex-row items-center">
-          {!editMode ? (
-            <>
-              <TouchableOpacity onPress={toggleEditMode} className="mr-4">
-                <MaterialIcons name="edit" size={24} color="white" />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={toggleEditMode}>
-                <Ionicons name="ellipsis-horizontal" size={24} color="white" />
-              </TouchableOpacity>
-            </>
-          ) : (
-            <TouchableOpacity onPress={toggleEditMode}>
-              <Image
-                source={require("../../assets/images/Eye.png")} // Replace with your actual path
-                style={{ width: 24, height: 24, tintColor: "white" }} // Adjust size and color
-              />
-            </TouchableOpacity>
-          )}
-        </View>
+        <Text className="text-white text-lg font-bold ml-[35%]">Daily Target</Text>
       </View>
 
-    
       {/* Toggle Buttons */}
-<View className="flex-row justify-center items-center py-4 bg-black">
-  {editMode ? (
-    <>
-      {/* All Button */}
-      <TouchableOpacity
-        className={`px-4 py-2 rounded-full mx-2 ${
-          selectedToggle === 'All' ? 'bg-[#2AAD7A]' : 'bg-white'
-        }`}
-        onPress={() => setSelectedToggle('All')}
-      >
-        <Text className={`font-bold ${selectedToggle === 'All' ? 'text-white' : 'text-black'}`}>
-          All
-        </Text>
-      </TouchableOpacity>
-
-      {/* Active Button */}
-      <TouchableOpacity
-        className={`px-4 py-2 rounded-full mx-2 ${
-          selectedToggle === 'Active' ? 'bg-[#2AAD7A]' : 'bg-white'
-        }`}
-        onPress={() => setSelectedToggle('Active')}
-      >
-        <Text className={`font-bold ${selectedToggle === 'Active' ? 'text-white' : 'text-black'}`}>
-          Active
-        </Text>
-      </TouchableOpacity>
-
-      {/* Expired Button */}
-      <TouchableOpacity
-        className={`px-4 py-2 rounded-full mx-2 ${
-          selectedToggle === 'Expired' ? 'bg-[#2AAD7A]' : 'bg-white'
-        }`}
-        onPress={() => setSelectedToggle('Expired')}
-      >
-        <Text className={`font-bold ${selectedToggle === 'Expired' ? 'text-white' : 'text-black'}`}>
-          Expired
-        </Text>
-      </TouchableOpacity>
-    </>
-  ) : (
-    <>
-      {/* All Button */}
-      <TouchableOpacity
-        className={`px-4 py-2 rounded-full mx-2 ${
-          selectedToggle === 'All' ? 'bg-[#2AAD7A]' : 'bg-white'
-        }`}
-        onPress={() => setSelectedToggle('All')}
-      >
-        <Text className={`font-bold ${selectedToggle === 'All' ? 'text-white' : 'text-black'}`}>
-          All
-        </Text>
-      </TouchableOpacity>
-
-      {/* To Do Button */}
-      <TouchableOpacity
-        className={`px-4 py-2 rounded-full mx-2 ${
-          selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
-        }`}
-        onPress={() => setSelectedToggle('ToDo')}
-      >
-        <Text className={`font-bold ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
-          To do
-        </Text>
-      </TouchableOpacity>
-
-      {/* Completed Button */}
-      <TouchableOpacity
-        className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
-          selectedToggle === 'Completed' ? 'bg-[#2AAD7A]' : 'bg-white'
-        }`}
-        onPress={() => setSelectedToggle('Completed')}
-      >
-        <Text
-          className={`font-bold mr-2 ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
+      <View className="flex-row justify-center items-center py-4 bg-black">
+        {/* To Do Button */}
+        <TouchableOpacity
+          className={`px-4 py-2 rounded-full mx-2 ${
+            selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
+          }`}
+          onPress={() => setSelectedToggle('ToDo')}
         >
-          Completed
-        </Text>
-        <View className="bg-white rounded-full px-2">
-          <Text className="text-green-500 font-bold text-xs">11</Text>
-        </View>
-      </TouchableOpacity>
-    </>
-  )}
-</View>
+          <Text className={`font-bold ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
+            To do
+          </Text>
+        </TouchableOpacity>
 
+        {/* Completed Button */}
+        <TouchableOpacity
+          className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
+            selectedToggle === 'Completed' ? 'bg-[#2AAD7A]' : 'bg-white'
+          }`}
+          onPress={() => setSelectedToggle('Completed')}
+        >
+          <Text
+            className={`font-bold mr-2 ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
+          >
+            Completed
+          </Text>
+          <View className="bg-white rounded-full px-2">
+            <Text className="text-green-500 font-bold text-xs">11</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
 
       {/* Table Header */}
       <View className="flex-row bg-green-500 py-2 px-2 rounded-t-lg">
-        {!editMode && <Text className="flex-1 text-white text-center font-bold">No</Text>}
+        <Text className="flex-1 text-white text-center font-bold">No</Text>
         <Text className="flex-2 text-white text-center font-bold">Variety</Text>
         <Text className="flex-1 text-white text-center font-bold">Grade</Text>
         <Text className="flex-1 text-white text-center font-bold">Target (kg)</Text>
         <Text className="flex-1 text-white text-center font-bold">Completed (kg)</Text>
-        {editMode && <Text className="flex-1 text-white text-center font-bold">Validity</Text>}
-        {editMode && <Text className="flex-1 text-white text-center font-bold">Action</Text>}
       </View>
 
       {/* Table Data */}
@@ -186,28 +98,14 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
             key={index}
             className={`flex-row items-center py-2 px-2 ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
           >
-            {!editMode && <Text className="flex-1 text-center">{item.no}</Text>}
+            <Text className="flex-1 text-center">{item.no}</Text>
             <Text className="flex-2 text-center">{item.variety}</Text>
             <Text className="flex-1 text-center">{item.grade}</Text>
             <Text className="flex-1 text-center">{item.target}</Text>
             <Text className="flex-1 text-center">{item.completed}</Text>
-            {editMode && <Text className="flex-1 text-center">N/A</Text>}
-            {editMode && (
-              <TouchableOpacity className="flex-1 items-center">
-                <Ionicons name="trash" size={20} color="red" />
-              </TouchableOpacity>
-            )}
           </View>
         ))}
       </ScrollView>
-
-      {/* Floating Button */}
-      <TouchableOpacity
-        onPress={() => navigation.navigate("TargetValidPeriod")}
-        className="absolute bottom-8 right-8 bg-green-500 rounded-full p-4 shadow-lg"
-      >
-        <Ionicons name="add" size={24} color="white" />
-      </TouchableOpacity>
     </View>
   );
 };

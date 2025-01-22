@@ -171,6 +171,9 @@ import NoCollectionCenterScreen from '@/components/NoCollectionCenterScreen ';
 import environment from '@/environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import EditTargetScreen from '@/components/ManagerScreens/EditTargetScreen';
+import PassTargetScreen from '@/components/ManagerScreens/PassTargetScreen';
+import RecieveTargetScreen from '@/components/ManagerScreens/RecieveTargetScreen';
 
 
 const Stack = createNativeStackNavigator(); 
@@ -251,10 +254,11 @@ const index = () => {
       <Stack.Screen name="ClaimOfficer" component={ClaimOfficer} />
       <Stack.Screen name="TransactionList" component={TransactionList as any} />
       <Stack.Screen name="FarmerReport" component={FarmerReport as any} />
-      <Stack.Screen name="SetTargetScreen" component={SetTargetScreen as any} />
+      <Stack.Screen name="EditTargetScreen" component={EditTargetScreen as any} />
       <Stack.Screen name="DailyTarget" component={DailyTarget as any} />
-      <Stack.Screen name="TargetValidPeriod" component={TargetValidPeriod as any} /> 
+      <Stack.Screen name="PassTargetScreen" component={PassTargetScreen as any} /> 
       <Stack.Screen name="NoCollectionCenterScreen" component={NoCollectionCenterScreen} />
+      <Stack.Screen name="RecieveTargetScreen" component={RecieveTargetScreen} />
       <Stack.Screen name='Main' component={MainTabNavigator} options={{ headerShown: false }} />
       
 

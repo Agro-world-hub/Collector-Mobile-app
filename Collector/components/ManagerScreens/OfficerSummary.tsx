@@ -125,25 +125,23 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
               size={100}
               width={10}
               fill={40}
-              tintColor="#16A34A"
+              tintColor="#0CB783"
               backgroundColor="#E5E7EB"
             />
             <Text className="text-center mt-2 text-lg font-bold">40%</Text>
-            <Text className="text-sm text-gray-500 mt-1">Total Weight</Text>
+            <Text className="text-sm text-gray-500 mt-1">Target Coverage</Text>
           </View>
+          
+            <View className="mt-6 items-center">
+                  <TouchableOpacity
+                    className="bg-[#2AAD7A] rounded-full w-64 py-3 h-12"
+                    onPress={() => navigation.navigate('EditTargetScreen')}
+                  >
+                    <Text className="text-white text-center font-medium">Open Target Board</Text>
+                  </TouchableOpacity>
+                </View>
 
-          {/* Total Farmers */}
-          <View className="items-center">
-            <CircularProgress
-              size={100}
-              width={10}
-              fill={40}
-              tintColor="#FACC15"
-              backgroundColor="#E5E7EB"
-            />
-            <Text className="text-center mt-2 text-lg font-bold">40%</Text>
-            <Text className="text-sm text-gray-500 mt-1">Total Farmers</Text>
-          </View>
+        
         </View>
       </View>
     </View>
