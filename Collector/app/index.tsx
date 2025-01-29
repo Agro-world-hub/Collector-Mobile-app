@@ -174,6 +174,8 @@ import axios from 'axios';
 import EditTargetScreen from '@/components/ManagerScreens/EditTargetScreen';
 import PassTargetScreen from '@/components/ManagerScreens/PassTargetScreen';
 import RecieveTargetScreen from '@/components/ManagerScreens/RecieveTargetScreen';
+import DailyTargetListForOfficers from '@/components/ManagerScreens/DailyTargetListForOfficers';
+import EditTargetManager from '@/components/ManagerScreens/EditTargetManager';
 
 
 const Stack = createNativeStackNavigator(); 
@@ -259,6 +261,9 @@ const index = () => {
       <Stack.Screen name="PassTargetScreen" component={PassTargetScreen as any} /> 
       <Stack.Screen name="NoCollectionCenterScreen" component={NoCollectionCenterScreen} />
       <Stack.Screen name="RecieveTargetScreen" component={RecieveTargetScreen} />
+      <Stack.Screen name="DailyTargetListForOfficers" component={DailyTargetListForOfficers as any} />
+      
+      <Stack.Screen name="EditTargetManager" component={EditTargetManager as any} />
       <Stack.Screen name='Main' component={MainTabNavigator} options={{ headerShown: false }} />
       
 

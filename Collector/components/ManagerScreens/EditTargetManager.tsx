@@ -4,10 +4,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
 
-type EditTargetScreenNavigationProps = StackNavigationProp<RootStackParamList, 'EditTargetScreen'>;
+type EditTargetManagerNavigationProps = StackNavigationProp<RootStackParamList, 'EditTargetManager'>;
 
-interface EditTargetScreenProps {
-  navigation: EditTargetScreenNavigationProps;
+interface EditTargetManagerProps {
+  navigation: EditTargetManagerNavigationProps;
   route: {
     params: {
       varietyName: string;
@@ -19,13 +19,13 @@ interface EditTargetScreenProps {
   };
 }
 
-const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route }) => {
+const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route }) => {
   const [myTarget, setMyTarget] = useState('100kg');
   const [isEditing, setIsEditing] = useState(false);
   const [toDoAmount] = useState('50kg');
-  
   const { varietyName, grade, target, todo, qty } = route.params;
-  console.log('managers target edit details',route.params);
+  console.log('officers edit details',varietyName, grade, target, todo, qty);
+  console.log(qty)
 
   return (
     <View className="flex-1 bg-white">
@@ -34,7 +34,7 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-semibold ml-[30%]">Variety #1</Text>
+        <Text className="text-white text-lg font-semibold ml-[30%]">{varietyName}</Text>
       </View>
 
       {/* Content */}
@@ -51,11 +51,11 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
 
         {/* My Target */}
         <View>
-          <Text className="text-gray-600 font-medium">Assigned Target</Text>
+          <Text className="text-gray-600 font-medium">My Target</Text>
           <View className="flex-row items-center mt-2 border border-gray-300 rounded-md px-3 py-2">
             <TextInput
               className="flex-1 text-gray-800"
-              value={myTarget}
+              value={target.toString()}
               editable={isEditing}
               onChangeText={(text) => setMyTarget(text)}
             />
@@ -93,7 +93,7 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
           <Text className="text-gray-600 font-medium">To Do Amount</Text>
           <TextInput
             className="border border-gray-300 rounded-md px-3 py-2 mt-2 text-gray-800"
-            value={toDoAmount}
+            value={todo.toString()}
             editable={false}
           />
         </View>
@@ -102,4 +102,4 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
   );
 };
 
-export default EditTargetScreen;
+export default EditTargetManager;

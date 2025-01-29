@@ -90,7 +90,8 @@ export type RootStackParamList = {
     EditTargetScreen:undefined;
     PassTargetScreen:undefined;
     RecieveTargetScreen:undefined;
-    
+    DailyTargetListForOfficers:{officerId:string,collectionOfficerId:number};
+    EditTargetManager:undefined;
     
 
 };

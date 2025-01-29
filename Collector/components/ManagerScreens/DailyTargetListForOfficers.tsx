@@ -7,10 +7,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import environment from '@/environment/environment';
 import { Ionicons } from '@expo/vector-icons';
 
-type DailyTargetNavigationProps = StackNavigationProp<RootStackParamList, 'DailyTarget'>;
+type DailyTargetListForOfficerstNavigationProps = StackNavigationProp<RootStackParamList, 'DailyTargetListForOfficers'>;
 
-interface DailyTargetProps {
-  navigation: DailyTargetNavigationProps;
+interface DailyTargetListForOfficersProps {
+  navigation: DailyTargetListForOfficerstNavigationProps;
+  route: {
+    params: {
+      collectionOfficerId: number;
+    };
+  };
 }
 
 interface TargetData {
@@ -19,15 +24,16 @@ interface TargetData {
   grade: string;
   target: number;
   todo: number;
-  qty: number; 
 }
 
-const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
+const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({ navigation,route }) => {
   const [todoData, setTodoData] = useState<TargetData[]>([]);
   const [completedData, setCompletedData] = useState<TargetData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedToggle, setSelectedToggle] = useState('ToDo'); // Track selected toggle
+  const {collectionOfficerId} = route.params;
+  console.log(collectionOfficerId);
 
   useEffect(() => {
     const fetchTargets = async () => {
@@ -35,19 +41,17 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
       const startTime = Date.now(); // Capture the start time for the spinner
       try {
         const authToken = await AsyncStorage.getItem('token');
-        const response = await axios.get(`${environment.API_BASE_URL}api/target/officer`, {
+        const response = await axios.get(`${environment.API_BASE_URL}api/target/officer/${collectionOfficerId}`, {
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
         });
 
         const allData = response.data.data;
-        console.log('--------all data----------',allData);
+        console.log(allData);
         const todoItems = allData.filter((item: TargetData) => item.todo > 0); // Move tasks with todo > 0 to ToDo
         const completedItems = allData.filter((item: TargetData) => item.todo === 0); // Tasks with todo === 0 go to Completed
-        
-        
-        
+
         setTodoData(todoItems);
         setCompletedData(completedItems);
         setError(null);
@@ -128,33 +132,33 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
       </View>
     ) : (
       displayedData.map((item, index) => (
-<TouchableOpacity
-  key={index}
-  className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
-  onPress={() => {
-    let qty = 0;
-
-    // ✅ Extract qty from centerTarget based on the grade
-    if (item.centerTarget) {
-      if (item.grade === 'A' && item.centerTarget.total_qtyA !== undefined) {
-        qty = parseFloat(item.centerTarget.total_qtyA);
-      } else if (item.grade === 'B' && item.centerTarget.total_qtyB !== undefined) {
-        qty = parseFloat(item.centerTarget.total_qtyB);
-      } else if (item.grade === 'C' && item.centerTarget.total_qtyC !== undefined) {
-        qty = parseFloat(item.centerTarget.total_qtyC);
-      }
-    }
-
-    // ✅ Pass qty value to navigation
-    navigation.navigate('EditTargetManager' as any, {
-      varietyName: item.varietyName,
-      grade: item.grade,
-      target: item.target,
-      todo: item.todo,
-      qty: qty, // ✅ Ensure qty is passed correctly
-    });
-  }}
->
+        <TouchableOpacity
+          key={index}
+          className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
+          onPress={() => {
+            let qty = 0;
+        
+            // ✅ Extract qty from centerTarget based on the grade
+            if (item.centerTarget) {
+              if (item.grade === 'A' && item.centerTarget.total_qtyA !== undefined) {
+                qty = parseFloat(item.centerTarget.total_qtyA);
+              } else if (item.grade === 'B' && item.centerTarget.total_qtyB !== undefined) {
+                qty = parseFloat(item.centerTarget.total_qtyB);
+              } else if (item.grade === 'C' && item.centerTarget.total_qtyC !== undefined) {
+                qty = parseFloat(item.centerTarget.total_qtyC);
+              }
+            }
+        
+            // ✅ Pass qty value to navigation
+            navigation.navigate('EditTargetScreen' as any, {
+              varietyName: item.varietyName,
+              grade: item.grade,
+              target: item.target,
+              todo: item.todo,
+              qty: qty, // ✅ Ensure qty is passed correctly
+            });
+          }}
+        >
         <View
           key={index}
           className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
@@ -185,7 +189,6 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
           >
             {item.todo.toFixed(2)}
           </Text>
-          
         </View>
         </TouchableOpacity>
       ))
@@ -197,4 +200,4 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
   );
 };
 
-export default DailyTarget;
+export default DailyTargetListForOfficers;
