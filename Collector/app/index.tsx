@@ -260,7 +260,7 @@ const index = () => {
       <Stack.Screen name="DailyTarget" component={DailyTarget as any} />
       <Stack.Screen name="PassTargetScreen" component={PassTargetScreen as any} /> 
       <Stack.Screen name="NoCollectionCenterScreen" component={NoCollectionCenterScreen} />
-      <Stack.Screen name="RecieveTargetScreen" component={RecieveTargetScreen} />
+      <Stack.Screen name="RecieveTargetScreen" component={RecieveTargetScreen as any} />
       <Stack.Screen name="DailyTargetListForOfficers" component={DailyTargetListForOfficers as any} />
       
       <Stack.Screen name="EditTargetManager" component={EditTargetManager as any} />

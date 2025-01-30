@@ -10,6 +10,7 @@ interface EditTargetManagerProps {
   navigation: EditTargetManagerNavigationProps;
   route: {
     params: {
+      varietyId: number;
       varietyName: string;
       grade: string;
       target: string;
@@ -22,10 +23,10 @@ interface EditTargetManagerProps {
 const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route }) => {
   const [myTarget, setMyTarget] = useState('100kg');
   const [isEditing, setIsEditing] = useState(false);
-  const [toDoAmount] = useState('50kg');
-  const { varietyName, grade, target, todo, qty } = route.params;
-  console.log('officers edit details',varietyName, grade, target, todo, qty);
-  console.log(qty)
+  
+  const { varietyName, grade, target, todo, qty ,varietyId} = route.params;
+ 
+  console.log('officers edit details',route.params);
 
   return (
     <View className="flex-1 bg-white">
@@ -73,13 +74,13 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
             <View className="flex-row justify-center space-x-4 mt-4 p-5">
               <TouchableOpacity
                 className="flex-1 bg-[#D16D6A] px-6 py-2 rounded-md items-center"
-                onPress={() => navigation.navigate('PassTargetScreen')}
+                onPress={() => navigation.navigate('PassTargetScreen'as any,{varietyName, grade, target, todo, qty ,varietyId})} // Save and exit edit mode
               >
                 <Text className="text-white font-medium">Pass</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex-1 bg-[#2AAD7A] px-6 py-2 rounded-md items-center"
-                onPress={() => navigation.navigate('RecieveTargetScreen')} // Save and exit edit mode
+                onPress={() => navigation.navigate('RecieveTargetScreen' as any,{varietyName, grade, target, todo, qty ,varietyId})} // Save and exit edit mode
               >
                 <Text className="text-white font-medium">Receive</Text>
               </TouchableOpacity>

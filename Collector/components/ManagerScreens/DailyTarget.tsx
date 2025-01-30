@@ -14,6 +14,7 @@ interface DailyTargetProps {
 }
 
 interface TargetData {
+  varietyId: number;
   centerTarget: any;
   varietyName: string;
   grade: string;
@@ -148,6 +149,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
     // ✅ Pass qty value to navigation
     navigation.navigate('EditTargetManager' as any, {
       varietyName: item.varietyName,
+      varietyId: item.varietyId,
       grade: item.grade,
       target: item.target,
       todo: item.todo,

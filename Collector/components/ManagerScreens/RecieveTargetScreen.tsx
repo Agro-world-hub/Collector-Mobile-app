@@ -1,68 +1,189 @@
-import React from 'react';
-import { View, Text, TextInput, Button, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
-import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { SelectList } from "react-native-dropdown-select-list";
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import environment from '@/environment/environment';
 
 // Define the navigation prop type
 type RecieveTargetScreenNavigationProps = StackNavigationProp<RootStackParamList, 'RecieveTargetScreen'>;
 
 interface RecieveTargetScreenProps {
   navigation: RecieveTargetScreenNavigationProps;
+  route: {
+    params: {
+      varietyName: string;
+      grade: string;
+      target: string;
+      todo: string;
+      qty: string;
+      varietyId: string;
+    };
+  };
 }
 
-const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation }) => {
-  const [assignee, setAssignee] = useState('Pasan Ranshika');
-  const [amount, setAmount] = useState('50');
+const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, route }) => {
+  const [assignee, setAssignee] = useState('');
+  const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
+  const [officers, setOfficers] = useState<{ key: string; value: string }[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [fetchingTarget, setFetchingTarget] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [maxAmount, setMaxAmount] = useState<number>(0);
 
-  const maxAmount = 50;
+  const { varietyName, grade, target, qty, varietyId } = route.params;
+
+  console.log("Initial Max Amount:", maxAmount);
+
+  // ✅ Fetch officers dynamically
+  const fetchOfficers = async () => {
+    try {
+      setLoading(true);
+      setErrorMessage(null);
+
+      const token = await AsyncStorage.getItem('token');
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/collection-manager/collection-officers`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Officers:", response.data.data);
+
+      if (response.data.status === 'success') {
+        const formattedOfficers = response.data.data.map((officer: any) => ({
+          key: officer.collectionOfficerId.toString(),
+          value: officer.fullName,
+        }));
+
+        setOfficers([{ key: '0', value: '--Select an officer--' }, ...formattedOfficers]);
+      } else {
+        setErrorMessage('Failed to fetch officers.');
+      }
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        setErrorMessage('No officers available.');
+      } else {
+        setErrorMessage('An error occurred while fetching officers.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ Fetch Daily Target when officer is selected
+  const fetchDailyTarget = async (officerId: string) => {
+    if (officerId === '0') return; // Ignore if no officer selected
+  
+    try {
+      setFetchingTarget(true);
+      setErrorMessage(null);
+  
+      const token = await AsyncStorage.getItem('token');
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/target/get-daily-todo-byvariety/${officerId}/${varietyId}/${grade}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      console.log("Daily Target Response:", response.data);
+  
+      if (response.data.status === 'success' && response.data.data.length > 0) {
+        const { target, complete } = response.data.data[0];
+        const calculatedTodo = parseFloat(target) - parseFloat(complete);
+  
+        setMaxAmount(calculatedTodo > 0 ? calculatedTodo : 0); // Ensure todo is not negative
+        setAmount(calculatedTodo.toString()); // Set default value
+      } else {
+        setErrorMessage('No target data found for selected officer.');
+  
+        // ✅ Auto-refresh fields after 3 seconds
+        setTimeout(() => {
+          setErrorMessage(null);
+          setMaxAmount(0);
+          setAmount('');
+          setAssignee('');
+        }, 3000);
+      }
+    } catch (error: any) {
+      setErrorMessage('Failed to fetch daily target.');
+  
+      // ✅ Auto-refresh fields after 3 seconds
+      setTimeout(() => {
+        setErrorMessage(null);
+        setMaxAmount(0);
+        setAmount('');
+        setAssignee('');
+      }, 3000);
+    } finally {
+      setFetchingTarget(false);
+    }
+  };
+  useEffect(() => {
+    fetchOfficers();
+  }, []);
 
   const handleAmountChange = (text: string) => {
     setAmount(text);
     const numericValue = parseFloat(text);
     if (numericValue > maxAmount) {
-      setError(`You have exceeded maximum amount`);
+      setError(`You have exceeded the maximum amount.`);
     } else {
       setError('');
     }
   };
 
-  const assigneeOptions = [
-    { key: '1', value: '--Select an officer--' },
-    { key: '2', value: 'pasan Rashmika' },
-  ];
-
   return (
-    <View className="flex-1 bg-white ">
-       <View className="flex-row items-center bg-[#2AAD7A] p-6 rounded-b-lg">
+    <View className="flex-1 bg-white">
+      {/* ✅ Fixed Header */}
+      <View className="flex-row items-center bg-[#2AAD7A] p-6 rounded-b-lg">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-semibold ml-[30%]">Variety #1</Text>
+        <Text className="text-white text-lg font-semibold ml-[30%]">{varietyName}</Text>
       </View>
 
-      <View className="bg-white rounded-lg  p-4">
+      <View className="bg-white rounded-lg p-4">
         <View className='p-5'>
           <Text className="text-gray-700 mb-2">Short Stock Assignee</Text>
-          <View className="border border-gray-300 rounded-lg mb-4">
-            <SelectList
-              setSelected={(value: string) => setAssignee(value)}
-              data={assigneeOptions}
-              save="value"
-              defaultOption={{ key: '1', value: '--Select an officer--' }}
-            />
-          </View>
-          
+
+          {loading ? (
+            <ActivityIndicator size="large" color="#2AAD7A" />
+          ) : errorMessage ? (
+            <Text className="text-red-500">{errorMessage}</Text>
+          ) : (
+            <View className="border border-gray-300 rounded-lg mb-4">
+              <SelectList
+                setSelected={(value: string) => {
+                  setAssignee(value);
+                  fetchDailyTarget(value); // Fetch daily target when an officer is selected
+                }}
+                data={officers}
+                save="key"
+                defaultOption={{ key: '0', value: '--Select an officer--' }}
+              />
+            </View>
+          )}
+
           <View className="border-b border-gray-300 my-4" />
 
-          <Text className="text-gray text-sm  mb-2 text-center mt-4">The maximum amount you can receive :</Text>
-          <Text className="text-xl font-bold text-center text-black mb-4">50kg</Text>
+          <Text className="text-gray text-sm mb-2 text-center mt-4">The maximum amount you can receive:</Text>
+          {fetchingTarget ? (
+            <ActivityIndicator size="small" color="#2AAD7A" />
+          ) : (
+            <Text className="text-xl font-bold text-center text-black mb-4">{maxAmount}kg</Text>
+          )}
         </View>
-
-        
 
         <View className='p-5'>
           <Text className="text-gray-700 mb-2">Amount (kg)</Text>
@@ -79,7 +200,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation })
       <View className="mt-6 items-center">
         <TouchableOpacity
           className="bg-[#2AAD7A] rounded-full w-64 py-3"
-          
+          disabled={loading || fetchingTarget}
         >
           <Text className="text-white text-center font-medium">Save</Text>
         </TouchableOpacity>
