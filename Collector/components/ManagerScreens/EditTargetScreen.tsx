@@ -12,9 +12,12 @@ interface EditTargetScreenProps {
     params: {
       varietyName: string;
       grade: string;
+      varietyId: string;
       target: string;
       todo: string;
       qty: string;
+      collectionOfficerId:number;
+      
     };
   };
 }
@@ -24,7 +27,7 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
   const [isEditing, setIsEditing] = useState(false);
   const [toDoAmount] = useState('50kg');
   
-  const { varietyName, grade, target, todo, qty } = route.params;
+  const { varietyName, grade, target, todo, qty,varietyId ,collectionOfficerId } = route.params;
   console.log('managers target edit details',route.params);
 
   return (
@@ -34,7 +37,7 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-semibold ml-[30%]">Variety #1</Text>
+        <Text className="text-white text-lg font-semibold ml-[30%]">{varietyName}</Text>
       </View>
 
       {/* Content */}
@@ -55,7 +58,7 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
           <View className="flex-row items-center mt-2 border border-gray-300 rounded-md px-3 py-2">
             <TextInput
               className="flex-1 text-gray-800"
-              value={myTarget}
+              value={target.toString()}
               editable={isEditing}
               onChangeText={(text) => setMyTarget(text)}
             />
@@ -70,16 +73,16 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
 
           {/* Buttons in Edit Mode */}
           {isEditing && (
-            <View className="flex-row justify-center space-x-4 mt-4 p-5">
+           <View className="flex-row justify-center space-x-4 mt-4 p-5">
               <TouchableOpacity
                 className="flex-1 bg-[#D16D6A] px-6 py-2 rounded-md items-center"
-                onPress={() => navigation.navigate('PassTargetScreen')}
+                onPress={() => navigation.navigate('PassTargetBetweenOfficers'as any,{varietyName, grade, target, todo, qty ,varietyId,collectionOfficerId})} // Save and exit edit mode
               >
                 <Text className="text-white font-medium">Pass</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex-1 bg-[#2AAD7A] px-6 py-2 rounded-md items-center"
-                onPress={() => navigation.navigate('RecieveTargetScreen')} // Save and exit edit mode
+                onPress={() => navigation.navigate('RecieveTargetBetweenOfficers' as any,{varietyName, grade, target, todo, qty ,varietyId,collectionOfficerId})} // Save and exit edit mode
               >
                 <Text className="text-white font-medium">Receive</Text>
               </TouchableOpacity>
@@ -93,7 +96,7 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
           <Text className="text-gray-600 font-medium">To Do Amount</Text>
           <TextInput
             className="border border-gray-300 rounded-md px-3 py-2 mt-2 text-gray-800"
-            value={toDoAmount}
+            value={todo.toString()}
             editable={false}
           />
         </View>

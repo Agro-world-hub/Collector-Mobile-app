@@ -92,6 +92,8 @@ export type RootStackParamList = {
     RecieveTargetScreen:undefined;
     DailyTargetListForOfficers:{officerId:string,collectionOfficerId:number};
     EditTargetManager:undefined;
+    PassTargetBetweenOfficers:undefined;
+    RecieveTargetBetweenOfficers:undefined
     
 
 };

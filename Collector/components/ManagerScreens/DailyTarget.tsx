@@ -153,7 +153,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
       grade: item.grade,
       target: item.target,
       todo: item.todo,
-      qty: qty, // ✅ Ensure qty is passed correctly
+      qty: qty, 
     });
   }}
 >

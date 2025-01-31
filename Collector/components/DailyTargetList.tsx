@@ -33,13 +33,13 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
       const startTime = Date.now(); // Capture the start time for the spinner
       try {
         const authToken = await AsyncStorage.getItem('token');
-        const response = await axios.get(`${environment.API_BASE_URL}api/target/get-daily-target-officer`, {
+        const response = await axios.get(`${environment.API_BASE_URL}api/target/officer`, {
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
         });
 
-        const allData = response.data;
+        const allData = response.data.data;
         const todoItems = allData.filter((item: TargetData) => item.todo > 0); // Move tasks with todo > 0 to ToDo
         const completedItems = allData.filter((item: TargetData) => item.todo === 0); // Tasks with todo === 0 go to Completed
 

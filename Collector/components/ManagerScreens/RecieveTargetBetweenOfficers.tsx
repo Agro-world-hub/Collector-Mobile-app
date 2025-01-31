@@ -9,23 +9,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import environment from '@/environment/environment';
 
 // Define the navigation prop type
-type RecieveTargetScreenNavigationProps = StackNavigationProp<RootStackParamList, 'RecieveTargetScreen'>;
+type RecieveTargetBetweenOfficersScreenNavigationProps = StackNavigationProp<RootStackParamList, 'RecieveTargetBetweenOfficers'>;
 
-interface RecieveTargetScreenProps {
-  navigation: RecieveTargetScreenNavigationProps;
+interface RecieveTargetBetweenOfficersScreenProps {
+  navigation: RecieveTargetBetweenOfficersScreenNavigationProps;
   route: {
     params: {
+      varietyId: number;
       varietyName: string;
       grade: string;
       target: string;
       todo: string;
       qty: string;
-      varietyId: string;
+      collectionOfficerId: number;
     };
   };
 }
 
-const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, route }) => {
+const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenProps> = ({ navigation, route }) => {
   const [assignee, setAssignee] = useState('');
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
@@ -35,7 +36,11 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [maxAmount, setMaxAmount] = useState<number>(0);
 
-  const { varietyName, grade, target, qty, varietyId } = route.params;
+  const { varietyName, grade, target, qty, varietyId,collectionOfficerId } = route.params;
+  console.log(collectionOfficerId)
+  
+  const toOfficerId = collectionOfficerId;
+  console.log('toOfficerId',toOfficerId);  // The officer transferring the target
 
   console.log("Initial Max Amount:", maxAmount);
 
@@ -166,9 +171,10 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
   
       const token = await AsyncStorage.getItem('token');
       const response = await axios.put(
-        `${environment.API_BASE_URL}api/target/manager/recieve-target`,
+        `${environment.API_BASE_URL}api/target/recieve-target`,
         {
-          fromOfficerId: assignee,  // The officer transferring the target
+          fromOfficerId: assignee,
+          toOfficerId:toOfficerId,  // The officer transferring the target
           varietyId: varietyId, 
           grade,
           amount: numericAmount,
@@ -182,7 +188,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
   
       if (response.status === 200) {
         Alert.alert("Success", "Target received successfully.");
-        navigation.goBack();
+        navigation.navigate('DailyTargetListForOfficers'as any,{collectionOfficerId:collectionOfficerId}); 
       } else {
         Alert.alert("Error", "Failed to receive target.");
       }
@@ -266,4 +272,4 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
   );
 };
 
-export default RecieveTargetScreen;
+export default RecieveTargetBetweenOfficers;
