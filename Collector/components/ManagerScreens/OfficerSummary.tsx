@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -14,6 +14,8 @@ import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../types";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import environment from "@/environment/environment";
+import io from "socket.io-client"; 
+import { socket } from "../../services/socket"
 
 type OfficerSummaryNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -40,13 +42,33 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
   } = route.params;
   const [showMenu, setShowMenu] = useState(false);
   console.log(route.params);
-
-  const handleDial = (phoneNumber: string) => {
+  const [officerStatus, setOfficerStatus] = useState('offline');
+  
+  console.log(officerStatus);
+    const handleDial = (phoneNumber: string) => {
     const phoneUrl = `tel:${phoneNumber}`;
     Linking.openURL(phoneUrl).catch((err) =>
       console.error("Failed to open dial pad:", err)
     );
   };
+
+
+
+
+   useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Socket connected successfully");
+    });
+
+    socket.on("connect_error", (error: any) => {
+      console.log("Socket connection error:", error);
+    });
+
+    return () => {
+      socket.disconnect();
+      console.log("Socket disconnected");
+    };
+  }, [collectionOfficerId]);
 
   const handleDisclaim = async () => {
     setShowMenu(false);
@@ -92,6 +114,71 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
       Alert.alert("Error", "Failed to disclaim officer. Please try again.");
     }
   };
+
+  // useEffect(() => {
+  //   const fetchOfficerStatus = async () => {
+  //     console.log(collectionOfficerId)
+  //     if (collectionOfficerId) {
+  //       try {
+  //         const res = await fetch(
+  //           `${environment.API_BASE_URL}api/collection-manager/get-officer-online`,
+  //           {
+  //             method: "POST",
+  //             headers: {
+  //               "Content-Type": "application/json",
+  //             },
+  //             body: JSON.stringify({ collectionOfficerId }),
+  //           }
+  //         );
+          
+  //         if (!res.ok) {
+  //           throw new Error("Failed to fetch officer status");
+  //         }
+  
+  //         const data = await res.json();
+  //         console.log(data.result.OnlineStatus);
+  //       } catch (error) {
+  //         console.error("Error fetching officer status:", error);
+  //       }
+  //     }
+  //   };
+  
+  //   fetchOfficerStatus();
+  // }, [collectionOfficerId]); 
+
+  // useEffect(() => {
+  //   // Connect to the backend server using the appropriate URL
+  //   const socket = io(environment.API_BASE_URL, {
+  //     transports: ['websocket'],
+  //   });
+    
+
+  //   // On successful connection
+  //   socket.on('connect', () => {
+  //     console.log('Socket connected successfully');
+  //   });
+
+  //   // Handle connection errors
+  //   socket.on('connect_error', (error) => {
+  //     console.log('Socket connection error:', error);
+  //   });
+
+  //   // Listen for events from the server
+  //   // socket.on('officer_status_update', (data) => {
+  //   //   console.log('Received officer status update:', data);
+  //   // });
+
+  //   // Clean up socket connection when the component unmounts
+  //   return () => {
+  //     socket.disconnect();
+  //     console.log('Socket disconnected');
+  //   };
+  // }, []);
+  
+// Client-Side (React Native)
+
+
+
 
   return (
     <View className="flex-1 bg-white ">
@@ -229,25 +316,23 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
               size={100}
               width={10}
               fill={40}
-              tintColor="#16A34A"
+              tintColor="#0CB783"
               backgroundColor="#E5E7EB"
             />
             <Text className="text-center mt-2 text-lg font-bold">40%</Text>
-            <Text className="text-sm text-gray-500 mt-1">Total Weight</Text>
+            <Text className="text-sm text-gray-500 mt-1">Target Coverage</Text>
           </View>
+          
+            <View className="mt-6 items-center">
+                  <TouchableOpacity
+                    className="bg-[#2AAD7A] rounded-full w-64 py-3 h-12"
+                    onPress={() => navigation.navigate('EditTargetScreen')}
+                  >
+                    <Text className="text-white text-center font-medium">Open Target Board</Text>
+                  </TouchableOpacity>
+                </View>
 
-          {/* Total Farmers */}
-          <View className="items-center">
-            <CircularProgress
-              size={100}
-              width={10}
-              fill={40}
-              tintColor="#FACC15"
-              backgroundColor="#E5E7EB"
-            />
-            <Text className="text-center mt-2 text-lg font-bold">40%</Text>
-            <Text className="text-sm text-gray-500 mt-1">Total Farmers</Text>
-          </View>
+        
         </View>
       </View>
     </View>

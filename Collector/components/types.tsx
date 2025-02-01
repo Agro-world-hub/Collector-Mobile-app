@@ -32,7 +32,7 @@ export type RootStackParamList = {
     ComplainPage:{farmerName:any, farmerPhone:any, userId:number};
     OfficerQr:undefined;
     Profile:undefined;
-    ReportPage:{userId:string};
+    ReportPage:{userId:string,registeredFarmerId:Number};
     SearchPriceScreen:undefined;
     PriceChart: {
         varietyId: string;
@@ -66,7 +66,30 @@ export type RootStackParamList = {
       jobRole: string;
     };
     ClaimOfficer:undefined;
-    TransactionList:undefined
+    TransactionList:undefined;
+    FarmerReport:{
+      registeredFarmerId: number;
+      userId: number;
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+      address: string;
+      NICnumber: string;
+      totalAmount: number;
+      bankAddress: string | null;
+      accountNumber: string | null;
+      accountHolderName: string | null;
+      bankName: string | null;
+      branchName: string | null;
+      selectedDate: string;
+    };
+    SetTargetScreen:{fromDate:string,toDate:string,fromTime:string,toTime:string};
+    DailyTarget:undefined;
+    TargetValidPeriod:undefined;
+    NoCollectionCenterScreen:undefined;
+    EditTargetScreen:undefined;
+    PassTargetScreen:undefined;
+    RecieveTargetScreen:undefined;
 
     OTPE:{
       firstName: string;

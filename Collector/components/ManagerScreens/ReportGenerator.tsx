@@ -9,6 +9,7 @@ import * as Sharing from 'expo-sharing';
 import { RouteProp } from '@react-navigation/native';
 import * as MediaLibrary from 'expo-media-library';
 import {  Platform } from 'react-native';
+import * as FileSystem from 'expo-file-system';
 
 
 
@@ -32,6 +33,15 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
   const { officerId,collectionOfficerId } = route.params;
   console.log(officerId);
   
+  const getTodayInColombo = () => {
+    const now = new Date();
+    const colomboOffset = 330; // Colombo is UTC+5:30
+    const utcOffset = now.getTimezoneOffset();
+    const colomboTime = new Date(now.getTime() + (colomboOffset - utcOffset) * 60 * 1000);
+    colomboTime.setHours(0, 0, 0, 0); // Normalize to midnight
+    return colomboTime;
+  };
+  
 
   const handleGenerate = async () => {
     if (!startDate || !endDate) {
@@ -39,11 +49,20 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
       return;
     }
   
-    const fileUri = await handleGeneratePDF(formatDate(startDate), formatDate(endDate), officerId,collectionOfficerId);
+    
+    
+    
+    if (endDate < startDate) {
+      Alert.alert('Error', 'End date cannot be earlier than the start date.');
+      return;
+    }
+    
+    // Proceed with PDF generation
+    const fileUri = await handleGeneratePDF(formatDate(startDate), formatDate(endDate), officerId, collectionOfficerId);
     if (fileUri) {
       const reportIdMatch = fileUri.match(/report_(.+)\.pdf/);
       const reportId = reportIdMatch ? reportIdMatch[1] : null;
-
+  
       setGeneratedReportId(reportId); // Store the report ID to display in the UI
       setReportGenerated(true);
       Alert.alert('Success', 'PDF Generated Successfully!');
@@ -51,6 +70,8 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
       Alert.alert('Error', 'Failed to generate PDF');
     }
   };
+  
+
   
   const handleDownload = async () => {
     if (!startDate || !endDate) {
@@ -79,9 +100,20 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
         return;
       }
   
+      // Define the new file name
+      const date = new Date().toISOString().slice(0, 10); // Get the current date (YYYY-MM-DD)
+      const fileName = `Report_${officerId}_${date}.pdf`; // Example file name
+      const tempUri = `${FileSystem.cacheDirectory}${fileName}`;
+  
+      // Copy the file to a new path with the desired name
+      await FileSystem.copyAsync({
+        from: fileUri, // Original URI
+        to: tempUri, // New URI with the desired file name
+      });
+  
       if (Platform.OS === 'android') {
         // Save to Media Library (Downloads folder)
-        const asset = await MediaLibrary.createAssetAsync(fileUri);
+        const asset = await MediaLibrary.createAssetAsync(tempUri);
         const album = await MediaLibrary.getAlbumAsync('Download');
   
         if (!album) {
@@ -90,16 +122,17 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
           await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
         }
   
-        Alert.alert('Success', 'File saved to Downloads folder.');
+        Alert.alert('Success', `File saved as ${fileName} in the Downloads folder.`);
       } else {
         // For iOS, inform the user about the app's document directory
-        Alert.alert('Success', `File saved to app's directory: ${fileUri}`);
+        Alert.alert('Success', `File saved to app's directory: ${tempUri}`);
       }
     } catch (error) {
       console.error('Failed to save file:', error);
       Alert.alert('Error', 'An error occurred while saving the file.');
     }
   };
+  
   
   const handleShare = async () => {
     if (!startDate || !endDate) {
@@ -164,12 +197,13 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
             <Text className="text-gray-500">{formatDate(startDate)}</Text>
           </TouchableOpacity>
           {showStartPicker && (
-            <DateTimePicker
-              value={startDate || new Date()}
-              mode="date"
-              display="default"
-              onChange={(event, date) => handleDateChange(event, date, 'start')}
-            />
+           <DateTimePicker
+           value={startDate || new Date()}
+           mode="date"
+           display="default"
+           maximumDate={getTodayInColombo()} // Disallow future dates
+           onChange={(event, date) => handleDateChange(event, date, 'start')}
+         />
           )}
         </View>
 
@@ -184,11 +218,13 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
           </TouchableOpacity>
           {showEndPicker && (
             <DateTimePicker
-              value={endDate || new Date()}
-              mode="date"
-              display="default"
-              onChange={(event, date) => handleDateChange(event, date, 'end')}
-            />
+            value={endDate || new Date()}
+            mode="date"
+            display="default"
+            maximumDate={getTodayInColombo()} // Disallow future dates 
+            minimumDate={startDate} // End date must not be earlier than the start date
+            onChange={(event, date) => handleDateChange(event, date, 'end')}
+          />
           )}
         </View>
 

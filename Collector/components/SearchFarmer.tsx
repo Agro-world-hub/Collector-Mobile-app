@@ -95,6 +95,10 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
         Alert.alert("Error", "An unexpected error occurred.");
       }
     }
+
+    // Reset the NIC number and noResults after the search is completed
+    setNICnumber('');
+    setNoResults(false); // Optionally hide the "No results" message immediately after resetting
   };
 
   return (

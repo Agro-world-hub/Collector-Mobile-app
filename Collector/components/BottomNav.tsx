@@ -53,8 +53,12 @@
 // export default BottomNav;
 
 import React, {useState, useEffect} from 'react';
+import NetInfo from '@react-native-community/netinfo';
 import { View, TouchableOpacity, Image,  Animated, Keyboard  } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import environment from '@/environment/environment';
+import { AppState } from 'react-native';
 
 const homeIcon = require('../assets/images/homee.png');
 const searchIcon = require('../assets/images/searchh.png');
@@ -97,6 +101,36 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
 
     fetchUserRole();
   }, []);
+  
+  
+  useEffect(() => {
+    const checkClaimStatus = async () => {
+      try {
+        // const userId = await AsyncStorage.getItem('userId');
+        // if (!userId) {
+        //   console.error('User ID is missing from AsyncStorage');
+        //   navigation.navigate('Login');
+        //   return;
+        // }
+
+        const response = await axios.get(`${environment.API_BASE_URL}api/collection-officer/get-claim-status`, {
+          headers: {
+            Authorization: `Bearer ${await AsyncStorage.getItem('token')}`,
+          },
+        });
+
+        if (response.data.claimStatus === 0) {
+          navigation.navigate('NoCollectionCenterScreen');
+        }
+      } catch (error) {
+        console.error('Error checking claim status:', error);
+        navigation.navigate('Login');
+      }
+    };
+
+    checkClaimStatus();
+  }, [navigation]);
+
   // Get the name of the currently focused tab from the state
   let currentTabName = state.routes[state.index]?.name;
   console.log('Current tab:', currentTabName);
@@ -115,11 +149,88 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
   if (userRole === "Collection Center Manager") {
     tabs = [
       { name: "Dashboard", icon: homeIcon, focusedIcon: homeIcon },
-      { name: "QRScanner", icon: qrIcon, focusedIcon: qrIcon },
+      { name: "DailyTarget", icon: qrIcon, focusedIcon: qrIcon },
       { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
       { name: "CollectionOfficersList", icon: adminIcon, focusedIcon: adminIcon },
     ];
   }
+
+
+  const [appState, setAppState] = useState(AppState.currentState);
+  interface UserData {
+    token: string;
+  }
+  
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const checkUserStatus = async (status: number) => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        console.log('User authenticated:', { token });
+
+        // Send user status update to the server
+        try {
+          const response = await axios.post(
+            `${environment.API_BASE_URL}api/collection-officer/update-officer-status`,
+            {
+              status: status,  // Set status value to 0 (offline)
+            },
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          console.log(response.data.message);
+        } catch (error) {
+          console.error('Error emitting event:', error);
+        }
+      } else {
+        console.log('User not authenticated');
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  useEffect(() => {
+    const appStateListener = AppState.addEventListener('change', (nextAppState) => {
+      console.log('App state changed:', nextAppState);
+      setAppState(nextAppState);
+
+      if (nextAppState === 'active') {
+        checkUserStatus(1);
+      } else if (nextAppState === 'background') {
+        // App went to the background: Set user as offline
+        checkUserStatus(0);
+      }
+    });
+
+    // Cleanup listener when component is unmounted
+    return () => {
+      appStateListener.remove();
+    };
+  }, [userData]);
+
+  const [connectionStatus, setConnectionStatus] = useState('connected'); // track connection status
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      const previousStatus = connectionStatus;
+      const currentStatus = state.isConnected ? 'connected' : 'disconnected';
+
+      console.log('Connection status:', currentStatus);
+      setConnectionStatus(currentStatus);
+
+      // If status is changing to 'disconnected', perform an action
+      if (previousStatus === 'connected' && currentStatus === 'disconnected') {
+        checkUserStatus(0);
+      }
+    });
+
+    // Cleanup on unmount
+    return () => unsubscribe();
+  }, [connectionStatus]);
+  
+
 
   if (isKeyboardVisible) return null;
   return (

@@ -61,6 +61,7 @@ const AddOfficerBasicDetails: React.FC = () => {
   
 
   const fetchEmpId = async (role: string) => {
+    console.log('Fetching empId for role:', role);
     try {
       const response = await axios.get(
         `${environment.API_BASE_URL}api/collection-manager/generate-empId/${role}`
@@ -235,7 +236,7 @@ const AddOfficerBasicDetails: React.FC = () => {
           }}
         >
           <Text className="text-gray-700 text-center">
-            {jobRole === 'Collection Officer' ? 'CCO' : ''}
+            {jobRole === 'Collection Officer' ? 'COO' : ''}
           </Text>
         </View>
 

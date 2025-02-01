@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"; // Import the icon library
@@ -20,6 +20,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import NetInfo from "@react-native-community/netinfo";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -40,7 +41,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
   const { t } = useTranslation();
   const handleLogin = async () => {
     try {
-      // Replace `api.post` with `fetch` and pass the request payload as JSON
+      // Replace api.post with fetch and pass the request payload as JSON
 
       const response = await fetch(
         `${environment.API_BASE_URL}api/collection-officer/login`,
@@ -71,6 +72,8 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       // Parse the response data
   
       const { token, passwordUpdateRequired, payload, jobRole } = data;
+      
+      
       // Store token in AsyncStorage if received
       console.log("passwordUpdateRequired", passwordUpdateRequired);
       await AsyncStorage.setItem("jobRole", jobRole);
@@ -91,6 +94,23 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       Alert.alert("Error", "Something went wrong. Please try again.");
     }
   };
+
+  // const emitEvent = async () => {
+    // try {
+    //   const response = await axios.post( `${environment.API_BASE_URL}api/socket/update-officer-status`, {
+    //     eventName: "custom_event",
+    //     data: { message: "Hello from the server!" },
+    //   });
+    //   console.log(response.data.message);
+    // } catch (error) {
+    //   console.error("Error emitting event:", error);
+    // }
+  // };
+
+  // useEffect(() => {
+  //   emitEvent();
+  // })
+
 
   return (
     <ScrollView
@@ -156,4 +176,4 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
   );
 };
 
-export default Login;
+export default Login;

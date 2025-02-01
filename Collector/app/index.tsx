@@ -106,8 +106,9 @@
 
 // export default index
 
-import React,{ useEffect } from 'react'
+import React,{ useEffect , useState} from 'react'
 import { View, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -162,7 +163,22 @@ import AddOfficerBasicDetails from '@/components/ManagerScreens/AddOfficerBasicD
 import AddOfficerAddressDetails from '@/components/ManagerScreens/AddOfficerAddressDetails';
 import ClaimOfficer from '@/components/ManagerScreens/ClaimOfficer';
 import TransactionList from '@/components/ManagerScreens/TransactionList';
+import FarmerReport from '@/components/ManagerScreens/FarmerReport';
+import SetTargetScreen from '@/components/ManagerScreens/SetTargetScreen';
+import DailyTarget from '@/components/ManagerScreens/DailyTarget';
+import TargetValidPeriod from '@/components/ManagerScreens/TargetValidPeriod';
+import NoCollectionCenterScreen from '@/components/NoCollectionCenterScreen ';
+import environment from '@/environment/environment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import EditTargetScreen from '@/components/ManagerScreens/EditTargetScreen';
+import PassTargetScreen from '@/components/ManagerScreens/PassTargetScreen';
+import RecieveTargetScreen from '@/components/ManagerScreens/RecieveTargetScreen';
 import OTPE from '@/components/Otpverification';
+import io from 'socket.io-client';
+import { AppState } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
+import * as Network from 'expo-network';
 
 
 const Stack = createNativeStackNavigator(); 
@@ -193,6 +209,8 @@ const index = () => {
   
     // Prevent screenshots and screen recording
     // ScreenCapture.usePreventScreenCapture()
+
+   
 
   return (
     <LanguageProvider>
@@ -243,7 +261,12 @@ const index = () => {
       <Stack.Screen name="ClaimOfficer" component={ClaimOfficer} />
       <Stack.Screen name="TransactionList" component={TransactionList as any} />
       <Stack.Screen name="OTPE" component={OTPE} />
-      
+      <Stack.Screen name="FarmerReport" component={FarmerReport as any} />
+      <Stack.Screen name="EditTargetScreen" component={EditTargetScreen as any} />
+      <Stack.Screen name="DailyTarget" component={DailyTarget as any} />
+      <Stack.Screen name="PassTargetScreen" component={PassTargetScreen as any} /> 
+      <Stack.Screen name="NoCollectionCenterScreen" component={NoCollectionCenterScreen} />
+      <Stack.Screen name="RecieveTargetScreen" component={RecieveTargetScreen} />
       <Stack.Screen name='Main' component={MainTabNavigator} options={{ headerShown: false }} />
       
 
@@ -256,3 +279,7 @@ const index = () => {
 }
 
 export default index
+
+function updateUserStatus(arg0: string) {
+  throw new Error('Function not implemented.');
+}
