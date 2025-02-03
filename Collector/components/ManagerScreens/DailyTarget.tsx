@@ -1,47 +1,70 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { RootStackParamList } from '../types';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import environment from '@/environment/environment';
+import { Ionicons } from '@expo/vector-icons';
 
-const data = [
-  { no: "01", variety: "Variety #1", grade: "A", target: 20, completed: 10 },
-  { no: "02", variety: "Variety #1", grade: "B", target: 30, completed: 0 },
-  { no: "03", variety: "Variety #1", grade: "C", target: 50, completed: 0 },
-  { no: "04", variety: "Variety #2", grade: "A", target: 20, completed: 18 },
-  { no: "05", variety: "Variety #3", grade: "A", target: 22, completed: 11 },
-  { no: "06", variety: "Variety #4", grade: "B", target: 20, completed: 8 },
-  { no: "07", variety: "Variety #5", grade: "A", target: 20, completed: 5 },
-  { no: "08", variety: "Variety #6", grade: "A", target: 20, completed: 0 },
-  { no: "09", variety: "Variety #7", grade: "A", target: 20, completed: 0 },
-  { no: "10", variety: "Variety #8", grade: "A", target: 20, completed: 0 },
-  { no: "11", variety: "Variety #9", grade: "A", target: 60, completed: 20 },
-  { no: "12", variety: "Variety #10", grade: "A", target: 40, completed: 30 },
-  { no: "13", variety: "Variety #11", grade: "A", target: 5, completed: 0.5 },
-  { no: "14", variety: "Variety #12", grade: "A", target: 5, completed: 1 },
-  { no: "15", variety: "Variety #13", grade: "A", target: 12, completed: 10 },
-  { no: "16", variety: "Variety #14", grade: "B", target: 25, completed: 15 },
-  { no: "17", variety: "Variety #15", grade: "A", target: 30, completed: 25 },
-  { no: "18", variety: "Variety #16", grade: "C", target: 40, completed: 20 },
-  { no: "19", variety: "Variety #17", grade: "B", target: 35, completed: 5 },
-  { no: "20", variety: "Variety #18", grade: "A", target: 28, completed: 12 },
-  { no: "21", variety: "Variety #19", grade: "A", target: 15, completed: 10 },
-  { no: "22", variety: "Variety #20", grade: "C", target: 50, completed: 40 },
-  { no: "23", variety: "Variety #21", grade: "A", target: 10, completed: 8 },
-  { no: "24", variety: "Variety #22", grade: "B", target: 60, completed: 45 },
-  { no: "25", variety: "Variety #23", grade: "A", target: 35, completed: 32 },
-];
-
-// Define type for DailyTargetList navigation props
 type DailyTargetNavigationProps = StackNavigationProp<RootStackParamList, 'DailyTarget'>;
 
 interface DailyTargetProps {
   navigation: DailyTargetNavigationProps;
 }
 
-// Daily Target List Screen
+interface TargetData {
+  varietyId: number;
+  centerTarget: any;
+  varietyName: string;
+  grade: string;
+  target: number;
+  todo: number;
+  qty: number; 
+}
+
 const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
+  const [todoData, setTodoData] = useState<TargetData[]>([]);
+  const [completedData, setCompletedData] = useState<TargetData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedToggle, setSelectedToggle] = useState('ToDo'); // Track selected toggle
+
+  useEffect(() => {
+    const fetchTargets = async () => {
+      setLoading(true);
+      const startTime = Date.now(); // Capture the start time for the spinner
+      try {
+        const authToken = await AsyncStorage.getItem('token');
+        const response = await axios.get(`${environment.API_BASE_URL}api/target/officer`, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+
+        const allData = response.data.data;
+        console.log('--------all data----------',allData);
+        const todoItems = allData.filter((item: TargetData) => item.todo > 0); // Move tasks with todo > 0 to ToDo
+        const completedItems = allData.filter((item: TargetData) => item.todo === 0); // Tasks with todo === 0 go to Completed
+        
+        
+        
+        setTodoData(todoItems);
+        setCompletedData(completedItems);
+        setError(null);
+      } catch (err) {
+        setError('Failed to fetch data. Please try again later.');
+      } finally {
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = 3000 - elapsedTime; // Ensure at least 3 seconds loading time
+        setTimeout(() => setLoading(false), remainingTime > 0 ? remainingTime : 0);
+      }
+    };
+
+    fetchTargets();
+  }, []);
+
+  const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
 
   return (
     <View className="flex-1 bg-black p-4">
@@ -54,14 +77,18 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
       <View className="flex-row justify-center items-center py-4 bg-black">
         {/* To Do Button */}
         <TouchableOpacity
-          className={`px-4 py-2 rounded-full mx-2 ${
+          className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
             selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
           }`}
+          style={{ height: 40 }} // Ensure consistent height
           onPress={() => setSelectedToggle('ToDo')}
         >
-          <Text className={`font-bold ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
+          <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
             To do
           </Text>
+          <View className="bg-white rounded-full px-2">
+            <Text className="text-green-500 font-bold text-xs">{todoData.length}</Text>
+          </View>
         </TouchableOpacity>
 
         {/* Completed Button */}
@@ -69,43 +96,105 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
             selectedToggle === 'Completed' ? 'bg-[#2AAD7A]' : 'bg-white'
           }`}
+          style={{ height: 40 }} // Ensure consistent height
           onPress={() => setSelectedToggle('Completed')}
         >
           <Text
-            className={`font-bold mr-2 ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
+            className={`font-bold ${
+              selectedToggle === 'Completed' ? 'text-white' : 'text-black'
+            }`}
           >
             Completed
           </Text>
-          <View className="bg-white rounded-full px-2">
-            <Text className="text-green-500 font-bold text-xs">11</Text>
+          <View className="bg-white rounded-full px-2 ml-2">
+            <Text className="text-green-500 font-bold text-xs">{completedData.length}</Text>
           </View>
         </TouchableOpacity>
       </View>
 
-      {/* Table Header */}
-      <View className="flex-row bg-green-500 py-2 px-2 rounded-t-lg">
-        <Text className="flex-1 text-white text-center font-bold">No</Text>
-        <Text className="flex-2 text-white text-center font-bold">Variety</Text>
-        <Text className="flex-1 text-white text-center font-bold">Grade</Text>
-        <Text className="flex-1 text-white text-center font-bold">Target (kg)</Text>
-        <Text className="flex-1 text-white text-center font-bold">Completed (kg)</Text>
+      <ScrollView horizontal className="border border-gray-300 bg-white">
+  <View>
+    {/* Table Header */}
+    <View className="flex-row bg-[#2AAD7A] h-[7%]">
+      <Text className="w-16 p-2 font-bold text-center text-white">No</Text>
+      <Text className="w-40 p-2 font-bold text-center text-white">Variety</Text>
+      <Text className="w-32 p-2 font-bold text-center text-white">Grade</Text>
+      <Text className="w-32 p-2 font-bold text-center text-white">Target (kg)</Text>
+      <Text className="w-32 p-2 font-bold text-center text-white">Todo (kg)</Text>
+    </View>
+    {/* Table Data */}
+    {loading ? (
+      <View className="flex-1 justify-center items-center py-10">
+        <ActivityIndicator size="large" color="#2AAD7A" />
       </View>
+    ) : (
+      displayedData.map((item, index) => (
+<TouchableOpacity
+  key={index}
+  className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
+  onPress={() => {
+    let qty = 0;
 
-      {/* Table Data */}
-      <ScrollView className="bg-white rounded-b-lg">
-        {data.map((item, index) => (
-          <View
-            key={index}
-            className={`flex-row items-center py-2 px-2 ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
+    // ✅ Extract qty from centerTarget based on the grade
+    if (item.centerTarget) {
+      if (item.grade === 'A' && item.centerTarget.total_qtyA !== undefined) {
+        qty = parseFloat(item.centerTarget.total_qtyA);
+      } else if (item.grade === 'B' && item.centerTarget.total_qtyB !== undefined) {
+        qty = parseFloat(item.centerTarget.total_qtyB);
+      } else if (item.grade === 'C' && item.centerTarget.total_qtyC !== undefined) {
+        qty = parseFloat(item.centerTarget.total_qtyC);
+      }
+    }
+
+    // ✅ Pass qty value to navigation
+    navigation.navigate('EditTargetManager' as any, {
+      varietyName: item.varietyName,
+      varietyId: item.varietyId,
+      grade: item.grade,
+      target: item.target,
+      todo: item.todo,
+      qty: qty, 
+    });
+  }}
+>
+        <View
+          key={index}
+          className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
+        >
+          <Text
+            className="w-16 p-2 border-r border-gray-300 text-center"
           >
-            <Text className="flex-1 text-center">{item.no}</Text>
-            <Text className="flex-2 text-center">{item.variety}</Text>
-            <Text className="flex-1 text-center">{item.grade}</Text>
-            <Text className="flex-1 text-center">{item.target}</Text>
-            <Text className="flex-1 text-center">{item.completed}</Text>
-          </View>
-        ))}
-      </ScrollView>
+            {selectedToggle === 'ToDo' ? index + 1 : <Ionicons name="flag" size={20} color="green" />}
+          </Text>
+          <Text
+            className="w-40 p-2 border-r border-gray-300 text-center flex-wrap"
+            numberOfLines={2}
+          >
+            {item.varietyName}
+          </Text>
+          <Text
+            className="w-32 p-2 border-r border-gray-300 text-center"
+          >
+            {item.grade}
+          </Text>
+          <Text
+            className="w-32 p-2 border-r border-gray-300 text-center"
+          >
+            {item.target.toFixed(2)}
+          </Text>
+          <Text
+            className="w-32 p-2 text-center"
+          >
+            {item.todo.toFixed(2)}
+          </Text>
+          
+        </View>
+        </TouchableOpacity>
+      ))
+    )}
+  </View>
+</ScrollView>
+
     </View>
   );
 };

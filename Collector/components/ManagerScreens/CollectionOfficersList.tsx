@@ -79,6 +79,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
           phoneNumber1: item.phoneNumber1,
           phoneNumber2: item.phoneNumber2,
           collectionOfficerId: item.collectionOfficerId,
+          
         })
       }
     >

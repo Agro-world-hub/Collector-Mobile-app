@@ -103,6 +103,10 @@ export type RootStackParamList = {
       branchName: string
     }
     
+    DailyTargetListForOfficers:{officerId:string,collectionOfficerId:number};
+    EditTargetManager:undefined;
+    PassTargetBetweenOfficers:undefined;
+    RecieveTargetBetweenOfficers:undefined
     
 
 };

@@ -9,10 +9,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import environment from '@/environment/environment';
 
-type PassTargetScreenNavigationProps = StackNavigationProp<RootStackParamList, 'PassTargetScreen'>;
+type PassTargetBetweenOfficersScreenNavigationProps = StackNavigationProp<RootStackParamList, 'PassTargetBetweenOfficers'>;
 
-interface PassTargetScreenProps {
-  navigation: PassTargetScreenNavigationProps;
+interface PassTargetBetweenOfficersScreenProps {
+  navigation: PassTargetBetweenOfficersScreenNavigationProps;
   route: {
     params: {
       varietyId: number;
@@ -21,11 +21,12 @@ interface PassTargetScreenProps {
       target: string;
       todo: string;
       qty: string;
+      collectionOfficerId: number;
     };
   };
 }
 
-const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }) => {
+const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> = ({ navigation, route }) => {
   const [assignee, setAssignee] = useState('');
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
@@ -34,7 +35,8 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   
-  const { varietyName, grade, target, todo, qty, varietyId } = route.params;
+  const { varietyName, grade, target, todo, qty, varietyId,collectionOfficerId } = route.params;
+  console.log(collectionOfficerId)
   const maxAmount = parseFloat(todo);
 
   console.log("Max Amount:", maxAmount);
@@ -123,8 +125,9 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
 
       const token = await AsyncStorage.getItem('token');
       const response = await axios.put(
-        `${environment.API_BASE_URL}api/target/manager/pass-target`,
+        `${environment.API_BASE_URL}api/target/pass-target`,
         {
+          fromOfficerId: collectionOfficerId,
           toOfficerId: assignee, 
           varietyId: varietyId, 
           grade,
@@ -136,10 +139,11 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
           },
         }
       );
-
+      
+      
       if (response.status === 200) {
         Alert.alert("Success", "Target transferred successfully.");
-        navigation.goBack(); 
+        navigation.navigate('DailyTargetListForOfficers'as any,{collectionOfficerId:collectionOfficerId}); 
       } else {
         Alert.alert("Error", "Failed to transfer target.");
       }
@@ -216,4 +220,4 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
   );
 };
 
-export default PassTargetScreen;
+export default PassTargetBetweenOfficers;

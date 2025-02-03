@@ -4,31 +4,29 @@ import { Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
 
-type EditTargetScreenNavigationProps = StackNavigationProp<RootStackParamList, 'EditTargetScreen'>;
+type EditTargetManagerNavigationProps = StackNavigationProp<RootStackParamList, 'EditTargetManager'>;
 
-interface EditTargetScreenProps {
-  navigation: EditTargetScreenNavigationProps;
+interface EditTargetManagerProps {
+  navigation: EditTargetManagerNavigationProps;
   route: {
     params: {
+      varietyId: number;
       varietyName: string;
       grade: string;
-      varietyId: string;
       target: string;
       todo: string;
       qty: string;
-      collectionOfficerId:number;
-      
     };
   };
 }
 
-const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route }) => {
+const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route }) => {
   const [myTarget, setMyTarget] = useState('100kg');
   const [isEditing, setIsEditing] = useState(false);
-  const [toDoAmount] = useState('50kg');
   
-  const { varietyName, grade, target, todo, qty,varietyId ,collectionOfficerId } = route.params;
-  console.log('managers target edit details',route.params);
+  const { varietyName, grade, target, todo, qty ,varietyId} = route.params;
+ 
+  console.log('officers edit details',route.params);
 
   return (
     <View className="flex-1 bg-white">
@@ -54,7 +52,7 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
 
         {/* My Target */}
         <View>
-          <Text className="text-gray-600 font-medium">Assigned Target</Text>
+          <Text className="text-gray-600 font-medium">My Target</Text>
           <View className="flex-row items-center mt-2 border border-gray-300 rounded-md px-3 py-2">
             <TextInput
               className="flex-1 text-gray-800"
@@ -73,16 +71,16 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
 
           {/* Buttons in Edit Mode */}
           {isEditing && (
-           <View className="flex-row justify-center space-x-4 mt-4 p-5">
+            <View className="flex-row justify-center space-x-4 mt-4 p-5">
               <TouchableOpacity
                 className="flex-1 bg-[#D16D6A] px-6 py-2 rounded-md items-center"
-                onPress={() => navigation.navigate('PassTargetBetweenOfficers'as any,{varietyName, grade, target, todo, qty ,varietyId,collectionOfficerId})} // Save and exit edit mode
+                onPress={() => navigation.navigate('PassTargetScreen'as any,{varietyName, grade, target, todo, qty ,varietyId})} // Save and exit edit mode
               >
                 <Text className="text-white font-medium">Pass</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex-1 bg-[#2AAD7A] px-6 py-2 rounded-md items-center"
-                onPress={() => navigation.navigate('RecieveTargetBetweenOfficers' as any,{varietyName, grade, target, todo, qty ,varietyId,collectionOfficerId})} // Save and exit edit mode
+                onPress={() => navigation.navigate('RecieveTargetScreen' as any,{varietyName, grade, target, todo, qty ,varietyId})} // Save and exit edit mode
               >
                 <Text className="text-white font-medium">Receive</Text>
               </TouchableOpacity>
@@ -105,4 +103,4 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
   );
 };
 
-export default EditTargetScreen;
+export default EditTargetManager;

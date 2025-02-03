@@ -174,6 +174,10 @@ import axios from 'axios';
 import EditTargetScreen from '@/components/ManagerScreens/EditTargetScreen';
 import PassTargetScreen from '@/components/ManagerScreens/PassTargetScreen';
 import RecieveTargetScreen from '@/components/ManagerScreens/RecieveTargetScreen';
+import DailyTargetListForOfficers from '@/components/ManagerScreens/DailyTargetListForOfficers';
+import EditTargetManager from '@/components/ManagerScreens/EditTargetManager';
+import RecieveTargetBetweenOfficers from '@/components/ManagerScreens/RecieveTargetBetweenOfficers';
+import PassTargetBetweenOfficers from '@/components/ManagerScreens/PassTargetBetweenOfficers';
 import OTPE from '@/components/Otpverification';
 import io from 'socket.io-client';
 import { AppState } from 'react-native';
@@ -266,7 +270,12 @@ const index = () => {
       <Stack.Screen name="DailyTarget" component={DailyTarget as any} />
       <Stack.Screen name="PassTargetScreen" component={PassTargetScreen as any} /> 
       <Stack.Screen name="NoCollectionCenterScreen" component={NoCollectionCenterScreen} />
-      <Stack.Screen name="RecieveTargetScreen" component={RecieveTargetScreen} />
+      <Stack.Screen name="RecieveTargetScreen" component={RecieveTargetScreen as any} />
+      <Stack.Screen name="DailyTargetListForOfficers" component={DailyTargetListForOfficers as any} />
+      <Stack.Screen name="PassTargetBetweenOfficers" component={PassTargetBetweenOfficers as any} />
+      <Stack.Screen name="RecieveTargetBetweenOfficers" component={RecieveTargetBetweenOfficers as any} />
+      
+      <Stack.Screen name="EditTargetManager" component={EditTargetManager as any} />
       <Stack.Screen name='Main' component={MainTabNavigator} options={{ headerShown: false }} />
       
 

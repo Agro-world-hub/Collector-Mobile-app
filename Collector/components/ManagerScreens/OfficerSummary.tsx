@@ -326,7 +326,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
             <View className="mt-6 items-center">
                   <TouchableOpacity
                     className="bg-[#2AAD7A] rounded-full w-64 py-3 h-12"
-                    onPress={() => navigation.navigate('EditTargetScreen')}
+                    onPress={() => navigation.navigate('DailyTargetListForOfficers',{ officerId,collectionOfficerId })}
                   >
                     <Text className="text-white text-center font-medium">Open Target Board</Text>
                   </TouchableOpacity>
