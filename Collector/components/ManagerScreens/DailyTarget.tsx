@@ -6,6 +6,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import environment from '@/environment/environment';
 import { Ionicons } from '@expo/vector-icons';
+import LottieView from 'lottie-react-native'; // Import LottieView
 
 type DailyTargetNavigationProps = StackNavigationProp<RootStackParamList, 'DailyTarget'>;
 
@@ -124,9 +125,14 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
     </View>
     {/* Table Data */}
     {loading ? (
-      <View className="flex-1 justify-center items-center py-10">
-        <ActivityIndicator size="large" color="#2AAD7A" />
-      </View>
+                <View className="flex-1 justify-center items-center mr-[45%] ">
+                  <LottieView
+                    source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
+                    autoPlay
+                    loop
+                    style={{ width: 350, height: 350 }}
+                  />
+                </View>
     ) : (
       displayedData.map((item, index) => (
 <TouchableOpacity

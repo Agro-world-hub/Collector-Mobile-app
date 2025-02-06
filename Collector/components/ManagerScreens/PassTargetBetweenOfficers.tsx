@@ -8,6 +8,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import environment from '@/environment/environment';
+import LottieView from 'lottie-react-native';
 
 type PassTargetBetweenOfficersScreenNavigationProps = StackNavigationProp<RootStackParamList, 'PassTargetBetweenOfficers'>;
 
@@ -209,7 +210,14 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
             disabled={submitting}
           >
             {submitting ? (
-              <ActivityIndicator size="small" color="white" />
+              <View className="flex-1 justify-center items-center mr-[45%] ">
+                                <LottieView
+                                  source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
+                                  autoPlay
+                                  loop
+                                  style={{ width: 350, height: 350 }}
+                                />
+                              </View>
             ) : (
               <Text className="text-white text-center font-medium">Save</Text>
             )}

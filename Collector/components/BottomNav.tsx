@@ -148,7 +148,7 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
 
   if (userRole === "Collection Center Manager") {
     tabs = [
-      { name: "Dashboard", icon: homeIcon, focusedIcon: homeIcon },
+      { name: "ManagerDashboard", icon: homeIcon, focusedIcon: homeIcon },
       { name: "DailyTarget", icon: qrIcon, focusedIcon: qrIcon },
       { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
       { name: "CollectionOfficersList", icon: adminIcon, focusedIcon: adminIcon },

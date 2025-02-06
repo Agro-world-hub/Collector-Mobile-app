@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import environment from '@/environment/environment';
 import { Ionicons } from '@expo/vector-icons';
+import LottieView from 'lottie-react-native';
 
 type DailyTargetListForOfficerstNavigationProps = StackNavigationProp<RootStackParamList, 'DailyTargetListForOfficers'>;
 
@@ -134,9 +135,14 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
           </View>
 
           {loading ? (
-            <View className="flex-1 justify-center items-center py-10">
-              <ActivityIndicator size="large" color="#2AAD7A" />
-            </View>
+             <View className="flex-1 justify-center items-center mr-[45%] ">
+                  <LottieView
+                    source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
+                    autoPlay
+                    loop
+                    style={{ width: 350, height: 350 }}
+                  />
+                </View>
           ) : (
             displayedData.map((item, index) => (
               <TouchableOpacity

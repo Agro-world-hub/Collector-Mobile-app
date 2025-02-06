@@ -49,6 +49,7 @@
     "expo-web-browser": "~13.0.3",
     "i18next": "^24.1.0",
     "install": "^0.13.0",
+    "lottie-react-native": "^7.2.2",
     "nativewind": "^2.0.11",
     "npm": "^10.9.0",
     "qrcode": "^1.5.4",

@@ -183,6 +183,9 @@ import io from 'socket.io-client';
 import { AppState } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import * as Network from 'expo-network';
+import ManagerDashboard from '@/components/ManagerScreens/ManagerDashboard';
+import CenterTarget from '@/components/ManagerScreens/CenterTarget';
+import ManagerTransactions from '@/components/ManagerScreens/ManagerTransactions';
 
 
 const Stack = createNativeStackNavigator(); 
@@ -203,7 +206,9 @@ function MainTabNavigator() {
       <Tab.Screen name="PriceChart" component={PriceChart as any}/>
      <Tab.Screen name="UnregisteredCropDetails" component={UnregisteredCropDetails as any} />
      <Tab.Screen name="SearchFarmer" component={SearchFarmer} />
-      <Tab.Screen name="ComplainHistory" component={ComplainHistory} />
+      <Tab.Screen name="ManagerDashboard" component={ManagerDashboard} />
+      
+      
     </Tab.Navigator>
   );
 }
@@ -274,6 +279,10 @@ const index = () => {
       <Stack.Screen name="DailyTargetListForOfficers" component={DailyTargetListForOfficers as any} />
       <Stack.Screen name="PassTargetBetweenOfficers" component={PassTargetBetweenOfficers as any} />
       <Stack.Screen name="RecieveTargetBetweenOfficers" component={RecieveTargetBetweenOfficers as any} />
+      <Stack.Screen name="CenterTarget" component={CenterTarget as any} />
+      <Stack.Screen name="ManagerTransactions" component={ManagerTransactions as any} />
+      
+      
       
       <Stack.Screen name="EditTargetManager" component={EditTargetManager as any} />
       <Stack.Screen name='Main' component={MainTabNavigator} options={{ headerShown: false }} />

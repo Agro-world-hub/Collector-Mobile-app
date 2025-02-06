@@ -39,7 +39,7 @@ export type RootStackParamList = {
         cropName: string;
         varietyName: string;
       };
-    Main:undefined;
+    Main:{screen: keyof RootStackParamList};
     CollectionOfficersList:undefined;
 
 
@@ -82,6 +82,7 @@ export type RootStackParamList = {
       bankName: string | null;
       branchName: string | null;
       selectedDate: string;
+      empId: string;
     };
     SetTargetScreen:{fromDate:string,toDate:string,fromTime:string,toTime:string};
     DailyTarget:undefined;
@@ -107,6 +108,9 @@ export type RootStackParamList = {
     EditTargetManager:undefined;
     PassTargetBetweenOfficers:undefined;
     RecieveTargetBetweenOfficers:undefined
+    ManagerDashboard:undefined;
+    CenterTarget:undefined;
+    ManagerTransactions:undefined;
     
 
 };
@@ -123,3 +127,4 @@ export type OfficerBasicDetailsFormData = {
   nicNumber: string;
   email: string;
 };
+

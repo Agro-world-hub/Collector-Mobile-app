@@ -133,7 +133,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       {/* Profile Card */}
       <View className="flex-row items-center p-2 mt-4  mb-4">
         <Image
-          source={require("../assets/images/profile.png")}
+          source={require("../assets/images/mprofile.png")}
           className="w-16 h-16 rounded-full mr-3"
         />
         <View className="flex-1">

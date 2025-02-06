@@ -1,21 +1,22 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, BackHandler } from 'react-native';
 import { CircularProgress } from 'react-native-circular-progress';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Make sure to install this if not already done
 
-import { RootStackParamList } from './types';
+import { RootStackParamList } from '../types';
 import axios from 'axios';
 import environment from '@/environment/environment';
+import { useFocusEffect } from 'expo-router';
 
-type DashboardNavigationProps = StackNavigationProp<
+type ManagerDashboardNavigationProps = StackNavigationProp<
   RootStackParamList,
-  "Dashboard"
+  "ManagerDashboard"
 >;
 
-interface DashboardProps {
-  navigation: DashboardNavigationProps;
+interface ManagerDashboardProps {
+  navigation: ManagerDashboardNavigationProps;
 }
 
 interface ProfileData {
@@ -24,8 +25,9 @@ interface ProfileData {
   companyName: string;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
+const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [empId, setEmpId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -36,6 +38,9 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
             headers: { Authorization: `Bearer ${token}` },
           });
           setProfile(response.data.data); // Assuming 'data.data' contains profile info
+          console.log('empid',response.data.data.empId)
+          setEmpId(response.data.data.empId);
+          console.log("Profile data:", response.data.data);
           console.log("Profile data:", response.data.data);
         }
       } catch (error) {
@@ -45,13 +50,25 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
 
     fetchUserProfile();
   }, []);
+  
+  // Disable back press
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        return true; // Prevent back navigation
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
 
   return (
-    <ScrollView className="flex-1 bg-white p-4">
+    <ScrollView className="flex-1 bg-white p-3">
       {/* Profile Section */}
       <TouchableOpacity className="flex-row items-center mb-4 p-4" onPress={() => navigation.navigate("EngProfile")}>
         <Image
-          source={require("../assets/images/mprofile.png")}
+          source={require("../../assets/images/mprofile.png")}
           className="w-16 h-16 rounded-full mr-4"
         />
         <View>
@@ -69,7 +86,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
       </View>
 
       {/* Target Progress */}
-      <View className="flex-row items-center justify-between mb-4 p-2 mt-[15%]">
+      <View className="flex-row items-center justify-between mb-2 p-7 mt-[15%]">
         <Text className="text-gray-700 font-bold text-lg">Your Target Progress</Text>
         <View className="relative">
           <CircularProgress
@@ -86,11 +103,26 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
       </View>
 
       {/* Action Buttons */}
-      <View className="flex-row flex-wrap justify-between p-5 mt-[10%]">
+      <View className="flex-row flex-wrap justify-between p-5 mt-[5%]">
+        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("CenterTarget"as any)}>
+          <Image
+            source={require("../../assets/images/ct.png")}
+            className="w-8 h-8 absolute top-2 right-2"
+          />
+          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">Center Target</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("ManagerTransactions"as any,{empId})}>
+          <Image
+            source={require("../../assets/images/mycollect.png")}
+            className="w-8 h-8 absolute top-2 right-2"
+          />
+          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">My Collection</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("QRScanner"as any)}>
           <Image
-            source={require("../assets/images/qrrr.png")}
+            source={require("../../assets/images/qrrr.png")}
             className="w-8 h-8 absolute top-2 right-2"
           />
           <Text className="text-gray-700 text-lg absolute bottom-2 left-2">Scan QR</Text>
@@ -98,7 +130,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
 
         <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative mb-5" onPress={() => navigation.navigate("SearchFarmer"as any)}>
           <Image
-            source={require("../assets/images/nic.png")}
+            source={require("../../assets/images/nic.png")}
             className="w-8 h-8 absolute top-2 right-2"
           />
           <Text className="text-gray-700 text-lg absolute bottom-2 left-2">Search By NIC</Text>
@@ -108,4 +140,4 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
   );
 };
 
-export default Dashboard;
+export default ManagerDashboard;

@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, Image, SafeAreaView } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { scale } from 'react-native-size-matters';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { RootStackParamList } from '../types';
 import environment from '@/environment/environment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type TransactionListNavigationProp = StackNavigationProp<RootStackParamList, 'TransactionList'>;
-type TranscationListRouteProp = RouteProp<RootStackParamList, 'OfficerSummary'>;
+type ManagerTransactionsNavigationProp = StackNavigationProp<RootStackParamList, 'ManagerTransactions'>;
 
-interface TransactionListProps {
-  navigation: TransactionListNavigationProp;
-  route: TranscationListRouteProp;
-  
+interface ManagerTransactionsProps {
+  navigation: ManagerTransactionsNavigationProp;
+  route: any; // Add route to the props
 }
 
 interface Transaction {
+  id: number;
   registeredFarmerId: number;
   userId: number;
   phoneNumber: string;
@@ -28,21 +26,21 @@ interface Transaction {
   accountHolderName: string | null;
   bankName: string | null;
   branchName: string | null;
-  id: number;
+  empId: string;
   firstName: string;
   lastName: string;
   NICnumber: string;
   totalAmount: number;
 }
 
-const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) => {
-  const { officerId, collectionOfficerId } = route.params;
-
+const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
+  const {empId} = route.params;
+  console.log('empId:', empId);
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -54,10 +52,29 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
 
   const fetchTransactions = async (date: string) => {
     try {
+      // Get the token from AsyncStorage or from wherever it's stored
+      const token = await AsyncStorage.getItem('token');
+      
+      // Check if the token exists before making the request
+      if (!token) {
+        console.error('No token found. Please log in again.');
+        return;
+      }
+  
+      // Make the fetch request with Authorization header
       const response = await fetch(
-        `${environment.API_BASE_URL}api/collection-manager/transaction-list?collectionOfficerId=${collectionOfficerId}&date=${date}`
+        `${environment.API_BASE_URL}api/collection-manager/my-collection?date=${date}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,  // Add the token here
+          },
+        }
       );
+  
       const data = await response.json();
+  
       console.log('Transactions:', data);
   
       if (response.ok) {
@@ -76,6 +93,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
           accountHolderName: transaction.accountHolderName || null,
           bankName: transaction.bankName || null,
           branchName: transaction.branchName || null,
+          empId: transaction.empId || '',  // Added empId from the response
         }));
   
         setTransactions(formattedData);
@@ -92,7 +110,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     const filtered = transactions.filter(
-      (transaction: any) =>
+      (transaction) =>
         transaction.firstName?.toLowerCase().includes(query.toLowerCase()) ||
         transaction.lastName?.toLowerCase().includes(query.toLowerCase()) ||
         transaction.NICnumber?.includes(query)
@@ -116,11 +134,11 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
       <View>
         {/* Header */}
         <View className="bg-[#2AAD7A] p-4 mt-[-10] rounded-b-[35px] shadow-md">
-          <Text className="text-white text-lg font-bold ml-[28%]">EMP ID: {officerId}</Text>
+          <Text className="text-white text-lg font-bold ml-[28%] mt-[4%]">EMP ID:{empId} </Text>
           <View className="flex-row items-center justify-between mt-2">
-          <Text className="text-white text-lg ml-[20%]">
-          Selected Date: {selectedDate ? selectedDate.toISOString().split('T')[0] : 'N/A'}
-        </Text>
+            <Text className="text-white text-lg ml-[20%]">
+              Selected Date: {selectedDate ? selectedDate.toISOString().split('T')[0] : 'N/A'}
+            </Text>
             <TouchableOpacity onPress={() => setShowDatePicker(true)} className="mb-6">
               <Ionicons name="calendar-outline" size={24} color="white" />
             </TouchableOpacity>
@@ -168,7 +186,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
           <TouchableOpacity
             className="flex-row items-center p-4 mb-3 rounded-[35px] bg-gray-100 shadow-sm"
             onPress={() => {
-              navigation.navigate('FarmerReport'as any,  {
+              navigation.navigate('FarmerReport', {
                 registeredFarmerId: item.registeredFarmerId,
                 userId: item.userId,
                 firstName: item.firstName,
@@ -183,6 +201,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
                 bankName: item.bankName,
                 branchName: item.branchName,
                 selectedDate: selectedDate.toISOString().split('T')[0],
+                empId: item.empId,  // Pass empId to the FarmerReport screen
               });
             }}
           >
@@ -211,8 +230,8 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
           </View>
         }
       />
-
     </SafeAreaView>
   );
 };
-export default TransactionList;
+
+export default ManagerTransactions;

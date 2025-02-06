@@ -87,7 +87,11 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       if (passwordUpdateRequired == true) {
         navigation.navigate("ChangePassword", { empid } as any);
       } else {
-        navigation.navigate("Main");
+      if (jobRole === "Collection Officer") {
+        navigation.navigate("Main", { screen: "Dashboard" });
+      }else{
+        navigation.navigate("Main", { screen: "ManagerDashboard" });
+      }
       }
     } catch (error) {
       console.error("Login error:", error);
