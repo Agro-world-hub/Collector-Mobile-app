@@ -28,8 +28,10 @@ interface complainItem {
   language: string;
   complainCategory: string;
   status: "Opened" | "Closed";
-  reply?: string;
-}
+    reply?: string;
+  }
+
+
 
 type ComplainHistoryNavigationProp = StackNavigationProp<
   RootStackParamList,

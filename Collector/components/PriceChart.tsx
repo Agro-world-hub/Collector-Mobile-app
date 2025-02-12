@@ -298,7 +298,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
   );
 
   const handlePriceChange = (index: number, newPrice: string) => {
-    const cleanedPrice = newPrice.replace(/[^0-9.]/g, ''); 
+    const cleanedPrice = newPrice.replace(/[^0-9.]/g, '');
     const updatedPrices = [...editedPrices];
     updatedPrices[index].price = cleanedPrice;
     setEditedPrices(updatedPrices);
@@ -306,15 +306,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
 
   const handleButtonClick = async () => {
     if (isEditable) {
-
-      const hasPriceChanged = editedPrices.some(
-        (priceItem, index) => priceItem.price !== priceData[index].price
-      );
-  
-      if (!hasPriceChanged) {
-        Alert.alert("No Changes", "No prices were updated. Please edit the prices before submitting.");
-        return; // Exit early if no changes
-      }
       try {
         const token = await AsyncStorage.getItem("token");
         if (!token) {
@@ -332,7 +323,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
           return;
         }
 
-        const response = await api.post(
+        await api.post(
           "api/auth/marketpricerequest",
           { prices: requestData },
           {
@@ -343,15 +334,12 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
         );
 
         Alert.alert("Success", "The price request was sent successfully!");
-
         await fetchPrices(); // Refetch prices after submitting
-
         setIsEditable(false);
         setButtonText("Request Price Update");
       } catch (error) {
         console.error("Error submitting price request:", error);
         setError("Failed to submit price update.");
-
         Alert.alert("Error", "Failed to submit price update.");
       }
     } else {
@@ -363,68 +351,45 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       {/* Header */}
-      <View
-        className="bg-[#2AAD7A] h-20 flex-row items-center"
-        style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
-      >
-        <TouchableOpacity onPress={() => navigation.goBack()} className="">
+      <View className="bg-[#2AAD7A] h-20 flex-row items-center" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={24} color="#fff" />
         </TouchableOpacity>
         <Text className="text-white text-lg font-bold text-center flex-1">Price Chart</Text>
       </View>
 
       {/* Content */}
-      <ScrollView
-        className="flex-1"
-        style={{ paddingHorizontal: wp(8), paddingVertical: hp(8) }}
-      >
-        {/* Crop Name */}
+      <ScrollView className="flex-1" style={{ paddingHorizontal: wp(8), paddingVertical: hp(8) }}>
         <View className="mb-4">
           <Text className="text-gray-600 text-sm mb-1">Crop Name</Text>
-          <TextInput
-            placeholder="Capcicum"
-            className="border border-gray-300 rounded-lg px-4 py-2 text-gray-800"
-            value={cropName}
-            editable={false}
-          />
+          <TextInput className="border border-gray-300 rounded-lg px-4 py-2 text-gray-800" value={cropName} editable={false} />
         </View>
 
-        {/* Variety */}
         <View className="mb-4">
           <Text className="text-gray-600 text-sm mb-1">Variety</Text>
-          <TextInput
-            placeholder="Muria"
-            className="border border-gray-300 rounded-lg px-4 py-2 text-gray-800"
-            value={varietyName}
-            editable={false}
-          />
+          <TextInput className="border border-gray-300 rounded-lg px-4 py-2 text-gray-800" value={varietyName} editable={false} />
         </View>
 
-        {/* Loading State */}
         {loading && (
           <View className="items-center my-6">
             <ActivityIndicator size="large" color="#2AAD7A" />
           </View>
         )}
 
-        {/* Error State */}
         {error && (
           <View className="bg-red-100 p-4 rounded-md mb-6">
             <Text className="text-red-600 text-center">{error}</Text>
           </View>
         )}
 
-        {/* Unit Prices Section */}
         {priceData.length > 0 && !loading && !error && (
           <View className="mb-6">
             <Text className="text-gray-600 text-sm mb-2">Unit Prices according to Grades</Text>
-
             <View className="border border-gray-300 rounded-lg p-4">
               {priceData.map((priceItem, index) => (
                 <View key={index} className="flex-row items-center mb-3">
                   <Text className="w-32 text-gray-600">{`Grade ${priceItem.grade}`}</Text>
                   <TextInput
-                    placeholder={`Rs.${priceItem.price}`}
                     className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-gray-800"
                     value={editedPrices[index]?.price}
                     editable={isEditable}
@@ -437,14 +402,8 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
           </View>
         )}
 
-        
-        <TouchableOpacity
-          className="bg-[#2AAD7A] rounded-[45px] py-3 h-12 mt-4 w-3/4 mx-auto"
-          onPress={handleButtonClick}
-        >
-          <Text className="text-center text-base text-white font-semibold">
-            {buttonText}
-          </Text>
+        <TouchableOpacity className="bg-[#2AAD7A] rounded-[45px] py-3 h-12 mt-4 w-3/4 mx-auto" onPress={handleButtonClick}>
+          <Text className="text-center text-base text-white font-semibold">{buttonText}</Text>
         </TouchableOpacity>
 
         {isEditable && (
