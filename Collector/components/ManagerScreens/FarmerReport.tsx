@@ -47,6 +47,7 @@ interface Crop {
   unitPriceC: string;
   weightC: string;
   total: number;
+  invoiceNumber: string;
 }
 
 const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
@@ -141,7 +142,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
         </head>
         <body>
           <h1>Purchase Report</h1>
-          <h2>Invoice Number: COO0125250102001</h2>
+          <h2>Invoice Number: ${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}</h2>
           <h2>Date: ${selectedDate}</h2>
           
           <h3>Personal Details</h3>
@@ -287,7 +288,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
       <View className="mb-4 p-4">
   {/* Selected Date and Invoice Number */}
   <View className="mb-2">
-  <Text className="text-sm font-bold">INV NO: COO0125250102001</Text>
+  <Text className="text-sm font-bold">INV NO:{crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}</Text>
     <Text className="text-sm font-bold">Date: {selectedDate}</Text>
     
   </View>

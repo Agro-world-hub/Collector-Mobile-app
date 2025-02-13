@@ -49,6 +49,7 @@ interface Crop {
   unitPriceC: string;
   weightC: string;
   total: number;
+  invoiceNumber: string;
 }
 
 const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
@@ -92,10 +93,12 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
         accHolderName: data.accHolderName ?? "",
         bankName: data.bankName ?? "",
         branchName: data.branchName ?? "",
+        
+        
       });
 
       setCrops(cropsResponse.data);
-      console.log(cropsResponse.data);
+      console.log('crop response for report',cropsResponse.data);
 
     } catch (error) {
       console.error('Error fetching details:', error);

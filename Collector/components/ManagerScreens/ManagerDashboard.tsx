@@ -1,14 +1,13 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, BackHandler } from 'react-native';
+import { View, Text, Image, TouchableOpacity, BackHandler, Alert } from 'react-native';
 import { CircularProgress } from 'react-native-circular-progress';
 import { ScrollView } from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Make sure to install this if not already done
-
-import { RootStackParamList } from '../types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import environment from '@/environment/environment';
 import { useFocusEffect } from 'expo-router';
+import { RootStackParamList } from '../types';
 
 type ManagerDashboardNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -21,13 +20,14 @@ interface ManagerDashboardProps {
 
 interface ProfileData {
   firstNameEnglish: string;
-  lastNameEnglish:string
+  lastNameEnglish: string;
   companyName: string;
 }
 
 const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [empId, setEmpId] = useState<string | null>(null);
+  const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -37,20 +37,42 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
           const response = await axios.get(`${environment.API_BASE_URL}api/collection-officer/user-profile`, {
             headers: { Authorization: `Bearer ${token}` },
           });
-          setProfile(response.data.data); // Assuming 'data.data' contains profile info
-          console.log('empid',response.data.data.empId)
+          setProfile(response.data.data);
           setEmpId(response.data.data.empId);
-          console.log("Profile data:", response.data.data);
-          console.log("Profile data:", response.data.data);
         }
       } catch (error) {
         console.error("Failed to fetch user profile:", error);
       }
     };
 
+    const fetchTargetPercentage = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        if (!token) {
+          Alert.alert("Error", "User not authenticated.");
+          return;
+        }
+
+        const response = await axios.get(`${environment.API_BASE_URL}api/target/officer-task-summary`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.data.success) {
+          const percentage = parseInt(response.data.completionPercentage.replace("%", ""), 10); // Remove '%' and convert to number
+          setTargetPercentage(percentage);
+        } else {
+          setTargetPercentage(0);
+        }
+      } catch (error) {
+        console.error("Failed to fetch target percentage:", error);
+        setTargetPercentage(0); // Set default value in case of error
+      }
+    };
+
     fetchUserProfile();
+    fetchTargetPercentage();
   }, []);
-  
+
   // Disable back press
   useFocusEffect(
     useCallback(() => {
@@ -72,12 +94,10 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
           className="w-16 h-16 rounded-full mr-4"
         />
         <View>
-          {/* Displaying name and company name if the profile is available */}
-          <Text className="text-lg font-bold">{profile?.firstNameEnglish  || "Loading..."} {profile?.lastNameEnglish  || "Loading..."}</Text>
+          <Text className="text-lg font-bold">{profile?.firstNameEnglish || "Loading..."} {profile?.lastNameEnglish || "Loading..."}</Text>
           <Text className="text-gray-500">{profile?.companyName || "Loading..."}</Text>
         </View>
       </TouchableOpacity>
-
 
       {/* Daily Target Warning */}
       <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-2 border-[#DF9301]">
@@ -92,19 +112,19 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
           <CircularProgress
             size={100}
             width={8}
-            fill={40}
+            fill={targetPercentage !== null ? targetPercentage : 0} // Dynamically set progress
             tintColor="#34D399"
             backgroundColor="#E5E7EB"
           />
           <View className="absolute items-center justify-center h-24 w-24">
-            <Text className="text-2xl font-bold">40%</Text>
+            <Text className="text-2xl font-bold">{targetPercentage !== null ? `${targetPercentage}%` : "0%"}</Text>
           </View>
         </View>
       </View>
 
       {/* Action Buttons */}
       <View className="flex-row flex-wrap justify-between p-5 mt-[5%]">
-        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("CenterTarget"as any)}>
+        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("CenterTarget" as any)}>
           <Image
             source={require("../../assets/images/ct.png")}
             className="w-8 h-8 absolute top-2 right-2"
@@ -112,7 +132,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
           <Text className="text-gray-700 text-lg absolute bottom-2 left-2">Center Target</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("ManagerTransactions"as any,{empId})}>
+        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("ManagerTransactions" as any, { empId })}>
           <Image
             source={require("../../assets/images/mycollect.png")}
             className="w-8 h-8 absolute top-2 right-2"
@@ -120,7 +140,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
           <Text className="text-gray-700 text-lg absolute bottom-2 left-2">My Collection</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("QRScanner"as any)}>
+        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("QRScanner" as any)}>
           <Image
             source={require("../../assets/images/qrrr.png")}
             className="w-8 h-8 absolute top-2 right-2"
@@ -128,7 +148,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
           <Text className="text-gray-700 text-lg absolute bottom-2 left-2">Scan QR</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative mb-5" onPress={() => navigation.navigate("SearchFarmer"as any)}>
+        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative mb-5" onPress={() => navigation.navigate("SearchFarmer" as any)}>
           <Image
             source={require("../../assets/images/nic.png")}
             className="w-8 h-8 absolute top-2 right-2"
