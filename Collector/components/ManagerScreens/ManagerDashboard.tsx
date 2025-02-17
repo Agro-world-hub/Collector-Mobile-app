@@ -1,13 +1,13 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, BackHandler, Alert } from 'react-native';
+import { View, Text, Image, TouchableOpacity, BackHandler, Alert, ScrollView, RefreshControl } from 'react-native';
 import { CircularProgress } from 'react-native-circular-progress';
-import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import environment from '@/environment/environment';
 import { useFocusEffect } from 'expo-router';
 import { RootStackParamList } from '../types';
+
 
 type ManagerDashboardNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -28,65 +28,71 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [empId, setEmpId] = useState<string | null>(null);
   const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-        if (token) {
-          const response = await axios.get(`${environment.API_BASE_URL}api/collection-officer/user-profile`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setProfile(response.data.data);
-          setEmpId(response.data.data.empId);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user profile:", error);
-      }
-    };
-
-    const fetchTargetPercentage = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-        if (!token) {
-          Alert.alert("Error", "User not authenticated.");
-          return;
-        }
-
-        const response = await axios.get(`${environment.API_BASE_URL}api/target/officer-task-summary`, {
+  const fetchUserProfile = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (token) {
+        const response = await axios.get(`${environment.API_BASE_URL}api/collection-officer/user-profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
-        if (response.data.success) {
-          const percentage = parseInt(response.data.completionPercentage.replace("%", ""), 10); // Remove '%' and convert to number
-          setTargetPercentage(percentage);
-        } else {
-          setTargetPercentage(0);
-        }
-      } catch (error) {
-        console.error("Failed to fetch target percentage:", error);
-        setTargetPercentage(0); // Set default value in case of error
+        setProfile(response.data.data);
+        setEmpId(response.data.data.empId);
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch user profile:", error);
+    }
+  };
 
+  const fetchTargetPercentage = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        Alert.alert("Error", "User not authenticated.");
+        return;
+      }
+      const response = await axios.get(`${environment.API_BASE_URL}api/target/officer-task-summary`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log('response for percentage target',response.data)
+      if (response.data.success) {
+        const percentage = parseInt(response.data.completionPercentage.replace("%", ""), 10);
+        setTargetPercentage(percentage);
+      } else {
+        setTargetPercentage(0);
+      }
+    } catch (error) {
+      console.error("Failed to fetch target percentage:", error);
+      setTargetPercentage(0);
+    }
+  };
+
+  useEffect(() => {
     fetchUserProfile();
     fetchTargetPercentage();
   }, []);
 
-  // Disable back press
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchUserProfile();
+    await fetchTargetPercentage();
+    setRefreshing(false);
+  };
+
   useFocusEffect(
     useCallback(() => {
-      const onBackPress = () => {
-        return true; // Prevent back navigation
-      };
-
+      const onBackPress = () => true;
       BackHandler.addEventListener('hardwareBackPress', onBackPress);
       return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, [])
   );
 
   return (
-    <ScrollView className="flex-1 bg-white p-3">
+    <ScrollView
+      className="flex-1 bg-white p-3"
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+    >
       {/* Profile Section */}
       <TouchableOpacity className="flex-row items-center mb-4 p-4" onPress={() => navigation.navigate("EngProfile")}>
         <Image

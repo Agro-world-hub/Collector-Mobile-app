@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, Dimensions, RefreshControl } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -31,6 +31,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
   const [loading, setLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showMenu, setShowMenu] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchOfficers = async () => {
     try {
@@ -59,8 +60,14 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
         setErrorMessage('An error occurred while fetching officers.');
       }
     } finally {
-      setTimeout(() => setLoading(false), 4000); // Keep loading for 4 seconds
+      setLoading(false);
     }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchOfficers();
+    setRefreshing(false);
   };
 
   useFocusEffect(
@@ -148,6 +155,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
             paddingBottom: scale(80),
             paddingTop: scale(10),
           }}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           showsVerticalScrollIndicator={true}
         />
       )}

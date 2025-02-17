@@ -1,6 +1,6 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
 import { RootStackParamList } from '../types';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -26,38 +26,45 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
   const [completedData, setCompletedData] = useState<TargetData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedToggle, setSelectedToggle] = useState('ToDo'); 
+  const [selectedToggle, setSelectedToggle] = useState('ToDo');
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchTargets = async () => {
+    setLoading(true);
+    const startTime = Date.now();
+    try {
+      const authToken = await AsyncStorage.getItem('token');
+      const response = await axios.get(`${environment.API_BASE_URL}api/target/get-center-target`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      const allData = response.data.data;
+      const todoItems = allData.filter((item: TargetData) => item.todo > 0);
+      const completedItems = allData.filter((item: TargetData) => item.todo === 0);
+
+      setTodoData(todoItems);
+      setCompletedData(completedItems);
+      setError(null);
+    } catch (err) {
+      setError('Failed to fetch data. Please try again later.');
+    } finally {
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = 4000 - elapsedTime;
+      setTimeout(() => setLoading(false), remainingTime > 0 ? remainingTime : 0);
+    }
+  };
 
   useEffect(() => {
-    const fetchTargets = async () => {
-      setLoading(true);
-      const startTime = Date.now();
-      try {
-        const authToken = await AsyncStorage.getItem('token');
-        const response = await axios.get(`${environment.API_BASE_URL}api/target/get-center-target`, {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-
-        const allData = response.data.data;
-        const todoItems = allData.filter((item: TargetData) => item.todo > 0);
-        const completedItems = allData.filter((item: TargetData) => item.todo === 0);
-
-        setTodoData(todoItems);
-        setCompletedData(completedItems);
-        setError(null);
-      } catch (err) {
-        setError('Failed to fetch data. Please try again later.');
-      } finally {
-        const elapsedTime = Date.now() - startTime;
-        const remainingTime = 4000 - elapsedTime;
-        setTimeout(() => setLoading(false), remainingTime > 0 ? remainingTime : 0);
-      }
-    };
-
     fetchTargets();
   }, []);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchTargets(); // Trigger data fetch on refresh
+    setRefreshing(false); // Reset refreshing state after fetching
+  };
 
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
 
@@ -93,9 +100,7 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
           onPress={() => setSelectedToggle('Completed')}
         >
           <Text
-            className={`font-bold ${
-              selectedToggle === 'Completed' ? 'text-white' : 'text-black'
-            }`}
+            className={`font-bold ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
           >
             Completed
           </Text>
@@ -106,7 +111,11 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
       </View>
 
       {/* Table Header */}
-      <ScrollView horizontal className="border border-gray-300 bg-white">
+      <ScrollView
+        horizontal
+        className="border border-gray-300 bg-white"
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
         <View>
           <View className="flex-row bg-[#2AAD7A] h-[7%]">
             <Text className="w-16 p-2 font-bold text-center">No</Text>
