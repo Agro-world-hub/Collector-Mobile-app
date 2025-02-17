@@ -110,7 +110,7 @@ import React,{ useEffect , useState} from 'react'
 import { View, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Splash from '@/components/Splash';
 import Login from '@/components/Login';
@@ -188,7 +188,7 @@ import CenterTarget from '@/components/ManagerScreens/CenterTarget';
 import ManagerTransactions from '@/components/ManagerScreens/ManagerTransactions';
 
 
-const Stack = createNativeStackNavigator(); 
+const Stack = createStackNavigator(); 
 const Tab = createBottomTabNavigator();
 
 function MainTabNavigator() {
@@ -297,7 +297,3 @@ const index = () => {
 }
 
 export default index
-
-function updateUserStatus(arg0: string) {
-  throw new Error('Function not implemented.');
-}
