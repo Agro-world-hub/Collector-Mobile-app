@@ -1,12 +1,22 @@
+import React, { useEffect, useState, useCallback } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { CircularProgress } from 'react-native-circular-progress';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import environment from '@/environment/environment';
-import { Ionicons } from '@expo/vector-icons';
-import LottieView from 'lottie-react-native'; // Import LottieView
+import LottieView from 'lottie-react-native';
 
 type DailyTargetNavigationProps = StackNavigationProp<RootStackParamList, 'DailyTarget'>;
 
@@ -30,6 +40,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedToggle, setSelectedToggle] = useState('ToDo'); // Track selected toggle
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     const fetchTargets = async () => {
@@ -44,12 +55,10 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
         });
 
         const allData = response.data.data;
-        console.log('--------all data----------',allData);
+        console.log('--------all data----------', allData);
         const todoItems = allData.filter((item: TargetData) => item.todo > 0); // Move tasks with todo > 0 to ToDo
         const completedItems = allData.filter((item: TargetData) => item.todo === 0); // Tasks with todo === 0 go to Completed
-        
-        
-        
+
         setTodoData(todoItems);
         setCompletedData(completedItems);
         setError(null);
@@ -62,6 +71,33 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
       }
     };
 
+    fetchTargets();
+  }, []);
+
+  // Refreshing function
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    const fetchTargets = async () => {
+      try {
+        const authToken = await AsyncStorage.getItem('token');
+        const response = await axios.get(`${environment.API_BASE_URL}api/target/officer`, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+
+        const allData = response.data.data;
+        const todoItems = allData.filter((item: TargetData) => item.todo > 0); // Move tasks with todo > 0 to ToDo
+        const completedItems = allData.filter((item: TargetData) => item.todo === 0); // Tasks with todo === 0 go to Completed
+
+        setTodoData(todoItems);
+        setCompletedData(completedItems);
+        setRefreshing(false); // Stop refreshing once data is loaded
+      } catch (err) {
+        setError('Failed to fetch data. Please try again later.');
+        setRefreshing(false); // Stop refreshing on error
+      }
+    };
     fetchTargets();
   }, []);
 
@@ -101,9 +137,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
           onPress={() => setSelectedToggle('Completed')}
         >
           <Text
-            className={`font-bold ${
-              selectedToggle === 'Completed' ? 'text-white' : 'text-black'
-            }`}
+            className={`font-bold ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
           >
             Completed
           </Text>
@@ -113,94 +147,78 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView horizontal className="border border-gray-300 bg-white">
-  <View>
-    {/* Table Header */}
-    <View className="flex-row bg-[#2AAD7A] h-[7%]">
-      <Text className="w-16 p-2 font-bold text-center text-white">No</Text>
-      <Text className="w-40 p-2 font-bold text-center text-white">Variety</Text>
-      <Text className="w-32 p-2 font-bold text-center text-white">Grade</Text>
-      <Text className="w-32 p-2 font-bold text-center text-white">Target (kg)</Text>
-      <Text className="w-32 p-2 font-bold text-center text-white">Todo (kg)</Text>
-    </View>
-    {/* Table Data */}
-    {loading ? (
-                <View className="flex-1 justify-center items-center mr-[45%] ">
-                  <LottieView
-                    source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
-                    autoPlay
-                    loop
-                    style={{ width: 350, height: 350 }}
-                  />
+      {/* Target List Table */}
+      <ScrollView
+        horizontal
+        className="border border-gray-300 bg-white"
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
+        <View>
+          {/* Table Header */}
+          <View className="flex-row bg-[#2AAD7A] h-[7%]">
+            <Text className="w-16 p-2 font-bold text-center text-white">No</Text>
+            <Text className="w-40 p-2 font-bold text-center text-white">Variety</Text>
+            <Text className="w-32 p-2 font-bold text-center text-white">Grade</Text>
+            <Text className="w-32 p-2 font-bold text-center text-white">Target (kg)</Text>
+            <Text className="w-32 p-2 font-bold text-center text-white">Todo (kg)</Text>
+          </View>
+
+          {/* Table Data */}
+          {loading ? (
+            <View className="flex-1 justify-center items-center mr-[45%]">
+              <LottieView
+                source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
+                autoPlay
+                loop
+                style={{ width: 350, height: 350 }}
+              />
+            </View>
+          ) : (
+            displayedData.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
+                onPress={() => {
+                  let qty = 0;
+
+                  // Extract qty from centerTarget based on the grade
+                  if (item.centerTarget) {
+                    if (item.grade === 'A' && item.centerTarget.total_qtyA !== undefined) {
+                      qty = parseFloat(item.centerTarget.total_qtyA);
+                    } else if (item.grade === 'B' && item.centerTarget.total_qtyB !== undefined) {
+                      qty = parseFloat(item.centerTarget.total_qtyB);
+                    } else if (item.grade === 'C' && item.centerTarget.total_qtyC !== undefined) {
+                      qty = parseFloat(item.centerTarget.total_qtyC);
+                    }
+                  }
+
+                  // Pass qty value to navigation
+                  navigation.navigate('EditTargetManager' as any, {
+                    varietyName: item.varietyName,
+                    varietyId: item.varietyId,
+                    grade: item.grade,
+                    target: item.target,
+                    todo: item.todo,
+                    qty: qty,
+                  });
+                }}
+              >
+                <View className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}>
+                  <Text className="w-16 p-2 border-r border-gray-300 text-center">
+                    {selectedToggle === 'ToDo' ? index + 1 : <Ionicons name="flag" size={20} color="green" />}
+                  </Text>
+                  <Text className="w-40 p-2 border-r border-gray-300 text-center flex-wrap" numberOfLines={2}>
+                    {item.varietyName}
+                  </Text>
+                  <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.grade}</Text>
+                  <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.target.toFixed(2)}</Text>
+                  <Text className="w-32 p-2 text-center">{item.todo.toFixed(2)}</Text>
                 </View>
-    ) : (
-      displayedData.map((item, index) => (
-<TouchableOpacity
-  key={index}
-  className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
-  onPress={() => {
-    let qty = 0;
-
-    // ✅ Extract qty from centerTarget based on the grade
-    if (item.centerTarget) {
-      if (item.grade === 'A' && item.centerTarget.total_qtyA !== undefined) {
-        qty = parseFloat(item.centerTarget.total_qtyA);
-      } else if (item.grade === 'B' && item.centerTarget.total_qtyB !== undefined) {
-        qty = parseFloat(item.centerTarget.total_qtyB);
-      } else if (item.grade === 'C' && item.centerTarget.total_qtyC !== undefined) {
-        qty = parseFloat(item.centerTarget.total_qtyC);
-      }
-    }
-
-    // ✅ Pass qty value to navigation
-    navigation.navigate('EditTargetManager' as any, {
-      varietyName: item.varietyName,
-      varietyId: item.varietyId,
-      grade: item.grade,
-      target: item.target,
-      todo: item.todo,
-      qty: qty, 
-    });
-  }}
->
-        <View
-          key={index}
-          className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
-        >
-          <Text
-            className="w-16 p-2 border-r border-gray-300 text-center"
-          >
-            {selectedToggle === 'ToDo' ? index + 1 : <Ionicons name="flag" size={20} color="green" />}
-          </Text>
-          <Text
-            className="w-40 p-2 border-r border-gray-300 text-center flex-wrap"
-            numberOfLines={2}
-          >
-            {item.varietyName}
-          </Text>
-          <Text
-            className="w-32 p-2 border-r border-gray-300 text-center"
-          >
-            {item.grade}
-          </Text>
-          <Text
-            className="w-32 p-2 border-r border-gray-300 text-center"
-          >
-            {item.target.toFixed(2)}
-          </Text>
-          <Text
-            className="w-32 p-2 text-center"
-          >
-            {item.todo.toFixed(2)}
-          </Text>
-          
+              </TouchableOpacity>
+            ))
+          )}
         </View>
-        </TouchableOpacity>
-      ))
-    )}
-  </View>
-</ScrollView>
-
+      </ScrollView>
     </View>
   );
 };

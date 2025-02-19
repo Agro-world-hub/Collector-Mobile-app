@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Linking,
   Alert,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { CircularProgress } from "react-native-circular-progress";
@@ -14,8 +16,7 @@ import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../types";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import environment from "@/environment/environment";
-import io from "socket.io-client"; 
-import { socket } from "../../services/socket"
+import axios from "axios";
 
 type OfficerSummaryNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -29,10 +30,7 @@ interface OfficerSummaryProps {
   route: OfficerSummaryRouteProp;
 }
 
-const OfficerSummary: React.FC<OfficerSummaryProps> = ({
-  route,
-  navigation,
-}) => {
+const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) => {
   const {
     officerId,
     officerName,
@@ -41,35 +39,48 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
     collectionOfficerId,
   } = route.params;
   const [showMenu, setShowMenu] = useState(false);
-  console.log(route.params);
   const [officerStatus, setOfficerStatus] = useState('offline');
-  
-  console.log(officerStatus);
-    const handleDial = (phoneNumber: string) => {
+  const [taskPercentage, setTaskPercentage] = useState<number | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleDial = (phoneNumber: string) => {
     const phoneUrl = `tel:${phoneNumber}`;
     Linking.openURL(phoneUrl).catch((err) =>
       console.error("Failed to open dial pad:", err)
     );
   };
 
+  // Fetch task summary and completion percentage
+  const fetchTaskSummary = async () => {
+    try {
+      const res = await axios.get(
+        `${environment.API_BASE_URL}api/target/officer-task-summary/${collectionOfficerId}`
+      );
 
+      if (res.data.success) {
+        const { totalTasks, completedTasks } = res.data;
+        const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+        setTaskPercentage(percentage); // Update the state with the percentage
+      } else {
+        Alert.alert("Error", "No task summary found for this officer.");
+      }
+    } catch (error) {
+      console.error("Error fetching task summary:", error);
+      Alert.alert("Error", "Failed to fetch task summary.");
+    }
+  };
 
-
-   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Socket connected successfully");
-    });
-
-    socket.on("connect_error", (error: any) => {
-      console.log("Socket connection error:", error);
-    });
-
-    return () => {
-      socket.disconnect();
-      console.log("Socket disconnected");
-    };
+  // Refreshing function
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchTaskSummary();  // Re-fetch task summary
+    setRefreshing(false);
   }, [collectionOfficerId]);
 
+  useEffect(() => {
+    fetchTaskSummary();
+  }, [collectionOfficerId]);
+  
   const handleDisclaim = async () => {
     setShowMenu(false);
 
@@ -115,73 +126,13 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
     }
   };
 
-  // useEffect(() => {
-  //   const fetchOfficerStatus = async () => {
-  //     console.log(collectionOfficerId)
-  //     if (collectionOfficerId) {
-  //       try {
-  //         const res = await fetch(
-  //           `${environment.API_BASE_URL}api/collection-manager/get-officer-online`,
-  //           {
-  //             method: "POST",
-  //             headers: {
-  //               "Content-Type": "application/json",
-  //             },
-  //             body: JSON.stringify({ collectionOfficerId }),
-  //           }
-  //         );
-          
-  //         if (!res.ok) {
-  //           throw new Error("Failed to fetch officer status");
-  //         }
-  
-  //         const data = await res.json();
-  //         console.log(data.result.OnlineStatus);
-  //       } catch (error) {
-  //         console.error("Error fetching officer status:", error);
-  //       }
-  //     }
-  //   };
-  
-  //   fetchOfficerStatus();
-  // }, [collectionOfficerId]); 
-
-  // useEffect(() => {
-  //   // Connect to the backend server using the appropriate URL
-  //   const socket = io(environment.API_BASE_URL, {
-  //     transports: ['websocket'],
-  //   });
-    
-
-  //   // On successful connection
-  //   socket.on('connect', () => {
-  //     console.log('Socket connected successfully');
-  //   });
-
-  //   // Handle connection errors
-  //   socket.on('connect_error', (error) => {
-  //     console.log('Socket connection error:', error);
-  //   });
-
-  //   // Listen for events from the server
-  //   // socket.on('officer_status_update', (data) => {
-  //   //   console.log('Received officer status update:', data);
-  //   // });
-
-  //   // Clean up socket connection when the component unmounts
-  //   return () => {
-  //     socket.disconnect();
-  //     console.log('Socket disconnected');
-  //   };
-  // }, []);
-  
-// Client-Side (React Native)
-
-
-
-
   return (
-    <View className="flex-1 bg-white ">
+    <ScrollView
+      className="flex-1 bg-white "
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       {/* Header */}
       <View className="relative">
         {/* Header Section */}
@@ -313,29 +264,31 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
           {/* Total Weight */}
           <View className="items-center mb-8">
             <CircularProgress
-              size={100}
+              size={120}
               width={10}
-              fill={40}
+              fill={taskPercentage ?? 0} // Dynamically set fill percentage
               tintColor="#0CB783"
               backgroundColor="#E5E7EB"
-            />
-            <Text className="text-center mt-2 text-lg font-bold">40%</Text>
-            <Text className="text-sm text-gray-500 mt-1">Target Coverage</Text>
-          </View>
-          
-            <View className="mt-6 items-center">
-                  <TouchableOpacity
-                    className="bg-[#2AAD7A] rounded-full w-64 py-3 h-12"
-                    onPress={() => navigation.navigate('DailyTargetListForOfficers',{ officerId,collectionOfficerId })}
-                  >
-                    <Text className="text-white text-center font-medium">Open Target Board</Text>
-                  </TouchableOpacity>
-                </View>
+            >
+              {(fill) => (
+                <Text className="text-[#0CB783] font-bold text-xl">{Math.round(fill)}%</Text>
+              )}
+            </CircularProgress>
 
-        
+            <Text className="text-sm text-gray-500 mt-4">Target Coverage</Text>
+          </View>
+
+          <View className="mt-6 items-center">
+            <TouchableOpacity
+              className="bg-[#2AAD7A] rounded-full w-64 py-3 h-12"
+              onPress={() => navigation.navigate('DailyTargetListForOfficers', { officerId, collectionOfficerId })}
+            >
+              <Text className="text-white text-center font-medium">Open Target Board</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
