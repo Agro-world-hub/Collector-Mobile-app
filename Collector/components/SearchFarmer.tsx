@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { useFocusEffect } from "expo-router";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -95,11 +96,19 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
         Alert.alert("Error", "An unexpected error occurred.");
       }
     }
-
-    // Reset the NIC number and noResults after the search is completed
-    setNICnumber('');
-    setNoResults(false); // Optionally hide the "No results" message immediately after resetting
   };
+
+
+  useFocusEffect(
+    useCallback(() => {
+      setNICnumber("");
+      setNoResults(false);
+    }, [])
+  );
+
+  const DismisKeyboard = () => {
+    Keyboard.dismiss();
+  }
 
   return (
     <ScrollView
@@ -132,6 +141,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
               onChangeText={handleNicChange}
               placeholder="Enter NIC number"
               className="flex-1 text-center"
+              maxLength={12}
             />
             <TouchableOpacity className="ml-2" onPress={handleSearch}>
               <FontAwesome name="search" size={24} color="green" />
@@ -166,7 +176,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
             <View className="mt-6 items-center">
               <Image
                 source={require("../assets/images/notfound.png")}
-                className="h-[200px] w-[300px] rounded-lg"
+                className="h-[200px] w-[200px] rounded-lg"
                 resizeMode="contain"
               />
               <Text className="text-center text-lg mt-4">

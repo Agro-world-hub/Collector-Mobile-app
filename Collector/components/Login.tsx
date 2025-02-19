@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import React, { useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -100,6 +102,11 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
   };
 
   return (
+    <KeyboardAvoidingView
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+    enabled
+    className="flex-1"
+  >
     <ScrollView
       className="flex-1 w-full bg-white"
       keyboardShouldPersistTaps="handled"
@@ -177,6 +184,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
         </View>
       )}
     </ScrollView>
+  </KeyboardAvoidingView>
   );
 };
 

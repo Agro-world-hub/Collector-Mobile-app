@@ -154,6 +154,12 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
       { name: "CollectionOfficersList", icon: adminIcon, focusedIcon: adminIcon },
     ];
   }
+  useEffect(() => {
+    // Check the userRole and manually navigate if needed
+    if (userRole === "Collection Center Manager" && currentTabName == "Dashboard") {
+      navigation.navigate("ManagerDashboard");
+    }
+  }, [userRole, currentTabName, navigation]);
 
 
   const [appState, setAppState] = useState(AppState.currentState);

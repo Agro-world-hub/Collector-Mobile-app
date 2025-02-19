@@ -151,7 +151,7 @@ import ReportPage from '@/components/ReportPage';
 import SearchPriceScreen from '@/components/SearchPriceScreen';
 import PriceChart from '@/components/PriceChart';
 import { LanguageProvider } from '@/context/LanguageContext';
-
+import { AuthProvider } from '@/context/AuthContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import BottomNav from '@/components/BottomNav';
 import CollectionOfficersList from '@/components/ManagerScreens/CollectionOfficersList';
@@ -218,8 +218,6 @@ const index = () => {
   
     // Prevent screenshots and screen recording
     // ScreenCapture.usePreventScreenCapture()
-
-   
 
   return (
     <LanguageProvider>
