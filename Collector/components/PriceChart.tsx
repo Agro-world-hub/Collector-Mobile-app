@@ -311,19 +311,20 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
         if (!token) {
           throw new Error("No authentication token found.");
         }
-
+  
         const requestData = editedPrices.map((priceItem) => ({
           varietyId,
           grade: priceItem.grade,
           requestPrice: priceItem.price,
         }));
-
+  
         if (requestData.length === 0) {
           Alert.alert("No prices to update", "Please edit the prices before submitting.");
           return;
         }
-
-        await api.post(
+  
+        // Send the price update request
+        const response = await api.post(
           "api/auth/marketpricerequest",
           { prices: requestData },
           {
@@ -332,21 +333,33 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
             },
           }
         );
-
-        Alert.alert("Success", "The price request was sent successfully!");
-        await fetchPrices(); // Refetch prices after submitting
-        setIsEditable(false);
-        setButtonText("Request Price Update");
+  
+        // Handle success response
+        if (response.status === 201) {
+          Alert.alert("Success", "The price request was sent successfully!");
+          await fetchPrices(); // Refetch prices after submitting
+          setIsEditable(false);
+          setButtonText("Request Price Update");
+        }
       } catch (error) {
-        console.error("Error submitting price request:", error);
-        setError("Failed to submit price update.");
-        Alert.alert("Error", "Failed to submit price update.");
+        // Check if error status is 400 and show the message to update prices
+        if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+          Alert.alert(
+            "Error",
+            "You must change the prices before submitting. Please update the values."
+          );
+        } else {
+          console.error("Error submitting price request:", error);
+          setError("Failed to submit price update.");
+          Alert.alert("Error", "Failed to submit price update.");
+        }
       }
     } else {
       setIsEditable(true);
       setButtonText("Submit Request");
     }
   };
+  
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
