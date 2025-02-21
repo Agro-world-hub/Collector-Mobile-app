@@ -1,6 +1,6 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Platform, BackHandler } from 'react-native';
 import { CircularProgress } from 'react-native-circular-progress';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Make sure to install this if not already done
@@ -44,6 +44,19 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
     };
 
     fetchUserProfile();
+  }, []);
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      const onBackPress = () => {
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+      };
+    }
   }, []);
 
   return (

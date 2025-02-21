@@ -58,6 +58,7 @@ import { View, TouchableOpacity, Image,  Animated, Keyboard  } from 'react-nativ
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import environment from '@/environment/environment';
+import { socket } from '@/services/socket';
 import { AppState } from 'react-native';
 
 const homeIcon = require('../assets/images/homee.png');
@@ -173,6 +174,7 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
       const token = await AsyncStorage.getItem('token');
       if (token) {
         console.log('User authenticated:', { token });
+        socket.emit('updateOfficerStatus', { status, token });
 
         // Send user status update to the server
         try {

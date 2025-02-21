@@ -55,18 +55,33 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
 
 
 
-   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Socket connected successfully");
-    });
+  //  useEffect(() => {
+  //   socket.on("connect", () => {
+  //     console.log("Socket connected successfully");
+  //   });
 
-    socket.on("connect_error", (error: any) => {
-      console.log("Socket connection error:", error);
-    });
+  //   socket.on("connect_error", (error: any) => {
+  //     console.log("Socket connection error:", error);
+  //   });
 
+  //   return () => {
+  //     socket.disconnect();
+  //     console.log("Socket disconnected");
+  //   };
+  // }, [collectionOfficerId]);
+  useEffect(() => {
+    if (collectionOfficerId) {
+      socket.emit("getOfficerStatus", { collectionOfficerId });
+  
+      // Listen for officer status updates from the server
+      socket.on("officerStatusUpdate", (status) => {
+        setOfficerStatus(status); // Update status based on server response
+      });
+    }
+  
+    // Cleanup the socket listener on unmount
     return () => {
-      socket.disconnect();
-      console.log("Socket disconnected");
+      socket.off("officerStatusUpdate");
     };
   }, [collectionOfficerId]);
 
