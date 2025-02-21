@@ -293,6 +293,11 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
       {/* Personal Details Section */}
       {details && (
         <View className="mb-4">
+           {/* Selected Date and Invoice Number */}
+            <View className="mb-2">
+            <Text className="text-sm font-bold">INV NO:{crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}</Text>
+              
+            </View>
           <Text className="font-bold text-sm mb-2">Personal Details</Text>
           <ScrollView horizontal className="border border-gray-300 rounded-lg">
             <View>

@@ -1,13 +1,20 @@
-import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { RootStackParamList } from '../types';
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import LottieView from 'lottie-react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp, useFocusEffect } from '@react-navigation/native';
+import { RootStackParamList } from '../types';
 import environment from '@/environment/environment';
-import { Ionicons } from '@expo/vector-icons';
-import LottieView from 'lottie-react-native';
 
 type DailyTargetListForOfficerstNavigationProps = StackNavigationProp<RootStackParamList, 'DailyTargetListForOfficers'>;
 
@@ -35,9 +42,10 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedToggle, setSelectedToggle] = useState('ToDo'); 
+  const [refreshing, setRefreshing] = useState(false);
   const { collectionOfficerId } = route.params;
 
-  // ✅ Fetch Targets API (Now runs every time the page is visited)
+  // ✅ Fetch Targets API (Runs every time the page is visited or refreshed)
   const fetchTargets = async () => {
     setLoading(true);
     const startTime = Date.now(); 
@@ -76,6 +84,13 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
     }, [])
   );
 
+  // ✅ Refreshing function for Pull-to-Refresh
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchTargets();  // Re-fetch task data on refresh
+    setRefreshing(false); // Set refreshing to false once data is loaded
+  }, [collectionOfficerId]);
+
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
 
   return (
@@ -87,6 +102,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
 
       {/* Toggle Buttons */}
       <View className="flex-row justify-center items-center py-4 bg-black">
+        {/* To Do Button */}
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
             selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
@@ -102,6 +118,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
           </View>
         </TouchableOpacity>
 
+        {/* Completed Button */}
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
             selectedToggle === 'Completed' ? 'bg-[#2AAD7A]' : 'bg-white'
@@ -110,9 +127,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
           onPress={() => setSelectedToggle('Completed')}
         >
           <Text
-            className={`font-bold ${
-              selectedToggle === 'Completed' ? 'text-white' : 'text-black'
-            }`}
+            className={`font-bold ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
           >
             Completed
           </Text>
@@ -123,7 +138,11 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
       </View>
 
       {/* Scrollable Table */}
-      <ScrollView horizontal className="border border-gray-300 bg-white">
+      <ScrollView
+        horizontal
+        className="border border-gray-300 bg-white"
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
         <View>
           {/* Table Header */}
           <View className="flex-row bg-[#2AAD7A] h-[7%]">
@@ -135,7 +154,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
           </View>
 
           {loading ? (
-             <View className="flex-1 justify-center items-center mr-[45%] ">
+             <View className="flex-1 justify-center items-center mr-[45%]">
                   <LottieView
                     source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
                     autoPlay

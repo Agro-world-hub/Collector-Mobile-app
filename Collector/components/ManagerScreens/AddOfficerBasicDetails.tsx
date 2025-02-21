@@ -111,7 +111,8 @@ const AddOfficerBasicDetails: React.FC = () => {
     console.log('Form Data:', updatedFormData, preferredLanguages, type, jobRole);
   
     const prefixedUserId =
-      jobRole === 'Collection Officer' ? `CCO${formData.userId}` : formData.userId;
+    jobRole === 'Collection Officer' ? `COO${formData.userId}` : formData.userId;
+  
   
     // Navigate to the next screen with the updated data
     navigation.navigate('AddOfficerAddressDetails', {

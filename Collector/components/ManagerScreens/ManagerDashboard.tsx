@@ -105,14 +105,28 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
         </View>
       </TouchableOpacity>
 
-      {/* Daily Target Warning */}
-      <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-2 border-[#DF9301]">
-        <Text className="text-center text-yellow-600 font-bold">🚀 Keep Going!</Text>
-        <Text className="text-center text-gray-500">You haven't achieved your daily target today</Text>
-      </View>
+       {/* Conditional Rendering for Daily Target */}
+          {targetPercentage !== null && targetPercentage < 100 ? (
+              <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-2 border-[#DF9301]">
+                <Text className="text-center text-yellow-600 font-bold">🚀 Keep Going!</Text>
+                <Text className="text-center text-gray-500">You haven't achieved your daily target today</Text>
+              </View>
+            ) : (
+              <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-2 border-[#2AAD7A]">
+                <View className="flex-row justify-center items-center mb-2">
+                  <Image 
+                    source={require("../../assets/images/hand.png")} 
+                    className="w-8 h-8 mr-2"
+                  />
+                  <Text className="text-center text-[#2AAD7A] font-bold">Completed!</Text>
+                </View>
+                <Text className="text-center text-gray-500">You have achieved your daily target today</Text>
+              </View>
+      
+            )}
 
       {/* Target Progress */}
-      <View className="flex-row items-center justify-between mb-2 p-7 mt-[15%]">
+      <View className="flex-row items-center justify-between mb-2 p-7 mt-2">
         <Text className="text-gray-700 font-bold text-lg">Your Target Progress</Text>
         <View className="relative">
           <CircularProgress
