@@ -338,9 +338,11 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
             style={{ width: 24, height: 24 }} // Adjust size if needed
           />
         </TouchableOpacity>
-        <Text className="text-xl font-bold ml-3">
-          Fill Farmer Personal Details
-        </Text>
+        <View className="w-full items-center">
+  <Text className="text-xl font-bold text-center">Fill Personal Details</Text>
+</View>
+
+
       </View>
 
       {/* Scrollable Form */}
@@ -501,7 +503,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
       {/* Next Button */}
       <TouchableOpacity
-        className="bg-green-500 p-3 rounded-full items-center mt-5"
+        className="bg-[#2AAD7A] p-3 rounded-full items-center mt-5"
         onPress={handleNext}
       >
         <Text className="text-white text-lg">Submit</Text>

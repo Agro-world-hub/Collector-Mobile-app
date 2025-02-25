@@ -135,13 +135,18 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
             Enter Farmer's NIC number
           </Text>
 
-          <View className="flex-row justify-center items-center border rounded-full mt-4 px-4 py-2 bg-gray-100">
+          <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2 bg-gray-100 bg-white">
+
             <TextInput
               value={NICnumber}
               onChangeText={handleNicChange}
               placeholder="Enter NIC number"
-              className="flex-1 text-center"
+              className="flex-1 text-center "
               maxLength={12}
+              style={{
+                
+                color: "#000", // Text color (optional)
+              }}
             />
             <TouchableOpacity className="ml-2" onPress={handleSearch}>
               <FontAwesome name="search" size={24} color="green" />
@@ -158,7 +163,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
             <View className="mt-10 items-center">
               <Image
                 source={require("../assets/images/search.png")}
-                className="h-[400px] w-[350px] rounded-lg"
+                className="h-[350px] w-[300px] rounded-lg"
                 resizeMode="contain"
               />
             </View>
@@ -179,7 +184,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
                 className="h-[200px] w-[200px] rounded-lg"
                 resizeMode="contain"
               />
-              <Text className="text-center text-lg mt-4">
+              <Text className="text-center text-lg mt-4 color-[#888888]">
                 No registered farmer found
               </Text>
 

@@ -115,10 +115,10 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
         <AntDesign name="left" size={24} color="#000502" />
       </TouchableOpacity>
 
-      <View className="items-center pt-[10%]">
+      <View className="items-center mt-[-5%]">
         <Image source={loginImage} />
         <Text className="font-bold text-2xl pt-[7%]">
-          {t("SignIn.Wellcome")}
+          {/* {t("SignIn.Wellcome")} */} Welcome!
         </Text>
       </View>
 
@@ -139,8 +139,10 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       ) : (
         <View className="p-6">
           <Text className="text-base pb-[2%] font-light">Employee ID</Text>
-          <View className="flex-row items-center border rounded-3xl w-full h-[53px] mb-5 bg-white px-3">
-            <Icon name="email" size={24} color="green" />
+          <View className="flex-row items-center border rounded-3xl w-full h-[53px] mb-5 bg-white px-3" style={{ borderColor: '#D5D5D5' }}>
+
+            {/* <Icon name="email" size={24} color="green" /> */}
+            <AntDesign name="user" size={24} color="green" />
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
               placeholder="Employee ID"
@@ -150,7 +152,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
           </View>
 
           <Text className="text-base pb-[2%] font-light">Password</Text>
-          <View className="flex-row items-center border rounded-3xl w-full h-[53px] mb-10 bg-white px-3">
+          <View className="flex-row items-center border rounded-3xl w-full h-[53px] mb-5 bg-white px-3" style={{ borderColor: '#D5D5D5' }}>
             <Icon name="lock" size={24} color="green" />
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
@@ -169,7 +171,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
           </View>
 
           <TouchableOpacity
-            className="bg-[#2AAD7A] w-full p-3 rounded-3xl shadow-2xl items-center justify-center"
+            className="bg-[#2AAD7A] w-full p-3 rounded-3xl shadow-2xl items-center justify-center mb-[10%]"
             onPress={handleLogin}
             disabled={loading} // Disable button while loading
           >

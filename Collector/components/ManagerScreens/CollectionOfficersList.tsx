@@ -8,6 +8,7 @@ import axios from 'axios';
 import environment from '@/environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LottieView from 'lottie-react-native'; // Import Lottie for animation
+import BottomNav from '../BottomNav';
 
 const { width } = Dimensions.get('window');
 const scale = (size: number) => (width / 375) * size;
@@ -157,6 +158,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
           }}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           showsVerticalScrollIndicator={true}
+          
         />
       )}
 
@@ -166,6 +168,10 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
       >
         <Ionicons name="add" size={scale(24)} color="#fff" />
       </TouchableOpacity>
+    
+
+      
+
     </View>
   );
 };

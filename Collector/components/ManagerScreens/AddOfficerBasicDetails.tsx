@@ -215,7 +215,7 @@ const AddOfficerBasicDetails: React.FC = () => {
           <Picker
             selectedValue={jobRole}
             onValueChange={(itemValue) => handleJobRoleChange(itemValue)}
-            style={{ height: 40, width: '100%' }}
+            style={{ height: 50, width: '100%' }}
           >
             <Picker.Item label="--Select Job Role--" value="Select Job Role" />
             <Picker.Item label="Manager" value="Manager" />

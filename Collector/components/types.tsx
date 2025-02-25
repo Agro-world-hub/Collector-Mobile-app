@@ -1,4 +1,5 @@
 export type RootStackParamList = {
+  BottomNav:undefined
     Splash:undefined;
     Login:undefined;
     ChangePassword:undefined;

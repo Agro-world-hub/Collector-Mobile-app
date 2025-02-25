@@ -99,8 +99,8 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
             data={cropOptions}
             placeholder="Select Crop"
             boxStyles={{
-              backgroundColor: '#F9F9F9',
-              borderColor: '#E5E5E5',
+              backgroundColor: 'white',
+              borderColor: '#CFCFCF',
             }}
             dropdownTextStyles={{
               color: '#000',
@@ -120,8 +120,8 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
             data={varietyOptions}
             placeholder="Select Variety"
             boxStyles={{
-              backgroundColor: '#F9F9F9',
-              borderColor: '#E5E5E5',
+              backgroundColor: 'white',
+              borderColor: '#CFCFCF',
             }}
             dropdownTextStyles={{
               color: '#000',

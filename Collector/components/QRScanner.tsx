@@ -302,6 +302,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
         animationType="slide"
         onRequestClose={() => setShowPermissionModal(false)}
       >
+         
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.7)' }}>
           <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, shadowColor: 'black', width: '80%' }}>
             <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Camera Permission Required</Text>
@@ -338,6 +339,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
         }}
         style={{ flex: 1 }}
       />
+    
       <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' }}>
         <View
           style={{

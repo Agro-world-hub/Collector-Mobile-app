@@ -127,7 +127,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
           </View>
         </View>
 
-        <View className="flex-row items-center bg-[#F5F1FC] px-4 py-2 rounded-full border border-black mt-[-18] mx-auto w-[90%] shadow-sm">
+        <View className="flex-row items-center bg-[#F7F7F7] px-4 py-2 rounded-full border border-[#444444] mt-[-18] mx-auto w-[90%] shadow-sm">
           <TextInput
             placeholder="Search By NIC Number, Name"
             placeholderTextColor="grey"

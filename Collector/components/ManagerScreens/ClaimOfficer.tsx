@@ -16,6 +16,7 @@ import { RootStackParamList } from '../types';
 import { useNavigation } from '@react-navigation/native';
 import environment from '../../environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 
 interface OfficerDetails {
@@ -123,7 +124,7 @@ const ClaimOfficer: React.FC = () => {
           className="pr-4"
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="arrow-back" size={24} color="#000" />
+           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
         <Text className="text-lg font-bold ml-[25%]">Claim Officers</Text>
       </View>
@@ -137,7 +138,7 @@ const ClaimOfficer: React.FC = () => {
           <Picker
             selectedValue={jobRole}
             onValueChange={(itemValue) => setJobRole(itemValue)}
-            style={{ height: 40, width: '100%' }}
+            style={{ height: 50, width: '100%' }}
           >
             <Picker.Item label="Collection Officer" value="Collection Officer" />
             <Picker.Item label="Customer Officer" value="Customer Officer" />
