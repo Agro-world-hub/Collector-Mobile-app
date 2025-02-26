@@ -108,13 +108,13 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
       <View className="items-center pt-[10%]">
         <Text className="font-bold text-xl">Choose a New Password</Text>
         <Text className="w-[53%] text-center font-light pt-3">
-          Choose your new password to access your account
+        Change the password and keep it secured
         </Text>
       </View>
 
       <View className="items-center pt-[12%]">
-        <Text className="font-normal pb-2">Current Password</Text>
-        <View className="flex-row items-center border rounded-3xl w-[95%] h-[53px] mb-8 bg-white px-3">
+        <Text className="font-normal pb-2 ml-[-55%]">Current Password</Text>
+        <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-[95%] h-[53px] mb-8 bg-white px-3">
           <TextInput
             className="flex-1 h-[40px] text-base"
             placeholder="Current Password"
@@ -131,8 +131,8 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           </TouchableOpacity>
         </View>
 
-        <Text className="font-normal pb-2">New Password</Text>
-        <View className="flex-row items-center border rounded-3xl w-[95%] h-[53px] mb-8 bg-white px-3">
+        <Text className="font-normal pb-2 ml-[-60%]">New Password</Text>
+        <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-[95%] h-[53px] mb-8 bg-white px-3">
           <TextInput
             className="flex-1 h-[40px] text-base"
             placeholder="New Password"
@@ -149,8 +149,8 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           </TouchableOpacity>
         </View>
 
-        <Text className="font-normal pb-2">Confirm New Password</Text>
-        <View className="flex-row items-center border rounded-3xl w-[95%] h-[53px] mb-5 bg-white px-3">
+        <Text className="font-normal pb-2 ml-[-45%]">Confirm New Password</Text>
+        <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-[95%] h-[53px] mb-5 bg-white px-3">
           <TextInput
             className="flex-1 h-[40px] text-base"
             placeholder="Confirm New Password"

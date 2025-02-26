@@ -1,16 +1,13 @@
-// socket-service.js
-import io from 'socket.io-client';
-
-// Create a singleton socket instance
-const socket = io('http://192.168.43.180:3005', {
-  reconnection: true,
-  reconnectionAttempts: 5,
-  reconnectionDelay: 1000
+import { Platform } from "react-native";
+import { io } from "socket.io-client";
+export const socket = io("http://192.168.1.14:3005/", {
+  transports: ['websocket'], // Ensure WebSocket is used for better performance
+  reconnectionAttempts: 5, // Number of reconnection attempts before it stops
+  timeout: 10000, // Connection timeout
 });
 
-// Add some logging to help with debugging
 socket.on('connect', () => {
-  console.log('Socket connected:', socket.id);
+  console.log('Socket connected: ' + socket.id);
 });
 
 socket.on('disconnect', () => {
@@ -18,7 +15,7 @@ socket.on('disconnect', () => {
 });
 
 socket.on('connect_error', (error) => {
-  console.log('Connection error:', error);
+  console.log('Socket connection error:', error);
 });
 
 export default socket;

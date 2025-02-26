@@ -18,7 +18,6 @@ import { OfficerBasicDetailsFormData } from '../types';
 import environment from '@/environment/environment';
 import countryCodes from './countryCodes.json';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import * as ImagePicker from 'expo-image-picker';
 
 type AddOfficerBasicDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -39,8 +38,6 @@ const AddOfficerBasicDetails: React.FC = () => {
   const [phoneCode2, setPhoneCode2] = useState<string>('+94'); // Default Sri Lanka calling code
   const [phoneNumber1, setPhoneNumber1] = useState('');
   const [phoneNumber2, setPhoneNumber2] = useState('');
-  
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
 
   const [formData, setFormData] = useState<OfficerBasicDetailsFormData>({
@@ -53,7 +50,6 @@ const AddOfficerBasicDetails: React.FC = () => {
     lastNameTamil: '',
     nicNumber: '',
     email: '',
-    profileImage: '',
   });
 
   const toggleLanguage = (language: keyof typeof preferredLanguages) => {
@@ -90,29 +86,6 @@ const AddOfficerBasicDetails: React.FC = () => {
     }
   };
 
-  const handleImagePick = async () => {
-    // Request for camera roll permission if not granted
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
-      Alert.alert('Permission required', 'You need to grant camera roll permissions to select an image');
-      return;
-    }
-
-    // Pick the image
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      base64: true, // Ensure base64 data is returned
-    });
-
-    if (!result.canceled) {
-      if (result.assets && result.assets.length > 0) {
-        if (result.assets[0].base64) {
-          setSelectedImage(result.assets[0].base64); // Set base64 image data
-        }
-      }
-    }
-  };
-
   const handleNext = () => {
     if (
       !formData.userId ||
@@ -125,7 +98,7 @@ const AddOfficerBasicDetails: React.FC = () => {
       Alert.alert('Error', 'Please fill in all required fields.');
       return;
     }
-
+  
     // Update formData with separate phone codes and numbers
     const updatedFormData = {
       ...formData,
@@ -134,15 +107,13 @@ const AddOfficerBasicDetails: React.FC = () => {
       phoneCode2: phoneCode2,
       phoneNumber2: phoneNumber2,
     };
-
-    // Add the base64 image to formData
-    updatedFormData.profileImage = selectedImage || '';
-
+  
     console.log('Form Data:', updatedFormData, preferredLanguages, type, jobRole);
-
+  
     const prefixedUserId =
-      jobRole === 'Collection Officer' ? `COO${formData.userId}` : formData.userId;
-
+    jobRole === 'Collection Officer' ? `COO${formData.userId}` : formData.userId;
+  
+  
     // Navigate to the next screen with the updated data
     navigation.navigate('AddOfficerAddressDetails', {
       formData: { ...updatedFormData, userId: prefixedUserId },
@@ -165,23 +136,22 @@ const AddOfficerBasicDetails: React.FC = () => {
 
       {/* Profile Avatar */}
       <View className="justify-center items-center my-4 relative">
-      {/* Profile Image */}
-      <Image
-        source={selectedImage ? { uri: `data:image/png;base64,${selectedImage}` } : require('../../assets/images/user1.png')}
-        className="w-24 h-24 rounded-full"
-      />
+        {/* Profile Image */}
+        <Image
+          source={require('../../assets/images/user1.png')}
+          className="w-24 h-24 rounded-full"
+        />
 
-      {/* Edit Icon (Pen Icon) */}
-      <TouchableOpacity
-        onPress={handleImagePick} // Handle the image picking
-        className="absolute bottom-0 right-4 bg-[#3980C0] p-1 rounded-full mr-[35%] shadow-md"
-        style={{
-          elevation: 5, // For shadow effect
-        }}
-      >
-        <Ionicons name="pencil" size={18} color="white" />
-      </TouchableOpacity>
-    </View>
+        {/* Edit Icon (Pen Icon) */}
+        <TouchableOpacity
+          className="absolute bottom-0 right-4 bg-[#3980C0] p-1 rounded-full mr-[35%] shadow-md"
+          style={{
+            elevation: 5, // For shadow effect
+          }}
+        >
+          <Ionicons name="pencil" size={18} color="white" />
+        </TouchableOpacity>
+      </View>
 
 
       {/* Type Selector */}
@@ -245,7 +215,7 @@ const AddOfficerBasicDetails: React.FC = () => {
           <Picker
             selectedValue={jobRole}
             onValueChange={(itemValue) => handleJobRoleChange(itemValue)}
-            style={{ height: 40, width: '100%' }}
+            style={{ height: 50, width: '100%' }}
           >
             <Picker.Item label="--Select Job Role--" value="Select Job Role" />
             <Picker.Item label="Manager" value="Manager" />

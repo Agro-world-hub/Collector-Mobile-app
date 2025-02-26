@@ -129,7 +129,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
       )}
 
       {/* Target Progress */}
-      <View className="flex-row items-center justify-between mb-4 p-2 mt-[15%]">
+      {/* <View className="flex-row items-center justify-between mb-4 p-2 mt-[15%]">
         <Text className="text-gray-700 font-bold text-lg">Your Target Progress</Text>
         <View className="relative">
                  <CircularProgress
@@ -143,10 +143,27 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
                    <Text className="text-2xl font-bold">{targetPercentage !== null ? `${targetPercentage}%` : "0%"}</Text>
                  </View>
                </View>
-      </View>
+      </View> */}
+      <View className="flex items-center justify-center my-6">
+  <View className="relative">
+  <CircularProgress
+                   size={100}
+                   width={8}
+                   fill={targetPercentage !== null ? targetPercentage : 0} // Dynamically set progress
+                   tintColor="#34D399"
+                   backgroundColor="#E5E7EB"
+                 />
+                 <View className="absolute items-center justify-center h-24 w-24">
+                   <Text className="text-2xl font-bold">{targetPercentage !== null ? `${targetPercentage}%` : "0%"}</Text>
+                 </View>
+  </View>
+  <Text className="text-gray-700 font-bold text-lg mt-2">Your Target </Text>
+  <Text className="text-gray-700 font-bold text-lg "> Progress</Text>
+</View>
+
 
       {/* Action Buttons */}
-      <View className="flex-row flex-wrap justify-between p-5 mt-[10%]">
+      <View className="flex-row flex-wrap justify-between p-5 mt-[4%]">
 
         <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("QRScanner"as any)}>
           <Image

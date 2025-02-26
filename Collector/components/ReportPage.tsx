@@ -11,6 +11,7 @@ import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
+import QRCode from 'react-native-qrcode-svg';
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -36,6 +37,7 @@ interface PersonalAndBankDetails {
   accHolderName: string | null;
   bankName: string | null;
   branchName: string | null;
+
 }
 
 interface Crop {
@@ -52,11 +54,109 @@ interface Crop {
   invoiceNumber: string;
 }
 
+interface officerDetails {
+  QRCode: string;
+}
+
 const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
   const [details, setDetails] = useState<PersonalAndBankDetails | null>(null);
+  const [officerDetails, setofficerDetails] = useState<officerDetails | null>(null);
   const route = useRoute<ReportPageRouteProp>();
   const { userId,registeredFarmerId } = route.params || {};
   const [crops, setCrops] = useState<Crop[]>([]);
+  // const qrCodeRef = useRef<any>(null);
+    const [qrValue, setQrValue] = useState<string>("");
+
+
+
+
+
+  // const fetchOfficerDetails = async () => {
+  //   try {
+  //     const token = await AsyncStorage.getItem("token");
+  //     if (!token) {
+  //       Alert.alert("Error", "No token found");
+  //       return;
+  //     }
+  
+  //     const response = await api.get("api/collection-officer/user-profile", {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  
+  //     const data = response.data.data;
+  //     console.log(data);
+  
+  //     if (response.data.status === "success") {
+  //       const officerDetails = {
+  //         empId: data.empId,
+  //         QRCode: data.QRcode, // Changed to use QRCode (case-sensitive check)
+  //       };
+  
+  //       console.log("Extracted QR Code:", officerDetails.QRCode);
+  
+  //       const qrData = JSON.stringify(officerDetails);
+  //       setQrValue(qrData);
+  //     } else {
+  //       Alert.alert("Error", response.data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching officer details:", error);
+  //     Alert.alert("Error", "Failed to fetch details");
+  //   }
+  // };
+  
+  // useEffect(() => {
+  //   fetchOfficerDetails(); // Changed function name here
+  // }, []);
+
+  const fetchOfficerDetails = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        Alert.alert("Error", "No token found");
+        return;
+      }
+
+      const response = await api.get("api/collection-officer/user-profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = response.data.data;
+      console.log(data);
+
+      if (response.data.status === "success") {
+        const officerDetails = {
+          empId: data.empId,
+          QRCode: data.QRcode, // Ensure case is correct
+        };
+
+        console.log("Extracted QR Code:", officerDetails.QRCode);
+
+        // Set the officerDetails state
+        setofficerDetails(officerDetails);
+
+        // If you need to store QR code or other details in other states
+        const qrData = JSON.stringify(officerDetails);
+        setQrValue(qrData);  // Assuming setQrValue is for QR code
+      } else {
+        Alert.alert("Error", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching officer details:", error);
+      Alert.alert("Error", "Failed to fetch details");
+    }
+  };
+
+  useEffect(() => {
+    fetchOfficerDetails(); // Fetch details when the component mounts
+  }, []);
+
+  
+
 
   useEffect(() => {
     fetchDetails();
@@ -135,6 +235,10 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
       return sum + Number(crop.total); // Ensure total is a number
     }, 0);
   
+    // Check if officerDetails exists before accessing QR code
+    const officerQRCode = officerDetails?.QRCode || ''; // Default to empty string if officerDetails is null
+    const farmerQRCode = details?.qrCode ? details.qrCode.replace(/^data:image\/png;base64,/, "") : '';// Default to empty string if details is null
+  
     const html = `
     <html>
       <head>
@@ -144,11 +248,14 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
           table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
           th, td { border: 1px solid black; padding: 8px; text-align: left; }
           th { background-color: #f2f2f2; }
+          .qr-codes { display: flex; justify-content: space-between; margin-top: 20px; }
+          .qr-codes div { text-align: center; }
+          .qr-codes img { width: 150px; height: 150px; }
         </style>
       </head>
       <body>
         <h1>Purchase Report</h1>
-        
+  
         <h2>Personal Details</h2>
         <table>
           <tr>
@@ -166,7 +273,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
             <td>${details.address}</td>
           </tr>
         </table>
-    
+  
         <h2>Bank Details</h2>
         <table>
           <tr>
@@ -182,7 +289,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
             <td>${details.branchName}</td>
           </tr>
         </table>
-        
+  
         <h2>Crop Details</h2>
         <table>
           <tr>
@@ -198,14 +305,29 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
           </tr>
           ${cropsTableRows}
         </table>
-    
+  
         <div>
           <strong>Total Price:</strong> ${totalSum.toFixed(2)}
         </div>
   
+      <div class="qr-codes">
+  <div>
+    <img src="${farmerQRCode}" alt="Farmer's QR Code" style="width: 200px; height: 200px;" />
+    <p><strong>Farmer's QR Code</strong></p>
+  </div>
+  <div>
+    <img src="${officerQRCode}" alt="Officer's QR Code" style="width: 200px; height: 200px;" />
+    <p><strong>Officer's QR Code</strong></p>
+  </div>
+  <div></div>
+  <div></div>
+   <div></div>
+</div>
+
+  
       </body>
     </html>
-  `;
+    `;
   
     try {
       const { uri } = await Print.printToFileAsync({ html });
@@ -266,7 +388,8 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
   };
   
   
-  
+  console.log("QR Code URL:", details?.qrCode);
+
 
   const handleSharePDF = async () => {
     const uri = await generatePDF();
@@ -384,6 +507,11 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
   </View>
 )}
 
+{crops.map((crop) => (
+  <Text className='font-bold' key={crop.id}>Full Total (Rs.) : {crop.total}</Text>
+))}
+
+
       {/* QR Code Section
       {details && details.qrCode && officer && officer.QRcode && (
       <View className="mb-4 flex-row items-center justify-start">
@@ -400,6 +528,32 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
     )} */}
 
 
+
+      {details && details.qrCode  && officerDetails && officerDetails.QRCode && (
+      <View className="mb-4 flex-row items-center justify-start">
+        <View className="mr-4">
+          <View>
+        <Image 
+  source={{ uri: details.qrCode.replace(/^data:image\/png;base64,/, "") }} 
+  style={{ width: 150, height: 150 }} 
+/>
+<Text className="font-bold ml-5 text-sm mb-2">Farmer's QR Code</Text>
+</View>
+
+         
+        </View>
+        <View>
+        <Image 
+  source={{ uri: officerDetails.QRCode.replace(/^data:image\/png;base64,/, "") }} 
+  style={{ width: 150, height: 150 }} 
+/>
+
+<Text className="font-bold ml-5 text-sm mb-2">Officer's QR Code</Text>
+</View>
+        
+      </View>
+    )} 
+   
 
       <View className="flex-row justify-around w-full mb-7">
         <TouchableOpacity className="bg-[#2AAD7A] p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={handleDownloadPDF}>
