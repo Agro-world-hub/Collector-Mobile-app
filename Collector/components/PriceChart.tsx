@@ -275,6 +275,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
   const [editedPrices, setEditedPrices] = useState<any[]>([]);
   const [isEditable, setIsEditable] = useState(false);
   const [buttonText, setButtonText] = useState("Request Price Update");
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fetch prices
   const fetchPrices = async () => {

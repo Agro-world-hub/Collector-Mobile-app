@@ -10,7 +10,8 @@ export type RootStackParamList = {
     FormScreen: { scannedData: any };
     EngProfile:undefined;
     UnregisteredFarmerDetails:{ cropCount: 1, userId:number };
-    UnregisteredCropDetails: { cropCount: number, userId:number };
+    //UnregisteredCropDetails: { cropCount: number, userId:number };
+    UnregisteredCropDetails: { userId: number; cropCount: number };
     SinChangePassword:undefined;
     SinLogin:undefined;
     Lanuage:undefined;
@@ -40,8 +41,11 @@ export type RootStackParamList = {
         cropName: string;
         varietyName: string;
       };
-    Main:{screen: keyof RootStackParamList};
+   // Main:{screen: keyof RootStackParamList};
+   Main: { screen: keyof RootStackParamList; params?: any };
     CollectionOfficersList:undefined;
+
+    
 
 
 
