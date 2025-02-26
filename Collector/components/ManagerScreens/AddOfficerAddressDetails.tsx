@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import countryCodes from './countryCodes.json';
 import { Picker } from '@react-native-picker/picker';
+import { ActivityIndicator } from 'react-native';
 
 type AddOfficerAddressDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -49,6 +50,7 @@ const AddOfficerAddressDetails: React.FC = () => {
   const [countries, setCountries] = useState<{ name: string; dial_code: string; code: string }[]>([]);
   const [error, setError] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [loading, setLoading] = useState(false);
 
   const handleValidation = (key: string, value: string) => {
     setFormData((prevState) => {
@@ -250,11 +252,31 @@ const AddOfficerAddressDetails: React.FC = () => {
         >
           <Text className="text-gray-800 text-center">Go Back</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={handleSubmit}
           className="bg-green-600 px-8 py-3 rounded-full"
         >
           <Text className="text-white text-center">Submit</Text>
+        </TouchableOpacity> */}
+        <TouchableOpacity
+          className={`bg-green-600 px-8 py-3 rounded-full ${
+            loading ? "bg-gray-400 opacity-50" : "bg-[#2AAD7A]"
+          }`}
+          onPress={() => {
+            if (!loading) {
+              setLoading(true); // Disable the button on click
+              handleSubmit(); // Your action function
+            }
+          }}
+          disabled={loading} // Disable button during the operation
+        >
+          {loading ? (
+            <ActivityIndicator color="white" size="small" />
+          ) : (
+            <Text className="text-white text-center">
+              Submit
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </ScrollView>
