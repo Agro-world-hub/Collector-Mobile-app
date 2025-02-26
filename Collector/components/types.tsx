@@ -123,6 +123,7 @@ export type OfficerBasicDetailsFormData = {
   lastNameSinhala: string;
   firstNameTamil: string;
   lastNameTamil: string;
+  profileImage:string
 
   nicNumber: string;
   email: string;

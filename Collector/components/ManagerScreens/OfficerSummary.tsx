@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -17,6 +17,7 @@ import { RootStackParamList } from "../types";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import environment from "@/environment/environment";
 import axios from "axios";
+import socket from "@/services/socket";
 
 type OfficerSummaryNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -42,6 +43,8 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
   const [officerStatus, setOfficerStatus] = useState('offline');
   const [taskPercentage, setTaskPercentage] = useState<number | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [isOnline, setIsOnline] = useState(false); // Track the online status
+
 
   const handleDial = (phoneNumber: string) => {
     const phoneUrl = `tel:${phoneNumber}`;
@@ -60,7 +63,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
       if (res.data.success) {
         const { totalTasks, completedTasks } = res.data;
         const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-        setTaskPercentage(percentage); // Update the state with the percentage
+        setTaskPercentage(percentage); 
       } else {
         Alert.alert("Error", "No task summary found for this officer.");
       }
@@ -125,7 +128,66 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
       Alert.alert("Error", "Failed to disclaim officer. Please try again.");
     }
   };
+  
+  
+  const isOnlineRef = useRef(false);
 
+  
+  // Create stable callback references with useCallback
+  const handleLoginSuccess = useCallback((data: any) => {
+    if (data.empId === officerId) {
+      if (!isOnlineRef.current) {
+        isOnlineRef.current = true;
+        setIsOnline(true);
+      }
+    }
+  }, [officerId]);
+  
+  const handleEmployeeOnline = useCallback((data: any) => {
+    if (data.empId === officerId) {
+      if (!isOnlineRef.current) {
+        console.log('Employee is online', data);
+        isOnlineRef.current = true;
+        setIsOnline(true);
+      }
+    }
+  }, [officerId]);
+  
+  const handleEmployeeOffline = useCallback((data: any) => {
+    if (data.empId === officerId) {
+      if (isOnlineRef.current) {
+        console.log('Employee is offline', data);
+        isOnlineRef.current = false;
+        setIsOnline(false);
+      }
+    }
+  }, [officerId]);
+  
+  useEffect(() => {
+    // Use a flag to track if component is mounted
+    let isMounted = true;
+    
+    // Set up event listeners first so we don't miss events
+    socket.on('loginSuccess', handleLoginSuccess);
+    socket.on('employeeOnline', handleEmployeeOnline);
+    socket.on('employeeOffline', handleEmployeeOffline);
+    
+    // Send login event when component mounts
+    // Add timestamp for latency measurement
+    console.log('Emitting login with empId:', officerId);
+    socket.emit('login', { empId: officerId, timestamp: Date.now() });
+    
+    // Clean up event listeners when component unmounts
+    return () => {
+      isMounted = false;
+      socket.off('loginSuccess', handleLoginSuccess);
+      socket.off('employeeOnline', handleEmployeeOnline);
+      socket.off('employeeOffline', handleEmployeeOffline);
+    };
+  }, [officerId, handleLoginSuccess, handleEmployeeOnline, handleEmployeeOffline]);
+  
+ 
+  
   return (
     <ScrollView
       className="flex-1 bg-white "
@@ -164,7 +226,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
           )}
 
           {/* Profile Image with Green Border */}
-          <View className="w-28 h-28 border-[6px] border-[#2AAD7A] rounded-full items-center justify-center">
+          <View className={`w-28 h-28 border-[6px] rounded-full items-center justify-center ${isOnline ? 'border-[#2AAD7A]' : 'border-gray-400'}`}>
             <Image
               source={require("../../assets/images/mprofile.png")}
               className="w-24 h-24 rounded-full"
@@ -293,3 +355,5 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
 };
 
 export default OfficerSummary;
+
+

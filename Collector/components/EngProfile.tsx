@@ -21,6 +21,7 @@ import {
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useTranslation } from "react-i18next";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import socket from "@/services/socket";
 
 type EngProfileNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -108,14 +109,27 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
   const handleLogout = async () => {
     try {
+      // Disconnect the socket connection
+      if (socket.connected) {
+        socket.disconnect();
+        console.log("Socket disconnected.");
+      }
+  
+      // Remove the token and empId from AsyncStorage (or any storage you're using)
       await AsyncStorage.removeItem("token");
+      await AsyncStorage.removeItem("empId");  // Remove the empId as well
+  
+      // Optionally, you can also remove it from your app's state (if stored there)
+      // setEmpId(null);  // Clear empId from the app's state (if using useState)
+  
+      // Navigate to the Login screen
       navigation.navigate("Login");
     } catch (error) {
       console.error("An error occurred during logout:", error);
       Alert.alert("Error", "Failed to log out.");
     }
   };
-
+  
   const handleEditClick = () => {
     navigation.navigate("Profile");
   };

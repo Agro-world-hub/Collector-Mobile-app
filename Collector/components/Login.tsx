@@ -7,7 +7,7 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -17,6 +17,9 @@ import environment from "../environment/environment";
 import { useTranslation } from "react-i18next";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import LottieView from "lottie-react-native"; // Import LottieView
+import socket from "@/services/socket";
+import * as Network from 'expo-network';
+import { AppState } from 'react-native';
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Login">;
 
@@ -33,71 +36,146 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
   const [loading, setLoading] = useState(false); // State for showing loader
   const { t } = useTranslation();
 
-  const handleLogin = async () => {
-    setLoading(true); // Show loader when login starts
-    try {
-      const response = await fetch(
-        `${environment.API_BASE_URL}api/collection-officer/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            empId: empid,
-            password,
-          }),
+// Setup socket listeners on component mount
+useEffect(() => {
+  setupSocketListeners();
+  
+  // Clean up on unmount
+  return () => {
+    cleanupSocketListeners();
+  };
+}, []);
+
+const setupSocketListeners = () => {
+  if (socket.listeners('connect').length === 0) {
+    socket.on('connect', async () => {
+      console.log('Socket connected with ID:', socket.id);
+      // Re-emit login event on reconnection
+      try {
+        const storedEmpId = await AsyncStorage.getItem('empid');
+        if (storedEmpId) {
+          socket.emit('login', { empId: storedEmpId });
+          console.log('Reconnected and sent login for empId:', storedEmpId);
         }
-      );
-
-      const data = await response.json();
-      console.log(data);
-      
-      
-     
-
-      if (!response.ok) {
-        setLoading(false);
-        if (response.status === 404) {
-          Alert.alert("Error", "Invalid Employee ID. Please try again.");
-        } else if (response.status === 401) {
-          Alert.alert("Error", "Invalid Password. Please try again.");
-        } else {
-          Alert.alert("Error", data.message || "An error occurred. Try again.");
-        }
-        return;
+      } catch (error) {
+        console.error('Error getting stored empId:', error);
       }
+    });
 
-      const { token, passwordUpdateRequired, jobRole, empId } = data;
+    socket.on('disconnect', () => {
+      console.log('Socket disconnected');
+    });
 
-      await AsyncStorage.setItem("jobRole", jobRole);
-      if (token) {
-          await AsyncStorage.setItem("token", token);
-      }
+    socket.on('loginSuccess', (data) => {
+      console.log('Login success:', data);
+    });
 
-      // Store the empId in AsyncStorage
-      await AsyncStorage.setItem("empid", empId.toString());
+    socket.on('loginError', (error) => {
+      console.error('Socket login error:', error);
+    });
 
+    socket.on('employeeOnline', (data) => {
+      console.log('Employee online:', data.empId);
+      // Update your UI to show employee is online
+    });
 
-      // Wait 4 seconds before navigation
-      setTimeout(() => {
-        setLoading(false);
-        if (passwordUpdateRequired) {
-          navigation.navigate("ChangePassword", { empid } as any);
-        } else {
-          if (jobRole === "Collection Officer") {
-            navigation.navigate("Main", { screen: "Dashboard" });
-          } else {
-            navigation.navigate("Main", { screen: "ManagerDashboard" });
+    socket.on('employeeOffline', (data) => {
+      console.log('Employee offline:', data.empId);
+      // Update your UI to show employee is offline
+    });
+
+    // Set up AppState listener for background/foreground transitions
+    AppState.addEventListener('change', async (nextAppState) => {
+      if (nextAppState === 'active') {
+        // App came to foreground
+        if (!socket.connected) {
+          socket.connect();
+          try {
+            const storedEmpId = await AsyncStorage.getItem('empid');
+            if (storedEmpId) {
+              socket.emit('login', { empId: storedEmpId });
+              console.log('App active, sent login for empId:', storedEmpId);
+            }
+          } catch (error) {
+            console.error('Error getting stored empId:', error);
           }
         }
-      }, 4000);
-    } catch (error) {
+      } else if (nextAppState === 'background' || nextAppState === 'inactive') {
+        // Option 1: Maintain connection in background (do nothing)
+        
+        // Option 2: Disconnect when app goes to background
+        socket.disconnect();
+      }
+    });
+  }
+};
+
+
+const cleanupSocketListeners = () => {
+  socket.off('connect');
+  socket.off('disconnect');
+  socket.off('loginSuccess');
+  socket.off('loginError');
+  socket.off('employeeOnline');
+  socket.off('employeeOffline');
+};
+
+const handleLogin = async () => {
+  setLoading(true); // Show loader when login starts
+  try {
+    const response = await fetch(
+      `${environment.API_BASE_URL}api/collection-officer/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          empId: empid,
+          password,
+        }),
+      }
+    );
+
+    const data = await response.json();
+    console.log("Login response:", data);
+
+    if (!response.ok) {
       setLoading(false);
-      console.error("Login error:", error);
-      Alert.alert("Error", "Something went wrong. Please try again.");
+      if (response.status === 404) {
+        Alert.alert("Error", "Invalid Employee ID. Please try again.");
+      } else if (response.status === 401) {
+        Alert.alert("Error", "Invalid Password. Please try again.");
+      } else {
+        Alert.alert("Error", data.message || "An error occurred. Try again.");
+      }
+      return;
     }
-  };
+
+    // Login successful
+    const { token, jobRole, empId } = data;
+    await AsyncStorage.setItem("token", token);
+    await AsyncStorage.setItem("jobRole", jobRole);
+    await AsyncStorage.setItem("empid", empId.toString());
+
+    // Emit the login event to the Socket.IO server
+    socket.emit('login', { empId: empId });
+
+    setLoading(false);
+    // Navigate based on job role
+    if (jobRole === "Collection Officer") {
+      navigation.navigate("Main", { screen: "Dashboard" });
+    } else {
+      navigation.navigate("Main", { screen: "ManagerDashboard" });
+    }
+  } catch (error) {
+    setLoading(false);
+    console.error("Login error:", error);
+    Alert.alert("Error", "Something went wrong. Please try again.");
+  }
+};
+
+
 
   return (
     <ScrollView
