@@ -53,8 +53,13 @@
 // export default BottomNav;
 
 import React, {useState, useEffect} from 'react';
+import NetInfo from '@react-native-community/netinfo';
 import { View, TouchableOpacity, Image,  Animated, Keyboard  } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import environment from '@/environment/environment';
+import { AppState } from 'react-native';
+import socket from '@/services/socket';
 
 const homeIcon = require('../assets/images/homee.png');
 const searchIcon = require('../assets/images/searchh.png');
@@ -97,6 +102,36 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
 
     fetchUserRole();
   }, []);
+  
+  
+  useEffect(() => {
+    const checkClaimStatus = async () => {
+      try {
+        // const userId = await AsyncStorage.getItem('userId');
+        // if (!userId) {
+        //   console.error('User ID is missing from AsyncStorage');
+        //   navigation.navigate('Login');
+        //   return;
+        // }
+
+        const response = await axios.get(`${environment.API_BASE_URL}api/collection-officer/get-claim-status`, {
+          headers: {
+            Authorization: `Bearer ${await AsyncStorage.getItem('token')}`,
+          },
+        });
+
+        if (response.data.claimStatus === 0) {
+          navigation.navigate('NoCollectionCenterScreen');
+        }
+      } catch (error) {
+        console.error('Error checking claim status:', error);
+        navigation.navigate('Login');
+      }
+    };
+
+    checkClaimStatus();
+  }, [navigation]);
+
   // Get the name of the currently focused tab from the state
   let currentTabName = state.routes[state.index]?.name;
   console.log('Current tab:', currentTabName);
@@ -114,12 +149,238 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
 
   if (userRole === "Collection Center Manager") {
     tabs = [
-      { name: "Dashboard", icon: homeIcon, focusedIcon: homeIcon },
-      { name: "QRScanner", icon: qrIcon, focusedIcon: qrIcon },
+      { name: "ManagerDashboard", icon: homeIcon, focusedIcon: homeIcon },
+      { name: "DailyTarget", icon: qrIcon, focusedIcon: qrIcon },
       { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
       { name: "CollectionOfficersList", icon: adminIcon, focusedIcon: adminIcon },
     ];
   }
+
+
+  // const [appState, setAppState] = useState(AppState.currentState);
+  // interface UserData {
+  //   token: string;
+  // }
+  
+  // const [userData, setUserData] = useState<UserData | null>(null);
+  // const checkUserStatus = async (status: number) => {
+  //   try {
+  //     const token = await AsyncStorage.getItem('token');
+  //     if (token) {
+  //       console.log('User authenticated:', { token });
+
+  //       // Send user status update to the server
+  //       try {
+  //         const response = await axios.post(
+  //           `${environment.API_BASE_URL}api/collection-officer/update-officer-status`,
+  //           {
+  //             status: status,  // Set status value to 0 (offline)
+  //           },
+  //           {
+  //             headers: { Authorization: `Bearer ${token}` },
+  //           }
+  //         );
+  //         console.log(response.data.message);
+  //       } catch (error) {
+  //         console.error('Error emitting event:', error);
+  //       }
+  //     } else {
+  //       console.log('User not authenticated');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching user data:', error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const appStateListener = AppState.addEventListener('change', (nextAppState) => {
+  //     console.log('App state changed:', nextAppState);
+  //     setAppState(nextAppState);
+
+  //     if (nextAppState === 'active') {
+  //       checkUserStatus(1);
+  //     } else if (nextAppState === 'background') {
+  //       // App went to the background: Set user as offline
+  //       checkUserStatus(0);
+  //     }
+  //   });
+
+  //   // Cleanup listener when component is unmounted
+  //   return () => {
+  //     appStateListener.remove();
+  //   };
+  // }, [userData]);
+
+  // const [connectionStatus, setConnectionStatus] = useState('connected'); // track connection status
+
+  // useEffect(() => {
+  //   const unsubscribe = NetInfo.addEventListener((state) => {
+  //     const previousStatus = connectionStatus;
+  //     const currentStatus = state.isConnected ? 'connected' : 'disconnected';
+
+  //     console.log('Connection status:', currentStatus);
+  //     setConnectionStatus(currentStatus);
+
+  //     // If status is changing to 'disconnected', perform an action
+  //     if (previousStatus === 'connected' && currentStatus === 'disconnected') {
+  //       checkUserStatus(0);
+  //     }
+  //   });
+
+  //   // Cleanup on unmount
+  //   return () => unsubscribe();
+  // }, [connectionStatus]);
+  
+  
+    // const [appState, setAppState] = useState(AppState.currentState); // Track app state
+    // const [empId, setEmpId] = useState<string | null>(null); // Store empId
+
+    
+    // useEffect(() => {
+    //   // Fetch empId from AsyncStorage when the component mounts
+    //   const getEmpIdFromStorage = async () => {
+    //     try {
+    //       const storedEmpId = await AsyncStorage.getItem("empid");
+    //       if (storedEmpId) {
+    //         setEmpId(storedEmpId);
+    //       } else {
+    //         // Navigate to login screen if empId is not found
+    //         console.log("empId not found, navigating to login.");
+    //         navigation.navigate('Login' as never); // Navigate to Login screen
+    //       }
+    //     } catch (error) {
+    //       console.error("Failed to fetch empId from AsyncStorage:", error);
+    //       navigation.navigate('Login' as never); // Navigate to Login if there's an error fetching empId
+    //     }
+    //   };
+    
+    //   getEmpIdFromStorage();
+    
+    //   // Listen for app state changes
+    //   const appStateListener = AppState.addEventListener("change", (nextAppState) => {
+    //     if (nextAppState === "background" || nextAppState === "inactive") {
+    //       // If the app goes to background or inactive, disconnect the socket
+    //       if (empId && socket) {
+    //         console.log(`App went to background or inactive, disconnecting socket for empId ${empId}`);
+    //         socket.disconnect(); // This automatically handles the disconnect
+    //       }
+    //     }
+    //     setAppState(nextAppState); // Update app state
+    //   });
+    
+    //   // Cleanup appState listener when the component is unmounted
+    //   return () => {
+    //     appStateListener.remove();
+    //   };
+    // }, [empId, navigation]); // Only run this effect when empId changes
+    
+    // // Handle socket disconnection
+    // useEffect(() => {
+    //   if (socket) {
+    //     socket.on("disconnect", () => {
+    //       console.log("Socket disconnected");
+    //       // Additional logic for handling disconnection can be added here
+    //     });
+        
+    //     // Cleanup function for socket disconnection
+    //     return () => {
+    //       console.log("Cleaning up socket connection");
+    //       socket.disconnect();
+    //     };
+    //   }
+    // }, [socket]); // Only run when socket is available
+    
+    
+    
+    
+// Setup socket listeners on component mount
+useEffect(() => {
+  setupSocketListeners();
+  
+  // Clean up on unmount
+  return () => {
+    cleanupSocketListeners();
+  };
+}, []);
+
+const setupSocketListeners = () => {
+  if (socket.listeners('connect').length === 0) {
+    socket.on('connect', async () => {
+      console.log('Socket connected with ID:', socket.id);
+      // Re-emit login event on reconnection
+      try {
+        const storedEmpId = await AsyncStorage.getItem('empid');
+        if (storedEmpId) {
+          socket.emit('login', { empId: storedEmpId });
+          console.log('Reconnected and sent login for empId:', storedEmpId);
+        }
+      } catch (error) {
+        console.error('Error getting stored empId:', error);
+      }
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Socket disconnected');
+    });
+
+    socket.on('loginSuccess', (data) => {
+      console.log('Login success:', data);
+    });
+
+    socket.on('loginError', (error) => {
+      console.error('Socket login error:', error);
+    });
+
+    socket.on('employeeOnline', (data) => {
+      console.log('Employee online:', data.empId);
+      // Update your UI to show employee is online
+    });
+
+    socket.on('employeeOffline', (data) => {
+      console.log('Employee offline:', data.empId);
+      // Update your UI to show employee is offline
+    });
+
+    // Set up AppState listener for background/foreground transitions
+    AppState.addEventListener('change', async (nextAppState) => {
+      if (nextAppState === 'active') {
+        // App came to foreground
+        if (!socket.connected) {
+          socket.connect();
+          try {
+            const storedEmpId = await AsyncStorage.getItem('empid');
+            if (storedEmpId) {
+              socket.emit('login', { empId: storedEmpId });
+              console.log('App active, sent login for empId:', storedEmpId);
+            }
+          } catch (error) {
+            console.error('Error getting stored empId:', error);
+          }
+        }
+      } else if (nextAppState === 'background' || nextAppState === 'inactive') {
+        // Option 1: Maintain connection in background (do nothing)
+        
+        // Option 2: Disconnect when app goes to background
+        console.log('App went to background, disconnecting socket');
+        socket.disconnect();
+      }
+    });
+  }
+};
+
+
+const cleanupSocketListeners = () => {
+  socket.off('connect');
+  socket.off('disconnect');
+  socket.off('loginSuccess');
+  socket.off('loginError');
+  socket.off('employeeOnline');
+  socket.off('employeeOffline');
+};
+      
+  
+  
+
 
   if (isKeyboardVisible) return null;
   return (

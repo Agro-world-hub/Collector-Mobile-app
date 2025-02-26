@@ -1,17 +1,17 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
+import { RootStackParamList } from '../types';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import environment from '@/environment/environment';
 import { Ionicons } from '@expo/vector-icons';
-import LottieView from 'lottie-react-native';
-import { RootStackParamList } from './types';
+import LottieView from 'lottie-react-native'; // Import LottieView
 
-type DailyTargetListNavigationProps = StackNavigationProp<RootStackParamList, 'DailyTargetList'>;
+type CenterTargetNavigationProps = StackNavigationProp<RootStackParamList, 'CenterTarget'>;
 
-interface DailyTargetListProps {
-  navigation: DailyTargetListNavigationProps;
+interface CenterTargetProps {
+  navigation: CenterTargetNavigationProps;
 }
 
 interface TargetData {
@@ -21,20 +21,20 @@ interface TargetData {
   todo: number;
 }
 
-const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
+const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
   const [todoData, setTodoData] = useState<TargetData[]>([]);
   const [completedData, setCompletedData] = useState<TargetData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [refreshing, setRefreshing] = useState<boolean>(false); // State for refresh control
   const [error, setError] = useState<string | null>(null);
   const [selectedToggle, setSelectedToggle] = useState('ToDo');
+  const [refreshing, setRefreshing] = useState(false);
 
-  // Function to fetch targets
-  const fetchTargets = useCallback(async () => {
+  const fetchTargets = async () => {
     setLoading(true);
+    const startTime = Date.now();
     try {
       const authToken = await AsyncStorage.getItem('token');
-      const response = await axios.get(`${environment.API_BASE_URL}api/target/officer`, {
+      const response = await axios.get(`${environment.API_BASE_URL}api/target/get-center-target`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -50,20 +50,20 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
     } catch (err) {
       setError('Failed to fetch data. Please try again later.');
     } finally {
-      setLoading(false);
-      setRefreshing(false);
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = 4000 - elapsedTime;
+      setTimeout(() => setLoading(false), remainingTime > 0 ? remainingTime : 0);
     }
-  }, []);
+  };
 
-  // Initial data load
   useEffect(() => {
     fetchTargets();
-  }, [fetchTargets]);
+  }, []);
 
-  // Function for refreshing the list
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setRefreshing(true);
-    fetchTargets();
+    await fetchTargets(); // Trigger data fetch on refresh
+    setRefreshing(false); // Reset refreshing state after fetching
   };
 
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
@@ -72,7 +72,7 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
     <View className="flex-1 bg-black p-4">
       {/* Header */}
       <View className="bg-black px-4 py-3 flex-row justify-between items-center">
-        <Text className="text-white text-lg font-bold ml-[35%]">Daily Target</Text>
+        <Text className="text-white text-lg font-bold ml-[35%]">Center Target</Text>
       </View>
 
       {/* Toggle Buttons */}
@@ -99,7 +99,9 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
           style={{ height: 40 }}
           onPress={() => setSelectedToggle('Completed')}
         >
-          <Text className={`font-bold ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}>
+          <Text
+            className={`font-bold ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
+          >
             Completed
           </Text>
           <View className="bg-white rounded-full px-2 ml-2">
@@ -108,16 +110,13 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Table Header and Data */}
+      {/* Table Header */}
       <ScrollView
         horizontal
         className="border border-gray-300 bg-white"
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <View>
-          {/* Table Header */}
           <View className="flex-row bg-[#2AAD7A] h-[7%]">
             <Text className="w-16 p-2 font-bold text-center">No</Text>
             <Text className="w-40 p-2 font-bold text-center">Variety</Text>
@@ -126,11 +125,11 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
             <Text className="w-32 p-2 font-bold text-center">Todo (kg)</Text>
           </View>
 
-          {/* Table Data */}
+          {/* Loading Screen with Lottie */}
           {loading ? (
-            <View className="flex-1 justify-center items-center mr-[45%]">
+            <View className="flex-1 justify-center items-center mr-[45%] ">
               <LottieView
-                source={require('../assets/lottie/collector.json')}
+                source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
                 autoPlay
                 loop
                 style={{ width: 350, height: 350 }}
@@ -165,4 +164,4 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
   );
 };
 
-export default DailyTargetList;
+export default CenterTarget;

@@ -162,80 +162,157 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
   
 
   return (
-    <ScrollView 
-      className="flex-1 bg-[#F9F9FA] "
-      style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
-    >
-      <View className="flex-row items-center  mb-6">
-        <TouchableOpacity onPress={() => navigation.goBack()} className="">
-          <AntDesign name="left" size={24} color="#000" />
-        </TouchableOpacity>
-      </View>
-        <View className="items-center pb-20">
-          <Image
-            source={require("../assets/images/complain1.png")}
-            className="w-36 h-36 "
-            resizeMode="contain"
+    // <ScrollView 
+    //   className="flex-1 bg-[#F9F9FA] "
+    //   style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
+    // >
+    //   <View className="flex-row items-center  mb-6">
+    //     <TouchableOpacity onPress={() => navigation.goBack()} className="">
+    //       <AntDesign name="left" size={24} color="#000" />
+    //     </TouchableOpacity>
+    //   </View>
+    //     <View className="items-center pb-20">
+    //       <Image
+    //         source={require("../assets/images/complain1.png")}
+    //         className="w-36 h-36 "
+    //         resizeMode="contain"
+    //       />
+
+    //       <View className="w-[90%] items-center p-6 shadow-2xl bg-[#FFFFFF] rounded-xl">
+    //         <View className="flex-row ">
+    //           <Text className="text-2xl font-semibold text-center mb-4 color-[#424242]">
+    //             {t("Tellus")}
+    //           </Text>
+    //           <Text className="text-2xl font-semibold text-center mb-4 pl-2 color-[#D72C62]">
+    //             {t("Problem")}
+    //           </Text>
+    //         </View>
+
+    //         <View className="w-full border border-gray-300 rounded-lg bg-white mb-4">
+    //           <Picker
+    //             selectedValue={selectedCategory}
+    //             onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+    //           >
+    //             <Picker.Item
+    //               label={t("select Category")}
+    //               value=""
+    //             />
+    //             <Picker.Item
+    //               label={t("Finance")}
+    //               value="Finance"
+    //             />
+    //             <Picker.Item
+    //               label={t("collection")}
+    //               value="Collection"
+    //             />
+    //             <Picker.Item
+    //               label={t("Agro Input Suplire")}
+    //               value="Agro Input Supplier"
+    //             />
+    //           </Picker>
+    //         </View>
+
+    //         <Text className="text-sm text-gray-600 text-center mb-4">
+    //           {t("We will respond to you within two days of receiving your message")}
+    //         </Text>
+
+    //         <TextInput
+    //           className="w-full h-52 border border-gray-300 rounded-lg p-3 bg-white mb-8 text-gray-800 "
+    //           placeholder={t("Kindly submit")}
+    //           multiline
+    //           value={complain}
+    //           onChangeText={(text) => setComplain(text)}
+    //           style={{ textAlignVertical: "top" }}
+    //         />
+
+    //         <TouchableOpacity
+    //           className="w-full bg-gray-800 py-4 rounded-lg items-center  "
+    //           onPress={handleSubmit}
+    //         >
+    //           <Text className="text-white font-bold text-lg">
+    //             {t("Submit")}
+    //           </Text>
+    //         </TouchableOpacity>
+    //       </View>
+    //     </View>
+    // </ScrollView >
+    <SafeAreaView className="flex-1 bg-[#F9F9FA]pb-20">
+    <View className=" absolute z-10 ">
+      <AntDesign
+        name="left"
+        size={24}
+        color="#000000"
+        onPress={() => navigation.goBack()}
+        style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}
+      />
+    </View>
+    <ScrollView className="flex-1 ">
+      <View className="items-center p-2 pb-20">
+        <Image
+          source={require("../assets/images/complain1.png")}
+          className="w-36 h-36 "
+          resizeMode="contain"
+        />
+
+        <View className="w-[90%] items-center p-6 shadow-2xl bg-[#FFFFFF] rounded-xl">
+          <View className="flex-row ">
+            <Text className="text-2xl font-semibold text-center mb-4 color-[#424242]">
+             Tellus
+            </Text>
+            <Text className="text-2xl font-semibold text-center mb-4 pl-2 color-[#D72C62]">
+             Problem
+            </Text>
+          </View>
+
+          <View className="w-full border border-gray-300 rounded-lg bg-white mb-4">
+            <Picker
+              selectedValue={selectedCategory}
+              onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+            >
+              <Picker.Item
+                label={t("ReportComplaint.selectCategory")}
+                value=""
+              />
+              <Picker.Item
+                label={t("ReportComplaint.Finance")}
+                value="Finance"
+              />
+              <Picker.Item
+                label={t("ReportComplaint.collection")}
+                value="Collection"
+              />
+              <Picker.Item
+                label={t("ReportComplaint.AgroInputSuplire")}
+                value="Agro Input Supplier"
+              />
+            </Picker>
+          </View>
+
+          <Text className="text-sm text-gray-600 text-center mb-4">
+            {t("ReportComplaint.WewilRespond")}
+          </Text>
+
+          <TextInput
+            className="w-full h-52 border border-gray-300 rounded-lg p-3 bg-white mb-8 text-gray-800 "
+            placeholder={t("ReportComplaint.Kindlysubmit")}
+            multiline
+            value={complain}
+            onChangeText={(text) => setComplain(text)}
+            style={{ textAlignVertical: "top" }}
           />
 
-          <View className="w-[90%] items-center p-6 shadow-2xl bg-[#FFFFFF] rounded-xl">
-            <View className="flex-row ">
-              <Text className="text-2xl font-semibold text-center mb-4 color-[#424242]">
-                {t("Tellus")}
-              </Text>
-              <Text className="text-2xl font-semibold text-center mb-4 pl-2 color-[#D72C62]">
-                {t("Problem")}
-              </Text>
-            </View>
-
-            <View className="w-full border border-gray-300 rounded-lg bg-white mb-4">
-              <Picker
-                selectedValue={selectedCategory}
-                onValueChange={(itemValue) => setSelectedCategory(itemValue)}
-              >
-                <Picker.Item
-                  label={t("select Category")}
-                  value=""
-                />
-                <Picker.Item
-                  label={t("Finance")}
-                  value="Finance"
-                />
-                <Picker.Item
-                  label={t("collection")}
-                  value="Collection"
-                />
-                <Picker.Item
-                  label={t("Agro Input Suplire")}
-                  value="Agro Input Supplier"
-                />
-              </Picker>
-            </View>
-
-            <Text className="text-sm text-gray-600 text-center mb-4">
-              {t("We will respond to you within two days of receiving your message")}
+          <TouchableOpacity
+            className="w-full bg-[#2AAD7A] py-4 rounded-lg items-center  "
+            onPress={handleSubmit}
+          >
+            <Text className="text-white font-bold text-lg">
+              {t("ReportComplaint.Submit")}
             </Text>
-
-            <TextInput
-              className="w-full h-52 border border-gray-300 rounded-lg p-3 bg-white mb-8 text-gray-800 "
-              placeholder={t("Kindly submit")}
-              multiline
-              value={complain}
-              onChangeText={(text) => setComplain(text)}
-              style={{ textAlignVertical: "top" }}
-            />
-
-            <TouchableOpacity
-              className="w-full bg-gray-800 py-4 rounded-lg items-center  "
-              onPress={handleSubmit}
-            >
-              <Text className="text-white font-bold text-lg">
-                {t("Submit")}
-              </Text>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
         </View>
-    </ScrollView >
+      </View>
+    </ScrollView>
+  </SafeAreaView>
   );
 };
 

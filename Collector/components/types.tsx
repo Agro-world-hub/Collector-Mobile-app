@@ -32,14 +32,14 @@ export type RootStackParamList = {
     ComplainPage:{farmerName:any, farmerPhone:any, userId:number};
     OfficerQr:undefined;
     Profile:undefined;
-    ReportPage:{userId:string};
+    ReportPage:{userId:string,registeredFarmerId:Number};
     SearchPriceScreen:undefined;
     PriceChart: {
         varietyId: string;
         cropName: string;
         varietyName: string;
       };
-    Main:undefined;
+    Main:{screen: keyof RootStackParamList};
     CollectionOfficersList:undefined;
 
 
@@ -66,7 +66,31 @@ export type RootStackParamList = {
       jobRole: string;
     };
     ClaimOfficer:undefined;
-    TransactionList:undefined
+    TransactionList:undefined;
+    FarmerReport:{
+      registeredFarmerId: number;
+      userId: number;
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+      address: string;
+      NICnumber: string;
+      totalAmount: number;
+      bankAddress: string | null;
+      accountNumber: string | null;
+      accountHolderName: string | null;
+      bankName: string | null;
+      branchName: string | null;
+      selectedDate: string;
+      empId: string;
+    };
+    SetTargetScreen:{fromDate:string,toDate:string,fromTime:string,toTime:string};
+    DailyTarget:undefined;
+    TargetValidPeriod:undefined;
+    NoCollectionCenterScreen:undefined;
+    EditTargetScreen:undefined;
+    PassTargetScreen:undefined;
+    RecieveTargetScreen:undefined;
 
     OTPE:{
       firstName: string;
@@ -80,6 +104,13 @@ export type RootStackParamList = {
       branchName: string
     }
     
+    DailyTargetListForOfficers:{officerId:string,collectionOfficerId:number};
+    EditTargetManager:undefined;
+    PassTargetBetweenOfficers:undefined;
+    RecieveTargetBetweenOfficers:undefined
+    ManagerDashboard:undefined;
+    CenterTarget:undefined;
+    ManagerTransactions:undefined;
     
 
 };
@@ -92,7 +123,9 @@ export type OfficerBasicDetailsFormData = {
   lastNameSinhala: string;
   firstNameTamil: string;
   lastNameTamil: string;
+  profileImage:string
 
   nicNumber: string;
   email: string;
 };
+

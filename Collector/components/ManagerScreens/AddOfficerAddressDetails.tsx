@@ -44,6 +44,7 @@ const AddOfficerAddressDetails: React.FC = () => {
     confirmAccountNumber: '',
     bankName: '',
     branchName: '',
+    profileImage: '', // Add a profile image field
 
   });
   const [countries, setCountries] = useState<{ name: string; dial_code: string; code: string }[]>([]);
@@ -82,8 +83,7 @@ const AddOfficerAddressDetails: React.FC = () => {
       !formData.accountHolderName ||
       !formData.accountNumber ||
       !formData.confirmAccountNumber ||
-      !formData.bankName 
-   
+      !formData.bankName
     ) {
       Alert.alert('Error', 'Please fill in all required fields.');
       return;
@@ -102,6 +102,7 @@ const AddOfficerAddressDetails: React.FC = () => {
       languages: Object.keys(preferredLanguages)
         .filter((lang) => preferredLanguages[lang as keyof typeof preferredLanguages])
         .join(', '), // Convert preferred languages to a comma-separated string
+      profileImage: formData.profileImage, // Add the profile image from the form data
     };
   
     try {
@@ -112,6 +113,7 @@ const AddOfficerAddressDetails: React.FC = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json', // Ensure it's sending JSON
           },
         }
       );
@@ -143,6 +145,7 @@ const AddOfficerAddressDetails: React.FC = () => {
       }
     }
   };
+  
   
 
   return (

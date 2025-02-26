@@ -7,6 +7,7 @@ import {
   Image,
   Alert,
   ScrollView,
+  Keyboard
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
@@ -63,6 +64,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
   };
 
   const handleSearch = async () => {
+    Keyboard.dismiss();
     if (NICnumber.trim().length === 0) return;
 
     setIsSearching(true);
@@ -93,6 +95,10 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
         Alert.alert("Error", "An unexpected error occurred.");
       }
     }
+
+    // Reset the NIC number and noResults after the search is completed
+    setNICnumber('');
+    setNoResults(false); // Optionally hide the "No results" message immediately after resetting
   };
 
   return (
@@ -116,11 +122,11 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
 
         {/* Search Form */}
         <View className="p-4">
-          <Text className="text-center text-lg mb-4 mt-5">
+          <Text className="text-center text-lg  mt-5">
             Enter Farmer's NIC number
           </Text>
 
-          <View className="flex-row justify-center items-center border rounded-full mt-10 px-4 py-2 bg-gray-100">
+          <View className="flex-row justify-center items-center border rounded-full mt-4 px-4 py-2 bg-gray-100">
             <TextInput
               value={NICnumber}
               onChangeText={handleNicChange}
@@ -157,10 +163,10 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
 
           {/* No Results Found */}
           {!isSearching && noResults && NICnumber.length > 0 && (
-            <View className="mt-10 items-center">
+            <View className="mt-6 items-center">
               <Image
                 source={require("../assets/images/notfound.png")}
-                className="h-[300px] w-[350px] rounded-lg"
+                className="h-[200px] w-[300px] rounded-lg"
                 resizeMode="contain"
               />
               <Text className="text-center text-lg mt-4">
@@ -173,7 +179,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
                     NIC: NICnumber,
                   })
                 }
-                className="mt-6 bg-green-500 rounded-lg px-6 py-3"
+                className="mt-16 bg-[#2AAD7A]  rounded-full px-16 py-3  "
               >
                 <Text className="text-white text-lg">Register Farmer</Text>
               </TouchableOpacity>

@@ -49,12 +49,13 @@ interface Crop {
   unitPriceC: string;
   weightC: string;
   total: number;
+  invoiceNumber: string;
 }
 
 const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
   const [details, setDetails] = useState<PersonalAndBankDetails | null>(null);
   const route = useRoute<ReportPageRouteProp>();
-  const { userId } = route.params || {};
+  const { userId,registeredFarmerId } = route.params || {};
   const [crops, setCrops] = useState<Crop[]>([]);
 
   useEffect(() => {
@@ -71,7 +72,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
 
       const [detailsResponse, cropsResponse] = await Promise.all([
         api.get(`api/farmer/report-user-details/${userId}`),
-        api.get(`api/unregisteredfarmercrop/user-crops/today/${userId}`),
+        api.get(`api/unregisteredfarmercrop/user-crops/today/${userId}/${registeredFarmerId}`),
         // Commented out officer QR code fetching
         // api.get(`api/collection-officer/get-officer-Qr`, {
         //   headers: { Authorization: `Bearer ${token}` },
@@ -92,10 +93,12 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
         accHolderName: data.accHolderName ?? "",
         bankName: data.bankName ?? "",
         branchName: data.branchName ?? "",
+        
+        
       });
 
       setCrops(cropsResponse.data);
-      console.log(cropsResponse.data);
+      console.log('crop response for report',cropsResponse.data);
 
     } catch (error) {
       console.error('Error fetching details:', error);
@@ -214,40 +217,55 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
     }
   };
   
+
+
   const handleDownloadPDF = async () => {
-    const uri = await generatePDF();
+    const uri = await generatePDF(); // Generate the PDF and get its URI
   
     if (uri) {
       // Get the current date in YYYY-MM-DD format
       const date = new Date().toISOString().slice(0, 10);
-      
-      // Define the path for the PDF in the Downloads folder
-      const downloadUri = `${FileSystem.documentDirectory}PurchaseReport_${date}.pdf`;
+      const fileName = `PurchaseReport_${details?.NICnumber}_${date}.pdf`;
   
-      // Request permission to access media library (for saving in external storage)
-      const { status } = await MediaLibrary.requestPermissionsAsync();
-      
-      if (status === 'granted') {
-        try {
-          // Move the generated PDF to the Downloads folder
-          const fileUri = `${FileSystem.documentDirectory}PurchaseReport_${date}.pdf`;
-          await FileSystem.moveAsync({
-            from: uri,  // The original PDF URI generated
-            to: downloadUri, // The new file name with the desired path
+      try {
+        // Request permission to access media library
+        const { status } = await MediaLibrary.requestPermissionsAsync();
+  
+        if (status === 'granted') {
+          // Define a temporary path in the FileSystem's cache directory with the correct file name
+          const tempUri = `${FileSystem.cacheDirectory}${fileName}`;
+  
+          // Copy the file to the new temporary path with the desired file name
+          await FileSystem.copyAsync({
+            from: uri, // Original URI
+            to: tempUri, // New URI with the correct name
           });
   
-          Alert.alert('Download Success', `PDF has been downloaded as PurchaseReport_${date}.pdf to your Downloads folder`);
-        } catch (error) {
-          console.error('Error downloading PDF:', error);
-          Alert.alert('Error', 'Failed to download PDF');
+          // Create an asset with the renamed file
+          const asset = await MediaLibrary.createAssetAsync(tempUri);
+  
+          // Save to the Downloads album
+          const album = await MediaLibrary.getAlbumAsync('Download');
+          if (!album) {
+            await MediaLibrary.createAlbumAsync('Download', asset, false);
+          } else {
+            await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+          }
+  
+          Alert.alert('Download Success', `${fileName} has been saved to your Downloads folder.`);
+        } else {
+          Alert.alert('Permission Denied', 'You need to grant permission to save the PDF.');
         }
-      } else {
-        Alert.alert('Permission Denied', 'You need to grant permission to save the PDF.');
+      } catch (error) {
+        console.error('Error saving PDF:', error);
+        Alert.alert('Error', 'Failed to save PDF to Downloads folder.');
       }
     } else {
-      Alert.alert('Error', 'PDF was not generated');
+      Alert.alert('Error', 'PDF was not generated.');
     }
   };
+  
+  
   
 
   const handleSharePDF = async () => {
@@ -275,6 +293,11 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
       {/* Personal Details Section */}
       {details && (
         <View className="mb-4">
+           {/* Selected Date and Invoice Number */}
+            <View className="mb-2">
+            <Text className="text-sm font-bold">INV NO:{crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}</Text>
+              
+            </View>
           <Text className="font-bold text-sm mb-2">Personal Details</Text>
           <ScrollView horizontal className="border border-gray-300 rounded-lg">
             <View>

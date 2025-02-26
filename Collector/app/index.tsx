@@ -106,8 +106,9 @@
 
 // export default index
 
-import React,{ useEffect } from 'react'
-import { View, Text } from 'react-native';
+import React,{ useEffect , useState} from 'react'
+import { View, Text  } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -162,7 +163,30 @@ import AddOfficerBasicDetails from '@/components/ManagerScreens/AddOfficerBasicD
 import AddOfficerAddressDetails from '@/components/ManagerScreens/AddOfficerAddressDetails';
 import ClaimOfficer from '@/components/ManagerScreens/ClaimOfficer';
 import TransactionList from '@/components/ManagerScreens/TransactionList';
+import FarmerReport from '@/components/ManagerScreens/FarmerReport';
+import SetTargetScreen from '@/components/ManagerScreens/SetTargetScreen';
+import DailyTarget from '@/components/ManagerScreens/DailyTarget';
+import TargetValidPeriod from '@/components/ManagerScreens/TargetValidPeriod';
+import NoCollectionCenterScreen from '@/components/NoCollectionCenterScreen ';
+import environment from '@/environment/environment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import EditTargetScreen from '@/components/ManagerScreens/EditTargetScreen';
+import PassTargetScreen from '@/components/ManagerScreens/PassTargetScreen';
+import RecieveTargetScreen from '@/components/ManagerScreens/RecieveTargetScreen';
+import DailyTargetListForOfficers from '@/components/ManagerScreens/DailyTargetListForOfficers';
+import EditTargetManager from '@/components/ManagerScreens/EditTargetManager';
+import RecieveTargetBetweenOfficers from '@/components/ManagerScreens/RecieveTargetBetweenOfficers';
+import PassTargetBetweenOfficers from '@/components/ManagerScreens/PassTargetBetweenOfficers';
 import OTPE from '@/components/Otpverification';
+import io from 'socket.io-client';
+import { AppState } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
+import * as Network from 'expo-network';
+import ManagerDashboard from '@/components/ManagerScreens/ManagerDashboard';
+import CenterTarget from '@/components/ManagerScreens/CenterTarget';
+import ManagerTransactions from '@/components/ManagerScreens/ManagerTransactions';
+import socket from '@/services/socket';
 
 
 const Stack = createNativeStackNavigator(); 
@@ -183,16 +207,162 @@ function MainTabNavigator() {
       <Tab.Screen name="PriceChart" component={PriceChart as any}/>
      <Tab.Screen name="UnregisteredCropDetails" component={UnregisteredCropDetails as any} />
      <Tab.Screen name="SearchFarmer" component={SearchFarmer} />
-      <Tab.Screen name="ComplainHistory" component={ComplainHistory} />
+      <Tab.Screen name="ManagerDashboard" component={ManagerDashboard} />
+      
+      
     </Tab.Navigator>
   );
 }
 
 
 const index = () => {
+  // Prevent screenshots and screen recording
+  // ScreenCapture.usePreventScreenCapture();
+
+  // const [appState, setAppState] = useState(AppState.currentState); // Track app state
+  // const [empId, setEmpId] = useState<string | null>(null); // Store empId
+  // const navigation = useNavigation(); // Use the navigation hook
   
-    // Prevent screenshots and screen recording
-    // ScreenCapture.usePreventScreenCapture()
+  // useEffect(() => {
+  //   // Fetch empId from AsyncStorage when the component mounts
+  //   const getEmpIdFromStorage = async () => {
+  //     try {
+  //       const storedEmpId = await AsyncStorage.getItem("empid");
+  //       if (storedEmpId) {
+  //         setEmpId(storedEmpId);
+  //       } else {
+  //         // Navigate to login screen if empId is not found
+  //         console.log("empId not found, navigating to login.");
+  //         navigation.navigate('Login' as never); // Navigate to Login screen
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to fetch empId from AsyncStorage:", error);
+  //       navigation.navigate('Login' as never); // Navigate to Login if there's an error fetching empId
+  //     }
+  //   };
+  
+  //   getEmpIdFromStorage();
+  
+  //   // Listen for app state changes
+  //   const appStateListener = AppState.addEventListener("change", (nextAppState) => {
+  //     if (nextAppState === "background" || nextAppState === "inactive") {
+  //       // If the app goes to background or inactive, disconnect the socket
+  //       if (empId && socket) {
+  //         console.log(`App went to background or inactive, disconnecting socket for empId ${empId}`);
+  //         socket.disconnect(); // This automatically handles the disconnect
+  //       }
+  //     }
+  //     setAppState(nextAppState); // Update app state
+  //   });
+  
+  //   // Cleanup appState listener when the component is unmounted
+  //   return () => {
+  //     appStateListener.remove();
+  //   };
+  // }, [empId, navigation]); // Only run this effect when empId changes
+  
+  // // Handle socket disconnection
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket.on("disconnect", () => {
+  //       console.log("Socket disconnected");
+  //       // Additional logic for handling disconnection can be added here
+  //     });
+      
+  //     // Cleanup function for socket disconnection
+  //     return () => {
+  //       console.log("Cleaning up socket connection");
+  //       socket.disconnect();
+  //     };
+  //   }
+  // }, [socket]); // Only run when socket is available
+  
+    // Setup socket listeners on component mount
+useEffect(() => {
+  setupSocketListeners();
+  
+  // Clean up on unmount
+  return () => {
+    cleanupSocketListeners();
+  };
+}, []);
+
+const setupSocketListeners = () => {
+  if (socket.listeners('connect').length === 0) {
+    socket.on('connect', async () => {
+      console.log('Socket connected with ID:', socket.id);
+      // Re-emit login event on reconnection
+      try {
+        const storedEmpId = await AsyncStorage.getItem('empid');
+        if (storedEmpId) {
+          socket.emit('login', { empId: storedEmpId });
+          console.log('Reconnected and sent login for empId:', storedEmpId);
+        }
+      } catch (error) {
+        console.error('Error getting stored empId:', error);
+      }
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Socket disconnected');
+    });
+
+    socket.on('loginSuccess', (data) => {
+      console.log('Login success:', data);
+    });
+
+    socket.on('loginError', (error) => {
+      console.error('Socket login error:', error);
+    });
+
+    socket.on('employeeOnline', (data) => {
+      console.log('Employee online:', data.empId);
+      // Update your UI to show employee is online
+    });
+
+    socket.on('employeeOffline', (data) => {
+      console.log('Employee offline:', data.empId);
+      // Update your UI to show employee is offline
+    });
+
+    // Set up AppState listener for background/foreground transitions
+    AppState.addEventListener('change', async (nextAppState) => {
+      if (nextAppState === 'active') {
+        // App came to foreground
+        if (!socket.connected) {
+          socket.connect();
+          try {
+            const storedEmpId = await AsyncStorage.getItem('empid');
+            if (storedEmpId) {
+              socket.emit('login', { empId: storedEmpId });
+              console.log('App active, sent login for empId:', storedEmpId);
+            }
+          } catch (error) {
+            console.error('Error getting stored empId:', error);
+          }
+        }
+      } else if (nextAppState === 'background' || nextAppState === 'inactive') {
+        // Option 1: Maintain connection in background (do nothing)
+        
+        // Option 2: Disconnect when app goes to background
+        console.log('App went to background, disconnecting socket');
+        socket.disconnect();
+      }
+    });
+  }
+};
+
+const cleanupSocketListeners = () => {
+  socket.off('connect');
+  socket.off('disconnect');
+  socket.off('loginSuccess');
+  socket.off('loginError');
+  socket.off('employeeOnline');
+  socket.off('employeeOffline');
+};
+   
+
+   
 
   return (
     <LanguageProvider>
@@ -243,7 +413,21 @@ const index = () => {
       <Stack.Screen name="ClaimOfficer" component={ClaimOfficer} />
       <Stack.Screen name="TransactionList" component={TransactionList as any} />
       <Stack.Screen name="OTPE" component={OTPE} />
+      <Stack.Screen name="FarmerReport" component={FarmerReport as any} />
+      <Stack.Screen name="EditTargetScreen" component={EditTargetScreen as any} />
+      <Stack.Screen name="DailyTarget" component={DailyTarget as any} />
+      <Stack.Screen name="PassTargetScreen" component={PassTargetScreen as any} /> 
+      <Stack.Screen name="NoCollectionCenterScreen" component={NoCollectionCenterScreen} />
+      <Stack.Screen name="RecieveTargetScreen" component={RecieveTargetScreen as any} />
+      <Stack.Screen name="DailyTargetListForOfficers" component={DailyTargetListForOfficers as any} />
+      <Stack.Screen name="PassTargetBetweenOfficers" component={PassTargetBetweenOfficers as any} />
+      <Stack.Screen name="RecieveTargetBetweenOfficers" component={RecieveTargetBetweenOfficers as any} />
+      <Stack.Screen name="CenterTarget" component={CenterTarget as any} />
+      <Stack.Screen name="ManagerTransactions" component={ManagerTransactions as any} />
       
+      
+      
+      <Stack.Screen name="EditTargetManager" component={EditTargetManager as any} />
       <Stack.Screen name='Main' component={MainTabNavigator} options={{ headerShown: false }} />
       
 

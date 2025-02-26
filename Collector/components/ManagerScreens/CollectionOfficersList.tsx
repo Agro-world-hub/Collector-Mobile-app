@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, Dimensions, RefreshControl } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -7,6 +7,7 @@ import { RootStackParamList } from '../types';
 import axios from 'axios';
 import environment from '@/environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LottieView from 'lottie-react-native'; // Import Lottie for animation
 
 const { width } = Dimensions.get('window');
 const scale = (size: number) => (width / 375) * size;
@@ -30,11 +31,12 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
   const [loading, setLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showMenu, setShowMenu] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchOfficers = async () => {
     try {
       setLoading(true);
-      setErrorMessage(null); // Reset error message before fetching
+      setErrorMessage(null);
 
       const token = await AsyncStorage.getItem('token');
       const response = await axios.get(
@@ -62,7 +64,12 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
     }
   };
 
-  // Reload the officers list every time the screen is focused
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchOfficers();
+    setRefreshing(false);
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       fetchOfficers();
@@ -102,26 +109,17 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
   return (
     <View className="flex-1 bg-white">
       <View className="bg-green-600 py-6 px-4 rounded-b-2xl relative">
-        <Text
-          style={{ fontSize: 18 }}
-          className="text-white text-center font-bold"
-        >
+        <Text style={{ fontSize: 18 }} className="text-white text-center font-bold">
           Collection Officers
         </Text>
 
-        <TouchableOpacity
-          className="absolute top-6 right-4"
-          onPress={() => setShowMenu((prev) => !prev)}
-        >
+        <TouchableOpacity className="absolute top-6 right-4" onPress={() => setShowMenu((prev) => !prev)}>
           <Ionicons name="ellipsis-vertical" size={24} color="#fff" />
         </TouchableOpacity>
 
         {showMenu && (
           <View className="absolute top-14 right-4 bg-white shadow-lg rounded-lg">
-            <TouchableOpacity
-              className="px-4 py-2 bg-white rounded-lg shadow-lg"
-              onPress={() => navigation.navigate('ClaimOfficer')}
-            >
+            <TouchableOpacity className="px-4 py-2 bg-white rounded-lg shadow-lg" onPress={() => navigation.navigate('ClaimOfficer')}>
               <Text className="text-gray-700 font-semibold">Claim Officer</Text>
             </TouchableOpacity>
           </View>
@@ -129,16 +127,21 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
       </View>
 
       <View className="px-4 mt-4">
-        <Text
-          style={{ fontSize: scale(16) }}
-          className="font-bold text-gray-800 mb-2"
-        >
+        <Text style={{ fontSize: scale(16) }} className="font-bold text-gray-800 mb-2">
           Officers List <Text className="text-gray-500">(All {officers.length})</Text>
         </Text>
       </View>
 
       {loading ? (
-        <ActivityIndicator size="large" color="#16A34A" className="flex-1 justify-center items-center" />
+        // Lottie Loader for 4 seconds
+        <View className="flex-1 justify-center items-center">
+          <LottieView
+            source={require('../../assets/lottie/collector.json')} // Ensure JSON file is correct
+            autoPlay
+            loop
+            style={{ width: 350, height: 350 }}
+          />
+        </View>
       ) : errorMessage ? (
         <View className="flex-1 justify-center items-center">
           <Text className="text-gray-500 text-lg">{errorMessage}</Text>
@@ -152,6 +155,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
             paddingBottom: scale(80),
             paddingTop: scale(10),
           }}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           showsVerticalScrollIndicator={true}
         />
       )}

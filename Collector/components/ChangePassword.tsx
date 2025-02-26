@@ -92,6 +92,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
     <ScrollView
       className="flex-1 bg-white"
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
+      keyboardShouldPersistTaps="handled"
     >
       <TouchableOpacity onPress={() => navigation.goBack()} className="">
         <AntDesign name="left" size={24} color="#000502" />

@@ -14,7 +14,19 @@ import { Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
 import { useNavigation } from '@react-navigation/native';
+import environment from '../../environment/environment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
+interface OfficerDetails {
+  name: string;
+  id: number;
+  jobRole: string;
+  empId: string;
+  companyNameEnglish: string;
+  companyNameSinhala: string;
+  companyNameTamil: string;
+}
 type ClaimOfficerNavigationProp = StackNavigationProp<RootStackParamList, 'ClaimOfficer'>;
 
 const ClaimOfficer: React.FC = () => {
@@ -23,24 +35,85 @@ const ClaimOfficer: React.FC = () => {
   const [jobRole, setJobRole] = useState('Collection Officer');
   const [empID, setEmpID] = useState('');
   const [officerFound, setOfficerFound] = useState(false);
-  const [officerDetails, setOfficerDetails] = useState({
-    name: 'Gaya Perera',
-    role: 'Collection Officer',
-    empCode: 'CCO01485',
-    company: 'Agro World Pvt Ltd',
-  });
+  const [officerDetails, setOfficerDetails] = useState<OfficerDetails | null>(null);
 
-  const handleSearch = () => {
-    if (empID === '0120') {
-      setOfficerFound(true);
-    } else {
-      setOfficerFound(false);
+  const empPrefix = jobRole === 'Collection Officer' ? 'COO' : 'CUO';
+
+  const handleSearch = async () => {
+
+    console.log(empID, jobRole);
+    try {
+      const userToken = await AsyncStorage.getItem('token');
+
+      if (!userToken) {
+        Alert.alert('Error', 'User token not found. Please log in again.');
+        return;
+      }
+
+      const response = await fetch(`${environment.API_BASE_URL}api/collection-manager/get-claim-officer`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userToken}`,
+        },
+        body: JSON.stringify({ empID: `${empPrefix}${empID}`, jobRole }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.result && data.result.length > 0) {
+        const officer = data.result[0];
+        setOfficerDetails({
+          name: `${officer.firstNameEnglish} ${officer.lastNameEnglish}`,
+          companyNameEnglish: officer.companyNameEnglish,
+          companyNameSinhala: officer.companyNameSinhala,
+          companyNameTamil: officer.companyNameTamil,
+          id: officer.id,
+          jobRole: officer.jobRole,
+          empId: officer.empId,
+        });
+        setOfficerFound(true);
+      } else {
+        setOfficerFound(false);
+      }
+    } catch (err) {
+      console.error(err);
+      Alert.alert('Error', 'Something went wrong. Please try again later.');
     }
   };
 
-  const handleClaimOfficer = () => {
-    Alert.alert('Success', 'You have claimed this officer.');
+  const handleClaimOfficer = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem('token');
+
+      if (!userToken) {
+        Alert.alert('Error', 'User token not found. Please log in again.');
+        return;
+      }
+
+      const response = await fetch(`${environment.API_BASE_URL}api/collection-manager/claim-officer`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userToken}`,
+        },
+        body: JSON.stringify({ officerId: officerDetails?.id }),
+      });
+
+      if (!response.ok) {
+        Alert.alert('Error', 'Failed to claim the officer. Please try again later.');
+      } else {
+        Alert.alert('Success', 'Officer successfully claimed.');
+        setOfficerFound(false);
+        setOfficerDetails(null);
+        setEmpID('');
+      }
+    } catch (err) {
+      console.error(err);
+      Alert.alert('Error', 'Something went wrong. Please try again later.');
+    }
   };
+  
 
   return (
     <ScrollView className="flex-1 bg-white">
@@ -67,7 +140,7 @@ const ClaimOfficer: React.FC = () => {
             style={{ height: 40, width: '100%' }}
           >
             <Picker.Item label="Collection Officer" value="Collection Officer" />
-            <Picker.Item label="Supervisor" value="Supervisor" />
+            <Picker.Item label="Customer Officer" value="Customer Officer" />
           </Picker>
         </View>
 
@@ -77,11 +150,12 @@ const ClaimOfficer: React.FC = () => {
         </Text>
         <View className="flex-row items-center border border-gray-300 rounded-lg mb-4">
           <View className="bg-gray-200 px-4 py-2 rounded-l-lg">
-            <Text className="text-gray-600 font-bold">COO</Text>
+          <Text className="text-gray-600 font-bold">{empPrefix}</Text>
           </View>
           <TextInput
             placeholder="0122"
             value={empID}
+            keyboardType="numeric"
             onChangeText={setEmpID}
             className="flex-1 px-4 py-2 text-gray-700"
           />
@@ -89,13 +163,13 @@ const ClaimOfficer: React.FC = () => {
       
         {/* Search Button */}
         <TouchableOpacity
-          className={`py-3  py-3 rounded-[35px] items-center mt-7 ${
+          className={` py-4 rounded-full items-center mt-7 ${
             empID ? 'bg-[#2AAD7A]' : 'bg-gray-300'
           }`}
           disabled={!empID}
           onPress={handleSearch}
         >
-          <Text className="text-white text-center font-semibold">Search</Text>
+          <Text className="text-white text-lg text-center font-semibold">Search</Text>
         </TouchableOpacity>
       </View>
 
@@ -123,19 +197,19 @@ const ClaimOfficer: React.FC = () => {
           />
           {/* Officer Details */}
           <Text className="text-lg font-bold text-gray-800">
-            {officerDetails.name}
+          {officerDetails?.name}
           </Text>
           <Text className="text-sm text-gray-500">
-            {officerDetails.role} - {officerDetails.empCode}
+            {officerDetails?.jobRole} - {officerDetails?.empId}
           </Text>
-          <Text className="text-sm text-gray-500">{officerDetails.company}</Text>
+          <Text className="text-sm text-gray-500">{officerDetails?.companyNameEnglish}</Text>
 
           {/* Claim Officer Button */}
           <TouchableOpacity
-            className="mt-6 bg-[#2AAD7A] w-[250px] py-3 px-8 rounded-[35px]"
+            className="mt-6 bg-[#2AAD7A]    py-4 rounded-full"
             onPress={handleClaimOfficer}
           >
-            <Text className="text-white font-semibold text-center">
+            <Text className="text-white text-lg px-28 font-semibold text-center">
               Claim Officer
             </Text>
           </TouchableOpacity>
