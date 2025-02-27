@@ -9,8 +9,6 @@ import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -52,15 +50,9 @@ interface Crop {
   invoiceNumber: string;
 }
 
-interface officerDetails {
-  QRCode: string;
-}
-
 const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
   const [details, setDetails] = useState<PersonalAndBankDetails | null>(null);
-  const [officerDetails, setofficerDetails] = useState<officerDetails | null>(null);
   const route = useRoute<FarmerReportRouteProp>();
-   const [qrValue, setQrValue] = useState<string>("");
   const {
     registeredFarmerId,
     userId,
@@ -81,56 +73,6 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
   console.log('Farmer Report:', route.params);
   const [crops, setCrops] = useState<Crop[]>([]);
 
-
-  const fetchOfficerDetails = async () => {
-    try {
-      const token = await AsyncStorage.getItem("token");
-      if (!token) {
-        Alert.alert("Error", "No token found");
-        return;
-      }
-
-      const response = await api.get("api/collection-officer/user-profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = response.data.data;
-      console.log(data);
-
-      if (response.data.status === "success") {
-        const officerDetails = {
-          empId: data.empId,
-          QRCode: data.QRcode, // Ensure case is correct
-        };
-
-        console.log("Extracted QR Code:", officerDetails.QRCode);
-
-        // Set the officerDetails state
-        setofficerDetails(officerDetails);
-
-        // If you need to store QR code or other details in other states
-        const qrData = JSON.stringify(officerDetails);
-        setQrValue(qrData);  // Assuming setQrValue is for QR code
-      } else {
-        Alert.alert("Error", response.data.message);
-      }
-    } catch (error) {
-      console.error("Error fetching officer details:", error);
-      Alert.alert("Error", "Failed to fetch details");
-    }
-  };
-
-  useEffect(() => {
-    fetchOfficerDetails(); // Fetch details when the component mounts
-  }, []);
-
-  
-
-
-
-
   const fetchCropDetails = async (userId: number, createdAt: string, farmerId: number) => {
     try {
       const response = await axios.get(
@@ -147,55 +89,6 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
     } catch (error) {
       console.error('Error fetching crop details:', error);
       return [];
-    }
-  };
-
-
-  useEffect(() => {
-    fetchDetails();
-  }, []);
-
-  const fetchDetails = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      if (!token) {
-        Alert.alert('Error', 'No token found');
-        return;
-      }
-
-      const [detailsResponse, cropsResponse] = await Promise.all([
-        api.get(`api/farmer/report-user-details/${userId}`),
-        api.get(`api/unregisteredfarmercrop/user-crops/today/${userId}/${registeredFarmerId}`),
-        // Commented out officer QR code fetching
-        // api.get(`api/collection-officer/get-officer-Qr`, {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // }),
-      ]);
-
-      const data = detailsResponse.data;
-      setDetails({
-        userId: data.userId ?? "",
-        firstName: data.firstName ?? "",
-        lastName: data.lastName ?? "",
-        phoneNumber: data.phoneNumber ?? "",
-        NICnumber: data.NICnumber ?? "",
-        profileImage: data.profileImage ?? "",
-        qrCode: data.qrCode ?? "",
-        address: data.address ?? "",
-        accNumber: data.accNumber ?? "",
-        accHolderName: data.accHolderName ?? "",
-        bankName: data.bankName ?? "",
-        branchName: data.branchName ?? "",
-        
-        
-      });
-
-      setCrops(cropsResponse.data);
-      console.log('crop response for report',cropsResponse.data);
-
-    } catch (error) {
-      console.error('Error fetching details:', error);
-      Alert.alert('Error', 'Failed to load details');
     }
   };
   
@@ -235,8 +128,6 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
         .join('');
   
       const totalSum = crops.reduce((sum: number, crop: Crop) => sum + Number(crop.total), 0);
-       const officerQRCode = officerDetails? officerDetails.QRCode.replace(/^data:image\/png;base64,/, ""): '' ; // Default to empty string if officerDetails is null
-      const farmerQRCode = details?.qrCode ? details.qrCode.replace(/^data:image\/png;base64,/, "") : '';// Default to empty string if details is null
   
       const html = `
       <html>
@@ -307,25 +198,9 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
           <div style="text-align: left; margin-top: 20px;">
             <strong>Full Total: Rs. ${totalSum.toFixed(2)}</strong>
           </div>
-
-         <div class="qr-codes" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-  <div style="text-align: center; margin-right: 20px;">
-      <img src="${farmerQRCode}" alt="Farmer's QR Code" style="width: 200px; height: 200px;" />
-    <p><strong>Farmer's QR Code</strong></p>
-  </div>
-  <div style="text-align: center;">
-      <img src="${officerQRCode}" alt="Farmer's QR Code" style="width: 200px; height: 200px;" />
-    <p><strong>Officer's QR Code</strong></p>
-  </div>
-  <div></div>
-   <div></div>
-</div>
-
         </body>
       </html>
       `;
-
-    
   
       const { uri } = await Print.printToFileAsync({ html });
       return uri;
@@ -505,7 +380,6 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
   </View>
 )}
 
-
       {/* QR Code Section
       {details && details.qrCode && officer && officer.QRcode && (
       <View className="mb-4 flex-row items-center justify-start">
@@ -520,31 +394,6 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
         </View>
       </View>
     )} */}
-
-      {details && details.qrCode  && officerDetails && officerDetails.QRCode && (
-          <View className="mb-4 flex-row items-center justify-start">
-            <View className="mr-4">
-              <View>
-            <Image 
-      source={{ uri: details.qrCode.replace(/^data:image\/png;base64,/, "") }} 
-      style={{ width: 150, height: 150 }} 
-    />
-    <Text className="font-bold ml-5 text-sm mb-2">Farmer's QR Code</Text>
-    </View>
-    
-             
-            </View>
-            <View>
-            <Image 
-      source={{ uri: officerDetails.QRCode.replace(/^data:image\/png;base64,/, "") }} 
-      style={{ width: 150, height: 150 }} 
-    />
-    
-    <Text className="font-bold ml-5 text-sm mb-2">Officer's QR Code</Text>
-    </View>
-            
-          </View>
-        )} 
 
 
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -19,7 +19,6 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import { useFocusEffect } from "expo-router";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -96,19 +95,11 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
         Alert.alert("Error", "An unexpected error occurred.");
       }
     }
+
+    // Reset the NIC number and noResults after the search is completed
+    setNICnumber('');
+    setNoResults(false); // Optionally hide the "No results" message immediately after resetting
   };
-
-
-  useFocusEffect(
-    useCallback(() => {
-      setNICnumber("");
-      setNoResults(false);
-    }, [])
-  );
-
-  const DismisKeyboard = () => {
-    Keyboard.dismiss();
-  }
 
   return (
     <ScrollView
@@ -135,18 +126,12 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
             Enter Farmer's NIC number
           </Text>
 
-          <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2 bg-gray-100 bg-white">
-
+          <View className="flex-row justify-center items-center border rounded-full mt-4 px-4 py-2 bg-gray-100">
             <TextInput
               value={NICnumber}
               onChangeText={handleNicChange}
               placeholder="Enter NIC number"
-              className="flex-1 text-center "
-              maxLength={12}
-              style={{
-                
-                color: "#000", // Text color (optional)
-              }}
+              className="flex-1 text-center"
             />
             <TouchableOpacity className="ml-2" onPress={handleSearch}>
               <FontAwesome name="search" size={24} color="green" />
@@ -163,7 +148,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
             <View className="mt-10 items-center">
               <Image
                 source={require("../assets/images/search.png")}
-                className="h-[350px] w-[300px] rounded-lg"
+                className="h-[400px] w-[350px] rounded-lg"
                 resizeMode="contain"
               />
             </View>
@@ -181,10 +166,10 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
             <View className="mt-6 items-center">
               <Image
                 source={require("../assets/images/notfound.png")}
-                className="h-[200px] w-[200px] rounded-lg"
+                className="h-[200px] w-[300px] rounded-lg"
                 resizeMode="contain"
               />
-              <Text className="text-center text-lg mt-4 color-[#888888]">
+              <Text className="text-center text-lg mt-4">
                 No registered farmer found
               </Text>
 

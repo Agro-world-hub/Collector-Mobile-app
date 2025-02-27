@@ -370,14 +370,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
       {/* Buttons Wrapper */}
       <View className="items-center mt-8">
         {/* Collect Button */}
-        {/* <TouchableOpacity className="bg-[#2AAD7A] w-[300px] py-3 rounded-full items-center" onPress={() => navigation.navigate('UnregisteredCropDetails' as any, { userId })}> */}
-        <TouchableOpacity className="bg-[#2AAD7A] w-[300px] py-3 rounded-full items-center" onPress={() =>
-  navigation.navigate("Main", {
-    screen: "UnregisteredCropDetails",
-    params: { userId },
-  } as never)
-}
-        > 
+        <TouchableOpacity className="bg-[#2AAD7A] w-[300px] py-3 rounded-full items-center" onPress={() => navigation.navigate('UnregisteredCropDetails' as any, { userId })}>
           <Text className="text-white text-lg">Collect</Text>
         </TouchableOpacity>
 

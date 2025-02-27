@@ -270,7 +270,6 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               editable={false}
             />
           </View>
-          
           <View>
             <Text className="text-gray-500 mb-">City</Text>
             <TextInput
@@ -279,8 +278,6 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               editable={false}
             />
           </View>
-        
-          
           {showUpdateButton && (
             <TouchableOpacity
               onPress={handleUpdatePhoneNumber}

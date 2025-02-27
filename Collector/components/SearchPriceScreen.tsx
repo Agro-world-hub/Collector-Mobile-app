@@ -6,7 +6,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from './types';
 import environment from '../environment/environment';
-import { ScrollView } from 'react-native-gesture-handler';
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -81,7 +80,6 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
   }, [selectedCrop]);
 
   return (
-    <ScrollView className="flex-1 bg-white">
     <View className="flex-1 bg-white items-center px-6 pt-12">
       <Text className="text-xl font-semibold mb-4">Search Price</Text>
       <Image
@@ -101,8 +99,8 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
             data={cropOptions}
             placeholder="Select Crop"
             boxStyles={{
-              backgroundColor: 'white',
-              borderColor: '#CFCFCF',
+              backgroundColor: '#F9F9F9',
+              borderColor: '#E5E5E5',
             }}
             dropdownTextStyles={{
               color: '#000',
@@ -122,8 +120,8 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
             data={varietyOptions}
             placeholder="Select Variety"
             boxStyles={{
-              backgroundColor: 'white',
-              borderColor: '#CFCFCF',
+              backgroundColor: '#F9F9F9',
+              borderColor: '#E5E5E5',
             }}
             dropdownTextStyles={{
               color: '#000',
@@ -151,7 +149,6 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
         <Text className="text-white font-semibold text-lg">Search</Text>
       </TouchableOpacity>
     </View>
-    </ScrollView>
   );
 };
 

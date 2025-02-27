@@ -1,5 +1,4 @@
 export type RootStackParamList = {
-  BottomNav:undefined
     Splash:undefined;
     Login:undefined;
     ChangePassword:undefined;
@@ -10,8 +9,7 @@ export type RootStackParamList = {
     FormScreen: { scannedData: any };
     EngProfile:undefined;
     UnregisteredFarmerDetails:{ cropCount: 1, userId:number };
-    //UnregisteredCropDetails: { cropCount: number, userId:number };
-    UnregisteredCropDetails: { userId: number; cropCount: number };
+    UnregisteredCropDetails: { cropCount: number, userId:number };
     SinChangePassword:undefined;
     SinLogin:undefined;
     Lanuage:undefined;
@@ -41,11 +39,8 @@ export type RootStackParamList = {
         cropName: string;
         varietyName: string;
       };
-   // Main:{screen: keyof RootStackParamList};
-   Main: { screen: keyof RootStackParamList; params?: any };
+    Main:{screen: keyof RootStackParamList};
     CollectionOfficersList:undefined;
-
-    
 
 
 
@@ -129,6 +124,7 @@ export type OfficerBasicDetailsFormData = {
   firstNameTamil: string;
   lastNameTamil: string;
   profileImage:string
+
   nicNumber: string;
   email: string;
 };

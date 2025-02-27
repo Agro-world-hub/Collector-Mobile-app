@@ -257,7 +257,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
         <View className="w-[90%] items-center p-6 shadow-2xl bg-[#FFFFFF] rounded-xl">
           <View className="flex-row ">
             <Text className="text-2xl font-semibold text-center mb-4 color-[#424242]">
-             Tell us the
+             Tellus
             </Text>
             <Text className="text-2xl font-semibold text-center mb-4 pl-2 color-[#D72C62]">
              Problem
@@ -288,9 +288,8 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
             </Picker>
           </View>
 
-          <Text className="text-sm text-gray-600 text-center mb-4 color-[#959595]">
-            {/* {t("ReportComplaint.WewilRespond")} */}
-            We will get back to the farmer within 2 days after hearing from you
+          <Text className="text-sm text-gray-600 text-center mb-4">
+            {t("ReportComplaint.WewilRespond")}
           </Text>
 
           <TextInput
@@ -303,12 +302,11 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
           />
 
           <TouchableOpacity
-            className="w-full bg-[#2AAD7A] py-3 rounded-full items-center  "
+            className="w-full bg-[#2AAD7A] py-4 rounded-lg items-center  "
             onPress={handleSubmit}
           >
             <Text className="text-white font-bold text-lg">
-              {/* {t("ReportComplaint.Submit")} */}
-              Submit
+              {t("ReportComplaint.Submit")}
             </Text>
           </TouchableOpacity>
         </View>

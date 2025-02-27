@@ -58,8 +58,8 @@ import { View, TouchableOpacity, Image,  Animated, Keyboard  } from 'react-nativ
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import environment from '@/environment/environment';
-import  socket  from '@/services/socket';
 import { AppState } from 'react-native';
+import socket from '@/services/socket';
 
 const homeIcon = require('../assets/images/homee.png');
 const searchIcon = require('../assets/images/searchh.png');
@@ -151,17 +151,10 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
     tabs = [
       { name: "ManagerDashboard", icon: homeIcon, focusedIcon: homeIcon },
       { name: "DailyTarget", icon: qrIcon, focusedIcon: qrIcon },
-      
-      { name: "CollectionOfficersList", icon: adminIcon, focusedIcon: adminIcon },
       { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
+      { name: "CollectionOfficersList", icon: adminIcon, focusedIcon: adminIcon },
     ];
   }
-  useEffect(() => {
-    // Check the userRole and manually navigate if needed
-    if (userRole === "Collection Center Manager" && currentTabName == "Dashboard") {
-      navigation.navigate("ManagerDashboard");
-    }
-  }, [userRole, currentTabName, navigation]);
 
 
   // const [appState, setAppState] = useState(AppState.currentState);
@@ -384,6 +377,10 @@ const cleanupSocketListeners = () => {
   socket.off('employeeOnline');
   socket.off('employeeOffline');
 };
+      
+  
+  
+
 
   if (isKeyboardVisible) return null;
   return (

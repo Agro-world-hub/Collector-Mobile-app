@@ -5,7 +5,6 @@ import { RootStackParamList } from './types';
 import environment from '@/environment/environment';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ScrollView } from 'react-native-gesture-handler';
 
 type NoCollectionCenterScreenNavigationProps = StackNavigationProp<RootStackParamList, 'NoCollectionCenterScreen'>;
 
@@ -29,12 +28,10 @@ const NoCollectionCenterScreen: React.FC<NoCollectionCenterScreenProps> = ({ nav
   }, [navigation]);
 
   return (
-    <ScrollView className='flex-1 bg-white '>
     <View className="flex-1 bg-white justify-center items-center">
-     
       {/* Error Text */}
       <View className="items-center mb-[25%]">
-        <Text className="text-lg font-semibold  text-black-300 mt-[20%]">Error Found!</Text>
+        <Text className="text-lg font-semibold  text-black-300">Error Found!</Text>
         <Text className="text-2xl font-bold text-black mt-2">
           No Collection Center
         </Text>
@@ -48,9 +45,7 @@ const NoCollectionCenterScreen: React.FC<NoCollectionCenterScreenProps> = ({ nav
           resizeMode="contain"
         />
       </View>
-    
     </View>
-    </ScrollView>
   );
 };
 

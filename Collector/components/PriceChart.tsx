@@ -275,7 +275,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
   const [editedPrices, setEditedPrices] = useState<any[]>([]);
   const [isEditable, setIsEditable] = useState(false);
   const [buttonText, setButtonText] = useState("Request Price Update");
-  const [isLoading, setIsLoading] = useState(false);
 
   // Fetch prices
   const fetchPrices = async () => {
@@ -422,7 +421,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
 
         {isEditable && (
           <TouchableOpacity
-            className="border border-gray-400  mt-4 py-3 h-12 rounded-full items-center w-3/4 mx-auto"
+            className="border border-gray-400 w-[300px] mt-4 py-3 h-12 rounded-full items-center w-3/4 mx-auto"
             onPress={() => {
               setIsEditable(false);
               setButtonText("Request Price Update");

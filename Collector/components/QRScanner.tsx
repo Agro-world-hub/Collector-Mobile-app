@@ -178,11 +178,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, Animated, Image, Dimensions } from 'react-native';
-// import { BarCodeScanner } from 'expo-barcode-scanner';
+import { BarCodeScanner } from 'expo-barcode-scanner';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
-import { CameraView, Camera } from "expo-camera";
-
 
 type QRScannerNavigationProp = StackNavigationProp<RootStackParamList, 'QRScanner'>;
 
@@ -206,24 +204,17 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
   const [unsuccessfulLoadingBarWidth, setUnsuccessfulLoadingBarWidth] = useState(new Animated.Value(100));  // Start with 100%
 
   useEffect(() => {
-    // const getCameraPermission = async () => {
-    //   const { status } = await BarCodeScanner.requestPermissionsAsync();
-    //   if (status === 'granted') {
-    //     setHasPermission(true);
-    //   } else {
-    //     setHasPermission(false);
-    //     setShowPermissionModal(true);
-    //   }
-    // };
+    const getCameraPermission = async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      if (status === 'granted') {
+        setHasPermission(true);
+      } else {
+        setHasPermission(false);
+        setShowPermissionModal(true);
+      }
+    };
 
-    // getCameraPermission();
-  
-      const getCameraPermissions = async () => {
-        const { status } = await Camera.requestCameraPermissionsAsync();
-        setHasPermission(status === "granted");
-      };
-      
-      getCameraPermissions();
+    getCameraPermission();
 
     // Reset scanner when the screen is focused again
     const unsubscribe = navigation.addListener('focus', () => {
@@ -302,7 +293,6 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
         animationType="slide"
         onRequestClose={() => setShowPermissionModal(false)}
       >
-         
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.7)' }}>
           <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, shadowColor: 'black', width: '80%' }}>
             <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Camera Permission Required</Text>
@@ -327,19 +317,11 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
   return (
     <View style={{ flex: 1, position: 'relative' }}>
       {/* Add a key prop to BarCodeScanner to force it to re-render when 'scanned' state changes */}
-      {/* <BarCodeScanner
+      <BarCodeScanner
         key={scanned ? 'scanned' : 'reset'} // Force reset when 'scanned' is true
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={{ flex: 1 }}
-      /> */}
-      <CameraView
-        onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-        barcodeScannerSettings={{
-          barcodeTypes: ["qr", "pdf417"],
-        }}
-        style={{ flex: 1 }}
       />
-    
       <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' }}>
         <View
           style={{

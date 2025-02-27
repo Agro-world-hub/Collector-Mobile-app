@@ -24,9 +24,6 @@ import {
 import { useTranslation } from "react-i18next";
 import bankNames from "../assets/jsons/banks.json";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import LottieView from "lottie-react-native"; // Import LottieView
-import { ActivityIndicator } from "react-native";
-
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -72,7 +69,6 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   const { t } = useTranslation();
   const [filteredBranches, setFilteredBranches] = useState<allBranches[]>([]);
   const [callingCode, setCallingCode] = useState("+94"); 
-  // const [loading, setLoading] = useState(false);
 
 
   console.log(countryCode)
@@ -342,11 +338,9 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
             style={{ width: 24, height: 24 }} // Adjust size if needed
           />
         </TouchableOpacity>
-        <View className="w-full items-center">
-  <Text className="text-xl font-bold text-center">Fill Personal Details</Text>
-</View>
-
-
+        <Text className="text-xl font-bold ml-3">
+          Fill Farmer Personal Details
+        </Text>
       </View>
 
       {/* Scrollable Form */}
@@ -506,35 +500,12 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       </ScrollView>
 
       {/* Next Button */}
-      {/* <TouchableOpacity
-        className="bg-[#2AAD7A] p-3 rounded-full items-center mt-5"
+      <TouchableOpacity
+        className="bg-green-500 p-3 rounded-full items-center mt-5"
         onPress={handleNext}
       >
         <Text className="text-white text-lg">Submit</Text>
-      </TouchableOpacity> */}
-
-<TouchableOpacity
-  className={`p-3 rounded-full items-center mt-5 ${
-    loading ? "bg-gray-400 opacity-50" : "bg-[#2AAD7A]"
-  }`}
-  onPress={() => {
-    if (!loading) {
-      setLoading(true); // Disable the button on click
-      handleNext(); // Your action function
-    }
-  }}
-  disabled={loading} // Disable button during the operation
->
-  {loading ? (
-    <ActivityIndicator color="white" size="small" />
-  ) : (
-    <Text className="text-center text-xl font-light text-white">
-      Submit
-    </Text>
-  )}
-</TouchableOpacity>
-
-
+      </TouchableOpacity>
 
       {/* Success Modal */}
       <Modal transparent={true} visible={isModalVisible} animationType="slide">
