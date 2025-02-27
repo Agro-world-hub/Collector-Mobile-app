@@ -200,9 +200,7 @@ import {
   Alert,
   ActivityIndicator,
   KeyboardAvoidingView,
-  Platform,
-  KeyboardAvoidingView,
-  Platform,
+  Platform
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -471,7 +469,6 @@ const handleLogin = async () => {
         </View>
       )}
     </ScrollView>
-    </KeyboardAvoidingView>
     </KeyboardAvoidingView>
   );
 };
