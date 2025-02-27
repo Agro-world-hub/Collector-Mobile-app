@@ -201,6 +201,8 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -386,10 +388,11 @@ const handleLogin = async () => {
 
 
   return (
-    <KeyboardAvoidingView
-    behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <KeyboardAvoidingView 
+    behavior={Platform.OS ==="ios" ? "padding" : "height"}
     enabled
-    className="flex-1">
+    className="flex-1"
+    >
     <ScrollView
       className="flex-1 w-full bg-white"
       keyboardShouldPersistTaps="handled"
@@ -398,10 +401,10 @@ const handleLogin = async () => {
         <AntDesign name="left" size={24} color="#000502" />
       </TouchableOpacity>
 
-      <View className="items-center pt-[10%]">
+      <View className="items-center pt-[-20%]">
         <Image source={loginImage} />
         <Text className="font-bold text-2xl pt-[7%]">
-          {t("SignIn.Wellcome")}
+          {t("Welcome!")}
         </Text>
       </View>
 
@@ -422,8 +425,9 @@ const handleLogin = async () => {
       ) : (
         <View className="p-6">
           <Text className="text-base pb-[2%] font-light">Employee ID</Text>
-          <View className="flex-row items-center border rounded-3xl w-full h-[53px] mb-5 bg-white px-3">
-            <Icon name="email" size={24} color="green" />
+          <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-full h-[53px] mb-5 bg-white px-3">
+            {/* <Icon name="email" size={24} color="green" /> */}
+            <AntDesign name="user" size={24} color="green" />
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
               placeholder="Employee ID"
@@ -433,7 +437,7 @@ const handleLogin = async () => {
           </View>
 
           <Text className="text-base pb-[2%] font-light">Password</Text>
-          <View className="flex-row items-center border rounded-3xl w-full h-[53px] mb-10 bg-white px-3">
+          <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-full h-[53px] mb-10 bg-white px-3">
             <Icon name="lock" size={24} color="green" />
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
@@ -467,6 +471,7 @@ const handleLogin = async () => {
         </View>
       )}
     </ScrollView>
+    </KeyboardAvoidingView>
     </KeyboardAvoidingView>
   );
 };

@@ -163,8 +163,16 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
       )}
 
       <TouchableOpacity
+      onPress={async () => {
+        try {
+          await AsyncStorage.removeItem('officerFormData'); // Clear stored data
+          navigation.navigate('AddOfficerBasicDetails' as any)
+        } catch (error) {
+          console.error("Error clearing form data:", error);
+        }
+      }}
         className="absolute bottom-5 right-5 bg-black w-14 h-14 rounded-full justify-center items-center shadow-lg"
-        onPress={() => navigation.navigate('AddOfficerBasicDetails' as any)}
+        
       >
         <Ionicons name="add" size={scale(24)} color="#fff" />
       </TouchableOpacity>

@@ -26,6 +26,8 @@ import bankNames from "../assets/jsons/banks.json";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LottieView from "lottie-react-native"; // Import LottieView
 import { ActivityIndicator } from "react-native";
+import { KeyboardAvoidingView } from "react-native";
+import { Platform } from "react-native";
 
 
 const api = axios.create({
@@ -333,6 +335,11 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   };
 
   return (
+      <KeyboardAvoidingView 
+            behavior={Platform.OS ==="ios" ? "padding" : "height"}
+            enabled
+            className="flex-1"
+            >
     <View className="flex-1 p-5 bg-white">
       {/* Header with Back Icon */}
       <View className="flex-row items-center mb-4">
@@ -603,6 +610,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
         </View>
       </Modal>
     </View>
+    </KeyboardAvoidingView>
   );
 };
 
