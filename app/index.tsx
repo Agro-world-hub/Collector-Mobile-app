@@ -367,7 +367,10 @@ const cleanupSocketListeners = () => {
   return (
     <LanguageProvider>
     <GestureHandlerRootView style={{ flex: 1 }}>
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator      screenOptions={{
+            headerShown: false,
+            gestureEnabled: false, // Disable swipe gestures globally
+          }}>
       <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="ChangePassword" component={ChangePassword as any}/>
