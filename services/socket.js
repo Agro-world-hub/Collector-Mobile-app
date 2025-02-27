@@ -1,10 +1,11 @@
 // socket-service.js
 import io from 'socket.io-client';
 // Create a singleton socket instance
-const socket = io('http://192.168.8.100:3005', {
+const socket = io('http://192.168.1.14:3005/agro-api/collection-status', {
   reconnection: true,
   reconnectionAttempts: 5,
-  reconnectionDelay: 1000
+  reconnectionDelay: 1000,
+  withCredentials: true,
 });
 
 // Add some logging to help with debugging
