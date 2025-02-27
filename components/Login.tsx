@@ -82,18 +82,18 @@
 
 
 //       // Wait 4 seconds before navigation
-//       setTimeout(() => {
-//         setLoading(false);
-//         if (passwordUpdateRequired) {
-//           navigation.navigate("ChangePassword", { empid } as any);
-//         } else {
-//           if (jobRole === "Collection Officer") {
-//             navigation.navigate("Main", { screen: "Dashboard" });
-//           } else {
-//             navigation.navigate("Main", { screen: "ManagerDashboard" });
-//           }
-//         }
-//       }, 4000);
+      // setTimeout(() => {
+      //   setLoading(false);
+      //   if (passwordUpdateRequired) {
+      //     navigation.navigate("ChangePassword", { empid } as any);
+      //   } else {
+      //     if (jobRole === "Collection Officer") {
+      //       navigation.navigate("Main", { screen: "Dashboard" });
+      //     } else {
+      //       navigation.navigate("Main", { screen: "ManagerDashboard" });
+      //     }
+      //   }
+      // }, 4000);
 //     } catch (error) {
 //       setLoading(false);
 //       console.error("Login error:", error);
@@ -342,13 +342,14 @@ const handleLogin = async () => {
       } else if (response.status === 401) {
         Alert.alert("Error", "Invalid Password. Please try again.");
       } else {
+        console.log("Login error:", data);
         Alert.alert("Error", data.message || "An error occurred. Try again.");
       }
       return;
     }
 
     // Login successful
-    const { token, jobRole, empId } = data;
+    const { token,passwordUpdateRequired, jobRole, empId } = data;
     await AsyncStorage.setItem("token", token);
     await AsyncStorage.setItem("jobRole", jobRole);
     await AsyncStorage.setItem("empid", empId.toString());
@@ -356,13 +357,25 @@ const handleLogin = async () => {
     // Emit the login event to the Socket.IO server
     socket.emit('login', { empId: empId });
 
-    setLoading(false);
-    // Navigate based on job role
-    if (jobRole === "Collection Officer") {
-      navigation.navigate("Main", { screen: "Dashboard" });
-    } else {
-      navigation.navigate("Main", { screen: "ManagerDashboard" });
-    }
+    // setLoading(false);
+    // // Navigate based on job role
+    // if (jobRole === "Collection Officer") {
+    //   navigation.navigate("Main", { screen: "Dashboard" });
+    // } else {
+    //   navigation.navigate("Main", { screen: "ManagerDashboard" });
+    // }
+    setTimeout(() => {
+      setLoading(false);
+      if (passwordUpdateRequired) {
+        navigation.navigate("ChangePassword", { empid } as any);
+      } else {
+        if (jobRole === "Collection Officer") {
+          navigation.navigate("Main", { screen: "Dashboard" });
+        } else {
+          navigation.navigate("Main", { screen: "ManagerDashboard" });
+        }
+      }
+    }, 4000);
   } catch (error) {
     setLoading(false);
     console.error("Login error:", error);
