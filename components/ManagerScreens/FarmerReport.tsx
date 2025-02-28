@@ -80,6 +80,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
   
   console.log('Farmer Report:', route.params);
   const [crops, setCrops] = useState<Crop[]>([]);
+  const totalSum = crops.reduce((sum:number, crop:any) => sum + parseFloat(crop.total || 0), 0);
 
 
   const fetchOfficerDetails = async () => {
@@ -500,7 +501,13 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
             <Text className="w-32 p-2 border-b border-gray-300">{crop.total}</Text>
           </View>
         ))}
+
+
+        
       </View>
+      
+      
+      
     </ScrollView>
   </View>
 )}
@@ -520,6 +527,11 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
         </View>
       </View>
     )} */}
+        <View className="p-2 border-t border-gray-300">
+          <Text className="font-bold">Total Sum: Rs {totalSum.toFixed(2)}</Text>
+        </View>
+
+    
 
       {details && details.qrCode  && officerDetails && officerDetails.QRCode && (
           <View className="mb-4 flex-row items-center justify-start">

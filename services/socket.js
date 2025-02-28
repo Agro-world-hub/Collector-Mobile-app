@@ -1,7 +1,7 @@
 // socket-service.js
 import io from 'socket.io-client';
 // Create a singleton socket instance
-const socket = io('http://192.168.8.100:3005', {
+const socket = io('http://192.168.43.180:3005', {
   reconnection: true,
   reconnectionAttempts: 5,
   reconnectionDelay: 1000

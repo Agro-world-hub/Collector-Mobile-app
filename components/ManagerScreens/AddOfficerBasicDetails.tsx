@@ -415,6 +415,7 @@ import environment from '@/environment/environment';
 import countryCodes from './countryCodes.json';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import * as ImagePicker from 'expo-image-picker';
+import { SelectList } from "react-native-dropdown-select-list";
 
 type AddOfficerBasicDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -450,6 +451,7 @@ const AddOfficerBasicDetails: React.FC = () => {
     nicNumber: '',
     email: '',
     profileImage: '',
+    jobRole: '',
   });
 
   const toggleLanguage = (language: keyof typeof preferredLanguages) => {
@@ -509,6 +511,45 @@ const AddOfficerBasicDetails: React.FC = () => {
     }
   };
 
+  // const handleNext = () => {
+  //   if (
+  //     !formData.userId ||
+  //     !formData.firstNameEnglish ||
+  //     !formData.lastNameEnglish ||
+  //     !phoneNumber1 || // Ensure phone number 1 is provided
+  //     !formData.nicNumber ||
+  //     !formData.email
+  //   ) {
+  //     Alert.alert('Error', 'Please fill in all required fields.');
+  //     return;
+  //   }
+
+  //   // Update formData with separate phone codes and numbers
+  //   const updatedFormData = {
+  //     ...formData,
+  //     phoneCode1: phoneCode1,
+  //     phoneNumber1: phoneNumber1,
+  //     phoneCode2: phoneCode2,
+  //     phoneNumber2: phoneNumber2,
+  //   };
+
+  //   // Add the base64 image to formData
+  //   updatedFormData.profileImage = selectedImage || '';
+
+  //   console.log('Form Data:', updatedFormData, preferredLanguages, type, jobRole);
+
+  //   const prefixedUserId =
+  //     jobRole === 'Collection Officer' ? `COO${formData.userId}` : formData.userId;
+
+  //   // Navigate to the next screen with the updated data
+  //   navigation.navigate('AddOfficerAddressDetails', {
+  //     formData: { ...updatedFormData, userId: prefixedUserId },
+  //     type,
+  //     preferredLanguages,
+  //     jobRole,
+  //   });
+  // };
+  
   const handleNext = () => {
     if (
       !formData.userId ||
@@ -521,7 +562,7 @@ const AddOfficerBasicDetails: React.FC = () => {
       Alert.alert('Error', 'Please fill in all required fields.');
       return;
     }
-
+  
     // Update formData with separate phone codes and numbers
     const updatedFormData = {
       ...formData,
@@ -530,15 +571,15 @@ const AddOfficerBasicDetails: React.FC = () => {
       phoneCode2: phoneCode2,
       phoneNumber2: phoneNumber2,
     };
-
-    // Add the base64 image to formData
+  
+    // Set the profileImage to an empty string if no image was picked
     updatedFormData.profileImage = selectedImage || '';
-
+  
     console.log('Form Data:', updatedFormData, preferredLanguages, type, jobRole);
-
+  
     const prefixedUserId =
       jobRole === 'Collection Officer' ? `COO${formData.userId}` : formData.userId;
-
+  
     // Navigate to the next screen with the updated data
     navigation.navigate('AddOfficerAddressDetails', {
       formData: { ...updatedFormData, userId: prefixedUserId },
@@ -548,6 +589,38 @@ const AddOfficerBasicDetails: React.FC = () => {
     });
   };
   
+  const [error1, setError1] = useState('');
+  const [error2, setError2] = useState('');
+  
+  
+  // Validation function for phone numbers
+  const validatePhoneNumber = (input: string) => /^[0-9]{9}$/.test(input)
+
+  // Handle phone number 1 change
+  const handlePhoneNumber1Change = (input: string) => {
+    setPhoneNumber1(input);
+    if (!validatePhoneNumber(input)) {
+      setError1('Phone number 1 must be 9 digits.');
+    } else {
+      setError1('');
+    }
+  };
+
+  // Handle phone number 2 change
+  const handlePhoneNumber2Change = (input: string) => {
+    setPhoneNumber2(input);
+    if (!validatePhoneNumber(input)) {
+      setError2('Phone number 2 must be 9 digits.');
+    } else {
+      setError2('');
+    }
+  };
+  
+  const jobRoles = [
+    { key: "1", value: "Select Job Role" },
+    { key: "2", value: "Collection Officer" },
+    // Add more roles as necessary
+  ];
   
   return (
     <ScrollView className="flex-1 bg-white">
@@ -578,6 +651,7 @@ const AddOfficerBasicDetails: React.FC = () => {
         <Ionicons name="pencil" size={18} color="white" />
       </TouchableOpacity>
     </View>
+
 
 
       {/* Type Selector */}
@@ -636,20 +710,27 @@ const AddOfficerBasicDetails: React.FC = () => {
       <View className="px-8">
        {/* Job Role Dropdown */}
        <View className="pb-2 mb-4">
-        <Text className="font-semibold text-sm mb-2">Job Role:</Text>
-        <View className="border border-gray-300 rounded-lg pb-3">
-          <Picker
-            selectedValue={jobRole}
-            onValueChange={(itemValue) => handleJobRoleChange(itemValue)}
-            style={{ height: 40, width: '100%' }}
-          >
-            <Picker.Item label="--Select Job Role--" value="Select Job Role" />
-            <Picker.Item label="Manager" value="Manager" />
-            <Picker.Item label="Supervisor" value="Supervisor" />
-            <Picker.Item label="Collection Officer" value="Collection Officer" />
-          </Picker>
+          <Text className="font-semibold text-sm mb-2">Job Role:</Text>
+          <View className="border border-gray-300 rounded-lg pb-3">
+            <SelectList
+              setSelected={handleJobRoleChange}
+              data={jobRoles}
+              save="value"
+              defaultOption={{
+                key: "1",
+                value: formData.jobRole || "Select Job Role",
+              }}
+              boxStyles={{
+                height: 40,
+                borderWidth: 1,
+                borderColor: "#ccc",
+                borderRadius: 5,
+                paddingLeft: 10,
+              }}
+              dropdownStyles={{ backgroundColor: "white", borderRadius: 5 }}
+            />
+          </View>
         </View>
-      </View>
 
    
       {/* User ID Field */}
@@ -720,69 +801,69 @@ const AddOfficerBasicDetails: React.FC = () => {
 
 
            {/* Phone Number 1 */}
-<View className="mb-4">
-  {/* Phone Number 1 */}
-  <View className="flex-row items-center border border-gray-300 rounded-lg">
-    <View style={{ flex: 4, alignItems: 'center' }}>
-      <Picker
-        selectedValue={phoneCode1}
-        onValueChange={(itemValue) => setPhoneCode1(itemValue)}
-        style={{
-          width: '100%',
-        }}
-      >
-        {countryCodes.map((country) => (
-          <Picker.Item
-            key={country.code}
-            label={`${country.code} (${country.dial_code})`}
-            value={country.dial_code}
-          />
-        ))}
-      </Picker>
-    </View>
-    <View style={{ flex: 7 }}>
-      <TextInput
-        placeholder="--Phone Number 1--"
-        keyboardType="phone-pad"
-        value={phoneNumber1}
-        onChangeText={setPhoneNumber1}
-        className="px-3 py-2 text-gray-700"
-      />
-    </View>
-  </View>
-</View>
+           <View className="mb-4">
+        <View className="flex-row items-center border border-gray-300 rounded-lg">
+          <View style={{ flex: 4, alignItems: 'center' }}>
+            <Picker
+              selectedValue={phoneCode1}
+              onValueChange={(itemValue) => setPhoneCode1(itemValue)}
+              style={{ width: '100%' }}
+            >
+              {countryCodes.map((country) => (
+                <Picker.Item
+                  key={country.code}
+                  label={`${country.code} (${country.dial_code})`}
+                  value={country.dial_code}
+                />
+              ))}
+            </Picker>
+          </View>
+          <View style={{ flex: 7 }}>
+            <TextInput
+              placeholder="--Phone Number 1--"
+              keyboardType="phone-pad"
+              value={phoneNumber1}
+              onChangeText={handlePhoneNumber1Change}
+              className="px-3 py-2 text-gray-700"
+            />
+           
+          </View>
+        </View>
+        {error1 ? <Text style={{ color: 'red' }}>{error1}</Text> : null}
+      </View>
 
-{/* Phone Number 2 */}
-<View className="mb-4">
-  <View className="flex-row items-center border border-gray-300 rounded-lg">
-    <View style={{ flex: 4, alignItems: 'center' }}>
-      <Picker
-        selectedValue={phoneCode2}
-        onValueChange={(itemValue) => setPhoneCode2(itemValue)}
-        style={{
-          width: '100%',
-        }}
-      >
-        {countryCodes.map((country) => (
-          <Picker.Item
-            key={country.code}
-            label={`${country.code} (${country.dial_code})`}
-            value={country.dial_code}
-          />
-        ))}
-      </Picker>
-    </View>
-    <View style={{ flex: 7 }}>
-      <TextInput
-        placeholder="--Phone Number 2--"
-        keyboardType="phone-pad"
-        value={phoneNumber2}
-        onChangeText={setPhoneNumber2}
-        className="px-3 py-2 text-gray-700"
-      />
-    </View>
-  </View>
-</View>
+      {/* Phone Number 2 */}
+      <View className="mb-4">
+        <View className="flex-row items-center border border-gray-300 rounded-lg">
+          <View style={{ flex: 4, alignItems: 'center' }}>
+            <Picker
+              selectedValue={phoneCode2}
+              onValueChange={(itemValue) => setPhoneCode2(itemValue)}
+              style={{ width: '100%' }}
+            >
+              {countryCodes.map((country) => (
+                <Picker.Item
+                  key={country.code}
+                  label={`${country.code} (${country.dial_code})`}
+                  value={country.dial_code}
+                />
+              ))}
+            </Picker>
+          </View>
+          <View style={{ flex: 7 }}>
+            <TextInput
+              placeholder="--Phone Number 2--"
+              keyboardType="phone-pad"
+              value={phoneNumber2}
+              onChangeText={handlePhoneNumber2Change}
+              className="px-3 py-2 text-gray-700"
+            />
+           
+          </View>
+          
+        </View>
+        {error2 ? <Text style={{ color: 'red' }}>{error2}</Text> : null}
+      </View>
 
      
 

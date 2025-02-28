@@ -469,8 +469,8 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
     
     // Send login event when component mounts
     // Add timestamp for latency measurement
-    console.log('Emitting login with empId:', officerId);
-    socket.emit('login', { empId: officerId, timestamp: Date.now() });
+    // console.log('Emitting login with empId:', officerId);
+    // socket.emit('login', { empId: officerId, timestamp: Date.now() });
     
     // Clean up event listeners when component unmounts
     return () => {
