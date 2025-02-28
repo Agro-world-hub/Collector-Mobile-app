@@ -110,12 +110,12 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
 
   {/* Conditional Rendering for Daily Target */}
     {targetPercentage !== null && targetPercentage < 100 ? (
-        <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-2 border-[#DF9301]">
+        <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#DF9301]">
           <Text className="text-center text-yellow-600 font-bold">🚀 Keep Going!</Text>
           <Text className="text-center text-gray-500">You haven't achieved your daily target today</Text>
         </View>
       ) : (
-        <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-2 border-[#2AAD7A]">
+        <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#2AAD7A]">
           <View className="flex-row justify-center items-center mb-2">
             <Image 
               source={require("../assets/images/hand.png")} // Replace with your image path
@@ -144,7 +144,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
                  </View>
                </View>
       </View> */}
-      <View className="flex items-center justify-center my-6">
+      <View className="flex items-center justify-center my-6 mt-[13%]">
   <View className="relative">
   <CircularProgress
                    size={100}
@@ -163,7 +163,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
 
 
       {/* Action Buttons */}
-      <View className="flex-row flex-wrap justify-between p-5 mt-[4%]">
+      <View className="flex-row flex-wrap justify-between p-6 mt-[-5%]">
 
         <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("QRScanner"as any)}>
           <Image

@@ -107,12 +107,12 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
 
        {/* Conditional Rendering for Daily Target */}
           {targetPercentage !== null && targetPercentage < 100 ? (
-              <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-2 border-[#DF9301]">
+              <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#DF9301]">
                 <Text className="text-center text-yellow-600 font-bold">🚀 Keep Going!</Text>
                 <Text className="text-center text-gray-500">You haven't achieved your daily target today</Text>
               </View>
             ) : (
-              <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-2 border-[#2AAD7A]">
+              <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#2AAD7A]">
                 <View className="flex-row justify-center items-center mb-2">
                   <Image 
                     source={require("../../assets/images/hand.png")} 
@@ -126,7 +126,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             )}
 
       {/* Target Progress */}
-      <View className="flex-row items-center justify-between mb-2 p-7 mt-2">
+      <View className="flex-row items-center justify-between mb-[-5%] p-7 mt-[4%]">
         <Text className="text-gray-700 font-bold text-lg">Your Target Progress</Text>
         <View className="relative">
           <CircularProgress
@@ -143,7 +143,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
       </View>
 
       {/* Action Buttons */}
-      <View className="flex-row flex-wrap justify-between p-5 mt-[5%]">
+      <View className="flex-row flex-wrap justify-between p-5 mt-[5%] mb-[8%]">
         <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("CenterTarget" as any)}>
           <Image
             source={require("../../assets/images/ct.png")}

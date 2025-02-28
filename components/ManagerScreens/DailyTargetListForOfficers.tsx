@@ -94,14 +94,14 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
 
   return (
-    <View className="flex-1 bg-black p-4">
+    <View className="flex-1 bg-[#282828] ">
       {/* Header */}
-      <View className="bg-black px-4 py-3 flex-row justify-between items-center">
+      <View className="bg-[#282828] px-4 py-3 flex-row justify-between items-center">
         <Text className="text-white text-lg font-bold ml-[35%]">Daily Target</Text>
       </View>
 
       {/* Toggle Buttons */}
-      <View className="flex-row justify-center items-center py-4 bg-black">
+      <View className="flex-row justify-center items-center py-4 bg-[#282828]">
         {/* To Do Button */}
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
@@ -140,7 +140,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
       {/* Scrollable Table */}
       <ScrollView
         horizontal
-        className="border border-gray-300 bg-white"
+        className=" bg-white"
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <View>
