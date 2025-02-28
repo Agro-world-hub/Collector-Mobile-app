@@ -750,7 +750,7 @@ const AddOfficerAddressDetails: React.FC = () => {
     } catch (error) {
       console.error('Error submitting officer data:', error);
 
-      if (error.response && error.response.status === 400) {
+      if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
         const serverErrors = error.response.data.error;
         if (serverErrors) {
           if (typeof serverErrors === 'string') {

@@ -420,7 +420,7 @@ import { KeyboardAvoidingView } from 'react-native';
 import { Platform } from 'react-native';
 import { AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SelectList } from "react-native-dropdown-select-list";
+
 
 type AddOfficerBasicDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
