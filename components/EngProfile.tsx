@@ -393,6 +393,18 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
     useState<boolean>(false);
   const { t } = useTranslation();
 
+  const route = useRoute();
+  const currentScreen = route.name;
+  const handleBackPress = () => {
+    if (currentScreen === "EngProfile") {
+      navigation.reset({
+        index: 0,  
+        routes: [{ name: "Main" }],  
+      });
+    } else {
+      navigation.goBack();
+    }
+  };
   const complaintOptions = [t("Report Complaint"), t("View Complaint History")];
 
   const handleComplaintSelect = (complaint: string) => {
@@ -401,7 +413,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
     if (complaint === t("Report Complaint")) {
       navigation.navigate("ComplainPage" as any, { userId: 0 });
     } else if (complaint === t("View Complaint History")) {
-      navigation.navigate("ComplainHistory" as  any);
+      navigation.navigate("Main",{screen:"ComplainHistory" });
     }
   };
 
@@ -470,13 +482,14 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
     navigation.navigate("Profile");
   };
 
+
   return (
     <View
       className="flex-1 bg-white "
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
     >
       {/* Back Button */}
-      <TouchableOpacity onPress={() => navigation.goBack()} className="">
+      <TouchableOpacity onPress={() => handleBackPress()} className="">
         <AntDesign name="left" size={24} color="#000502" />
       </TouchableOpacity>
 

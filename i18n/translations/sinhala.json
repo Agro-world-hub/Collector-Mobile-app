@@ -1,6 +1,53 @@
 {
   "SignIn": {
     "Wellcome": "සාදරයෙන් පිළිගනිමු!"
+  },
+  "Districts": {
+    "selectDistrict": "Select a District",
+    "Ampara": "Ampara",
+    "Anuradhapura": "Anuradhapura",
+    "Badulla": "Badulla",
+    "Batticaloa": "Batticaloa",
+    "Colombo": "Colombo",
+    "Galle": "Galle",
+    "Gampaha": "Gampaha",
+    "Hambantota": "Hambantota",
+    "Jaffna": "Jaffna",
+    "Kalutara": "Kalutara",
+    "Kandy": "Kandy",
+    "Kegalle": "Kegalle",
+    "Kilinochchi": "Kilinochchi",
+    "Kurunegala": "Kurunegala",
+    "Mannar": "Mannar",
+    "Matale": "Matale",
+    "Matara": "Matara",
+    "Moneragala": "Moneragala",
+    "Mullaitivu": "Mullaitivu",
+    "NuwaraEliya": "Nuwara Eliya",
+    "Polonnaruwa": "Polonnaruwa",
+    "Puttalam": "Puttalam",
+    "Rathnapura": "Rathnapura",
+    "Trincomalee": "Trincomalee",
+    "Vavuniya": "Vavuniya"
+  },  
+  "ReportComplaint": {
+    "LNG": "si",
+    "fillAllFields": "කරුණාකර සියලු විස්තර පුරවන්න.",
+    "success": "සාර්ථකයි",
+    "complaintSuccess": "පැමිණිල්ල එක් කිරීම සාර්ථකයි!",
+    "complaintFailed": "පැමිණිල්ල එක් කිරීම අසාර්ථකයි. කරුණාකර නැවත උත්සාහ කරන්න.",
+    "Tellus": "ඔබගේ",
+    "Problem": "පැමිණිල්ල",
+    "selectCategory": "පැමිණිලි කාණ්ඩය තෝරන්න",
+    "finace": "මූල්‍යමය",
+    "sorry": "සමාවන්න",
+    "Finance": "මූල්‍යමය",
+    "Agriculture": "කෘෂිකර්ම",
+    "Call Center": "ඇමතුම් සහය",
+    "Procuiment": "මිලදී ගැනීම්",
+    "WewilRespond": "දින 2ක් ඇතුළත ඔබගේ ගැටලුවට ප්‍රතිචාර දැක්වීමට කටයුතු කරන්නෙමු.",
+    "Kindlysubmit": "කරුණාකර ඔබේ පැමිණිල්ල මෙහි ඉදිරිපත් කරන්න.",
+    "Submit": "තහවුරු කරන්න",
+    "Other": "වෙනත්"
   }
-  
 }

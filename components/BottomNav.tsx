@@ -137,6 +137,8 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
   console.log('Current tab:', currentTabName);
   if (currentTabName === 'PriceChart') {
     currentTabName = 'SearchPriceScreen';
+  }else if (currentTabName === 'EditTargetManager' || currentTabName === 'PassTargetScreen' || currentTabName === 'RecieveTargetScreen' ) {
+    currentTabName = 'DailyTarget';
   }
   
   // if (userRole === 'Collection Center Manager') {

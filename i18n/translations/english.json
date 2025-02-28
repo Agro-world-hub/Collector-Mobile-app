@@ -29,6 +29,25 @@
     "Rathnapura": "Rathnapura",
     "Trincomalee": "Trincomalee",
     "Vavuniya": "Vavuniya"
-  }
-  
+  },  
+  "ReportComplaint": {
+    "LNG": "en",
+    "fillAllFields": "Please fill in all fields.",
+    "success": "Success",
+    "complaintSuccess": "Complaint added successfully!",
+    "complaintFailed": "Failed to add a complaint. Please try again.",
+    "Tellus": "Tell us the",
+    "Problem": "Problem",
+    "selectCategory": "Select Complain Category",
+    "finace": "Finance",
+    "sorry": "Sorry",
+    "Finance": "Finance",
+    "Agriculture": "Agriculture",
+    "Call Center": "Call Center",
+    "Procuiment": "Procuiment",
+    "WewilRespond": "We will respond to you within two days of receiving your message.",
+    "Kindlysubmit": "Kindly submit your complaint here..",
+    "Submit": "Submit",
+    "Other": "Other"
+  }  
 }

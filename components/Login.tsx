@@ -338,7 +338,7 @@ const handleLogin = async () => {
     if (!response.ok) {
       setLoading(false);
       if (response.status === 404) {
-        Alert.alert("Error", "Invalid Employee ID. Please try again.");
+        Alert.alert("Error", "Invalid EMP ID & Password ");
       } else if (response.status === 401) {
         Alert.alert("Error", "Invalid Password. Please try again.");
       } else {
