@@ -415,6 +415,11 @@ import environment from '@/environment/environment';
 import countryCodes from './countryCodes.json';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import * as ImagePicker from 'expo-image-picker';
+import { SelectList } from 'react-native-dropdown-select-list';
+import { KeyboardAvoidingView } from 'react-native';
+import { Platform } from 'react-native';
+import { AppState } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SelectList } from "react-native-dropdown-select-list";
 
 type AddOfficerBasicDetailsNavigationProp = StackNavigationProp<
@@ -510,6 +515,16 @@ const AddOfficerBasicDetails: React.FC = () => {
       }
     }
   };
+
+  const clearFormData = async () => {
+    try {
+      await AsyncStorage.removeItem('AddOfficerFormData');
+    } catch (error) {
+      console.error("Error clearing form data:", error);
+    }
+  };
+  
+  
 
   // const handleNext = () => {
   //   if (
@@ -623,12 +638,32 @@ const AddOfficerBasicDetails: React.FC = () => {
   ];
   
   return (
+      <KeyboardAvoidingView 
+        behavior={Platform.OS ==="ios" ? "padding" : "height"}
+        enabled
+        className="flex-1"
+        >
     <ScrollView className="flex-1 bg-white">
       {/* Header */}
       <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
-        <TouchableOpacity onPress={() => navigation.goBack()} className="pr-4">
+        {/* <TouchableOpacity onPress={() => navigation.goBack()} className="pr-4">
            <AntDesign name="left" size={24} color="#000502" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+       <TouchableOpacity
+  onPress={async () => {
+    try {
+      await AsyncStorage.removeItem('officerFormData'); // Clear stored data
+      navigation.goBack();
+    } catch (error) {
+      console.error("Error clearing form data:", error);
+    }
+  }}
+  className="pr-4"
+>
+  <AntDesign name="left" size={24} color="#000502" />
+</TouchableOpacity>
+
+
         <Text className="text-lg font-bold ml-[25%]">Add Officer</Text>
       </View>
 
@@ -897,6 +932,7 @@ const AddOfficerBasicDetails: React.FC = () => {
         </TouchableOpacity>
       </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

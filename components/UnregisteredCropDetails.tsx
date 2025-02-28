@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView,Image, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView,Image, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp,useFocusEffect,useRoute } from '@react-navigation/native';
 import { RootStackParamList } from './types';
@@ -370,6 +370,11 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     
 
     return (
+         <KeyboardAvoidingView 
+                    behavior={Platform.OS ==="ios" ? "padding" : "height"}
+                    enabled
+                    className="flex-1"
+                    >
         <ScrollView className="flex-1 bg-gray-50 px-6 py-4" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
             {/* <View className="flex-row items-center mt-1 mb-6">
                 <TouchableOpacity onPress={() => navigation.goBack()} className="p-2">
@@ -485,6 +490,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                 }  
             </View>
         </ScrollView>
+        </KeyboardAvoidingView>
     );
 };
 

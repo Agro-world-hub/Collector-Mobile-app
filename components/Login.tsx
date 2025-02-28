@@ -82,18 +82,18 @@
 
 
 //       // Wait 4 seconds before navigation
-//       setTimeout(() => {
-//         setLoading(false);
-//         if (passwordUpdateRequired) {
-//           navigation.navigate("ChangePassword", { empid } as any);
-//         } else {
-//           if (jobRole === "Collection Officer") {
-//             navigation.navigate("Main", { screen: "Dashboard" });
-//           } else {
-//             navigation.navigate("Main", { screen: "ManagerDashboard" });
-//           }
-//         }
-//       }, 4000);
+      // setTimeout(() => {
+      //   setLoading(false);
+      //   if (passwordUpdateRequired) {
+      //     navigation.navigate("ChangePassword", { empid } as any);
+      //   } else {
+      //     if (jobRole === "Collection Officer") {
+      //       navigation.navigate("Main", { screen: "Dashboard" });
+      //     } else {
+      //       navigation.navigate("Main", { screen: "ManagerDashboard" });
+      //     }
+      //   }
+      // }, 4000);
 //     } catch (error) {
 //       setLoading(false);
 //       console.error("Login error:", error);
@@ -199,6 +199,8 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -340,13 +342,14 @@ const handleLogin = async () => {
       } else if (response.status === 401) {
         Alert.alert("Error", "Invalid Password. Please try again.");
       } else {
+        console.log("Login error:", data);
         Alert.alert("Error", data.message || "An error occurred. Try again.");
       }
       return;
     }
 
     // Login successful
-    const { token, jobRole, empId } = data;
+    const { token,passwordUpdateRequired, jobRole, empId } = data;
     await AsyncStorage.setItem("token", token);
     await AsyncStorage.setItem("jobRole", jobRole);
     await AsyncStorage.setItem("empid", empId.toString());
@@ -354,13 +357,25 @@ const handleLogin = async () => {
     // Emit the login event to the Socket.IO server
     socket.emit('login', { empId: empId });
 
-    setLoading(false);
-    // Navigate based on job role
-    if (jobRole === "Collection Officer") {
-      navigation.navigate("Main", { screen: "Dashboard" });
-    } else {
-      navigation.navigate("Main", { screen: "ManagerDashboard" });
-    }
+    // setLoading(false);
+    // // Navigate based on job role
+    // if (jobRole === "Collection Officer") {
+    //   navigation.navigate("Main", { screen: "Dashboard" });
+    // } else {
+    //   navigation.navigate("Main", { screen: "ManagerDashboard" });
+    // }
+    setTimeout(() => {
+      setLoading(false);
+      if (passwordUpdateRequired) {
+        navigation.navigate("ChangePassword", { empid } as any);
+      } else {
+        if (jobRole === "Collection Officer") {
+          navigation.navigate("Main", { screen: "Dashboard" });
+        } else {
+          navigation.navigate("Main", { screen: "ManagerDashboard" });
+        }
+      }
+    }, 4000);
   } catch (error) {
     setLoading(false);
     console.error("Login error:", error);
@@ -371,6 +386,11 @@ const handleLogin = async () => {
 
 
   return (
+    <KeyboardAvoidingView 
+    behavior={Platform.OS ==="ios" ? "padding" : "height"}
+    enabled
+    className="flex-1"
+    >
     <ScrollView
       className="flex-1 w-full bg-white"
       keyboardShouldPersistTaps="handled"
@@ -379,10 +399,10 @@ const handleLogin = async () => {
         <AntDesign name="left" size={24} color="#000502" />
       </TouchableOpacity>
 
-      <View className="items-center pt-[10%]">
+      <View className="items-center pt-[-20%]">
         <Image source={loginImage} />
         <Text className="font-bold text-2xl pt-[7%]">
-          {t("SignIn.Wellcome")}
+          {t("Welcome!")}
         </Text>
       </View>
 
@@ -403,8 +423,9 @@ const handleLogin = async () => {
       ) : (
         <View className="p-6">
           <Text className="text-base pb-[2%] font-light">Employee ID</Text>
-          <View className="flex-row items-center border rounded-3xl w-full h-[53px] mb-5 bg-white px-3">
-            <Icon name="email" size={24} color="green" />
+          <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-full h-[53px] mb-5 bg-white px-3">
+            {/* <Icon name="email" size={24} color="green" /> */}
+            <AntDesign name="user" size={24} color="green" />
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
               placeholder="Employee ID"
@@ -414,7 +435,7 @@ const handleLogin = async () => {
           </View>
 
           <Text className="text-base pb-[2%] font-light">Password</Text>
-          <View className="flex-row items-center border rounded-3xl w-full h-[53px] mb-10 bg-white px-3">
+          <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-full h-[53px] mb-10 bg-white px-3">
             <Icon name="lock" size={24} color="green" />
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
@@ -448,6 +469,7 @@ const handleLogin = async () => {
         </View>
       )}
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
