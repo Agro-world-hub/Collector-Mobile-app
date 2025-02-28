@@ -208,7 +208,11 @@ function MainTabNavigator() {
      <Tab.Screen name="UnregisteredCropDetails" component={UnregisteredCropDetails as any} />
      <Tab.Screen name="SearchFarmer" component={SearchFarmer} />
       <Tab.Screen name="ManagerDashboard" component={ManagerDashboard} />
-      
+      <Stack.Screen name="DailyTargetList" component={DailyTargetList} />
+      <Stack.Screen name="CollectionOfficersList" component={CollectionOfficersList }/>
+      <Stack.Screen name="DailyTarget" component={DailyTarget as any} />
+
+
       
     </Tab.Navigator>
   );
@@ -367,7 +371,10 @@ const cleanupSocketListeners = () => {
   return (
     <LanguageProvider>
     <GestureHandlerRootView style={{ flex: 1 }}>
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator      screenOptions={{
+            headerShown: false,
+            gestureEnabled: false, // Disable swipe gestures globally
+          }}>
       <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="ChangePassword" component={ChangePassword as any}/>
@@ -404,10 +411,10 @@ const cleanupSocketListeners = () => {
       <Stack.Screen name="ReportPage" component={ReportPage} />
       {/* <Stack.Screen name="SearchPriceScreen" component={SearchPriceScreen} />  */}
       {/* <Stack.Screen name="PriceChart" component={PriceChart as any}/> */}
-      <Stack.Screen name="CollectionOfficersList" component={CollectionOfficersList }/>
+      {/* <Stack.Screen name="CollectionOfficersList" component={CollectionOfficersList }/> */}
       <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} />
       <Stack.Screen name="ReportGenerator" component={ReportGenerator as any} />
-      <Stack.Screen name="DailyTargetList" component={DailyTargetList} />
+      {/* <Stack.Screen name="DailyTargetList" component={DailyTargetList} /> */}
       <Stack.Screen name="AddOfficerBasicDetails" component={AddOfficerBasicDetails} />
       <Stack.Screen name="AddOfficerAddressDetails" component={AddOfficerAddressDetails} />
       <Stack.Screen name="ClaimOfficer" component={ClaimOfficer} />
@@ -415,7 +422,7 @@ const cleanupSocketListeners = () => {
       <Stack.Screen name="OTPE" component={OTPE} />
       <Stack.Screen name="FarmerReport" component={FarmerReport as any} />
       <Stack.Screen name="EditTargetScreen" component={EditTargetScreen as any} />
-      <Stack.Screen name="DailyTarget" component={DailyTarget as any} />
+      {/* <Stack.Screen name="DailyTarget" component={DailyTarget as any} /> */}
       <Stack.Screen name="PassTargetScreen" component={PassTargetScreen as any} /> 
       <Stack.Screen name="NoCollectionCenterScreen" component={NoCollectionCenterScreen} />
       <Stack.Screen name="RecieveTargetScreen" component={RecieveTargetScreen as any} />

@@ -135,7 +135,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
             Enter Farmer's NIC number
           </Text>
 
-          <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2 bg-gray-100 bg-white">
+          <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2  bg-white">
 
             <TextInput
               value={NICnumber}
