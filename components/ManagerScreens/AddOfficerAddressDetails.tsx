@@ -603,7 +603,7 @@ import environment from '@/environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import countryCodes from './countryCodes.json';
-import { Picker } from '@react-native-picker/picker';
+import { SelectList } from "react-native-dropdown-select-list";
 import { ActivityIndicator } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native';
 import { Platform } from 'react-native';
@@ -626,7 +626,7 @@ const AddOfficerAddressDetails: React.FC = () => {
     houseNumber: '',
     streetName: '',
     city: '',
-    country: '',
+    country: 'Sri Lanka', // Always set to Sri Lanka
     province: '',
     district: '',
     accountHolderName: '',
@@ -703,7 +703,6 @@ const AddOfficerAddressDetails: React.FC = () => {
       !formData.houseNumber ||
       !formData.streetName ||
       !formData.city ||
-      !formData.country ||
       !formData.accountHolderName ||
       !formData.accountNumber ||
       !formData.confirmAccountNumber ||
@@ -718,20 +717,20 @@ const AddOfficerAddressDetails: React.FC = () => {
       return;
     }
 
-    try {
-      setLoading(true);
-      const token = await AsyncStorage.getItem('token');
-      const combinedData = {
-        ...basicDetails,
-        ...formData,
-        jobRole,
-        empType: type,
-        languages: Object.keys(preferredLanguages)
-          .filter((lang) => preferredLanguages[lang as keyof typeof preferredLanguages])
-          .join(', '), // Convert preferred languages to a comma-separated string
-        profileImage: formData.profileImage, // Add the profile image from the form data
-      };
+    // Make sure the country is always 'Sri Lanka' before submitting
+    const combinedData = {
+      ...basicDetails,
+      ...formData,
+      jobRole,
+      empType: type,
+      languages: Object.keys(preferredLanguages)
+        .filter((lang) => preferredLanguages[lang as keyof typeof preferredLanguages])
+        .join(', '), // Convert preferred languages to a comma-separated string
+      profileImage: formData.profileImage, // Add the profile image from the form data
+    };
 
+    try {
+      const token = await AsyncStorage.getItem('token');
       const response = await axios.post(
         `${environment.API_BASE_URL}api/collection-manager/collection-officer/add`,
         combinedData,
@@ -750,11 +749,77 @@ const AddOfficerAddressDetails: React.FC = () => {
       }
     } catch (error) {
       console.error('Error submitting officer data:', error);
-      Alert.alert('Error', 'An error occurred while creating the officer.');
-    } finally {
-      setLoading(false);
+
+      if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+        const serverErrors = error.response.data.error;
+        if (serverErrors) {
+          if (typeof serverErrors === 'string') {
+            Alert.alert('Error', serverErrors);
+          } else {
+            const errorMessages = Object.values(serverErrors).join('\n');
+            Alert.alert('Validation Errors', errorMessages);
+          }
+        } else {
+          Alert.alert('Error', 'An error occurred while creating the officer.');
+        }
+      } else {
+        Alert.alert('Error', 'An error occurred while creating the officer.');
+      }
     }
   };
+  
+  const jsonData = {
+    provinces: [
+      {
+        name: "Western",
+        districts: ["Colombo", "Gampaha", "Kalutara"]
+      },
+      {
+        name: "Central",
+        districts: ["Kandy", "Matale", "Nuwara Eliya"]
+      },
+      {
+        name: "Southern",
+        districts: ["Galle", "Matara", "Hambantota"]
+      },
+      {
+        name: "Eastern",
+        districts: ["Ampara", "Batticaloa", "Trincomalee"]
+      },
+      {
+        name: "Northern",
+        districts: ["Jaffna", "Kilinochchi", "Mannar"]
+      },
+      {
+        name: "North Western",
+        districts: ["Kurunegala", "Puttalam"]
+      },
+      {
+        name: "North Central",
+        districts: ["Anuradhapura", "Polonnaruwa"]
+      },
+      {
+        name: "Uva",
+        districts: ["Badulla", "Moneragala"]
+      },
+      {
+        name: "Sabaragamuwa",
+        districts: ["Ratnapura", "Kegalle"]
+      }
+    ]
+  };
+
+  const [districts, setDistricts] = useState<string[]>([]);
+
+  // Handle province change
+  const handleProvinceChange = (province: string) => {
+    setFormData({ ...formData, province, district: "" }); // Clear the district when province changes
+    const selectedProvince = jsonData.provinces.find(p => p.name === province);
+    if (selectedProvince) {
+      setDistricts(selectedProvince.districts);
+    }
+  };
+  
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} enabled className="flex-1">
@@ -767,52 +832,95 @@ const AddOfficerAddressDetails: React.FC = () => {
           <Text className="text-lg font-bold ml-[25%]">Add Officer</Text>
         </View>
 
-        {/* Address Details */}
-        <View className="px-8 mt-4">
-          <TextInput
-            placeholder="--House / Plot Number--"
-            value={formData.houseNumber}
-            onChangeText={(text) => handleInputChange('houseNumber', text)}
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
-          />
-          <TextInput
-            placeholder="--Street Name--"
-            value={formData.streetName}
-            onChangeText={(text) => handleInputChange('streetName', text)}
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
-          />
-          <TextInput
-            placeholder="--City--"
-            value={formData.city}
-            onChangeText={(text) => handleInputChange('city', text)}
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
-          />
-          <View className="border border-gray-300 rounded-lg mb-4">
-            <Picker
-              selectedValue={formData.country}
-              onValueChange={(value) => handleInputChange('country', value)}
-              className="text-gray-700 px-2 py-0"
-            >
-              <Picker.Item label="--Country--" value="" />
-              {countries.map((country) => (
-                <Picker.Item key={country.code} label={country.name} value={country.code} />
-              ))}
-            </Picker>
-          </View>
+      {/* Address Details */}
+      <View className="px-8 mt-4">
+        <TextInput
+          placeholder="--House / Plot Number--"
+          value={formData.houseNumber}
+          onChangeText={(text) => setFormData({ ...formData, houseNumber: text })}
+          className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+        />
+        <TextInput
+          placeholder="--Street Name--"
+          value={formData.streetName}
+          onChangeText={(text) => setFormData({ ...formData, streetName: text })}
+          className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+        />
+        <TextInput
+          placeholder="--City--"
+          value={formData.city}
+          onChangeText={(text) => setFormData({ ...formData, city: text })}
+          className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+        />
+        <TextInput
+          placeholder="--Country--"
+          value="Sri Lanka" // Always set to Sri Lanka
+          editable={false} // Make the input non-editable
+          className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+        />
 
-          <TextInput
-            placeholder="--Province--"
-            value={formData.province}
-            onChangeText={(text) => handleInputChange('province', text)}
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
-          />
-          <TextInput
-            placeholder="--District--"
-            value={formData.district}
-            onChangeText={(text) => handleInputChange('district', text)}
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+    
+        {/* <TextInput
+          placeholder="--Province--"
+          value={formData.province}
+          onChangeText={(text) => setFormData({ ...formData, province: text })}
+          className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+        />
+        <TextInput
+          placeholder="--District--"
+          value={formData.district}
+          onChangeText={(text) => setFormData({ ...formData, district: text })}
+          className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+        /> */}
+        
+        <View style={{ marginBottom: 10 }}>
+          {/* <Text style={{ fontSize: 18, marginBottom: 5 }}>Select Province</Text> */}
+          <SelectList
+            setSelected={(province:any) => handleProvinceChange(province)}
+            data={jsonData.provinces.map((province) => ({ key: province.name, value: province.name }))}
+            defaultOption={{ key: formData.province, value: formData.province }}
+            boxStyles={{
+              borderColor: "#cccccc",
+              borderWidth: 1,
+              borderRadius: 5,
+              padding: 10,
+            }}
+            dropdownStyles={{
+              borderRadius: 5,
+              borderWidth: 1,
+              borderColor: "#cccccc",
+            }}
+            search={true}
+            placeholder='Province'
           />
         </View>
+
+        {/* District Dropdown */}
+        {formData.province && (
+          <View style={{ marginBottom: 10 }}>
+            {/* <Text style={{ fontSize: 18, marginBottom: 5 }}>Select District</Text> */}
+            <SelectList
+              setSelected={(district:any) => setFormData({ ...formData, district })}
+              data={districts.map((district) => ({ key: district, value: district }))}
+              defaultOption={{ key: formData.district, value: formData.district }}
+              boxStyles={{
+                borderColor: "#cccccc",
+                borderWidth: 1,
+                borderRadius: 5,
+                padding: 10,
+              }}
+              dropdownStyles={{
+                borderRadius: 5,
+                borderWidth: 1,
+                borderColor: "#cccccc",
+              }}
+              search={true}
+              placeholder='Province'
+            />
+          </View>
+        )}
+      </View>
+    
 
         {/* Bank Details */}
         <View className="px-8 mt-4">

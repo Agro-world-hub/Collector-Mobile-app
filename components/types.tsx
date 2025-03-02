@@ -131,5 +131,6 @@ export type OfficerBasicDetailsFormData = {
   profileImage:string
   nicNumber: string;
   email: string;
+  jobRole:string;
 };
 
