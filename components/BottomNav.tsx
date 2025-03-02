@@ -139,6 +139,8 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
     currentTabName = 'SearchPriceScreen';
   }else if (currentTabName === 'EditTargetManager' || currentTabName === 'PassTargetScreen' || currentTabName === 'RecieveTargetScreen' ) {
     currentTabName = 'DailyTarget';
+  }else if (currentTabName === 'TransactionList') {
+    currentTabName = 'CollectionOfficersList';
   }
   
   // if (userRole === 'Collection Center Manager') {
@@ -389,6 +391,9 @@ const cleanupSocketListeners = () => {
 
   if (isKeyboardVisible) return null;
   return (
+    <View className={` ${
+        currentTabName === 'QRScanner' ? 'bg-black' : 'bg-white'
+      }`}>
     <View className="flex-row  justify-between items-center bg-[#21202B] py-3 px-6 rounded-t-3xl w-full">
       {tabs.map((tab, index) => {
         // Check if the current tab is focused
@@ -421,6 +426,7 @@ const cleanupSocketListeners = () => {
           </TouchableOpacity>
         );
       })}
+    </View>
     </View>
   );
 };

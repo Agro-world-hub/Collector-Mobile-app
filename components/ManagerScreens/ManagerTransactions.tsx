@@ -7,6 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { RootStackParamList } from '../types';
 import environment from '@/environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AntDesign } from '@expo/vector-icons';
 
 type ManagerTransactionsNavigationProp = StackNavigationProp<RootStackParamList, 'ManagerTransactions'>;
 
@@ -134,18 +135,23 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
       <View>
         {/* Header */}
         <View className="bg-[#2AAD7A] p-4 mt-[-10] rounded-b-[35px] shadow-md">
+          <TouchableOpacity onPress={() => navigation.goBack()} className="absolute mt-[10%] left-4">
+                    <AntDesign name="left" size={22} color="white" />
+                  </TouchableOpacity>
           <Text className="text-white text-lg font-bold ml-[28%] mt-[4%]">EMP ID:{empId} </Text>
           <View className="flex-row items-center justify-between mt-2">
             <Text className="text-white text-lg ml-[20%]">
               Selected Date: {selectedDate ? selectedDate.toISOString().split('T')[0] : 'N/A'}
             </Text>
-            <TouchableOpacity onPress={() => setShowDatePicker(true)} className="mb-6">
-              <Ionicons name="calendar-outline" size={24} color="white" />
+            <View className='mt-[-3%]'>
+            <TouchableOpacity onPress={() => setShowDatePicker(true)} className="mb-4">
+              <Ionicons name="calendar-outline" size={26} color="white" />
             </TouchableOpacity>
+            </View>
           </View>
         </View>
 
-        <View className="flex-row items-center bg-[#F5F1FC] px-4 py-2 rounded-full border border-black mt-[-18] mx-auto w-[90%] shadow-sm">
+        <View className="flex-row items-center bg-[#F7F7F7] px-4 py-2 rounded-full border border-[#444444] mt-[-18] mx-auto w-[90%] shadow-sm">
           <TextInput
             placeholder="Search By NIC Number, Name"
             placeholderTextColor="grey"

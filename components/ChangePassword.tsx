@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   Alert,
   Image,
+  Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -89,6 +91,12 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   };
 
   return (
+
+     <KeyboardAvoidingView 
+    behavior={Platform.OS ==="ios" ? "padding" : "height"}
+    enabled
+    className="flex-1"
+    >
     <ScrollView
       className="flex-1 bg-white"
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
@@ -185,6 +193,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
                     </TouchableOpacity> */}
       </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

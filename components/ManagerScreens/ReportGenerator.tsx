@@ -10,6 +10,7 @@ import { RouteProp } from '@react-navigation/native';
 import * as MediaLibrary from 'expo-media-library';
 import {  Platform } from 'react-native';
 import * as FileSystem from 'expo-file-system';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 
@@ -176,7 +177,8 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <ScrollView className="flex-1 bg-white">
+   
       {/* Header */}
       <View className="bg-white rounded-b-[25px] px-4 pt-12 pb-6 items-center shadow-md">
         <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-6 left-4">
@@ -189,7 +191,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
       <View className="px-6 mt-8">
         {/* Start Date */}
         <View className="mb-6">
-          <Text className="text-sm text-gray-700 mb-2">Start Date :</Text>
+          <Text className="text-sm text-gray-700 mb-2">Start Date:</Text>
           <TouchableOpacity
             onPress={() => setShowStartPicker(true)}
             className="border border-gray-300 rounded-lg px-4 py-3"
@@ -275,7 +277,8 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
           <Text className="text-gray-500 italic">- You have to set Time Duration first -</Text>
         </View>
       )}
-    </View>
+
+    </ScrollView>
   );
 };
 
