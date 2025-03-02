@@ -338,7 +338,7 @@ const handleLogin = async () => {
     if (!response.ok) {
       setLoading(false);
       if (response.status === 404) {
-        Alert.alert("Error", "Invalid Employee ID. Please try again.");
+        Alert.alert("Error", "Invalid EMP ID & Password ");
       } else if (response.status === 401) {
         Alert.alert("Error", "Invalid Password. Please try again.");
       } else {
@@ -386,15 +386,26 @@ const handleLogin = async () => {
 
 
   return (
+    // <KeyboardAvoidingView 
+    // behavior={Platform.OS ==="ios" ? "padding" : "height"}
+    // enabled
+    // className="flex-1"
+    // >
+    // <ScrollView
+    //   className="flex-1 w-full bg-white"
+    //   keyboardShouldPersistTaps="handled"
+    // >
     <KeyboardAvoidingView 
     behavior={Platform.OS ==="ios" ? "padding" : "height"}
-    enabled
-    className="flex-1"
-    >
-    <ScrollView
-      className="flex-1 w-full bg-white"
-      keyboardShouldPersistTaps="handled"
-    >
+  keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} 
+  enabled 
+  className="flex-1"
+>
+  <ScrollView 
+    contentContainerStyle={{ flexGrow: 1 }} 
+    keyboardShouldPersistTaps="handled"
+     className=" bg-white"
+  >
       <TouchableOpacity onPress={() => navigation.goBack()} className="p-4">
         <AntDesign name="left" size={24} color="#000502" />
       </TouchableOpacity>
@@ -454,7 +465,7 @@ const handleLogin = async () => {
           </View>
 
           <TouchableOpacity
-            className="bg-[#2AAD7A] w-full p-3 rounded-3xl shadow-2xl items-center justify-center"
+            className="bg-[#2AAD7A] w-full p-3 rounded-3xl shadow-2xl items-center justify-center mb-[20%]"
             onPress={handleLogin}
             disabled={loading} // Disable button while loading
           >

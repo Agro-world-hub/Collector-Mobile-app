@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -23,6 +23,7 @@ interface DailyTargetListForOfficersProps {
   route: {
     params: {
       collectionOfficerId: number;
+      officerId:string
     };
   };
 }
@@ -43,7 +44,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [selectedToggle, setSelectedToggle] = useState('ToDo'); 
   const [refreshing, setRefreshing] = useState(false);
-  const { collectionOfficerId } = route.params;
+  const { collectionOfficerId, officerId } = route.params;
 
   // ✅ Fetch Targets API (Runs every time the page is visited or refreshed)
   const fetchTargets = async () => {
@@ -94,14 +95,18 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
 
   return (
-    <View className="flex-1 bg-black p-4">
+    <View className="flex-1 bg-[#282828] ">
       {/* Header */}
-      <View className="bg-black px-4 py-3 flex-row justify-between items-center">
-        <Text className="text-white text-lg font-bold ml-[35%]">Daily Target</Text>
+      <View className="bg-[#282828] px-4 py-3 flex-row  justify-center  items-center">
+         <TouchableOpacity onPress={() => navigation.goBack()} className='absolute left-4'>
+        <AntDesign name="left" size={22} color="white" />
+              </TouchableOpacity>
+              <Text className="text-white text-lg font-bold">{officerId}</Text>
+
       </View>
 
       {/* Toggle Buttons */}
-      <View className="flex-row justify-center items-center py-4 bg-black">
+      <View className="flex-row justify-center items-center py-4 bg-[#282828]">
         {/* To Do Button */}
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
@@ -140,7 +145,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
       {/* Scrollable Table */}
       <ScrollView
         horizontal
-        className="border border-gray-300 bg-white"
+        className=" bg-white"
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <View>

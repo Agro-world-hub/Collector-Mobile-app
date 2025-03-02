@@ -177,7 +177,7 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, Alert, BackHandler, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert, BackHandler, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import axios from 'axios';
 import environment from '../environment/environment';
@@ -333,7 +333,12 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
 
 
   return (
-    <ScrollView className='bg-white ' style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}>
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
+    <ScrollView 
+      className="bg-white"
+      contentContainerStyle={{ paddingHorizontal: wp(4), paddingVertical: hp(2), flexGrow: 1 }}
+      showsVerticalScrollIndicator={false} // Optional: Hide scrollbar
+    >
     <View className="flex-1 " >
       {/* Header with Back Icon */}
           <View className="flex-row items-center  mb-6">
@@ -416,6 +421,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
       )}
     </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

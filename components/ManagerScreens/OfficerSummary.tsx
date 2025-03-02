@@ -414,7 +414,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
 
       if (data.status === "success") {
         Alert.alert("Success", "Officer disclaimed successfully.");
-        navigation.navigate("CollectionOfficersList");
+        navigation.navigate("Main",{screen:"CollectionOfficersList"});
       } else {
         Alert.alert("Failed", data.message || "Failed to disclaim officer.");
       }
@@ -499,7 +499,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
             onPress={() => navigation.goBack()}
             className="absolute top-6 left-4"
           >
-            <AntDesign name="left" size={24} color="#000" />
+            <AntDesign name="left" size={22} color="#000" />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -579,10 +579,10 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
           <TouchableOpacity
             className="items-center mt-5"
             onPress={() =>
-              navigation.navigate("TransactionList" as any, {
+              navigation.navigate("Main", {screen:"TransactionList" , params:{
                 officerId,
                 collectionOfficerId,
-              })
+              }})
             }
           >
             <View className="w-12 h-12 bg-[#FFFFFF66] rounded-full items-center justify-center shadow-md">
@@ -635,7 +635,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
             <Text className="text-sm text-gray-500 mt-4">Target Coverage</Text>
           </View>
 
-          <View className="mt-6 items-center">
+          <View className="mt-6 mb-10 items-center">
             <TouchableOpacity
               className="bg-[#2AAD7A] rounded-full w-64 py-3 h-12"
               onPress={() => navigation.navigate('DailyTargetListForOfficers', { officerId, collectionOfficerId })}

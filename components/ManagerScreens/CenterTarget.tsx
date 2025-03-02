@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import environment from '@/environment/environment';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native'; // Import LottieView
+import { AntDesign } from '@expo/vector-icons';
 
 type CenterTargetNavigationProps = StackNavigationProp<RootStackParamList, 'CenterTarget'>;
 
@@ -69,14 +70,17 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
 
   return (
-    <View className="flex-1 bg-black p-4">
+    <View className="flex-1 bg-[#282828] ">
       {/* Header */}
-      <View className="bg-black px-4 py-3 flex-row justify-between items-center">
-        <Text className="text-white text-lg font-bold ml-[35%]">Center Target</Text>
+      <View className="bg-[#282828] px-4 py-3 flex-row justify-between items-center">
+      <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-6 left-4">
+          <AntDesign name="left" size={22} color="white" />
+        </TouchableOpacity>
+        <Text className="text-white text-lg font-bold ml-[35%] mt-[3%]">Center Target</Text>
       </View>
 
       {/* Toggle Buttons */}
-      <View className="flex-row justify-center items-center py-4 bg-black">
+      <View className="flex-row justify-center items-center py-4 bg-[#282828]">
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
             selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
@@ -113,16 +117,16 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
       {/* Table Header */}
       <ScrollView
         horizontal
-        className="border border-gray-300 bg-white"
+        className=" bg-white"
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <View>
           <View className="flex-row bg-[#2AAD7A] h-[7%]">
-            <Text className="w-16 p-2 font-bold text-center">No</Text>
-            <Text className="w-40 p-2 font-bold text-center">Variety</Text>
-            <Text className="w-32 p-2 font-bold text-center">Grade</Text>
-            <Text className="w-32 p-2 font-bold text-center">Target (kg)</Text>
-            <Text className="w-32 p-2 font-bold text-center">Todo (kg)</Text>
+            <Text className="w-16 p-2  text-center text-white">No</Text>
+            <Text className="w-40 p-2  text-center text-white">Variety</Text>
+            <Text className="w-32 p-2  text-center text-white">Grade</Text>
+            <Text className="w-32 p-2  text-center text-white">Target (kg)</Text>
+            <Text className="w-32 p-2  text-center text-white">Todo (kg)</Text>
           </View>
 
           {/* Loading Screen with Lottie */}

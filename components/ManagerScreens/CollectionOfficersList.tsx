@@ -34,6 +34,13 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
   const [showMenu, setShowMenu] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      setShowMenu(false);
+    }
+    , [])
+  );
+
   const fetchOfficers = async () => {
     try {
       setLoading(true);
@@ -108,8 +115,8 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
   );
 
   return (
-    <View className="flex-1 bg-white">
-      <View className="bg-green-600 py-6 px-4 rounded-b-2xl relative">
+    <View className="flex-1 bg-[#2AAD7A]">
+      <View className="bg-[#2AAD7A] py-6 px-4  relative">
         <Text style={{ fontSize: 18 }} className="text-white text-center font-bold">
           Collection Officers
         </Text>
@@ -127,11 +134,14 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
         )}
       </View>
 
-      <View className="px-4 mt-4">
-        <Text style={{ fontSize: scale(16) }} className="font-bold text-gray-800 mb-2">
-          Officers List <Text className="text-gray-500">(All {officers.length})</Text>
+      <View className="flex-1  mt-3 rounded-t-2xl bg-white">
+        <View className='mt-4 px-4'>
+        <Text style={{ fontSize: scale(16) }} className="font-bold text-[#21202B] mb-2">
+          Officers List <Text className="text-[#21202B] font-semibold">(All {officers.length})</Text>
+         
         </Text>
-      </View>
+        </View>
+      
 
       {loading ? (
         // Lottie Loader for 4 seconds
@@ -156,7 +166,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
             paddingBottom: scale(80),
             paddingTop: scale(10),
           }}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#ADADAD1A" colors={['#ADADAD1A']}/>}
           showsVerticalScrollIndicator={true}
           
         />
@@ -178,7 +188,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
       </TouchableOpacity>
     
 
-      
+      </View>
 
     </View>
   );

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, Alert } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
-import { Ionicons } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { SelectList } from "react-native-dropdown-select-list";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -150,14 +150,23 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
       setSubmitting(false);
     }
   };
+  
 
   return (
     <View className="flex-1 bg-white">
       {/* ✅ Fixed Header */}
       <View className="flex-row items-center bg-[#2AAD7A] p-6 rounded-b-lg">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        {/* <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+<TouchableOpacity onPress={() => {
+  navigation.reset({
+    index: 0,
+    routes: [{name: 'Main',params: { screen: 'EditTargetManager', params: { varietyId, varietyName, grade, target, todo, qty }, }, }, ],});
+  }}>
+  <Ionicons name="arrow-back" size={22} color="white" />
+</TouchableOpacity>
+
         <Text className="text-white text-lg font-semibold ml-[30%]">{varietyName}</Text>
       </View>
 

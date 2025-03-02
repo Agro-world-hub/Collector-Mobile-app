@@ -211,9 +211,12 @@ function MainTabNavigator() {
       <Stack.Screen name="DailyTargetList" component={DailyTargetList} />
       <Stack.Screen name="CollectionOfficersList" component={CollectionOfficersList }/>
       <Stack.Screen name="DailyTarget" component={DailyTarget as any} />
+      <Stack.Screen name="PassTargetScreen" component={PassTargetScreen as any} /> 
+      <Stack.Screen name="RecieveTargetScreen" component={RecieveTargetScreen as any} />
+      <Stack.Screen name="ComplainHistory" component={ComplainHistory} />
+      <Stack.Screen name="EditTargetManager" component={EditTargetManager as any} />
+      <Stack.Screen name="TransactionList" component={TransactionList as any} />
 
-
-      
     </Tab.Navigator>
   );
 }
@@ -418,14 +421,14 @@ const cleanupSocketListeners = () => {
       <Stack.Screen name="AddOfficerBasicDetails" component={AddOfficerBasicDetails} />
       <Stack.Screen name="AddOfficerAddressDetails" component={AddOfficerAddressDetails} />
       <Stack.Screen name="ClaimOfficer" component={ClaimOfficer} />
-      <Stack.Screen name="TransactionList" component={TransactionList as any} />
+      {/* <Stack.Screen name="TransactionList" component={TransactionList as any} /> */}
       <Stack.Screen name="OTPE" component={OTPE} />
       <Stack.Screen name="FarmerReport" component={FarmerReport as any} />
       <Stack.Screen name="EditTargetScreen" component={EditTargetScreen as any} />
       {/* <Stack.Screen name="DailyTarget" component={DailyTarget as any} /> */}
-      <Stack.Screen name="PassTargetScreen" component={PassTargetScreen as any} /> 
+      {/* <Stack.Screen name="PassTargetScreen" component={PassTargetScreen as any} />  */}
       <Stack.Screen name="NoCollectionCenterScreen" component={NoCollectionCenterScreen} />
-      <Stack.Screen name="RecieveTargetScreen" component={RecieveTargetScreen as any} />
+      {/* <Stack.Screen name="RecieveTargetScreen" component={RecieveTargetScreen as any} /> */}
       <Stack.Screen name="DailyTargetListForOfficers" component={DailyTargetListForOfficers as any} />
       <Stack.Screen name="PassTargetBetweenOfficers" component={PassTargetBetweenOfficers as any} />
       <Stack.Screen name="RecieveTargetBetweenOfficers" component={RecieveTargetBetweenOfficers as any} />
@@ -434,7 +437,7 @@ const cleanupSocketListeners = () => {
       
       
       
-      <Stack.Screen name="EditTargetManager" component={EditTargetManager as any} />
+      {/* <Stack.Screen name="EditTargetManager" component={EditTargetManager as any} /> */}
       <Stack.Screen name='Main' component={MainTabNavigator} options={{ headerShown: false }} />
       
 

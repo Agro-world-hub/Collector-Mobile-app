@@ -53,8 +53,8 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
   const handlePhoneNumberChange = (text: string) => {
     setNewPhoneNumber(text);
 
-    if (text.length > 12) {
-      setErrorMessage("Phone number cannot exceed 12 digits.");
+    if (text.length > 9) {
+      setErrorMessage("Phone number cannot exceed 9 digits.");
     } else {
       setErrorMessage("");
     }
@@ -64,8 +64,8 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
   const handlePhoneNumber2Change = (text: string) => {
     setNewPhoneNumber2(text);
 
-    if (text.length > 12) {
-      setErrorMessage("Phone number cannot exceed 12 digits.");
+    if (text.length > 9) {
+      setErrorMessage("Phone number cannot exceed 9 digits.");
     } else {
       setErrorMessage("");
     }
@@ -232,9 +232,10 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={newPhoneNumber}
-              placeholder="716615228"
+              placeholder="7XXXXXXXX"
               keyboardType="numeric"
               onChangeText={handlePhoneNumberChange}
+              maxLength={9}
             />
             {errorMessage && (
               <Text className="text-red-500">{errorMessage}</Text>
@@ -246,9 +247,10 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={newPhoneNumber2}
-              placeholder="716615228"
+              placeholder="7XXXXXXXX"
               keyboardType="numeric"
               onChangeText={handlePhoneNumber2Change}
+              maxLength={9}
             />
             {errorMessage && (
               <Text className="text-red-500">{errorMessage}</Text>
