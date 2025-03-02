@@ -728,6 +728,8 @@ const AddOfficerAddressDetails: React.FC = () => {
         .join(', '), // Convert preferred languages to a comma-separated string
       profileImage: formData.profileImage, // Add the profile image from the form data
     };
+    
+    console.log('Combined data for passing to backend :', combinedData);
 
     try {
       const token = await AsyncStorage.getItem('token');
