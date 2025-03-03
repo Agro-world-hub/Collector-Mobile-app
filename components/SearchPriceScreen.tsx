@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -81,7 +81,11 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
   }, [selectedCrop]);
 
   return (
-    <ScrollView className="flex-1 bg-white">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}>
+    <ScrollView className="flex-1 bg-white "
+    keyboardShouldPersistTaps="handled">
     <View className="flex-1 bg-white items-center px-6 pt-12">
       <Text className="text-xl font-semibold mb-4">Search Price</Text>
       <Image
@@ -134,7 +138,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
 
       {/* Search Button */}
       <TouchableOpacity
-        className="bg-[#2AAD7A] w-full py-3 rounded-[35px] items-center"
+        className="bg-[#2AAD7A] w-full py-3 mb-4 rounded-[35px] items-center"
         onPress={() => {
           if (selectedCrop && selectedVariety) {
             const cropName = cropOptions.find(option => option.key === selectedCrop)?.value || '';
@@ -152,6 +156,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
       </TouchableOpacity>
     </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

@@ -2,7 +2,7 @@
 import io from 'socket.io-client';
 // Create a singleton socket instance
 
-const socket = io('http://192.168.8.104:3005/agro-api/collection-status', {
+const socket = io('http://192.168.8.105:3005/agro-api/collection-status', {
 
   reconnection: true,
   reconnectionAttempts: 5,
