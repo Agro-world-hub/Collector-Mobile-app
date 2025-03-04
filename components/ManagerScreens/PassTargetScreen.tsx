@@ -150,14 +150,23 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
       setSubmitting(false);
     }
   };
+  
 
   return (
     <View className="flex-1 bg-white">
       {/* ✅ Fixed Header */}
       <View className="flex-row items-center bg-[#2AAD7A] p-6 rounded-b-lg">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-        <AntDesign name="left" size={22} color="white" />
-        </TouchableOpacity>
+        {/* <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="white" />
+        </TouchableOpacity> */}
+<TouchableOpacity onPress={() => {
+  navigation.reset({
+    index: 0,
+    routes: [{name: 'Main',params: { screen: 'EditTargetManager', params: { varietyId, varietyName, grade, target, todo, qty }, }, }, ],});
+  }}>
+  <Ionicons name="arrow-back" size={22} color="white" />
+</TouchableOpacity>
+
         <Text className="text-white text-lg font-semibold ml-[30%]">{varietyName}</Text>
       </View>
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,6 +8,7 @@ import { scale } from 'react-native-size-matters';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { RootStackParamList } from '../types';
 import environment from '@/environment/environment';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 type TransactionListNavigationProp = StackNavigationProp<RootStackParamList, 'TransactionList'>;
 type TranscationListRouteProp = RouteProp<RootStackParamList, 'OfficerSummary'>;
@@ -36,7 +37,7 @@ interface Transaction {
 }
 
 const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) => {
-  const { officerId, collectionOfficerId } = route.params;
+  const { officerId, collectionOfficerId,  phoneNumber1, phoneNumber2, officerName } = route.params;
 
   const [searchQuery, setSearchQuery] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -112,10 +113,18 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
   }, [selectedDate]);
 
   return (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}>
     <SafeAreaView className="flex-1 bg-white">
+
       <View>
+
         {/* Header */}
-        <View className="bg-[#2AAD7A] p-4 mt-[-10] rounded-b-[35px] shadow-md">
+        <View className="bg-[#2AAD7A] p-4 mt-[-18] rounded-b-[35px] shadow-md">
+        <TouchableOpacity onPress={() =>         navigation.navigate('OfficerSummary'as any,{collectionOfficerId, officerId,phoneNumber1,phoneNumber2,officerName})} className='absolute left-4 mt-4'>
+        <AntDesign name="left" size={22} color="white" />
+              </TouchableOpacity>
           <Text className="text-white text-lg font-bold ml-[28%]">EMP ID: {officerId}</Text>
           <View className="flex-row items-center justify-between mt-2">
           <Text className="text-white text-lg ml-[20%]">
@@ -213,6 +222,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
       />
 
     </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 export default TransactionList;

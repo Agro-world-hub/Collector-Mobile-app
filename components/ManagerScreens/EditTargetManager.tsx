@@ -34,9 +34,17 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
     <View className="flex-1 bg-white">
       {/* Header */}
       <View className="flex-row items-center bg-[#2AAD7A] p-6 rounded-b-lg">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        {/* <TouchableOpacity onPress={() => navigation.navigate("EditTargetScreen")}>
+          <Ionicons name="arrow-back" size={24} color="white" />
+        </TouchableOpacity> */}
+        <TouchableOpacity onPress={() => {
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'Main',params: { screen: 'DailyTarget', params: { varietyId, varietyName, grade, target, todo, qty }, }, }, ],});
+          }}>
         <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
+        
         <Text className="text-white text-lg font-semibold ml-[30%]">{varietyName}</Text>
       </View>
 
@@ -76,13 +84,16 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
             <View className="flex-row justify-center space-x-4 mt-4 p-5">
               <TouchableOpacity
                 className="flex-1 bg-[#D16D6A] px-6 py-2 rounded-md items-center"
-                onPress={() => navigation.navigate('PassTargetScreen'as any,{varietyName, grade, target, todo, qty ,varietyId})} // Save and exit edit mode
+                onPress={() => navigation.navigate('Main', {screen: 'PassTargetScreen',params: {varietyName, grade, target, todo, qty ,varietyId}})}                
+                // onPress={() => navigation.navigate('PassTargetScreen'as any,{varietyName, grade, target, todo, qty ,varietyId})} // Save and exit edit mode
               >
                 <Text className="text-white font-medium">Pass</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex-1 bg-[#2AAD7A] px-6 py-2 rounded-md items-center"
-                onPress={() => navigation.navigate('RecieveTargetScreen' as any,{varietyName, grade, target, todo, qty ,varietyId})} // Save and exit edit mode
+                onPress={() => navigation.navigate('Main', {screen: 'RecieveTargetScreen',params: {varietyName, grade, target, todo, qty ,varietyId}})}                
+
+                // onPress={() => navigation.navigate('RecieveTargetScreen' as any,{varietyName, grade, target, todo, qty ,varietyId})} // Save and exit edit mode
               >
                 <Text className="text-white font-medium">Receive</Text>
               </TouchableOpacity>

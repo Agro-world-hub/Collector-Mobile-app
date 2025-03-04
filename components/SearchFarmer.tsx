@@ -7,7 +7,9 @@ import {
   Image,
   Alert,
   ScrollView,
-  Keyboard
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
@@ -111,6 +113,9 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
   }
 
   return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}>
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
       keyboardShouldPersistTaps="handled"
@@ -203,6 +208,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
         </View>
       </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

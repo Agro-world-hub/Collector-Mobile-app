@@ -58,7 +58,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
       console.log(token);
 
       const res = await axios.get<complainItem[]>(
-        `${environment.API_BASE_URL}api/auth/get-complains`,
+        `${environment.API_BASE_URL}api/complain/get-complains`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

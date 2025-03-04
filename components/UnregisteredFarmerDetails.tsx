@@ -28,8 +28,8 @@ import LottieView from "lottie-react-native"; // Import LottieView
 import { ActivityIndicator } from "react-native";
 import { KeyboardAvoidingView } from "react-native";
 import { Platform } from "react-native";
-
-
+import AntDesign from "react-native-vector-icons/AntDesign";
+import { SelectList } from "react-native-dropdown-select-list";
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
@@ -64,7 +64,9 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   const [accNumber, setAccNumber] = useState("");
   const [accHolderName, setAccHolderName] = useState("");
   const [bankName, setBankName] = useState("");
+  console.log(bankName)
   const [branchName, setBranchName] = useState("");
+  console.log(branchName)
   const [isModalVisible, setIsModalVisible] = useState(false); // Success modal visibility state
   const [isUnsuccessfulModalVisible, setIsUnsuccessfulModalVisible] = useState(false); // Unsuccessful modal visibility state
   const [loading, setLoading] = useState(false); // Loading state for the progress bar
@@ -180,7 +182,6 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   }, [bankName]);
 
   const districtOptions = [
-    { key: 0, value: "", translationKey: t("Districts.selectDistrict") },
     { key: 1, value: "Ampara", translationKey: t("Districts.Ampara") },
     {
       key: 2,
@@ -246,7 +247,8 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       !bankName ||
       !branchName // Removed trailing comma
     ) {
-      Alert.alert("Main.error", "SignupForum.fillAllFields");
+      Alert.alert("Sorry", "Please fill all fields");
+      setLoading(false);
       return;
     }
 
@@ -264,16 +266,16 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
 
       if (checkResponse.data.message === "This Phone Number already exists.") {
-        Alert.alert("Main.error", "SignupForum.phoneExists");
+        Alert.alert("Sorry", "This Phone Number already exists.");
         return;
       } else if (checkResponse.data.message === "This NIC already exists.") {
-        Alert.alert("Main.error", "SignupForum.nicExists");
+        Alert.alert("Sorry", "This NIC already exists.");
         return;
       } else if (
         checkResponse.data.message ===
         "This Phone Number and NIC already exist."
       ) {
-        Alert.alert("Main.error", "SignupForum.phoneNicExist");
+        Alert.alert("Sorry", "This Phone Number and NIC already exist.");
         return;
       }
 
@@ -344,10 +346,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       {/* Header with Back Icon */}
       <View className="flex-row items-center mb-4">
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={require("../assets/images/back.png")} // Path to your PNG image
-            style={{ width: 24, height: 24 }} // Adjust size if needed
-          />
+           <AntDesign name="left" size={22} color="#000" />
         </TouchableOpacity>
         <View className="w-full items-center">
   <Text className="text-xl font-bold text-center">Fill Personal Details</Text>
@@ -404,11 +403,12 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
             />
             <TextInput
-              placeholder="Phone Number"
+              placeholder="7XXXXXXXX"
               keyboardType="phone-pad"
               value={phoneNumber}
               onChangeText={setPhoneNumber}
               className="flex-1"
+              maxLength={9}
             />
           </View>
         </View>
@@ -416,8 +416,8 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
         {/* Address */}
         <View className="mb-4">
           <Text className="text-gray-600 mb-2">District</Text>
-          <View className="border border-gray-300  rounded-lg">
-            <Picker
+          <View className="  rounded-lg">
+            {/* <Picker
               selectedValue={district}
               onValueChange={(itemValue: any) => setDistrict(itemValue)}
               style={{
@@ -435,7 +435,18 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
                   }}
                 />
               ))}
-            </Picker>
+            </Picker> */}
+                     <SelectList
+              setSelected={setDistrict}
+              data={districtOptions.map(district => ({
+                key: district.value,
+                value: district.translationKey,
+              }))}
+              placeholder="Select District"
+              boxStyles={{ borderColor: '#ccc', borderRadius: 8 }}
+              dropdownStyles={{ borderColor: '#ccc' }}
+              search={false}  // Optional: hide search inside dropdown
+            />
           </View>
         </View>
 
@@ -464,8 +475,8 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
         {/* Bank Name */}
         <View className="mb-4">
           <Text className="text-gray-600 mb-2">Bank Name</Text>
-          <View className="border border-gray-300  rounded-lg">
-            <Picker
+          <View className="  rounded-lg">
+            {/* <Picker
               selectedValue={bankName}
               onValueChange={(value) => setBankName(value)}
               style={{
@@ -483,15 +494,26 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
                     value={bank.name}
                   />
                 ))}
-            </Picker>
+            </Picker> */}
+            <SelectList
+              setSelected={setBankName}
+              data={bankNames.map(bank => ({
+                key: bank.name,
+                value: bank.name,
+              }))}
+              placeholder="Select Bank"
+              boxStyles={{ borderColor: '#ccc', borderRadius: 8 }}
+              dropdownStyles={{ borderColor: '#ccc' }}
+              search={true}  
+            />
           </View>
         </View>
 
         {/* Branch Name */}
         <View className="mb-8">
           <Text className="text-gray-600 mb-2">Branch Name</Text>
-          <View className="border border-gray-300  rounded-lg">
-            <Picker
+          <View className=" rounded-lg">
+            {/* <Picker
               selectedValue={branchName}
               onValueChange={(value) => setBranchName(value)}
               style={{
@@ -507,7 +529,18 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
                   value={branch.name}
                 />
               ))}
-            </Picker>
+            </Picker> */}
+            <SelectList
+              setSelected={setBranchName}
+              data={filteredBranches.map(branch => ({
+                key: branch.name,
+                value: branch.name,
+              }))}
+              placeholder="Select Branch"
+              boxStyles={{ borderColor: '#ccc', borderRadius: 8 }}
+              dropdownStyles={{ borderColor: '#ccc' }}
+              search={true}  
+            />
           </View>
         </View>
       </ScrollView>

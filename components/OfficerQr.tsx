@@ -16,6 +16,7 @@ import axios from "axios";
 import environment from "../environment/environment";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
+import { ScrollView } from "react-native-gesture-handler";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -85,14 +86,17 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
   }, []);
 
   const downloadQRCode = async () => {
-    if (!qrCodeRef.current) return;
-
+    if (!qrValue || !qrCodeRef.current) {
+      Alert.alert("Error", "QR Code is not ready yet.");
+      return;
+    }
+  
     try {
       const uri = await captureRef(qrCodeRef.current, {
         format: "png",
         quality: 1.0,
       });
-
+  
       const { status } = await MediaLibrary.requestPermissionsAsync();
       if (status !== "granted") {
         Alert.alert(
@@ -101,33 +105,36 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
         );
         return;
       }
-
+  
       const fileName = `QRCode_${Date.now()}.png`;
       const fileUri = `${FileSystem.documentDirectory}${fileName}`;
-
+  
       await FileSystem.moveAsync({
         from: uri,
         to: fileUri,
       });
-
+  
       await MediaLibrary.saveToLibraryAsync(fileUri);
-
+  
       Alert.alert("Success", "QR Code saved to gallery");
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Failed to save QR Code");
     }
   };
-
+  
   const shareQRCode = async () => {
-    if (!qrCodeRef.current) return;
-
+    if (!qrValue || !qrCodeRef.current) {
+      Alert.alert("Error", "QR Code is not ready yet.");
+      return;
+    }
+  
     try {
       const uri = await captureRef(qrCodeRef.current, {
         format: "png",
         quality: 1.0,
       });
-
+  
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(uri, {
           mimeType: "image/png",
@@ -144,8 +151,10 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
       Alert.alert("Error", "Failed to share QR Code");
     }
   };
+  
 
   return (
+  
     <View
       className="flex-1 bg-white"
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
@@ -159,12 +168,12 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
           QR Code
         </Text>
       </View>
-
+      <ScrollView>
       {/* QR Code Display */}
       <View className="items-center my-6">
         <View
           ref={qrCodeRef}
-          className="bg-white p-4 mt-[90px] rounded-xl border-2 border-[#2AAD7A]"
+          className="bg-white p-4 mt-[4%] rounded-xl border-2 border-[#2AAD7A]"
         >
           {qrValue ? (
             <QRCode value={qrValue} size={200} />
@@ -204,7 +213,9 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
           <Text className="text-white text-xs mt-1">Share</Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     </View>
+
   );
 };
 

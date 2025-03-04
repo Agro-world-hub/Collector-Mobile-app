@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  Keyboard,
   // Picker,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -17,6 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import environment from '../../environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { SelectList } from 'react-native-dropdown-select-list';
 
 
 interface OfficerDetails {
@@ -41,7 +43,7 @@ const ClaimOfficer: React.FC = () => {
   const empPrefix = jobRole === 'Collection Officer' ? 'COO' : 'CUO';
 
   const handleSearch = async () => {
-
+    Keyboard.dismiss();
     console.log(empID, jobRole);
     try {
       const userToken = await AsyncStorage.getItem('token');
@@ -117,7 +119,9 @@ const ClaimOfficer: React.FC = () => {
   
 
   return (
-    <ScrollView className="flex-1 bg-white">
+    <ScrollView className="flex-1 bg-white" keyboardShouldPersistTaps="handled" 
+
+>
       {/* Header */}
       <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
         <TouchableOpacity
@@ -134,15 +138,24 @@ const ClaimOfficer: React.FC = () => {
         <Text className="font-semibold text-gray-800 mb-2 text-center">
           Job Role
         </Text>
-        <View className="border border-gray-300 rounded-lg pb-3">
-          <Picker
+        <View className=" rounded-lg pb-3">
+          {/* <Picker
             selectedValue={jobRole}
             onValueChange={(itemValue) => setJobRole(itemValue)}
             style={{ height: 50, width: '100%' }}
           >
             <Picker.Item label="Collection Officer" value="Collection Officer" />
             <Picker.Item label="Customer Officer" value="Customer Officer" />
-          </Picker>
+          </Picker> */}
+                 <SelectList
+            setSelected={(value: React.SetStateAction<string>) => setJobRole(value)}
+            data={[
+              { key: 'Collection Officer', value: 'Collection Officer' },
+              { key: 'Customer Officer', value: 'Customer Officer' },
+            ]}
+            save="key"
+            defaultOption={{ key: 'Collection Officer', value: 'Collection Officer' }}
+          />
         </View>
 
         {/* EMP ID Input */}
@@ -190,7 +203,7 @@ const ClaimOfficer: React.FC = () => {
 
       {/* Officer Found */}
       {officerFound && (
-        <View className="px-4 mt-16 items-center">
+        <View className="px-4 mt-10 items-center">
           {/* Officer Avatar */}
           <Image
             source={require('../../assets/images/profile.png')}
@@ -207,7 +220,7 @@ const ClaimOfficer: React.FC = () => {
 
           {/* Claim Officer Button */}
           <TouchableOpacity
-            className="mt-6 bg-[#2AAD7A]    py-4 rounded-full"
+            className="mt-6 mb-10 bg-[#2AAD7A]    py-4 rounded-full"
             onPress={handleClaimOfficer}
           >
             <Text className="text-white text-lg px-28 font-semibold text-center">

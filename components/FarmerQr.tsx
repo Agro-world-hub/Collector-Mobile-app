@@ -357,7 +357,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
       
       ) : (
         <>
-      <View className="items-center mt-[10%]">
+      <View className="items-center mt-[4%]">
         <Text className="text-lg font-bold mb-2">{farmerName}</Text>
         <Text className="text-gray-500 mb-9">{farmerNIC}</Text>
 

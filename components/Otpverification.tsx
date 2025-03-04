@@ -25,6 +25,8 @@ import { useTranslation } from "react-i18next";
 import { Dimensions } from "react-native";
 import { Modal } from "react-native";
 import { Animated } from "react-native";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import { ScrollView } from "react-native-gesture-handler";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -312,14 +314,14 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
   };
 
   return (
-    <SafeAreaView
-      className="flex-1 bg-white"
+
+    <ScrollView
+      className="flex-1 "
       style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}
     >
-      <StatusBar style="light" />
       <View>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back-outline" size={30} color="gray" />
+        <TouchableOpacity onPress={() => navigation.goBack()}  >
+           <AntDesign name="left" size={22} color="#000" />
         </TouchableOpacity>
       </View>
       <View className="flex justify-center items-center mt-0">
@@ -392,7 +394,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
               key={index}
               ref={(el) => (inputRefs.current[index] = el as TextInput)}
               className={`w-12 h-12 text-lg text-center rounded-lg ${
-                otpCode[index] ? "bg-[#FFFFFF] text-black" : "bg-[#FFFFFF] text-black"
+                otpCode[index] ? "bg-[#FFFFFF] text-black pb-2" : "bg-[#FFFFFF] text-black"
               }`}
               keyboardType="numeric"
               maxLength={1}
@@ -450,7 +452,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 

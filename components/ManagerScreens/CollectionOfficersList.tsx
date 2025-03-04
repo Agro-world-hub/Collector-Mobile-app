@@ -34,6 +34,13 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
   const [showMenu, setShowMenu] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      setShowMenu(false);
+    }
+    , [])
+  );
+
   const fetchOfficers = async () => {
     try {
       setLoading(true);

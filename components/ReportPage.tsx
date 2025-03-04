@@ -255,6 +255,9 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
       </head>
       <body>
         <h1>Purchase Report</h1>
+          <h2>Invoice Number: ${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}</h2>
+          <h2><strong> Date:</strong> ${new Date().toLocaleDateString()}</h2>
+          
   
         <h2>Personal Details</h2>
         <table>

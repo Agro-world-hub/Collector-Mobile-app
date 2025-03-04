@@ -306,7 +306,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.7)' }}>
           <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, shadowColor: 'black', width: '80%' }}>
             <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Camera Permission Required</Text>
-            <Text style={{ color: '#555', marginBottom: 20 }}>
+            <Text style={{ color: '#555', marginBottom: 0 }}>
               We need camera access to scan QR codes. Please enable camera permissions in your device settings.
             </Text>
             <TouchableOpacity
