@@ -11,6 +11,7 @@ import {
 import AntDesign from "react-native-vector-icons/AntDesign";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from 'expo-image-picker';
 import environment from "../environment/environment";
 import {
   widthPercentageToDP as wp,
@@ -18,7 +19,7 @@ import {
 } from "react-native-responsive-screen";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
-
+import * as ImageManipulator from 'expo-image-manipulator';
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
@@ -43,13 +44,15 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     streetName: "",
     city: "",
     province: "",
-    district:""
+    district:"",
+    profileImage: "",
   });
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [newPhoneNumber2, setNewPhoneNumber2] = useState("");
 
   const [showUpdateButton, setShowUpdateButton] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState({ uri: "" });
 
 
   const handlePhoneNumberChange = (text: string) => {
@@ -113,8 +116,10 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
         phoneNumber: data.phoneNumber01,
         phoneNumber2: data.phoneNumber02,
         province:data.province,
-        district:data.district
+        district:data.district,
+        profileImage: data.image,
       });
+      setProfileImage({ uri: data.image });
       setNewPhoneNumber(data.phoneNumber01);
       setNewPhoneNumber2(data.phoneNumber02);
     } catch (error) {
@@ -157,8 +162,80 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     }
   };
   
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission required",
+        "Please allow access to your photo library to upload a profile picture."
+      );
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
 
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      let imageUri = result.assets[0].uri;
 
+      const resizedImage = await ImageManipulator.manipulateAsync(
+        imageUri,
+        [{ resize: { width: 500 } }], 
+        { compress: 0.6, format: ImageManipulator.SaveFormat.JPEG }
+      );
+      console.log("Resized and compressed image:", resizedImage);
+      setProfileImage({ uri: resizedImage.uri });
+      await uploadImage(resizedImage.uri);  
+    }
+  };
+
+  const uploadImage = async (imageUri: string) => {
+    console.log("Uploading image...");
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        Alert.alert(("Main.error"), ("Main.somethingWentWrong"));
+        return;
+      }
+      const formData = new FormData();
+      if (imageUri) {
+        const fileName = imageUri.split("/").pop();
+        const fileType = fileName?.split(".").pop()
+          ? `image/${fileName.split(".").pop()}`
+          : "image/jpeg";
+
+        formData.append("profileImage", {
+          uri: imageUri,
+          name: fileName,
+          type: fileType,
+        } as any);
+      }
+      console.log(formData);
+      const response = await fetch(
+        `${environment.API_BASE_URL}api/collection-officer/upload-profile-image`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.status === "success") {
+      } else {
+        Alert.alert(("Sorry"), ("Something went wrong"));
+      }
+    } catch (error) {
+      Alert.alert(("Sorry"), ("Something went wrong"));
+    }
+  };
 
   return (
     <View
@@ -175,10 +252,31 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
       </View>
 
       <View className="items-center mb-6">
-        <Image
+        {/* <Image
           source={require("../assets/images/mprofile.png")}
           className="w-28 h-28 rounded-full"
-        />
+        /> */}
+      
+                      <View className="items-center mb-6 relative">
+                <Image
+                  source={
+                    profileImage
+                      ? profileImage
+                      : require("../assets/images/pcprofile 1.webp")
+                  }
+                  style={{ width: 100, height: 100, borderRadius: 50 }}
+                />
+                <TouchableOpacity
+                  className="absolute right-0 bottom-0 p-1 bg-white  rounded-full"
+                  onPress={pickImage}
+                >
+                  <Image
+                    source={require("../assets/images/Pencil.webp")}
+                    style={{ width: 17, height: 17, tintColor: "green" }}
+                  />
+                </TouchableOpacity>
+              </View>
+          
       </View>
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16 }}>
@@ -278,18 +376,18 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
           </View>
           
           <View>
-            <Text className="text-gray-500 mb-">City</Text>
+            <Text className="text-gray-500 ">City</Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-4"
+              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
               value={profileData.city}
               editable={false}
             />
           </View>
 
           <View>
-            <Text className="text-gray-500 mb-">District</Text>
+            <Text className="text-gray-500 ">District</Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-4"
+              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
               value={profileData.district}
               editable={false}
             />
@@ -298,7 +396,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
           <View>
             <Text className="text-gray-500 mb-">Province</Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-4"
+              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
               value={profileData.province}
               editable={false}
             />

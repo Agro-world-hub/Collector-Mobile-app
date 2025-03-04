@@ -121,11 +121,11 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
       <View>
 
         {/* Header */}
-        <View className="bg-[#2AAD7A] p-4 mt-[-18] rounded-b-[35px] shadow-md">
-        <TouchableOpacity onPress={() =>         navigation.navigate('OfficerSummary'as any,{collectionOfficerId, officerId,phoneNumber1,phoneNumber2,officerName})} className='absolute left-4 mt-4'>
+        <View className="bg-[#2AAD7A] p-4  rounded-b-[35px] shadow-md">
+        <TouchableOpacity onPress={() =>         navigation.navigate('OfficerSummary'as any,{collectionOfficerId, officerId,phoneNumber1,phoneNumber2,officerName})} className='absolute left-4 mt-[4%]'>
         <AntDesign name="left" size={22} color="white" />
               </TouchableOpacity>
-          <Text className="text-white text-lg font-bold ml-[28%]">EMP ID: {officerId}</Text>
+          <Text className="text-white text-lg font-bold ml-[28%] mt-[4%]">EMP ID: {officerId}</Text>
           <View className="flex-row items-center justify-between mt-2">
           <Text className="text-white text-lg ml-[20%]">
           Selected Date: {selectedDate ? selectedDate.toISOString().split('T')[0] : 'N/A'}

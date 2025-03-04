@@ -80,7 +80,7 @@
 //   useEffect(() => {
 //     fetchTaskSummary();
 //   }, [collectionOfficerId]);
-  
+
 //   const handleDisclaim = async () => {
 //     setShowMenu(false);
 
@@ -326,20 +326,23 @@ interface OfficerSummaryProps {
   route: OfficerSummaryRouteProp;
 }
 
-const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) => {
+const OfficerSummary: React.FC<OfficerSummaryProps> = ({
+  route,
+  navigation,
+}) => {
   const {
     officerId,
     officerName,
     phoneNumber1,
     phoneNumber2,
     collectionOfficerId,
+    image,
   } = route.params;
   const [showMenu, setShowMenu] = useState(false);
-  const [officerStatus, setOfficerStatus] = useState('offline');
+  const [officerStatus, setOfficerStatus] = useState("offline");
   const [taskPercentage, setTaskPercentage] = useState<number | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [isOnline, setIsOnline] = useState(false); // Track the online status
-
 
   const handleDial = (phoneNumber: string) => {
     const phoneUrl = `tel:${phoneNumber}`;
@@ -357,8 +360,9 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
 
       if (res.data.success) {
         const { totalTasks, completedTasks } = res.data;
-        const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-        setTaskPercentage(percentage); 
+        const percentage =
+          totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+        setTaskPercentage(percentage);
       } else {
         Alert.alert("Error", "No task summary found for this officer.");
       }
@@ -371,14 +375,14 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
   // Refreshing function
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    fetchTaskSummary();  // Re-fetch task summary
+    fetchTaskSummary(); // Re-fetch task summary
     setRefreshing(false);
   }, [collectionOfficerId]);
 
   useEffect(() => {
     fetchTaskSummary();
   }, [collectionOfficerId]);
-  
+
   const handleDisclaim = async () => {
     setShowMenu(false);
 
@@ -414,7 +418,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
 
       if (data.status === "success") {
         Alert.alert("Success", "Officer disclaimed successfully.");
-        navigation.navigate("Main",{screen:"CollectionOfficersList"});
+        navigation.navigate("Main", { screen: "CollectionOfficersList" });
       } else {
         Alert.alert("Failed", data.message || "Failed to disclaim officer.");
       }
@@ -423,66 +427,76 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
       Alert.alert("Error", "Failed to disclaim officer. Please try again.");
     }
   };
-  
-  
+
   const isOnlineRef = useRef(false);
 
-  
   // Create stable callback references with useCallback
-  const handleLoginSuccess = useCallback((data: any) => {
-    if (data.empId === officerId) {
-      if (!isOnlineRef.current) {
-        isOnlineRef.current = true;
-        setIsOnline(true);
+  const handleLoginSuccess = useCallback(
+    (data: any) => {
+      if (data.empId === officerId) {
+        if (!isOnlineRef.current) {
+          isOnlineRef.current = true;
+          setIsOnline(true);
+        }
       }
-    }
-  }, [officerId]);
-  
-  const handleEmployeeOnline = useCallback((data: any) => {
-    if (data.empId === officerId) {
-      if (!isOnlineRef.current) {
-        console.log('Employee is online', data);
-        isOnlineRef.current = true;
-        setIsOnline(true);
+    },
+    [officerId]
+  );
+
+  const handleEmployeeOnline = useCallback(
+    (data: any) => {
+      if (data.empId === officerId) {
+        if (!isOnlineRef.current) {
+          console.log("Employee is online", data);
+          isOnlineRef.current = true;
+          setIsOnline(true);
+        }
       }
-    }
-  }, [officerId]);
-  
-  const handleEmployeeOffline = useCallback((data: any) => {
-    if (data.empId === officerId) {
-      if (isOnlineRef.current) {
-        console.log('Employee is offline', data);
-        isOnlineRef.current = false;
-        setIsOnline(false);
+    },
+    [officerId]
+  );
+
+  const handleEmployeeOffline = useCallback(
+    (data: any) => {
+      if (data.empId === officerId) {
+        if (isOnlineRef.current) {
+          console.log("Employee is offline", data);
+          isOnlineRef.current = false;
+          setIsOnline(false);
+        }
       }
-    }
-  }, [officerId]);
-  
+    },
+    [officerId]
+  );
+
   useEffect(() => {
     // Use a flag to track if component is mounted
     let isMounted = true;
-    
+
     // Set up event listeners first so we don't miss events
-    socket.on('loginSuccess', handleLoginSuccess);
-    socket.on('employeeOnline', handleEmployeeOnline);
-    socket.on('employeeOffline', handleEmployeeOffline);
-    
+    socket.on("loginSuccess", handleLoginSuccess);
+    socket.on("employeeOnline", handleEmployeeOnline);
+    socket.on("employeeOffline", handleEmployeeOffline);
+
     // Send login event when component mounts
     // Add timestamp for latency measurement
     // console.log('Emitting login with empId:', officerId);
     // socket.emit('login', { empId: officerId, timestamp: Date.now() });
-    
+
     // Clean up event listeners when component unmounts
     return () => {
       isMounted = false;
-      socket.off('loginSuccess', handleLoginSuccess);
-      socket.off('employeeOnline', handleEmployeeOnline);
-      socket.off('employeeOffline', handleEmployeeOffline);
+      socket.off("loginSuccess", handleLoginSuccess);
+      socket.off("employeeOnline", handleEmployeeOnline);
+      socket.off("employeeOffline", handleEmployeeOffline);
     };
-  }, [officerId, handleLoginSuccess, handleEmployeeOnline, handleEmployeeOffline]);
-  
- 
-  
+  }, [
+    officerId,
+    handleLoginSuccess,
+    handleEmployeeOnline,
+    handleEmployeeOffline,
+  ]);
+
   return (
     <ScrollView
       className="flex-1 bg-white "
@@ -496,7 +510,9 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
         <View className="bg-white rounded-b-[25px] px-4 pt-12 pb-6 items-center shadow-lg z-10">
           {/* Back Icon */}
           <TouchableOpacity
-            onPress={() => navigation.navigate("Main",{screen:"CollectionOfficersList"})}
+            onPress={() =>
+              navigation.navigate("Main", { screen: "CollectionOfficersList" })
+            }
             className="absolute top-4 left-4"
           >
             <AntDesign name="left" size={22} color="#000" />
@@ -521,10 +537,20 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
           )}
 
           {/* Profile Image with Green Border */}
-          <View className={`w-28 h-28 border-[6px] rounded-full items-center justify-center ${isOnline ? 'border-[#2AAD7A]' : 'border-gray-400'}`}>
-            <Image
+          <View
+            className={`w-28 h-28 border-[6px] rounded-full items-center justify-center ${isOnline ? "border-[#2AAD7A]" : "border-gray-400"}`}
+          >
+            {/* <Image
               source={require("../../assets/images/mprofile.png")}
               className="w-24 h-24 rounded-full"
+            /> */}
+            <Image
+              source={
+                image
+                  ? { uri: image }
+                  : require("../../assets/images/mprofile.png")
+              }
+              className="w-24 h-24 rounded-full "
             />
           </View>
           {/* Name and EMP ID */}
@@ -579,13 +605,16 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
           <TouchableOpacity
             className="items-center mt-5"
             onPress={() =>
-              navigation.navigate("Main", {screen:"TransactionList" , params:{
-                officerId,
-                collectionOfficerId,
-                phoneNumber1,
-                phoneNumber2,
-                officerName
-              }})
+              navigation.navigate("Main", {
+                screen: "TransactionList",
+                params: {
+                  officerId,
+                  collectionOfficerId,
+                  phoneNumber1,
+                  phoneNumber2,
+                  officerName,
+                },
+              })
             }
           >
             <View className="w-12 h-12 bg-[#FFFFFF66] rounded-full items-center justify-center shadow-md">
@@ -631,7 +660,9 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
               backgroundColor="#E5E7EB"
             >
               {(fill) => (
-                <Text className="text-[#0CB783] font-bold text-xl">{Math.round(fill)}%</Text>
+                <Text className="text-[#0CB783] font-bold text-xl">
+                  {Math.round(fill)}%
+                </Text>
               )}
             </CircularProgress>
 
@@ -641,9 +672,16 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
           <View className="mt-6 mb-10 items-center">
             <TouchableOpacity
               className="bg-[#2AAD7A] rounded-full w-64 py-3 h-12"
-              onPress={() => navigation.navigate('DailyTargetListForOfficers', { officerId, collectionOfficerId })}
+              onPress={() =>
+                navigation.navigate("DailyTargetListForOfficers", {
+                  officerId,
+                  collectionOfficerId,
+                })
+              }
             >
-              <Text className="text-white text-center font-medium">Open Target Board</Text>
+              <Text className="text-white text-center font-medium">
+                Open Target Board
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -653,5 +691,3 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
 };
 
 export default OfficerSummary;
-
-
