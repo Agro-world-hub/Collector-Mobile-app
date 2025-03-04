@@ -41,7 +41,9 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     phoneNumber2: "",
     houseNumber: "",
     streetName: "",
-    city: ""
+    city: "",
+    province: "",
+    district:""
   });
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [newPhoneNumber2, setNewPhoneNumber2] = useState("");
@@ -109,7 +111,9 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
         streetName: data.streetName,
         city: data.city,
         phoneNumber: data.phoneNumber01,
-        phoneNumber2: data.phoneNumber02
+        phoneNumber2: data.phoneNumber02,
+        province:data.province,
+        district:data.district
       });
       setNewPhoneNumber(data.phoneNumber01);
       setNewPhoneNumber2(data.phoneNumber02);
@@ -278,6 +282,24 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-4"
               value={profileData.city}
+              editable={false}
+            />
+          </View>
+
+          <View>
+            <Text className="text-gray-500 mb-">District</Text>
+            <TextInput
+              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-4"
+              value={profileData.district}
+              editable={false}
+            />
+          </View>
+
+          <View>
+            <Text className="text-gray-500 mb-">Province</Text>
+            <TextInput
+              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-4"
+              value={profileData.province}
               editable={false}
             />
           </View>
