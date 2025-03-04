@@ -15,6 +15,7 @@ import {
   } from "react-native-responsive-screen";
   
   import generateInvoiceNumber from "@/utils/generateInvoiceNumber";
+import CameraComponent from "@/utils/CameraComponent";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -43,7 +44,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     const [unitPrices, setUnitPrices] = useState<{ [key: string]: number | null }>({ A: null, B: null, C: null });
     const [quantities, setQuantities] = useState<{ [key: string]: number }>({ A: 0, B: 0, C: 0 });
     const [total, setTotal] = useState<number>(0);
-    const [image, setImage] = useState<any>(null);
+    const [image, setImage] = useState<string | null>(null); // Store base64 image here
     const [crops, setCrops] = useState<any[]>([]);
     const [selectedVarietyName, setSelectedVarietyName] = useState<string | null>(null);
     const [donebutton1visibale, setdonebutton1visibale] = useState(true);
@@ -180,6 +181,8 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                 
         }    
         };
+        
+     const [resetCameraImage, setResetCameraImage] = useState(false);
 
       const incrementCropCount = async() => {
         setaddbutton(true);
@@ -201,7 +204,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
             gradeBquan: quantities.B || 0,
             gradeCprice: unitPrices.C || 0,
             gradeCquan: quantities.C || 0,
-            image: image?.assets[0]?.base64 || null,
+            image: image || null,
         };
     
         setCrops(prevCrops => {
@@ -210,6 +213,9 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
         });
     
         resetCropEntry();
+        
+            // Toggle resetCameraImage to trigger the useEffect in CameraComponent
+        setResetCameraImage(prev => !prev);
         setCropCount(prevCount => prevCount + 1);
     };
     
@@ -222,19 +228,23 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
         setImage(null);
     };
     
-    const handleImagePick = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-            base64: true,
-        });
+    // const handleImagePick = async () => {
+    //     const result = await ImagePicker.launchImageLibraryAsync({
+    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //         allowsEditing: true,
+    //         aspect: [4, 3],
+    //         quality: 1,
+    //         base64: true,
+    //     });
     
-        if (!result.canceled) {
-            setImage(result);
-        }
-    };
+    //     if (!result.canceled) {
+    //         setImage(result);
+    //     }
+    // };
+    
+    const handleImagePick = (base64Image: string | null) => {
+        setImage(base64Image); // Update image state with base64 string
+      };
     
     const refreshCropForms = () => {
         setSelectedCrop(null);
@@ -250,6 +260,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
         setdonebutton2disabale(false);
         setaddbutton(true);
         setCropCount(1);
+        setResetCameraImage(prev => !prev);
       };
     
       const handleSubmit = async () => {
@@ -337,7 +348,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                     gradeBquan: quantities.B || 0,
                     gradeCprice: unitPrices.C || 0,
                     gradeCquan: quantities.C || 0,
-                    image: image?.assets[0]?.base64 || null,
+                    image: image || null,
                 },
             };
     
@@ -450,18 +461,14 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                     ))}
                 </View>
 
-                <View>
-                <TouchableOpacity onPress={handleImagePick} className="mt-4 py-2 bg-black rounded-md">
-                    <Text className="text-center text-white">Add Image</Text>
+                <View className='mt-[10%]'>
+                {/* Camera component to capture image */}
+                <CameraComponent onImagePicked={handleImagePick} resetImage={resetCameraImage}/> 
 
-                </TouchableOpacity>
-                {image && (
-                    <Image
-                        source={{ uri: `data:image/jpeg;base64,${image.assets[0].base64}` }}
-                        style={{ width: 200, height: 200, marginTop: 10 ,marginLeft:70 }}
-                    />
-                )}
-                </View>
+                {/* Display the base64 image after it is picked */}
+
+            </View>
+
 
 
                 {/* Total and Buttons */}

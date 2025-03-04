@@ -718,13 +718,13 @@ const AddOfficerAddressDetails: React.FC = () => {
       Alert.alert('Error', 'Please fill in all required fields.');
       return;
     }
-
+  
     if (formData.accountNumber !== formData.confirmAccountNumber) {
       Alert.alert('Error', 'Account numbers do not match.');
       return;
     }
-
-    // Make sure the country is always 'Sri Lanka' before submitting
+  
+    // Ensure 'Sri Lanka' is set as the country before submitting
     const combinedData = {
       ...basicDetails,
       ...formData,
@@ -733,11 +733,11 @@ const AddOfficerAddressDetails: React.FC = () => {
       languages: Object.keys(preferredLanguages)
         .filter((lang) => preferredLanguages[lang as keyof typeof preferredLanguages])
         .join(', '), // Convert preferred languages to a comma-separated string
-      profileImage: formData.profileImage, // Add the profile image from the form data
+      profileImage: basicDetails.profileImage || '', // Include the base64 image in the payload
     };
-    
-    console.log('Combined data for passing to backend :', combinedData);
-
+  
+    console.log('Combined data for passing to backend:', combinedData);
+  
     try {
       const token = await AsyncStorage.getItem('token');
       const response = await axios.post(
@@ -750,15 +750,15 @@ const AddOfficerAddressDetails: React.FC = () => {
           },
         }
       );
-
+  
       if (response.status === 201) {
         Alert.alert('Success', 'Officer created successfully!');
         await AsyncStorage.removeItem('officerFormData'); // Clear saved form data after successful submission
-       navigation.navigate("Main",{screen:'CollectionOfficersList'});
+        navigation.navigate("Main",{screen:"CollectionOfficersList" });
       }
     } catch (error) {
       console.error('Error submitting officer data:', error);
-
+  
       if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
         const serverErrors = error.response.data.error;
         if (serverErrors) {

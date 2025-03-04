@@ -66,6 +66,8 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
   const [crops, setCrops] = useState<Crop[]>([]);
   // const qrCodeRef = useRef<any>(null);
     const [qrValue, setQrValue] = useState<string>("");
+    
+    const totalSum = crops.reduce((sum:number, crop:any) => sum + parseFloat(crop.total || 0), 0);
 
 
 
@@ -510,9 +512,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
   </View>
 )}
 
-{crops.map((crop) => (
-  <Text className='font-bold' key={crop.id}>Full Total (Rs.) : {crop.total}</Text>
-))}
+
 
 
       {/* QR Code Section
@@ -530,6 +530,9 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
       </View>
     )} */}
 
+        <View className="p-2 border-t border-gray-300">
+          <Text className="font-bold">Total Sum: Rs {totalSum.toFixed(2)}</Text>
+        </View>
 
 
       {details && details.qrCode  && officerDetails && officerDetails.QRCode && (
