@@ -746,7 +746,7 @@ const AddOfficerBasicDetails: React.FC = () => {
        {/* Job Role Dropdown */}
        <View className="pb-2 mb-4">
           <Text className="font-semibold text-sm mb-2">Job Role:</Text>
-          <View className="border border-gray-300 rounded-lg pb-3">
+          <View className="rounded-lg pb-3">
             <SelectList
               setSelected={handleJobRoleChange}
               data={jobRoles}
@@ -755,13 +755,11 @@ const AddOfficerBasicDetails: React.FC = () => {
                 key: "1",
                 value: formData.jobRole || "Select Job Role",
               }}
-              boxStyles={{
-                height: 40,
-                borderWidth: 1,
-                borderColor: "#ccc",
-                borderRadius: 5,
-                paddingLeft: 10,
-              }}
+              // boxStyles={{
+              //   height: 40,
+              //   borderRadius: 5,
+              //   paddingLeft: 10,
+              // }}
               dropdownStyles={{ backgroundColor: "white", borderRadius: 5 }}
             />
           </View>
