@@ -639,7 +639,7 @@ const AddOfficerBasicDetails: React.FC = () => {
       enabled
       className="flex-1"
     >
-      <ScrollView className="flex-1 bg-white">
+      <ScrollView className="flex-1 bg-white" keyboardShouldPersistTaps="handled">
         {/* Header */}
         <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
           {/* <TouchableOpacity onPress={() => navigation.goBack()} className="pr-4">
@@ -853,8 +853,8 @@ const AddOfficerBasicDetails: React.FC = () => {
 
           {/* Phone Number 1 */}
           <View className="mb-4">
-            <View className="flex-row items-center border border-gray-300 rounded-lg">
-              <View style={{ flex: 4, alignItems: "center" }}>
+            <View className="flex-row gap-2 rounded-lg">
+              <View style={{ flex: 3, alignItems: "center" }} className="  ">
                 {/* <Picker
               selectedValue={phoneCode1}
               onValueChange={(itemValue) => setPhoneCode1(itemValue)}
@@ -875,8 +875,8 @@ const AddOfficerBasicDetails: React.FC = () => {
                     value: `${country.code} (${country.dial_code})`,
                   }))}
                   boxStyles={{
-                    borderColor: "transparent", // Remove the border
-                    borderRadius: 0,
+                    borderColor: "#ccc", // Remove the border
+                    borderRadius: 8,
                     width: "100%",
                   }}
                   dropdownStyles={{ borderColor: "#ccc" }}
@@ -884,24 +884,24 @@ const AddOfficerBasicDetails: React.FC = () => {
                   defaultOption={{ key: phoneCode1, value: phoneCode1 }} // Set the default selected value
                 />
               </View>
-              <View style={{ flex: 7 }}>
+              <View style={{ flex: 7 }} className="border border-gray-300 py-1 max-h-11  rounded-lg">
                 <TextInput
-                  placeholder="--Phone Number 1--"
+                  placeholder="7X-XXX-XXXX"
                   keyboardType="phone-pad"
                   value={phoneNumber1}
                   onChangeText={handlePhoneNumber1Change}
-                  className="px-3 py-2 text-gray-700"
+                  className="px-3 py-3 text-gray-700"
                   maxLength={9} // Limit the input to 9 characters
                 />
               </View>
             </View>
-            {error1 ? <Text style={{ color: "red" }}>{error1}</Text> : null}
+            {error1 ? <Text className="mt-2" style={{ color: "red" }}>{error1}</Text> : null}
           </View>
 
           {/* Phone Number 2 */}
           <View className="mb-4">
-            <View className="flex-row items-center border border-gray-300 rounded-lg">
-              <View style={{ flex: 4, alignItems: "center" }}>
+            <View className="flex-row items-center gap-2 rounded-lg">
+              <View style={{ flex: 3, alignItems: "center" }}>
                 {/* <Picker
               selectedValue={phoneCode2}
               onValueChange={(itemValue) => setPhoneCode2(itemValue)}
@@ -922,8 +922,8 @@ const AddOfficerBasicDetails: React.FC = () => {
                     value: `${country.code} (${country.dial_code})`,
                   }))}
                   boxStyles={{
-                    borderColor: "transparent", // Remove the border
-                    borderRadius: 0,
+                    borderColor: "#ccc", // Remove the border
+                    borderRadius: 8,
                     width: "100%",
                   }}
                   dropdownStyles={{ borderColor: "#ccc" }}
@@ -931,17 +931,18 @@ const AddOfficerBasicDetails: React.FC = () => {
                   defaultOption={{ key: phoneCode2, value: phoneCode2 }} // Set the default selected value
                 />
               </View>
-              <View style={{ flex: 7 }}>
+              <View style={{ flex: 7 }} className="border border-gray-300 py-1 max-h-11  rounded-lg">
                 <TextInput
-                  placeholder="--Phone Number 2--"
+                  placeholder="7X-XXX-XXXX"
                   keyboardType="phone-pad"
                   value={phoneNumber2}
                   onChangeText={handlePhoneNumber2Change}
-                  className="px-3 py-2 text-gray-700"
+                  className="px-3 py-3 text-gray-700"
+                  maxLength={9} // Limit the input to 9 characters
                 />
               </View>
             </View>
-            {error2 ? <Text style={{ color: "red" }}>{error2}</Text> : null}
+            {error2 ? <Text className="mt-2" style={{ color: "red" }}>{error2}</Text> : null}
           </View>
 
           <TextInput

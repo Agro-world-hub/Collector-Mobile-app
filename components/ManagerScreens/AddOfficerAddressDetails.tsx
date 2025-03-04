@@ -607,6 +607,7 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { ActivityIndicator } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native';
 import { Platform } from 'react-native';
+import bankNames from "../../assets/jsons/banks.json";
 
 type AddOfficerAddressDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -620,7 +621,11 @@ const AddOfficerAddressDetails: React.FC = () => {
   // Rename the destructured `formData` from route.params to avoid conflict
   const { formData: basicDetails, type, preferredLanguages, jobRole } = route.params;
   console.log('Basic details:', basicDetails, type, preferredLanguages, jobRole);
-
+  const [filteredBranches, setFilteredBranches] = useState<any[]>([]);
+  const [bankName, setBankName] = useState<string>("");
+  const [branchName, setBranchName] = useState<string>("");
+  
+  
 
   const [formData, setFormData] = useState({
     houseNumber: '',
@@ -636,6 +641,8 @@ const AddOfficerAddressDetails: React.FC = () => {
     branchName: '',
     profileImage: '',
   });
+
+  console.log(formData)
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -747,7 +754,7 @@ const AddOfficerAddressDetails: React.FC = () => {
       if (response.status === 201) {
         Alert.alert('Success', 'Officer created successfully!');
         await AsyncStorage.removeItem('officerFormData'); // Clear saved form data after successful submission
-      //  navigation.navigate('CollectionOfficersList');
+       navigation.navigate("Main",{screen:'CollectionOfficersList'});
       }
     } catch (error) {
       console.error('Error submitting officer data:', error);
@@ -821,11 +828,53 @@ const AddOfficerAddressDetails: React.FC = () => {
       setDistricts(selectedProvince.districts);
     }
   };
-  
 
+  useEffect(() => {
+    if (bankName) {
+      const selectedBank = bankNames.find((bank) => bank.name === bankName);
+      if (selectedBank) {
+        try {
+          const data = require("../../assets/jsons/branches.json");
+          const filteredBranches = data[selectedBank.ID] || [];
+
+          const sortedBranches = filteredBranches.sort(
+            (a: { name: string }, b: { name: any }) =>
+              a.name.localeCompare(b.name)
+          );
+
+          setFilteredBranches(sortedBranches);
+        } catch (error) {
+          console.error("Error loading branches", error);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setFilteredBranches([]);
+      }
+    } else {
+      setFilteredBranches([]);
+    }
+  }, [bankName]);
+  
+  const handleBankSelection = (selectedBank: string) => {
+    console.log("Selected bank: ", selectedBank);
+    setBankName(selectedBank);
+    setFormData((prevData) => ({
+      ...prevData,
+      bankName: selectedBank,  
+    }));
+  };
+
+  const handleBranchSelection = (selectedBranch: string) => {
+    setBranchName(selectedBranch);
+    setFormData((prevData) => ({
+      ...prevData,
+      branchName: selectedBranch,  
+    }));
+  };
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} enabled className="flex-1">
-      <ScrollView className="flex-1 bg-white">
+      <ScrollView className="flex-1 bg-white" keyboardShouldPersistTaps="handled">
         {/* Header */}
         <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
           <TouchableOpacity onPress={() => navigation.goBack()} className="pr-4">
@@ -886,6 +935,8 @@ const AddOfficerAddressDetails: React.FC = () => {
               borderWidth: 1,
               borderRadius: 5,
               padding: 10,
+              paddingLeft: 15,
+              paddingRight: 15,
             }}
             dropdownStyles={{
               borderRadius: 5,
@@ -893,13 +944,13 @@ const AddOfficerAddressDetails: React.FC = () => {
               borderColor: "#cccccc",
             }}
             search={true}
-            placeholder='Province'
+            placeholder='Select Province'
           />
         </View>
 
         {/* District Dropdown */}
         {formData.province && (
-          <View style={{ marginBottom: 10 }}>
+          <View style={{ marginBottom: 2 }}>
             {/* <Text style={{ fontSize: 18, marginBottom: 5 }}>Select District</Text> */}
             <SelectList
               setSelected={(district:any) => setFormData({ ...formData, district })}
@@ -910,6 +961,8 @@ const AddOfficerAddressDetails: React.FC = () => {
                 borderWidth: 1,
                 borderRadius: 5,
                 padding: 10,
+                paddingLeft: 15,
+                paddingRight: 15,
               }}
               dropdownStyles={{
                 borderRadius: 5,
@@ -917,7 +970,7 @@ const AddOfficerAddressDetails: React.FC = () => {
                 borderColor: "#cccccc",
               }}
               search={true}
-              placeholder='Province'
+              placeholder='Select District'
             />
           </View>
         )}
@@ -948,18 +1001,72 @@ const AddOfficerAddressDetails: React.FC = () => {
           />
           {error && <Text className="text-red-500 text-sm mb-4">{error}</Text>}
 
-          <TextInput
+          {/* <TextInput
             placeholder="--Bank Name--"
             value={formData.bankName}
             onChangeText={(text) => handleInputChange('bankName', text)}
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
-          />
+          /> 
+
           <TextInput
             placeholder="--Branch Name--"
             value={formData.branchName}
             onChangeText={(text) => handleInputChange('branchName', text)}
             className="border border-gray-300 rounded-lg px-3 py-2"
+          />  */}
+   <View className="">
+          <View className='mb-4'>
+          <SelectList
+            setSelected={handleBankSelection} // Handle bank selection
+            data={bankNames.map((bank) => ({
+              key: bank.name, // Bank name as key
+              value: bank.name, // Display name in dropdown
+            }))}
+            placeholder="--Bank Name--"
+            boxStyles={{
+              borderColor: "#cccccc",
+              borderWidth: 1,
+              borderRadius: 5,
+              padding: 10,
+              paddingLeft: 15,
+              paddingRight: 15,
+            }}
+            dropdownStyles={{
+              borderRadius: 5,
+              borderWidth: 1,
+              borderColor: "#cccccc",
+            }}
+            search={true}
           />
+          </View>
+          <View>
+          {filteredBranches.length > 0 && (
+            <SelectList
+              setSelected={handleBranchSelection} // Handle branch selection
+              data={filteredBranches.map((branch) => ({
+                key: branch.name, // Branch name as key
+                value: branch.name, // Display branch name in dropdown
+              }))}
+              placeholder="--Branch Name--"
+              boxStyles={{
+                borderColor: "#cccccc",
+                borderWidth: 1,
+                borderRadius: 5,
+                padding: 10,
+                paddingLeft: 15,
+                paddingRight: 15,
+              }}
+              dropdownStyles={{
+                borderRadius: 5,
+                borderWidth: 1,
+                borderColor: "#cccccc",
+              }}
+              search={true}
+            />
+          )}
+          </View>
+        </View>
+
         </View>
 
         {/* Buttons */}
