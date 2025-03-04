@@ -358,6 +358,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { useTranslation } from "react-i18next";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import socket from "@/services/socket";
+import { ScrollView } from "react-native-gesture-handler";
 
 type EngProfileNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -484,6 +485,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
 
   return (
+ 
     <View
       className="flex-1 bg-white "
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
@@ -492,7 +494,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       <TouchableOpacity onPress={() => handleBackPress()} className="">
         <AntDesign name="left" size={24} color="#000502" />
       </TouchableOpacity>
-
+      <ScrollView>
       {/* Profile Card */}
       <View className="flex-row items-center p-2 mt-4  mb-4">
         <Image
@@ -692,7 +694,9 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           </View>
         </Modal>
       </View>
+      </ScrollView>
     </View>
+   
   );
 };
 

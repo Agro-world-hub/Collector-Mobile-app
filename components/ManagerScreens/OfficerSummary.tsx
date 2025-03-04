@@ -496,14 +496,14 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
         <View className="bg-white rounded-b-[25px] px-4 pt-12 pb-6 items-center shadow-lg z-10">
           {/* Back Icon */}
           <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            className="absolute top-6 left-4"
+            onPress={() => navigation.navigate("Main",{screen:"CollectionOfficersList"})}
+            className="absolute top-4 left-4"
           >
             <AntDesign name="left" size={22} color="#000" />
           </TouchableOpacity>
 
           <TouchableOpacity
-            className="absolute top-6 right-4"
+            className="absolute top-4 right-4"
             onPress={() => setShowMenu((prev) => !prev)}
           >
             <Ionicons name="ellipsis-vertical" size={24} />
@@ -582,6 +582,9 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
               navigation.navigate("Main", {screen:"TransactionList" , params:{
                 officerId,
                 collectionOfficerId,
+                phoneNumber1,
+                phoneNumber2,
+                officerName
               }})
             }
           >

@@ -139,7 +139,7 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
     currentTabName = 'SearchPriceScreen';
   }else if (currentTabName === 'EditTargetManager' || currentTabName === 'PassTargetScreen' || currentTabName === 'RecieveTargetScreen' ) {
     currentTabName = 'DailyTarget';
-  }else if (currentTabName === 'TransactionList') {
+  }else if (currentTabName === 'TransactionList' || currentTabName === 'OfficerSummary') {
     currentTabName = 'CollectionOfficersList';
   }
   

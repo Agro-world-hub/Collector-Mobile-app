@@ -397,7 +397,6 @@ const handleLogin = async () => {
     // >
     <KeyboardAvoidingView 
     behavior={Platform.OS ==="ios" ? "padding" : "height"}
-  keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} 
   enabled 
   className="flex-1"
 >

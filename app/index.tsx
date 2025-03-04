@@ -216,6 +216,7 @@ function MainTabNavigator() {
       <Stack.Screen name="ComplainHistory" component={ComplainHistory} />
       <Stack.Screen name="EditTargetManager" component={EditTargetManager as any} />
       <Stack.Screen name="TransactionList" component={TransactionList as any} />
+      <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} />
 
     </Tab.Navigator>
   );
@@ -415,7 +416,7 @@ const cleanupSocketListeners = () => {
       {/* <Stack.Screen name="SearchPriceScreen" component={SearchPriceScreen} />  */}
       {/* <Stack.Screen name="PriceChart" component={PriceChart as any}/> */}
       {/* <Stack.Screen name="CollectionOfficersList" component={CollectionOfficersList }/> */}
-      <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} />
+      {/* <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} /> */}
       <Stack.Screen name="ReportGenerator" component={ReportGenerator as any} />
       {/* <Stack.Screen name="DailyTargetList" component={DailyTargetList} /> */}
       <Stack.Screen name="AddOfficerBasicDetails" component={AddOfficerBasicDetails} />

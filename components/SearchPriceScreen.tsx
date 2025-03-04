@@ -86,7 +86,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
           style={{ flex: 1 }}>
     <ScrollView className="flex-1 bg-white "
     keyboardShouldPersistTaps="handled">
-    <View className="flex-1 bg-white items-center px-6 pt-12">
+    <View className="flex-1 bg-white items-center px-6 pt-8">
       <Text className="text-xl font-semibold mb-4">Search Price</Text>
       <Image
         source={require('../assets/images/market-price-1.png')} // Replace with your image path

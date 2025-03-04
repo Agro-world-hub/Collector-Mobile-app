@@ -16,6 +16,7 @@ import axios from "axios";
 import environment from "../environment/environment";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
+import { ScrollView } from "react-native-gesture-handler";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -153,6 +154,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
   
 
   return (
+  
     <View
       className="flex-1 bg-white"
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
@@ -166,12 +168,12 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
           QR Code
         </Text>
       </View>
-
+      <ScrollView>
       {/* QR Code Display */}
       <View className="items-center my-6">
         <View
           ref={qrCodeRef}
-          className="bg-white p-4 mt-[90px] rounded-xl border-2 border-[#2AAD7A]"
+          className="bg-white p-4 mt-[4%] rounded-xl border-2 border-[#2AAD7A]"
         >
           {qrValue ? (
             <QRCode value={qrValue} size={200} />
@@ -211,7 +213,9 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
           <Text className="text-white text-xs mt-1">Share</Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     </View>
+
   );
 };
 
