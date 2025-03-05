@@ -403,7 +403,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
       <View className="flex-row justify-around w-full mt-6">
         <TouchableOpacity className="bg-gray-600 p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={downloadQRCode}>
           <Image
-            source={require('../assets/images/download.png')} // Path to download icon
+            source={require('../assets/images/download.webp')} // Path to download icon
             style={{ width: 24, height: 24 }}
           />
           <Text className="text-sm text-cyan-50">Download</Text>
@@ -411,7 +411,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
 
         <TouchableOpacity className="bg-gray-600 p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={shareQRCode}>
           <Image
-            source={require('../assets/images/Share.png')} // Path to share icon
+            source={require('../assets/images/Share.webp')} // Path to share icon
             style={{ width: 24, height: 24 }}
           />
           <Text className="text-sm text-cyan-50">Share</Text>

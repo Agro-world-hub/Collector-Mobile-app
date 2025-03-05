@@ -191,7 +191,7 @@ const ClaimOfficer: React.FC = () => {
       {!officerFound && empID && (
         <View className="flex items-center justify-center mt-24">
           <Image
-            source={require('../../assets/images/dd.png')} // Replace with your PNG file path
+            source={require('../../assets/images/dd.webp')} // Replace with your PNG file path
             className="w-28 h-28" // Adjust width and height as needed
             resizeMode="contain" // Ensures the image scales proportionally
           />
@@ -206,7 +206,7 @@ const ClaimOfficer: React.FC = () => {
         <View className="px-4 mt-10 items-center">
           {/* Officer Avatar */}
           <Image
-            source={require('../../assets/images/profile.png')}
+            source={require('../../assets/images/profile.webp')}
             className="w-20 h-20 rounded-full mb-4"
           />
           {/* Officer Details */}

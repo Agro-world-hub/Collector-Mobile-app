@@ -43,7 +43,7 @@ const NoCollectionCenterScreen: React.FC<NoCollectionCenterScreenProps> = ({ nav
       {/* Illustration */}
       <View className="w-full flex items-center justify-center">
         <Image
-          source={require('../assets/images/noUser.png')}
+          source={require('../assets/images/noUser.webp')}
           className="w-80 h-80"
           resizeMode="contain"
         />

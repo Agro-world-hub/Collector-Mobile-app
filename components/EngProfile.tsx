@@ -498,14 +498,14 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
         {/* Profile Card */}
         <View className="flex-row items-center p-2 mt-4  mb-4">
           {/* <Image
-          source={require("../assets/images/mprofile.png")}
+          source={require("../assets/images/mprofile.webp")}
           className="w-16 h-16 rounded-full mr-3"
         /> */}
           <Image
             source={
               profile?.image
                 ? { uri: profile.image }
-                : require("../assets/images/mprofile.png")
+                : require("../assets/images/mprofile.webp")
             }
             className="w-16 h-16 rounded-full mr-3"
           />
@@ -675,7 +675,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
                 <View className="flex-row justify-center mb-4">
                   <View className="bg-gray-200 rounded-full p-4">
                     <Image
-                      source={require("../assets/images/ringer.png")} // Replace with your call ringing PNG path
+                      source={require("../assets/images/ringer.webp")} // Replace with your call ringing PNG path
                       className="w-16 h-16"
                     />
                   </View>

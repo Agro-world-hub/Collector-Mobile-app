@@ -583,7 +583,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
             <Text className="text-xl font-bold mb-4">Success!</Text>
             <View className="mb-4">
               <Image
-                source={require("../assets/images/tick.png")} // Replace with your own checkmark image
+                source={require("../assets/images/tick.webp")} // Replace with your own checkmark image
                 className="w-24 h-24"
               />
             </View>
@@ -608,7 +608,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
             <Text className="text-xl font-bold mb-4">Oops!</Text>
             <View className="mb-4">
               <Image
-                source={require("../assets/images/error.png")} // Replace with your own error image
+                source={require("../assets/images/error.webp")} // Replace with your own error image
                 className="w-24 h-24"
               />
             </View>

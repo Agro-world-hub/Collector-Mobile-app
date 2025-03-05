@@ -11,7 +11,7 @@ interface SinChangePasswordProps {
     navigation: SinChangePasswordNavigationProp;
 }
 
-const toplogo = require('../../assets/images/colector.png');
+const toplogo = require('../../assets/images/colector.webp');
 
 const SinChangePassword: React.FC<SinChangePasswordProps> = ({ navigation }) => {
     const [currentPassword, setCurrentPassword] = useState('');

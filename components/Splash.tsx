@@ -9,7 +9,7 @@ interface SplashProps {
   navigation: SplashNavigationProp;
 }
 
-const phone = require('../assets/images/phone.png');
+const phone = require('../assets/images/phone.webp');
 
 const Splash: React.FC<SplashProps> = ({ navigation }) => {
   useEffect(() => {

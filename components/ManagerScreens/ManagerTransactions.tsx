@@ -162,7 +162,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
             onChangeText={handleSearch}
           />
           <Image
-            source={require('../../assets/images/searchhh.png')}
+            source={require('../../assets/images/searchhh.webp')}
             className="w-8 h-8"
             resizeMode="contain"
           />

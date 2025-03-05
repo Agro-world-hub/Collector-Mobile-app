@@ -115,19 +115,16 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
       }
     >
       {/* Profile Section */}
-      <TouchableOpacity
-        className="flex-row items-center mb-4 p-4"
-        onPress={() => navigation.navigate("EngProfile")}
-      >
+      <TouchableOpacity className="flex-row items-center mb-4 p-4" onPress={() => navigation.navigate("EngProfile")}>
         {/* <Image
-          source={require("../assets/images/mprofile.png")}
+          source={require("../assets/images/mprofile.webp")}
           className="w-16 h-16 rounded-full mr-4"
-        /> */}
+        />  */}
         <Image
           source={
             profile?.image
               ? { uri: profile.image }
-              : require("../assets/images/mprofile.png")
+              : require("../assets/images/mprofile.webp")
           }
           className="w-16 h-16 rounded-full mr-3"
           onError={() => console.log("Failed to load image")}
@@ -158,8 +155,8 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
       ) : (
         <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#2AAD7A]">
           <View className="flex-row justify-center items-center mb-2">
-            <Image
-              source={require("../assets/images/hand.png")} // Replace with your image path
+            <Image 
+              source={require("../assets/images/hand.webp")} // Replace with your image path
               className="w-8 h-8 mr-2"
             />
             <Text className="text-center text-[#2AAD7A] font-bold">
@@ -216,7 +213,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
           onPress={() => navigation.navigate("QRScanner" as any)}
         >
           <Image
-            source={require("../assets/images/qrrr.png")}
+            source={require("../assets/images/qrrr.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
           <Text className="text-gray-700 text-lg absolute bottom-2 left-2">
@@ -229,7 +226,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
           onPress={() => navigation.navigate("SearchFarmer" as any)}
         >
           <Image
-            source={require("../assets/images/nic.png")}
+            source={require("../assets/images/nic.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
           <Text className="text-gray-700 text-lg absolute bottom-2 left-2">
