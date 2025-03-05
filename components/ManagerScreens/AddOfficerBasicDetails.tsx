@@ -455,6 +455,21 @@ const AddOfficerBasicDetails: React.FC = () => {
     }));
   };
 
+  const nicRegex = /^\d{9}[Vv]?$|^\d{10}$/;
+
+
+  const validateNicNumber = (input: string) => /^[0-9]{9}[vV]$|^[0-9]{10}$/.test(input);
+
+  const handleNicNumberChange = (input: string) => {
+    setFormData({ ...formData, nicNumber: input });
+    if (!validateNicNumber(input)) {
+      setError3("NIC Number must be 9 digits followed by 'V' or 10 digits.");
+    } else {
+      setError3("");
+    }
+  };
+  
+
   const fetchEmpId = async (role: string) => {
     console.log("Fetching empId for role:", role);
     try {
@@ -604,6 +619,21 @@ const AddOfficerBasicDetails: React.FC = () => {
 
   const [error1, setError1] = useState("");
   const [error2, setError2] = useState("");
+  const [error3, setError3] = useState("");
+  const [errorEmail, setErrorEmail] = useState("");
+
+  const validateEmail = (email: string) => 
+    /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|\.com|\.gov|\.lk)$/i.test(email);
+  
+  // Handle email change
+  const handleEmailChange = (input: string) => {
+    setFormData({ ...formData, email: input });
+    if (!validateEmail(input)) {
+      setErrorEmail("Email must end with 'gmail.com', 'yahoo.com', '.com', '.gov', or '.lk'.");
+    } else {
+      setErrorEmail("");
+    }
+  };
 
   // Validation function for phone numbers
   const validatePhoneNumber = (input: string) => /^[0-9]{9}$/.test(input);
@@ -717,6 +747,8 @@ const AddOfficerBasicDetails: React.FC = () => {
           </TouchableOpacity>
         </View>
 
+        <View style={{ borderBottomWidth: 1, borderColor: "#ADADAD", marginVertical: 10 }} />
+
         {/* Preferred Languages */}
         <View className="px-8 mb-4">
           <Text className="font-semibold text-sm mb-2">
@@ -746,12 +778,14 @@ const AddOfficerBasicDetails: React.FC = () => {
           </View>
         </View>
 
+        <View style={{ borderBottomWidth: 1, borderColor: "#ADADAD", marginVertical: 10 }} />
+
         {/* Input Fields */}
         <View className="px-8">
           {/* Job Role Dropdown */}
-          <View className="pb-2 mb-4">
+          <View className="mt-[-2] ">
             <Text className="font-semibold text-sm mb-2">Job Role:</Text>
-            <View className=" rounded-lg pb-3">
+            <View className=" rounded-lg pb-3 " >
               <SelectList
                 setSelected={handleJobRoleChange}
                 data={jobRoles}
@@ -762,11 +796,12 @@ const AddOfficerBasicDetails: React.FC = () => {
                 }}
                 placeholder="Select Job Role"
                 boxStyles={{
-                  height: 40,
+                  height: 42,
                   borderWidth: 1,
-                  borderColor: "#ccc",
+                  borderColor: "#CFCFCF",
                   borderRadius: 5,
                   paddingLeft: 10,
+                  
                 }}
                 dropdownStyles={{ backgroundColor: "white", borderRadius: 5 }}
               />
@@ -850,6 +885,8 @@ const AddOfficerBasicDetails: React.FC = () => {
             }
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
+ 
+
 
           {/* Phone Number 1 */}
           <View className="mb-4">
@@ -868,6 +905,8 @@ const AddOfficerBasicDetails: React.FC = () => {
                 />
               ))}
             </Picker> */}
+
+            
                 <SelectList
                   setSelected={setPhoneCode1}
                   data={countryCodes.map((country) => ({
@@ -878,13 +917,14 @@ const AddOfficerBasicDetails: React.FC = () => {
                     borderColor: "#ccc", // Remove the border
                     borderRadius: 8,
                     width: "100%",
+                    height: 40
                   }}
                   dropdownStyles={{ borderColor: "#ccc" }}
                   search={false} // Disable search in dropdown if not needed
                   defaultOption={{ key: phoneCode1, value: phoneCode1 }} // Set the default selected value
                 />
               </View>
-              <View style={{ flex: 7 }} className="border border-gray-300 py-1 max-h-11  rounded-lg">
+              <View style={{ flex: 7 }} className="border border-gray-300 rounded-lg  text-gray-700 ">
                 <TextInput
                   placeholder="7X-XXX-XXXX"
                   keyboardType="phone-pad"
@@ -925,13 +965,14 @@ const AddOfficerBasicDetails: React.FC = () => {
                     borderColor: "#ccc", // Remove the border
                     borderRadius: 8,
                     width: "100%",
+                    height: 40
                   }}
                   dropdownStyles={{ borderColor: "#ccc" }}
                   search={false} // Disable search in dropdown if not needed
                   defaultOption={{ key: phoneCode2, value: phoneCode2 }} // Set the default selected value
                 />
               </View>
-              <View style={{ flex: 7 }} className="border border-gray-300 py-1 max-h-11  rounded-lg">
+              <View style={{ flex: 7 }} className="border border-gray-300 rounded-lg  text-gray-700 ">
                 <TextInput
                   placeholder="7X-XXX-XXXX"
                   keyboardType="phone-pad"
@@ -945,20 +986,29 @@ const AddOfficerBasicDetails: React.FC = () => {
             {error2 ? <Text className="mt-2" style={{ color: "red" }}>{error2}</Text> : null}
           </View>
 
-          <TextInput
+          {/* <TextInput
             placeholder="--NIC Number--"
             value={formData.nicNumber}
             onChangeText={(text) =>
               setFormData({ ...formData, nicNumber: text })
             }
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+          /> */}
+
+<TextInput
+            placeholder="--NIC Number--"
+            value={formData.nicNumber}
+            onChangeText={handleNicNumberChange}
+            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
+          {error3 ? <Text className="mb-3" style={{ color: "red" }}>{error3}</Text> : null}
           <TextInput
             placeholder="--Email Address--"
             value={formData.email}
-            onChangeText={(text) => setFormData({ ...formData, email: text })}
-            className="border border-gray-300 rounded-lg px-3 py-2"
+            onChangeText={handleEmailChange}
+            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
+          {errorEmail ? <Text className="mt-2" style={{ color: "red" }}>{errorEmail}</Text> : null}
         </View>
 
         {/* Buttons */}
