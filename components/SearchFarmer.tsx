@@ -167,7 +167,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
           {!isSearching && NICnumber.length === 0 && (
             <View className="mt-10 items-center">
               <Image
-                source={require("../assets/images/search.png")}
+                source={require("../assets/images/search.webp")}
                 className="h-[350px] w-[300px] rounded-lg"
                 resizeMode="contain"
               />
@@ -185,7 +185,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
           {!isSearching && noResults && NICnumber.length > 0 && (
             <View className="mt-6 items-center">
               <Image
-                source={require("../assets/images/notfound.png")}
+                source={require("../assets/images/notfound.webp")}
                 className="h-[200px] w-[200px] rounded-lg"
                 resizeMode="contain"
               />

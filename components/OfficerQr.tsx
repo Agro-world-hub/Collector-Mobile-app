@@ -387,7 +387,7 @@ const shareQRCode = async () => {
       {/* Profile Info */}
       <View className="flex-row items-center justify-center mb-4 px-4 mt-[9sssssss%]">
         <Image
-          source={require("../assets/images/profile.png")}
+          source={require("../assets/images/profile.webp")}
           className="w-20 h-20 rounded-full border-2 border-gray-300 mr-4"
         />
         <View>

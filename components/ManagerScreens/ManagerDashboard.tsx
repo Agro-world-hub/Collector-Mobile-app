@@ -96,7 +96,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
       {/* Profile Section */}
       <TouchableOpacity className="flex-row items-center mb-4 p-4" onPress={() => navigation.navigate("EngProfile")}>
         <Image
-          source={require("../../assets/images/mprofile.png")}
+          source={require("../../assets/images/mprofile.webp")}
           className="w-16 h-16 rounded-full mr-4"
         />
         <View>
@@ -115,7 +115,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
               <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#2AAD7A]">
                 <View className="flex-row justify-center items-center mb-2">
                   <Image 
-                    source={require("../../assets/images/hand.png")} 
+                    source={require("../../assets/images/hand.webp")} 
                     className="w-8 h-8 mr-2"
                   />
                   <Text className="text-center text-[#2AAD7A] font-bold">Completed!</Text>
@@ -146,7 +146,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
       <View className="flex-row flex-wrap justify-between p-5 mt-[5%] mb-[8%]">
         <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("CenterTarget" as any)}>
           <Image
-            source={require("../../assets/images/ct.png")}
+            source={require("../../assets/images/ct.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
           <Text className="text-gray-700 text-lg absolute bottom-2 left-2">Center Target</Text>
@@ -154,7 +154,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
 
         <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("ManagerTransactions" as any, { empId })}>
           <Image
-            source={require("../../assets/images/mycollect.png")}
+            source={require("../../assets/images/mycollect.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
           <Text className="text-gray-700 text-lg absolute bottom-2 left-2">My Collection</Text>
@@ -162,7 +162,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
 
         <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("QRScanner" as any)}>
           <Image
-            source={require("../../assets/images/qrrr.png")}
+            source={require("../../assets/images/qrrr.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
           <Text className="text-gray-700 text-lg absolute bottom-2 left-2">Scan QR</Text>
@@ -170,7 +170,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
 
         <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative mb-5" onPress={() => navigation.navigate("SearchFarmer" as any)}>
           <Image
-            source={require("../../assets/images/nic.png")}
+            source={require("../../assets/images/nic.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
           <Text className="text-gray-700 text-lg absolute bottom-2 left-2">Search By NIC</Text>

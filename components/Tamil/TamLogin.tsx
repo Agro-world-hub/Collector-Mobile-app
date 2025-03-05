@@ -11,7 +11,7 @@ interface LoginProps {
     navigation: TamLoginNavigationProp;
 }
 
-const login = require('@/assets/images/login.png');
+const login = require('@/assets/images/bg.webp');
 
 const TamLogin: React.FC<LoginProps> = ({ navigation }) => {
     const [username, setUsername] = useState('');

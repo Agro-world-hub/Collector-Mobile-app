@@ -411,7 +411,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
        <View className="flex-row items-center mb-4">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
-            source={require('../assets/images/back.png')} // Path to your back icon
+            source={require('../assets/images/back.webp')} // Path to your back icon
             style={{ width: 24, height: 24 }}
           />
         </TouchableOpacity>
@@ -564,7 +564,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
       <View className="flex-row justify-around w-full mb-7">
         <TouchableOpacity className="bg-[#2AAD7A] p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={handleDownloadPDF}>
           <Image
-            source={require('../assets/images/download.png')} // Path to download icon
+            source={require('../assets/images/download.webp')} // Path to download icon
             style={{ width: 24, height: 24 }}
           />
           <Text className="text-sm text-cyan-50">Download</Text>
@@ -572,7 +572,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
 
         <TouchableOpacity className="bg-[#2AAD7A] p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={handleSharePDF}>
           <Image
-            source={require('../assets/images/Share.png')} // Path to share icon
+            source={require('../assets/images/Share.webp')} // Path to share icon
             style={{ width: 24, height: 24 }}
           />
           <Text className="text-sm text-cyan-50">Share</Text>

@@ -61,10 +61,10 @@ import environment from '@/environment/environment';
 import  socket  from '@/services/socket';
 import { AppState } from 'react-native';
 
-const homeIcon = require('../assets/images/homee.png');
-const searchIcon = require('../assets/images/searchh.png');
-const qrIcon = require('../assets/images/target.png');
-const adminIcon = require('../assets/images/People.png');
+const homeIcon = require('../assets/images/homee.webp');
+const searchIcon = require('../assets/images/searchh.webp');
+const qrIcon = require('../assets/images/target.webp');
+const adminIcon = require('../assets/images/People.webp');
 
 const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
   let tabs = [

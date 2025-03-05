@@ -176,7 +176,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
 
       <View className="items-center mb-6">
         <Image
-          source={require("../assets/images/mprofile.png")}
+          source={require("../assets/images/mprofile.webp")}
           className="w-28 h-28 rounded-full"
         />
       </View>

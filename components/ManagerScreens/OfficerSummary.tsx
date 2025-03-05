@@ -523,7 +523,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
           {/* Profile Image with Green Border */}
           <View className={`w-28 h-28 border-[6px] rounded-full items-center justify-center ${isOnline ? 'border-[#2AAD7A]' : 'border-gray-400'}`}>
             <Image
-              source={require("../../assets/images/mprofile.png")}
+              source={require("../../assets/images/mprofile.webp")}
               className="w-24 h-24 rounded-full"
             />
           </View>
@@ -590,7 +590,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({ route, navigation }) =>
           >
             <View className="w-12 h-12 bg-[#FFFFFF66] rounded-full items-center justify-center shadow-md">
               <Image
-                source={require("../../assets/images/lf.png")} // Replace with your image path
+                source={require("../../assets/images/lf.webp")} // Replace with your image path
                 style={{ width: 28, height: 28, resizeMode: "contain" }} // Adjust dimensions as needed
               />
             </View>

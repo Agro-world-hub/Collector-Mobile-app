@@ -382,7 +382,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
             <Text className="text-xl font-bold mb-4">Failed</Text>
             <View className="mb-4">
               <Image
-                source={require('../assets/images/error.png')} // Replace with your own error image
+                source={require('../assets/images/error.webp')} // Replace with your own error image
                 className="w-24 h-24"
               />
             </View>

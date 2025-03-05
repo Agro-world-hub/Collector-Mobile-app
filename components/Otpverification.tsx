@@ -75,7 +75,7 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => 
         <View className="bg-white p-6 rounded-2xl items-center w-72 h-80 shadow-lg relative">
           <Text className="text-xl font-bold mt-4 text-center">Success!</Text>
 
-          <Image source={require("../assets/images/success.png")} style={{ width: 100, height: 100 }} />
+          <Image source={require("../assets/images/success.webp")} style={{ width: 100, height: 100 }} />
 
           <Text className="text-gray-500 mb-4">Registration Successful</Text>
 
@@ -335,7 +335,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         style={{ marginTop: dynamicStyles.margingTopForImage }}
       >
         <Image
-          source={require("../assets/images/otp.png")}
+          source={require("../assets/images/otp.webp")}
           style={{
             width: dynamicStyles.imageWidth,
             height: dynamicStyles.imageHeight,

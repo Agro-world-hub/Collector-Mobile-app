@@ -89,7 +89,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
     <View className="flex-1 bg-white items-center px-6 pt-8">
       <Text className="text-xl font-semibold mb-4">Search Price</Text>
       <Image
-        source={require('../assets/images/market-price-1.png')} // Replace with your image path
+        source={require('../assets/images/marketprice.webp')} // Replace with your image path
         className="w-64 h-40 mb-6 mt-8"
         resizeMode="contain"
       />

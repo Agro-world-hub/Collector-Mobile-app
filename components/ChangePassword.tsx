@@ -108,7 +108,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
 
       <View className="items-center pt-4">
         <Image
-          source={require("@/assets/images/Collectorimage.png")} // Update path to your image
+          source={require("@/assets/images/Collectorimage.webp")} // Update path to your image
           resizeMode="contain"
         />
       </View>

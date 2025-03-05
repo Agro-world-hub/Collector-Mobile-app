@@ -273,7 +273,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
         </View>
       ) : (
         <View className="items-center justify-center flex-1">
-          <Image source={require('../../assets/images/empty.png')} className="w-20 h-20 mb-4" resizeMode="contain" />
+          <Image source={require('../../assets/images/empty.webp')} className="w-20 h-20 mb-4" resizeMode="contain" />
           <Text className="text-gray-500 italic">- You have to set Time Duration first -</Text>
         </View>
       )}

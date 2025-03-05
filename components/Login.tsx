@@ -222,7 +222,7 @@ interface LoginProps {
   navigation: LoginNavigationProp;
 }
 
-const loginImage = require("@/assets/images/login.png");
+const loginImage = require("@/assets/images/bg.webp");
 
 const Login: React.FC<LoginProps> = ({ navigation }) => {
   const [empid, setEmpid] = useState("");
@@ -409,8 +409,9 @@ const handleLogin = async () => {
         <AntDesign name="left" size={24} color="#000502" />
       </TouchableOpacity>
 
-      <View className="items-center pt-[-20%]">
-        <Image source={loginImage} />
+      <View className="items-center mt-[-4%]">
+      <Image source={loginImage} style={{ width: 270, height: 350 }} />
+
         <Text className="font-bold text-2xl pt-[7%]">
           {t("Welcome!")}
         </Text>

@@ -562,7 +562,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
         <ScrollView className="flex-1 " keyboardShouldPersistTaps="handled">
           <View className="items-center p-2 pb-20">
             <Image
-              source={require("../assets/images/complain1.png")}
+              source={require("../assets/images/complain.webp")}
               className="w-36 h-36 "
               resizeMode="contain"
             />
