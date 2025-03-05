@@ -32,6 +32,7 @@ interface Transaction {
   lastName: string;
   NICnumber: string;
   totalAmount: number;
+  image: string | null;
 }
 
 const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,navigation }) => {
@@ -95,6 +96,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
           bankName: transaction.bankName || null,
           branchName: transaction.branchName || null,
           empId: transaction.empId || '',  // Added empId from the response
+          image: transaction.profileImage || null,  // Added image from the response
         }));
   
         setTransactions(formattedData);
@@ -134,8 +136,8 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
     <SafeAreaView className="flex-1 bg-white">
       <View>
         {/* Header */}
-        <View className="bg-[#2AAD7A] p-4 mt-[-10] rounded-b-[35px] shadow-md">
-          <TouchableOpacity onPress={() => navigation.goBack()} className="absolute mt-[10%] left-4">
+        <View className="bg-[#2AAD7A] p-4  rounded-b-[35px] shadow-md">
+          <TouchableOpacity onPress={() => navigation.goBack()} className="absolute mt-[4%] left-4">
                     <AntDesign name="left" size={22} color="white" />
                   </TouchableOpacity>
           <Text className="text-white text-lg font-bold ml-[28%] mt-[4%]">EMP ID:{empId} </Text>
@@ -212,11 +214,19 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
             }}
           >
             <View className="w-14 h-14 rounded-full overflow-hidden justify-center items-center mr-4 shadow-md">
-              <Image
+              {/* <Image
                 source={require('../../assets/images/ava.webp')}
                 className="w-full h-full"
                 resizeMode="cover"
-              />
+              /> */}
+                    <Image
+                        source={
+                          item.image
+                            ? { uri: item.image }
+                            : require("../../assets/images/ava.webp")
+                        }
+                        className="w-16 h-16 rounded-full mr-3"
+                      />
             </View>
             <View className="flex-1">
               <Text className="text-[18px] font-semibold text-gray-900">

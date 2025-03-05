@@ -352,7 +352,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
     if (uri) {
       // Get the current date in YYYY-MM-DD format
       const date = new Date().toISOString().slice(0, 10);
-      const fileName = `PurchaseReport_${details?.NICnumber}_${date}.pdf`;
+      const fileName = `PurchaseReport_${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}_${date}.pdf`;
   
       try {
         // Request permission to access media library
