@@ -458,16 +458,32 @@ const AddOfficerBasicDetails: React.FC = () => {
   const nicRegex = /^\d{9}[Vv]?$|^\d{10}$/;
 
 
-  const validateNicNumber = (input: string) => /^[0-9]{9}[vV]$|^[0-9]{10}$/.test(input);
+  // const validateNicNumber = (input: string) => /^[0-9]{9}[vV]$|^[0-9]{10}$/.test(input);
 
-  const handleNicNumberChange = (input: string) => {
-    setFormData({ ...formData, nicNumber: input });
-    if (!validateNicNumber(input)) {
-      setError3("NIC Number must be 9 digits followed by 'V' or 10 digits.");
-    } else {
-      setError3("");
-    }
-  };
+  // const handleNicNumberChange = (input: string) => {
+  //   setFormData({ ...formData, nicNumber: input });
+  //   if (!validateNicNumber(input)) {
+  //     setError3("NIC Number must be 9 digits followed by 'V' or 10 digits.");
+  //   } else {
+  //     setError3("");
+  //   }
+  // };
+
+  const validateNicNumber = (input: string) => /^[0-9]{9}V$|^[0-9]{10}$/.test(input);
+
+const handleNicNumberChange = (input: string) => {
+  // Normalize 'v' or 'V' to uppercase 'V'
+  const normalizedInput = input.replace(/[vV]/g, "V");
+
+  setFormData({ ...formData, nicNumber: normalizedInput });
+
+  if (!validateNicNumber(normalizedInput)) {
+    setError3("NIC Number must be 9 digits followed by 'V' or 10 digits.");
+  } else {
+    setError3("");
+  }
+};
+
   
 
   const fetchEmpId = async (role: string) => {
