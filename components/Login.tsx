@@ -413,12 +413,12 @@ const handleLogin = async () => {
       <Image source={loginImage} style={{ width: 270, height: 350 }} />
 
         <Text className="font-bold text-2xl pt-[7%]">
-          {t("Welcome!")}
+          {t("SignIn.Welcome!")}
         </Text>
       </View>
 
       <View className="mt-2 items-center">
-        <Text>Please Sign in to login</Text>
+        <Text>{t("SignIn.PleaseSignIn")}</Text>
       </View>
 
       {loading ? (

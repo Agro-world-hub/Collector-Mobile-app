@@ -1,6 +1,8 @@
 {
   "SignIn": {
-    "Wellcome": "Wellcome Back!"
+    "LNG": "en",
+    "Wellcome": "Wellcome!",
+    "PleaseSignIn": "Please Sign in to login"
   },
   "Districts": {
     "selectDistrict": "Select a District",
