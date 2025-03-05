@@ -13,7 +13,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-   "ios": {
+    "ios": {
       "supportsTablet": true,
       "infoPlist": {
         "NSAppTransportSecurity": {
@@ -80,9 +80,9 @@
         "ACCESS_NETWORK_STATE",
         "CHANGE_NETWORK_STATE",
         "SYSTEM_ALERT_WINDOW",
-        "FOREGROUND_SERVICE",
         "REQUEST_INSTALL_PACKAGES",
-        "NOTIFICATIONS"
+        "NOTIFICATIONS",
+        "android.permission.CAMERA"
       ]
     },
     "web": {
@@ -94,9 +94,18 @@
       "expo-router",
       "expo-font",
       "expo-barcode-scanner"
-        ],
+    ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "bcf132dd-10be-4c02-84c3-79d97800d773"
+      }
+    },
+    "owner": "dilshankaluhennadi"
   }
 }
