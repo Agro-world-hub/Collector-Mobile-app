@@ -52,14 +52,14 @@
 
 // export default BottomNav;
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import NetInfo from '@react-native-community/netinfo';
 import { View, TouchableOpacity, Image,  Animated, Keyboard  } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import environment from '@/environment/environment';
 import  socket  from '@/services/socket';
-import { AppState } from 'react-native';
+import { AppState, AppStateStatus } from 'react-native';
 
 const homeIcon = require('../assets/images/homee.png');
 const searchIcon = require('../assets/images/searchh.png');
@@ -300,8 +300,8 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
     //     };
     //   }
     // }, [socket]); // Only run when socket is available
-    
-    
+  
+
     
     
 // Setup socket listeners on component mount
@@ -369,9 +369,29 @@ const setupSocketListeners = () => {
           }
         }
       } else if (nextAppState === 'background' || nextAppState === 'inactive') {
-        // Option 1: Maintain connection in background (do nothing)
         
-        // Option 2: Disconnect when app goes to background
+          // Start a timeout to check if app remains in background
+    setTimeout(async () => {
+      // Recheck app state after 5 seconds
+      if (AppState.currentState === 'background' || AppState.currentState === 'inactive') {
+        try {
+          // Remove token and empId from AsyncStorage
+          await AsyncStorage.removeItem('token');
+          await AsyncStorage.removeItem('empid');
+
+          // Disconnect socket
+          console.log('App in background for 5 seconds, disconnecting socket');
+          socket.disconnect();
+
+          // Navigate to login screen
+          navigation.navigate('Login' as never);
+
+        } catch (error) {
+          console.error('Error removing credentials or navigating:', error);
+        }
+      }
+    }, 3000); // 5 seconds delay
+        
         console.log('App went to background, disconnecting socket');
         socket.disconnect();
       }
@@ -388,6 +408,7 @@ const cleanupSocketListeners = () => {
   socket.off('employeeOnline');
   socket.off('employeeOffline');
 };
+
 
   if (isKeyboardVisible) return null;
   return (

@@ -2,7 +2,7 @@
 import io from 'socket.io-client';
 // Create a singleton socket instance
 
-const socket = io('http://192.168.8.105:3005/agro-api/collection-status', {
+const socket = io('http://192.168.1.22:3005/agro-api/collection-status', {
 
   reconnection: true,
   reconnectionAttempts: 5,
@@ -22,5 +22,6 @@ socket.on('disconnect', () => {
 socket.on('connect_error', (error) => {
   console.log('Connection error:', error);
 });
+
 
 export default socket;
