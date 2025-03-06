@@ -460,15 +460,16 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
   const handleLogout = async () => {
     try {
+      const empId = await AsyncStorage.getItem("empid");
+      await status(empId!, false);
       // Disconnect the socket connection
-      if (socket.connected) {
-        socket.disconnect();
-        console.log("Socket disconnected.");
-      }
+      // if (socket.connected) {
+      //   socket.disconnect();
+      //   console.log("Socket disconnected.");
+      // }
 
       // Remove the token and empId from AsyncStorage (or any storage you're using)
       await AsyncStorage.removeItem("token");
-      await AsyncStorage.removeItem("empId"); // Remove the empId as well
 
       // Optionally, you can also remove it from your app's state (if stored there)
       // setEmpId(null);  // Clear empId from the app's state (if using useState)
@@ -484,7 +485,38 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const handleEditClick = () => {
     navigation.navigate("Profile");
   };
-
+  const status = async (empId: string, status: boolean) => {
+    try {
+      const token = await AsyncStorage.getItem("token"); 
+      if (!token) {
+        console.error("Token not found");
+        return;
+      }
+  
+      const response = await fetch(
+        `${environment.API_BASE_URL}api/collection-officer/online-status`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,  // Add token in Authorization header
+          },
+          body: JSON.stringify({
+            empId: empId, // Use the passed empId
+            status: status, // Use the passed status
+          }),
+        }
+      );
+  
+      if (response) {
+        console.log("User is marked as ofline");
+      } else {
+        console.log("Failed to update online status");
+      }
+    } catch (error) {
+      console.error("Online status error:", error);
+    }
+  };
   return (
     <View
       className="flex-1 bg-white "

@@ -313,6 +313,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import environment from "@/environment/environment";
 import axios from "axios";
 import socket from "@/services/socket";
+import { useFocusEffect } from "expo-router";
 
 type OfficerSummaryNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -377,6 +378,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
     setRefreshing(true);
     fetchTaskSummary(); // Re-fetch task summary
     setRefreshing(false);
+    getOnlineStatus();
   }, [collectionOfficerId]);
 
   useEffect(() => {
@@ -428,74 +430,112 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
     }
   };
 
-  const isOnlineRef = useRef(false);
+  // const isOnlineRef = useRef(false);
 
-  // Create stable callback references with useCallback
-  const handleLoginSuccess = useCallback(
-    (data: any) => {
-      if (data.empId === officerId) {
-        if (!isOnlineRef.current) {
-          isOnlineRef.current = true;
-          setIsOnline(true);
-        }
-      }
-    },
-    [officerId]
+  // // Create stable callback references with useCallback
+  // const handleLoginSuccess = useCallback(
+  //   (data: any) => {
+  //     if (data.empId === officerId) {
+  //       if (!isOnlineRef.current) {
+  //         isOnlineRef.current = true;
+  //         setIsOnline(true);
+  //       }
+  //     }
+  //   },
+  //   [officerId]
+  // );
+
+  // const handleEmployeeOnline = useCallback(
+  //   (data: any) => {
+  //     if (data.empId === officerId) {
+  //       if (!isOnlineRef.current) {
+  //         console.log("Employee is online", data);
+  //         isOnlineRef.current = true;
+  //         setIsOnline(true);
+  //       }
+  //     }
+  //   },
+  //   [officerId]
+  // );
+
+  // const handleEmployeeOffline = useCallback(
+  //   (data: any) => {
+  //     if (data.empId === officerId) {
+  //       if (isOnlineRef.current) {
+  //         console.log("Employee is offline", data);
+  //         isOnlineRef.current = false;
+  //         setIsOnline(false);
+  //       }
+  //     }
+  //   },
+  //   [officerId]
+  // );
+
+  // useEffect(() => {
+  //   // Use a flag to track if component is mounted
+  //   let isMounted = true;
+
+  //   // Set up event listeners first so we don't miss events
+  //   socket.on("loginSuccess", handleLoginSuccess);
+  //   socket.on("employeeOnline", handleEmployeeOnline);
+  //   socket.on("employeeOffline", handleEmployeeOffline);
+
+  //   // Send login event when component mounts
+  //   // Add timestamp for latency measurement
+  //   // console.log('Emitting login with empId:', officerId);
+  //   // socket.emit('login', { empId: officerId, timestamp: Date.now() });
+
+  //   // Clean up event listeners when component unmounts
+  //   return () => {
+  //     isMounted = false;
+  //     socket.off("loginSuccess", handleLoginSuccess);
+  //     socket.off("employeeOnline", handleEmployeeOnline);
+  //     socket.off("employeeOffline", handleEmployeeOffline);
+  //   };
+  // }, [
+  //   officerId,
+  //   handleLoginSuccess,
+  //   handleEmployeeOnline,
+  //   handleEmployeeOffline,
+  // ]);
+
+  useFocusEffect(
+    useCallback(() => {
+      getOnlineStatus();
+    }, [collectionOfficerId])
   );
-
-  const handleEmployeeOnline = useCallback(
-    (data: any) => {
-      if (data.empId === officerId) {
-        if (!isOnlineRef.current) {
-          console.log("Employee is online", data);
-          isOnlineRef.current = true;
+  const getOnlineStatus = async () => {
+    console.log("Getting officer status...");
+    try {
+      const res = await fetch(
+        `${environment.API_BASE_URL}api/collection-manager/get-officer-online/${collectionOfficerId}`
+      );
+      const data = await res.json();
+      console.log("Officer status:", data);
+  
+      if (data.success) {
+        // Check OnlineStatus value and set status accordingly
+        const { OnlineStatus } = data.result;
+        
+        if (OnlineStatus === 1) {
+          setOfficerStatus("online"); // Assuming you have a setStatus function to update state
           setIsOnline(true);
-        }
-      }
-    },
-    [officerId]
-  );
-
-  const handleEmployeeOffline = useCallback(
-    (data: any) => {
-      if (data.empId === officerId) {
-        if (isOnlineRef.current) {
-          console.log("Employee is offline", data);
-          isOnlineRef.current = false;
+          console.log("Officer is online");
+        } else {
+          setOfficerStatus("offline");
           setIsOnline(false);
+          console.log("Officer is offline");
         }
+      } else {
+        console.error("Failed to get officer status");
+        Alert.alert("Error", "Failed to get officer status.");
       }
-    },
-    [officerId]
-  );
-
-  useEffect(() => {
-    // Use a flag to track if component is mounted
-    let isMounted = true;
-
-    // Set up event listeners first so we don't miss events
-    socket.on("loginSuccess", handleLoginSuccess);
-    socket.on("employeeOnline", handleEmployeeOnline);
-    socket.on("employeeOffline", handleEmployeeOffline);
-
-    // Send login event when component mounts
-    // Add timestamp for latency measurement
-    // console.log('Emitting login with empId:', officerId);
-    // socket.emit('login', { empId: officerId, timestamp: Date.now() });
-
-    // Clean up event listeners when component unmounts
-    return () => {
-      isMounted = false;
-      socket.off("loginSuccess", handleLoginSuccess);
-      socket.off("employeeOnline", handleEmployeeOnline);
-      socket.off("employeeOffline", handleEmployeeOffline);
-    };
-  }, [
-    officerId,
-    handleLoginSuccess,
-    handleEmployeeOnline,
-    handleEmployeeOffline,
-  ]);
+    } catch (error) {
+      console.error("Failed to get officer status:", error);
+      Alert.alert("Error", "Failed to get officer status.");
+    }
+  };
+  
 
   return (
     <ScrollView

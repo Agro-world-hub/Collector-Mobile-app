@@ -20,16 +20,16 @@ const socket = io('http://192.168.8.102:3005/agro-api/collection-status', {
 // });
 
 // Add some logging to help with debugging
-socket.on('connect', () => {
-  console.log('Socket connected:', socket.id);
-});
+// socket.on('connect', () => {
+//   console.log('Socket connected:', socket.id);
+// });
 
-socket.on('disconnect', () => {
-  console.log('Socket disconnected');
-});
+// socket.on('disconnect', () => {
+//   console.log('Socket disconnected');
+// });
 
-socket.on('connect_error', (error) => {
-  console.log('Connection error:', error);
-});
+// socket.on('connect_error', (error) => {
+//   console.log('Connection error:', error);
+// });
 
 export default socket;
