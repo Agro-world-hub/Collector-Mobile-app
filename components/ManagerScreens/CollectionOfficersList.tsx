@@ -207,6 +207,7 @@ import environment from '@/environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LottieView from 'lottie-react-native'; // Import Lottie for animation
 import BottomNav from '../BottomNav';
+import { useTranslation } from "react-i18next";
 
 const { width } = Dimensions.get('window');
 const scale = (size: number) => (width / 375) * size;
@@ -232,6 +233,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showMenu, setShowMenu] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const { t } = useTranslation();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -594,7 +596,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
     <View className="flex-1 bg-[#2AAD7A]">
       <View className="bg-[#2AAD7A] py-6 px-4  relative">
         <Text style={{ fontSize: 18 }} className="text-white text-center font-bold">
-          Collection Officers
+         {t("CollectionOfficersList.Collection Officers")}
         </Text>
 
         <TouchableOpacity className="absolute top-6 right-4" onPress={() => setShowMenu((prev) => !prev)}>
@@ -604,7 +606,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
         {showMenu && (
           <View className="absolute top-14 right-4 bg-white shadow-lg rounded-lg">
             <TouchableOpacity className="px-4 py-2 bg-white rounded-lg shadow-lg" onPress={() => navigation.navigate('ClaimOfficer')}>
-              <Text className="text-gray-700 font-semibold">Claim Officer</Text>
+              <Text className="text-gray-700 font-semibold">{t("CollectionOfficersList.Claim Officer")}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -613,7 +615,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({ navigat
       <View className="flex-1  mt-3 rounded-t-2xl bg-white">
         <View className='mt-4 px-4'>
         <Text style={{ fontSize: scale(16) }} className="font-bold text-[#21202B] mb-2">
-          Officers List <Text className="text-[#21202B] font-semibold">(All {officers.length})</Text>
+        {t("CollectionOfficersList.Officers List")} <Text className="text-[#21202B] font-semibold">(All {officers.length})</Text>
          
         </Text>
         </View>

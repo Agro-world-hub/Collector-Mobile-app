@@ -241,6 +241,7 @@ import environment from "../environment/environment";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
 import { ScrollView } from "react-native-gesture-handler";
+import { useTranslation } from "react-i18next";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -263,6 +264,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
   const [companyName, setCompanyName] = useState<string>("");
   const [jobRole, setJobRole] = useState<string>("");
   const [QR, setQR] = useState<string>("");
+   const { t } = useTranslation();
 
   const fetchRegistrationDetails = async () => {
   try {
@@ -368,7 +370,7 @@ const shareQRCode = async () => {
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
         <Text className="flex-1 text-center text-xl font-bold text-black">
-          QR Code
+          {t("OfficerQr.QRCode")}
         </Text>
       </View>
       <ScrollView>
@@ -379,7 +381,7 @@ const shareQRCode = async () => {
       <Image source={{ uri: QR }} style={{ width: 230, height: 230, resizeMode: "contain" }} />
     </View>
   ) : (
-    <Text className="text-gray-500 text-center mt-4">No QR Code available.</Text>
+    <Text className="text-gray-500 text-center mt-4">{t("OfficerQr.Noavailable")}</Text>
   )}
 </View>
 
@@ -404,14 +406,14 @@ const shareQRCode = async () => {
           onPress={downloadQRCode}
         >
           <MaterialIcons name="download" size={24} color="white" />
-          <Text className="text-white text-xs mt-1">Download</Text>
+          <Text className="text-white text-xs mt-1">{t("OfficerQr.Download")}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           className="bg-[#2AAD7A] w-24 h-20 rounded-lg items-center justify-center flex-col mx-2"
           onPress={shareQRCode}
         >
           <MaterialIcons name="share" size={24} color="white" />
-          <Text className="text-white text-xs mt-1">Share</Text>
+          <Text className="text-white text-xs mt-1">{t("OfficerQr.Share")}</Text>
         </TouchableOpacity>
       </View>
       </ScrollView>

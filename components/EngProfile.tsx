@@ -360,6 +360,7 @@ import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import socket from "@/services/socket";
 import { ScrollView } from "react-native-gesture-handler";
 
+
 type EngProfileNavigationProp = StackNavigationProp<
   RootStackParamList,
   "EngProfile"
@@ -522,7 +523,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           className="flex-row items-center py-3"
         >
           <Ionicons name="globe-outline" size={20} color="black" />
-          <Text className="flex-1 text-lg ml-2">Language Settings</Text>
+          <Text className="flex-1 text-lg ml-2">{t("EngProfile.Language")}</Text>
           <Ionicons
             name={isLanguageDropdownOpen ? "chevron-up" : "chevron-down"}
             size={20}
@@ -566,7 +567,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           onPress={() => navigation.navigate("OfficerQr")}
         >
           <Ionicons name="qr-code" size={20} color="black" />
-          <Text className="flex-1 text-lg ml-2">View My QR Code</Text>
+          <Text className="flex-1 text-lg ml-2">{t("EngProfile.View")}</Text>
         </TouchableOpacity>
 
         {/* Horizontal Line */}
@@ -580,7 +581,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           }
         >
           <Ionicons name="lock-closed-outline" size={20} color="black" />
-          <Text className="flex-1 text-lg ml-2">Change Password</Text>
+          <Text className="flex-1 text-lg ml-2">{t("EngProfile.ChangePassword")}</Text>
         </TouchableOpacity>
 
         {/* Horizontal Line */}
@@ -604,7 +605,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           className="flex-row items-center py-3"
         >
           <AntDesign name="warning" size={20} color="black" />
-          <Text className="flex-1 text-lg ml-2">{t("Complaints")}</Text>
+          <Text className="flex-1 text-lg ml-2">{t("EngProfile.Complaints")}</Text>
           <Ionicons
             name={isComplaintDropdownOpen ? "chevron-up" : "chevron-down"}
             size={20}
@@ -649,7 +650,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           onPress={handleLogout}
         >
           <Ionicons name="log-out-outline" size={20} color="red" />
-          <Text className="flex-1 text-lg ml-2 text-red-500">Logout</Text>
+          <Text className="flex-1 text-lg ml-2 text-red-500">{t("EngProfile.Logout")}</Text>
         </TouchableOpacity>
 
         {/* Modal for Call */}

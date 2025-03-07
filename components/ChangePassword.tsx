@@ -21,6 +21,7 @@ import {
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import FastImage from "react-native-fast-image";
+import { useTranslation } from "react-i18next";
 type ChangePasswordNavigationProp = StackNavigationProp<
   RootStackParamList,
   "ChangePassword"
@@ -46,6 +47,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   const [secureCurrent, setSecureCurrent] = useState(true);
   const [secureNew, setSecureNew] = useState(true);
   const [secureConfirm, setSecureConfirm] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchEmpid = async () => {
@@ -114,18 +116,18 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
       </View>
 
       <View className="items-center pt-[10%]">
-        <Text className="font-bold text-xl">Choose a New Password</Text>
+        <Text className="font-bold text-xl">{t("ChangePassword.ChoosePassword")}</Text>
         <Text className="w-[53%] text-center font-light pt-3">
-        Change the password and keep it secured
+        {t("ChangePassword.Changepassword")}
         </Text>
       </View>
 
       <View className="items-center pt-[12%]">
-        <Text className="font-normal pb-2 ml-[-55%]">Current Password</Text>
+        <Text className="font-normal pb-2 ml-[-55%]">{t("ChangePassword.CurrentPassword")}</Text>
         <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-[95%] h-[53px] mb-8 bg-white px-3">
           <TextInput
             className="flex-1 h-[40px] text-base"
-            placeholder="Current Password"
+            placeholder={t("ChangePassword.CurrentPassword")}
             secureTextEntry={secureCurrent}
             onChangeText={setCurrentPassword}
             value={currentPassword}
@@ -139,11 +141,11 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           </TouchableOpacity>
         </View>
 
-        <Text className="font-normal pb-2 ml-[-60%]">New Password</Text>
+        <Text className="font-normal pb-2 ml-[-60%]">{t("ChangePassword.NewPassword")}</Text>
         <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-[95%] h-[53px] mb-8 bg-white px-3">
           <TextInput
             className="flex-1 h-[40px] text-base"
-            placeholder="New Password"
+            placeholder={t("ChangePassword.NewPassword")}
             secureTextEntry={secureNew}
             onChangeText={setNewPassword}
             value={newPassword}
@@ -157,11 +159,11 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           </TouchableOpacity>
         </View>
 
-        <Text className="font-normal pb-2 ml-[-45%]">Confirm New Password</Text>
+        <Text className="font-normal pb-2 ml-[-45%]">{t("ChangePassword.ConfirmNewPassword")}</Text>
         <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-[95%] h-[53px] mb-5 bg-white px-3">
           <TextInput
             className="flex-1 h-[40px] text-base"
-            placeholder="Confirm New Password"
+            placeholder={t("ChangePassword.ConfirmNewPassword")}
             secureTextEntry={secureConfirm}
             onChangeText={setConfirmPassword}
             value={confirmPassword}

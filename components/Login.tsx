@@ -413,12 +413,13 @@ const handleLogin = async () => {
       <Image source={loginImage} style={{ width: 270, height: 350 }} />
 
         <Text className="font-bold text-2xl pt-[7%]">
-          {t("Welcome!")}
+          {t("SignIn.Wellcome")}
         </Text>
       </View>
 
       <View className="mt-2 items-center">
-        <Text>Please Sign in to login</Text>
+        <Text>{t("SignIn.SigntoLogin")}</Text>
+        {/* <Text>Please Sign in to login</Text> */}
       </View>
 
       {loading ? (
@@ -433,24 +434,24 @@ const handleLogin = async () => {
             </View>
       ) : (
         <View className="p-6">
-          <Text className="text-base pb-[2%] font-light">Employee ID</Text>
+          <Text className="text-base pb-[2%] font-light">{t("SignIn.Employee")}</Text>
           <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-full h-[53px] mb-5 bg-white px-3">
             {/* <Icon name="email" size={24} color="green" /> */}
             <AntDesign name="user" size={24} color="green" />
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
-              placeholder="Employee ID"
+              placeholder={t("SignIn.Employee")}
               onChangeText={setEmpid}
               value={empid}
             />
           </View>
 
-          <Text className="text-base pb-[2%] font-light">Password</Text>
+          <Text className="text-base pb-[2%] font-light">{t("SignIn.Password")}</Text>
           <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-full h-[53px] mb-10 bg-white px-3">
             <Icon name="lock" size={24} color="green" />
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
-              placeholder="Password"
+              placeholder={t("SignIn.Password")}
               secureTextEntry={secureTextEntry}
               onChangeText={setPassword}
               value={password}
@@ -473,7 +474,7 @@ const handleLogin = async () => {
               <ActivityIndicator color="white" size="small" />
             ) : (
               <Text className="text-center text-xl font-light text-white">
-                Sign In
+                {t("SignIn.Sign")}
               </Text>
             )}
           </TouchableOpacity>

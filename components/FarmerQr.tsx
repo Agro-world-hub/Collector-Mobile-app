@@ -193,6 +193,7 @@ import {
 } from "react-native-responsive-screen";
 import { useFocusEffect } from '@react-navigation/native';
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { useTranslation } from "react-i18next";
 
 // Create API instance
 const api = axios.create({
@@ -214,6 +215,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
   const [permissionsGranted, setPermissionsGranted] = useState(false);
   const [farmerPhone, setFarmerPhone] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
+  const { t } = useTranslation();
 
   const route = useRoute<FarmerQrRouteProp>();
   const { userId } = route.params;
@@ -345,7 +347,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
                <TouchableOpacity onPress={() => navigation.goBack()} className="">
                  <AntDesign name="left" size={24} color="#000" />
                </TouchableOpacity>
-               <Text className="flex-1 text-center text-xl font-bold text-black">Farmer Details</Text>
+               <Text className="flex-1 text-center text-xl font-bold text-black">{t("FarmerQr.FarmerDetails")}</Text>
              </View>
 
 
@@ -368,7 +370,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
             style={{ width: 300, height: 300, borderWidth: 1, borderColor: '#00C853' }} // Adding border and dimensions
           />
         ) : (
-          <Text className="text-red-500">QR Code not available</Text>
+          <Text className="text-red-500">{t("FarmerQr.QRavailable")}</Text>
         )}
       </View>
 
@@ -383,7 +385,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
   } as never)
 }
         > 
-          <Text className="text-white text-lg">Collect</Text>
+          <Text className="text-white text-lg">{t("FarmerQr.Collect")}</Text>
         </TouchableOpacity>
 
         {/* Complain Button */}
@@ -395,7 +397,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
             userId
           })}
         >
-          <Text className="text-gray-700 text-lg">Report a Complain</Text>
+          <Text className="text-gray-700 text-lg">{t("FarmerQr.ReportComplain")}</Text>
         </TouchableOpacity>
       </View>
 
@@ -406,7 +408,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
             source={require('../assets/images/download.webp')} // Path to download icon
             style={{ width: 24, height: 24 }}
           />
-          <Text className="text-sm text-cyan-50">Download</Text>
+          <Text className="text-sm text-cyan-50">{t("FarmerQr.Download")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity className="bg-gray-600 p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={shareQRCode}>
@@ -414,7 +416,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
             source={require('../assets/images/Share.webp')} // Path to share icon
             style={{ width: 24, height: 24 }}
           />
-          <Text className="text-sm text-cyan-50">Share</Text>
+          <Text className="text-sm text-cyan-50">{t("FarmerQr.Share")}</Text>
         </TouchableOpacity>
       </View>
       </>

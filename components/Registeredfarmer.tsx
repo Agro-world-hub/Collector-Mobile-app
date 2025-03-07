@@ -5,6 +5,8 @@ import { RootStackParamList } from './types'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
+import { useTranslation } from "react-i18next";
+
 
 type RegisteredfarmerNavigationProp = StackNavigationProp<RootStackParamList, 'Registeredfarmer'>;
 
@@ -24,17 +26,18 @@ const Registeredfarmer: React.FC<RegisteredfarmerProps> = ({ navigation }) => {
   const [bankname, setBankname] = useState('');
   const [branchname, setBranchname] = useState('');
   const [selectedNav, setSelectedNav] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   return (
     <View className='flex-1 bg-white'>
       <View className='flex-row pt-[7%]'>
         <AntDesign name="left" size={24} color="#000502" onPress={() => navigation.goBack()} />
-        <Text className='text-xl pl-[28%] text-center'>Farmer Details</Text>
+        <Text className='text-xl pl-[28%] text-center'> {t("Registeredfarmer.FarmerDetails")}</Text>
       </View>
 
       <View className='ml-[10%] mr-[10%] flex-1'>
         <ScrollView contentContainerStyle={{ paddingBottom: 20 }}> 
-          <Text className='text-base pb-[2%] font-medium'>First Name</Text>
+          <Text className='text-base pb-[2%] font-medium'>{t("Registeredfarmer.FirstName")}</Text>
           <View className="flex-row items-center border w-full h-[40px] mb-5 bg-white px-3">
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
@@ -43,7 +46,7 @@ const Registeredfarmer: React.FC<RegisteredfarmerProps> = ({ navigation }) => {
             />
           </View>
 
-          <Text className='text-base pb-[2%] font-medium'>Last Name</Text>
+          <Text className='text-base pb-[2%] font-medium'>{t("Registeredfarmer.LastName")}</Text>
           <View className="flex-row items-center border w-full h-[40px] mb-5 bg-white px-3">
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
@@ -52,7 +55,7 @@ const Registeredfarmer: React.FC<RegisteredfarmerProps> = ({ navigation }) => {
             />
           </View>
 
-          <Text className='text-base pb-[2%] font-medium'>NIC Number</Text>
+          <Text className='text-base pb-[2%] font-medium'>{t("Registeredfarmer.NIC")}</Text>
           <View className="flex-row items-center border w-full h-[40px] mb-5 bg-white px-3">
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
@@ -61,7 +64,7 @@ const Registeredfarmer: React.FC<RegisteredfarmerProps> = ({ navigation }) => {
             />
           </View>
 
-          <Text className='text-base pb-[2%] font-medium'>Phone Number</Text>
+          <Text className='text-base pb-[2%] font-medium'>{t("Registeredfarmer.Phone")}</Text>
           <View className="flex-row items-center border w-full h-[40px] mb-5 bg-white px-3">
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
@@ -71,7 +74,7 @@ const Registeredfarmer: React.FC<RegisteredfarmerProps> = ({ navigation }) => {
             />
           </View>
 
-          <Text className='text-base pb-[2%] font-medium'>Address</Text>
+          <Text className='text-base pb-[2%] font-medium'>{t("Registeredfarmer.Address")}</Text>
           <View className="flex-row items-center border w-full h-[40px] mb-5 bg-white px-3">
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
@@ -80,7 +83,7 @@ const Registeredfarmer: React.FC<RegisteredfarmerProps> = ({ navigation }) => {
             />
           </View>
 
-          <Text className='text-base pb-[2%] font-medium'>Account Number</Text>
+          <Text className='text-base pb-[2%] font-medium'>{t("Registeredfarmer.AccountNum")}</Text>
           <View className="flex-row items-center border w-full h-[40px] mb-5 bg-white px-3">
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
@@ -90,7 +93,7 @@ const Registeredfarmer: React.FC<RegisteredfarmerProps> = ({ navigation }) => {
             />
           </View>
 
-          <Text className='text-base pb-[2%] font-medium'>Account Holders Name</Text>
+          <Text className='text-base pb-[2%] font-medium'>{t("Registeredfarmer.AccountName")}</Text>
           <View className="flex-row items-center border w-full h-[40px] mb-5 bg-white px-3">
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
@@ -99,7 +102,7 @@ const Registeredfarmer: React.FC<RegisteredfarmerProps> = ({ navigation }) => {
             />
           </View>
 
-          <Text className='text-base pb-[2%] font-medium'>Bank Name</Text>
+          <Text className='text-base pb-[2%] font-medium'>{t("Registeredfarmer.Bank")}</Text>
           <View className="flex-row items-center border w-full h-[40px] mb-5 bg-white px-3">
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
@@ -108,7 +111,7 @@ const Registeredfarmer: React.FC<RegisteredfarmerProps> = ({ navigation }) => {
             />
           </View>
 
-          <Text className='text-base pb-[2%] font-medium'>Branch Name</Text>
+          <Text className='text-base pb-[2%] font-medium'>{t("Registeredfarmer.Branch")}</Text>
           <View className="flex-row items-center border w-full h-[40px] mb-5 bg-white px-3">
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
@@ -117,7 +120,7 @@ const Registeredfarmer: React.FC<RegisteredfarmerProps> = ({ navigation }) => {
             />
           </View>
           <TouchableOpacity className='bg-[#2AAD7A] w-full h-[50px] rounded-3xl shadow-2xl items-center justify-center' onPress={() => navigation.navigate('Ufarmercropdetails')}>
-            <Text className='text-center text-xl font-light text-white'>Next</Text>
+            <Text className='text-center text-xl font-light text-white'>{t("Registeredfarmer.Next")}</Text>
           </TouchableOpacity>
         </ScrollView>
 

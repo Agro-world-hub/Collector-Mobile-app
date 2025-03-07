@@ -1,7 +1,347 @@
 {
   "SignIn": {
-    "Wellcome": "Wellcome Back!"
+    "LNG": "en",
+    "Wellcome": "Welcome !",
+    "SigntoLogin": "Please Sign in to login",
+    "Employee":"Employee ID",
+    "Password": "Password",
+    "Sign":"Sign In"
   },
+  "DashBoard":{
+    "LNG": "en",
+    "Keep": "Keep Going!",
+     "Youhavenotachieved":"You haven't achieved your daily target today",
+     "Completed":"Completed!",
+     "Youhaveachieved":"You have achieved your daily target today",
+    "Yourtarget": "Your Target",
+    "Progress": "Progress",
+    "Scan":"Scan QR",
+    "Search": "Search By NIC"
+
+  },
+  "EngProfile":{
+    "LNG": "en",
+    "Language":"Language Settings",
+    "View":"View My QR Code",
+    "ChangePassword":"Change Password",
+    "Complaints":"Complaints",
+    "Logout": "Logout"
+
+  },
+  "Profile":{
+    "LNG": "en",
+    "MyProfile":"My Profile",
+    "FirstName":"First Name",
+    "LastName":"Last Name ",
+    "Company":"Company Name",
+    "CenterCode":"Center Code",
+    "Job":"Job Role",
+    "NIC":"NIC Number",
+    "Phone1":"Phone Number - 1",
+    "Phone2":"Phone Number - 2",
+    "House":"House/Bulding No",
+    "Street":"Street Name",
+    "City":"City",
+    "District":"District",
+    "Province": "Province"
+
+
+  },
+  "DailyTarget":{
+    "LNG": "en",
+    "DailyTarget":"Daily Target",
+    "Todo":"To do",
+    "Completed":"Completed",
+    "No":"No",
+    "Variety":"Variety",
+    "Grade":"Grade",
+    "Target":"Target (kg)",
+    "Todo()":"Todo (kg)"
+
+  },
+  "SearchPrice":{
+    "LNG": "en",
+    "SearchPrice":"Search Price",
+    "Crop":"Crop Name",
+    "SelectCrop":"Select Crop",
+    "Variety":"Variety",
+    "SelectVariety":"Select Variety",
+    "Search":"Search"
+
+  },
+  "SearchFarmer":{
+    "LNG": "en",
+    "Search":"Search",
+    "EnterFarmer":"Enter Farmer's NIC number",
+    "Searching":"Searching...",
+    "EnterNIC":"Enter NIC number",
+    "Noregistered":"No registered farmer found",
+    "RegisterFarmer":"Register Farmer"
+  
+
+  },
+  "UnregisteredFarmerDetails":{
+    "LNG": "en",
+    "FillDetails":"Fill Personal Details",
+    "FirstName":"First Name",
+    "LastName":"Last Name ",
+    "NIC":"NIC Number",
+    "Phone":"Phone Number",
+    "District":"District",
+    "AccountNum":"Account Number",
+    "AccountName":"Account Holder's Name",
+    "Bank":"Bank Name",
+    "Branch":"Branch Name",
+    "Submit":"Submit",
+    "Success":"Success!",
+    "Successful":"Registration Successful",
+    "Oops":"Oops!",
+    "Unsuccessful":"Registration Unsuccessful",
+    "Close":"Close"
+  },
+  "PriceChart":{
+    "LNG": "en",
+    "PriceChart":"Price Chart",
+    "Crop":"Crop Name",
+    "Variety":"Variety",
+    "UnitGrades":"Unit Prices according to Grades",
+    "Go":"Go Back"
+
+  },
+  "Otpverification":{
+    "LNG": "en",
+    "OTPVerification":"OTPVerification",
+    " EnterCode":" Enter Verification Code",
+    "OTPCode":"OTPCode",
+    "Didreceive":" I didn’t receive the code!",
+    "Verify":"Verify",
+    "Success":"Success!",
+    "Registration":"Registration Successful",
+    "OK":"OK",
+    "invalidOTP":"invalidOTP",
+    "completeOTP":"completeOTP"
+
+  },
+  "FarmerQr":{
+    "LNG": "en",
+    "FarmerDetails":"Farmer Details",
+    "QRavailable":"QR Code not available",
+    "Collect":"Collect",
+    "ReportComplain":"Report a Complain",
+    "Download":"Download",
+    "Share":"Share"
+
+  },
+  "UnregisteredCropDetails":{
+    "LNG": "en",
+    "FillDetails":"Fill Details",
+    "Crop":"Crop",
+    "CropName":"Crop Name",
+    "Variety":"Variety",
+    "UnitGrades":"Unit Prices according to Grades",
+    "Total":"Total (Rs.)",
+    "Add":"Add more",
+    "Done":"Done"
+
+  },
+  "ReportPage":{
+    "LNG": "en",
+    "PurchaseReport":"Purchase Report",
+    "INV":"INV NO:",
+    "PersonalDetails":"Personal Details",
+    "Address":"Address",
+    "FirstName":"First Name",
+    "LastName":"Last Name ",
+    "NIC":"NIC Number",
+    "Phone":"Phone Number",
+    "Bank":"Bank Details",
+    "AccountNum":"Account Number",
+    "AccountName":"Account Holder's Name",
+    "BankName":"Bank Name",
+    "BranchName":"Branch Name",
+    "CropDetails":"Crop Details",
+    "CropName":"Crop Name",
+    "Variety":"Variety",
+    "Unit Price A":"Unit Price A",
+    "Weight A":"Weight A",
+    "Unit Price B":"Unit Price B",
+    "Weight B":"Weight B",
+    "Unit Price C":"Unit Price C",
+    "Weight C":"Weight C",
+    "Total":"Total",
+    "TotalSum":"Total Sum: Rs",
+    "FarmerQR":"Farmer's QR Code",
+    "OfficerQR":"Officer's QR Code",
+    "Download":"Download",
+    "Share":"Share"
+
+  },
+  "NoCollectionCenterScreen":{
+    "LNG": "en",
+    "ErrorFound":"Error Found!",
+    "NoCenter":"No Collection Center"
+
+  },
+  "OfficerQr":{
+    "LNG": "en",
+    "QRCode":"QR Code",
+    "Noavailable":"No QR Code available.",
+    "Download":"Download",
+    "Share":"Share"
+
+  },
+  "ChangePassword":{
+    "LNG": "en",
+    "ChoosePassword":"Choose a New Password",
+    "Changepassword":" Change the password and keep it secured",
+    "CurrentPassword":"Current Password",
+    "NewPassword":"New Password",
+    "ConfirmNewPassword":"Confirm New Password"
+
+  },
+  "QRScanner":{
+    "LNG": "en",
+    "CameraRequired":"Camera Permission Required",
+    "WeneedCamera":" We need camera access to scan QR codes. Please enable camera permissions in your device settings.",
+    "Close":"Close",
+    "TapScan":"Tap to Scan Again",
+    "Failed":"Failed",
+    "SearchNIC":"Search by User’s NIC number"
+  },
+  "Registeredfarmer":{
+    "LNG": "en",
+    "FarmerDetails":"Farmer Details",
+    "FirstName":"First Name",
+    "LastName":"Last Name ",
+    "NIC":"NIC Number",
+    "Phone":"Phone Number",
+    "Address":"Address",
+    "AccountNum":"Account Number",
+    "AccountName":"Account Holder's Name",
+    "Bank":"Bank Name",
+    "Branch":"Branch Name",
+    "Next":"Next"
+    
+  },
+
+  "Ufarmercropdetails":{
+    "LNG": "en",
+    "FillCropDetails":"Fill Crop Details",
+    "CropName":"Crop Name",
+    "Quality":"Quality",
+    "Quantity":"Quantity",
+    "UnitPrice":"Unit Price (Rs.)",
+    "UploadImage":"Upload Image",
+    "ChooseImage":"Choose Image",
+    "Total":"Total (Rs.)",
+    "Next":"Next"
+  },
+  "ManagerDashboard":{
+    "LNG": "en",
+    "Keep": "Keep Going!",
+     "Youhavenotachieved":"You haven't achieved your daily target today",
+     "Completed":"Completed!",
+     "Youhaveachieved":"You have achieved your daily target today",
+    "Yourtarget": "Your Target Progress",
+   
+    "Scan":"Scan QR",
+    "Search": "Search By NIC",
+    "CenterTarget":"Center Target",
+    "MyCollection":"My Collection"
+
+  },
+  "AddOfficerBasicDetails":{
+    "LNG": "en",
+    "AddOfficer":"Add Officer",
+    "Type":"Type :",
+    "Permanent":"Permanent",
+    "Temporary":"Temporary",
+    "PreferredLanguages":"Preferred Languages :",
+    "Sinhala":"Sinhala",
+    "English":"English",
+    "Tamil":"Tamil",
+    "JobRole":"Job Role:",
+    "SelectJobRole":"Select Job Role",
+    "FirstNameEnglish":"--First Name in English--",
+    "LastNameEnglish":"--Last Name in English--",
+    "FirstNameinSinhala":"--First Name in Sinhala--",
+    "LastNameSinhala":"--Last Name in Sinhala--",
+    "FirstNameTamil":"--First Name in Tamil--",
+    "LastNameTamil":"--Last Name in Tamil--",
+    "NIC":"--NIC Number--",
+    "Email":"--Email Address--",
+    "Cancel":"Cancel",
+    "Next":"Next"
+  },
+  "AddOfficerAddressDetails":{
+    "LNG": "en",
+    "AddOfficer":"Add Officer",
+    "House":"--House / Plot Number--",
+    "Street Name":"--Street Name--",
+    "City":"--City--",
+    "Country":"Sri Lanka",
+    "AccountName":"--Account Holder's Name--",
+    "AccountNum":"--Account Number--",
+    "Confirm AccountNum":"--Confirm Account Number--",
+    "BankName":"--Bank Name--",
+    "BranchName":"--Branch Name--",
+    "Go":"Go Back",
+    "Submit":"Submit"
+    
+  },
+  "CenterTarget":{
+    "LNG": "en",
+    "CenterTarget":"Center Target",
+    "Todo":"To do",
+    "Completed":"Completed",
+    "No":"No",
+    "Variety":"Variety",
+    "Grade":"Grade",
+    "Target":"Target (kg)",
+    "Todo()":"Todo (kg)"
+
+  },
+
+  "ClaimOfficer":{
+    "LNG": "en",
+    "ClaimOfficers":"Claim Officers",
+    "JobRole":"Job Role",
+    "EMPID":"EMP ID",
+    "Search":"Search",
+    "Claim Officer":"Claim Officer",
+    "No Disclaimed":" - No Disclaimed officer was found -"
+   
+  },
+
+  "CollectionOfficersList":{
+    "LNG": "en",
+    "Collection Officers":" Collection Officers",
+    "Claim Officer":"Claim Officer",
+    "Officers List":" Officers List"
+   
+  },
+
+  "EditTargetManager":{
+    "LNG": "en",
+    "TotalTarget":"Total Target for the center",
+    "My Target":"My Target",
+    "Pass":"Pass",
+    "Receive":"Receive",
+    "Amount":"To Do Amount",
+    "Assigned Target":"Assigned Target"
+   
+  },
+  "ManagerTransactions":{
+    "LNG": "en",
+    "EMPID":"EMP ID:",
+    "Selected Date":"Selected Date:",
+    "Transaction List":"Transaction List",
+    "NIC":"NIC:",
+    "Notransactions":"No transactions found for the selected date.",
+    "Search":"Search By NIC Number, Name",
+    "All":"All"
+  },
+
   "Districts": {
     "selectDistrict": "Select a District",
     "Ampara": "Ampara",

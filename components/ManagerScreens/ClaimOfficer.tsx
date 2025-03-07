@@ -19,6 +19,7 @@ import environment from '../../environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { SelectList } from 'react-native-dropdown-select-list';
+import { useTranslation } from "react-i18next";
 
 
 interface OfficerDetails {
@@ -39,6 +40,7 @@ const ClaimOfficer: React.FC = () => {
   const [empID, setEmpID] = useState('');
   const [officerFound, setOfficerFound] = useState(false);
   const [officerDetails, setOfficerDetails] = useState<OfficerDetails | null>(null);
+    const { t } = useTranslation();
 
   const empPrefix = jobRole === 'Collection Officer' ? 'COO' : 'CUO';
 
@@ -130,13 +132,13 @@ const ClaimOfficer: React.FC = () => {
         >
            <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
-        <Text className="text-lg font-bold ml-[25%]">Claim Officers</Text>
+        <Text className="text-lg font-bold ml-[25%]"> {t("ClaimOfficer.ClaimOfficers")}</Text>
       </View>
 
       {/* Form */}
       <View className="px-8 mt-7">
         <Text className="font-semibold text-gray-800 mb-2 text-center">
-          Job Role
+        {t("ClaimOfficer.JobRole")}
         </Text>
         <View className=" rounded-lg pb-3">
           {/* <Picker
@@ -160,7 +162,7 @@ const ClaimOfficer: React.FC = () => {
 
         {/* EMP ID Input */}
         <Text className="font-semibold text-gray-800 mt-6 mb-2 text-center">
-          EMP ID
+        {t("ClaimOfficer.EMPID")}
         </Text>
         <View className="flex-row items-center border border-gray-300 rounded-lg mb-4">
           <View className="bg-gray-200 px-4 py-2 rounded-l-lg">
@@ -183,7 +185,7 @@ const ClaimOfficer: React.FC = () => {
           disabled={!empID}
           onPress={handleSearch}
         >
-          <Text className="text-white text-lg text-center font-semibold">Search</Text>
+          <Text className="text-white text-lg text-center font-semibold">  {t("ClaimOfficer.Search")}</Text>
         </TouchableOpacity>
       </View>
 
@@ -196,7 +198,7 @@ const ClaimOfficer: React.FC = () => {
             resizeMode="contain" // Ensures the image scales proportionally
           />
           <Text className="text-gray-500 mt-2">
-            - No Disclaimed officer was found -
+          {t("ClaimOfficer.No Disclaimed")}   
           </Text>
         </View>
       )}
@@ -224,7 +226,7 @@ const ClaimOfficer: React.FC = () => {
             onPress={handleClaimOfficer}
           >
             <Text className="text-white text-lg px-28 font-semibold text-center">
-              Claim Officer
+              {t("ClaimOfficer.Claim Officer")}
             </Text>
           </TouchableOpacity>
         </View>
