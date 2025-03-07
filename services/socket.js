@@ -8,7 +8,16 @@ const socket = io('http://192.168.1.15:3005/agro-api/collection-status', {
   reconnectionAttempts: 5,
   reconnectionDelay: 1000,
   withCredentials: true,
+  transports: ['websocket']
 });
+// const socket = io('https://dev.agroworld.lk/agro-api/collection-status', {
+
+//   reconnection: true,
+//   reconnectionAttempts: 5,
+//   reconnectionDelay: 1000,
+//   transports: ['websocket'],
+//   debug: true
+// });
 
 // Add some logging to help with debugging
 socket.on('connect', () => {

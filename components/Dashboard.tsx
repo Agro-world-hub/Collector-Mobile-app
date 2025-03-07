@@ -22,8 +22,9 @@ interface DashboardProps {
 
 interface ProfileData {
   firstNameEnglish: string;
-  lastNameEnglish:string
+  lastNameEnglish: string;
   companyName: string;
+  image: string;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
@@ -33,85 +34,111 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
     const [refreshing, setRefreshing] = useState(false);
      const { t } = useTranslation();
 
-    const fetchUserProfile = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-        if (token) {
-          const response = await axios.get(`${environment.API_BASE_URL}api/collection-officer/user-profile`, {
+  const fetchUserProfile = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (token) {
+        const response = await axios.get(
+          `${environment.API_BASE_URL}api/collection-officer/user-profile`,
+          {
             headers: { Authorization: `Bearer ${token}` },
-          });
-          setProfile(response.data.data);
-          setEmpId(response.data.data.empId);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user profile:", error);
+          }
+        );
+        setProfile(response.data.data);
+        setEmpId(response.data.data.empId);
       }
-    };
-  
-    const fetchTargetPercentage = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-        if (!token) {
-          Alert.alert("Error", "User not authenticated.");
-          return;
-        }
-        const response = await axios.get(`${environment.API_BASE_URL}api/target/officer-task-summary`, {
+    } catch (error) {
+      console.error("Failed to fetch user profile:", error);
+    }
+  };
+
+  const fetchTargetPercentage = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        Alert.alert("Error", "User not authenticated.");
+        return;
+      }
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/target/officer-task-summary`,
+        {
           headers: { Authorization: `Bearer ${token}` },
-        });
-        console.log('response for percentage target',response.data)
-        if (response.data.success) {
-          const percentage = parseInt(response.data.completionPercentage.replace("%", ""), 10);
-          setTargetPercentage(percentage);
-        } else {
-          setTargetPercentage(0);
         }
-      } catch (error) {
-        console.error("Failed to fetch target percentage:", error);
+      );
+      console.log("response for percentage target", response.data);
+      if (response.data.success) {
+        const percentage = parseInt(
+          response.data.completionPercentage.replace("%", ""),
+          10
+        );
+        setTargetPercentage(percentage);
+      } else {
         setTargetPercentage(0);
       }
-    };
-  
-    useEffect(() => {
-      fetchUserProfile();
-      fetchTargetPercentage();
-    }, []);
-  
-    const onRefresh = async () => {
-      setRefreshing(true);
-      await fetchUserProfile();
-      await fetchTargetPercentage();
-      setRefreshing(false);
-    };
-  
-    useFocusEffect(
-      useCallback(() => {
-        const onBackPress = () => true;
-        BackHandler.addEventListener('hardwareBackPress', onBackPress);
-        return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-      }, [])
-    );
+    } catch (error) {
+      console.error("Failed to fetch target percentage:", error);
+      setTargetPercentage(0);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserProfile();
+    fetchTargetPercentage();
+  }, []);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchUserProfile();
+    await fetchTargetPercentage();
+    setRefreshing(false);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => true;
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
 
   return (
-   <ScrollView
-        className="flex-1 bg-white p-3"
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      >
+    <ScrollView
+      className="flex-1 bg-white p-3"
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       {/* Profile Section */}
       <TouchableOpacity className="flex-row items-center mb-4 p-4" onPress={() => navigation.navigate("EngProfile")}>
-        <Image
+        {/* <Image
           source={require("../assets/images/mprofile.webp")}
           className="w-16 h-16 rounded-full mr-4"
+        />  */}
+        <Image
+          source={
+            profile?.image
+              ? { uri: profile.image }
+              : require("../assets/images/mprofile.webp")
+          }
+          className="w-16 h-16 rounded-full mr-3"
+          onError={() => console.log("Failed to load image")}
         />
+
         <View>
           {/* Displaying name and company name if the profile is available */}
-          <Text className="text-lg font-bold">{profile?.firstNameEnglish  || "Loading..."} {profile?.lastNameEnglish  || "Loading..."}</Text>
-          <Text className="text-gray-500">{profile?.companyName || "Loading..."}</Text>
+          <Text className="text-lg font-bold">
+            {profile?.firstNameEnglish || "Loading..."}{" "}
+            {profile?.lastNameEnglish || "Loading..."}
+          </Text>
+          <Text className="text-gray-500">
+            {profile?.companyName || "Loading..."}
+          </Text>
         </View>
       </TouchableOpacity>
 
-
-  {/* Conditional Rendering for Daily Target */}
-    {targetPercentage !== null && targetPercentage < 100 ? (
+      {/* Conditional Rendering for Daily Target */}
+      {targetPercentage !== null && targetPercentage < 100 ? (
         <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#DF9301]">
            <Text className="text-center text-yellow-600 font-bold"> 🚀{t("DashBoard.Keep")}</Text>                                                      
          
@@ -128,7 +155,6 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
           </View>
           <Text className="text-center text-gray-500">{t("DashBoard.Youhaveachieved")}</Text>
         </View>
-
       )}
 
       {/* Target Progress */}
@@ -167,8 +193,10 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
 
       {/* Action Buttons */}
       <View className="flex-row flex-wrap justify-between p-6 mt-[-5%]">
-
-        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("QRScanner"as any)}>
+        <TouchableOpacity
+          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative"
+          onPress={() => navigation.navigate("QRScanner" as any)}
+        >
           <Image
             source={require("../assets/images/qrrr.webp")}
             className="w-8 h-8 absolute top-2 right-2"
@@ -176,7 +204,10 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
           <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("DashBoard.Scan")}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative mb-5" onPress={() => navigation.navigate("SearchFarmer"as any)}>
+        <TouchableOpacity
+          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative mb-5"
+          onPress={() => navigation.navigate("SearchFarmer" as any)}
+        >
           <Image
             source={require("../assets/images/nic.webp")}
             className="w-8 h-8 absolute top-2 right-2"

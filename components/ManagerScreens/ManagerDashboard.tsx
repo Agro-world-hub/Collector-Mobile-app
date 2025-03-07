@@ -23,6 +23,7 @@ interface ProfileData {
   firstNameEnglish: string;
   lastNameEnglish: string;
   companyName: string;
+  image: string;
 }
 
 const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
@@ -36,9 +37,12 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (token) {
-        const response = await axios.get(`${environment.API_BASE_URL}api/collection-officer/user-profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          `${environment.API_BASE_URL}api/collection-officer/user-profile`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setProfile(response.data.data);
         setEmpId(response.data.data.empId);
       }
@@ -54,12 +58,18 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
         Alert.alert("Error", "User not authenticated.");
         return;
       }
-      const response = await axios.get(`${environment.API_BASE_URL}api/target/officer-task-summary`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      console.log('response for percentage target',response.data)
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/target/officer-task-summary`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("response for percentage target", response.data);
       if (response.data.success) {
-        const percentage = parseInt(response.data.completionPercentage.replace("%", ""), 10);
+        const percentage = parseInt(
+          response.data.completionPercentage.replace("%", ""),
+          10
+        );
         setTargetPercentage(percentage);
       } else {
         setTargetPercentage(0);
@@ -85,25 +95,42 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => true;
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
     }, [])
   );
 
   return (
     <ScrollView
       className="flex-1 bg-white p-3"
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
       {/* Profile Section */}
       <TouchableOpacity className="flex-row items-center mb-4 p-4" onPress={() => navigation.navigate("EngProfile")}>
-        <Image
+        {/* <Image
           source={require("../../assets/images/mprofile.webp")}
           className="w-16 h-16 rounded-full mr-4"
+        />  */}
+        <Image
+          source={
+            profile?.image
+              ? { uri: profile.image }
+              : require("../../assets/images/mprofile.webp")
+          }
+          className="w-16 h-16 rounded-full mr-3"
         />
+
         <View>
-          <Text className="text-lg font-bold">{profile?.firstNameEnglish || "Loading..."} {profile?.lastNameEnglish || "Loading..."}</Text>
-          <Text className="text-gray-500">{profile?.companyName || "Loading..."}</Text>
+          <Text className="text-lg font-bold">
+            {profile?.firstNameEnglish || "Loading..."}{" "}
+            {profile?.lastNameEnglish || "Loading..."}
+          </Text>
+          <Text className="text-gray-500">
+            {profile?.companyName || "Loading..."}
+          </Text>
         </View>
       </TouchableOpacity>
 
@@ -139,14 +166,19 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             backgroundColor="#E5E7EB"
           />
           <View className="absolute items-center justify-center h-24 w-24">
-            <Text className="text-2xl font-bold">{targetPercentage !== null ? `${targetPercentage}%` : "0%"}</Text>
+            <Text className="text-2xl font-bold">
+              {targetPercentage !== null ? `${targetPercentage}%` : "0%"}
+            </Text>
           </View>
         </View>
       </View>
 
       {/* Action Buttons */}
       <View className="flex-row flex-wrap justify-between p-5 mt-[5%] mb-[8%]">
-        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("CenterTarget" as any)}>
+        <TouchableOpacity
+          className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
+          onPress={() => navigation.navigate("CenterTarget" as any)}
+        >
           <Image
             source={require("../../assets/images/ct.webp")}
             className="w-8 h-8 absolute top-2 right-2"
@@ -154,7 +186,12 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
           <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.CenterTarget")}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("ManagerTransactions" as any, { empId })}>
+        <TouchableOpacity
+          className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
+          onPress={() =>
+            navigation.navigate("ManagerTransactions" as any, { empId })
+          }
+        >
           <Image
             source={require("../../assets/images/mycollect.webp")}
             className="w-8 h-8 absolute top-2 right-2"
@@ -162,7 +199,10 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
           <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.MyCollection")}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative" onPress={() => navigation.navigate("QRScanner" as any)}>
+        <TouchableOpacity
+          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative"
+          onPress={() => navigation.navigate("QRScanner" as any)}
+        >
           <Image
             source={require("../../assets/images/qrrr.webp")}
             className="w-8 h-8 absolute top-2 right-2"
@@ -170,7 +210,10 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
           <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.Scan")}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative mb-5" onPress={() => navigation.navigate("SearchFarmer" as any)}>
+        <TouchableOpacity
+          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative mb-5"
+          onPress={() => navigation.navigate("SearchFarmer" as any)}
+        >
           <Image
             source={require("../../assets/images/nic.webp")}
             className="w-8 h-8 absolute top-2 right-2"

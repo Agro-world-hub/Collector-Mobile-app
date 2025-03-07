@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Image, Alert, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp, useRoute } from '@react-navigation/native';
@@ -346,7 +346,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
      if (uri) {
        // Get the current date in YYYY-MM-DD format
        const date = new Date().toISOString().slice(0, 10);
-       const fileName = `PurchaseReport_${NICnumber}_${date}.pdf`;
+       const fileName = `PurchaseReport_${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}_${date}.pdf`;
    
        try {
          // Request permission to access media library
@@ -385,9 +385,10 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
        Alert.alert('Error', 'PDF was not generated.');
      }
    };
-
-
    
+   
+  
+
   const handleSharePDF = async () => {
     const uri = await generatePDF();
     if (uri && (await Sharing.isAvailableAsync())) {
