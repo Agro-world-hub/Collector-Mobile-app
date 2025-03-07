@@ -2,7 +2,7 @@ import React,{useEffect, useState, useContext} from 'react';
 import { View, Text, Image, TouchableOpacity,  } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-const lg = require('../assets/images/lang1.png');
+const lg = require('../assets/images/lang1.webp');
 import { RootStackParamList } from './types';
 import { LanguageContext } from '@/context/LanguageContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';

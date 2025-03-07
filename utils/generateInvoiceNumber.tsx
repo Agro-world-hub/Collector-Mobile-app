@@ -26,19 +26,15 @@ const generateInvoiceNumber = async (): Promise<string | null> => {
       `${environment.API_BASE_URL}api/unregisteredfarmercrop/invoice/latest/${empId}/${currentDate}`
     );
 
-    let newSequenceNumber = '0001'; // Default to 0001 if no invoice number exists
+    let invoiceNumber = `${empId}${currentDate}00001`; // Default value if no invoice exists
 
     console.log('Response in invoice:', response.data);
 
-    // If an invoice number exists in the response, increment the sequence number
+    // If the backend provides an invoice number, use that without modifying it
     if (response.data && response.data.invoiceNumber) {
-      const lastInvoiceNumber = response.data.invoiceNumber;
-      const lastSequence = parseInt(lastInvoiceNumber.slice(-4), 10); // Get the last 4 digits for sequence
-      newSequenceNumber = String(lastSequence + 1).padStart(4, '0'); // Increment and pad to 4 digits
+      invoiceNumber = response.data.invoiceNumber; // Use the backend-generated invoice number
     }
 
-    // Create the final invoice number by concatenating empId, current date, and the new sequence number
-    const invoiceNumber = `${empId}${currentDate}${newSequenceNumber}`;
     console.log('Generated Invoice Number:', invoiceNumber);
 
     return invoiceNumber;

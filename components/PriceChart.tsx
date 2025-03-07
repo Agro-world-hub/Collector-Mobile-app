@@ -254,6 +254,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { useTranslation } from "react-i18next";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -276,6 +277,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [buttonText, setButtonText] = useState("Request Price Update");
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation();
 
   // Fetch prices
   const fetchPrices = async () => {
@@ -369,18 +371,18 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-bold text-center flex-1">Price Chart</Text>
+        <Text className="text-white text-lg font-bold text-center flex-1">{t("PriceChart.PriceChart")}</Text>
       </View>
 
       {/* Content */}
       <ScrollView className="flex-1" style={{ paddingHorizontal: wp(8), paddingVertical: hp(8) }}>
         <View className="mb-4">
-          <Text className="text-gray-600 text-sm mb-1">Crop Name</Text>
+          <Text className="text-gray-600 text-sm mb-1">{t("PriceChart.Crop")}</Text>
           <TextInput className="border border-gray-300 rounded-lg px-4 py-2 text-gray-800" value={cropName} editable={false} />
         </View>
 
         <View className="mb-4">
-          <Text className="text-gray-600 text-sm mb-1">Variety</Text>
+          <Text className="text-gray-600 text-sm mb-1">{t("PriceChart.Variety")}</Text>
           <TextInput className="border border-gray-300 rounded-lg px-4 py-2 text-gray-800" value={varietyName} editable={false} />
         </View>
 
@@ -398,7 +400,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
 
         {priceData.length > 0 && !loading && !error && (
           <View className="mb-6">
-            <Text className="text-gray-600 text-sm mb-2">Unit Prices according to Grades</Text>
+            <Text className="text-gray-600 text-sm mb-2">{t("PriceChart.UnitGrades")}</Text>
             <View className="border border-gray-300 rounded-lg p-4">
               {priceData.map((priceItem, index) => (
                 <View key={index} className="flex-row items-center mb-3">
@@ -429,8 +431,10 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
               fetchPrices();
             }}
           >
-            <Text className="text-gray-700 text-base font-semibold">Go Back</Text>
+            <Text className="text-gray-700 text-base font-semibold">{t("PriceChart.Go")}</Text>
           </TouchableOpacity>
+
+         
         )}
       </ScrollView>
     </SafeAreaView>

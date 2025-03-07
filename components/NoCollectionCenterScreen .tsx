@@ -6,6 +6,7 @@ import environment from '@/environment/environment';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useTranslation } from "react-i18next";
 
 type NoCollectionCenterScreenNavigationProps = StackNavigationProp<RootStackParamList, 'NoCollectionCenterScreen'>;
 
@@ -14,6 +15,8 @@ interface NoCollectionCenterScreenProps {
 }
 
 const NoCollectionCenterScreen: React.FC<NoCollectionCenterScreenProps> = ({ navigation }) => {
+
+    const { t } = useTranslation();
   useEffect(() => {
     const backAction = () => {
       navigation.navigate('Login');
@@ -34,16 +37,16 @@ const NoCollectionCenterScreen: React.FC<NoCollectionCenterScreenProps> = ({ nav
      
       {/* Error Text */}
       <View className="items-center mb-[25%]">
-        <Text className="text-lg font-semibold  text-black-300 mt-[20%]">Error Found!</Text>
+        <Text className="text-lg font-semibold  text-black-300 mt-[20%]">{t("NoCollectionCenterScreen.ErrorFound")}</Text>
         <Text className="text-2xl font-bold text-black mt-2">
-          No Collection Center
+          {t("NoCollectionCenterScreen.NoCenter")}
         </Text>
       </View>
 
       {/* Illustration */}
       <View className="w-full flex items-center justify-center">
         <Image
-          source={require('../assets/images/noUser.png')}
+          source={require('../assets/images/noUser.webp')}
           className="w-80 h-80"
           resizeMode="contain"
         />

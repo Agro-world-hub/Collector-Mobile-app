@@ -21,7 +21,7 @@ const TamDashboard: React.FC<TamDashboardProps> = ({ navigation }) => {
         <Text className="text-white text-xl ml-5 font-bold">வணக்கம், நிமேஷ்!</Text>
         <TouchableOpacity onPress={()=>navigation.navigate('TamProfile')}>
         <Image
-          source={require('@/assets/images/profile.png')}
+          source={require('@/assets/images/profile.webp')}
           className="w-16 h-16 rounded-full"
         
         />
@@ -78,7 +78,7 @@ const TamDashboard: React.FC<TamDashboardProps> = ({ navigation }) => {
           style={{ transform: [{ scale: selectedNav === 'first' ? 1.5 : 1 }] }}
         >
           <Image
-            source={require('@/assets/images/first-image.png')}
+            source={require('@/assets/images/first-image.webp')}
             style={{ width: 35, height: 35 }}
             resizeMode="contain"
           />
@@ -88,7 +88,7 @@ const TamDashboard: React.FC<TamDashboardProps> = ({ navigation }) => {
           style={{ transform: [{ scale: selectedNav === 'second' ? 1.5 : 1 }] }}
         >
           <Image
-            source={require('@/assets/images/second-image.png')}
+            source={require('@/assets/images/second-image.webp')}
             style={{ width: 35, height: 35 }}
             resizeMode="contain"
           />
@@ -98,7 +98,7 @@ const TamDashboard: React.FC<TamDashboardProps> = ({ navigation }) => {
           style={{ transform: [{ scale: selectedNav === 'third' ? 1.5 : 1 }] }}
         >
           <Image
-            source={require('@/assets/images/third-image.png')}
+            source={require('@/assets/images/third-image.webp')}
             style={{ width: 35, height: 35 }}
             resizeMode="contain"
            

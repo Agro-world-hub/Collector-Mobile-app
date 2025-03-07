@@ -7,7 +7,9 @@ import {
   Image,
   Alert,
   ScrollView,
-  Keyboard
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
@@ -20,6 +22,7 @@ import {
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useFocusEffect } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -48,6 +51,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
     }[]
   >([]);
   const [ere, setEre] = useState("");
+  const { t } = useTranslation();
 
   const validateNic = (nic: string) => {
     const regex = /^(\d{12}|\d{9}V|\d{9}X|\d{9}v|\d{9}x)$/;
@@ -111,6 +115,9 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
   }
 
   return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}>
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
       keyboardShouldPersistTaps="handled"
@@ -125,22 +132,22 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
             <AntDesign name="left" size={24} color="#000" />
           </TouchableOpacity>
           <Text className="flex-1 text-center text-xl font-bold text-black">
-            Search
+          {t("SearchFarmer.Search")}
           </Text>
         </View>
 
         {/* Search Form */}
         <View className="p-4">
           <Text className="text-center text-lg  mt-5">
-            Enter Farmer's NIC number
+          {t("SearchFarmer.EnterFarmer")}
           </Text>
 
-          <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2 bg-gray-100 bg-white">
+          <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2  bg-white">
 
             <TextInput
               value={NICnumber}
               onChangeText={handleNicChange}
-              placeholder="Enter NIC number"
+              placeholder={t("SearchFarmer.EnterNIC")}
               className="flex-1 text-center "
               maxLength={12}
               style={{
@@ -162,7 +169,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
           {!isSearching && NICnumber.length === 0 && (
             <View className="mt-10 items-center">
               <Image
-                source={require("../assets/images/search.png")}
+                source={require("../assets/images/search.webp")}
                 className="h-[350px] w-[300px] rounded-lg"
                 resizeMode="contain"
               />
@@ -172,7 +179,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
           {/* Searching status */}
           {isSearching && (
             <View className="mt-10 items-center">
-              <Text className="text-center text-lg">Searching...</Text>
+              <Text className="text-center text-lg">{t("SearchFarmer.Searching")}</Text>
             </View>
           )}
 
@@ -180,12 +187,12 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
           {!isSearching && noResults && NICnumber.length > 0 && (
             <View className="mt-6 items-center">
               <Image
-                source={require("../assets/images/notfound.png")}
+                source={require("../assets/images/notfound.webp")}
                 className="h-[200px] w-[200px] rounded-lg"
                 resizeMode="contain"
               />
               <Text className="text-center text-lg mt-4 color-[#888888]">
-                No registered farmer found
+              {t("SearchFarmer.Noregistered")}
               </Text>
 
               <TouchableOpacity
@@ -196,13 +203,14 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
                 }
                 className="mt-16 bg-[#2AAD7A]  rounded-full px-16 py-3  "
               >
-                <Text className="text-white text-lg">Register Farmer</Text>
+                <Text className="text-white text-lg">{t("SearchFarmer.RegisterFarmer")}</Text>
               </TouchableOpacity>
             </View>
           )}
         </View>
       </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

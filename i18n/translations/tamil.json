@@ -1,5 +1,246 @@
 {
+  "SignIn": {
+    "LNG": "ta",
+    "Wellcome": "வணக்கம்!",
+    "SigntoLogin": "உள்நுழையவும்",
+    "Employee":"பணியாளர் ஐடி",
+    "Password": "கடவுச்சொல்",
+    "Sign":"உள்நுழை"
+  },
+  "DashBoard":{
+   "LNG": "ta",
+    "Keep": "தொடருங்கள்!",
+     "Youhavenotachieved":"இன்று உங்கள் தினசரி இலக்கை அடையவில்லை",
+     "Completed":"முடிந்தது!",
+     "Youhaveachieved":"இன்று உங்கள் தினசரி இலக்கை அடைந்துவிட்டீர்கள்",
+    "Yourtarget": "உங்கள் இலக்கு",
+    "Progress": "முன்னேற்றம்",
+    "Scan":"QR ஐ ஸ்கேன் செய்",
+    "Search": "NIC மூலம் தேடு"
+
+  },
+  "EngProfile":{
+    "LNG": "ta",
+    "Language":"மொழி அமைப்புகள்",
+    "View":"எனது QR குறியீட்டைக் காண்க",
+    "ChangePassword":"கடவுச்சொல்லை மாற்று",
+    "Complaints":"புகார்கள்",
+    "Logout": "வெளியேறு"
+
+  },
+  "Profile":{
+    "LNG": "ta",
+    "MyProfile":"எனது சுயவிவரம்",
+    "FirstName":"முதல் பெயர்",
+    "LastName":"கடைசி பெயர் ",
+    "Company":"நிறுவனத்தின் பெயர்",
+    "CenterCode":"மைய குறியீடு",
+    "Job":"வேலைப் பங்கு",
+    "NIC":"NIC எண்",
+    "Phone1":"தொலைபேசி எண் - 1",
+    "Phone2":"தொலைபேசி எண் - 2",
+    "House":"வீடு/கட்டிட எண்",
+    "Street":"தெரு பெயர்",
+    "City":"நகரம்",
+    "District":"மாவட்டம்",
+    "Province": "மாகாணம்"
+
+
+  },
+  "DailyTarget":{
+    "LNG": "ta",
+    "DailyTarget":"தினமணி இலக்கு",
+    "Todo":"செய்வது",
+    "Completed":"முடிந்தது",
+    "No":"இல்லை",
+    "Variety":"வெரைட்டி",
+    "Grade":"கிரேடு",
+    "Target":"இலக்கு (kg)",
+    "Todo()":"டோடோ (kg)"
+
+  },
+  "SearchPrice":{
+    "LNG": "ta",
+    "SearchPrice":"விலையைத் தேடு",
+    "Crop":"பயிர் பெயர்",
+    "SelectCrop":"பயிர் தேர்ந்தெடு",
+    "Variety":"வகை",
+    "SelectVariety":"வகையைத் தேர்ந்தெடுக்கவும்",
+    "Search":"தேடல்"
+
+  },
+  "SearchFarmer":{
+    "LNG": "ta",
+    "Search":"தேடவும்",
+    "EnterFarmer":"விவசாயிகளின் NIC எண்ணை உள்ளிடவும்",
+    "Searching":"தேடுகிறது...",
+    "EnterNIC":"NIC எண்ணை உள்ளிடவும்",
+    "Noregistered":"பதிவுசெய்யப்பட்ட விவசாயி இல்லை",
+    "RegisterFarmer":"விவசாயியைப் பதிவு செய்யவும்"
+
+  },
+  "UnregisteredFarmerDetails":{
+    "LNG": "ta",
+    "FillDetails":"தனிப்பட்ட விவரங்களை நிரப்பு",
+    "FirstName":"முதல் பெயர்",
+    "LastName":"கடைசி பெயர் ",
+    "NIC":"NIC எண்",
+    "Phone":"தொலைபேசி எண்",
+    "District":"மாவட்டம்",
+    "AccountNum":"கணக்கு எண்",
+    "AccountName":"கணக்கு வைத்திருப்பவரின் பெயர்",
+    "Back":"வங்கி பெயர்",
+    "Branch":"கிளை பெயர்",
+    "Submit":"சமர்ப்பி",
+    "Success":"வெற்றி!",
+    "Successful":"பதிவு வெற்றி",
+    "Oops":"அச்சச்சோ!",
+    "Unsuccessful":"பதிவு தோல்வி",
+    "Close":"மூடு"
+  },
+  "PriceChart":{
+    "LNG": "ta",
+    "PriceChart":"விலை விளக்கப்படம்",
+    "Crop":"பயிர் பெயர்",
+    "Variety":"வகை",
+    "UnitGrades":"தரங்களின்படி அலகு விலைகள்",
+    "Go":"திரும்பிச் செல்"
+
+  },
+  "Otpverification":{
+    "LNG": "ta",
+    "OTPVerification":"OTP சரிபார்ப்பு",
+    " EnterCode":" சரிபார்ப்புக் குறியீட்டை உள்ளிடவும்",
+    "OTPCode":"OTPCode",
+    "Didreceive":" எனக்கு குறியீடு கிடைக்கவில்லை!",
+    "Verify":"சரிபார்",
+    "Success":"வெற்றி!",
+    "Registration":"பதிவு வெற்றியடைந்தது",
+    "OK":"சரி",
+    "invalidOTP":"தவறான OTP",
+    "completeOTP":"முழுமையான OTP"
+
+  },
+  "FarmerQr":{
+    "LNG": "ta",
+    "FarmerDetails":"Farmer விவரங்கள்",
+    "QRavailable":"QR குறியீடு கிடைக்கவில்லை",
+    "Collect":"சேகரி",
+    "ReportComplain":"புகாரைப் புகாரளி",
+    "Download":"பதிவிறக்கு",
+    "Share":"பகிர்"
+
+  },
+  "UnregisteredCropDetails":{
+    "LNG": "ta",
+    "FillDetails":"நிரப்பு விவரங்கள்",
+    "Crop":"செதுக்கு",
+    "CropName":"செதுக்கு பெயர்",
+    "Variety":"வகை",
+    "UnitGrades":"தரங்களின்படி அலகு விலைகள்",
+    "Total":"மொத்தம் (ரூ.)",
+    "Add":"மேலும் சேர்",
+    "Done":"முடிந்தது"
+
+  },
+  "ReportPage":{
+    "LNG": "ta",
+    "PurchaseReport":"கொள்முதல் அறிக்கை",
+    "INV":"INV எண்:",
+    "PersonalDetails":"தனிப்பட்ட விவரங்கள்",
+    "Address":"முகவரி",
+    "FirstName":"முதல் பெயர்",
+    "LastName":"கடைசி பெயர்",
+    "NIC":"NIC எண்",
+    "Phone":"தொலைபேசி எண்",
+    "Bank":"வங்கி விவரங்கள்",
+    "AccountNum":"கணக்கு எண்",
+    "AccountName":"கணக்கு வைத்திருப்பவரின் பெயர்",
+    "BankName":"வங்கி பெயர்",
+    "BranchName":"கிளை பெயர்",
+    "CropDetails":"பயிர் விவரங்கள்",
+    "CropName":"பயிர் பெயர்",
+    "Variety":"வகை",
+    "Unit Price A":"அலகு விலை A",
+    "Weight A":"எடை A",
+    "Unit Price B":"அலகு விலை B",
+    "Weight B":"எடை B",
+    "Unit Price C":"அலகு விலை C",
+    "Weight C":"எடை C",
+    "Total":"மொத்தம்",
+    "TotalSum":"மொத்தத் தொகை: ரூ",
+    "FarmerQR":"விவசாயியின் QR குறியீடு",
+    "OfficerQR":"அதிகாரிகளின் QR குறியீடு",
+    "Download":"பதிவிறக்கம்",
+    "Share":"பகிர்"
+
+  },
+  "NoCollectionCenterScreen":{
+    "LNG": "ta",
+    "ErrorFound":"பிழை கண்டறியப்பட்டது!",
+    "NoCenter":"சேகரிப்பு மையம் இல்லை"
+
+  },
+  "OfficerQr":{
+    "LNG": "ta",
+    "QRCode":"QR குறியீடு",
+    "Noavailable":"QR குறியீடு இல்லை.",
+    "Download":"பதிவிறக்கு",
+    "Share":"பகிர்"
+
+  },
+  "QRScanner":{
+    "LNG": "ta",
+    "CameraRequired":"கேமரா அனுமதி தேவை",
+    "WeneedCamera":" QR குறியீடுகளை ஸ்கேன் செய்ய கேமரா அணுகல் தேவை. உங்கள் சாதன அமைப்புகளில் கேமரா அனுமதிகளை இயக்கவும்.",
+    "Close":"மூடு",
+    "TapScan":"மீண்டும் ஸ்கேன் செய்ய தட்டவும்",
+    "Failed":"தோல்வி",
+    "SearchNIC":"பயனரின் NIC எண் மூலம் தேடவும்"
+  },
+  "ChangePassword":{
+    "LNG": "ta",
+    "ChoosePassword":"புதிய கடவுச்சொல்லைத் தேர்ந்தெடு",
+    "Changepassword":" கடவுச்சொல்லை மாற்றி பாதுகாப்பாக வைத்திரு",
+    "CurrentPassword":"தற்போதைய கடவுச்சொல்",
+    "NewPassword":"புதிய கடவுச்சொல்",
+    "ConfirmNewPassword":"புதிய கடவுச்சொல்லை உறுதிப்படுத்து"
+
+  },
+  "Registeredfarmer":{
+    "LNG": "ta",
+    "FarmerDetails":"விவசாயி விவரங்கள்",
+    "FirstName":"முதல் பெயர்",
+    "LastName":"கடைசி பெயர் ",
+    "NIC":"NIC எண்",
+    "Phone":"தொலைபேசி எண்",
+    "Address":"முகவரி",
+    "AccountNum":"கணக்கு எண்",
+    "AccountName":"கணக்கு வைத்திருப்பவரின் பெயர்",
+    "Bank":"வங்கி பெயர்",
+    "Branch":"கிளை பெயர்",
+    "Next":"அடுத்து"
+    
+  },
+  "Ufarmercropdetails":{
+    "LNG": "ta",
+    "FillCropDetails":"செதுக்கு விவரங்களை நிரப்பு",
+    "CropName":"பயிர் பெயர்",
+    "Quality":"தரம்",
+    "Quantity":"அளவு",
+    "UnitPrice":"அலகு விலை (ரூ.)",
+    "UploadImage":"படத்தைப் பதிவேற்று",
+    "ChooseImage":"படத்தைத் தேர்ந்தெடு",
+    "Total":"மொத்தம் (ரூ.)",
+    "Next":"அடுத்து"
+  },
+
+
+
+
+
   "signupForm": {
+    "LNG": "ta",
     "signuphere": "இங்கே பதிவு செய்யுங்கள்",
     "registerwithphno": "மொபைல் ஃபோன் எண்ணைப் பயன்படுத்துதல்",
     "or": "அல்லது",
@@ -84,17 +325,7 @@
   "MarketPriceSlideShow": {
     "LNG": "ta"
   },
-  "Profile": {
-    "LNG": "ta",
-    "LanguageSettings": "மொழி அமைப்புகள்",
-    "ViewQR": "எனது QR குறியீட்டை காண்க",
-    "PlantCareHelp": "தாவர பராமரிப்பு உதவி",
-    "Logout": "வெளியேறு",
-    "NeedHelp": "உதவி தேவை",
-    "NeedPlantCareHelp": "தாவர பராமரிப்பு உதவி தேவைதா? உடனடி ஆதரவு பெற எங்கள் உதவி மையத்திற்கு அழைக்க அழுத்தவும்.",
-    "Cancel": "ரத்துசெய்",
-    "Call": "அழைக்கவும்"
-  },
+
   "EditProfile": {
     "LNG": "ta",
     "FirstName": "முதல் பெயர்",
@@ -151,6 +382,114 @@
     "Download": "பதிவிறக்கவும்",
     "Share": "பகிரவும்"
   },
+  "ManagerDashboard":{
+    "LNG": "ta",
+    "Keep": "தொடருங்கள்!",
+     "Youhavenotachieved":"இன்று உங்கள் தினசரி இலக்கை அடையவில்லை",
+     "Completed":"முடிந்தது!",
+     "Youhaveachieved":"இன்று உங்கள் தினசரி இலக்கை அடைந்துவிட்டீர்கள்",
+    "Yourtarget": "உங்கள் இலக்கு முன்னேற்றம்",
+   
+    "Scan":"QR ஐ ஸ்கேன் செய்",
+    "Search": "NIC மூலம் தேடு",
+    "CenterTarget":"மைய இலக்கு",
+    "MyCollection":"எனது சேகரிப்பு"
+
+  },
+  "AddOfficerBasicDetails":{
+    "LNG": "ta",
+    "AddOfficer":"அதிகாரியை சேர்",
+    "Type":"வகை :",
+    "Permanent":"நிரந்தர",
+    "Temporary":"தற்காலிக",
+    "PreferredLanguages":"விருப்பமான மொழிகள் :",
+    "Sinhala":"சிங்கள",
+    "English":"ஆங்கிலம்",
+    "Tamil":"தமிழ்",
+    "JobRole":"வேலைப் பங்கு:",
+    "SelectJobRole":"வேலைப் பங்கு தேர்ந்தெடு",
+    "FirstNameEnglish":"--ஆங்கிலத்தில் முதல் பெயர்--",
+    "LastNameEnglish":"--கடைசி முதல் பெயர்--",
+    "FirstNameinSinhala":"--சிங்களத்தில் கடைசி பெயர்--",
+    "LastNameSinhala":"--தமிழில் முதல் பெயர்--",
+    "FirstNameTamil":"--தமிழில் கடைசி பெயர்--",
+    "LastNameTamil":"--கடைசி கடைசி பெயர்--",
+    "NIC":"--NIC எண்--",
+    "Email":"--மின்னஞ்சல் முகவரி--",
+    "Cancel":"ரத்துசெய்",
+    "Next":"அடுத்து"
+  },
+  "AddOfficerAddressDetails":{
+    "LNG": "ta",
+    "AddOfficer":"அதிகாரியை சேர்",
+    "House":"--வீடு / மனை எண்--",
+    "Street Name":"--தெரு பெயர்--",
+    "City":"--நகரம்--",
+    "Country":"இலங்கை",
+    "AccountName":"--கணக்கு வைத்திருப்பவரின் பெயர்--",
+    "AccountNum":"--கணக்கு எண்--",
+    "Confirm AccountNum":"--கணக்கு எண்ணை உறுதிப்படுத்து--",
+    "BankName":"--வங்கி பெயர்--",
+    "BranchName":"--கிளை பெயர்--",
+    "Go":"திரும்பிச் செல்",
+    "Submit":"சமர்ப்பி"
+    
+  },
+
+
+  "CenterTarget":{
+    "LNG": "ta",
+    "CenterTarget":"மைய இலக்கு",
+    "Todo":"செய்வது",
+    "Completed":"முடிந்தது",
+    "No":"இல்லை",
+    "Variety":"வெரைட்டி",
+    "Grade":"கிரேடு",
+    "Target":"இலக்கு (kg)",
+    "Todo()":"டோடோ (kg)"
+
+  },
+  "ClaimOfficer":{
+    "LNG": "ta",
+    "ClaimOfficers":"அதிகாரிகளை உரிமைகோருங்கள்",
+    "JobRole":"வேலைப் பங்கு",
+    "EMPID":"EMP ID",
+    "Search":"தேடல்",
+    "Claim Officer":"உரிமைகோரல் அதிகாரி",
+     "No Disclaimed":" - எந்த மறுப்பு அதிகாரியும் காணப்படவில்லை -"
+   
+  },
+
+  "CollectionOfficersList":{
+    "LNG": "ta",
+    "Collection Officers":"வசூல் அதிகாரிகள்",
+    "Claim Officer":"உரிமைகோரல் அதிகாரி",
+    "Officers List":"அதிகாரிகள் பட்டியல்"
+   
+  },
+  "EditTargetManager":{
+    "LNG": "ta",
+    "TotalTarget":"மையத்திற்கான மொத்த இலக்கு",
+    "My Target":"எனது இலக்கு",
+    "Pass":"தேர்ச்சி",
+    "Receive":"பெறு",
+    "Amount":"செய்ய வேண்டிய தொகை",
+    "Assigned Target":"ஒதுக்கப்பட்ட இலக்கு"
+  
+   
+  },
+  "ManagerTransactions":{
+    "LNG": "en",
+    "EMPID":"EMP ID:",
+    "Selected Date":"தேர்ந்தெடுக்கப்பட்ட தேதி:",
+    "Transaction List":"பரிவர்த்தனைகள் பட்டியல்",
+    "NIC":"NIC:",
+    "Notransactions":"தேர்ந்தெடுக்கப்பட்ட தேதிக்கு எந்த பரிவர்த்தனைகளும் கிடைக்கவில்லை.",
+    "Search":"NIC எண், பெயர் மூலம் தேடுங்கள்",
+    "All":"அனைத்தும்"
+  },
+
+
   "District": {
     "LNG": "ta",
     "Ampara": "அம்பாறை",

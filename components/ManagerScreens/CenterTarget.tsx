@@ -7,6 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import environment from '@/environment/environment';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native'; // Import LottieView
+import { AntDesign } from '@expo/vector-icons';
+import { useTranslation } from "react-i18next";
 
 type CenterTargetNavigationProps = StackNavigationProp<RootStackParamList, 'CenterTarget'>;
 
@@ -28,6 +30,7 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
   const [error, setError] = useState<string | null>(null);
   const [selectedToggle, setSelectedToggle] = useState('ToDo');
   const [refreshing, setRefreshing] = useState(false);
+   const { t } = useTranslation();
 
   const fetchTargets = async () => {
     setLoading(true);
@@ -69,14 +72,17 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
 
   return (
-    <View className="flex-1 bg-black p-4">
+    <View className="flex-1 bg-[#282828] ">
       {/* Header */}
-      <View className="bg-black px-4 py-3 flex-row justify-between items-center">
-        <Text className="text-white text-lg font-bold ml-[35%]">Center Target</Text>
+      <View className="bg-[#282828] px-4 py-3 flex-row justify-between items-center">
+      <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-6 left-4">
+          <AntDesign name="left" size={22} color="white" />
+        </TouchableOpacity>
+        <Text className="text-white text-lg font-bold ml-[35%] mt-[3%]">{t("CenterTarget.CenterTarget")}</Text>
       </View>
 
       {/* Toggle Buttons */}
-      <View className="flex-row justify-center items-center py-4 bg-black">
+      <View className="flex-row justify-center items-center py-4 bg-[#282828]">
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
             selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
@@ -85,7 +91,7 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
           onPress={() => setSelectedToggle('ToDo')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
-            To do
+          {t("CenterTarget.Todo")}
           </Text>
           <View className="bg-white rounded-full px-2">
             <Text className="text-green-500 font-bold text-xs">{todoData.length}</Text>
@@ -102,7 +108,7 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
           <Text
             className={`font-bold ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
           >
-            Completed
+             {t("CenterTarget.Completed")} 
           </Text>
           <View className="bg-white rounded-full px-2 ml-2">
             <Text className="text-green-500 font-bold text-xs">{completedData.length}</Text>
@@ -113,16 +119,16 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
       {/* Table Header */}
       <ScrollView
         horizontal
-        className="border border-gray-300 bg-white"
+        className=" bg-white"
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <View>
           <View className="flex-row bg-[#2AAD7A] h-[7%]">
-            <Text className="w-16 p-2 font-bold text-center">No</Text>
-            <Text className="w-40 p-2 font-bold text-center">Variety</Text>
-            <Text className="w-32 p-2 font-bold text-center">Grade</Text>
-            <Text className="w-32 p-2 font-bold text-center">Target (kg)</Text>
-            <Text className="w-32 p-2 font-bold text-center">Todo (kg)</Text>
+            <Text className="w-16 p-2  text-center text-white"> {t("CenterTarget.No")} </Text>
+            <Text className="w-40 p-2  text-center text-white"> {t("CenterTarget.Variety")} </Text>
+            <Text className="w-32 p-2  text-center text-white"> {t("CenterTarget.Grade")}</Text>
+            <Text className="w-32 p-2  text-center text-white"> {t("CenterTarget.Target")}</Text>
+            <Text className="w-32 p-2  text-center text-white"> {t("CenterTarget.Todo()")} </Text>
           </View>
 
           {/* Loading Screen with Lottie */}

@@ -177,7 +177,7 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, Alert, BackHandler, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert, BackHandler, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import axios from 'axios';
 import environment from '../environment/environment';
@@ -193,6 +193,7 @@ import {
 } from "react-native-responsive-screen";
 import { useFocusEffect } from '@react-navigation/native';
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { useTranslation } from "react-i18next";
 
 // Create API instance
 const api = axios.create({
@@ -214,6 +215,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
   const [permissionsGranted, setPermissionsGranted] = useState(false);
   const [farmerPhone, setFarmerPhone] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
+  const { t } = useTranslation();
 
   const route = useRoute<FarmerQrRouteProp>();
   const { userId } = route.params;
@@ -333,14 +335,19 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
 
 
   return (
-    <ScrollView className='bg-white ' style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}>
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
+    <ScrollView 
+      className="bg-white"
+      contentContainerStyle={{ paddingHorizontal: wp(4), paddingVertical: hp(2), flexGrow: 1 }}
+      showsVerticalScrollIndicator={false} // Optional: Hide scrollbar
+    >
     <View className="flex-1 " >
       {/* Header with Back Icon */}
           <View className="flex-row items-center  mb-6">
                <TouchableOpacity onPress={() => navigation.goBack()} className="">
                  <AntDesign name="left" size={24} color="#000" />
                </TouchableOpacity>
-               <Text className="flex-1 text-center text-xl font-bold text-black">Farmer Details</Text>
+               <Text className="flex-1 text-center text-xl font-bold text-black">{t("FarmerQr.FarmerDetails")}</Text>
              </View>
 
 
@@ -352,7 +359,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
       
       ) : (
         <>
-      <View className="items-center mt-[10%]">
+      <View className="items-center mt-[4%]">
         <Text className="text-lg font-bold mb-2">{farmerName}</Text>
         <Text className="text-gray-500 mb-9">{farmerNIC}</Text>
 
@@ -363,7 +370,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
             style={{ width: 300, height: 300, borderWidth: 1, borderColor: '#00C853' }} // Adding border and dimensions
           />
         ) : (
-          <Text className="text-red-500">QR Code not available</Text>
+          <Text className="text-red-500">{t("FarmerQr.QRavailable")}</Text>
         )}
       </View>
 
@@ -378,7 +385,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
   } as never)
 }
         > 
-          <Text className="text-white text-lg">Collect</Text>
+          <Text className="text-white text-lg">{t("FarmerQr.Collect")}</Text>
         </TouchableOpacity>
 
         {/* Complain Button */}
@@ -390,7 +397,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
             userId
           })}
         >
-          <Text className="text-gray-700 text-lg">Report a Complain</Text>
+          <Text className="text-gray-700 text-lg">{t("FarmerQr.ReportComplain")}</Text>
         </TouchableOpacity>
       </View>
 
@@ -398,24 +405,25 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
       <View className="flex-row justify-around w-full mt-6">
         <TouchableOpacity className="bg-gray-600 p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={downloadQRCode}>
           <Image
-            source={require('../assets/images/download.png')} // Path to download icon
+            source={require('../assets/images/download.webp')} // Path to download icon
             style={{ width: 24, height: 24 }}
           />
-          <Text className="text-sm text-cyan-50">Download</Text>
+          <Text className="text-sm text-cyan-50">{t("FarmerQr.Download")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity className="bg-gray-600 p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={shareQRCode}>
           <Image
-            source={require('../assets/images/Share.png')} // Path to share icon
+            source={require('../assets/images/Share.webp')} // Path to share icon
             style={{ width: 24, height: 24 }}
           />
-          <Text className="text-sm text-cyan-50">Share</Text>
+          <Text className="text-sm text-cyan-50">{t("FarmerQr.Share")}</Text>
         </TouchableOpacity>
       </View>
       </>
       )}
     </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

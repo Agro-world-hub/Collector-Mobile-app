@@ -55,7 +55,7 @@ const TamProfile: React.FC<SinProfileProps> = ({ navigation }) => {
             {/* Profile Card */}
             <View className="flex-row items-center mb-4">
                 <Image
-                    source={require('@/assets/images/profile.png')}
+                    source={require('@/assets/images/profile.webp')}
                     className="w-12 h-12 rounded-full mr-3"
                 />
                 <View className="flex-1">
@@ -144,7 +144,7 @@ const TamProfile: React.FC<SinProfileProps> = ({ navigation }) => {
                         <View className="flex-row justify-center mb-4">
                             <View className="bg-gray-200 rounded-full p-4">
                                 <Image
-                                    source={require('@/assets/images/ringer.png')} // Replace with your call ringing PNG path
+                                    source={require('@/assets/images/ringer.webp')} // Replace with your call ringing PNG path
                                     className="w-16 h-16"
                                 />
                             </View>

@@ -26,11 +26,14 @@ import bankNames from "../assets/jsons/banks.json";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LottieView from "lottie-react-native"; // Import LottieView
 import { ActivityIndicator } from "react-native";
-
-
+import { KeyboardAvoidingView } from "react-native";
+import { Platform } from "react-native";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import { SelectList } from "react-native-dropdown-select-list";
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
+
 
 type UnregisteredFarmerDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -62,7 +65,9 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   const [accNumber, setAccNumber] = useState("");
   const [accHolderName, setAccHolderName] = useState("");
   const [bankName, setBankName] = useState("");
+  console.log(bankName)
   const [branchName, setBranchName] = useState("");
+  console.log(branchName)
   const [isModalVisible, setIsModalVisible] = useState(false); // Success modal visibility state
   const [isUnsuccessfulModalVisible, setIsUnsuccessfulModalVisible] = useState(false); // Unsuccessful modal visibility state
   const [loading, setLoading] = useState(false); // Loading state for the progress bar
@@ -178,7 +183,6 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   }, [bankName]);
 
   const districtOptions = [
-    { key: 0, value: "", translationKey: t("Districts.selectDistrict") },
     { key: 1, value: "Ampara", translationKey: t("Districts.Ampara") },
     {
       key: 2,
@@ -244,7 +248,8 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       !bankName ||
       !branchName // Removed trailing comma
     ) {
-      Alert.alert("Main.error", "SignupForum.fillAllFields");
+      Alert.alert("Sorry", "Please fill all fields");
+      setLoading(false);
       return;
     }
 
@@ -262,16 +267,16 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
 
       if (checkResponse.data.message === "This Phone Number already exists.") {
-        Alert.alert("Main.error", "SignupForum.phoneExists");
+        Alert.alert("Sorry", "This Phone Number already exists.");
         return;
       } else if (checkResponse.data.message === "This NIC already exists.") {
-        Alert.alert("Main.error", "SignupForum.nicExists");
+        Alert.alert("Sorry", "This NIC already exists.");
         return;
       } else if (
         checkResponse.data.message ===
         "This Phone Number and NIC already exist."
       ) {
-        Alert.alert("Main.error", "SignupForum.phoneNicExist");
+        Alert.alert("Sorry", "This Phone Number and NIC already exist.");
         return;
       }
 
@@ -333,17 +338,19 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   };
 
   return (
+      <KeyboardAvoidingView 
+            behavior={Platform.OS ==="ios" ? "padding" : "height"}
+            enabled
+            className="flex-1"
+            >
     <View className="flex-1 p-5 bg-white">
       {/* Header with Back Icon */}
       <View className="flex-row items-center mb-4">
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={require("../assets/images/back.png")} // Path to your PNG image
-            style={{ width: 24, height: 24 }} // Adjust size if needed
-          />
+           <AntDesign name="left" size={22} color="#000" />
         </TouchableOpacity>
         <View className="w-full items-center">
-  <Text className="text-xl font-bold text-center">Fill Personal Details</Text>
+  <Text className="text-xl font-bold text-center">{t("UnregisteredFarmerDetails.FillDetails")}</Text>
 </View>
 
 
@@ -353,9 +360,9 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       <ScrollView className="flex-1 p-3">
         {/* First Name */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">First Name</Text>
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.FirstName")}</Text>
           <TextInput
-            placeholder="First Name"
+            placeholder={t("UnregisteredFarmerDetails.FirstName")}
             className="border border-gray-300  p-3 rounded-lg"
             value={firstName}
             onChangeText={setFirstName}
@@ -364,9 +371,9 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
         {/* Last Name */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">Last Name</Text>
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.LastName")}</Text>
           <TextInput
-            placeholder="Last Name"
+            placeholder={t("UnregisteredFarmerDetails.LastName")}
             className="border border-gray-300  p-3 rounded-lg"
             value={lastName}
             onChangeText={setLastName}
@@ -375,7 +382,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
         {/* NIC Number */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">NIC Number</Text>
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.NIC")}</Text>
           <TextInput
             placeholder="NIC Number"
             className="border border-gray-300  p-3 rounded-lg"
@@ -386,7 +393,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
         {/* Phone Number */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">Phone Number</Text>
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.Phone")}</Text>
           <View className="flex-row items-center border border-gray-300  p-3 rounded-lg">
             <CountryPicker
               countryCode={countryCode}
@@ -397,20 +404,21 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
             />
             <TextInput
-              placeholder="Phone Number"
+              placeholder="7XXXXXXXX"
               keyboardType="phone-pad"
               value={phoneNumber}
               onChangeText={setPhoneNumber}
               className="flex-1"
+              maxLength={9}
             />
           </View>
         </View>
 
         {/* Address */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">District</Text>
-          <View className="border border-gray-300  rounded-lg">
-            <Picker
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.District")}</Text>
+          <View className="  rounded-lg">
+            {/* <Picker
               selectedValue={district}
               onValueChange={(itemValue: any) => setDistrict(itemValue)}
               style={{
@@ -428,15 +436,26 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
                   }}
                 />
               ))}
-            </Picker>
+            </Picker> */}
+                     <SelectList
+              setSelected={setDistrict}
+              data={districtOptions.map(district => ({
+                key: district.value,
+                value: district.translationKey,
+              }))}
+              placeholder="Select District"
+              boxStyles={{ borderColor: '#ccc', borderRadius: 8 }}
+              dropdownStyles={{ borderColor: '#ccc' }}
+              search={false}  // Optional: hide search inside dropdown
+            />
           </View>
         </View>
 
         {/* Account Number */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">Account Number</Text>
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.AccountNum")}</Text>
           <TextInput
-            placeholder="Account Number"
+            placeholder={t("UnregisteredFarmerDetails.AccountNum")}
             className="border border-gray-300  p-3 rounded-lg"
             value={accNumber}
             onChangeText={setAccNumber}
@@ -445,9 +464,9 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
         {/* Account Holder's Name */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">Account Holder's Name</Text>
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.AccountName")}</Text>
           <TextInput
-            placeholder="Account Holder's Name"
+            placeholder={t("UnregisteredFarmerDetails.AccountName")}
             className="border border-gray-300  p-3 rounded-lg"
             value={accHolderName}
             onChangeText={setAccHolderName}
@@ -456,9 +475,9 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
         {/* Bank Name */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">Bank Name</Text>
-          <View className="border border-gray-300  rounded-lg">
-            <Picker
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.Bank")}</Text>
+          <View className="  rounded-lg">
+            {/* <Picker
               selectedValue={bankName}
               onValueChange={(value) => setBankName(value)}
               style={{
@@ -476,15 +495,26 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
                     value={bank.name}
                   />
                 ))}
-            </Picker>
+            </Picker> */}
+            <SelectList
+              setSelected={setBankName}
+              data={bankNames.map(bank => ({
+                key: bank.name,
+                value: bank.name,
+              }))}
+              placeholder="Select Bank"
+              boxStyles={{ borderColor: '#ccc', borderRadius: 8 }}
+              dropdownStyles={{ borderColor: '#ccc' }}
+              search={true}  
+            />
           </View>
         </View>
 
         {/* Branch Name */}
         <View className="mb-8">
-          <Text className="text-gray-600 mb-2">Branch Name</Text>
-          <View className="border border-gray-300  rounded-lg">
-            <Picker
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.Branch")}</Text>
+          <View className=" rounded-lg">
+            {/* <Picker
               selectedValue={branchName}
               onValueChange={(value) => setBranchName(value)}
               style={{
@@ -500,7 +530,18 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
                   value={branch.name}
                 />
               ))}
-            </Picker>
+            </Picker> */}
+            <SelectList
+              setSelected={setBranchName}
+              data={filteredBranches.map(branch => ({
+                key: branch.name,
+                value: branch.name,
+              }))}
+              placeholder="Select Branch"
+              boxStyles={{ borderColor: '#ccc', borderRadius: 8 }}
+              dropdownStyles={{ borderColor: '#ccc' }}
+              search={true}  
+            />
           </View>
         </View>
       </ScrollView>
@@ -529,7 +570,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
     <ActivityIndicator color="white" size="small" />
   ) : (
     <Text className="text-center text-xl font-light text-white">
-      Submit
+      {t("UnregisteredFarmerDetails.Submit")}
     </Text>
   )}
 </TouchableOpacity>
@@ -540,14 +581,14 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       <Modal transparent={true} visible={isModalVisible} animationType="slide">
         <View className="flex-1 justify-center items-center bg-gray-900 bg-opacity-50">
           <View className="bg-white rounded-lg w-72 p-6 items-center">
-            <Text className="text-xl font-bold mb-4">Success!</Text>
+            <Text className="text-xl font-bold mb-4"> {t("UnregisteredFarmerDetails.Success")}</Text>
             <View className="mb-4">
               <Image
-                source={require("../assets/images/tick.png")} // Replace with your own checkmark image
+                source={require("../assets/images/tick.webp")} // Replace with your own checkmark image
                 className="w-24 h-24"
               />
             </View>
-            <Text className="text-gray-700">Registration Successful</Text>
+            <Text className="text-gray-700">{t("UnregisteredFarmerDetails.Successful")}</Text>
             <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
               <Animated.View
                 className="h-full bg-green-500"
@@ -565,14 +606,14 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       >
         <View className="flex-1 justify-center items-center bg-gray-900 bg-opacity-50">
           <View className="bg-white rounded-lg w-72 p-6 items-center">
-            <Text className="text-xl font-bold mb-4">Oops!</Text>
+            <Text className="text-xl font-bold mb-4">{t("UnregisteredFarmerDetails.Oops")}</Text>
             <View className="mb-4">
               <Image
-                source={require("../assets/images/error.png")} // Replace with your own error image
+                source={require("../assets/images/error.webp")} // Replace with your own error image
                 className="w-24 h-24"
               />
             </View>
-            <Text className="text-gray-700">Registration Unsuccessful</Text>
+            <Text className="text-gray-700">{t("UnregisteredFarmerDetails.Unsuccessful")}</Text>
 
             {/* Display error message */}
             {errorMessage && (
@@ -597,12 +638,13 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
                 unsuccessfulProgress.setValue(0); // Reset animation value when closing
               }}
             >
-              <Text className="text-white">Close</Text>
+              <Text className="text-white">{t("UnregisteredFarmerDetails.Close")}</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
     </View>
+    </KeyboardAvoidingView>
   );
 };
 

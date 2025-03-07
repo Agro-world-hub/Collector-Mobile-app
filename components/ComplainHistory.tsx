@@ -21,6 +21,7 @@ import {
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useFocusEffect } from "@react-navigation/native";
 
+
 interface complainItem {
   id: number;
   createdAt: string;
@@ -58,7 +59,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
       console.log(token);
 
       const res = await axios.get<complainItem[]>(
-        `${environment.API_BASE_URL}api/auth/get-complains`,
+        `${environment.API_BASE_URL}api/complain/get-complains`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

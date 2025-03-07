@@ -182,6 +182,7 @@ import { View, Text, Modal, TouchableOpacity, Animated, Image, Dimensions } from
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import { CameraView, Camera } from "expo-camera";
+import { useTranslation } from "react-i18next";
 
 
 type QRScannerNavigationProp = StackNavigationProp<RootStackParamList, 'QRScanner'>;
@@ -198,6 +199,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
   const [scanned, setScanned] = useState<boolean>(false);
   const [showPermissionModal, setShowPermissionModal] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+   const { t } = useTranslation();
 
   // Modal visibility state for unsuccessful QR scan
   const [isUnsuccessfulModalVisible, setIsUnsuccessfulModalVisible] = useState<boolean>(false);
@@ -305,9 +307,9 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
          
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.7)' }}>
           <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, shadowColor: 'black', width: '80%' }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Camera Permission Required</Text>
-            <Text style={{ color: '#555', marginBottom: 20 }}>
-              We need camera access to scan QR codes. Please enable camera permissions in your device settings.
+            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>{t("QRScanner.CameraRequired")}</Text>
+            <Text style={{ color: '#555', marginBottom: 0 }}>
+            {t("QRScanner.WeneedCamera")}
             </Text>
             <TouchableOpacity
               style={{ backgroundColor: '#34D399', padding: 10, borderRadius: 8 }}
@@ -316,7 +318,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
                 navigation.navigate('Dashboard');
               }}
             >
-              <Text style={{ color: 'white', textAlign: 'center', fontSize: 16 }}>Close</Text>
+              <Text style={{ color: 'white', textAlign: 'center', fontSize: 16 }}> {t("QRScanner.Close")}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -366,7 +368,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
               setScanned(false); // Reset the scanned state
             }}
           >
-            <Text style={{ color: '#fff', fontSize: 16 }}>Tap to Scan Again</Text>
+            <Text style={{ color: '#fff', fontSize: 16 }}>{t("QRScanner.TapScan")}</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -379,14 +381,14 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
       >
         <View className="flex-1 justify-center items-center bg-gray-900 bg-opacity-50">
           <View className="bg-white rounded-lg w-72 p-6 items-center">
-            <Text className="text-xl font-bold mb-4">Failed</Text>
+            <Text className="text-xl font-bold mb-4">{t("QRScanner.Failed")}</Text>
             <View className="mb-4">
               <Image
-                source={require('../assets/images/error.png')} // Replace with your own error image
+                source={require('../assets/images/error.webp')} // Replace with your own error image
                 className="w-24 h-24"
               />
             </View>
-            <Text className="text-gray-700">Search by User’s NIC number</Text>
+            <Text className="text-gray-700">{t("QRScanner.SearchNIC")}</Text>
 
             {/* Red Loading Bar */}
             <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
@@ -400,7 +402,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
                 setErrorMessage(null); // Clear error message when closing
               }}
             >
-              <Text className="text-white">Close</Text>
+              <Text className="text-white">{t("QRScanner.Close")}</Text>
             </TouchableOpacity>
           </View>
         </View>
