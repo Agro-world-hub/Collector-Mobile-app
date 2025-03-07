@@ -1,8 +1,348 @@
 {
   "SignIn": {
     "LNG": "si",
-    "Wellcome": "සාදරයෙන් පිළිගනිමු!"
+    "Wellcome": "සාදරයෙන් පිළිගනිමු!",
+    "SigntoLogin":"කරුණාකර පුරනය වීමට පුරනය වන්න.",
+    "Employee":"සේවක හැඳුනුම්පත",
+    "Password": "මුරපදය",
+    "Sign":"පුරනය වන්න"
   },
+  "DashBoard":{
+    "LNG": "si",
+    "Keep": "ඉදිරියට යන්න!",
+     "Youhavenotachieved":"අද ඔබේ දෛනික ඉලක්කය ඔබ සාක්ෂාත් කර ගෙන නැත",
+     "Completed":"සම්පූර්ණ කරන ලදී!",
+     "Youhaveachieved":"ඔබ අද ඔබේ දෛනික ඉලක්කය සාක්ෂාත් කර ගෙන ඇත",
+    "Yourtarget": "ඔබේ ඉලක්කය",
+    "Progress": "ප්‍රගතිය",
+    "Scan":"QR ස්කෑන් කරන්න",
+    "Search": "ජාතික හැඳුනුම්පත අනුව සොයන්න"
+
+  },
+"EngProfile":{
+    "LNG": "si",
+    "Language":"භාෂා සැකසුම්",
+    "View":"මගේ QR කේතය බලන්න",
+    "ChangePassword":"මුරපදය වෙනස් කරන්න",
+    "Complaints":"පැමිණිලි",
+    "Logout": "පිටවීම"
+
+  },
+  "Profile":{
+    "LNG": "si",
+    "MyProfile":"මගේ පැතිකඩ",
+    "FirstName":"පළමු නම",
+    "LastName":"අවසාන නම",
+    "Company":"සමාගමේ නම",
+    "CenterCode":"මධ්‍යස්ථාන කේතය",
+    "Job":"රැකියා භූමිකාව",
+    "NIC":"ජාතික හැඳුනුම්පත් අංකය",
+    "Phone1":"දුරකථන අංකය - 1",
+    "Phone2":"දුරකථන අංකය - 2",
+    "House":"නිවාස/ගොඩනැගිලි අංකය",
+    "Street":"වීදියේ නම",
+    "City":"නගරය",
+    "District":"දිස්ත්‍රික්කය",
+    "Province": "පළාත"
+
+
+  },
+  "DailyTarget":{
+    "LNG": "si",
+    "DailyTarget":"දෛනික ඉලක්කය",
+    "Todo":"කරන්න",
+    "Completed":"සම්පූර්ණයි",
+    "No":"අංකය",
+    "Variety":"විවිධ",
+    "Grade":"ශ්‍රේණිය",
+    "Target":"ඉලක්කය (kg)",
+    "Todo()":"කරන්න (kg)"
+
+  },
+  "SearchPrice":{
+    "LNG": "si",
+    "SearchPrice":"මිල සොයන්න",
+    "Crop":"බෝගයේ නම",
+    "SelectCrop":"බෝග තෝරන්න",
+    "Variety":"විවිධත්වය",
+    "SelectVariety":"ප්‍රභේදය තෝරන්න",
+    "Search":"සොයන්න"
+
+  },
+  "SearchFarmer":{
+    "LNG": "si",
+    "Search":"සොයන්න",
+    "EnterFarmer":"ගොවියාගේ ජාතික හැඳුනුම්පත් අංකය ඇතුළත් කරන්න",
+    "Searching":"සොයමින්...",
+    "EnterNIC":"ජාතික හැඳුනුම්පත් අංකය ඇතුළත් කරන්න",
+    "Noregistered":"ලියාපදිංචි ගොවියෙකු හමු නොවීය",
+    "RegisterFarmer":"ගොවි ලියාපදිංචි කරන්න"
+
+  },
+  "UnregisteredFarmerDetails":{
+   "LNG": "si",
+    "FillDetails":"පුද්ගලික විස්තර පුරවන්න",
+    "FirstName":"පළමු නම",
+    "LastName":"අවසාන නම ",
+    "NIC":"NIC අංකය",
+    "Phone":"දුරකථන අංකය",
+    "District":"දිස්ත්‍රික්කය",
+    "AccountNum":"ගිණුම් අංකය",
+    "AccountName":"ගිණුම් හිමියාගේ නම",
+    "Back":"බැංකු නම",
+    "Branch":"ශාඛාවේ නම",
+    "Submit":"ඉදිරිපත් කරන්න",
+    "Success":"සාර්ථකයි!",
+    "Successful":"ලියාපදිංචිය සාර්ථකයි",
+    "Oops":"අහෝ!",
+    "Unsuccessful":"ලියාපදිංචිය අසාර්ථකයි",
+    "Close":"වසන්න"
+  },
+  "PriceChart":{
+    "LNG": "si",
+    "PriceChart":"මිල සටහන",
+    "Crop":"බෝග නාමය",
+    "Variety":"විවිධත්වය",
+    "UnitGrades":"ශ්‍රේණි අනුව ඒකක මිල ගණන්",
+    "Go":"ආපසු යන්න"
+
+  },
+
+  "Otpverification":{
+    "LNG": "si",
+    "OTPVerification":"OTP සත්‍යාපනය",
+    " EnterCode":"සත්‍යාපන කේතය ඇතුළත් කරන්න",
+    "OTPCode":"OTPCode",
+    "Didreceive":" මට කේතය ලැබුණේ නැහැ!",
+    "Verify":"තහවුරු කරන්න",
+    "Success":"සාර්ථකයි!",
+    "Registration":"ලියාපදිංචිය සාර්ථකයි",
+    "OK":"හරි",
+    "invalidOTP":"අවලංගු OTP",
+    "completeOTP":"අවලංගු OTP"
+
+  },
+  "FarmerQr":{
+    "LNG": "si",
+    "FarmerDetails":"Farmer විස්තර",
+    "QRavailable":"QR කේතය නොමැත",
+    "Collect":"එකතු කරන්න",
+    "ReportComplain":"පැමිණිල්ලක් වාර්තා කරන්න",
+    "Download":"බාගන්න",
+    "Share":"බෙදාගන්න"
+
+  },
+  "UnregisteredCropDetails":{
+    "LNG": "si",
+    "FillDetails":"පිරවුම් විස්තර",
+    "Crop":"බෝග",
+    "CropName":"බෝග නම",
+    "Variety":"විවිධත්වය",
+    "UnitGrades":"ශ්‍රේණි අනුව ඒකක මිල ගණන්",
+    "Total":"එකතුව (රු.)",
+    "Add":"තවත් එකතු කරන්න",
+    "Done":"නිම"
+
+  },
+  "ReportPage":{
+    "LNG": "si",
+    "PurchaseReport":"මිලදී ගැනීමේ වාර්තාව",
+    "INV":"INV අංකය:",
+    "PersonalDetails":"පුද්ගලික විස්තර",
+    "Address":"ලිපිනය",
+    "FirstName":"පළමු නම",
+    "LastName":"අවසාන නම ",
+    "NIC":"NIC අංකය",
+    "Phone":"දුරකථන අංකය",
+    "Bank":"බැංකු විස්තර",
+    "AccountNum":"ගිණුම් අංකය",
+    "AccountName":"ගිණුම් හිමියාගේ නම",
+    "BankName":"බැංකුවේ නම",
+    "BranchName":"ශාඛාවේ නම",
+    "CropDetails":"බෝග විස්තර",
+    "CropName":"බෝග නම",
+    "Variety":"විවිධත්වය",
+    "Unit Price A":"ඒකක මිල A",
+    "Weight A":"බර A",
+    "Unit Price B":"ඒකක මිල B",
+    "Weight B":"බර B",
+    "Unit Price C":"ඒකකය මිල C",
+    "Weight C":"බර C",
+    "Total":"එකතුව",
+    "TotalSum":"මුළු එකතුව: රු",
+    "FarmerQR":"ගොවියාගේ QR කේතය",
+    "OfficerQR":"නිලධාරියාගේ QR කේතය",
+    "Download":"බාගන්න",
+    "Share":"බෙදාගන්න"
+
+  },
+
+  "NoCollectionCenterScreen":{
+    "LNG": "si",
+    "ErrorFound":"දෝෂය හමු විය!",
+    "NoCenter":"එකතු කිරීමේ මධ්‍යස්ථානයක් නොමැත"
+
+  },
+  "OfficerQr":{
+   "LNG": "si",
+    "QRCode":"QR කේතය",
+    "Noavailable":"QR කේතයක් නොමැත.",
+    "Download":"බාගන්න",
+    "Share":"බෙදාගන්න"
+
+  },
+  "QRScanner":{
+    "LNG": "si",
+    "CameraRequired":"කැමරා අවසරය අවශ්‍යයි",
+    "WeneedCamera":" QR කේත පරිලෝකනය කිරීමට අපට කැමරා ප්‍රවේශය අවශ්‍යයි. කරුණාකර ඔබගේ උපාංග සැකසුම් තුළ කැමරා අවසර සබල කරන්න.",
+    "Close":"වසන්න",
+    "TapScan":"නැවත ස්කෑන් කිරීමට තට්ටු කරන්න",
+    "Failed":"අසාර්ථක",
+    "SearchNIC":"පරිශීලකයාගේ NIC අංකය අනුව සොයන්න"
+  },
+  "ChangePassword":{
+    "LNG": "si",
+    "ChoosePassword":"නව මුරපදයක් තෝරන්න",
+    "Changepassword":" මුරපදය වෙනස් කර එය ආරක්ෂිතව තබා ගන්න",
+    "CurrentPassword":"වත්මන් මුරපදය",
+    "NewPassword":"නව මුරපදය",
+    "ConfirmNewPassword":"නව මුරපදය තහවුරු කරන්න"
+
+  },
+  "Registeredfarmer":{
+    "LNG": "si",
+    "FarmerDetails":"ගොවි විස්තර",
+    "FirstName":"පළමු නම",
+    "LastName":"අවසාන නම ",
+    "NIC":"ජාතික හැඳුනුම්පත් අංකය",
+    "Phone":"දුරකථන අංකය",
+    "Address":"ලිපිනය",
+    "AccountNum":"ගිණුම් අංකය",
+    "AccountName":"ගිණුම් හිමියාගේ නම",
+    "Bank":"බැංකුවේ නම",
+    "Branch":"ශාඛාවේ නම",
+    "Next":"ඊළඟ"
+    
+  },
+  "Ufarmercropdetails":{
+    "LNG": "si",
+    "FillCropDetails":"පිරවුම් විස්තර",
+    "CropName":"බෝග නාමය",
+    "Quality":"ගුණාත්මකභාවය",
+    "Quantity":"ප්‍රමාණය",
+    "UnitPrice":"ඒකක මිල (රු.)",
+    "UploadImage":"රූපය උඩුගත කරන්න",
+    "ChooseImage":"රූපය තෝරන්න",
+    "Total":"එකතුව (රු.)",
+    "Next":"ඊළඟ"
+  },
+  "ManagerDashboard":{
+    "LNG": "si",
+    "Keep": "ඉදිරියට යන්න!",
+     "Youhavenotachieved":"අද ඔබේ දෛනික ඉලක්කය ඔබ සාක්ෂාත් කර ගෙන නැත",
+     "Completed":"සම්පූර්ණ කරන ලදී!",
+     "Youhaveachieved":"ඔබ අද ඔබේ දෛනික ඉලක්කය සාක්ෂාත් කර ගෙන ඇත",
+    "Yourtarget": "ඔබේ ඉලක්කය ප්‍රගතිය",
+    
+    "Scan":"QR ස්කෑන් කරන්න",
+    "Search": "ජාතික හැඳුනුම්පත අනුව සොයන්න",
+    "CenterTarget":"මධ්‍යස්ථාන ඉලක්කය",
+    "MyCollection":"මගේ එකතුව"
+
+  },
+  "AddOfficerBasicDetails":{
+    "LNG": "si",
+    "AddOfficer":"නිලධාරියා එක් කරන්න",
+    "Type":"වර්ගය :",
+    "Permanent":"ස්ථිර",
+    "Temporary":"තාවකාලික",
+    "PreferredLanguages":"කැමති භාෂා :",
+    "Sinhala":"සිංහල",
+    "English":"ඉංග්‍රීසි",
+    "Tamil":"දෙමළ",
+    "JobRole":"රැකියා භූමිකාව:",
+    "SelectJobRole":"රැකියා භූමිකාව තෝරන්න",
+    "FirstNameEnglish":"--පළමු නම ඉංග්‍රීසියෙන්--",
+    "LastNameEnglish":"--අවසන් නම ඉංග්‍රීසියෙන්--",
+    "FirstNameinSinhala":"--පළමු නම සිංහලෙන්--",
+    "LastNameSinhala":"-අවසන් නම සිංහලෙන්--",
+    "FirstNameTamil":"--පළමු නම දෙමළෙන්--",
+    "LastNameTamil":"--අවසන් නම දෙමළෙන්--",
+    "NIC":"--ජාතික හැඳුනුම්පත් අංකය--",
+    "Email":"--ඊමේල් ලිපිනය--",
+    "Cancel":"අවලංගු කරන්න",
+    "Next":"ඊළඟ"
+  },
+  "AddOfficerAddressDetails":{
+    "LNG": "si",
+    "AddOfficer":"නිලධාරියා එක් කරන්න",
+    "House":"--නිවස / බිම් කොටස අංකය--",
+    "Street Name":"--වීදි නම--",
+    "City":"--නගරය--",
+    "Country":"ශ්‍රී ලංකාව",
+    "AccountName":"--ගිණුම් හිමියාගේ නම--",
+    "AccountNum":"--ගිණුම් අංකය--",
+    "Confirm AccountNum":"--ගිණුම් අංකය තහවුරු කරන්න--",
+    "BankName":"--බැංකු නම--",
+    "BranchName":"--ශාඛාවේ නම--",
+    "Go":"ආපසු යන්න",
+    "Submit":"ඉදිරිපත් කරන්න"
+    
+  },
+
+  "CenterTarget":{
+    "LNG": "si",
+    "CenterTarget":"මධ්‍යස්ථාන ඉලක්කය",
+    "Todo":"කරන්න",
+    "Completed":"සම්පූර්ණයි",
+    "No":"අංකය",
+    "Variety":"විවිධ",
+    "Grade":"ශ්‍රේණිය",
+    "Target":"ඉලක්කය (kg)",
+    "Todo()":"කරන්න (kg)"
+
+  },
+
+  "ClaimOfficer":{
+    "LNG": "si",
+    "ClaimOfficers":"හිමිකම් කියන නිලධාරීන්",
+    "JobRole":"රැකියා භූමිකාව",
+    "EMPID":"EMP හැඳුනුම්පත",
+    "Search":"සෙවීම",
+    "Claim Officer":"හිමිකම් නිලධාරියා",
+     "No Disclaimed":" - කිසිදු ප්‍රකාශ නොකළ නිලධාරියෙකු හමු නොවීය -"
+   
+  },
+  "CollectionOfficersList":{
+    "LNG": "si",
+    "Collection Officers":" එකතු කිරීමේ නිලධාරියා",
+    "Claim Officer":"හිමිකම් නිලධාරියා",
+    "Officers List":"නිලධාරීන්ගේ ලැයිස්තුව"
+   
+  },
+  "EditTargetManager":{
+    "LNG": "si",
+    "TotalTarget":"මධ්‍යස්ථානය සඳහා මුළු ඉලක්කය",
+    "My Target":"මගේ ඉලක්කය",
+    "Pass":"සමත්",
+    "Receive":"ලැබෙන්න",
+    "Amount":"කළ යුතු මුදල",
+    "Assigned Target":"පවරන ලද ඉලක්කය"
+  
+   
+  },
+  "ManagerTransactions":{
+    "LNG": "en",
+    "EMPID":"EMP ID:",
+    "Selected Date":"තෝරාගත් දිනය:",
+    "Transaction List":"ගනුදෙනු ලැයිස්තුව",
+    "NIC":"ජාතික හැඳුනුම්පත් අංකය:",
+    "Notransactions":"තෝරාගත් දිනය සඳහා ගනුදෙනු හමු නොවීය.",
+    "Search":"ජාතික හැඳුනුම්පත් අංකය, නම අනුව සොයන්න",
+    "All":"සියල්ල"
+  },
+
+
   "Districts": {
     "selectDistrict": "Select a District",
     "Ampara": "Ampara",

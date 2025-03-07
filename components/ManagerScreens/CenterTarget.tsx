@@ -8,6 +8,7 @@ import environment from '@/environment/environment';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native'; // Import LottieView
 import { AntDesign } from '@expo/vector-icons';
+import { useTranslation } from "react-i18next";
 
 type CenterTargetNavigationProps = StackNavigationProp<RootStackParamList, 'CenterTarget'>;
 
@@ -29,6 +30,7 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
   const [error, setError] = useState<string | null>(null);
   const [selectedToggle, setSelectedToggle] = useState('ToDo');
   const [refreshing, setRefreshing] = useState(false);
+   const { t } = useTranslation();
 
   const fetchTargets = async () => {
     setLoading(true);
@@ -76,7 +78,7 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
       <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-6 left-4">
           <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-bold ml-[35%] mt-[3%]">Center Target</Text>
+        <Text className="text-white text-lg font-bold ml-[35%] mt-[3%]">{t("CenterTarget.CenterTarget")}</Text>
       </View>
 
       {/* Toggle Buttons */}
@@ -89,7 +91,7 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
           onPress={() => setSelectedToggle('ToDo')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
-            To do
+          {t("CenterTarget.Todo")}
           </Text>
           <View className="bg-white rounded-full px-2">
             <Text className="text-green-500 font-bold text-xs">{todoData.length}</Text>
@@ -106,7 +108,7 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
           <Text
             className={`font-bold ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
           >
-            Completed
+             {t("CenterTarget.Completed")} 
           </Text>
           <View className="bg-white rounded-full px-2 ml-2">
             <Text className="text-green-500 font-bold text-xs">{completedData.length}</Text>
@@ -122,11 +124,11 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
       >
         <View>
           <View className="flex-row bg-[#2AAD7A] h-[7%]">
-            <Text className="w-16 p-2  text-center text-white">No</Text>
-            <Text className="w-40 p-2  text-center text-white">Variety</Text>
-            <Text className="w-32 p-2  text-center text-white">Grade</Text>
-            <Text className="w-32 p-2  text-center text-white">Target (kg)</Text>
-            <Text className="w-32 p-2  text-center text-white">Todo (kg)</Text>
+            <Text className="w-16 p-2  text-center text-white"> {t("CenterTarget.No")} </Text>
+            <Text className="w-40 p-2  text-center text-white"> {t("CenterTarget.Variety")} </Text>
+            <Text className="w-32 p-2  text-center text-white"> {t("CenterTarget.Grade")}</Text>
+            <Text className="w-32 p-2  text-center text-white"> {t("CenterTarget.Target")}</Text>
+            <Text className="w-32 p-2  text-center text-white"> {t("CenterTarget.Todo()")} </Text>
           </View>
 
           {/* Loading Screen with Lottie */}

@@ -4,6 +4,7 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useTranslation } from "react-i18next";
 
 type EditTargetManagerNavigationProps = StackNavigationProp<RootStackParamList, 'EditTargetManager'>;
 
@@ -24,6 +25,7 @@ interface EditTargetManagerProps {
 const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route }) => {
   const [myTarget, setMyTarget] = useState('100kg');
   const [isEditing, setIsEditing] = useState(false);
+  const { t } = useTranslation();
   
   const { varietyName, grade, target, todo, qty ,varietyId} = route.params;
  
@@ -52,7 +54,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
       <View className="mt-6 space-y-6 p-8">
         {/* Total Target */}
         <View>
-          <Text className="text-gray-600 font-medium">Total Target for the center</Text>
+          <Text className="text-gray-600 font-medium">{t("EditTargetManager.TotalTarget")}</Text>
           <TextInput
             className="border border-gray-300 rounded-md px-3 py-2 mt-2 text-gray-800"
             value={qty.toString()}
@@ -62,7 +64,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
 
         {/* My Target */}
         <View>
-          <Text className="text-gray-600 font-medium">My Target</Text>
+          <Text className="text-gray-600 font-medium">{t("EditTargetManager.My Target")}</Text>
           <View className="flex-row items-center mt-2 border border-gray-300 rounded-md px-3 py-2">
             <TextInput
               className="flex-1 text-gray-800"
@@ -87,7 +89,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
                 onPress={() => navigation.navigate('Main', {screen: 'PassTargetScreen',params: {varietyName, grade, target, todo, qty ,varietyId}})}                
                 // onPress={() => navigation.navigate('PassTargetScreen'as any,{varietyName, grade, target, todo, qty ,varietyId})} // Save and exit edit mode
               >
-                <Text className="text-white font-medium">Pass</Text>
+                <Text className="text-white font-medium">{t("EditTargetManager.Pass")}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex-1 bg-[#2AAD7A] px-6 py-2 rounded-md items-center"
@@ -95,7 +97,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
 
                 // onPress={() => navigation.navigate('RecieveTargetScreen' as any,{varietyName, grade, target, todo, qty ,varietyId})} // Save and exit edit mode
               >
-                <Text className="text-white font-medium">Receive</Text>
+                <Text className="text-white font-medium">{t("EditTargetManager.Receive")}</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -104,7 +106,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
 
         {/* To Do Amount */}
         <View>
-          <Text className="text-gray-600 font-medium">To Do Amount</Text>
+          <Text className="text-gray-600 font-medium">{t("EditTargetManager.Amount")}</Text>
           <TextInput
             className="border border-gray-300 rounded-md px-3 py-2 mt-2 text-gray-800"
             value={todo.toString()}

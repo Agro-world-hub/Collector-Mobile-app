@@ -19,7 +19,8 @@ import {
 } from "react-native-responsive-screen";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
-import * as ImageManipulator from 'expo-image-manipulator';
+import * as ImageManipulator from 'expo-image-manipulator';import { useTranslation } from "react-i18next";
+
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
@@ -52,6 +53,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
 
   const [showUpdateButton, setShowUpdateButton] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { t } = useTranslation();
   const [profileImage, setProfileImage] = useState({ uri: "" });
 
 
@@ -247,7 +249,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
         <Text className="flex-1 text-center text-xl font-bold text-black">
-          My Profile
+          {t("Profile.MyProfile")}
         </Text>
       </View>
 
@@ -282,7 +284,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16 }}>
         <View className="space-y-4">
           <View>
-            <Text className="text-gray-500 mb-2">First Name</Text>
+            <Text className="text-gray-500 mb-2">  {t("Profile.FirstName")}</Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={profileData.firstName}
@@ -290,7 +292,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             />
           </View>
           <View>
-            <Text className="text-gray-500 mb-2">Last Name</Text>
+            <Text className="text-gray-500 mb-2"> {t("Profile.LastName")}</Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={profileData.lastName}
@@ -298,7 +300,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             />
           </View>
           <View>
-            <Text className="text-gray-500 mb-2">Company Name</Text>
+            <Text className="text-gray-500 mb-2">{t("Profile.Company")}</Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={profileData.companyName}
@@ -306,7 +308,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             />
           </View>
           <View>
-            <Text className="text-gray-500 mb-2">Center Code</Text>
+            <Text className="text-gray-500 mb-2">{t("Profile.CenterCode")}</Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={profileData.regcode}
@@ -314,7 +316,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             />
           </View>
           <View>
-            <Text className="text-gray-500 mb-2">Job Role</Text>
+            <Text className="text-gray-500 mb-2">{t("Profile.Job")}</Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={profileData.jobRole}
@@ -322,7 +324,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             />
           </View>
           <View>
-            <Text className="text-gray-500 mb-2">NIC Number</Text>
+            <Text className="text-gray-500 mb-2">{t("Profile.NIC")}</Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={profileData.nicNumber}
@@ -330,7 +332,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             />
           </View>
           <View>
-            <Text className="text-gray-500 mb-2">Phone Number - 1</Text>
+            <Text className="text-gray-500 mb-2">{t("Profile.Phone1")}</Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={newPhoneNumber}
@@ -345,7 +347,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
           </View>
 
           <View>
-            <Text className="text-gray-500 mb-2">Phone Number - 2</Text>
+            <Text className="text-gray-500 mb-2">{t("Profile.Phone2")}</Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={newPhoneNumber2}
@@ -359,7 +361,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             )}
           </View>
           <View>
-            <Text className="text-gray-500 mb-2">House / Building No</Text>
+            <Text className="text-gray-500 mb-2">{t("Profile.House")}</Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={profileData.houseNumber}
@@ -367,7 +369,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             />
           </View>
           <View>
-            <Text className="text-gray-500 mb-2">Street Name</Text>
+            <Text className="text-gray-500 mb-2">{t("Profile.Street")}</Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={profileData.streetName}
@@ -376,7 +378,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
           </View>
           
           <View>
-            <Text className="text-gray-500 ">City</Text>
+            <Text className="text-gray-500 mb-">{t("Profile.City")}</Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
               value={profileData.city}
@@ -385,7 +387,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
           </View>
 
           <View>
-            <Text className="text-gray-500 ">District</Text>
+            <Text className="text-gray-500 mb-">{t("Profile.District")}</Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
               value={profileData.district}
@@ -394,7 +396,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
           </View>
 
           <View>
-            <Text className="text-gray-500 mb-">Province</Text>
+            <Text className="text-gray-500 mb-">{t("Profile.Province")}</Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
               value={profileData.province}

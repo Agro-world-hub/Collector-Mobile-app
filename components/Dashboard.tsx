@@ -1,21 +1,15 @@
-import { StackNavigationProp } from "@react-navigation/stack";
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  BackHandler,
-  Alert,
-  ScrollView,
-  RefreshControl,
-} from "react-native";
-import { CircularProgress } from "react-native-circular-progress";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import environment from "@/environment/environment";
-import { useFocusEffect } from "expo-router";
-import { RootStackParamList } from "./types";
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, BackHandler, Alert, ScrollView, RefreshControl } from 'react-native';
+import { CircularProgress } from 'react-native-circular-progress';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import environment from '@/environment/environment';
+import { useFocusEffect } from 'expo-router';
+import { RootStackParamList } from './types';
+import { useTranslation } from "react-i18next";
+
+
 
 type DashboardNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -35,9 +29,10 @@ interface ProfileData {
 
 const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [empId, setEmpId] = useState<string | null>(null);
-  const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
-  const [refreshing, setRefreshing] = useState(false);
+    const [empId, setEmpId] = useState<string | null>(null);
+    const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
+    const [refreshing, setRefreshing] = useState(false);
+     const { t } = useTranslation();
 
   const fetchUserProfile = async () => {
     try {
@@ -145,12 +140,9 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
       {/* Conditional Rendering for Daily Target */}
       {targetPercentage !== null && targetPercentage < 100 ? (
         <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#DF9301]">
-          <Text className="text-center text-yellow-600 font-bold">
-            🚀 Keep Going!
-          </Text>
-          <Text className="text-center text-gray-500">
-            You haven't achieved your daily target today
-          </Text>
+           <Text className="text-center text-yellow-600 font-bold"> 🚀{t("DashBoard.Keep")}</Text>                                                      
+         
+          <Text className="text-center text-gray-500">{t("DashBoard.Youhavenotachieved")}</Text>
         </View>
       ) : (
         <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#2AAD7A]">
@@ -159,13 +151,9 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
               source={require("../assets/images/hand.webp")} // Replace with your image path
               className="w-8 h-8 mr-2"
             />
-            <Text className="text-center text-[#2AAD7A] font-bold">
-              Completed!
-            </Text>
+            <Text className="text-center text-[#2AAD7A] font-bold">{t("DashBoard.Completed")}</Text>
           </View>
-          <Text className="text-center text-gray-500">
-            You have achieved your daily target today
-          </Text>
+          <Text className="text-center text-gray-500">{t("DashBoard.Youhaveachieved")}</Text>
         </View>
       )}
 
@@ -186,25 +174,22 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
                </View>
       </View> */}
       <View className="flex items-center justify-center my-6 mt-[13%]">
-        <View className="relative">
-          <CircularProgress
-            size={100}
-            width={8}
-            fill={targetPercentage !== null ? targetPercentage : 0} // Dynamically set progress
-            tintColor="#34D399"
-            backgroundColor="#E5E7EB"
-          />
-          <View className="absolute items-center justify-center h-24 w-24">
-            <Text className="text-2xl font-bold">
-              {targetPercentage !== null ? `${targetPercentage}%` : "0%"}
-            </Text>
-          </View>
-        </View>
-        <Text className="text-gray-700 font-bold text-lg mt-2">
-          Your Target{" "}
-        </Text>
-        <Text className="text-gray-700 font-bold text-lg "> Progress</Text>
-      </View>
+  <View className="relative">
+  <CircularProgress
+                   size={100}
+                   width={8}
+                   fill={targetPercentage !== null ? targetPercentage : 0} // Dynamically set progress
+                   tintColor="#34D399"
+                   backgroundColor="#E5E7EB"
+                 />
+                 <View className="absolute items-center justify-center h-24 w-24">
+                   <Text className="text-2xl font-bold">{targetPercentage !== null ? `${targetPercentage}%` : "0%"}</Text>
+                 </View>
+  </View>
+  <Text className="text-gray-700 font-bold text-lg mt-2">{t("DashBoard.Yourtarget")} </Text>
+  <Text className="text-gray-700 font-bold text-lg "> {t("DashBoard.Progress")}</Text>
+</View>
+
 
       {/* Action Buttons */}
       <View className="flex-row flex-wrap justify-between p-6 mt-[-5%]">
@@ -216,9 +201,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
             source={require("../assets/images/qrrr.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
-          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">
-            Scan QR
-          </Text>
+          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("DashBoard.Scan")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -229,9 +212,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
             source={require("../assets/images/nic.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
-          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">
-            Search By NIC
-          </Text>
+          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("DashBoard.Search")}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

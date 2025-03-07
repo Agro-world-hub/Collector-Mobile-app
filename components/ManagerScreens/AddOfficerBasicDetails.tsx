@@ -411,6 +411,7 @@ import { KeyboardAvoidingView } from "react-native";
 import { Platform } from "react-native";
 import { AppState } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 type AddOfficerBasicDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -431,6 +432,7 @@ const AddOfficerBasicDetails: React.FC = () => {
   const [phoneCode2, setPhoneCode2] = useState<string>("+94"); // Default Sri Lanka calling code
   const [phoneNumber1, setPhoneNumber1] = useState("");
   const [phoneNumber2, setPhoneNumber2] = useState("");
+    const { t } = useTranslation();
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -458,16 +460,32 @@ const AddOfficerBasicDetails: React.FC = () => {
   const nicRegex = /^\d{9}[Vv]?$|^\d{10}$/;
 
 
-  const validateNicNumber = (input: string) => /^[0-9]{9}[vV]$|^[0-9]{10}$/.test(input);
+  // const validateNicNumber = (input: string) => /^[0-9]{9}[vV]$|^[0-9]{10}$/.test(input);
 
-  const handleNicNumberChange = (input: string) => {
-    setFormData({ ...formData, nicNumber: input });
-    if (!validateNicNumber(input)) {
-      setError3("NIC Number must be 9 digits followed by 'V' or 10 digits.");
-    } else {
-      setError3("");
-    }
-  };
+  // const handleNicNumberChange = (input: string) => {
+  //   setFormData({ ...formData, nicNumber: input });
+  //   if (!validateNicNumber(input)) {
+  //     setError3("NIC Number must be 9 digits followed by 'V' or 10 digits.");
+  //   } else {
+  //     setError3("");
+  //   }
+  // };
+
+  const validateNicNumber = (input: string) => /^[0-9]{9}V$|^[0-9]{10}$/.test(input);
+
+const handleNicNumberChange = (input: string) => {
+  // Normalize 'v' or 'V' to uppercase 'V'
+  const normalizedInput = input.replace(/[vV]/g, "V");
+
+  setFormData({ ...formData, nicNumber: normalizedInput });
+
+  if (!validateNicNumber(normalizedInput)) {
+    setError3("NIC Number must be 9 digits followed by 'V' or 10 digits.");
+  } else {
+    setError3("");
+  }
+};
+
   
 
   const fetchEmpId = async (role: string) => {
@@ -689,7 +707,7 @@ const AddOfficerBasicDetails: React.FC = () => {
             <AntDesign name="left" size={24} color="#000502" />
           </TouchableOpacity>
 
-          <Text className="text-lg font-bold ml-[25%]">Add Officer</Text>
+          <Text className="text-lg font-bold ml-[25%]">{t("AddOfficerBasicDetails.AddOfficer")}</Text>
         </View>
 
         {/* Profile Avatar */}
@@ -718,7 +736,7 @@ const AddOfficerBasicDetails: React.FC = () => {
 
         {/* Type Selector */}
         <View className="px-8 flex-row items-center mb-4 ">
-          <Text className="font-semibold text-sm mr-4">Type:</Text>
+          <Text className="font-semibold text-sm mr-4">{t("AddOfficerBasicDetails.Type")}</Text>
           <TouchableOpacity
             className="flex-row items-center mr-6"
             onPress={() => setType("Permanent")}
@@ -730,7 +748,7 @@ const AddOfficerBasicDetails: React.FC = () => {
               size={20}
               color="#0021F5"
             />
-            <Text className="ml-2 text-gray-700">Permanent</Text>
+            <Text className="ml-2 text-gray-700">{t("AddOfficerBasicDetails.Permanent")}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             className="flex-row items-center"
@@ -743,7 +761,7 @@ const AddOfficerBasicDetails: React.FC = () => {
               size={20}
               color="#0021F5"
             />
-            <Text className="ml-2 text-gray-700">Temporary</Text>
+            <Text className="ml-2 text-gray-700">{t("AddOfficerBasicDetails.Temporary")}</Text>
           </TouchableOpacity>
         </View>
 
@@ -752,7 +770,7 @@ const AddOfficerBasicDetails: React.FC = () => {
         {/* Preferred Languages */}
         <View className="px-8 mb-4">
           <Text className="font-semibold text-sm mb-2">
-            Preferred Languages:
+          {t("AddOfficerBasicDetails.PreferredLanguages")}
           </Text>
           <View className="flex-row items-center">
             {["Sinhala", "English", "Tamil"].map((lang) => (
@@ -784,7 +802,7 @@ const AddOfficerBasicDetails: React.FC = () => {
         <View className="px-8">
           {/* Job Role Dropdown */}
           <View className="mt-[-2] ">
-            <Text className="font-semibold text-sm mb-2">Job Role:</Text>
+            <Text className="font-semibold text-sm mb-2">{t("AddOfficerBasicDetails.JobRole")}</Text>
             <View className=" rounded-lg pb-3 " >
               <SelectList
                 setSelected={handleJobRoleChange}
@@ -838,7 +856,7 @@ const AddOfficerBasicDetails: React.FC = () => {
           </View>
 
           <TextInput
-            placeholder="--First Name in English--"
+            placeholder={t("AddOfficerBasicDetails.FirstNameEnglish")}
             value={formData.firstNameEnglish}
             onChangeText={(text) =>
               setFormData({ ...formData, firstNameEnglish: text })
@@ -846,7 +864,7 @@ const AddOfficerBasicDetails: React.FC = () => {
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
-            placeholder="--Last Name in English--"
+            placeholder={t("AddOfficerBasicDetails.LastNameEnglish")}
             value={formData.lastNameEnglish}
             onChangeText={(text) =>
               setFormData({ ...formData, lastNameEnglish: text })
@@ -854,7 +872,7 @@ const AddOfficerBasicDetails: React.FC = () => {
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
-            placeholder="--First Name in Sinhala--"
+            placeholder={t("AddOfficerBasicDetails.FirstNameinSinhala")}
             value={formData.firstNameSinhala}
             onChangeText={(text) =>
               setFormData({ ...formData, firstNameSinhala: text })
@@ -862,7 +880,7 @@ const AddOfficerBasicDetails: React.FC = () => {
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
-            placeholder="--Last Name in Sinhala--"
+            placeholder={t("AddOfficerBasicDetails.LastNameSinhala")}
             value={formData.lastNameSinhala}
             onChangeText={(text) =>
               setFormData({ ...formData, lastNameSinhala: text })
@@ -870,7 +888,7 @@ const AddOfficerBasicDetails: React.FC = () => {
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
-            placeholder="--First Name in Tamil--"
+            placeholder={t("AddOfficerBasicDetails.FirstNameTamil")}
             value={formData.firstNameTamil}
             onChangeText={(text) =>
               setFormData({ ...formData, firstNameTamil: text })
@@ -878,7 +896,7 @@ const AddOfficerBasicDetails: React.FC = () => {
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
-            placeholder="--Last Name in Tamil--"
+            placeholder={t("AddOfficerBasicDetails.LastNameTamil")}
             value={formData.lastNameTamil}
             onChangeText={(text) =>
               setFormData({ ...formData, lastNameTamil: text })
@@ -996,14 +1014,14 @@ const AddOfficerBasicDetails: React.FC = () => {
           /> */}
 
 <TextInput
-            placeholder="--NIC Number--"
+            placeholder={t("AddOfficerBasicDetails.NIC")}
             value={formData.nicNumber}
             onChangeText={handleNicNumberChange}
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
           {error3 ? <Text className="mb-3" style={{ color: "red" }}>{error3}</Text> : null}
           <TextInput
-            placeholder="--Email Address--"
+            placeholder={t("AddOfficerBasicDetails.Email")}
             value={formData.email}
             onChangeText={handleEmailChange}
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
@@ -1017,13 +1035,13 @@ const AddOfficerBasicDetails: React.FC = () => {
             onPress={() => navigation.goBack()}
             className="bg-gray-300 px-8 py-3 rounded-full"
           >
-            <Text className="text-gray-800 text-center">Cancel</Text>
+            <Text className="text-gray-800 text-center">{t("AddOfficerBasicDetails.Cancel")}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleNext}
             className="bg-[#2AAD7A] px-8 py-3 rounded-full"
           >
-            <Text className="text-white text-center">Next</Text>
+            <Text className="text-white text-center">{t("AddOfficerBasicDetails.Next")}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

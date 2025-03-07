@@ -1,21 +1,14 @@
-import { StackNavigationProp } from "@react-navigation/stack";
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  BackHandler,
-  Alert,
-  ScrollView,
-  RefreshControl,
-} from "react-native";
-import { CircularProgress } from "react-native-circular-progress";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import environment from "@/environment/environment";
-import { useFocusEffect } from "expo-router";
-import { RootStackParamList } from "../types";
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, BackHandler, Alert, ScrollView, RefreshControl } from 'react-native';
+import { CircularProgress } from 'react-native-circular-progress';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import environment from '@/environment/environment';
+import { useFocusEffect } from 'expo-router';
+import { RootStackParamList } from '../types';
+import { useTranslation } from "react-i18next";
+
 
 type ManagerDashboardNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -38,6 +31,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
   const [empId, setEmpId] = useState<string | null>(null);
   const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
   const [refreshing, setRefreshing] = useState(false);
+      const { t } = useTranslation();
 
   const fetchUserProfile = async () => {
     try {
@@ -140,38 +134,29 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
         </View>
       </TouchableOpacity>
 
-      {/* Conditional Rendering for Daily Target */}
-      {targetPercentage !== null && targetPercentage < 100 ? (
-        <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#DF9301]">
-          <Text className="text-center text-yellow-600 font-bold">
-            🚀 Keep Going!
-          </Text>
-          <Text className="text-center text-gray-500">
-            You haven't achieved your daily target today
-          </Text>
-        </View>
-      ) : (
-        <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#2AAD7A]">
-          <View className="flex-row justify-center items-center mb-2">
-            <Image
-              source={require("../../assets/images/hand.webp")}
-              className="w-8 h-8 mr-2"
-            />
-            <Text className="text-center text-[#2AAD7A] font-bold">
-              Completed!
-            </Text>
-          </View>
-          <Text className="text-center text-gray-500">
-            You have achieved your daily target today
-          </Text>
-        </View>
-      )}
+       {/* Conditional Rendering for Daily Target */}
+          {targetPercentage !== null && targetPercentage < 100 ? (
+              <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#DF9301]">
+                <Text className="text-center text-yellow-600 font-bold">🚀 {t("ManagerDashboard.Keep")}</Text>
+                <Text className="text-center text-gray-500">{t("ManagerDashboard.Youhavenotachieved")}</Text>
+              </View>
+            ) : (
+              <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#2AAD7A]">
+                <View className="flex-row justify-center items-center mb-2">
+                  <Image 
+                    source={require("../../assets/images/hand.webp")} 
+                    className="w-8 h-8 mr-2"
+                  />
+                  <Text className="text-center text-[#2AAD7A] font-bold">{t("ManagerDashboard.Completed")}</Text>
+                </View>
+                <Text className="text-center text-gray-500">{t("ManagerDashboard.Youhaveachieved")}</Text>
+              </View>
+      
+            )}
 
       {/* Target Progress */}
       <View className="flex-row items-center justify-between mb-[-5%] p-7 mt-[4%]">
-        <Text className="text-gray-700 font-bold text-lg">
-          Your Target Progress
-        </Text>
+        <Text className="text-gray-700 font-bold text-lg">{t("ManagerDashboard.Yourtarget")}</Text>
         <View className="relative">
           <CircularProgress
             size={100}
@@ -198,9 +183,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             source={require("../../assets/images/ct.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
-          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">
-            Center Target
-          </Text>
+          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.CenterTarget")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -213,9 +196,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             source={require("../../assets/images/mycollect.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
-          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">
-            My Collection
-          </Text>
+          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.MyCollection")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -226,9 +207,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             source={require("../../assets/images/qrrr.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
-          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">
-            Scan QR
-          </Text>
+          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.Scan")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -239,9 +218,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             source={require("../../assets/images/nic.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
-          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">
-            Search By NIC
-          </Text>
+          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.Search")}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

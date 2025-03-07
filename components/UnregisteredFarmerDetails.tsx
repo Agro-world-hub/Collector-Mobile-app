@@ -34,6 +34,7 @@ const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
 
+
 type UnregisteredFarmerDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
   "UnregisteredFarmerDetails"
@@ -349,7 +350,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
            <AntDesign name="left" size={22} color="#000" />
         </TouchableOpacity>
         <View className="w-full items-center">
-  <Text className="text-xl font-bold text-center">Fill Personal Details</Text>
+  <Text className="text-xl font-bold text-center">{t("UnregisteredFarmerDetails.FillDetails")}</Text>
 </View>
 
 
@@ -359,9 +360,9 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       <ScrollView className="flex-1 p-3">
         {/* First Name */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">First Name</Text>
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.FirstName")}</Text>
           <TextInput
-            placeholder="First Name"
+            placeholder={t("UnregisteredFarmerDetails.FirstName")}
             className="border border-gray-300  p-3 rounded-lg"
             value={firstName}
             onChangeText={setFirstName}
@@ -370,9 +371,9 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
         {/* Last Name */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">Last Name</Text>
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.LastName")}</Text>
           <TextInput
-            placeholder="Last Name"
+            placeholder={t("UnregisteredFarmerDetails.LastName")}
             className="border border-gray-300  p-3 rounded-lg"
             value={lastName}
             onChangeText={setLastName}
@@ -381,7 +382,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
         {/* NIC Number */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">NIC Number</Text>
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.NIC")}</Text>
           <TextInput
             placeholder="NIC Number"
             className="border border-gray-300  p-3 rounded-lg"
@@ -392,7 +393,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
         {/* Phone Number */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">Phone Number</Text>
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.Phone")}</Text>
           <View className="flex-row items-center border border-gray-300  p-3 rounded-lg">
             <CountryPicker
               countryCode={countryCode}
@@ -415,7 +416,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
         {/* Address */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">District</Text>
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.District")}</Text>
           <View className="  rounded-lg">
             {/* <Picker
               selectedValue={district}
@@ -452,9 +453,9 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
         {/* Account Number */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">Account Number</Text>
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.AccountNum")}</Text>
           <TextInput
-            placeholder="Account Number"
+            placeholder={t("UnregisteredFarmerDetails.AccountNum")}
             className="border border-gray-300  p-3 rounded-lg"
             value={accNumber}
             onChangeText={setAccNumber}
@@ -463,9 +464,9 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
         {/* Account Holder's Name */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">Account Holder's Name</Text>
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.AccountName")}</Text>
           <TextInput
-            placeholder="Account Holder's Name"
+            placeholder={t("UnregisteredFarmerDetails.AccountName")}
             className="border border-gray-300  p-3 rounded-lg"
             value={accHolderName}
             onChangeText={setAccHolderName}
@@ -474,7 +475,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
         {/* Bank Name */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">Bank Name</Text>
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.Bank")}</Text>
           <View className="  rounded-lg">
             {/* <Picker
               selectedValue={bankName}
@@ -511,7 +512,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
         {/* Branch Name */}
         <View className="mb-8">
-          <Text className="text-gray-600 mb-2">Branch Name</Text>
+          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.Branch")}</Text>
           <View className=" rounded-lg">
             {/* <Picker
               selectedValue={branchName}
@@ -569,7 +570,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
     <ActivityIndicator color="white" size="small" />
   ) : (
     <Text className="text-center text-xl font-light text-white">
-      Submit
+      {t("UnregisteredFarmerDetails.Submit")}
     </Text>
   )}
 </TouchableOpacity>
@@ -580,14 +581,14 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       <Modal transparent={true} visible={isModalVisible} animationType="slide">
         <View className="flex-1 justify-center items-center bg-gray-900 bg-opacity-50">
           <View className="bg-white rounded-lg w-72 p-6 items-center">
-            <Text className="text-xl font-bold mb-4">Success!</Text>
+            <Text className="text-xl font-bold mb-4"> {t("UnregisteredFarmerDetails.Success")}</Text>
             <View className="mb-4">
               <Image
                 source={require("../assets/images/tick.webp")} // Replace with your own checkmark image
                 className="w-24 h-24"
               />
             </View>
-            <Text className="text-gray-700">Registration Successful</Text>
+            <Text className="text-gray-700">{t("UnregisteredFarmerDetails.Successful")}</Text>
             <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
               <Animated.View
                 className="h-full bg-green-500"
@@ -605,14 +606,14 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       >
         <View className="flex-1 justify-center items-center bg-gray-900 bg-opacity-50">
           <View className="bg-white rounded-lg w-72 p-6 items-center">
-            <Text className="text-xl font-bold mb-4">Oops!</Text>
+            <Text className="text-xl font-bold mb-4">{t("UnregisteredFarmerDetails.Oops")}</Text>
             <View className="mb-4">
               <Image
                 source={require("../assets/images/error.webp")} // Replace with your own error image
                 className="w-24 h-24"
               />
             </View>
-            <Text className="text-gray-700">Registration Unsuccessful</Text>
+            <Text className="text-gray-700">{t("UnregisteredFarmerDetails.Unsuccessful")}</Text>
 
             {/* Display error message */}
             {errorMessage && (
@@ -637,7 +638,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
                 unsuccessfulProgress.setValue(0); // Reset animation value when closing
               }}
             >
-              <Text className="text-white">Close</Text>
+              <Text className="text-white">{t("UnregisteredFarmerDetails.Close")}</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -359,6 +359,7 @@ import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import socket from "@/services/socket";
 import { ScrollView } from "react-native-gesture-handler";
 
+
 type EngProfileNavigationProp = StackNavigationProp<
   RootStackParamList,
   "EngProfile"
@@ -559,19 +560,19 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           {/* Horizontal Line */}
           <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
-          {/* Language Settings */}
-          <TouchableOpacity
-            onPress={() => setLanguageDropdownOpen(!isLanguageDropdownOpen)}
-            className="flex-row items-center py-3"
-          >
-            <Ionicons name="globe-outline" size={20} color="black" />
-            <Text className="flex-1 text-lg ml-2">Language Settings</Text>
-            <Ionicons
-              name={isLanguageDropdownOpen ? "chevron-up" : "chevron-down"}
-              size={20}
-              color="black"
-            />
-          </TouchableOpacity>
+        {/* Language Settings */}
+        <TouchableOpacity
+          onPress={() => setLanguageDropdownOpen(!isLanguageDropdownOpen)}
+          className="flex-row items-center py-3"
+        >
+          <Ionicons name="globe-outline" size={20} color="black" />
+          <Text className="flex-1 text-lg ml-2">{t("EngProfile.Language")}</Text>
+          <Ionicons
+            name={isLanguageDropdownOpen ? "chevron-up" : "chevron-down"}
+            size={20}
+            color="black"
+          />
+        </TouchableOpacity>
 
           {isLanguageDropdownOpen && (
             <View className="pl-8">
@@ -599,32 +600,32 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           {/* Horizontal Line */}
           <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
-          {/* View My QR Code */}
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingVertical: 12,
-            }}
-            onPress={() => navigation.navigate("OfficerQr")}
-          >
-            <Ionicons name="qr-code" size={20} color="black" />
-            <Text className="flex-1 text-lg ml-2">View My QR Code</Text>
-          </TouchableOpacity>
+        {/* View My QR Code */}
+        <TouchableOpacity
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            paddingVertical: 12,
+          }}
+          onPress={() => navigation.navigate("OfficerQr")}
+        >
+          <Ionicons name="qr-code" size={20} color="black" />
+          <Text className="flex-1 text-lg ml-2">{t("EngProfile.View")}</Text>
+        </TouchableOpacity>
 
           {/* Horizontal Line */}
           <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
-          {/* Change Password */}
-          <TouchableOpacity
-            className="flex-row items-center py-3"
-            onPress={() =>
-              navigation.navigate("ChangePassword", { empid } as any)
-            }
-          >
-            <Ionicons name="lock-closed-outline" size={20} color="black" />
-            <Text className="flex-1 text-lg ml-2">Change Password</Text>
-          </TouchableOpacity>
+        {/* Change Password */}
+        <TouchableOpacity
+          className="flex-row items-center py-3"
+          onPress={() =>
+            navigation.navigate("ChangePassword", { empid } as any)
+          }
+        >
+          <Ionicons name="lock-closed-outline" size={20} color="black" />
+          <Text className="flex-1 text-lg ml-2">{t("EngProfile.ChangePassword")}</Text>
+        </TouchableOpacity>
 
           {/* Horizontal Line */}
 
@@ -642,18 +643,18 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
           <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
-          <TouchableOpacity
-            onPress={() => setComplaintDropdownOpen(!isComplaintDropdownOpen)}
-            className="flex-row items-center py-3"
-          >
-            <AntDesign name="warning" size={20} color="black" />
-            <Text className="flex-1 text-lg ml-2">{t("Complaints")}</Text>
-            <Ionicons
-              name={isComplaintDropdownOpen ? "chevron-up" : "chevron-down"}
-              size={20}
-              color="black"
-            />
-          </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setComplaintDropdownOpen(!isComplaintDropdownOpen)}
+          className="flex-row items-center py-3"
+        >
+          <AntDesign name="warning" size={20} color="black" />
+          <Text className="flex-1 text-lg ml-2">{t("EngProfile.Complaints")}</Text>
+          <Ionicons
+            name={isComplaintDropdownOpen ? "chevron-up" : "chevron-down"}
+            size={20}
+            color="black"
+          />
+        </TouchableOpacity>
 
           {isComplaintDropdownOpen && (
             <View className="pl-8">
@@ -686,14 +687,14 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
           <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
-          {/* Logout */}
-          <TouchableOpacity
-            className="flex-row items-center py-3"
-            onPress={handleLogout}
-          >
-            <Ionicons name="log-out-outline" size={20} color="red" />
-            <Text className="flex-1 text-lg ml-2 text-red-500">Logout</Text>
-          </TouchableOpacity>
+        {/* Logout */}
+        <TouchableOpacity
+          className="flex-row items-center py-3"
+          onPress={handleLogout}
+        >
+          <Ionicons name="log-out-outline" size={20} color="red" />
+          <Text className="flex-1 text-lg ml-2 text-red-500">{t("EngProfile.Logout")}</Text>
+        </TouchableOpacity>
 
           {/* Modal for Call */}
           <Modal

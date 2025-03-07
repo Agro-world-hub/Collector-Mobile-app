@@ -599,6 +599,7 @@ import { ActivityIndicator } from "react-native";
 import { KeyboardAvoidingView } from "react-native";
 import { Platform } from "react-native";
 import bankNames from "../../assets/jsons/banks.json";
+import { useTranslation } from "react-i18next";
 
 type AddOfficerAddressDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -627,6 +628,7 @@ const AddOfficerAddressDetails: React.FC = () => {
   const [filteredBranches, setFilteredBranches] = useState<any[]>([]);
   const [bankName, setBankName] = useState<string>("");
   const [branchName, setBranchName] = useState<string>("");
+   const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     houseNumber: "",
@@ -910,13 +912,13 @@ const AddOfficerAddressDetails: React.FC = () => {
           >
             <AntDesign name="left" size={24} color="#000502" />
           </TouchableOpacity>
-          <Text className="text-lg font-bold ml-[25%]">Add Officer</Text>
+          <Text className="text-lg font-bold ml-[25%]">{t("AddOfficerAddressDetails.AddOfficer")}</Text>
         </View>
 
         {/* Address Details */}
         <View className="px-8 mt-4">
           <TextInput
-            placeholder="--House / Plot Number--"
+            placeholder={t("AddOfficerAddressDetails.House")}
             value={formData.houseNumber}
             onChangeText={(text) =>
               setFormData({ ...formData, houseNumber: text })
@@ -924,7 +926,7 @@ const AddOfficerAddressDetails: React.FC = () => {
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
-            placeholder="--Street Name--"
+            placeholder={t("AddOfficerAddressDetails.Street Name")}
             value={formData.streetName}
             onChangeText={(text) =>
               setFormData({ ...formData, streetName: text })
@@ -932,13 +934,13 @@ const AddOfficerAddressDetails: React.FC = () => {
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
-            placeholder="--City--"
+            placeholder={t("AddOfficerAddressDetails.City")}
             value={formData.city}
             onChangeText={(text) => setFormData({ ...formData, city: text })}
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
-            placeholder="--Country--"
+            placeholder={t("AddOfficerAddressDetails.Country")}
             value="Sri Lanka" // Always set to Sri Lanka
             editable={false} // Make the input non-editable
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
@@ -1026,7 +1028,7 @@ const AddOfficerAddressDetails: React.FC = () => {
         {/* Bank Details */}
         <View className="px-8 mt-4">
           <TextInput
-            placeholder="--Account Holder's Name--"
+            placeholder={t("AddOfficerAddressDetails.AccountName")}
             value={formData.accountHolderName}
             onChangeText={(text) =>
               handleInputChange("accountHolderName", text)
@@ -1034,14 +1036,14 @@ const AddOfficerAddressDetails: React.FC = () => {
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
-            placeholder="--Account Number--"
+            placeholder={t("AddOfficerAddressDetails.AccountNum")}
             keyboardType="numeric"
             value={formData.accountNumber}
             onChangeText={(text) => handleValidation("accountNumber", text)}
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
-            placeholder="--Confirm Account Number--"
+            placeholder={t("AddOfficerAddressDetails.Confirm AccountNum")}
             keyboardType="numeric"
             value={formData.confirmAccountNumber}
             onChangeText={(text) =>
@@ -1076,7 +1078,7 @@ const AddOfficerAddressDetails: React.FC = () => {
                   key: formData.bankName,
                   value: formData.bankName,
                 }}
-                placeholder="--Bank Name--"
+                placeholder={t("AddOfficerAddressDetails.BankName")}
                 boxStyles={{
                   borderColor: "#cccccc",
                   borderWidth: 1,
@@ -1105,7 +1107,7 @@ const AddOfficerAddressDetails: React.FC = () => {
                     key: formData.branchName,
                     value: formData.branchName,
                   }}
-                  placeholder="--Branch Name--"
+                  placeholder={t("AddOfficerAddressDetails.BranchName")}
                   boxStyles={{
                     borderColor: "#cccccc",
                     borderWidth: 1,
@@ -1132,7 +1134,7 @@ const AddOfficerAddressDetails: React.FC = () => {
             onPress={() => navigation.goBack()}
             className="bg-gray-300 px-8 py-3 rounded-full"
           >
-            <Text className="text-gray-800 text-center">Go Back</Text>
+            <Text className="text-gray-800 text-center">{t("AddOfficerAddressDetails.Go")}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleSubmit}
@@ -1141,7 +1143,7 @@ const AddOfficerAddressDetails: React.FC = () => {
             {loading ? (
               <ActivityIndicator color="white" size="small" />
             ) : (
-              <Text className="text-white text-center">Submit</Text>
+              <Text className="text-white text-center">{t("AddOfficerAddressDetails.Submit")}</Text>
             )}
           </TouchableOpacity>
         </View>

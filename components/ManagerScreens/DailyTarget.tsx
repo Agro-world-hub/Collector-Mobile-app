@@ -17,6 +17,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import environment from '@/environment/environment';
 import LottieView from 'lottie-react-native';
+import { useTranslation } from "react-i18next";
 
 type DailyTargetNavigationProps = StackNavigationProp<RootStackParamList, 'DailyTarget'>;
 
@@ -41,6 +42,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
   const [error, setError] = useState<string | null>(null);
   const [selectedToggle, setSelectedToggle] = useState('ToDo'); // Track selected toggle
   const [refreshing, setRefreshing] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchTargets = async () => {
@@ -107,7 +109,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
    <View className="flex-1 bg-[#282828]  w-full">
       {/* Header */}
       <View className="bg-[#282828] px-4 py-3 flex-row justify-between items-center">
-        <Text className="text-white text-lg font-bold ml-[35%]">Daily Target</Text>
+        <Text className="text-white text-lg font-bold ml-[35%]">{t("DailyTarget.DailyTarget")}</Text>
       </View>
 
       {/* Toggle Buttons */}
@@ -121,7 +123,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
           onPress={() => setSelectedToggle('ToDo')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
-            To do
+          {t("DailyTarget.Todo")}
           </Text>
           <View className="bg-white rounded-full px-2">
             <Text className="text-green-500 font-bold text-xs">{todoData.length}</Text>
@@ -139,7 +141,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
           <Text
             className={`font-bold ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
           >
-            Completed
+            {t("DailyTarget.Completed")}
           </Text>
           <View className="bg-white rounded-full px-2 ml-2">
             <Text className="text-green-500 font-bold text-xs">{completedData.length}</Text>
@@ -153,14 +155,14 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
         className=" bg-white w-full"
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        <View>
+   <View className="w-full bg-whitw ">
           {/* Table Header */}
           <View className="flex-row bg-[#2AAD7A] h-[7%]">
-            <Text className="w-16 p-2 font-bold text-center text-white">No</Text>
-            <Text className="w-40 p-2 font-bold text-center text-white">Variety</Text>
-            <Text className="w-32 p-2 font-bold text-center text-white">Grade</Text>
-            <Text className="w-32 p-2 font-bold text-center text-white">Target (kg)</Text>
-            <Text className="w-32 p-2 font-bold text-center text-white">Todo (kg)</Text>
+            <Text className="w-16 p-2  text-center text-white">{t("DailyTarget.No")}</Text>
+            <Text className="w-40 p-2  text-center text-white">{t("DailyTarget.Variety")}</Text>
+            <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Grade")}</Text>
+            <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Target")}</Text>
+            <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Todo()")}</Text>
           </View>
 
           {/* Table Data */}
