@@ -7,6 +7,7 @@ import { RootStackParamList } from "../types";
 import axios from "axios";
 import environment from "@/environment/environment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 type SetTargetScreenNavigationProps = StackNavigationProp<RootStackParamList, "SetTargetScreen">;
 
@@ -37,6 +38,7 @@ const SetTargetScreen: React.FC<SetTargetScreenProps> = ({ navigation, route }) 
   const [targets, setTargets] = useState<any[]>([]);
   const [loadingCrops, setLoadingCrops] = useState(false);
   const [loadingVarieties, setLoadingVarieties] = useState(false);
+  const { t } = useTranslation();
 
   // Function to fetch crop names
   const fetchCropNames = async () => {
@@ -238,14 +240,14 @@ const SetTargetScreen: React.FC<SetTargetScreenProps> = ({ navigation, route }) 
         <TouchableOpacity onPress={() => navigation.goBack()} className="mr-4">
           <AntDesign name="left" size={24} color="white" />
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-white ml-[25%]">Set Target</Text>
+        <Text className="text-xl font-bold text-white ml-[25%]">{t("SetTargetScreen.Set Target")}</Text>
       </View>
 
       {/* Scrollable Content */}
       <ScrollView className="px-6 py-8">
         {/* Select Crop */}
         <View className="mt-8">
-          <Text className="text-sm text-gray-600">--Select Crop--</Text>
+          <Text className="text-sm text-gray-600">{t("SetTargetScreen.Select Crop")}</Text>
           <SelectList
             setSelected={(value: string) => {
               const selectedCropObject = cropOptions.find((crop) => crop.value === value);
@@ -260,7 +262,7 @@ const SetTargetScreen: React.FC<SetTargetScreenProps> = ({ navigation, route }) 
 
         {/* Select Variety */}
         <View className="mt-4">
-          <Text className="text-sm text-gray-600">--Select Variety--</Text>
+          <Text className="text-sm text-gray-600">{t("SetTargetScreen.Select Variety")}</Text>
           <SelectList
             setSelected={(value: string) => {
               const selectedVarietyObject = varietyOptions.find((variety) => variety.value === value);
@@ -275,7 +277,7 @@ const SetTargetScreen: React.FC<SetTargetScreenProps> = ({ navigation, route }) 
 
         {/* Weight Section */}
         <View className="mt-8">
-          <Text className="text-gray-600 text-sm mb-2">Weight according to Grades</Text>
+          <Text className="text-gray-600 text-sm mb-2">{t("SetTargetScreen.WeightGrades")}</Text>
           <View className="border border-gray-300 rounded-lg p-4">
             {Object.entries(weights).map(([grade, value], index) => (
               <View key={index} className="flex-row items-center mb-3">
@@ -295,7 +297,7 @@ const SetTargetScreen: React.FC<SetTargetScreenProps> = ({ navigation, route }) 
          {/* Buttons */}
          <View className="mt-8 items-center">
           <TouchableOpacity className="border border-gray-500 rounded-[45px] p-3 mb-4" style={{ width: 250 ,height: 45}}  onPress={handleAddMore}>
-            <Text className="text-center text-gray-700 font-medium">Add More</Text>
+            <Text className="text-center text-gray-700 font-medium">{t("SetTargetScreen.Add More")}</Text>
           </TouchableOpacity>
 
           
@@ -305,14 +307,14 @@ const SetTargetScreen: React.FC<SetTargetScreenProps> = ({ navigation, route }) 
         <View className="mt-8 border border-gray-300 rounded-lg mb-10">
           {/* Table Headers */}
           <View className="flex-row bg-[#2AAD7A] py-2 px-3 rounded-t-lg">
-            <Text className="text-white font-bold w-8 text-center">No</Text>
-            <Text className="text-white font-bold w-20 text-center">Variety</Text>
-            <Text className="text-white font-bold w-12 text-center">Grade</Text>
+            <Text className="text-white font-bold w-8 text-center">{t("SetTargetScreen.No")}</Text>
+            <Text className="text-white font-bold w-20 text-center">{t("SetTargetScreen.Variety")}</Text>
+            <Text className="text-white font-bold w-12 text-center">{t("SetTargetScreen.Grade")}</Text>
             <View className="w-16">
-              <Text className="text-white font-bold text-center">Target</Text>
-              <Text className="text-white font-bold text-center text-xs">(kg)</Text>
+              <Text className="text-white font-bold text-center">{t("SetTargetScreen.Target")}</Text>
+              <Text className="text-white font-bold text-center text-xs">{t("SetTargetScreen.kg")}</Text>
             </View>
-            <Text className="text-white font-bold w-12 text-center ml-[10%]">Action</Text>
+            <Text className="text-white font-bold w-12 text-center ml-[10%]">{t("SetTargetScreen.Action")}</Text>
           </View>
 
           {/* Table Data */}
@@ -365,7 +367,7 @@ const SetTargetScreen: React.FC<SetTargetScreenProps> = ({ navigation, route }) 
             style={{ width: 250 ,height: 45}}
             onPress={handleSave}
           >
-            <Text className="text-center text-white font-medium">Save</Text>
+            <Text className="text-center text-white font-medium">{t("SetTargetScreen.Save")}</Text>
           </TouchableOpacity>
         </View>
 

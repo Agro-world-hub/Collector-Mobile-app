@@ -332,7 +332,7 @@
    
   },
   "ManagerTransactions":{
-    "LNG": "en",
+    "LNG": "si",
     "EMPID":"EMP ID:",
     "Selected Date":"තෝරාගත් දිනය:",
     "Transaction List":"ගනුදෙනු ලැයිස්තුව",
@@ -341,6 +341,66 @@
     "Search":"ජාතික හැඳුනුම්පත් අංකය, නම අනුව සොයන්න",
     "All":"සියල්ල"
   },
+  "OfficerSummary":{
+    "LNG": "si",
+    "Disclaim":"වියාචනය",
+    "EMPID":"EMP ID : ",
+    "Num1":"අංකය 1",
+    "Num2":"අංකය 2",
+    "Collection":"එකතුව",
+    "Report":"වාර්තා කරන්න",
+    "Today":"අද",
+    "Target Coverage":"ඉලක්ක ආවරණය",
+    "OpenTarget":"විවෘත ඉලක්ක පුවරුව"
+  },
+  "PassTargetBetweenOfficers":{
+    "LNG": "si",
+    "maximum amount":"ඔබට සමත් විය හැකි උපරිම මුදල:",
+    "kg":"kg",
+    "Short Stock Assignee":"කෙටි තොග පැවරුම්කරු",
+    "Amount":"මුදල (kg)",
+    "Save":"සුරකින්න",
+    "maximum amount receive":"ඔබට ලැබිය හැකි උපරිම මුදල:"
+   
+  },
+  "ReportGenerator":{
+    "LNG": "si",
+    "Start Date":"ආරම්භක දිනය:",
+    "End Date":"අවසන් දිනය:",
+    "Reset":"නැවත සකසන්න",
+    "Generate":"උත්පාදනය කරන්න",
+    "IDNO":"ID NO :",
+   "Report has been generated":"- වාර්තාව ජනනය කර ඇත -",
+     "Download":"බාගන්න",
+    "Share":"බෙදාගන්න",
+    "Time Duration first":"- ඔබ පළමුව කාල සීමාව සැකසිය යුතුය -"
+  },
+
+"SetTargetScreen":{
+   "LNG": "si",
+    "Set Target":"ඉලක්කය සකසන්න",
+    "Select Crop":"--බෝගය තෝරන්න--",
+    "Select Variety":"--විවිධත්වය තෝරන්න--",
+    "WeightGrades":"ශ්‍රේණි අනුව බර",
+    "Add More":"තවත් එකතු කරන්න",
+   "No":"No",
+     "Variety":"ප්‍රභේදය",
+    "Grade":"ශ්‍රේණිය",
+    "Target":"ඉලක්කය",
+ "kg":"(kg)",
+   "Action":"ක්‍රියාව",
+     "Save":"සුරකින්න"
+  
+  },
+  "TargetValidPeriod":{
+   "LNG": "si",
+    "Target's Valid Period":"ඉලක්කයේ වලංගු කාල සීමාව",
+    "Select Crop":"සිට",
+    "To":"වෙත",
+    "Add Target":"ඉලක්කය එක් කරන්න"
+ 
+  },
+
 
 
   "Districts": {

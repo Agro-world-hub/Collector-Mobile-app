@@ -479,7 +479,7 @@
    
   },
   "ManagerTransactions":{
-    "LNG": "en",
+    "LNG": "ta",
     "EMPID":"EMP ID:",
     "Selected Date":"தேர்ந்தெடுக்கப்பட்ட தேதி:",
     "Transaction List":"பரிவர்த்தனைகள் பட்டியல்",
@@ -488,6 +488,69 @@
     "Search":"NIC எண், பெயர் மூலம் தேடுங்கள்",
     "All":"அனைத்தும்"
   },
+
+  "OfficerSummary":{
+    "LNG": "ta",
+    "Disclaim":"Disclaim",
+    "EMPID":"EMP ஐடி : ",
+    "Num1":"எண் 1",
+    "Num2":"எண் 2",
+    "Collection":"சேகரிப்பு",
+    "Report":"அறிக்கை",
+    "Today":"இன்று",
+    "Target Coverage":"இலக்கு கவரேஜ்",
+    "OpenTarget":"இலக்கு பலகையைத் திற"
+  },
+  "PassTargetBetweenOfficers":{
+    "LNG": "ta",
+    "maximum amount":"நீங்கள் தேர்ச்சி பெறக்கூடிய அதிகபட்ச தொகை:",
+    "kg":"கிலோ",
+    "Short Stock Assignee":"குறுகிய பங்கு ஒதுக்கீட்டாளர்",
+    "Amount":"தொகை (கிலோ)",
+    "Save":"சேமி",
+    "maximum amount receive":"நீங்கள் பெறக்கூடிய அதிகபட்ச தொகை:"
+   
+  },
+  "ReportGenerator":{
+    "LNG": "ta",
+    "Start Date":"தொடக்க தேதி:",
+    "End Date":"முடிவு தேதி:",
+    "Reset":"மீட்டமை",
+    "Generate":"உருவாக்கு",
+    "IDNO":"ID NO :",
+   "Report has been generated":"- அறிக்கை உருவாக்கப்பட்டது -",
+     "Download":"பதிவிறக்கு",
+    "Share":"பகிர்",
+    "Time Duration first":"- நீங்கள் முதலில் நேர கால அளவை அமைக்க வேண்டும் -"
+  },
+
+"SetTargetScreen":{
+  "LNG": "ta",
+    "Set Target":"இலக்கை அமை",
+    "Select Crop":"--பயிரை தேர்ந்தெடு--",
+    "Select Variety":"--வகையைத் தேர்ந்தெடு--",
+    "WeightGrades":"தரங்களுக்கு ஏற்ப எடை",
+    "Add More":"மேலும் சேர்",
+   "No":"No",
+     "Variety":"வகை",
+    "Grade":"தரம்",
+    "Target":"இலக்கு",
+ "kg":"கிலோ)",
+   "Action":"செயல்",
+     "Save":"சேமி"
+  
+  },
+  "TargetValidPeriod":{
+   "LNG": "ta",
+    "Target's Valid Period":"இலக்கின் செல்லுபடியாகும் காலம்",
+    "From":"இருந்து",
+    "To":"க்கு",
+    "Add Target":"இலக்கைச் சேர்"
+ 
+  },
+
+
+
 
 
   "District": {

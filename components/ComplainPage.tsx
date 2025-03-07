@@ -549,7 +549,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
       enabled
       style={{ flex: 1 }}
     >
-      <SafeAreaView className="flex-1 bg-[#F9F9FA]pb-20">
+      <SafeAreaView className="flex-1 bg-[#FFFFFF]pb-20">
         <View className=" absolute z-10 ">
           <AntDesign
             name="left"
@@ -624,7 +624,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
               />
 
               <TouchableOpacity
-                className="w-full bg-gray-800 py-4 rounded-lg items-center  "
+                className="w-full bg-[#2AAD7A] py-4 rounded-full items-center  "
                 onPress={handleSubmit}
               >
                 {isLoading ? (

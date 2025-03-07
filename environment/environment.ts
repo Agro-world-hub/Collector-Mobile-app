@@ -1,6 +1,6 @@
 // environment.ts
 const environment ={
-    API_BASE_URL: "http://192.168.8.106:3000/agro-api/collection-api/",
+    API_BASE_URL: "http://192.168.1.15:3000/agro-api/collection-api/",
     // API_BASE_URL: "https://dev.agroworld.lk/agro-api/collection-api/",
 
 

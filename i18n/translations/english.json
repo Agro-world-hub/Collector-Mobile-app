@@ -341,6 +341,66 @@
     "Search":"Search By NIC Number, Name",
     "All":"All"
   },
+  "OfficerSummary":{
+    "LNG": "en",
+    "Disclaim":"Disclaim",
+    "EMPID":"EMP ID : ",
+    "Num1":"Num 1",
+    "Num2":"Num 2",
+    "Collection":"Collection",
+    "Report":"Report",
+    "Today":"Today",
+    "Target Coverage":"Target Coverage",
+    "OpenTarget":"Open Target Board"
+  },
+  "PassTargetBetweenOfficers":{
+    "LNG": "en",
+    "maximum amount":"The maximum amount you can pass:",
+    "kg":"kg",
+    "Short Stock Assignee":"Short Stock Assignee",
+    "Amount":"Amount (kg)",
+    "Save":"Save",
+   "maximum amount receive":"The maximum amount you can receive:"
+  },
+  "ReportGenerator":{
+    "LNG": "ta",
+    "Start Date":"Start Date:",
+    "End Date":"End Date :",
+    "Reset":"Reset",
+    "Generate":"Generate",
+    "IDNO":"ID NO :",
+   "Report has been generated":"- Report has been generated -",
+     "Download":"Download",
+    "Share":"Share",
+    "Time Duration first":"- You have to set Time Duration first -"
+  },
+  "SetTargetScreen":{
+    "LNG": "en",
+    "Set Target":"Set Target",
+    "Select Crop":"--Select Crop--",
+    "Select Variety":"--Select Variety--",
+    "WeightGrades":"Weight according to Grades",
+    "Add More":"Add More",
+   "No":"No",
+     "Variety":"Variety",
+    "Grade":"Grade",
+    "Target":"Target",
+ "kg":"(kg)",
+   "Action":"Action",
+     "Save":"Save"
+  
+  },
+  "TargetValidPeriod":{
+    "LNG": "en",
+    "Target's Valid Period":"Target's Valid Period",
+    "From":"From",
+    "To":"To",
+    "Add Target":"Add Target"
+ 
+  },
+
+
+
 
   "Districts": {
     "selectDistrict": "Select a District",

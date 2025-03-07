@@ -9,6 +9,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { RootStackParamList } from '../types';
 import environment from '@/environment/environment';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { useTranslation } from "react-i18next";
 
 type TransactionListNavigationProp = StackNavigationProp<RootStackParamList, 'TransactionList'>;
 type TranscationListRouteProp = RouteProp<RootStackParamList, 'OfficerSummary'>;
@@ -44,6 +45,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
+  const { t } = useTranslation();
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -128,7 +130,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
           <Text className="text-white text-lg font-bold ml-[28%] mt-[4%]">EMP ID: {officerId}</Text>
           <View className="flex-row items-center justify-between mt-2">
           <Text className="text-white text-lg ml-[20%]">
-          Selected Date: {selectedDate ? selectedDate.toISOString().split('T')[0] : 'N/A'}
+          {t("ManagerTransactions.Selected Date")} {selectedDate ? selectedDate.toISOString().split('T')[0] : 'N/A'}
         </Text>
             <TouchableOpacity onPress={() => setShowDatePicker(true)} className="mb-6">
               <Ionicons name="calendar-outline" size={24} color="white" />
@@ -138,7 +140,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
 
         <View className="flex-row items-center bg-[#F7F7F7] px-4 py-2 rounded-full border border-[#444444] mt-[-18] mx-auto w-[90%] shadow-sm">
           <TextInput
-            placeholder="Search By NIC Number, Name"
+            placeholder={t("ManagerTransactions.Search")}
             placeholderTextColor="grey"
             className="flex-1 text-sm text-gray-800"
             value={searchQuery}
@@ -166,7 +168,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
 
       <View className="px-4 mt-4">
         <Text className="text-lg font-semibold text-black mb-4">
-          Transaction List (All {filteredTransactions.length})
+        {t("ManagerTransactions.Transaction List")} ( {t("ManagerTransactions.All")} {filteredTransactions.length})
         </Text>
       </View>
       <FlatList
@@ -206,7 +208,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
               <Text className="text-[18px] font-semibold text-gray-900">
                 {item.firstName} {item.lastName}
               </Text>
-              <Text className="text-sm text-gray-500">NIC: {item.NICnumber}</Text>
+              <Text className="text-sm text-gray-500">{t("ManagerTransactions.NIC")} {item.NICnumber}</Text>
               <Text className="text-sm text-gray-500">
                 Total: Rs.{item.totalAmount ? item.totalAmount.toLocaleString() : 'N/A'}
               </Text>
@@ -216,7 +218,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
         )}
         ListEmptyComponent={
           <View className="items-center mt-[50%]">
-            <Text className="text-gray-500 text-lg">No transactions found for the selected date.</Text>
+            <Text className="text-gray-500 text-lg">{t("ManagerTransactions.Notransactions")}</Text>
           </View>
         }
       />
