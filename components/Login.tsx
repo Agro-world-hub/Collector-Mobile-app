@@ -447,7 +447,7 @@ const status = async (empId: string, status: boolean) => {
       <Image source={loginImage} style={{ width: 270, height: 350 }} />
 
         <Text className="font-bold text-2xl pt-[7%]">
-          {t("SignIn.Welcome!")}
+          {t("SignIn.Welcome")}
         </Text>
       </View>
 

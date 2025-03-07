@@ -52,14 +52,15 @@
 
 // export default BottomNav;
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import NetInfo from '@react-native-community/netinfo';
 import { View, TouchableOpacity, Image,  Animated, Keyboard  } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import environment from '@/environment/environment';
 import  socket  from '@/services/socket';
-import { AppState } from 'react-native';
+import { AppState, AppStateStatus } from 'react-native';
+import { use } from 'i18next';
 
 const homeIcon = require('../assets/images/homee.webp');
 const searchIcon = require('../assets/images/searchh.webp');
@@ -300,8 +301,8 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
     //     };
     //   }
     // }, [socket]); // Only run when socket is available
-    
-    
+  
+
     
     
 // Setup socket listeners on component mount
@@ -352,7 +353,7 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
 //       // Update your UI to show employee is offline
 //     });
 
-//     // Set up AppState listener for background/foreground transitions
+    // Set up AppState listener for background/foreground transitions
 //     AppState.addEventListener('change', async (nextAppState) => {
 //       if (nextAppState === 'active') {
 //         // App came to foreground
@@ -369,9 +370,29 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
 //           }
 //         }
 //       } else if (nextAppState === 'background' || nextAppState === 'inactive') {
-//         // Option 1: Maintain connection in background (do nothing)
         
-//         // Option 2: Disconnect when app goes to background
+//           // Start a timeout to check if app remains in background
+//     setTimeout(async () => {
+//       // Recheck app state after 5 seconds
+//       if (AppState.currentState === 'background' || AppState.currentState === 'inactive') {
+//         try {
+//           // Remove token and empId from AsyncStorage
+//           await AsyncStorage.removeItem('token');
+//           await AsyncStorage.removeItem('empid');
+
+//           // Disconnect socket
+//           console.log('App in background for 5 seconds, disconnecting socket');
+//           socket.disconnect();
+
+//           // Navigate to login screen
+//           navigation.navigate('Login' as never);
+
+//         } catch (error) {
+//           console.error('Error removing credentials or navigating:', error);
+//         }
+//       }
+//     }, 3000); // 5 seconds delay
+        
 //         console.log('App went to background, disconnecting socket');
 //         socket.disconnect();
 //       }
@@ -451,12 +472,48 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
 //     console.error("Online status error:", error);
 //   }
 // };
+useEffect(() => {
+  onlineStatus();
+}
+, []);
+const onlineStatus = async () => {
+  AppState.addEventListener("change", async (nextAppState) => {
+    console.log("App state changed toooolllllll:", nextAppState);
+    const storedEmpId = await AsyncStorage.getItem("empid");
+
+    if (nextAppState === "active") {
+    } else if (nextAppState === "background") {
+      console.log("App went to background, disconnecting socketssssss");
+        setTimeout(async () => {
+            // Recheck app state after 5 seconds
+            if (AppState.currentState === 'background' || AppState.currentState === 'inactive') {
+              try {
+                // Remove token and empId from AsyncStorage
+                await AsyncStorage.removeItem('token');
+                await AsyncStorage.removeItem('empid');
+      
+                // Disconnect socket
+                console.log('App in background for 5 seconds, disconnecting socket');
+                // socket.disconnect();
+      
+                // Navigate to login screen
+                navigation.navigate('Login' as never);
+      
+              } catch (error) {
+                console.error('Error removing credentials or navigating:', error);
+              }
+            }
+          }, 3000); // 5 seconds delay
+    }
+  });
+};
 
   if (isKeyboardVisible) return null;
   return (
-    <View className={` ${
-        currentTabName === 'QRScanner' ? 'bg-black' : 'bg-white'
-      }`}>
+    // <View className={` ${
+    //     currentTabName === 'QRScanner' ? 'bg-black' : 'bg-white'
+    //   }`}>
+    <View>
     <View className="flex-row  justify-between items-center bg-[#21202B] py-3 px-6 rounded-t-3xl w-full">
       {tabs.map((tab, index) => {
         // Check if the current tab is focused

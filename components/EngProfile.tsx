@@ -470,7 +470,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
       // Remove the token and empId from AsyncStorage (or any storage you're using)
       await AsyncStorage.removeItem("token");
-
+    await AsyncStorage.removeItem("jobRole");
       // Optionally, you can also remove it from your app's state (if stored there)
       // setEmpId(null);  // Clear empId from the app's state (if using useState)
 

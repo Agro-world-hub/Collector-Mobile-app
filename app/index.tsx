@@ -177,7 +177,7 @@ import * as Network from "expo-network";
 import ManagerDashboard from "@/components/ManagerScreens/ManagerDashboard";
 import CenterTarget from "@/components/ManagerScreens/CenterTarget";
 import ManagerTransactions from "@/components/ManagerScreens/ManagerTransactions";
-import socket from "@/services/socket";
+// import socket from "@/services/socket";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -227,6 +227,7 @@ function MainTabNavigator() {
 }
 
 const index = () => {
+  const navigation = useNavigation();
   // Prevent screenshots and screen recording
   // ScreenCapture.usePreventScreenCapture();
 
