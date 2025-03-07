@@ -212,7 +212,7 @@ import environment from "../environment/environment";
 import { useTranslation } from "react-i18next";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import LottieView from "lottie-react-native"; // Import LottieView
-import socket from "@/services/socket";
+// import socket from "@/services/socket";
 import * as Network from 'expo-network';
 import { AppState } from 'react-native';
 
@@ -232,88 +232,88 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
   const { t } = useTranslation();
 
 // Setup socket listeners on component mount
-useEffect(() => {
-  setupSocketListeners();
+// useEffect(() => {
+//   setupSocketListeners();
   
-  // Clean up on unmount
-  return () => {
-    cleanupSocketListeners();
-  };
-}, []);
+//   // Clean up on unmount
+//   return () => {
+//     cleanupSocketListeners();
+//   };
+// }, []);
 
-const setupSocketListeners = () => {
-  if (socket.listeners('connect').length === 0) {
-    socket.on('connect', async () => {
-      console.log('Socket connected with ID:', socket.id);
-      // Re-emit login event on reconnection
-      try {
-        const storedEmpId = await AsyncStorage.getItem('empid');
-        if (storedEmpId) {
-          socket.emit('login', { empId: storedEmpId });
-          console.log('Reconnected and sent login for empId:', storedEmpId);
-        }
-      } catch (error) {
-        console.error('Error getting stored empId:', error);
-      }
-    });
+// const setupSocketListeners = () => {
+//   if (socket.listeners('connect').length === 0) {
+//     socket.on('connect', async () => {
+//       console.log('Socket connected with ID:', socket.id);
+//       // Re-emit login event on reconnection
+//       try {
+//         const storedEmpId = await AsyncStorage.getItem('empid');
+//         if (storedEmpId) {
+//           socket.emit('login', { empId: storedEmpId });
+//           console.log('Reconnected and sent login for empId:', storedEmpId);
+//         }
+//       } catch (error) {
+//         console.error('Error getting stored empId:', error);
+//       }
+//     });
 
-    socket.on('disconnect', () => {
-      console.log('Socket disconnected');
-    });
+//     socket.on('disconnect', () => {
+//       console.log('Socket disconnected');
+//     });
 
-    socket.on('loginSuccess', (data) => {
-      console.log('Login success:', data);
-    });
+//     socket.on('loginSuccess', (data) => {
+//       console.log('Login success:', data);
+//     });
 
-    socket.on('loginError', (error) => {
-      console.error('Socket login error:', error);
-    });
+//     socket.on('loginError', (error) => {
+//       console.error('Socket login error:', error);
+//     });
 
-    socket.on('employeeOnline', (data) => {
-      console.log('Employee online:', data.empId);
-      // Update your UI to show employee is online
-    });
+//     socket.on('employeeOnline', (data) => {
+//       console.log('Employee online:', data.empId);
+//       // Update your UI to show employee is online
+//     });
 
-    socket.on('employeeOffline', (data) => {
-      console.log('Employee offline:', data.empId);
-      // Update your UI to show employee is offline
-    });
+//     socket.on('employeeOffline', (data) => {
+//       console.log('Employee offline:', data.empId);
+//       // Update your UI to show employee is offline
+//     });
 
-    // Set up AppState listener for background/foreground transitions
-    AppState.addEventListener('change', async (nextAppState) => {
-      if (nextAppState === 'active') {
-        // App came to foreground
-        if (!socket.connected) {
-          socket.connect();
-          try {
-            const storedEmpId = await AsyncStorage.getItem('empid');
-            if (storedEmpId) {
-              socket.emit('login', { empId: storedEmpId });
-              console.log('App active, sent login for empId:', storedEmpId);
-            }
-          } catch (error) {
-            console.error('Error getting stored empId:', error);
-          }
-        }
-      } else if (nextAppState === 'background' || nextAppState === 'inactive') {
-        // Option 1: Maintain connection in background (do nothing)
+//     // Set up AppState listener for background/foreground transitions
+//     AppState.addEventListener('change', async (nextAppState) => {
+//       if (nextAppState === 'active') {
+//         // App came to foreground
+//         if (!socket.connected) {
+//           socket.connect();
+//           try {
+//             const storedEmpId = await AsyncStorage.getItem('empid');
+//             if (storedEmpId) {
+//               socket.emit('login', { empId: storedEmpId });
+//               console.log('App active, sent login for empId:', storedEmpId);
+//             }
+//           } catch (error) {
+//             console.error('Error getting stored empId:', error);
+//           }
+//         }
+//       } else if (nextAppState === 'background' || nextAppState === 'inactive') {
+//         // Option 1: Maintain connection in background (do nothing)
         
-        // Option 2: Disconnect when app goes to background
-        socket.disconnect();
-      }
-    });
-  }
-};
+//         // Option 2: Disconnect when app goes to background
+//         socket.disconnect();
+//       }
+//     });
+//   }
+// };
 
 
-const cleanupSocketListeners = () => {
-  socket.off('connect');
-  socket.off('disconnect');
-  socket.off('loginSuccess');
-  socket.off('loginError');
-  socket.off('employeeOnline');
-  socket.off('employeeOffline');
-};
+// const cleanupSocketListeners = () => {
+//   socket.off('connect');
+//   socket.off('disconnect');
+//   socket.off('loginSuccess');
+//   socket.off('loginError');
+//   socket.off('employeeOnline');
+//   socket.off('employeeOffline');
+// };
 
 const handleLogin = async () => {
   setLoading(true); // Show loader when login starts
@@ -355,8 +355,9 @@ const handleLogin = async () => {
     await AsyncStorage.setItem("empid", empId.toString());
 
     // Emit the login event to the Socket.IO server
-    socket.emit('login', { empId: empId });
+    // socket.emit('login', { empId: empId });
 
+    await status(empId, true);
     // setLoading(false);
     // // Navigate based on job role
     // if (jobRole === "Collection Officer") {
@@ -380,6 +381,39 @@ const handleLogin = async () => {
     setLoading(false);
     console.error("Login error:", error);
     Alert.alert("Error", "Something went wrong. Please try again.");
+  }
+};
+
+const status = async (empId: string, status: boolean) => {
+  try {
+    const token = await AsyncStorage.getItem("token"); 
+    if (!token) {
+      console.error("Token not found");
+      return;
+    }
+
+    const response = await fetch(
+      `${environment.API_BASE_URL}api/collection-officer/online-status`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,  // Add token in Authorization header
+        },
+        body: JSON.stringify({
+          empId: empId, // Use the passed empId
+          status: status, // Use the passed status
+        }),
+      }
+    );
+
+    if (response) {
+      console.log("User is marked as online");
+    } else {
+      console.log("Failed to update online status");
+    }
+  } catch (error) {
+    console.error("Online status error:", error);
   }
 };
 
