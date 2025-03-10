@@ -119,7 +119,8 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert("Error", "No token found");
+         Alert.alert(t("Error.error"),
+                    t("Error.No token found"));
         return;
       }
 
@@ -151,7 +152,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
       }
     } catch (error) {
       console.error("Error fetching officer details:", error);
-      Alert.alert("Error", "Failed to fetch details");
+      Alert.alert(t("Error.error"), t("Error.Failed to fetch details"));
     }
   };
 
@@ -170,7 +171,8 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem('token');
       if (!token) {
-        Alert.alert('Error', 'No token found');
+        Alert.alert(t("Error.error"),
+                    t("Error.No token found"));
         return;
       }
 
@@ -206,13 +208,15 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
 
     } catch (error) {
       console.error('Error fetching details:', error);
-      Alert.alert('Error', 'Failed to load details');
+      Alert.alert(t("Error.error"),
+                    t("Error.Failed to load details"));
     }
   };
 
   const generatePDF = async () => {
     if (!details) {
-      Alert.alert('Error', 'Details are missing for generating PDF');
+      Alert.alert(t("Error.error"),
+                    t("Error.Details are missing for generating PDF"));
       return '';
     }
   
@@ -341,7 +345,8 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
       return uri;
     } catch (error) {
       console.error('Error generating PDF:', error);
-      Alert.alert('Error', 'Failed to generate PDF');
+      Alert.alert(t("Error.error"),
+      t("Error.PDF was not generated."));
       return '';
     }
   };
@@ -387,10 +392,12 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
         }
       } catch (error) {
         console.error('Error saving PDF:', error);
-        Alert.alert('Error', 'Failed to save PDF to Downloads folder.');
+        Alert.alert(t("Error.error"),
+                    t("Error.Failed to save PDF to Downloads folder."));
       }
     } else {
-      Alert.alert('Error', 'PDF was not generated.');
+      Alert.alert(t("Error.error"),
+                    t("Error.PDF was not generated."));
     }
   };
   

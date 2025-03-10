@@ -481,7 +481,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
         if (supported) {
           return Linking.openURL(url);
         } else {
-          Alert.alert("Error", "Unable to open dialer.");
+          Alert.alert(t("Error.error"), t("Error.Unable to open dialer."));
         }
       })
       .catch((err) => console.error("An error occurred", err));
@@ -507,7 +507,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       navigation.navigate("Login");
     } catch (error) {
       console.error("An error occurred during logout:", error);
-      Alert.alert("Error", "Failed to log out.");
+      Alert.alert(t("Error.error"), t("Error.Failed to log out."));
     }
   };
 

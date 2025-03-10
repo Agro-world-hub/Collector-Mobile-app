@@ -367,11 +367,11 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
           totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
         setTaskPercentage(percentage);
       } else {
-        Alert.alert("Error", "No task summary found for this officer.");
+        Alert.alert(t("Error.error"), t("Error.No task summary found for this officer."));
       }
     } catch (error) {
       console.error("Error fetching task summary:", error);
-      Alert.alert("Error", "Failed to fetch task summary.");
+      Alert.alert(t("Error.error"), t("Error.Failed to fetch task summary."));
     }
   };
 
@@ -391,7 +391,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
     setShowMenu(false);
 
     if (!collectionOfficerId) {
-      Alert.alert("Error", "Missing collectionOfficerId. Please try again.");
+      Alert.alert(t("Error.error"), t("Error.Missing collectionOfficerId"));
       return;
     }
 
@@ -412,7 +412,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
         console.error("Disclaim failed:", errorData);
         Alert.alert(
           "Error",
-          errorData.message || "Failed to disclaim officer."
+          errorData.message || t("Error.Failed to disclaim officer.")
         );
         return;
       }
@@ -428,7 +428,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
       }
     } catch (error) {
       console.error("Failed to disclaim:", error);
-      Alert.alert("Error", "Failed to disclaim officer. Please try again.");
+      Alert.alert(t("Error.error"), t("Error.Failed to disclaim officer."));
     }
   };
 
@@ -530,11 +530,11 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
         }
       } else {
         console.error("Failed to get officer status");
-        Alert.alert("Error", "Failed to get officer status.");
+        Alert.alert(t("Error.error"), t("Error.Failed to get officer status."));
       }
     } catch (error) {
       console.error("Failed to get officer status:", error);
-      Alert.alert("Error", "Failed to get officer status.");
+      Alert.alert(t("Error.error"), t("Error.Failed to get officer status."));
     }
   };
   

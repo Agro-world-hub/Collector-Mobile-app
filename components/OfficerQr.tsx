@@ -270,7 +270,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
   try {
     const token = await AsyncStorage.getItem("token");
     if (!token) {
-      Alert.alert("Error", "No token found");
+      Alert.alert(t("Error.error"), t("Error.No token found"));
       return;
     }
 
@@ -353,7 +353,7 @@ const shareQRCode = async () => {
     }
   } catch (error) {
     console.error("Share error:", error);
-    Alert.alert("Error", t("Error.Failed to share QR Code."));
+    Alert.alert(t("Error.error"), t("Error.Failed to share QR Code."));
   }
 };
 

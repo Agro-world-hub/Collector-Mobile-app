@@ -50,7 +50,7 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
       setCompletedData(completedItems);
       setError(null);
     } catch (err) {
-      setError('Failed to fetch data. Please try again later.');
+      setError(t("Error.Failed to fetch data."));
     } finally {
       setLoading(false);
       setRefreshing(false);

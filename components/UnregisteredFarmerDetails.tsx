@@ -170,7 +170,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
           setFilteredBranches(sortedBranches);
         } catch (error) {
           console.error("Error loading branches", error);
-          Alert.alert(t("Main.error"), t("Main.somethingWentWrong"));
+          Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
         } finally {
           setLoading(false);
         }
@@ -317,7 +317,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
         branchName: branchName,
       });
     } catch (error) {
-      Alert.alert("Main.error", "SignupForum.otpSendFailed");
+      Alert.alert(t("Error.error"), t("Error.SignupForum.otpSendFailed"));
     }
   };
 

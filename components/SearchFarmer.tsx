@@ -93,11 +93,11 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
         } else {
           Alert.alert(
             "Error",
-            error.response?.data?.error || "Failed to search for farmer."
+            error.response?.data?.error || t("Error.Failed to search for farmer.")
           );
         }
       } else {
-        Alert.alert("Error", "An unexpected error occurred.");
+        Alert.alert(t("Error.error"), t("Error.An unexpected error occurred."));
       }
     }
   };

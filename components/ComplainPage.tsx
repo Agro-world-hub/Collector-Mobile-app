@@ -462,7 +462,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
 
   const handleSubmit = async () => {
     if (!complain || !selectedCategory) {
-      Alert.alert("Error", "Please select a category and add your complaint.");
+     Alert.alert(t("Error.error"), t("Error.Please select a category and add your complaint."));
       return;
     }
   
@@ -512,7 +512,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
       navigation.goBack();
     } catch (error) {
       console.error("Error submitting complaint:", error);
-      Alert.alert("Error", t("Error.Failed to submit complaint. Please try again."));
+      Alert.alert(t("Error.error"), t("Error.Failed to submit complaint"));
     }
   };
 

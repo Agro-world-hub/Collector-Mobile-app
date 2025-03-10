@@ -685,7 +685,7 @@ const AddOfficerAddressDetails: React.FC = () => {
         confirmAccountNumber &&
         accountNumber !== confirmAccountNumber
       ) {
-        setError("Account numbers do not match.");
+        setError(t("Error.Account numbers do not match."));
       } else {
         setError(""); // Clear error if they match
       }
@@ -727,12 +727,12 @@ const AddOfficerAddressDetails: React.FC = () => {
       !formData.confirmAccountNumber ||
       !formData.bankName
     ) {
-      Alert.alert("Error", "Please fill in all required fields.");
+      Alert.alert(t("Error.error"), t("Error.Please fill in all required fields."));
       return;
     }
 
     if (formData.accountNumber !== formData.confirmAccountNumber) {
-      Alert.alert("Error", "Account numbers do not match.");
+      Alert.alert(t("Error.error"), t("Account numbers do not match."));
       return;
     }
 
@@ -784,13 +784,13 @@ const AddOfficerAddressDetails: React.FC = () => {
             Alert.alert("Error", serverErrors);
           } else {
             const errorMessages = Object.values(serverErrors).join("\n");
-            Alert.alert("Validation Errors", errorMessages);
+            Alert.alert(t("Error.Validation Errors"), errorMessages);
           }
         } else {
-          Alert.alert("Error", "An error occurred while creating the officer.");
+          Alert.alert(t("Error.error"), t("Error.An error occurred while creating the officer."));
         }
       } else {
-        Alert.alert("Error", "An error occurred while creating the officer.");
+        Alert.alert(t("Error.error"), t("Error.An error occurred while creating the officer."));
       }
     }
   };

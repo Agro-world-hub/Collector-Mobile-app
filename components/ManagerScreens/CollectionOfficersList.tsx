@@ -354,13 +354,13 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
         // Combine the sorted lists: approved officers first, then not approved
         setOfficers([...sortedApprovedOfficers, ...sortedNotApprovedOfficers]);
       } else {
-        setErrorMessage("Failed to fetch officers.");
+        setErrorMessage(t("Error.Failed to fetch officers."));
       }
     } catch (error: any) {
       if (error.response?.status === 404) {
-        setErrorMessage("No officers available.");
+        setErrorMessage(t("Error.No officers available."));
       } else {
-        setErrorMessage("An error occurred while fetching officers.");
+         setErrorMessage(t("Error.An error occurred while fetching officers."));
       }
     } finally {
       setLoading(false);

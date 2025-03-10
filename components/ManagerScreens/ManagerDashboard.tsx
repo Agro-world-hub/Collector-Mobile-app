@@ -55,7 +55,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert("Error", "User not authenticated.");
+        Alert.alert(t("Error.error"), t("Error.User not authenticated."));
         return;
       }
       const response = await axios.get(

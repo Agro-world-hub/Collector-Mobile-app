@@ -154,7 +154,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
         } catch (error) {
             console.error('Error fetching unit prices for selected variety:', error);
             // You can handle other error cases here, for example:
-            Alert.alert('Error', 'no any prices found !');
+            Alert.alert(t("Error.error"), t("Error.no any prices found !"));
         }
     };
     
@@ -321,7 +321,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
             navigation.navigate('ReportPage' as any, { userId, registeredFarmerId });
         } catch (error) {
             console.error('Error submitting crop data:', error);
-            alert('Failed to submit crop details. Please try again.');
+            alert(t("Error.Failed to submit crop details. Please try again."));
         }
     };
     
@@ -377,7 +377,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
             navigation.navigate('ReportPage' as any, { userId, registeredFarmerId });
         } catch (error) {
             console.error('Error submitting crop data:', error);
-            alert('Failed to submit crop details. Please try again.');
+            alert(t("Error.Failed to submit crop details. Please try again."));
         }
     };
     

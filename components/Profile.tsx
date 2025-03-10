@@ -61,7 +61,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     setNewPhoneNumber(text);
 
     if (text.length > 9) {
-      setErrorMessage("Phone number cannot exceed 9 digits.");
+      setErrorMessage(t("Error.Phone number cannot exceed 9 digits."));
     } else {
       setErrorMessage("");
     }
@@ -72,7 +72,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     setNewPhoneNumber2(text);
 
     if (text.length > 9) {
-      setErrorMessage("Phone number cannot exceed 9 digits.");
+      setErrorMessage(t("Error.Phone number cannot exceed 9 digits."));
     } else {
       setErrorMessage("");
     }
@@ -94,7 +94,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert(t("Error.Error"),
+        Alert.alert(t("Error.error"),
             t("Error.No token found"));
         return;
       }
@@ -127,7 +127,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
       setNewPhoneNumber2(data.phoneNumber02);
     } catch (error) {
       console.error("Error fetching profile data:", error);
-      Alert.alert("Error", "Failed to load profile data");
+      Alert.alert(t("Error.error"), t("Error.Failed to load profile data"));
     }
   };
 
@@ -135,7 +135,8 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert("Error", "No token found");
+        Alert.alert(t("Error.error"),
+            t("Error.No token found"));
         return;
       }
   
@@ -161,7 +162,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
       Alert.alert("Success", "Phone numbers updated successfully");
     } catch (error) {
       console.error("Error updating phone numbers:", error);
-      Alert.alert("Error", "Failed to update phone numbers");
+      Alert.alert(t("Error.error"), t("Error.Failed to update phone numbers"));
     }
   };
   
@@ -169,8 +170,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       Alert.alert(
-        "Permission required",
-        "Please allow access to your photo library to upload a profile picture."
+        t("Error.Permission required")
       );
       return;
     }
@@ -200,7 +200,8 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert(("Main.error"), ("Main.somethingWentWrong"));
+        Alert.alert(t("Error.errorOccurred"),
+        t("Error.somethingWentWrong"));
         return;
       }
       const formData = new FormData();
@@ -233,10 +234,10 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
 
       if (data.status === "success") {
       } else {
-        Alert.alert(("Sorry"), ("Something went wrong"));
+        Alert.alert(t("Error.Sorry"), t("Error.somethingWentWrong"));
       }
     } catch (error) {
-      Alert.alert(("Sorry"), ("Something went wrong"));
+      Alert.alert(t("Error.Sorry"), t("Error.somethingWentWrong"));
     }
   };
 

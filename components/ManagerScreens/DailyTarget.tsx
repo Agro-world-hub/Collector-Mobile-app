@@ -299,7 +299,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
         setCompletedData(completedItems);
         setError(null);
       } catch (err) {
-        setError('Failed to fetch data. Please try again later.');
+        setError(t("Error.Failed to fetch data."));
       } finally {
         const elapsedTime = Date.now() - startTime;
         const remainingTime = 3000 - elapsedTime; // Ensure at least 3 seconds loading time
@@ -331,7 +331,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
         setCompletedData(completedItems);
         setRefreshing(false); // Stop refreshing once data is loaded
       } catch (err) {
-        setError('Failed to fetch data. Please try again later.');
+        setError(t("Error.Failed to fetch data."));
         setRefreshing(false); // Stop refreshing on error
       }
     };

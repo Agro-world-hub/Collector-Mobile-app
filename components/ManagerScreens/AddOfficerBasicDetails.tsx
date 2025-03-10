@@ -503,7 +503,7 @@ const handleNicNumberChange = (input: string) => {
       console.log("EmpId:", response.data.result.empId);
     } catch (error) {
       console.error("Error fetching empId:", error);
-      Alert.alert("Error", "Failed to fetch employee ID");
+      Alert.alert(t("Error.error"), t("Error.Failed to fetch empid."));
     }
   };
 
@@ -597,7 +597,7 @@ const handleNicNumberChange = (input: string) => {
       !formData.nicNumber ||
       !formData.email
     ) {
-      Alert.alert("Error", "Please fill in all required fields.");
+      Alert.alert(t("Error.error"), t("Error.Please fill in all required fields."));
       return;
     }
 
@@ -647,7 +647,7 @@ const handleNicNumberChange = (input: string) => {
   const handleEmailChange = (input: string) => {
     setFormData({ ...formData, email: input });
     if (!validateEmail(input)) {
-      setErrorEmail("Email must end with 'gmail.com', 'yahoo.com', '.com', '.gov', or '.lk'.");
+      setErrorEmail(t("ErrorEmail"));
     } else {
       setErrorEmail("");
     }
@@ -660,7 +660,7 @@ const handleNicNumberChange = (input: string) => {
   const handlePhoneNumber1Change = (input: string) => {
     setPhoneNumber1(input);
     if (!validatePhoneNumber(input)) {
-      setError1("Phone number 1 must be 9 digits.");
+      setError1(t("Error.setphoneError1"));
     } else {
       setError1("");
     }
@@ -670,7 +670,7 @@ const handleNicNumberChange = (input: string) => {
   const handlePhoneNumber2Change = (input: string) => {
     setPhoneNumber2(input);
     if (!validatePhoneNumber(input)) {
-      setError2("Phone number 2 must be 9 digits.");
+      setError2(t("Error.setphoneError2"));
     } else {
       setError2("");
     }

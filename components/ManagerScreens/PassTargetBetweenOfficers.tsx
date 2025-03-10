@@ -75,13 +75,13 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
 
         setOfficers([{ key: '0', value: '--Select an officer--' }, ...formattedOfficers]);
       } else {
-        setErrorMessage('Failed to fetch officers.');
+        setErrorMessage(t("Error.Failed to fetch officers."));
       }
     } catch (error: any) {
       if (error.response?.status === 404) {
-        setErrorMessage('No officers available.');
+        setErrorMessage(t("Error.No officers available."));
       } else {
-        setErrorMessage('An error occurred while fetching officers.');
+        setErrorMessage(t("Error.An error occurred while fetching officers."));
       }
     } finally {
       setLoading(false);
@@ -99,7 +99,7 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
     setAmount(text);
     const numericValue = parseFloat(text);
     if (numericValue > maxAmount) {
-      setError(`You have exceeded the maximum amount.`);
+      setError(t("Error.You have exceeded the maximum amount."));
     } else {
       setError('');
     }
@@ -108,18 +108,22 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
   // ✅ Function to Pass Target
   const passTarget = async () => {
     if (!assignee || assignee === '0') {
-      Alert.alert("Error", "Please select an officer.");
+      Alert.alert(t("Error.error"), t("Error.Please select an officer."));
       return;
     }
 
     const numericAmount = parseFloat(amount);
     if (isNaN(numericAmount) || numericAmount <= 0) {
-      Alert.alert("Error", "Please enter a valid amount.");
+      Alert.alert(t("Error.error"), t("Error.Please enter a valid amount."));
       return;
     }
 
     if (numericAmount > maxAmount) {
-      Alert.alert("Error", `You cannot transfer more than ${maxAmount}kg.`);
+      Alert.alert(
+        t("Error.error"),
+        `${t("Error.You cannot transfer more than")} ${maxAmount}kg.`
+      );
+      
       return;
     }
 
@@ -145,14 +149,14 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
       
       
       if (response.status === 200) {
-        Alert.alert("Success", "Target transferred successfully.");
+        Alert.alert(t("Error.Success"), t("Error.Target transferred successfully."));
         navigation.navigate('DailyTargetListForOfficers'as any,{collectionOfficerId:collectionOfficerId}); 
       } else {
-        Alert.alert("Error", "Failed to transfer target.");
+        Alert.alert(t("Error.error"), t("Error.Failed to transfer target."));
       }
     } catch (error: any) {
       console.error("Transfer Target Error:", error);
-      Alert.alert("Error", "An error occurred while transferring the target.");
+      Alert.alert(t("Error.error"), t("Error.An error occurred while transferring the target."));
     } finally {
       setSubmitting(false);
     }

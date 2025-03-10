@@ -265,7 +265,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
       navigation.navigate('FarmerQr' as any, { userId });
     } catch (error) {
       console.error('QR Parsing Error:', error);
-      setErrorMessage('The scanned QR code does not contain a valid user ID or is damaged.');
+      setErrorMessage(t("Error.The scanned QR code does not contain a valid user ID or is damaged."));
       setIsUnsuccessfulModalVisible(true);
 
       // Start the decreasing animation

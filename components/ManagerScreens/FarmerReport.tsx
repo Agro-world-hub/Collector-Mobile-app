@@ -89,7 +89,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert("Error", "No token found");
+        Alert.alert(t("Error.error"), t("Error.No token found"));
         return;
       }
 
@@ -121,7 +121,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
       }
     } catch (error) {
       console.error("Error fetching officer details:", error);
-      Alert.alert("Error", "Failed to fetch details");
+      Alert.alert(t("Error.error"), t("Error.Failed to fetch details"));
     }
   };
 
@@ -162,7 +162,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem('token');
       if (!token) {
-        Alert.alert('Error', 'No token found');
+        Alert.alert(t("Error.error"), t("Error.No token found"));
         return;
       }
 
@@ -198,7 +198,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
 
     } catch (error) {
       console.error('Error fetching details:', error);
-      Alert.alert('Error', 'Failed to load details');
+      Alert.alert(t("Error.error"), t("Error.Failed to load details"));
     }
   };
   
@@ -208,7 +208,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
         const data = await fetchCropDetails(userId, selectedDate, registeredFarmerId);
         setCrops(data); // Populate the `crops` state with fetched data
       } catch (error) {
-        Alert.alert('Error', 'Failed to load crop details');
+        Alert.alert(t("Error.error"), t("Error.Failed to load crop details"));
       }
     };
   
@@ -334,7 +334,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
       return uri;
     } catch (error) {
       console.error('Error generating PDF:', error);
-      Alert.alert('Error', 'Failed to generate PDF');
+      Alert.alert(t("Error.error"), t("Error.Failed to generate PDF"));
       return '';
     }
   };
@@ -379,10 +379,12 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
          }
        } catch (error) {
          console.error('Error saving PDF:', error);
-         Alert.alert('Error', 'Failed to save PDF to Downloads folder.');
+         Alert.alert(t("Error.error"),
+                             t("Error.Failed to save PDF to Downloads folder."));
        }
      } else {
-       Alert.alert('Error', 'PDF was not generated.');
+         Alert.alert(t("Error.error"),
+                           t("Error.PDF was not generated."));
      }
    };
    
@@ -394,7 +396,8 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
     if (uri && (await Sharing.isAvailableAsync())) {
       await Sharing.shareAsync(uri);
     } else {
-      Alert.alert('Error', 'Sharing is not available on this device');
+      Alert.alert(t("Error.error"),
+                           t("Error.Sharing is not available on this device"));
     }
   };
 
