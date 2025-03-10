@@ -11,7 +11,7 @@ interface SinLoginProps {
     navigation: SinLoginNavigationProp;
 }
 
-const login = require('@/assets/images/login.png');
+const login = require('@/assets/images/bg.webp');
 
 const SinLogin: React.FC<SinLoginProps> = ({ navigation }) => {
     const [username, setUsername] = useState('');

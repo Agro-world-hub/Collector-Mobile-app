@@ -13,8 +13,10 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
   } from "react-native-responsive-screen";
+  import { useTranslation } from "react-i18next";
   
   import generateInvoiceNumber from "@/utils/generateInvoiceNumber";
+import CameraComponent from "@/utils/CameraComponent";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -43,7 +45,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     const [unitPrices, setUnitPrices] = useState<{ [key: string]: number | null }>({ A: null, B: null, C: null });
     const [quantities, setQuantities] = useState<{ [key: string]: number }>({ A: 0, B: 0, C: 0 });
     const [total, setTotal] = useState<number>(0);
-    const [image, setImage] = useState<any>(null);
+    const [image, setImage] = useState<string | null>(null); // Store base64 image here
     const [crops, setCrops] = useState<any[]>([]);
     const [selectedVarietyName, setSelectedVarietyName] = useState<string | null>(null);
     const [donebutton1visibale, setdonebutton1visibale] = useState(true);
@@ -51,6 +53,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     const [donebutton1disabale, setdonebutton1disabale] = useState(true);
     const [donebutton2disabale, setdonebutton2disabale] = useState(false);
     const [addbutton, setaddbutton] = useState(true);
+    const { t } = useTranslation();
    
     const route = useRoute<UnregisteredCropDetailsRouteProp>();
     const { userId } = route.params;
@@ -180,6 +183,8 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                 
         }    
         };
+        
+     const [resetCameraImage, setResetCameraImage] = useState(false);
 
       const incrementCropCount = async() => {
         setaddbutton(true);
@@ -201,7 +206,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
             gradeBquan: quantities.B || 0,
             gradeCprice: unitPrices.C || 0,
             gradeCquan: quantities.C || 0,
-            image: image?.assets[0]?.base64 || null,
+            image: image || null,
         };
     
         setCrops(prevCrops => {
@@ -210,6 +215,9 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
         });
     
         resetCropEntry();
+        
+            // Toggle resetCameraImage to trigger the useEffect in CameraComponent
+        setResetCameraImage(prev => !prev);
         setCropCount(prevCount => prevCount + 1);
     };
     
@@ -222,19 +230,23 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
         setImage(null);
     };
     
-    const handleImagePick = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-            base64: true,
-        });
+    // const handleImagePick = async () => {
+    //     const result = await ImagePicker.launchImageLibraryAsync({
+    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //         allowsEditing: true,
+    //         aspect: [4, 3],
+    //         quality: 1,
+    //         base64: true,
+    //     });
     
-        if (!result.canceled) {
-            setImage(result);
-        }
-    };
+    //     if (!result.canceled) {
+    //         setImage(result);
+    //     }
+    // };
+    
+    const handleImagePick = (base64Image: string | null) => {
+        setImage(base64Image); // Update image state with base64 string
+      };
     
     const refreshCropForms = () => {
         setSelectedCrop(null);
@@ -250,6 +262,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
         setdonebutton2disabale(false);
         setaddbutton(true);
         setCropCount(1);
+        setResetCameraImage(prev => !prev);
       };
     
       const handleSubmit = async () => {
@@ -337,7 +350,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                     gradeBquan: quantities.B || 0,
                     gradeCprice: unitPrices.C || 0,
                     gradeCquan: quantities.C || 0,
-                    image: image?.assets[0]?.base64 || null,
+                    image: image || null,
                 },
             };
     
@@ -386,12 +399,12 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                       <TouchableOpacity onPress={() => navigation.goBack()} className="">
                         <AntDesign name="left" size={24} color="#000" />
                       </TouchableOpacity>
-                      <Text className="flex-1 text-center text-xl font-bold text-black">Fill Details</Text>
+                      <Text className="flex-1 text-center text-xl font-bold text-black">{t("UnregisteredCropDetails.FillDetails")}</Text>
                     </View>
 
-            <Text className="text-center text-md font-medium mt-2">Crop {cropCount}</Text>
+            <Text className="text-center text-md font-medium mt-2">{t("UnregisteredCropDetails.Crop")}{cropCount}</Text>
             <View className="mb-6 border-b p-2 border-gray-200 pb-6">
-            <Text className="text-gray-600 mt-4">Crop Name</Text>               
+            <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.CropName")}</Text>               
               <View className="border border-gray-300 rounded-md mt-2 p-2">                 
                 
               <Picker
@@ -410,7 +423,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
 
                 </View>
 
-                <Text className="text-gray-600 mt-4">Variety</Text>
+                <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Variety")}</Text>
                 <View className="border border-gray-300 rounded-md mt-2 p-2">
                 <Picker
                     selectedValue={selectedVariety || null}
@@ -427,7 +440,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
 
                 </View>
 
-                <Text className="text-gray-600 mt-4">Unit Prices according to Grades</Text>
+                <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.UnitGrades")}</Text>
                 <View className="border border-gray-300 rounded-lg mt-2 p-4">
                     {['A', 'B', 'C'].map((grade) => (
                         <View key={grade} className="flex-row items-center mb-3">
@@ -450,22 +463,18 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                     ))}
                 </View>
 
-                <View>
-                <TouchableOpacity onPress={handleImagePick} className="mt-4 py-2 bg-black rounded-md">
-                    <Text className="text-center text-white">Add Image</Text>
+                <View className='mt-[10%]'>
+                {/* Camera component to capture image */}
+                <CameraComponent onImagePicked={handleImagePick} resetImage={resetCameraImage}/> 
 
-                </TouchableOpacity>
-                {image && (
-                    <Image
-                        source={{ uri: `data:image/jpeg;base64,${image.assets[0].base64}` }}
-                        style={{ width: 200, height: 200, marginTop: 10 ,marginLeft:70 }}
-                    />
-                )}
-                </View>
+                {/* Display the base64 image after it is picked */}
+
+            </View>
+
 
 
                 {/* Total and Buttons */}
-                <Text className="text-gray-600 mt-4">Total (Rs.)</Text>
+                <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Total")}</Text>
                 <View className="border border-gray-300 rounded-md mt-2 p-2">
                     <TextInput 
                         placeholder="--Auto Fill--" 
@@ -476,16 +485,16 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                 </View>
 
                 <TouchableOpacity onPress={incrementCropCount} disabled={addbutton==true} className={`bg-green-500 rounded-md p-4 mt-2 ${addbutton ? 'opacity-50' : ''}`}>
-                    <Text className="text-center text-white font-semibold">Add more</Text>
+                    <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Add")}</Text>
                 </TouchableOpacity>
                {donebutton1visibale && 
                 <TouchableOpacity onPress={handelsubmit2} disabled={donebutton1disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton1disabale ? 'opacity-50' : ''}`}>
-                    <Text className="text-center text-black font-semibold">Done</Text>
+                    <Text className="text-center text-black font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
                 </TouchableOpacity>
                 }
                 {donebutton2visibale &&
                 <TouchableOpacity onPress={handleSubmit} disabled={donebutton2disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton2disabale ? 'opacity-50' : ''}`}>
-                   <Text className="text-center text-black font-semibold">Done</Text>
+                   <Text className="text-center text-black font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
                 </TouchableOpacity>
                 }  
             </View>

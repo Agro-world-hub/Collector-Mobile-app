@@ -212,7 +212,7 @@ import environment from "../environment/environment";
 import { useTranslation } from "react-i18next";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import LottieView from "lottie-react-native"; // Import LottieView
-import socket from "@/services/socket";
+// import socket from "@/services/socket";
 import * as Network from 'expo-network';
 import { AppState } from 'react-native';
 
@@ -222,7 +222,7 @@ interface LoginProps {
   navigation: LoginNavigationProp;
 }
 
-const loginImage = require("@/assets/images/login.png");
+const loginImage = require("@/assets/images/bg.webp");
 
 const Login: React.FC<LoginProps> = ({ navigation }) => {
   const [empid, setEmpid] = useState("");
@@ -232,88 +232,88 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
   const { t } = useTranslation();
 
 // Setup socket listeners on component mount
-useEffect(() => {
-  setupSocketListeners();
+// useEffect(() => {
+//   setupSocketListeners();
   
-  // Clean up on unmount
-  return () => {
-    cleanupSocketListeners();
-  };
-}, []);
+//   // Clean up on unmount
+//   return () => {
+//     cleanupSocketListeners();
+//   };
+// }, []);
 
-const setupSocketListeners = () => {
-  if (socket.listeners('connect').length === 0) {
-    socket.on('connect', async () => {
-      console.log('Socket connected with ID:', socket.id);
-      // Re-emit login event on reconnection
-      try {
-        const storedEmpId = await AsyncStorage.getItem('empid');
-        if (storedEmpId) {
-          socket.emit('login', { empId: storedEmpId });
-          console.log('Reconnected and sent login for empId:', storedEmpId);
-        }
-      } catch (error) {
-        console.error('Error getting stored empId:', error);
-      }
-    });
+// const setupSocketListeners = () => {
+//   if (socket.listeners('connect').length === 0) {
+//     socket.on('connect', async () => {
+//       console.log('Socket connected with ID:', socket.id);
+//       // Re-emit login event on reconnection
+//       try {
+//         const storedEmpId = await AsyncStorage.getItem('empid');
+//         if (storedEmpId) {
+//           socket.emit('login', { empId: storedEmpId });
+//           console.log('Reconnected and sent login for empId:', storedEmpId);
+//         }
+//       } catch (error) {
+//         console.error('Error getting stored empId:', error);
+//       }
+//     });
 
-    socket.on('disconnect', () => {
-      console.log('Socket disconnected');
-    });
+//     socket.on('disconnect', () => {
+//       console.log('Socket disconnected');
+//     });
 
-    socket.on('loginSuccess', (data) => {
-      console.log('Login success:', data);
-    });
+//     socket.on('loginSuccess', (data) => {
+//       console.log('Login success:', data);
+//     });
 
-    socket.on('loginError', (error) => {
-      console.error('Socket login error:', error);
-    });
+//     socket.on('loginError', (error) => {
+//       console.error('Socket login error:', error);
+//     });
 
-    socket.on('employeeOnline', (data) => {
-      console.log('Employee online:', data.empId);
-      // Update your UI to show employee is online
-    });
+//     socket.on('employeeOnline', (data) => {
+//       console.log('Employee online:', data.empId);
+//       // Update your UI to show employee is online
+//     });
 
-    socket.on('employeeOffline', (data) => {
-      console.log('Employee offline:', data.empId);
-      // Update your UI to show employee is offline
-    });
+//     socket.on('employeeOffline', (data) => {
+//       console.log('Employee offline:', data.empId);
+//       // Update your UI to show employee is offline
+//     });
 
-    // Set up AppState listener for background/foreground transitions
-    AppState.addEventListener('change', async (nextAppState) => {
-      if (nextAppState === 'active') {
-        // App came to foreground
-        if (!socket.connected) {
-          socket.connect();
-          try {
-            const storedEmpId = await AsyncStorage.getItem('empid');
-            if (storedEmpId) {
-              socket.emit('login', { empId: storedEmpId });
-              console.log('App active, sent login for empId:', storedEmpId);
-            }
-          } catch (error) {
-            console.error('Error getting stored empId:', error);
-          }
-        }
-      } else if (nextAppState === 'background' || nextAppState === 'inactive') {
-        // Option 1: Maintain connection in background (do nothing)
+//     // Set up AppState listener for background/foreground transitions
+//     AppState.addEventListener('change', async (nextAppState) => {
+//       if (nextAppState === 'active') {
+//         // App came to foreground
+//         if (!socket.connected) {
+//           socket.connect();
+//           try {
+//             const storedEmpId = await AsyncStorage.getItem('empid');
+//             if (storedEmpId) {
+//               socket.emit('login', { empId: storedEmpId });
+//               console.log('App active, sent login for empId:', storedEmpId);
+//             }
+//           } catch (error) {
+//             console.error('Error getting stored empId:', error);
+//           }
+//         }
+//       } else if (nextAppState === 'background' || nextAppState === 'inactive') {
+//         // Option 1: Maintain connection in background (do nothing)
         
-        // Option 2: Disconnect when app goes to background
-        socket.disconnect();
-      }
-    });
-  }
-};
+//         // Option 2: Disconnect when app goes to background
+//         socket.disconnect();
+//       }
+//     });
+//   }
+// };
 
 
-const cleanupSocketListeners = () => {
-  socket.off('connect');
-  socket.off('disconnect');
-  socket.off('loginSuccess');
-  socket.off('loginError');
-  socket.off('employeeOnline');
-  socket.off('employeeOffline');
-};
+// const cleanupSocketListeners = () => {
+//   socket.off('connect');
+//   socket.off('disconnect');
+//   socket.off('loginSuccess');
+//   socket.off('loginError');
+//   socket.off('employeeOnline');
+//   socket.off('employeeOffline');
+// };
 
 const handleLogin = async () => {
   setLoading(true); // Show loader when login starts
@@ -338,7 +338,7 @@ const handleLogin = async () => {
     if (!response.ok) {
       setLoading(false);
       if (response.status === 404) {
-        Alert.alert("Error", "Invalid Employee ID. Please try again.");
+        Alert.alert("Error", "Invalid EMP ID & Password ");
       } else if (response.status === 401) {
         Alert.alert("Error", "Invalid Password. Please try again.");
       } else {
@@ -355,8 +355,9 @@ const handleLogin = async () => {
     await AsyncStorage.setItem("empid", empId.toString());
 
     // Emit the login event to the Socket.IO server
-    socket.emit('login', { empId: empId });
+    // socket.emit('login', { empId: empId });
 
+    await status(empId, true);
     // setLoading(false);
     // // Navigate based on job role
     // if (jobRole === "Collection Officer") {
@@ -383,31 +384,76 @@ const handleLogin = async () => {
   }
 };
 
+const status = async (empId: string, status: boolean) => {
+  try {
+    const token = await AsyncStorage.getItem("token"); 
+    if (!token) {
+      console.error("Token not found");
+      return;
+    }
+
+    const response = await fetch(
+      `${environment.API_BASE_URL}api/collection-officer/online-status`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,  // Add token in Authorization header
+        },
+        body: JSON.stringify({
+          empId: empId, // Use the passed empId
+          status: status, // Use the passed status
+        }),
+      }
+    );
+
+    if (response) {
+      console.log("User is marked as online");
+    } else {
+      console.log("Failed to update online status");
+    }
+  } catch (error) {
+    console.error("Online status error:", error);
+  }
+};
+
 
 
   return (
+    // <KeyboardAvoidingView 
+    // behavior={Platform.OS ==="ios" ? "padding" : "height"}
+    // enabled
+    // className="flex-1"
+    // >
+    // <ScrollView
+    //   className="flex-1 w-full bg-white"
+    //   keyboardShouldPersistTaps="handled"
+    // >
     <KeyboardAvoidingView 
     behavior={Platform.OS ==="ios" ? "padding" : "height"}
-    enabled
-    className="flex-1"
-    >
-    <ScrollView
-      className="flex-1 w-full bg-white"
-      keyboardShouldPersistTaps="handled"
-    >
+  enabled 
+  className="flex-1"
+>
+  <ScrollView 
+    contentContainerStyle={{ flexGrow: 1 }} 
+    keyboardShouldPersistTaps="handled"
+     className=" bg-white"
+  >
       <TouchableOpacity onPress={() => navigation.goBack()} className="p-4">
         <AntDesign name="left" size={24} color="#000502" />
       </TouchableOpacity>
 
-      <View className="items-center pt-[-20%]">
-        <Image source={loginImage} />
+      <View className="items-center mt-[-4%]">
+      <Image source={loginImage} style={{ width: 270, height: 350 }} />
+
         <Text className="font-bold text-2xl pt-[7%]">
-          {t("Welcome!")}
+          {t("SignIn.Wellcome")}
         </Text>
       </View>
 
       <View className="mt-2 items-center">
-        <Text>Please Sign in to login</Text>
+        <Text>{t("SignIn.SigntoLogin")}</Text>
+        {/* <Text>Please Sign in to login</Text> */}
       </View>
 
       {loading ? (
@@ -422,24 +468,24 @@ const handleLogin = async () => {
             </View>
       ) : (
         <View className="p-6">
-          <Text className="text-base pb-[2%] font-light">Employee ID</Text>
+          <Text className="text-base pb-[2%] font-light">{t("SignIn.Employee")}</Text>
           <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-full h-[53px] mb-5 bg-white px-3">
             {/* <Icon name="email" size={24} color="green" /> */}
             <AntDesign name="user" size={24} color="green" />
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
-              placeholder="Employee ID"
+              placeholder={t("SignIn.Employee")}
               onChangeText={setEmpid}
               value={empid}
             />
           </View>
 
-          <Text className="text-base pb-[2%] font-light">Password</Text>
+          <Text className="text-base pb-[2%] font-light">{t("SignIn.Password")}</Text>
           <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-full h-[53px] mb-10 bg-white px-3">
             <Icon name="lock" size={24} color="green" />
             <TextInput
               className="flex-1 h-[40px] text-base pl-2"
-              placeholder="Password"
+              placeholder={t("SignIn.Password")}
               secureTextEntry={secureTextEntry}
               onChangeText={setPassword}
               value={password}
@@ -454,7 +500,7 @@ const handleLogin = async () => {
           </View>
 
           <TouchableOpacity
-            className="bg-[#2AAD7A] w-full p-3 rounded-3xl shadow-2xl items-center justify-center"
+            className="bg-[#2AAD7A] w-full p-3 rounded-3xl shadow-2xl items-center justify-center mb-[20%]"
             onPress={handleLogin}
             disabled={loading} // Disable button while loading
           >
@@ -462,7 +508,7 @@ const handleLogin = async () => {
               <ActivityIndicator color="white" size="small" />
             ) : (
               <Text className="text-center text-xl font-light text-white">
-                Sign In
+                {t("SignIn.Sign")}
               </Text>
             )}
           </TouchableOpacity>

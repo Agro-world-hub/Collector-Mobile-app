@@ -10,6 +10,7 @@ import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from "react-i18next";
 
 
 const api = axios.create({
@@ -80,6 +81,8 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
   
   console.log('Farmer Report:', route.params);
   const [crops, setCrops] = useState<Crop[]>([]);
+  const totalSum = crops.reduce((sum:number, crop:any) => sum + parseFloat(crop.total || 0), 0);
+  const { t } = useTranslation();
 
 
   const fetchOfficerDetails = async () => {
@@ -343,7 +346,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
      if (uri) {
        // Get the current date in YYYY-MM-DD format
        const date = new Date().toISOString().slice(0, 10);
-       const fileName = `PurchaseReport_${NICnumber}_${date}.pdf`;
+       const fileName = `PurchaseReport_${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}_${date}.pdf`;
    
        try {
          // Request permission to access media library
@@ -401,11 +404,11 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
        <View className="flex-row items-center mb-4">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
-            source={require('../../assets/images/back.png')} // Path to your back icon
+            source={require('../../assets/images/back.webp')} // Path to your back icon
             style={{ width: 24, height: 24 }}
           />
         </TouchableOpacity>
-        <Text className="text-xl font-bold ml-[25%]">Purchase Report</Text>
+        <Text className="text-xl font-bold ml-[25%]">{t("ReportPage.PurchaseReport")}</Text>
       </View>
 
       {/* Personal Details Section */}
@@ -413,22 +416,22 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
       <View className="mb-4 p-4">
   {/* Selected Date and Invoice Number */}
   <View className="mb-2">
-  <Text className="text-sm font-bold">INV NO:{crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}</Text>
+  <Text className="text-sm font-bold">{t("ReportPage.INV")}{crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}</Text>
     <Text className="text-sm font-bold">Date: {selectedDate}</Text>
     
   </View>
 
-  <Text className="font-bold text-sm mb-2">Personal Details</Text>
+  <Text className="font-bold text-sm mb-2">{t("ReportPage.PersonalDetails")}</Text>
   <ScrollView horizontal className="border border-gray-300 rounded-lg">
     <View>
       {/* Table Header */}
-      <View className="flex-row bg-gray-200">
-        <Text className="w-32 p-2 font-bold border-r border-gray-300">First Name</Text>
-        <Text className="w-32 p-2 font-bold border-r border-gray-300">Last Name</Text>
-        <Text className="w-32 p-2 font-bold border-r border-gray-300">NIC Number</Text>
-        <Text className="w-32 p-2 font-bold border-r border-gray-300">Phone Number</Text>
-        <Text className="w-32 p-2 font-bold">Address</Text>
-      </View>
+       <View className="flex-row bg-gray-200">
+                      <Text className="w-32 p-2 font-bold border-r border-gray-300">{t("ReportPage.FirstName")}</Text>
+                      <Text className="w-32 p-2 font-bold border-r border-gray-300">{t("ReportPage.LastName")}</Text>
+                      <Text className="w-32 p-2 font-bold border-r border-gray-300">{t("ReportPage.NIC")}</Text>
+                      <Text className="w-32 p-2 font-bold border-r border-gray-300">{t("ReportPage.Phone")}</Text>
+                      <Text className="w-32 p-2 font-bold">{t("ReportPage.Address")}</Text>
+                    </View>
       {/* Table Rows */}
       <View className="flex-row">
         <Text className="w-32 p-2 border-r border-gray-300">{firstName}</Text>
@@ -445,16 +448,16 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
       {/* Bank Details Section */}
 
         <View className="mb-4 p-4">
-          <Text className="font-bold text-sm mb-2">Bank Details</Text>
+          <Text className="font-bold text-sm mb-2">{t("ReportPage.Bank")}</Text>
           <ScrollView horizontal className="border border-gray-300 rounded-lg">
             <View>
               {/* Table Header */}
               <View className="flex-row bg-gray-200">
-                <Text className="w-32 p-2 font-bold border-r border-gray-300">Account Number</Text>
-                <Text className="w-32 p-2 font-bold border-r border-gray-300">Account Holder's Name</Text>
-                <Text className="w-32 p-2 font-bold border-r border-gray-300">Bank Name</Text>
-                <Text className="w-32 p-2">Branch Name</Text>
-              </View>
+                             <Text className="w-32 p-2 font-bold border-r border-gray-300">{t("ReportPage.AccountNum")}</Text>
+                             <Text className="w-32 p-2 font-bold border-r border-gray-300">{t("ReportPage.AccountName")}</Text>
+                             <Text className="w-32 p-2 font-bold border-r border-gray-300">{t("ReportPage.BankName")}</Text>
+                             <Text className="w-32 p-2">{t("ReportPage.BranchName")}</Text>
+                           </View>
               {/* Table Rows */}
               <View className="flex-row">
               <Text className="w-32 p-2 border-r border-gray-300">{accountNumber || 'N/A'}</Text>
@@ -471,21 +474,21 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
        {/* Crop Details Section */}
        {crops.length > 0 && (
     <View className="mb-4 p-4">
-    <Text className="font-bold text-sm mb-2">Crop Details</Text>
+    <Text className="font-bold text-sm mb-2">{t("ReportPage.CropDetails")}</Text>
     <ScrollView horizontal className="border border-gray-300 rounded-lg">
       <View>
         {/* Table Header */}
-        <View className="flex-row bg-gray-200">
-          <Text className="w-32 p-2 font-bold border-r border-gray-300">Crop Name</Text>
-          <Text className="w-32 p-2 font-bold border-r border-gray-300">Variety</Text>
-          <Text className="w-32 p-2 font-bold border-r border-gray-300">Unit Price A</Text>
-          <Text className="w-32 p-2 font-bold border-r border-gray-300">Weight A</Text>
-          <Text className="w-32 p-2 font-bold border-r border-gray-300">Unit Price B</Text>
-          <Text className="w-32 p-2 font-bold border-r border-gray-300">Weight B</Text>
-          <Text className="w-32 p-2 font-bold border-r border-gray-300">Unit Price C</Text>
-          <Text className="w-32 p-2 font-bold border-r border-gray-300">Weight C</Text>
-          <Text className="w-32 p-2">Total</Text>
-        </View>
+      <View className="flex-row bg-gray-200">
+           <Text className="w-32 p-2 font-bold border-r border-gray-300">{t("ReportPage.CropName")}</Text>
+           <Text className="w-32 p-2 font-bold border-r border-gray-300">{t("ReportPage.Variety")}</Text>
+           <Text className="w-32 p-2 font-bold border-r border-gray-300">{t("ReportPage.Unit Price A")}</Text>
+           <Text className="w-32 p-2 font-bold border-r border-gray-300">{t("ReportPage.Weight A")}</Text>
+           <Text className="w-32 p-2 font-bold border-r border-gray-300">{t("ReportPage.Unit Price B")}</Text>
+           <Text className="w-32 p-2 font-bold border-r border-gray-300">{t("ReportPage.Weight B")}</Text>
+           <Text className="w-32 p-2 font-bold border-r border-gray-300">{t("ReportPage.Unit Price C")}</Text>
+           <Text className="w-32 p-2 font-bold border-r border-gray-300">{t("ReportPage.Weight C")}</Text>
+           <Text className="w-32 p-2">{t("ReportPage.Total")}</Text>
+         </View>
         {/* Table Rows */}
         {crops.map((crop) => (
           <View key={crop.id} className="flex-row">
@@ -500,7 +503,13 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
             <Text className="w-32 p-2 border-b border-gray-300">{crop.total}</Text>
           </View>
         ))}
+
+
+        
       </View>
+      
+      
+      
     </ScrollView>
   </View>
 )}
@@ -520,6 +529,11 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
         </View>
       </View>
     )} */}
+        <View className="p-2 border-t border-gray-300">
+          <Text className="font-bold">{t("ReportPage.TotalSum")}  {totalSum.toFixed(2)}</Text>
+        </View>
+
+    
 
       {details && details.qrCode  && officerDetails && officerDetails.QRCode && (
           <View className="mb-4 flex-row items-center justify-start">
@@ -529,7 +543,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
       source={{ uri: details.qrCode.replace(/^data:image\/png;base64,/, "") }} 
       style={{ width: 150, height: 150 }} 
     />
-    <Text className="font-bold ml-5 text-sm mb-2">Farmer's QR Code</Text>
+    <Text className="font-bold ml-5 text-sm mb-2">{t("ReportPage.FarmerQR")}</Text>
     </View>
     
              
@@ -540,7 +554,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
       style={{ width: 150, height: 150 }} 
     />
     
-    <Text className="font-bold ml-5 text-sm mb-2">Officer's QR Code</Text>
+    <Text className="font-bold ml-5 text-sm mb-2">{t("ReportPage.OfficerQR")}</Text>
     </View>
             
           </View>
@@ -551,18 +565,18 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
       <View className="flex-row justify-around w-full mb-7">
         <TouchableOpacity className="bg-[#2AAD7A] p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={handleDownloadPDF}>
           <Image
-            source={require('../../assets/images/download.png')} // Path to download icon
+            source={require('../../assets/images/download.webp')} // Path to download icon
             style={{ width: 24, height: 24 }}
           />
-          <Text className="text-sm text-cyan-50">Download</Text>
+          <Text className="text-sm text-cyan-50">{t("ReportPage.Download")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity className="bg-[#2AAD7A] p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={handleSharePDF}>
           <Image
-            source={require('../../assets/images/Share.png')} // Path to share icon
+            source={require('../../assets/images/Share.webp')} // Path to share icon
             style={{ width: 24, height: 24 }}
           />
-          <Text className="text-sm text-cyan-50">Share</Text>
+          <Text className="text-sm text-cyan-50">{t("ReportPage.Share")}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

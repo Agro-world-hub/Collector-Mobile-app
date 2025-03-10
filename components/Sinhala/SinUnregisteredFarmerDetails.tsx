@@ -25,7 +25,7 @@ const SinUnregisteredFarmerDetails: React.FC<SinUnregisteredFarmerDetailsProps> 
             <View className="flex-row items-center mb-4">
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image 
-                        source={require('@/assets/images/back.png')} // Path to your PNG image
+                        source={require('@/assets/images/back.webp')} // Path to your PNG image
                         style={{ width: 24, height: 24 }} // Adjust size if needed
                     />
                 </TouchableOpacity>

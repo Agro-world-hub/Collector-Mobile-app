@@ -1,3 +1,7 @@
+
+
+
+
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
@@ -21,6 +25,8 @@ import { useTranslation } from "react-i18next";
 import { Dimensions } from "react-native";
 import { Modal } from "react-native";
 import { Animated } from "react-native";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import { ScrollView } from "react-native-gesture-handler";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -47,6 +53,7 @@ interface SuccessModalProps {
 }
 const ShowSuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => {
   const progress = useRef(new Animated.Value(0)).current; // Start from 0
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (visible) {
@@ -67,14 +74,14 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => 
     <Modal visible={visible} transparent animationType="fade">
       <View className="flex-1 justify-center items-center bg-black/50">
         <View className="bg-white p-6 rounded-2xl items-center w-72 h-80 shadow-lg relative">
-          <Text className="text-xl font-bold mt-4 text-center">Success!</Text>
+          <Text className="text-xl font-bold mt-4 text-center"> {t("Otpverification.Success")}</Text>
 
-          <Image source={require("../assets/images/success.png")} style={{ width: 100, height: 100 }} />
+          <Image source={require("../assets/images/success.webp")} style={{ width: 100, height: 100 }} />
 
-          <Text className="text-gray-500 mb-4">Registration Successful</Text>
+          <Text className="text-gray-500 mb-4">{t("Otpverification.Registration")}</Text>
 
           <TouchableOpacity className="bg-[#2AAD7A] px-6 py-2 rounded-full mt-6" onPress={onClose}>
-            <Text className="text-white font-semibold">OK</Text>
+            <Text className="text-white font-semibold">{t("Otpverification.OK")}</Text>
           </TouchableOpacity>
 
           {/* Progress Bar - Fixed to Bottom */}
@@ -184,8 +191,8 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
 
     if (code.length !== 5) {
       Alert.alert(
-        t("OtpVerification.invalidOTP"),
-        t("OtpVerification.completeOTP")
+        t("Otpverification.invalidOTP"),
+        t("Otpverification.completeOTP")
       );
       return;
     }
@@ -308,14 +315,14 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
   };
 
   return (
-    <SafeAreaView
-      className="flex-1 bg-white"
+
+    <ScrollView
+      className="flex-1 "
       style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}
     >
-      <StatusBar style="light" />
       <View>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back-outline" size={30} color="gray" />
+        <TouchableOpacity onPress={() => navigation.goBack()}  >
+           <AntDesign name="left" size={22} color="#000" />
         </TouchableOpacity>
       </View>
       <View className="flex justify-center items-center mt-0">
@@ -329,7 +336,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         style={{ marginTop: dynamicStyles.margingTopForImage }}
       >
         <Image
-          source={require("../assets/images/otp.png")}
+          source={require("../assets/images/otp.webp")}
           style={{
             width: dynamicStyles.imageWidth,
             height: dynamicStyles.imageHeight,
@@ -338,7 +345,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
 
 <View className="">
           <Text className="mt-3 text-lg text-black text-center">
-          Enter Verification Code
+          {t("Otpverification.EnterCode")}
           </Text>
         </View>
         {language === "en" ? (
@@ -388,7 +395,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
               key={index}
               ref={(el) => (inputRefs.current[index] = el as TextInput)}
               className={`w-12 h-12 text-lg text-center rounded-lg ${
-                otpCode[index] ? "bg-[#FFFFFF] text-black" : "bg-[#FFFFFF] text-black"
+                otpCode[index] ? "bg-[#FFFFFF] text-black pb-2" : "bg-[#FFFFFF] text-black"
               }`}
               keyboardType="numeric"
               maxLength={1}
@@ -412,7 +419,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         <View className="mt-5">
         <Text className="text-md text-[#707070] pt-1">
               {/* {t("OtpVerification.OTPCode")} */}
-              I didn’t receive the code!
+              {t("Otpverification.Didreceive")}
             </Text>
             </View>
 
@@ -441,12 +448,12 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
           >
             <Text className="text-white text-lg">
               {/* {t("OtpVerification.Verify")} */}
-              Verify
+              {t("Otpverification.Verify")}
             </Text>
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 

@@ -11,7 +11,7 @@ interface TamChangePasswordProps {
     navigation: TamChangePasswordNavigationProp;
 }
 
-const toplogo = require('@/assets/images/colector.png');
+const toplogo = require('@/assets/images/colector.webp');
 
 const TamChangePassword: React.FC<TamChangePasswordProps> = ({ navigation }) => {
     const [currentPassword, setCurrentPassword] = useState('');

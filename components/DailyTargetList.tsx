@@ -7,6 +7,7 @@ import environment from '@/environment/environment';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { RootStackParamList } from './types';
+import { useTranslation } from "react-i18next";
 
 type DailyTargetListNavigationProps = StackNavigationProp<RootStackParamList, 'DailyTargetList'>;
 
@@ -28,6 +29,7 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState<boolean>(false); // State for refresh control
   const [error, setError] = useState<string | null>(null);
   const [selectedToggle, setSelectedToggle] = useState('ToDo');
+   const { t } = useTranslation();
 
   // Function to fetch targets
   const fetchTargets = useCallback(async () => {
@@ -69,14 +71,14 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
 
   return (
-    <View className="flex-1 bg-black p-4">
+    <View className="flex-1 bg-[#282828]  w-full">
       {/* Header */}
-      <View className="bg-black px-4 py-3 flex-row justify-between items-center">
-        <Text className="text-white text-lg font-bold ml-[35%]">Daily Target</Text>
+      <View className="bg-[#282828] px-4 py-3 flex-row justify-between items-center w-full">
+        <Text className="text-white text-lg font-bold ml-[35%]">{t("DailyTarget.DailyTarget")}</Text>
       </View>
 
       {/* Toggle Buttons */}
-      <View className="flex-row justify-center items-center py-4 bg-black">
+      <View className="flex-row justify-center items-center py-4 bg-[#282828] ">
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
             selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
@@ -85,10 +87,10 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
           onPress={() => setSelectedToggle('ToDo')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
-            To do
+          {t("DailyTarget.Todo")}
           </Text>
           <View className="bg-white rounded-full px-2">
-            <Text className="text-green-500 font-bold text-xs">{todoData.length}</Text>
+            <Text className="text-black font-bold text-xs">{todoData.length}</Text>
           </View>
         </TouchableOpacity>
 
@@ -100,30 +102,31 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
           onPress={() => setSelectedToggle('Completed')}
         >
           <Text className={`font-bold ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}>
-            Completed
+          {t("DailyTarget.Completed")}
           </Text>
           <View className="bg-white rounded-full px-2 ml-2">
-            <Text className="text-green-500 font-bold text-xs">{completedData.length}</Text>
+            <Text className="text-black font-bold text-xs">{completedData.length}</Text>
           </View>
         </TouchableOpacity>
       </View>
 
+   
       {/* Table Header and Data */}
       <ScrollView
         horizontal
-        className="border border-gray-300 bg-white"
+        className=" bg-white w-full"
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <View>
+        <View className="w-full bg-whitw ">
           {/* Table Header */}
           <View className="flex-row bg-[#2AAD7A] h-[7%]">
-            <Text className="w-16 p-2 font-bold text-center">No</Text>
-            <Text className="w-40 p-2 font-bold text-center">Variety</Text>
-            <Text className="w-32 p-2 font-bold text-center">Grade</Text>
-            <Text className="w-32 p-2 font-bold text-center">Target (kg)</Text>
-            <Text className="w-32 p-2 font-bold text-center">Todo (kg)</Text>
+            <Text className="w-16 p-2  text-center text-white">{t("DailyTarget.No")}</Text>
+            <Text className="w-40 p-2  text-center text-white">{t("DailyTarget.Variety")}</Text>
+            <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Grade")}</Text>
+            <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Target")}</Text>
+            <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Todo()")}</Text>
           </View>
 
           {/* Table Data */}
@@ -162,6 +165,8 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
         </View>
       </ScrollView>
     </View>
+
+   
   );
 };
 

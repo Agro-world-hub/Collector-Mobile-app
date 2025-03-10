@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,6 +15,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
 import environment from '@/environment/environment';
+import { useTranslation } from "react-i18next";
 
 type DailyTargetListForOfficerstNavigationProps = StackNavigationProp<RootStackParamList, 'DailyTargetListForOfficers'>;
 
@@ -23,6 +24,7 @@ interface DailyTargetListForOfficersProps {
   route: {
     params: {
       collectionOfficerId: number;
+      officerId:string
     };
   };
 }
@@ -43,7 +45,8 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [selectedToggle, setSelectedToggle] = useState('ToDo'); 
   const [refreshing, setRefreshing] = useState(false);
-  const { collectionOfficerId } = route.params;
+  const { collectionOfficerId, officerId } = route.params;
+  const { t } = useTranslation();
 
   // ✅ Fetch Targets API (Runs every time the page is visited or refreshed)
   const fetchTargets = async () => {
@@ -94,14 +97,18 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
 
   return (
-    <View className="flex-1 bg-black p-4">
+    <View className="flex-1 bg-[#282828] ">
       {/* Header */}
-      <View className="bg-black px-4 py-3 flex-row justify-between items-center">
-        <Text className="text-white text-lg font-bold ml-[35%]">Daily Target</Text>
+      <View className="bg-[#282828] px-4 py-3 flex-row  justify-center  items-center">
+         <TouchableOpacity onPress={() => navigation.goBack()} className='absolute left-4'>
+        <AntDesign name="left" size={22} color="white" />
+              </TouchableOpacity>
+              <Text className="text-white text-lg font-bold">{officerId}</Text>
+
       </View>
 
       {/* Toggle Buttons */}
-      <View className="flex-row justify-center items-center py-4 bg-black">
+      <View className="flex-row justify-center items-center py-4 bg-[#282828]">
         {/* To Do Button */}
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
@@ -111,7 +118,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
           onPress={() => setSelectedToggle('ToDo')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
-            To do
+          {t("DailyTarget.Todo")}
           </Text>
           <View className="bg-white rounded-full px-2">
             <Text className="text-green-500 font-bold text-xs">{todoData.length}</Text>
@@ -129,7 +136,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
           <Text
             className={`font-bold ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
           >
-            Completed
+            {t("DailyTarget.Completed")}
           </Text>
           <View className="bg-white rounded-full px-2 ml-2">
             <Text className="text-green-500 font-bold text-xs">{completedData.length}</Text>
@@ -140,18 +147,18 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
       {/* Scrollable Table */}
       <ScrollView
         horizontal
-        className="border border-gray-300 bg-white"
+        className=" bg-white"
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <View>
           {/* Table Header */}
           <View className="flex-row bg-[#2AAD7A] h-[7%]">
-            <Text className="w-16 p-2 font-bold text-center text-white">No</Text>
-            <Text className="w-40 p-2 font-bold text-center text-white">Variety</Text>
-            <Text className="w-32 p-2 font-bold text-center text-white">Grade</Text>
-            <Text className="w-32 p-2 font-bold text-center text-white">Target (kg)</Text>
-            <Text className="w-32 p-2 font-bold text-center text-white">Todo (kg)</Text>
-          </View>
+                  <Text className="w-16 p-2  text-center text-white">{t("DailyTarget.No")}</Text>
+                  <Text className="w-40 p-2  text-center text-white">{t("DailyTarget.Variety")}</Text>
+                  <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Grade")}</Text>
+                  <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Target")}</Text>
+                  <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Todo()")}</Text>
+                </View>
 
           {loading ? (
              <View className="flex-1 justify-center items-center mr-[45%]">

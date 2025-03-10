@@ -7,6 +7,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { RootStackParamList } from '../types';
 import environment from '@/environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AntDesign } from '@expo/vector-icons';
+import { useTranslation } from "react-i18next";
 
 type ManagerTransactionsNavigationProp = StackNavigationProp<RootStackParamList, 'ManagerTransactions'>;
 
@@ -31,6 +33,7 @@ interface Transaction {
   lastName: string;
   NICnumber: string;
   totalAmount: number;
+  image: string | null;
 }
 
 const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,navigation }) => {
@@ -41,6 +44,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
   const {empId} = route.params;
   console.log('empId:', empId);
+  const { t } = useTranslation();
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -94,6 +98,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
           bankName: transaction.bankName || null,
           branchName: transaction.branchName || null,
           empId: transaction.empId || '',  // Added empId from the response
+          image: transaction.profileImage || null,  // Added image from the response
         }));
   
         setTransactions(formattedData);
@@ -133,28 +138,33 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
     <SafeAreaView className="flex-1 bg-white">
       <View>
         {/* Header */}
-        <View className="bg-[#2AAD7A] p-4 mt-[-10] rounded-b-[35px] shadow-md">
-          <Text className="text-white text-lg font-bold ml-[28%] mt-[4%]">EMP ID:{empId} </Text>
+        <View className="bg-[#2AAD7A] p-4  rounded-b-[35px] shadow-md">
+          <TouchableOpacity onPress={() => navigation.goBack()} className="absolute mt-[4%] left-4">
+                    <AntDesign name="left" size={22} color="white" />
+                  </TouchableOpacity>
+          <Text className="text-white text-lg font-bold ml-[28%] mt-[4%]">{t("ManagerTransactions.EMPID")}{empId} </Text>
           <View className="flex-row items-center justify-between mt-2">
             <Text className="text-white text-lg ml-[20%]">
-              Selected Date: {selectedDate ? selectedDate.toISOString().split('T')[0] : 'N/A'}
+            {t("ManagerTransactions.Selected Date")} {selectedDate ? selectedDate.toISOString().split('T')[0] : 'N/A'}
             </Text>
-            <TouchableOpacity onPress={() => setShowDatePicker(true)} className="mb-6">
-              <Ionicons name="calendar-outline" size={24} color="white" />
+            <View className='mt-[-3%]'>
+            <TouchableOpacity onPress={() => setShowDatePicker(true)} className="mb-4">
+              <Ionicons name="calendar-outline" size={26} color="white" />
             </TouchableOpacity>
+            </View>
           </View>
         </View>
 
-        <View className="flex-row items-center bg-[#F5F1FC] px-4 py-2 rounded-full border border-black mt-[-18] mx-auto w-[90%] shadow-sm">
+        <View className="flex-row items-center bg-[#F7F7F7] px-4 py-2 rounded-full border border-[#444444] mt-[-18] mx-auto w-[90%] shadow-sm">
           <TextInput
-            placeholder="Search By NIC Number, Name"
+            placeholder={t("ManagerTransactions.Search")}
             placeholderTextColor="grey"
             className="flex-1 text-sm text-gray-800"
             value={searchQuery}
             onChangeText={handleSearch}
           />
           <Image
-            source={require('../../assets/images/searchhh.png')}
+            source={require('../../assets/images/searchhh.webp')}
             className="w-8 h-8"
             resizeMode="contain"
           />
@@ -175,7 +185,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
 
       <View className="px-4 mt-4">
         <Text className="text-lg font-semibold text-black mb-4">
-          Transaction List (All {filteredTransactions.length})
+        {t("ManagerTransactions.Transaction List")} ( {t("ManagerTransactions.All")} {filteredTransactions.length})
         </Text>
       </View>
       <FlatList
@@ -206,11 +216,19 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
             }}
           >
             <View className="w-14 h-14 rounded-full overflow-hidden justify-center items-center mr-4 shadow-md">
-              <Image
+              {/* <Image
                 source={require('../../assets/images/ava.webp')}
                 className="w-full h-full"
                 resizeMode="cover"
-              />
+              /> */}
+                    <Image
+                        source={
+                          item.image
+                            ? { uri: item.image }
+                            : require("../../assets/images/ava.webp")
+                        }
+                        className="w-16 h-16 rounded-full mr-3"
+                      />
             </View>
             <View className="flex-1">
               <Text className="text-[18px] font-semibold text-gray-900">

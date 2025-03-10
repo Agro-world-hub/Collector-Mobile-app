@@ -41,7 +41,6 @@
 //   companyName: string;
 // }
 
-
 // const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 //   const [isLanguageDropdownOpen, setLanguageDropdownOpen] =
 //     useState<boolean>(false);
@@ -358,6 +357,8 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { useTranslation } from "react-i18next";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import socket from "@/services/socket";
+import { ScrollView } from "react-native-gesture-handler";
+
 
 type EngProfileNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -376,8 +377,8 @@ interface UserProfile {
   firstNameEnglish: string;
   lastNameEnglish: string;
   companyName: string;
+  image: string;
 }
-
 
 const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const [isLanguageDropdownOpen, setLanguageDropdownOpen] =
@@ -393,6 +394,18 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
     useState<boolean>(false);
   const { t } = useTranslation();
 
+  const route = useRoute();
+  const currentScreen = route.name;
+  const handleBackPress = () => {
+    if (currentScreen === "EngProfile") {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Main" }],
+      });
+    } else {
+      navigation.goBack();
+    }
+  };
   const complaintOptions = [t("Report Complaint"), t("View Complaint History")];
 
   const handleComplaintSelect = (complaint: string) => {
@@ -401,7 +414,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
     if (complaint === t("Report Complaint")) {
       navigation.navigate("ComplainPage" as any, { userId: 0 });
     } else if (complaint === t("View Complaint History")) {
-      navigation.navigate("ComplainHistory" as  any);
+      navigation.navigate("Main", { screen: "ComplainHistory" });
     }
   };
 
@@ -410,9 +423,12 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       try {
         const token = await AsyncStorage.getItem("token");
         if (token) {
-          const response = await api.get("api/collection-officer/user-profile", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const response = await api.get(
+            "api/collection-officer/user-profile",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
           setProfile(response.data.data);
           console.log("Profile data:", response.data.data);
         }
@@ -445,19 +461,20 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
   const handleLogout = async () => {
     try {
+      const empId = await AsyncStorage.getItem("empid");
+      await status(empId!, false);
       // Disconnect the socket connection
-      if (socket.connected) {
-        socket.disconnect();
-        console.log("Socket disconnected.");
-      }
-  
+      // if (socket.connected) {
+      //   socket.disconnect();
+      //   console.log("Socket disconnected.");
+      // }
+
       // Remove the token and empId from AsyncStorage (or any storage you're using)
       await AsyncStorage.removeItem("token");
-      await AsyncStorage.removeItem("empId");  // Remove the empId as well
-  
+    await AsyncStorage.removeItem("jobRole");
       // Optionally, you can also remove it from your app's state (if stored there)
       // setEmpId(null);  // Clear empId from the app's state (if using useState)
-  
+
       // Navigate to the Login screen
       navigation.navigate("Login");
     } catch (error) {
@@ -465,41 +482,83 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       Alert.alert("Error", "Failed to log out.");
     }
   };
-  
+
   const handleEditClick = () => {
     navigation.navigate("Profile");
   };
-
+  const status = async (empId: string, status: boolean) => {
+    try {
+      const token = await AsyncStorage.getItem("token"); 
+      if (!token) {
+        console.error("Token not found");
+        return;
+      }
+  
+      const response = await fetch(
+        `${environment.API_BASE_URL}api/collection-officer/online-status`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,  // Add token in Authorization header
+          },
+          body: JSON.stringify({
+            empId: empId, // Use the passed empId
+            status: status, // Use the passed status
+          }),
+        }
+      );
+  
+      if (response) {
+        console.log("User is marked as ofline");
+      } else {
+        console.log("Failed to update online status");
+      }
+    } catch (error) {
+      console.error("Online status error:", error);
+    }
+  };
   return (
     <View
       className="flex-1 bg-white "
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
     >
       {/* Back Button */}
-      <TouchableOpacity onPress={() => navigation.goBack()} className="">
+      <TouchableOpacity onPress={() => handleBackPress()} className="">
         <AntDesign name="left" size={24} color="#000502" />
       </TouchableOpacity>
-
-      {/* Profile Card */}
-      <View className="flex-row items-center p-2 mt-4  mb-4">
-        <Image
-          source={require("../assets/images/mprofile.png")}
+      <ScrollView>
+        {/* Profile Card */}
+        <View className="flex-row items-center p-2 mt-4  mb-4">
+          {/* <Image
+          source={require("../assets/images/mprofile.webp")}
           className="w-16 h-16 rounded-full mr-3"
-        />
-        <View className="flex-1">
-          <Text className="text-lg mb-1">
-          {profile?.firstNameEnglish} {profile?.lastNameEnglish}
-          </Text>
-          <Text className="text-sm text-gray-500">{profile?.companyName}</Text>
-        </View>
-        <TouchableOpacity onPress={handleEditClick}>
-          <Ionicons name="create-outline" size={30} color="#2fcd46" />
-        </TouchableOpacity>
-      </View>
+        /> */}
+          <Image
+            source={
+              profile?.image
+                ? { uri: profile.image }
+                : require("../assets/images/mprofile.webp")
+            }
+            className="w-16 h-16 rounded-full mr-3"
+          />
 
-      <View className="flex-1 p-4">
-        {/* Horizontal Line */}
-        <View className="h-0.5 bg-[#D2D2D2] my-4" />
+          <View className="flex-1">
+            <Text className="text-lg mb-1">
+              {profile?.firstNameEnglish} {profile?.lastNameEnglish}
+            </Text>
+            <Text className="text-sm text-gray-500">
+              {profile?.companyName}
+            </Text>
+          </View>
+          <TouchableOpacity onPress={handleEditClick}>
+            <Ionicons name="create-outline" size={30} color="#2fcd46" />
+          </TouchableOpacity>
+        </View>
+
+        <View className="flex-1 p-4">
+          {/* Horizontal Line */}
+          <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
         {/* Language Settings */}
         <TouchableOpacity
@@ -507,7 +566,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           className="flex-row items-center py-3"
         >
           <Ionicons name="globe-outline" size={20} color="black" />
-          <Text className="flex-1 text-lg ml-2">Language Settings</Text>
+          <Text className="flex-1 text-lg ml-2">{t("EngProfile.Language")}</Text>
           <Ionicons
             name={isLanguageDropdownOpen ? "chevron-up" : "chevron-down"}
             size={20}
@@ -515,31 +574,31 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           />
         </TouchableOpacity>
 
-        {isLanguageDropdownOpen && (
-          <View className="pl-8">
-            {["English", "Tamil", "Sinhala"].map((language) => (
-              <TouchableOpacity
-                key={language}
-                onPress={() => handleLanguageSelect(language)}
-                className={`flex-row items-center py-2 px-4 rounded-lg my-1 ${selectedLanguage === language ? "bg-green-100" : "bg-transparent"}`}
-              >
-                <Text
-                  className={`text-base ${selectedLanguage === language ? "text-black" : "text-gray-500"}`}
+          {isLanguageDropdownOpen && (
+            <View className="pl-8">
+              {["English", "Tamil", "Sinhala"].map((language) => (
+                <TouchableOpacity
+                  key={language}
+                  onPress={() => handleLanguageSelect(language)}
+                  className={`flex-row items-center py-2 px-4 rounded-lg my-1 ${selectedLanguage === language ? "bg-green-100" : "bg-transparent"}`}
                 >
-                  {language}
-                </Text>
-                {selectedLanguage === language && (
-                  <View className="absolute right-4">
-                    <Ionicons name="checkmark" size={20} color="black" />
-                  </View>
-                )}
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
+                  <Text
+                    className={`text-base ${selectedLanguage === language ? "text-black" : "text-gray-500"}`}
+                  >
+                    {language}
+                  </Text>
+                  {selectedLanguage === language && (
+                    <View className="absolute right-4">
+                      <Ionicons name="checkmark" size={20} color="black" />
+                    </View>
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
 
-        {/* Horizontal Line */}
-        <View className="h-0.5 bg-[#D2D2D2] my-4" />
+          {/* Horizontal Line */}
+          <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
         {/* View My QR Code */}
         <TouchableOpacity
@@ -551,11 +610,11 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           onPress={() => navigation.navigate("OfficerQr")}
         >
           <Ionicons name="qr-code" size={20} color="black" />
-          <Text className="flex-1 text-lg ml-2">View My QR Code</Text>
+          <Text className="flex-1 text-lg ml-2">{t("EngProfile.View")}</Text>
         </TouchableOpacity>
 
-        {/* Horizontal Line */}
-        <View className="h-0.5 bg-[#D2D2D2] my-4" />
+          {/* Horizontal Line */}
+          <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
         {/* Change Password */}
         <TouchableOpacity
@@ -565,12 +624,12 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           }
         >
           <Ionicons name="lock-closed-outline" size={20} color="black" />
-          <Text className="flex-1 text-lg ml-2">Change Password</Text>
+          <Text className="flex-1 text-lg ml-2">{t("EngProfile.ChangePassword")}</Text>
         </TouchableOpacity>
 
-        {/* Horizontal Line */}
+          {/* Horizontal Line */}
 
-        {/* <View className="h-0.5 bg-[#D2D2D2] my-4" />
+          {/* <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
 <TouchableOpacity
   className="flex-row items-center py-3"
@@ -582,14 +641,14 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   </Text>
 </TouchableOpacity> */}
 
-        <View className="h-0.5 bg-[#D2D2D2] my-4" />
+          <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
         <TouchableOpacity
           onPress={() => setComplaintDropdownOpen(!isComplaintDropdownOpen)}
           className="flex-row items-center py-3"
         >
           <AntDesign name="warning" size={20} color="black" />
-          <Text className="flex-1 text-lg ml-2">{t("Complaints")}</Text>
+          <Text className="flex-1 text-lg ml-2">{t("EngProfile.Complaints")}</Text>
           <Ionicons
             name={isComplaintDropdownOpen ? "chevron-up" : "chevron-down"}
             size={20}
@@ -597,36 +656,36 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           />
         </TouchableOpacity>
 
-        {isComplaintDropdownOpen && (
-          <View className="pl-8">
-            {complaintOptions.map((complaint) => (
-              <TouchableOpacity
-                key={complaint}
-                onPress={() => handleComplaintSelect(complaint)}
-                className={`flex-row items-center py-2 px-4 rounded-lg my-1 ${
-                  selectedComplaint === complaint ? "bg-green-200" : ""
-                }`}
-              >
-                <Text
-                  className={`text-base ${
-                    selectedComplaint === complaint
-                      ? "text-black"
-                      : "text-gray-700"
+          {isComplaintDropdownOpen && (
+            <View className="pl-8">
+              {complaintOptions.map((complaint) => (
+                <TouchableOpacity
+                  key={complaint}
+                  onPress={() => handleComplaintSelect(complaint)}
+                  className={`flex-row items-center py-2 px-4 rounded-lg my-1 ${
+                    selectedComplaint === complaint ? "bg-green-200" : ""
                   }`}
                 >
-                  {complaint}
-                </Text>
-                {selectedComplaint === complaint && (
-                  <View className="absolute right-4">
-                    <Ionicons name="checkmark" size={20} color="black" />
-                  </View>
-                )}
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
+                  <Text
+                    className={`text-base ${
+                      selectedComplaint === complaint
+                        ? "text-black"
+                        : "text-gray-700"
+                    }`}
+                  >
+                    {complaint}
+                  </Text>
+                  {selectedComplaint === complaint && (
+                    <View className="absolute right-4">
+                      <Ionicons name="checkmark" size={20} color="black" />
+                    </View>
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
 
-        <View className="h-0.5 bg-[#D2D2D2] my-4" />
+          <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
         {/* Logout */}
         <TouchableOpacity
@@ -634,51 +693,52 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           onPress={handleLogout}
         >
           <Ionicons name="log-out-outline" size={20} color="red" />
-          <Text className="flex-1 text-lg ml-2 text-red-500">Logout</Text>
+          <Text className="flex-1 text-lg ml-2 text-red-500">{t("EngProfile.Logout")}</Text>
         </TouchableOpacity>
 
-        {/* Modal for Call */}
-        <Modal
-          transparent={true}
-          visible={isModalVisible}
-          animationType="fade"
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View className="flex-1 justify-center items-center bg-black opacity-50">
-            <View className="bg-white p-6 rounded-lg shadow-lg w-80">
-              <View className="flex-row justify-center mb-4">
-                <View className="bg-gray-200 rounded-full p-4">
-                  <Image
-                    source={require("../assets/images/ringer.png")} // Replace with your call ringing PNG path
-                    className="w-16 h-16"
-                  />
+          {/* Modal for Call */}
+          <Modal
+            transparent={true}
+            visible={isModalVisible}
+            animationType="fade"
+            onRequestClose={() => setModalVisible(false)}
+          >
+            <View className="flex-1 justify-center items-center bg-black opacity-50">
+              <View className="bg-white p-6 rounded-lg shadow-lg w-80">
+                <View className="flex-row justify-center mb-4">
+                  <View className="bg-gray-200 rounded-full p-4">
+                    <Image
+                      source={require("../assets/images/ringer.webp")} // Replace with your call ringing PNG path
+                      className="w-16 h-16"
+                    />
+                  </View>
+                </View>
+                <Text className="text-xl font-bold text-center mb-2">
+                  Need Help?
+                </Text>
+                <Text className="text-lg text-center mb-4">
+                  Need PlantCare help? Tap Call for instant support from our
+                  Help Center.
+                </Text>
+                <View className="flex-row justify-around">
+                  <TouchableOpacity
+                    onPress={() => setModalVisible(false)}
+                    className="bg-gray-200 p-3 rounded-full flex-1 mx-2"
+                  >
+                    <Text className="text-center">Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleCall}
+                    className="bg-green-500 p-3 rounded-full flex-1 mx-2"
+                  >
+                    <Text className="text-center text-white">Call</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-              <Text className="text-xl font-bold text-center mb-2">
-                Need Help?
-              </Text>
-              <Text className="text-lg text-center mb-4">
-                Need PlantCare help? Tap Call for instant support from our Help
-                Center.
-              </Text>
-              <View className="flex-row justify-around">
-                <TouchableOpacity
-                  onPress={() => setModalVisible(false)}
-                  className="bg-gray-200 p-3 rounded-full flex-1 mx-2"
-                >
-                  <Text className="text-center">Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={handleCall}
-                  className="bg-green-500 p-3 rounded-full flex-1 mx-2"
-                >
-                  <Text className="text-center text-white">Call</Text>
-                </TouchableOpacity>
-              </View>
             </View>
-          </View>
-        </Modal>
-      </View>
+          </Modal>
+        </View>
+      </ScrollView>
     </View>
   );
 };
