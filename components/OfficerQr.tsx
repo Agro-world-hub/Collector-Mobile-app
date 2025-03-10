@@ -292,7 +292,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
     }
   } catch (error) {
     console.error("Error fetching registration details:", error);
-    Alert.alert("Error", "Failed to fetch details");
+    Alert.alert(t("Error.error"), t("Error.Failed to fetch details"));
   }
 };
 
@@ -304,7 +304,7 @@ useEffect(() => {
 const downloadQRCode = async () => {
   try {
     if (!QR) {
-      Alert.alert("Error", "No QR Code available.");
+      Alert.alert(t("Error.error"), t("Error.No QR Code available."));
       return;
     }
 
@@ -326,7 +326,7 @@ const downloadQRCode = async () => {
     Alert.alert("Success", "QR Code saved to gallery.");
   } catch (error) {
     console.error("Download error:", error);
-    Alert.alert("Error", "Failed to save QR Code.");
+    Alert.alert(t("Error.error"), t("Error.failedSaveQRCode"));
   }
 };
 
@@ -334,7 +334,7 @@ const downloadQRCode = async () => {
 const shareQRCode = async () => {
   try {
     if (!QR) {
-      Alert.alert("Error", "No QR Code available.");
+      Alert.alert(t("Error.error"), t("Error.No QR Code available."));
       return;
     }
 
@@ -353,7 +353,7 @@ const shareQRCode = async () => {
     }
   } catch (error) {
     console.error("Share error:", error);
-    Alert.alert("Error", "Failed to share QR Code.");
+    Alert.alert("Error", t("Error.Failed to share QR Code."));
   }
 };
 

@@ -406,14 +406,14 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       navigation.goBack();
     }
   };
-  const complaintOptions = [t("Report Complaint"), t("View Complaint History")];
+  const complaintOptions = [t("EngProfile.Report Complaint"), t("EngProfile.View Complaint History")];
 
   const handleComplaintSelect = (complaint: string) => {
     setComplaintDropdownOpen(false);
 
-    if (complaint === t("Report Complaint")) {
+    if (complaint === t("EngProfile.Report Complaint")) {
       navigation.navigate("ComplainPage" as any, { userId: 0 });
-    } else if (complaint === t("View Complaint History")) {
+    } else if (complaint === t("EngProfile.View Complaint History")) {
       navigation.navigate("Main", { screen: "ComplainHistory" });
     }
   };

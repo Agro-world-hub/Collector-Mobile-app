@@ -348,13 +348,14 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
         // Check if error status is 400 and show the message to update prices
         if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
           Alert.alert(
-            "Error",
-            "You must change the prices before submitting. Please update the values."
+            t("Error.Error"),
+            t("Error.You must change the prices before submitting. Please update the values.")
           );
         } else {
           console.error("Error submitting price request:", error);
           setError("Failed to submit price update.");
-          Alert.alert("Error", "Failed to submit price update.");
+          Alert.alert(t("Error.Error"),
+            t("Error.Failed to submit price update."));
         }
       }
     } else {

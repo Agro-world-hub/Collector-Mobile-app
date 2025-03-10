@@ -19,12 +19,44 @@
     "Search": "ජාතික හැඳුනුම්පත අනුව සොයන්න"
 
   },
+  "Error":{
+    "error":"දෝෂය",
+    "Failed to fetch empid.":"empid ලබා ගැනීමට අසමත් විය.",
+    "New password and confirm password do not match.":"නව මුරපදය සහ තහවුරු කිරීමේ මුරපදය නොගැලපේ.",
+    "New password must be at least 6 characters long.":"නව මුරපදය අවම වශයෙන් අක්ෂර 6 ක් දිග විය යුතුය.",
+    "Failed to update password.":"මුරපදය යාවත්කාලීන කිරීමට අසමත් විය.",
+     "Failed to submit complaint. Please try again.":"පැමිණිල්ල ඉදිරිපත් කිරීමට අපොහොසත් විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+      "Unable to open dialer.":"ඩයලර් විවෘත කිරීමට නොහැකිය.",
+       "An error occurred during logout:":"පිටවීමේදී දෝෂයක් ඇති විය:",
+       "Failed to fetch farmer details":"ගොවි විස්තර ලබා ගැනීමට අසමත් විය.",
+       "noQRCodeAvailable":"QR කේතයක් නොමැත",
+       "failedSaveQRCode":"QR කේතය සුරැකීම අසාර්ථක විය.",
+       "Invalid EMP ID & Password":"අවලංගු EMP හැඳුනුම්පත සහ මුරපදය",
+       "Invalid Password. Please try again.":"අවලංගු මුරපදය. කරුණාකර නැවත උත්සාහ කරන්න.",
+       "An error occurred. Try again.":"දෝෂයක් ඇති විය. නැවත උත්සාහ කරන්න.",
+       "Something went wrong. Please try again.":"යමක් වැරදී ඇත. කරුණාකර නැවත උත්සාහ කරන්න.",
+       "No token found":"ටෝකනයක් හමු නොවීය",
+       "Failed to fetch details":"විස්තර ලබා ගැනීමට අසමත් විය.",
+       "No QR Code available.":"QR කේතයක් නොමැත.",
+       "Failed to share QR Code.":"QR කේතය බෙදා ගැනීමට අසමත් විය.",
+       "errorOccurred":"දෝෂයක් ඇති විය",
+       "somethingWentWrong":"යමක් වැරදී ඇත.",
+       "otpResent":"otp නැවත යැව්වා",
+       "otpResendFailed":"otp නැවත යැවීම අසාර්ථක විය",
+       "You must change the prices before submitting. Please update the values.":"ඉදිරිපත් කිරීමට පෙර ඔබ මිල ගණන් වෙනස් කළ යුතුය. කරුණාකර අගයන් යාවත්කාලීන කරන්න.",
+       "Failed to submit price update.":"මිල යාවත්කාලීන කිරීම ඉදිරිපත් කිරීමට අසමත් විය."
+
+  
+
+  },
 "EngProfile":{
     "LNG": "si",
     "Language":"භාෂා සැකසුම්",
     "View":"මගේ QR කේතය බලන්න",
     "ChangePassword":"මුරපදය වෙනස් කරන්න",
     "Complaints":"පැමිණිලි",
+    "Report Complaint":"පැමිණිල්ල වාර්තා කරන්න",
+    "View Complaint History":"පැමිණිලි ඉතිහාසය බලන්න",
     "Logout": "පිටවීම"
 
   },
@@ -124,7 +156,7 @@
   },
   "FarmerQr":{
     "LNG": "si",
-    "FarmerDetails":"Farmer විස්තර",
+    "FarmerDetails":"විස්තර",
     "QRavailable":"QR කේතය නොමැත",
     "Collect":"එකතු කරන්න",
     "ReportComplain":"පැමිණිල්ලක් වාර්තා කරන්න",

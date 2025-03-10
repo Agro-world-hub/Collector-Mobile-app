@@ -246,14 +246,14 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         );
       } else {
         Alert.alert(
-          t("OtpVerification.errorOccurred"),
-          t("Main.somethingWentWrong")
+          t("Error.errorOccurred"),
+          t("Error.somethingWentWrong")
         );
       }
     } catch (error) {
       Alert.alert(
-        t("OtpVerification.errorOccurred"),
-        t("Main.somethingWentWrong")
+        t("Error.errorOccurred"),
+        t("Error.somethingWentWrong")
       );
     }
   };
@@ -282,20 +282,20 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         setReferenceId(response.data.referenceId);
         Alert.alert(
           t("OtpVerification.success"),
-          t("OtpVerification.otpResent")
+          t("Error.otpResent")
         );
         setTimer(240);
         setDisabledResend(true);
       } else {
         Alert.alert(
-          t("OtpVerification.errorOccurred"),
-          t("OtpVerification.otpResendFailed")
+          t("Error.errorOccurred"),
+          t("Error.otpResendFailed")
         );
       }
     } catch (error) {
       Alert.alert(
-        t("OtpVerification.errorOccurred"),
-        t("OtpVerification.otpResendFailed")
+        t("Error.errorOccurred"),
+        t("Error.otpResendFailed")
       );
     }
   };

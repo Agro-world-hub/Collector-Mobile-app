@@ -19,12 +19,43 @@
     "Search": "NIC மூலம் தேடு"
 
   },
+  "Error":{
+    "error":"பிழை",
+    "Failed to fetch empid.":"empid ஐப் பெறுவதில் தோல்வி.",
+    "New password and confirm password do not match.":"புதிய கடவுச்சொல் மற்றும் உறுதிப்படுத்தல் கடவுச்சொல் பொருந்தவில்லை.",
+    "New password must be at least 6 characters long.":"புதிய கடவுச்சொல் குறைந்தது 6 எழுத்துகள் நீளமாக இருக்க வேண்டும்.",
+    "Failed to update password.":"கடவுச்சொல்லைப் புதுப்பிக்குவதில் தோல்வி.",
+     "Failed to submit complaint. Please try again.":"புகாரைச் சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+      "Unable to open dialer.":"டயலரைத் திறக்க முடியவில்லை.",
+       "An error occurred during logout:":"வெளியேறும்போது பிழை ஏற்பட்டது:",
+       "Failed to fetch farmer details":"விவசாயி விவரங்களைப் பெற முடியவில்லை.",
+       "noQRCodeAvailable":"QR குறியீடு எதுவும் கிடைக்கவில்லை.",
+       "failedSaveQRCode":"QR குறியீட்டைச் சேமிக்க முடியவில்லை.",
+       "Invalid EMP ID & Password":"தவறான EMP ஐடி & கடவுச்சொல்",
+       "Invalid Password. Please try again.":"தவறான கடவுச்சொல். மீண்டும் முயற்சிக்கவும்.",
+       "An error occurred. Try again.":"ஒரு பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.",
+       "Something went wrong. Please try again.":"ஏதோ தவறாகிவிட்டது. மீண்டும் முயற்சிக்கவும்.",
+       "No token found":"எந்த டோக்கனும் கிடைக்கவில்லை.",
+       "Failed to fetch details":"விவரங்களைப் பெற முடியவில்லை.",
+       "No QR Code available.":"QR குறியீடு எதுவும் இல்லை.",
+       "Failed to share QR Code.":"QR குறியீட்டைப் பகிர முடியவில்லை.",
+       "errorOccurred":"பிழை ஏற்பட்டது",
+       "somethingWentWrong":"ஏதோ தவறு நடந்துவிட்டது.",
+       "otpResent":"otp மறுப்பு",
+       "otpResendFailed":"otp மீண்டும் அனுப்ப முடியவில்லை.",
+       "You must change the prices before submitting. Please update the values.":"சமர்ப்பிக்கும் முன் விலைகளை மாற்ற வேண்டும். மதிப்புகளைப் புதுப்பிக்கவும்.",
+       "Failed to submit price update.":"விலை புதுப்பிப்பைச் சமர்ப்பிக்க முடியவில்லை."
+   
+    
+  },
   "EngProfile":{
     "LNG": "ta",
     "Language":"மொழி அமைப்புகள்",
     "View":"எனது QR குறியீட்டைக் காண்க",
     "ChangePassword":"கடவுச்சொல்லை மாற்று",
     "Complaints":"புகார்கள்",
+    "Report Complaint":"புகாரைப் புகாரளிக்கவும்",
+    "View Complaint History":"புகார் வரலாற்றைக் காண்க",
     "Logout": "வெளியேறு"
 
   },

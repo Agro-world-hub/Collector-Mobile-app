@@ -19,13 +19,45 @@
     "Search": "Search By NIC"
 
   },
+  "Error":{
+    "error":"Error",
+    "Failed to fetch empid.":"Failed to fetch empid.",
+    "New password and confirm password do not match.":"New password and confirm password do not match.",
+    "New password must be at least 6 characters long.":"New password must be at least 6 characters long.",
+    "Failed to update password.":"Failed to update password.",
+    "Failed to submit complaint. Please try again.":"Failed to submit complaint. Please try again.",
+    "Unable to open dialer.":"Unable to open dialer.",
+    "An error occurred during logout:":"An error occurred during logout:",
+    "Failed to fetch farmer details":"Failed to fetch farmer details",
+    "noQRCodeAvailable":"no QRCode Available",
+    "failedSaveQRCode":"failed Save QRCode",
+    "Invalid EMP ID & Password":"Invalid EMP ID & Password",
+    "Invalid Password. Please try again.":"Invalid Password. Please try again.",
+    "An error occurred. Try again.":"An error occurred. Try again.",
+    "Something went wrong. Please try again.":"Something went wrong. Please try again.",
+    "No token found":"No token found",
+    "Failed to fetch details":"Failed to fetch details",
+    "No QR Code available.":"No QR Code available.",
+    "Failed to share QR Code.":"Failed to share QR Code.",
+    "errorOccurred":"error Occurred",
+    "somethingWentWrong":"something Went Wrong",
+    "otpResent":"otpResent",
+    "otpResendFailed":"otp Resend Failed",
+    "You must change the prices before submitting. Please update the values.":"You must change the prices before submitting. Please update the values.",
+    "Failed to submit price update.":"Failed to submit price update."
+   
+
+  },
   "EngProfile":{
     "LNG": "en",
     "Language":"Language Settings",
     "View":"View My QR Code",
     "ChangePassword":"Change Password",
     "Complaints":"Complaints",
+    "Report Complaint":"Report Complaint",
+    "View Complaint History":"View Complaint History",
     "Logout": "Logout"
+   
 
   },
   "Profile":{
