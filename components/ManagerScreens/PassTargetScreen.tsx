@@ -8,6 +8,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import environment from '@/environment/environment';
+import { useTranslation } from "react-i18next";
 
 type PassTargetScreenNavigationProps = StackNavigationProp<RootStackParamList, 'PassTargetScreen'>;
 
@@ -33,6 +34,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
   const [loading, setLoading] = useState<boolean>(true);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { t } = useTranslation();
   
   const { varietyName, grade, target, todo, qty, varietyId } = route.params;
   const maxAmount = parseFloat(todo);
@@ -173,13 +175,13 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
       {/* ✅ Scrollable Content */}
       <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 20 }} keyboardShouldPersistTaps="handled">
         <View className="bg-white rounded-lg p-4">
-          <Text className="text-gray text-sm mb-2 text-center mt-5">The maximum amount you can pass:</Text>
-          <Text className="text-xl font-bold text-center text-black mb-4">{maxAmount}kg</Text>
+          <Text className="text-gray text-sm mb-2 text-center mt-5">{t("PassTargetBetweenOfficers.maximum amount")}</Text>
+          <Text className="text-xl font-bold text-center text-black mb-4">{maxAmount}{t("PassTargetBetweenOfficers.kg")}</Text>
 
           <View className="border-b border-gray-300 my-4" />
 
           <View className="p-5">
-            <Text className="text-gray-700 mb-2 mt-[20%]">Short Stock Assignee</Text>
+            <Text className="text-gray-700 mb-2 mt-[20%]">{t("PassTargetBetweenOfficers.Short Stock Assignee")}</Text>
 
             {loading ? (
               <ActivityIndicator size="large" color="#2AAD7A" />
@@ -196,7 +198,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
               </View>
             )}
 
-            <Text className="text-gray-700 mb-2">Amount (kg)</Text>
+            <Text className="text-gray-700 mb-2">{t("PassTargetBetweenOfficers.Amount")}</Text>
             <TextInput
               className="border border-gray-300 rounded-lg p-2 text-gray-800"
               keyboardType="numeric"
@@ -216,7 +218,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
             {submitting ? (
               <ActivityIndicator size="small" color="white" />
             ) : (
-              <Text className="text-white text-center font-medium">Save</Text>
+              <Text className="text-white text-center font-medium">{t("PassTargetBetweenOfficers.Save")}</Text>
             )}
           </TouchableOpacity>
         </View>

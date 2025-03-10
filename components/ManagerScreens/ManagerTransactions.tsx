@@ -234,7 +234,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
               <Text className="text-[18px] font-semibold text-gray-900">
                 {item.firstName} {item.lastName}
               </Text>
-              <Text className="text-sm text-gray-500">NIC: {item.NICnumber}</Text>
+              <Text className="text-sm text-gray-500"> {t("ManagerTransactions.NIC")} {item.NICnumber}</Text>
               <Text className="text-sm text-gray-500">
                 Total: Rs.{item.totalAmount ? item.totalAmount.toLocaleString() : 'N/A'}
               </Text>
@@ -244,7 +244,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
         )}
         ListEmptyComponent={
           <View className="items-center mt-[50%]">
-            <Text className="text-gray-500 text-lg">No transactions found for the selected date.</Text>
+            <Text className="text-gray-500 text-lg">{t("ManagerTransactions.Notransactions")}</Text>
           </View>
         }
       />

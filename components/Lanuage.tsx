@@ -26,7 +26,7 @@ const Lanuage: React.FC<LanuageProps> = ({ navigation }) => {
           handleLanguageSelect(storedLanguage);
         }
       } catch (error) {
-        console.error("Failed to retrieve language preference:", error);
+        console.error(("Failed to retrieve language preference:"), error);
       }
     };
 

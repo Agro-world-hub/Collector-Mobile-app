@@ -11,6 +11,7 @@ import * as MediaLibrary from 'expo-media-library';
 import {  Platform } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useTranslation } from "react-i18next";
 
 
 
@@ -30,6 +31,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [generatedReportId, setGeneratedReportId] = useState<string | null>(null);
+  const { t } = useTranslation();
   
   const { officerId,collectionOfficerId } = route.params;
   console.log(officerId);
@@ -191,7 +193,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
       <View className="px-6 mt-8">
         {/* Start Date */}
         <View className="mb-6">
-          <Text className="text-sm text-gray-700 mb-2">Start Date:</Text>
+          <Text className="text-sm text-gray-700 mb-2">{t("ReportGenerator.Start Date")}</Text>
           <TouchableOpacity
             onPress={() => setShowStartPicker(true)}
             className="border border-gray-300 rounded-lg px-4 py-3"
@@ -211,7 +213,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
 
         {/* End Date */}
         <View className="mb-6">
-          <Text className="text-sm text-gray-700 mb-2">End Date :</Text>
+          <Text className="text-sm text-gray-700 mb-2">{t("ReportGenerator.End Date")}</Text>
           <TouchableOpacity
             onPress={() => setShowEndPicker(true)}
             className="border border-gray-300 rounded-lg px-4 py-3"
@@ -233,10 +235,10 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
         {/* Buttons */}
         <View className="flex-row justify-between items-center">
           <TouchableOpacity onPress={handleReset} className="border border-gray-300 px-6 py-3 rounded-lg">
-            <Text className="text-gray-700">Reset</Text>
+            <Text className="text-gray-700">{t("ReportGenerator.Reset")}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleGenerate} className="bg-green-600 px-6 py-3 rounded-lg">
-            <Text className="text-white font-semibold">Generate</Text>
+            <Text className="text-white font-semibold">{t("ReportGenerator.Generate")}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -247,8 +249,8 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
           <View className="w-24 h-24 bg-orange-100 rounded-full items-center justify-center mb-4">
             <Ionicons name="document-text-outline" size={50} color="#F59E0B" />
           </View>
-          <Text className="text-lg font-semibold text-gray-800">ID NO : {generatedReportId}</Text>
-          <Text className="text-sm text-gray-500 italic mb-6">- Report has been generated -</Text>
+          <Text className="text-lg font-semibold text-gray-800">{t("ReportGenerator.IDNO")} {generatedReportId}</Text>
+          <Text className="text-sm text-gray-500 italic mb-6">{t("ReportGenerator.Report has been generated")}</Text>
 
           {/* Download and Share Buttons */}
           <View className="flex-row space-x-8">
@@ -258,7 +260,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
               style={{ width: 100, height: 80 }} // Explicit width and height
             >
               <Ionicons name="download" size={24} color="white" />
-              <Text className="text-sm text-white mt-1">Download</Text>
+              <Text className="text-sm text-white mt-1">{t("ReportGenerator.Download")}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -267,14 +269,14 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
               style={{ width: 100, height: 80 }} // Explicit width and height
             >
               <Ionicons name="share-social" size={24} color="white" />
-              <Text className="text-sm text-white mt-1">Share</Text>
+              <Text className="text-sm text-white mt-1">{t("ReportGenerator.Share")}</Text>
             </TouchableOpacity>
           </View>
         </View>
       ) : (
         <View className="items-center justify-center flex-1">
           <Image source={require('../../assets/images/empty.webp')} className="w-20 h-20 mb-4" resizeMode="contain" />
-          <Text className="text-gray-500 italic">- You have to set Time Duration first -</Text>
+          <Text className="text-gray-500 italic">{t("ReportGenerator.Time Duration first")}</Text>
         </View>
       )}
 

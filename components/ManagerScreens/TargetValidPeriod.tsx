@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, Platform } from "react-native";
 import { RootStackParamList } from "../types";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useTranslation } from "react-i18next";
 
 type TargetValidPeriodNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -22,6 +23,7 @@ const TargetValidPeriod: React.FC<TargetValidPeriodProps> = ({ navigation }) => 
   const [showFromTimePicker, setShowFromTimePicker] = useState(false);
   const [showToDatePicker, setShowToDatePicker] = useState(false);
   const [showToTimePicker, setShowToTimePicker] = useState(false);
+  const { t } = useTranslation();
 
   const formatDate = (date: Date) =>
     date.toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" });
@@ -52,14 +54,14 @@ const TargetValidPeriod: React.FC<TargetValidPeriodProps> = ({ navigation }) => 
         <TouchableOpacity onPress={() => navigation.goBack()} className="mr-2">
           <AntDesign name="left" size={24} color="white" />
         </TouchableOpacity>
-        <Text className="text-lg font-bold text-white ml-[20%]">Target's Valid Period</Text>
+        <Text className="text-lg font-bold text-white ml-[20%]">{t("TargetValidPeriod.Target's Valid Period")}</Text>
       </View>
 
       {/* Form Section */}
       <View className="flex-1 bg-white p-7 mt-[10%]">
         {/* From Section */}
         <View className="mb-8">
-          <Text className="text-black font-medium mb-2">From</Text>
+          <Text className="text-black font-medium mb-2">{t("TargetValidPeriod.From")}</Text>
           <View className="flex-row space-x-4">
             {/* Date Picker */}
             <TouchableOpacity
@@ -81,7 +83,7 @@ const TargetValidPeriod: React.FC<TargetValidPeriodProps> = ({ navigation }) => 
 
         {/* To Section */}
         <View className="mb-8">
-          <Text className="text-black font-medium mb-2">To</Text>
+          <Text className="text-black font-medium mb-2">{t("TargetValidPeriod.To")}</Text>
           <View className="flex-row space-x-4">
             {/* Date Picker */}
             <TouchableOpacity
@@ -103,7 +105,7 @@ const TargetValidPeriod: React.FC<TargetValidPeriodProps> = ({ navigation }) => 
 
         {/* Add Target Button */}
         <TouchableOpacity onPress={handleAddTarget} className="bg-[#2AAD7A] rounded-full py-3">
-          <Text className="text-center text-white font-bold">Add Target</Text>
+          <Text className="text-center text-white font-bold">{t("TargetValidPeriod.Add Target")}</Text>
         </TouchableOpacity>
       </View>
 

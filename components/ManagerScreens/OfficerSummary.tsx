@@ -314,6 +314,7 @@ import environment from "@/environment/environment";
 import axios from "axios";
 import socket from "@/services/socket";
 import { useFocusEffect } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 type OfficerSummaryNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -344,6 +345,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
   const [taskPercentage, setTaskPercentage] = useState<number | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [isOnline, setIsOnline] = useState(false); // Track the online status
+  const { t } = useTranslation();
 
   const handleDial = (phoneNumber: string) => {
     const phoneUrl = `tel:${phoneNumber}`;
@@ -571,7 +573,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
                 className="px-4 py-2 bg-white rounded-lg shadow-lg"
                 onPress={handleDisclaim}
               >
-                <Text className="text-gray-700 font-semibold">Disclaim</Text>
+                <Text className="text-gray-700 font-semibold">{t("OfficerSummary.Disclaim")}</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -595,7 +597,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
           <Text className="mt-4 text-lg font-bold text-black">
             {officerName}
           </Text>
-          <Text className="text-sm text-gray-500">EMP ID : {officerId}</Text>
+          <Text className="text-sm text-gray-500">{t("OfficerSummary.EMPID")} {officerId}</Text>
         </View>
 
         {/* Action Buttons Section */}
@@ -609,14 +611,14 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
               <View className="w-12 h-12 bg-[#FFFFFF66] rounded-full items-center justify-center shadow-md">
                 <Ionicons name="call" size={24} color="white" />
               </View>
-              <Text className="text-white mt-2 text-xs">Num 1</Text>
+              <Text className="text-white mt-2 text-xs">{t("OfficerSummary.Num1")}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity disabled={true} className="items-center mt-5">
               <View className="w-12 h-12 bg-[#FFFFFF66] rounded-full items-center justify-center shadow-md">
                 <MaterialIcons name="error-outline" size={24} color="white" />
               </View>
-              <Text className="text-white mt-2 text-xs">Num 1</Text>
+              <Text className="text-white mt-2 text-xs">{t("OfficerSummary.Num1")}</Text>
             </TouchableOpacity>
           )}
 
@@ -629,14 +631,14 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
               <View className="w-12 h-12 bg-[#FFFFFF66] rounded-full items-center justify-center shadow-md">
                 <Ionicons name="call" size={24} color="white" />
               </View>
-              <Text className="text-white mt-2 text-xs">Num 2</Text>
+              <Text className="text-white mt-2 text-xs">{t("OfficerSummary.Num2")}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity disabled={true} className="items-center mt-5">
               <View className="w-12 h-12 bg-[#FFFFFF66] rounded-full items-center justify-center shadow-md">
                 <MaterialIcons name="error-outline" size={24} color="white" />
               </View>
-              <Text className="text-white mt-2 text-xs">Num 2</Text>
+              <Text className="text-white mt-2 text-xs">{t("OfficerSummary.Num2")}</Text>
             </TouchableOpacity>
           )}
 
@@ -661,7 +663,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
                 style={{ width: 28, height: 28, resizeMode: "contain" }} // Adjust dimensions as needed
               />
             </View>
-            <Text className="text-white mt-2 text-xs">Collection</Text>
+            <Text className="text-white mt-2 text-xs">{t("OfficerSummary.Collection")}</Text>
           </TouchableOpacity>
 
           {/* Report Button */}
@@ -677,14 +679,14 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
             <View className="w-12 h-12 bg-[#FFFFFF66] rounded-full items-center justify-center shadow-md">
               <MaterialIcons name="description" size={24} color="white" />
             </View>
-            <Text className="text-white mt-2 text-xs">Report</Text>
+            <Text className="text-white mt-2 text-xs">{t("OfficerSummary.Report")}</Text>
           </TouchableOpacity>
         </View>
       </View>
 
       {/* Stats Section */}
       <View className="mt-6 px-6">
-        <Text className="text-gray-800 font-bold mb-4 text-lg">Today ▶</Text>
+        <Text className="text-gray-800 font-bold mb-4 text-lg">{t("OfficerSummary.Today")} ▶</Text>
 
         {/* Vertical Progress Indicators */}
         <View className="items-center">
@@ -704,7 +706,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
               )}
             </CircularProgress>
 
-            <Text className="text-sm text-gray-500 mt-4">Target Coverage</Text>
+            <Text className="text-sm text-gray-500 mt-4">{t("OfficerSummary.Target Coverage")}</Text>
           </View>
 
           <View className="mt-6 mb-10 items-center">
@@ -718,7 +720,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
               }
             >
               <Text className="text-white text-center font-medium">
-                Open Target Board
+              {t("OfficerSummary.OpenTarget")}
               </Text>
             </TouchableOpacity>
           </View>

@@ -243,7 +243,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
         }, 2000);
       
       } catch (error) {
-        Alert.alert('Error', 'Failed to fetch farmer details');
+        Alert.alert('Error', t("Error.Failed to fetch farmer details"));
         setLoading(false);
       } 
     };
@@ -262,7 +262,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
   const downloadQRCode = async () => {
     try {
       if (!farmerQRCode) {
-        Alert.alert(("Main.error"), ("QRcode.noQRCodeAvailable"));
+        Alert.alert(t("Error.error"), t("Error.noQRCodeAvailable"));
         return;
       }
 
@@ -284,14 +284,14 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
       Alert.alert(("QRcode.successTitle"), ("QRcode.savedToGallery"));
     } catch (error) {
       console.error("Download error:", error);
-      Alert.alert(("Main.error"), ("QRcode.failedSaveQRCode"));
+      Alert.alert(t("Error.error"), t("Error.failedSaveQRCode"));
     }
   };
 
   const shareQRCode = async () => {
     try {
       if (!farmerQRCode) {
-        Alert.alert(("Main.error"), ("QRcode.noQRCodeAvailable"));
+        Alert.alert(t("Error.error"), t("Error.noQRCodeAvailable"));
         return;
       }
 

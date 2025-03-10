@@ -338,12 +338,12 @@ const handleLogin = async () => {
     if (!response.ok) {
       setLoading(false);
       if (response.status === 404) {
-        Alert.alert("Error", "Invalid EMP ID & Password ");
+        Alert.alert("Error", t("Error.Invalid EMP ID & Password "));
       } else if (response.status === 401) {
-        Alert.alert("Error", "Invalid Password. Please try again.");
+        Alert.alert("Error", t("Error.Invalid Password. Please try again."));
       } else {
         console.log("Login error:", data);
-        Alert.alert("Error", data.message || "An error occurred. Try again.");
+        Alert.alert("Error", data.message || t("Error.An error occurred. Try again."));
       }
       return;
     }
@@ -391,7 +391,7 @@ const handleLogin = async () => {
   } catch (error) {
     setLoading(false);
     console.error("Login error:", error);
-    Alert.alert("Error", "Something went wrong. Please try again.");
+    Alert.alert("Error", t("Error.Something went wrong. Please try again."));
   }
 };
 

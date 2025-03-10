@@ -94,7 +94,8 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert("Error", "No token found");
+        Alert.alert(t("Error.Error"),
+            t("Error.No token found"));
         return;
       }
 
