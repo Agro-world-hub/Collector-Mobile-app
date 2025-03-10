@@ -101,8 +101,10 @@
     "extra": {
       "router": {
         "origin": false
+      },
+      "eas": {
+        "projectId": "bcf132dd-10be-4c02-84c3-79d97800d773"
       }
-     
     },
     "owner": "dilshankaluhennadi"
   }
