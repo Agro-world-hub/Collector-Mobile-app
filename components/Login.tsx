@@ -358,7 +358,7 @@ const handleLogin = async () => {
       const timestamp = new Date();
       const expirationTime = new Date(
         // timestamp.getTime() + 8 * 60 * 60 * 1000
-        timestamp.getTime() + 2 * 60 * 1000
+        timestamp.getTime() + 1 * 60 * 1000
       );
       await AsyncStorage.multiSet([
         ["tokenStoredTime", timestamp.toISOString()],
