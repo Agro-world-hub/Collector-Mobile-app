@@ -354,6 +354,17 @@ const handleLogin = async () => {
     await AsyncStorage.setItem("jobRole", jobRole);
     await AsyncStorage.setItem("empid", empId.toString());
 
+    if (token) {
+      const timestamp = new Date();
+      const expirationTime = new Date(
+        timestamp.getTime() + 8 * 60 * 60 * 1000
+        // timestamp.getTime() + 2 * 60 * 1000
+      );
+      await AsyncStorage.multiSet([
+        ["tokenStoredTime", timestamp.toISOString()],
+        ["tokenExpirationTime", expirationTime.toISOString()],
+      ]);    }
+   
     // Emit the login event to the Socket.IO server
     // socket.emit('login', { empId: empId });
 
@@ -417,6 +428,10 @@ const status = async (empId: string, status: boolean) => {
   }
 };
 
+const handleNavBack = async() => {
+  navigation.navigate("Lanuage");
+  await AsyncStorage.removeItem("@user_language");
+};
 
 
   return (
@@ -439,7 +454,7 @@ const status = async (empId: string, status: boolean) => {
     keyboardShouldPersistTaps="handled"
      className=" bg-white"
   >
-      <TouchableOpacity onPress={() => navigation.goBack()} className="p-4">
+      <TouchableOpacity onPress={() => handleNavBack()} className="p-4">
         <AntDesign name="left" size={24} color="#000502" />
       </TouchableOpacity>
 
