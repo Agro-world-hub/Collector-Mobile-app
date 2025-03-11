@@ -7,6 +7,7 @@ import { SelectList } from "react-native-dropdown-select-list";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import environment from '@/environment/environment';
+import { useTranslation } from "react-i18next";
 
 // Define the navigation prop type
 type RecieveTargetBetweenOfficersScreenNavigationProps = StackNavigationProp<RootStackParamList, 'RecieveTargetBetweenOfficers'>;
@@ -35,6 +36,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
   const [fetchingTarget, setFetchingTarget] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [maxAmount, setMaxAmount] = useState<number>(0);
+  const { t } = useTranslation();
 
   const { varietyName, grade, target, qty, varietyId,collectionOfficerId } = route.params;
   console.log(collectionOfficerId)
@@ -213,7 +215,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
 
       <View className="bg-white rounded-lg p-4">
         <View className='p-5'>
-          <Text className="text-gray-700 mb-2">Short Stock Assignee</Text>
+          <Text className="text-gray-700 mb-2">{t("PassTargetBetweenOfficers.Short Stock Assignee")}</Text>
 
           {loading ? (
             <ActivityIndicator size="large" color="#2AAD7A" />
@@ -235,16 +237,16 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
 
           <View className="border-b border-gray-300 my-4" />
 
-          <Text className="text-gray text-sm mb-2 text-center mt-4">The maximum amount you can receive:</Text>
+          <Text className="text-gray text-sm mb-2 text-center mt-4">{t("PassTargetBetweenOfficers.maximum amount receive")}</Text>
           {fetchingTarget ? (
             <ActivityIndicator size="small" color="#2AAD7A" />
           ) : (
-            <Text className="text-xl font-bold text-center text-black mb-4">{maxAmount}kg</Text>
+            <Text className="text-xl font-bold text-center text-black mb-4">{maxAmount}{t("PassTargetBetweenOfficers.kg")}</Text>
           )}
         </View>
 
         <View className='p-5'>
-          <Text className="text-gray-700 mb-2">Amount (kg)</Text>
+          <Text className="text-gray-700 mb-2">{t("PassTargetBetweenOfficers.Amount")}</Text>
           <TextInput
             className="border border-gray-300 rounded-lg p-2 text-gray-800"
             keyboardType="numeric"
@@ -264,7 +266,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
         {fetchingTarget ? (
           <ActivityIndicator size="small" color="white" />
         ) : (
-          <Text className="text-white text-center font-medium">Save</Text>
+          <Text className="text-white text-center font-medium">{t("PassTargetBetweenOfficers.Save")}</Text>
         )}
       </TouchableOpacity>
       </View>

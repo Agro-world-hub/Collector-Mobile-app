@@ -57,7 +57,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
         );
         console.log("Empid response:", response.data);
       } catch (error) {
-        Alert.alert("Error", "Failed to fetch empid.");
+        Alert.alert("Error", t("Error.Failed to fetch empid."));
       }
     };
   }, []);
@@ -65,12 +65,12 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   const handleChangePassword = async () => {
 
     if (newPassword !== confirmPassword) {
-      Alert.alert("Error", "New password and confirm password do not match.");
+      Alert.alert("Error", t("Error.New password and confirm password do not match."));
       return;
     }
 
     if (newPassword.length < 6) {
-      Alert.alert("Error", "New password must be at least 6 characters long.");
+      Alert.alert("Error", t("Error.New password must be at least 6 characters long."));
       return;
     }
 
@@ -88,7 +88,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
       Alert.alert("Success", "Password updated successfully");
       navigation.navigate("Login");
     } catch (error) {
-      Alert.alert("Error", "Failed to update password.");
+      Alert.alert("Error", t("Error.Failed to update password."));
     }
   };
 

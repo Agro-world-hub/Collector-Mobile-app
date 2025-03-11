@@ -16,11 +16,32 @@ const Splash: React.FC<SplashProps> = ({ navigation }) => {
   useEffect(() => {
     const checkTokenAndNavigate = async () => {
       try {
-        // Check for token in AsyncStorage
-        const token = await AsyncStorage.getItem('token');
         
-        // If token exists, check job role
-        if (token) {
+        await handleTokenCheck();
+        // Check for token in AsyncStorage
+      } catch (error) {
+        console.error('Error checking token or job role:', error);
+        // Fallback to language screen if there's an error
+        setTimeout(() => {
+          navigation.navigate('Lanuage');
+        }, 5000);
+      }
+    };
+
+    checkTokenAndNavigate();
+  }, [navigation]);
+
+  const handleTokenCheck = async () => {
+    try {
+      const expirationTime = await AsyncStorage.getItem("tokenExpirationTime");
+      const userToken = await AsyncStorage.getItem("token");
+
+      if (expirationTime && userToken) {
+        const currentTime = new Date();
+        const tokenExpiry = new Date(expirationTime);
+
+        if (currentTime < tokenExpiry) {
+          console.log("Token is valid, navigating to Main.");
           const jobRole = await AsyncStorage.getItem('jobRole');
           
           if (jobRole === "Collection Officer") {
@@ -34,23 +55,24 @@ const Splash: React.FC<SplashProps> = ({ navigation }) => {
               routes: [{ name: 'Main', params: { screen: 'ManagerDashboard' } }]
             });
           }
-        } else {
-          // If no token, wait for 5 seconds and go to language screen
-          setTimeout(() => {
-            navigation.navigate('Lanuage');
-          }, 5000);
+                } else {
+          console.log("Token expired, clearing storage.");
+          await AsyncStorage.multiRemove([
+            "token",
+            "tokenStoredTime",
+            "tokenExpirationTime",
+          ]);
+          navigation.navigate("Login");
         }
-      } catch (error) {
-        console.error('Error checking token or job role:', error);
-        // Fallback to language screen if there's an error
-        setTimeout(() => {
-          navigation.navigate('Lanuage');
-        }, 5000);
+      } else {
+        navigation.navigate("Login");
       }
-    };
+    } catch (error) {
+      console.error("Error checking token expiration:", error);
+      navigation.navigate("Login");
+    }
+  };
 
-    checkTokenAndNavigate();
-  }, [navigation]);
 
   return (
     <View className='bg-[#2AAD7A] w-full flex-1'>

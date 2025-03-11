@@ -333,7 +333,7 @@
 // };
 
 // export default EngProfile;
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -358,6 +358,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import socket from "@/services/socket";
 import { ScrollView } from "react-native-gesture-handler";
+import { LanguageContext } from "@/context/LanguageContext";
 
 
 type EngProfileNavigationProp = StackNavigationProp<
@@ -393,6 +394,8 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const [isComplaintDropdownOpen, setComplaintDropdownOpen] =
     useState<boolean>(false);
   const { t } = useTranslation();
+  const { changeLanguage } = useContext(LanguageContext);
+
 
   const route = useRoute();
   const currentScreen = route.name;
@@ -406,14 +409,14 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       navigation.goBack();
     }
   };
-  const complaintOptions = [t("Report Complaint"), t("View Complaint History")];
+  const complaintOptions = [t("EngProfile.Report Complaint"), t("EngProfile.View Complaint History")];
 
   const handleComplaintSelect = (complaint: string) => {
     setComplaintDropdownOpen(false);
 
-    if (complaint === t("Report Complaint")) {
+    if (complaint === t("EngProfile.Report Complaint")) {
       navigation.navigate("ComplainPage" as any, { userId: 0 });
-    } else if (complaint === t("View Complaint History")) {
+    } else if (complaint === t("EngProfile.View Complaint History")) {
       navigation.navigate("Main", { screen: "ComplainHistory" });
     }
   };
@@ -439,11 +442,36 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
     fetchUserProfile();
   }, []);
-
+  const HanldeAsynStorage = async (lng: string) => {
+    console.log("Selected language:", lng);
+    await AsyncStorage.setItem("@user_language", lng);
+  };
+  const LanguageSelect = async (language: string) => {
+    try {
+      await AsyncStorage.setItem("@user_language", language);
+      changeLanguage(language);
+    } catch (error) {}
+  };
   const handleLanguageSelect = (language: string) => {
+    console.log("Selected language:", language);
     setSelectedLanguage(language);
     setLanguageDropdownOpen(false);
+    try {
+
+      if (language === "English") {
+        console
+        LanguageSelect("en");
+        HanldeAsynStorage("en");
+      } else if (language === "தமிழ்") {
+        LanguageSelect("ta");
+        HanldeAsynStorage("ta");
+      } else if (language === "සිංහල") {
+        LanguageSelect("si");
+        HanldeAsynStorage("si");
+      }
+    } catch (error) {}
   };
+
 
   const handleCall = () => {
     const phoneNumber = "+1234567890"; // Replace with the actual number
@@ -576,7 +604,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
           {isLanguageDropdownOpen && (
             <View className="pl-8">
-              {["English", "Tamil", "Sinhala"].map((language) => (
+              {["English", "සිංහල", "தமிழ்"].map((language) => (
                 <TouchableOpacity
                   key={language}
                   onPress={() => handleLanguageSelect(language)}
