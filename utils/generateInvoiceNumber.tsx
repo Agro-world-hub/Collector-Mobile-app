@@ -1,6 +1,6 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import environment from "@/environment/environment";
+import {environment} from "../environment/environment";
 
 const generateInvoiceNumber = async (): Promise<string | null> => {
   try {

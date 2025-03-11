@@ -19,12 +19,43 @@
     "Search": "NIC மூலம் தேடு"
 
   },
+  "Error":{
+    "error":"பிழை",
+    "Failed to fetch empid.":"empid ஐப் பெறுவதில் தோல்வி.",
+    "New password and confirm password do not match.":"புதிய கடவுச்சொல் மற்றும் உறுதிப்படுத்தல் கடவுச்சொல் பொருந்தவில்லை.",
+    "New password must be at least 6 characters long.":"புதிய கடவுச்சொல் குறைந்தது 6 எழுத்துகள் நீளமாக இருக்க வேண்டும்.",
+    "Failed to update password.":"கடவுச்சொல்லைப் புதுப்பிக்குவதில் தோல்வி.",
+     "Failed to submit complaint. Please try again.":"புகாரைச் சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+      "Unable to open dialer.":"டயலரைத் திறக்க முடியவில்லை.",
+       "An error occurred during logout:":"வெளியேறும்போது பிழை ஏற்பட்டது:",
+       "Failed to fetch farmer details":"விவசாயி விவரங்களைப் பெற முடியவில்லை.",
+       "noQRCodeAvailable":"QR குறியீடு எதுவும் கிடைக்கவில்லை.",
+       "failedSaveQRCode":"QR குறியீட்டைச் சேமிக்க முடியவில்லை.",
+       "Invalid EMP ID & Password":"தவறான EMP ஐடி & கடவுச்சொல்",
+       "Invalid Password. Please try again.":"தவறான கடவுச்சொல். மீண்டும் முயற்சிக்கவும்.",
+       "An error occurred. Try again.":"ஒரு பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.",
+       "Something went wrong. Please try again.":"ஏதோ தவறாகிவிட்டது. மீண்டும் முயற்சிக்கவும்.",
+       "No token found":"எந்த டோக்கனும் கிடைக்கவில்லை.",
+       "Failed to fetch details":"விவரங்களைப் பெற முடியவில்லை.",
+       "No QR Code available.":"QR குறியீடு எதுவும் இல்லை.",
+       "Failed to share QR Code.":"QR குறியீட்டைப் பகிர முடியவில்லை.",
+       "errorOccurred":"பிழை ஏற்பட்டது",
+       "somethingWentWrong":"ஏதோ தவறு நடந்துவிட்டது.",
+       "otpResent":"otp மறுப்பு",
+       "otpResendFailed":"otp மீண்டும் அனுப்ப முடியவில்லை.",
+       "You must change the prices before submitting. Please update the values.":"சமர்ப்பிக்கும் முன் விலைகளை மாற்ற வேண்டும். மதிப்புகளைப் புதுப்பிக்கவும்.",
+       "Failed to submit price update.":"விலை புதுப்பிப்பைச் சமர்ப்பிக்க முடியவில்லை."
+   
+    
+  },
   "EngProfile":{
     "LNG": "ta",
     "Language":"மொழி அமைப்புகள்",
     "View":"எனது QR குறியீட்டைக் காண்க",
     "ChangePassword":"கடவுச்சொல்லை மாற்று",
     "Complaints":"புகார்கள்",
+    "Report Complaint":"புகாரைப் புகாரளிக்கவும்",
+    "View Complaint History":"புகார் வரலாற்றைக் காண்க",
     "Logout": "வெளியேறு"
 
   },
@@ -479,7 +510,7 @@
    
   },
   "ManagerTransactions":{
-    "LNG": "en",
+    "LNG": "ta",
     "EMPID":"EMP ID:",
     "Selected Date":"தேர்ந்தெடுக்கப்பட்ட தேதி:",
     "Transaction List":"பரிவர்த்தனைகள் பட்டியல்",
@@ -488,6 +519,69 @@
     "Search":"NIC எண், பெயர் மூலம் தேடுங்கள்",
     "All":"அனைத்தும்"
   },
+
+  "OfficerSummary":{
+    "LNG": "ta",
+    "Disclaim":"Disclaim",
+    "EMPID":"EMP ஐடி : ",
+    "Num1":"எண் 1",
+    "Num2":"எண் 2",
+    "Collection":"சேகரிப்பு",
+    "Report":"அறிக்கை",
+    "Today":"இன்று",
+    "Target Coverage":"இலக்கு கவரேஜ்",
+    "OpenTarget":"இலக்கு பலகையைத் திற"
+  },
+  "PassTargetBetweenOfficers":{
+    "LNG": "ta",
+    "maximum amount":"நீங்கள் தேர்ச்சி பெறக்கூடிய அதிகபட்ச தொகை:",
+    "kg":"கிலோ",
+    "Short Stock Assignee":"குறுகிய பங்கு ஒதுக்கீட்டாளர்",
+    "Amount":"தொகை (கிலோ)",
+    "Save":"சேமி",
+    "maximum amount receive":"நீங்கள் பெறக்கூடிய அதிகபட்ச தொகை:"
+   
+  },
+  "ReportGenerator":{
+    "LNG": "ta",
+    "Start Date":"தொடக்க தேதி:",
+    "End Date":"முடிவு தேதி:",
+    "Reset":"மீட்டமை",
+    "Generate":"உருவாக்கு",
+    "IDNO":"ID NO :",
+   "Report has been generated":"- அறிக்கை உருவாக்கப்பட்டது -",
+     "Download":"பதிவிறக்கு",
+    "Share":"பகிர்",
+    "Time Duration first":"- நீங்கள் முதலில் நேர கால அளவை அமைக்க வேண்டும் -"
+  },
+
+"SetTargetScreen":{
+  "LNG": "ta",
+    "Set Target":"இலக்கை அமை",
+    "Select Crop":"--பயிரை தேர்ந்தெடு--",
+    "Select Variety":"--வகையைத் தேர்ந்தெடு--",
+    "WeightGrades":"தரங்களுக்கு ஏற்ப எடை",
+    "Add More":"மேலும் சேர்",
+   "No":"No",
+     "Variety":"வகை",
+    "Grade":"தரம்",
+    "Target":"இலக்கு",
+ "kg":"கிலோ)",
+   "Action":"செயல்",
+     "Save":"சேமி"
+  
+  },
+  "TargetValidPeriod":{
+   "LNG": "ta",
+    "Target's Valid Period":"இலக்கின் செல்லுபடியாகும் காலம்",
+    "From":"இருந்து",
+    "To":"க்கு",
+    "Add Target":"இலக்கைச் சேர்"
+ 
+  },
+
+
+
 
 
   "District": {

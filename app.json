@@ -1,17 +1,16 @@
 {
   "expo": {
-    "newArchEnabled": true,
     "name": "Collector",
     "slug": "Collector",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/favicon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/favicon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#2AAD7A"
     },
     "ios": {
       "supportsTablet": true,
@@ -19,12 +18,12 @@
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
         },
-        "NSCameraUsageDescription": "This app requires camera access to scan Farmer QR codes.",
-        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to save images.",
+        "NSCameraUsageDescription": "This app requires camera access to scan plant QR codes.",
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to save plant images.",
         "NSLocationWhenInUseUsageDescription": "This app uses your location to track plant care reminders based on your location.",
         "NSLocationAlwaysUsageDescription": "This app uses your location in the background to give accurate care reminders.",
         "NSMicrophoneUsageDescription": "Microphone access is required to record sounds for plant growth monitoring.",
-        "NSBluetoothPeripheralUsageDescription": "Bluetooth is required to connect to officer sensors.",
+        "NSBluetoothPeripheralUsageDescription": "Bluetooth is required to connect to plant sensors.",
         "UIBackgroundModes": [
           "location"
         ]
@@ -54,7 +53,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/favicon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.collector.Collector",
@@ -80,9 +79,9 @@
         "ACCESS_NETWORK_STATE",
         "CHANGE_NETWORK_STATE",
         "SYSTEM_ALERT_WINDOW",
+        "FOREGROUND_SERVICE",
         "REQUEST_INSTALL_PACKAGES",
-        "NOTIFICATIONS",
-        "android.permission.CAMERA"
+        "NOTIFICATIONS"
       ]
     },
     "web": {
@@ -90,22 +89,36 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
+    "extra": {
+      "API_BASE_URL": "https://ag-world-orginal.vercel.app/",
+      "SHOUTOUT_API_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3NmM4NTZkMC04YmY2LTExZWQtODE0NS0yOTMwOGIyN2NlM2EiLCJzdWIiOiJTSE9VVE9VVF9BUElfVVNFUiIsImlhdCI6MTY3MjgxMjYxOCwiZXhwIjoxOTg4NDMxODE4LCJzY29wZXMiOnsiYWN0aXZpdGllcyI6WyJyZWFkIiwid3JpdGUiXSwibWVzc2FnZXMiOlsicmVhZCIsIndyaXRlIl0sImNvbnRhY3RzIjpbInJlYWQiLCJ3cml0ZSJdfSwic29fdXNlcl9pZCI6IjgzOTkzIiwic29fdXNlcl9yb2xlIjoidXNlciIsInNvX3Byb2ZpbGUiOiJhbGwiLCJzb191c2VyX25hbWUiOiIiLCJzb19hcGlrZXkiOiJub25lIn0.ayaQjSjBxcSSnqskZp_F_NlrLa_98ddiOi1lfK8WrJ4",
+      "eas": {
+        "projectId": "cc6eedbe-b743-4e76-864e-0dd8ecfaa871"
+      },
+      "router": {
+        "origin": false
+      }
+    },
     "plugins": [
       "expo-router",
-      "expo-font",
-      "expo-barcode-scanner"
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/favicon.png",
+          "color": "#ffffff"
+        }
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
     },
-    "extra": {
-      "router": {
-        "origin": false
-      },
-      "eas": {
-        "projectId": "bcf132dd-10be-4c02-84c3-79d97800d773"
-      }
+    "expo-camera": {
+      "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+      "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+      "recordAudioAndroid": true
     },
+    "newArchEnabled": true,
     "owner": "dilshankaluhennadi"
   }
 }
