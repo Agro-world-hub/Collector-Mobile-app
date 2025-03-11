@@ -1,9 +1,0 @@
-// environment.ts
-const environment = {
-    API_BASE_URL: "http://192.168.1.14:3001/agro-api/collection-api/",
-    // API_BASE_URL: "http://10.0.2.2:3001/",
-    // Add more variables as needed
-  };
-  
-  export default environment;
-  
