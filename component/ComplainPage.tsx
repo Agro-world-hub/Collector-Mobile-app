@@ -504,8 +504,8 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
       }
   
       Alert.alert(
-        "Submitted",
-        `Your complaint has Submit successfuly!:`
+        t("Error.Submitted"),
+        t("Error.Your complaint has Submit successfuly")
       );
       setComplain("");
       setSelectedCategory(null);
