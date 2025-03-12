@@ -6,8 +6,9 @@ import { RootStackParamList } from './types';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
+import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {environment} from "../environment/environment";
+import {environment }from '@/environment/environment';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -16,7 +17,6 @@ import {
   
   import generateInvoiceNumber from "@/utils/generateInvoiceNumber";
 import CameraComponent from "@/utils/CameraComponent";
-import { SelectList } from 'react-native-dropdown-select-list';
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -40,9 +40,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     const [cropCount, setCropCount] = useState(1);
     const [cropNames, setCropNames] = useState<Crop[]>([]);
     const [selectedCrop, setSelectedCrop] = useState<{ id: string; name: string } | null>(null);
-    console.log(selectedCrop);
     const [varieties, setVarieties] = useState<{ id: string; variety: string }[]>([]);
-    console.log(varieties);
     const [selectedVariety, setSelectedVariety] = useState<string | null>(null);
     const [unitPrices, setUnitPrices] = useState<{ [key: string]: number | null }>({ A: null, B: null, C: null });
     const [quantities, setQuantities] = useState<{ [key: string]: number }>({ A: 0, B: 0, C: 0 });
@@ -156,7 +154,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
         } catch (error) {
             console.error('Error fetching unit prices for selected variety:', error);
             // You can handle other error cases here, for example:
-            Alert.alert('Error', 'no any prices found !');
+            Alert.alert(t("Error.error"), t("Error.no any prices found !"));
         }
     };
     
@@ -323,7 +321,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
             navigation.navigate('ReportPage' as any, { userId, registeredFarmerId });
         } catch (error) {
             console.error('Error submitting crop data:', error);
-            alert('Failed to submit crop details. Please try again.');
+            alert(t("Error.Failed to submit crop details. Please try again."));
         }
     };
     
@@ -379,7 +377,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
             navigation.navigate('ReportPage' as any, { userId, registeredFarmerId });
         } catch (error) {
             console.error('Error submitting crop data:', error);
-            alert('Failed to submit crop details. Please try again.');
+            alert(t("Error.Failed to submit crop details. Please try again."));
         }
     };
     
@@ -407,9 +405,9 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
             <Text className="text-center text-md font-medium mt-2">{t("UnregisteredCropDetails.Crop")}{cropCount}</Text>
             <View className="mb-6 border-b p-2 border-gray-200 pb-6">
             <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.CropName")}</Text>               
-              <View className=" mt-2 ">                 
+              <View className="border border-gray-300 rounded-md mt-2 p-2">                 
                 
-              {/* <Picker
+              <Picker
                     selectedValue={selectedCrop?.id || null} // Use the crop's id for selection
                     onValueChange={(itemValue: string | null) => {
                         const crop = cropNames.find(c => c.id === itemValue); // Find the crop by id
@@ -421,22 +419,13 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                     {cropNames.map((crop) => (
                         <Picker.Item key={crop.id} label={crop.cropNameEnglish} value={crop.id} /> // Use id as the value
                     ))}
-                </Picker> */}
-                          <SelectList
-              setSelected={(itemValue: string) => {
-                const crop = cropNames.find(c => c.id === itemValue); // Find the crop by id
-                if (crop) handleCropChange({ id: crop.id, cropNameEnglish: crop.cropNameEnglish });
-              }}
-              boxStyles={{ height: 50, width: '100%',    borderColor: "#CFCFCF",paddingLeft: 14,paddingRight: 8,}}
-              data={cropNames.map(crop => ({ key: crop.id, value: crop.cropNameEnglish }))}
-              defaultOption={{ key: selectedCrop?.id, value: selectedCrop?.name }}
-            />
+                </Picker>
 
                 </View>
 
                 <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Variety")}</Text>
-                <View className=" mt-2 ">
-                {/* <Picker
+                <View className="border border-gray-300 rounded-md mt-2 p-2">
+                <Picker
                     selectedValue={selectedVariety || null}
                     onValueChange={(itemValue: any) => handleVarietyChange(itemValue)}
                     style={{ height: 50, width: '100%' }}
@@ -446,15 +435,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                     {varieties.map((variety) => (
                         <Picker.Item key={variety.id} label={variety.variety} value={variety.id} />
                     ))}
-                </Picker> */}
-                         <SelectList
-              setSelected={(itemValue: string) => handleVarietyChange(itemValue)}
-              data={varieties.map(variety => ({ key: variety.id, value: variety.variety }))}
-              defaultOption={{ key: selectedVariety, value: varieties.find(v => v.id === selectedVariety)?.variety }}
-              placeholder='Select Variety'
-              boxStyles={{ height: 50, width: '100%',    borderColor: "#CFCFCF",paddingLeft: 14,paddingRight: 8,}}
-              // Disable if no crop selected
-            />
+                </Picker>
 
 
                 </View>

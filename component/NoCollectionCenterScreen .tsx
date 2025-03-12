@@ -2,7 +2,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
 import { View, Text, Image, BackHandler } from 'react-native';
 import { RootStackParamList } from './types';
-import {environment} from "../environment/environment";
+import {environment }from '@/environment/environment';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';

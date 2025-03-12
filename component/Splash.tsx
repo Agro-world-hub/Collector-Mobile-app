@@ -62,14 +62,14 @@ const Splash: React.FC<SplashProps> = ({ navigation }) => {
             "tokenStoredTime",
             "tokenExpirationTime",
           ]);
-          navigation.navigate("Login");
+          navigation.navigate("Lanuage");
         }
       } else {
-        navigation.navigate("Login");
+        navigation.navigate("Lanuage");
       }
     } catch (error) {
       console.error("Error checking token expiration:", error);
-      navigation.navigate("Login");
+      navigation.navigate("Lanuage");
     }
   };
 

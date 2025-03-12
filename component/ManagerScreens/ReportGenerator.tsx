@@ -48,7 +48,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
 
   const handleGenerate = async () => {
     if (!startDate || !endDate) {
-      Alert.alert('Error', 'Please select both start and end dates.');
+      Alert.alert(t("Error.error"), t("Error.Please select both start and end dates."));
       return;
     }
   
@@ -56,7 +56,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
     
     
     if (endDate < startDate) {
-      Alert.alert('Error', 'End date cannot be earlier than the start date.');
+      Alert.alert(t("Error.error"), t("Error.End date cannot be earlier than the start date."));
       return;
     }
     
@@ -68,9 +68,9 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
   
       setGeneratedReportId(reportId); // Store the report ID to display in the UI
       setReportGenerated(true);
-      Alert.alert('Success', 'PDF Generated Successfully!');
+      Alert.alert(t("Error.Success"), t("Error.PDF Generated Successfully"));
     } else {
-      Alert.alert('Error', 'Failed to generate PDF');
+      Alert.alert(t("Error.error"), t("Error.Failed to generate PDF"));
     }
   };
   
@@ -78,7 +78,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
   
   const handleDownload = async () => {
     if (!startDate || !endDate) {
-      Alert.alert('Error', 'Please select both start and end dates.');
+      Alert.alert(t("Error.error"), t("Error.Please select both start and end dates."));
       return;
     }
   
@@ -86,7 +86,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
       // Request permissions
       const { status } = await MediaLibrary.requestPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('Permission Denied', 'You need to grant storage permissions to save the file.');
+        Alert.alert(t("Error.Permission Denied"));
         return;
       }
   
@@ -99,7 +99,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
       );
   
       if (!fileUri) {
-        Alert.alert('Error', 'Failed to generate PDF.');
+        Alert.alert(t("Error.error"), t("Error.Failed to generate PDF"));
         return;
       }
   
@@ -125,21 +125,22 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
           await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
         }
   
-        Alert.alert('Success', `File saved as ${fileName} in the Downloads folder.`);
+        Alert.alert(t("Error.Success"), `${t("Error.File saved as")} ${fileName} ${t("Error.in the Downloads folder")}`);
+        
       } else {
         // For iOS, inform the user about the app's document directory
-        Alert.alert('Success', `File saved to app's directory: ${tempUri}`);
+        Alert.alert(t("Error.Success"), `${t("Error.File saved to app's directory:")} ${tempUri}`);
       }
     } catch (error) {
       console.error('Failed to save file:', error);
-      Alert.alert('Error', 'An error occurred while saving the file.');
+      Alert.alert(t("Error.error"), t("Error.An error occurred while saving the file."));
     }
   };
   
   
   const handleShare = async () => {
     if (!startDate || !endDate) {
-      Alert.alert('Error', 'Please select both start and end dates.');
+      Alert.alert(t("Error.error"), t("Error.Please select both start and end dates."));
       return;
     }
   
@@ -147,7 +148,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
     if (fileUri && (await Sharing.isAvailableAsync())) {
       await Sharing.shareAsync(fileUri, { mimeType: 'application/pdf' });
     } else {
-      Alert.alert('Error', 'Sharing is not available on this device.');
+      Alert.alert(t("Error.error"), t("Error.Sharing is not available on this device."));
     }
   };
 

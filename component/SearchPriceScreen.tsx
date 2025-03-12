@@ -5,9 +5,10 @@ import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from './types';
-import {environment} from "../environment/environment";
+import {environment }from '@/environment/environment';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTranslation } from "react-i18next";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -27,42 +28,147 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
   const [loadingCrops, setLoadingCrops] = useState(false);
   const [loadingVarieties, setLoadingVarieties] = useState(false);
   const { t } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+
+  const fetchSelectedLanguage = async () => {
+    try {
+      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+      setSelectedLanguage(lang || "en"); // Default to English if not set
+    } catch (error) {
+      console.error("Error fetching language preference:", error);
+    }
+  };
+
+   // Fetch language on component mount
+   useEffect(() => {
+    const fetchData = async () => {
+      await fetchSelectedLanguage();
+    };
+    fetchData();
+  }, []);
+
 
   // Function to fetch crop names
+  // const fetchCropNames = async () => {
+  //   setLoadingCrops(true);
+  //   try {
+  //     const response = await api.get('api/unregisteredfarmercrop/get-crop-names');
+  //     const formattedData = response.data.map((crop: any) => ({
+  //       key: crop.id.toString(),
+  //       value: crop.cropNameEnglish,
+  //     }));
+  //     setCropOptions(formattedData);
+  //     console.log(response.data)
+  //   } catch (error) {
+  //     console.error('Failed to fetch crop names:', error);
+  //   } finally {
+  //     setLoadingCrops(false);
+  //   }
+  // };
+
   const fetchCropNames = async () => {
     setLoadingCrops(true);
     try {
-      const response = await api.get('api/unregisteredfarmercrop/get-crop-names');
-      const formattedData = response.data.map((crop: any) => ({
-        key: crop.id.toString(),
-        value: crop.cropNameEnglish,
-      }));
+      const response = await api.get("api/unregisteredfarmercrop/get-crop-names");
+      
+      const formattedData = response.data.map((crop: any) => {
+        let cropName;
+        switch (selectedLanguage) {
+          case "si":
+            cropName = crop.cropNameSinhala;
+            break;
+          case "ta":
+            cropName = crop.cropNameTamil;
+            break;
+          default:
+            cropName = crop.cropNameEnglish;
+        }
+  
+        return {
+          key: crop.id.toString(),
+          value: cropName,
+        };
+      });
+  
       setCropOptions(formattedData);
     } catch (error) {
-      console.error('Failed to fetch crop names:', error);
+      console.error("Failed to fetch crop names:", error);
     } finally {
       setLoadingCrops(false);
     }
   };
+  
+  // Fetch crops whenever the language changes
+  useEffect(() => {
+    if (selectedLanguage) {
+      fetchCropNames();
+    }
+  }, [selectedLanguage]);
+  
+ 
+  
+  
 
   // Function to fetch varieties based on the selected crop
+  // const fetchVarieties = async () => {
+  //   if (!selectedCrop) return;
+
+  //   setLoadingVarieties(true);
+  //   try {
+  //     const response = await api.get(`api/unregisteredfarmercrop/crops/varieties/${selectedCrop}`);
+  //     const formattedData = response.data.map((variety: any) => ({
+  //       key: variety.id.toString(),
+  //       value: variety.varietyNameEnglish,
+  //     }));
+  //     setVarietyOptions(formattedData);
+  //   } catch (error) {
+  //     console.error('Failed to fetch varieties:', error);
+  //   } finally {
+  //     setLoadingVarieties(false);
+  //   }
+  // };
+
   const fetchVarieties = async () => {
     if (!selectedCrop) return;
-
+  
     setLoadingVarieties(true);
     try {
       const response = await api.get(`api/unregisteredfarmercrop/crops/varieties/${selectedCrop}`);
-      const formattedData = response.data.map((variety: any) => ({
-        key: variety.id.toString(),
-        value: variety.varietyNameEnglish,
-      }));
+  
+      const formattedData = response.data.map((variety: any) => {
+        let varietyName;
+        switch (selectedLanguage) {
+          case "si":
+            varietyName = variety.varietyNameSinhala;
+            break;
+          case "ta":
+            varietyName = variety.varietyNameTamil;
+            break;
+          default:
+            varietyName = variety.varietyNameEnglish;
+        }
+  
+        return {
+          key: variety.id.toString(),
+          value: varietyName,
+        };
+      });
+  
       setVarietyOptions(formattedData);
     } catch (error) {
-      console.error('Failed to fetch varieties:', error);
+      console.error("Failed to fetch varieties:", error);
     } finally {
       setLoadingVarieties(false);
     }
   };
+  
+  // Re-fetch varieties when selected language or crop changes
+  useEffect(() => {
+    if (selectedCrop && selectedLanguage) {
+      fetchVarieties();
+    }
+  }, [selectedCrop, selectedLanguage]);
+  
 
   // Reload data when the screen comes into focus
   useFocusEffect(
@@ -81,6 +187,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
   useEffect(() => {
     fetchVarieties();
   }, [selectedCrop]);
+  
 
   return (
         <KeyboardAvoidingView

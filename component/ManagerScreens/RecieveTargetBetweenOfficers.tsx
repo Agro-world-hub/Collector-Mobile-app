@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SelectList } from "react-native-dropdown-select-list";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {environment} from "../../environment/environment";
+import {environment }from '@/environment/environment';
 import { useTranslation } from "react-i18next";
 
 // Define the navigation prop type
@@ -72,13 +72,13 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
 
         setOfficers([{ key: '0', value: '--Select an officer--' }, ...formattedOfficers]);
       } else {
-        setErrorMessage('Failed to fetch officers.');
+        setErrorMessage(t("Error.Failed to fetch officers."));
       }
     } catch (error: any) {
       if (error.response?.status === 404) {
-        setErrorMessage('No officers available.');
+        setErrorMessage(t("Error.No officers available."));
       } else {
-        setErrorMessage('An error occurred while fetching officers.');
+        setErrorMessage(t("Error.An error occurred while fetching officers."));
       }
     } finally {
       setLoading(false);
@@ -112,7 +112,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
         setMaxAmount(calculatedTodo > 0 ? calculatedTodo : 0); // Ensure todo is not negative
         setAmount(calculatedTodo.toString()); // Set default value
       } else {
-        setErrorMessage('No target data found for selected officer.');
+        setErrorMessage(t("Error.No target data found for selected officer."));
   
         // ✅ Auto-refresh fields after 3 seconds
         setTimeout(() => {
@@ -123,7 +123,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
         }, 3000);
       }
     } catch (error: any) {
-      setErrorMessage('Failed to fetch daily target.');
+      setErrorMessage(t("Error.Failed to fetch daily target."));
   
       // ✅ Auto-refresh fields after 3 seconds
       setTimeout(() => {
@@ -144,7 +144,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
     setAmount(text);
     const numericValue = parseFloat(text);
     if (numericValue > maxAmount) {
-      setError(`You have exceeded the maximum amount.`);
+      setError(t("Error.You have exceeded the maximum amount."));
     } else {
       setError('');
     }
@@ -153,18 +153,21 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
   
   const receiveTarget = async () => {
     if (!assignee || assignee === '0') {
-      Alert.alert("Error", "Please select an officer.");
+      Alert.alert(t("Error.error"), t("Error.Please select an officer."));
       return;
     }
   
     const numericAmount = parseFloat(amount);
     if (isNaN(numericAmount) || numericAmount <= 0) {
-      Alert.alert("Error", "Please enter a valid amount.");
+      Alert.alert(t("Error.error"), t("Error.Please enter a valid amount."));
       return;
     }
   
     if (numericAmount > maxAmount) {
-      Alert.alert("Error", `You cannot receive more than ${maxAmount}kg.`);
+       Alert.alert(
+              t("Error.error"),
+              `${t("Error.You cannot transfer more than")} ${maxAmount}kg.`
+            );
       return;
     }
   
@@ -189,14 +192,14 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
       );
   
       if (response.status === 200) {
-        Alert.alert("Success", "Target received successfully.");
+        Alert.alert(t("Error.Success"), t("Error.Target transferred successfully."));
         navigation.navigate('DailyTargetListForOfficers'as any,{collectionOfficerId:collectionOfficerId}); 
       } else {
-        Alert.alert("Error", "Failed to receive target.");
+         Alert.alert(t("Error.error"), t("Error.Failed to transfer target."));
       }
     } catch (error: any) {
       console.error("Receive Target Error:", error);
-      Alert.alert("Error", "An error occurred while receiving the target.");
+     Alert.alert(t("Error.error"), t("Error.An error occurred while transferring the target."));
     } finally {
       setFetchingTarget(false);
     }

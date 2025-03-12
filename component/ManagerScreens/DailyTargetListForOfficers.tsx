@@ -14,7 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
-import {environment} from "../../environment/environment";
+import {environment }from '@/environment/environment';
 import { useTranslation } from "react-i18next";
 
 type DailyTargetListForOfficerstNavigationProps = StackNavigationProp<RootStackParamList, 'DailyTargetListForOfficers'>;
@@ -72,7 +72,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
       setCompletedData(completedItems);
       setError(null);
     } catch (err) {
-      setError('Failed to fetch data. Please try again later.');
+      setError(t("Error.Failed to fetch data."));
     } finally {
       const elapsedTime = Date.now() - startTime;
       const remainingTime = 3000 - elapsedTime; 
