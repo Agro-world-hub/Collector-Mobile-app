@@ -17,6 +17,7 @@ import {
   
   import generateInvoiceNumber from "@/utils/generateInvoiceNumber";
 import CameraComponent from "@/utils/CameraComponent";
+import { SelectList } from 'react-native-dropdown-select-list';
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -383,123 +384,257 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     
 
     return (
-         <KeyboardAvoidingView 
-                    behavior={Platform.OS ==="ios" ? "padding" : "height"}
-                    enabled
-                    className="flex-1"
-                    >
-        <ScrollView className="flex-1 bg-gray-50 px-6 py-4" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
-            {/* <View className="flex-row items-center mt-1 mb-6">
-                <TouchableOpacity onPress={() => navigation.goBack()} className="p-2">
-                    <AntDesign name="left" size={24} color="#000" />
-                </TouchableOpacity>
-                <Text className="text-center ml-[26%] text-lg font-semibold">Fill Details</Text>
-            </View> */}
-                 <View className="flex-row items-center  mb-6">
-                      <TouchableOpacity onPress={() => navigation.goBack()} className="">
-                        <AntDesign name="left" size={24} color="#000" />
-                      </TouchableOpacity>
-                      <Text className="flex-1 text-center text-xl font-bold text-black">{t("UnregisteredCropDetails.FillDetails")}</Text>
-                    </View>
+        //  <KeyboardAvoidingView 
+        //             behavior={Platform.OS ==="ios" ? "padding" : "height"}
+        //             enabled
+        //             className="flex-1"
+        //             >
+        // <ScrollView className="flex-1 bg-gray-50 px-6 py-4" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
+        //     {/* <View className="flex-row items-center mt-1 mb-6">
+        //         <TouchableOpacity onPress={() => navigation.goBack()} className="p-2">
+        //             <AntDesign name="left" size={24} color="#000" />
+        //         </TouchableOpacity>
+        //         <Text className="text-center ml-[26%] text-lg font-semibold">Fill Details</Text>
+        //     </View> */}
+        //          <View className="flex-row items-center  mb-6">
+        //               <TouchableOpacity onPress={() => navigation.goBack()} className="">
+        //                 <AntDesign name="left" size={24} color="#000" />
+        //               </TouchableOpacity>
+        //               <Text className="flex-1 text-center text-xl font-bold text-black">{t("UnregisteredCropDetails.FillDetails")}</Text>
+        //             </View>
 
-            <Text className="text-center text-md font-medium mt-2">{t("UnregisteredCropDetails.Crop")}{cropCount}</Text>
-            <View className="mb-6 border-b p-2 border-gray-200 pb-6">
-            <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.CropName")}</Text>               
-              <View className="border border-gray-300 rounded-md mt-2 p-2">                 
+        //     <Text className="text-center text-md font-medium mt-2">{t("UnregisteredCropDetails.Crop")}{cropCount}</Text>
+        //     <View className="mb-6 border-b p-2 border-gray-200 pb-6">
+        //     <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.CropName")}</Text>               
+        //       <View className="border border-gray-300 rounded-md mt-2 p-2">                 
                 
-              <Picker
-                    selectedValue={selectedCrop?.id || null} // Use the crop's id for selection
-                    onValueChange={(itemValue: string | null) => {
-                        const crop = cropNames.find(c => c.id === itemValue); // Find the crop by id
-                        if (crop) handleCropChange({ id: crop.id, cropNameEnglish: crop.cropNameEnglish }); // Pass the correct object structure
-                    }}
-                    style={{ height: 50, width: '100%' }}
-                >
-                    <Picker.Item label="Select Crop" value={null} />
-                    {cropNames.map((crop) => (
-                        <Picker.Item key={crop.id} label={crop.cropNameEnglish} value={crop.id} /> // Use id as the value
-                    ))}
-                </Picker>
+        //       <Picker
+        //             selectedValue={selectedCrop?.id || null} // Use the crop's id for selection
+        //             onValueChange={(itemValue: string | null) => {
+        //                 const crop = cropNames.find(c => c.id === itemValue); // Find the crop by id
+        //                 if (crop) handleCropChange({ id: crop.id, cropNameEnglish: crop.cropNameEnglish }); // Pass the correct object structure
+        //             }}
+        //             style={{ height: 50, width: '100%' }}
+        //         >
+        //             <Picker.Item label="Select Crop" value={null} />
+        //             {cropNames.map((crop) => (
+        //                 <Picker.Item key={crop.id} label={crop.cropNameEnglish} value={crop.id} /> // Use id as the value
+        //             ))}
+        //         </Picker>
 
-                </View>
+        //         </View>
 
-                <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Variety")}</Text>
-                <View className="border border-gray-300 rounded-md mt-2 p-2">
-                <Picker
-                    selectedValue={selectedVariety || null}
-                    onValueChange={(itemValue: any) => handleVarietyChange(itemValue)}
-                    style={{ height: 50, width: '100%' }}
-                    enabled={!!selectedCrop}  // Ensure Picker is only enabled after selecting a crop
-                >
-                    <Picker.Item label="Select Variety" value={null} />
-                    {varieties.map((variety) => (
-                        <Picker.Item key={variety.id} label={variety.variety} value={variety.id} />
-                    ))}
-                </Picker>
+        //         <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Variety")}</Text>
+        //         <View className="border border-gray-300 rounded-md mt-2 p-2">
+        //         <Picker
+        //             selectedValue={selectedVariety || null}
+        //             onValueChange={(itemValue: any) => handleVarietyChange(itemValue)}
+        //             style={{ height: 50, width: '100%' }}
+        //             enabled={!!selectedCrop}  // Ensure Picker is only enabled after selecting a crop
+        //         >
+        //             <Picker.Item label="Select Variety" value={null} />
+        //             {varieties.map((variety) => (
+        //                 <Picker.Item key={variety.id} label={variety.variety} value={variety.id} />
+        //             ))}
+        //         </Picker>
 
 
-                </View>
+        //         </View>
 
-                <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.UnitGrades")}</Text>
-                <View className="border border-gray-300 rounded-lg mt-2 p-4">
-                    {['A', 'B', 'C'].map((grade) => (
-                        <View key={grade} className="flex-row items-center mb-3">
-                            <Text className="w-8 text-gray-600">{grade}</Text>
-                            <TextInput
-                                placeholder="Rs."
-                                keyboardType="numeric"
-                                className="flex-1 border border-gray-300 rounded-md p-2 mx-2 text-gray-600"
-                                value={unitPrices[grade]?.toString() || ''}
-                                editable={false}
-                            />
-                            <TextInput
-                                placeholder="kg"
-                                keyboardType="numeric"
-                                className="flex-1 border border-gray-300 rounded-md p-2 text-gray-600"
-                                value={quantities[grade].toString()}
-                                onChangeText={value => handleQuantityChange(grade, value)}
-                            />
-                        </View>
-                    ))}
-                </View>
+        //         <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.UnitGrades")}</Text>
+        //         <View className="border border-gray-300 rounded-lg mt-2 p-4">
+        //             {['A', 'B', 'C'].map((grade) => (
+        //                 <View key={grade} className="flex-row items-center mb-3">
+        //                     <Text className="w-8 text-gray-600">{grade}</Text>
+        //                     <TextInput
+        //                         placeholder="Rs."
+        //                         keyboardType="numeric"
+        //                         className="flex-1 border border-gray-300 rounded-md p-2 mx-2 text-gray-600"
+        //                         value={unitPrices[grade]?.toString() || ''}
+        //                         editable={false}
+        //                     />
+        //                     <TextInput
+        //                         placeholder="kg"
+        //                         keyboardType="numeric"
+        //                         className="flex-1 border border-gray-300 rounded-md p-2 text-gray-600"
+        //                         value={quantities[grade].toString()}
+        //                         onChangeText={value => handleQuantityChange(grade, value)}
+        //                     />
+        //                 </View>
+        //             ))}
+        //         </View>
 
-                <View className='mt-[10%]'>
-                {/* Camera component to capture image */}
-                <CameraComponent onImagePicked={handleImagePick} resetImage={resetCameraImage}/> 
+        //         <View className='mt-[10%]'>
+        //         {/* Camera component to capture image */}
+        //         <CameraComponent onImagePicked={handleImagePick} resetImage={resetCameraImage}/> 
 
-                {/* Display the base64 image after it is picked */}
+        //         {/* Display the base64 image after it is picked */}
 
+        //     </View>
+
+
+
+        //         {/* Total and Buttons */}
+        //         <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Total")}</Text>
+        //         <View className="border border-gray-300 rounded-md mt-2 p-2">
+        //             <TextInput 
+        //                 placeholder="--Auto Fill--" 
+        //                 editable={false} 
+        //                 value={total.toString()} 
+        //                 className="text-gray-600" 
+        //             />
+        //         </View>
+
+        //         <TouchableOpacity onPress={incrementCropCount} disabled={addbutton==true} className={`bg-green-500 rounded-md p-4 mt-2 ${addbutton ? 'opacity-50' : ''}`}>
+        //             <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Add")}</Text>
+        //         </TouchableOpacity>
+        //        {donebutton1visibale && 
+        //         <TouchableOpacity onPress={handelsubmit2} disabled={donebutton1disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton1disabale ? 'opacity-50' : ''}`}>
+        //             <Text className="text-center text-black font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
+        //         </TouchableOpacity>
+        //         }
+        //         {donebutton2visibale &&
+        //         <TouchableOpacity onPress={handleSubmit} disabled={donebutton2disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton2disabale ? 'opacity-50' : ''}`}>
+        //            <Text className="text-center text-black font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
+        //         </TouchableOpacity>
+        //         }  
+        //     </View>
+        // </ScrollView>
+        // </KeyboardAvoidingView>
+        <KeyboardAvoidingView 
+        behavior={Platform.OS ==="ios" ? "padding" : "height"}
+        enabled
+        className="flex-1"
+        >
+<ScrollView className="flex-1 bg-gray-50 px-6 py-4" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
+{/* <View className="flex-row items-center mt-1 mb-6">
+    <TouchableOpacity onPress={() => navigation.goBack()} className="p-2">
+        <AntDesign name="left" size={24} color="#000" />
+    </TouchableOpacity>
+    <Text className="text-center ml-[26%] text-lg font-semibold">Fill Details</Text>
+</View> */}
+     <View className="flex-row items-center  mb-6">
+          <TouchableOpacity onPress={() => navigation.goBack()} className="">
+            <AntDesign name="left" size={24} color="#000" />
+          </TouchableOpacity>
+          <Text className="flex-1 text-center text-xl font-bold text-black">{t("UnregisteredCropDetails.FillDetails")}</Text>
+        </View>
+
+<Text className="text-center text-md font-medium mt-2">{t("UnregisteredCropDetails.Crop")}{cropCount}</Text>
+<View className="mb-6 border-b p-2 border-gray-200 pb-6">
+<Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.CropName")}</Text>               
+  <View className=" mt-2 ">                 
+    
+  {/* <Picker
+        selectedValue={selectedCrop?.id || null} // Use the crop's id for selection
+        onValueChange={(itemValue: string | null) => {
+            const crop = cropNames.find(c => c.id === itemValue); // Find the crop by id
+            if (crop) handleCropChange({ id: crop.id, cropNameEnglish: crop.cropNameEnglish }); // Pass the correct object structure
+        }}
+        style={{ height: 50, width: '100%' }}
+    >
+        <Picker.Item label="Select Crop" value={null} />
+        {cropNames.map((crop) => (
+            <Picker.Item key={crop.id} label={crop.cropNameEnglish} value={crop.id} /> // Use id as the value
+        ))}
+    </Picker> */}
+              <SelectList
+  setSelected={(itemValue: string) => {
+    const crop = cropNames.find(c => c.id === itemValue); // Find the crop by id
+    if (crop) handleCropChange({ id: crop.id, cropNameEnglish: crop.cropNameEnglish });
+  }}
+  boxStyles={{ height: 50, width: '100%',    borderColor: "#CFCFCF",paddingLeft: 14,paddingRight: 8,}}
+  data={cropNames.map(crop => ({ key: crop.id, value: crop.cropNameEnglish }))}
+  defaultOption={{ key: selectedCrop?.id, value: selectedCrop?.name }}
+/>
+
+    </View>
+
+    <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Variety")}</Text>
+    <View className=" mt-2 ">
+    {/* <Picker
+        selectedValue={selectedVariety || null}
+        onValueChange={(itemValue: any) => handleVarietyChange(itemValue)}
+        style={{ height: 50, width: '100%' }}
+        enabled={!!selectedCrop}  // Ensure Picker is only enabled after selecting a crop
+    >
+        <Picker.Item label="Select Variety" value={null} />
+        {varieties.map((variety) => (
+            <Picker.Item key={variety.id} label={variety.variety} value={variety.id} />
+        ))}
+    </Picker> */}
+             <SelectList
+  setSelected={(itemValue: string) => handleVarietyChange(itemValue)}
+  data={varieties.map(variety => ({ key: variety.id, value: variety.variety }))}
+  defaultOption={{ key: selectedVariety, value: varieties.find(v => v.id === selectedVariety)?.variety }}
+  placeholder='Select Variety'
+  boxStyles={{ height: 50, width: '100%',    borderColor: "#CFCFCF",paddingLeft: 14,paddingRight: 8,}}
+  // Disable if no crop selected
+/>
+
+
+    </View>
+
+    <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.UnitGrades")}</Text>
+    <View className="border border-gray-300 rounded-lg mt-2 p-4">
+        {['A', 'B', 'C'].map((grade) => (
+            <View key={grade} className="flex-row items-center mb-3">
+                <Text className="w-8 text-gray-600">{grade}</Text>
+                <TextInput
+                    placeholder="Rs."
+                    keyboardType="numeric"
+                    className="flex-1 border border-gray-300 rounded-md p-2 mx-2 text-gray-600"
+                    value={unitPrices[grade]?.toString() || ''}
+                    editable={false}
+                />
+                <TextInput
+                    placeholder="kg"
+                    keyboardType="numeric"
+                    className="flex-1 border border-gray-300 rounded-md p-2 text-gray-600"
+                    value={quantities[grade].toString()}
+                    onChangeText={value => handleQuantityChange(grade, value)}
+                />
             </View>
+        ))}
+    </View>
+
+    <View className='mt-[10%]'>
+    {/* Camera component to capture image */}
+    <CameraComponent onImagePicked={handleImagePick} resetImage={resetCameraImage}/> 
+
+    {/* Display the base64 image after it is picked */}
+
+</View>
 
 
 
-                {/* Total and Buttons */}
-                <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Total")}</Text>
-                <View className="border border-gray-300 rounded-md mt-2 p-2">
-                    <TextInput 
-                        placeholder="--Auto Fill--" 
-                        editable={false} 
-                        value={total.toString()} 
-                        className="text-gray-600" 
-                    />
-                </View>
+    {/* Total and Buttons */}
+    <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Total")}</Text>
+    <View className="border border-gray-300 rounded-md mt-2 p-2">
+        <TextInput 
+            placeholder="--Auto Fill--" 
+            editable={false} 
+            value={total.toString()} 
+            className="text-gray-600" 
+        />
+    </View>
 
-                <TouchableOpacity onPress={incrementCropCount} disabled={addbutton==true} className={`bg-green-500 rounded-md p-4 mt-2 ${addbutton ? 'opacity-50' : ''}`}>
-                    <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Add")}</Text>
-                </TouchableOpacity>
-               {donebutton1visibale && 
-                <TouchableOpacity onPress={handelsubmit2} disabled={donebutton1disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton1disabale ? 'opacity-50' : ''}`}>
-                    <Text className="text-center text-black font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
-                </TouchableOpacity>
-                }
-                {donebutton2visibale &&
-                <TouchableOpacity onPress={handleSubmit} disabled={donebutton2disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton2disabale ? 'opacity-50' : ''}`}>
-                   <Text className="text-center text-black font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
-                </TouchableOpacity>
-                }  
-            </View>
-        </ScrollView>
-        </KeyboardAvoidingView>
+    <TouchableOpacity onPress={incrementCropCount} disabled={addbutton==true} className={`bg-green-500 rounded-md p-4 mt-2 ${addbutton ? 'opacity-50' : ''}`}>
+        <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Add")}</Text>
+    </TouchableOpacity>
+   {donebutton1visibale && 
+    <TouchableOpacity onPress={handelsubmit2} disabled={donebutton1disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton1disabale ? 'opacity-50' : ''}`}>
+        <Text className="text-center text-black font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
+    </TouchableOpacity>
+    }
+    {donebutton2visibale &&
+    <TouchableOpacity onPress={handleSubmit} disabled={donebutton2disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton2disabale ? 'opacity-50' : ''}`}>
+       <Text className="text-center text-black font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
+    </TouchableOpacity>
+    }  
+</View>
+</ScrollView>
+</KeyboardAvoidingView>
     );
 };
 
