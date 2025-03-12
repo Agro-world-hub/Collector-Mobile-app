@@ -4,7 +4,7 @@ import { View, Text, Image, TouchableOpacity, BackHandler, Alert, ScrollView, Re
 import { CircularProgress } from 'react-native-circular-progress';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import environment from '@/environment/environment';
+import {environment} from '@/environment/environment';
 import { useFocusEffect } from 'expo-router';
 import { RootStackParamList } from './types';
 import { useTranslation } from "react-i18next";
@@ -187,6 +187,16 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
     }
   };
 
+  const getTextStyle = (language: string) => {
+    if (language === "si") {
+      return {
+        fontSize: 14, // Smaller text size for Sinhala
+        lineHeight: 20, // Space between lines
+      };
+    }
+   
+  };
+
 
   return (
     <ScrollView
@@ -217,11 +227,11 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
             {profile?.firstNameEnglish || "Loading..."}{" "}
             {profile?.lastNameEnglish || "Loading..."}
           </Text> */}
-          <Text className="text-lg font-bold">{getFullName()}</Text>
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-lg font-bold">{getFullName()}</Text>
           {/* <Text className="text-gray-500">
             {profile?.companyName || "Loading..."}
           </Text> */}
-          <Text className="text-gray-500">{getcompanyName()}</Text>
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500">{getcompanyName()}</Text>
         </View>
       </TouchableOpacity>
 
@@ -274,8 +284,8 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
                    <Text className="text-2xl font-bold">{targetPercentage !== null ? `${targetPercentage}%` : "0%"}</Text>
                  </View>
   </View>
-  <Text className="text-gray-700 font-bold text-lg mt-2">{t("DashBoard.Yourtarget")} </Text>
-  <Text className="text-gray-700 font-bold text-lg "> {t("DashBoard.Progress")}</Text>
+  <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 font-bold text-lg mt-2">{t("DashBoard.Yourtarget")} </Text>
+  <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 font-bold text-lg "> {t("DashBoard.Progress")}</Text>
 </View>
 
 
@@ -289,7 +299,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
             source={require("../assets/images/qrrr.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
-          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("DashBoard.Scan")}</Text>
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 text-lg absolute bottom-2 left-2">{t("DashBoard.Scan")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -300,7 +310,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
             source={require("../assets/images/nic.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
-          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("DashBoard.Search")}</Text>
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 text-lg absolute bottom-2 left-2">{t("DashBoard.Search")}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

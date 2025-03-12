@@ -25,6 +25,8 @@ const api = axios.create({
 interface Crop {
     id: string;
     cropNameEnglish: string;
+    cropNameSinhala: string;
+    cropNameTamil: string;
 }
 
 // Define navigation and route props
@@ -54,10 +56,19 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     const [donebutton2disabale, setdonebutton2disabale] = useState(false);
     const [addbutton, setaddbutton] = useState(true);
     const { t } = useTranslation();
+    const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
    
     const route = useRoute<UnregisteredCropDetailsRouteProp>();
     const { userId } = route.params;
     console.log(userId)
+
+    useEffect(() => {
+        const fetchSelectedLanguage = async () => {
+          const lang = await AsyncStorage.getItem("@user_language");
+          setSelectedLanguage(lang || "en"); // Default to English
+        };
+        fetchSelectedLanguage();
+      }, []);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -108,6 +119,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
             } else {
                 console.error('Varieties response is not an array or is empty.');
             }
+            console.log(varietiesResponse.data)
         } catch (error) {
             console.error('Error fetching varieties:', error); // Log any errors
         }
@@ -407,7 +419,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
             <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.CropName")}</Text>               
               <View className="border border-gray-300 rounded-md mt-2 p-2">                 
                 
-              <Picker
+              {/* <Picker
                     selectedValue={selectedCrop?.id || null} // Use the crop's id for selection
                     onValueChange={(itemValue: string | null) => {
                         const crop = cropNames.find(c => c.id === itemValue); // Find the crop by id
@@ -419,7 +431,31 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                     {cropNames.map((crop) => (
                         <Picker.Item key={crop.id} label={crop.cropNameEnglish} value={crop.id} /> // Use id as the value
                     ))}
-                </Picker>
+                </Picker> */}
+                <Picker
+  selectedValue={selectedCrop?.id || null} // Use the crop's id for selection
+  onValueChange={(itemValue: string | null) => {
+    const crop = cropNames.find(c => c.id === itemValue); // Find the crop by id
+    if (crop) handleCropChange({ id: crop.id, cropNameEnglish: crop.cropNameEnglish }); // Pass the correct object structure
+  }}
+  style={{ height: 50, width: '100%' }}
+>
+  <Picker.Item label={t("UnregisteredCropDetails.Select Crop")} value={null} />
+  {cropNames.map((crop) => (
+    <Picker.Item 
+      key={crop.id} 
+      label={
+        selectedLanguage === "si"
+          ? crop.cropNameSinhala
+          : selectedLanguage === "ta"
+          ? crop.cropNameTamil
+          : crop.cropNameEnglish
+      } 
+      value={crop.id} 
+    />
+  ))}
+</Picker>
+
 
                 </View>
 

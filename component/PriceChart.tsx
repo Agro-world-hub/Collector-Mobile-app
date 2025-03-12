@@ -279,6 +279,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
   const [buttonText, setButtonText] = useState(t("PriceChart.Request Price Update"));
 
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
  
 
   // Fetch prices
@@ -344,7 +345,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
           Alert.alert(t("Error.Success"), t("Error.The price request was sent successfully"));
           await fetchPrices(); // Refetch prices after submitting
           setIsEditable(false);
-          setButtonText(t("PriceChart.Request Price Update"));
+          setButtonText(t("PriceChart.Request Price Update") );
         }
       } catch (error) {
         // Check if error status is 400 and show the message to update prices
@@ -364,6 +365,16 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
       setIsEditable(true);
       setButtonText(t("PriceChart.Submit Request"));
     }
+  };
+
+  const getTextStyle = (language: string) => {
+    if (language === "si") {
+      return {
+        fontSize: 14, // Smaller text size for Sinhala
+        lineHeight: 20, // Space between lines
+      };
+    }
+   
   };
   
 
@@ -423,7 +434,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
         )}
 
         <TouchableOpacity className="bg-[#2AAD7A] rounded-[45px] py-3 h-12 mt-4 w-3/4 mx-auto" onPress={handleButtonClick}>
-          <Text className="text-center text-base text-white font-semibold">{buttonText}</Text>
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-base text-white font-semibold">{buttonText}</Text>
         </TouchableOpacity>
 
         {isEditable && (
