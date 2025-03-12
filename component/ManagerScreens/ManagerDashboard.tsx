@@ -129,13 +129,13 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
       fetchData();
     }, []);
   
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await fetchUserProfile();
-    await fetchTargetPercentage();
-    setRefreshing(false);
-  };
+    const onRefresh = async () => {
+      setRefreshing(true);
+      await fetchUserProfile();
+      await fetchTargetPercentage();
+      await checkTokenExpiration();
+      setRefreshing(false);
+    };
 
   useFocusEffect(
     useCallback(() => {
@@ -168,6 +168,34 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
     }
   };
 
+  const checkTokenExpiration = async () => {
+    try {
+      const expirationTime = await AsyncStorage.getItem(
+        "tokenExpirationTime"
+      );
+      const userToken = await AsyncStorage.getItem("token");
+
+      if (expirationTime && userToken) {
+        const currentTime = new Date();
+        const tokenExpiry = new Date(expirationTime);
+
+        if (currentTime < tokenExpiry) {
+          console.log("Token is valid");
+        } else {
+          console.log("Token expired, clearing storage.");
+          await AsyncStorage.multiRemove([
+            "token",
+            "tokenStoredTime",
+            "tokenExpirationTime",
+          ]);
+          navigation.navigate("Login");
+        }
+      }
+    } catch (error) {
+      console.error("Error checking token expiration:", error);
+      navigation.navigate("Login");
+    }
+  };
   return (
     <ScrollView
       className="flex-1 bg-white p-3"
