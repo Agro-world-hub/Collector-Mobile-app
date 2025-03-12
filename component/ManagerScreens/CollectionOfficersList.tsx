@@ -408,6 +408,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
         };
         fetchData();
       }, []);
+      
 
       const getOfficerName = (officer: Officer) => {
         switch (selectedLanguage) {
