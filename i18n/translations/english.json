@@ -40,11 +40,88 @@
     "No QR Code available.":"No QR Code available.",
     "Failed to share QR Code.":"Failed to share QR Code.",
     "errorOccurred":"error Occurred",
-    "somethingWentWrong":"something Went Wrong",
+    "somethingWentWrong":"something Went Wrong. Please try again later.",
     "otpResent":"otpResent",
     "otpResendFailed":"otp Resend Failed",
     "You must change the prices before submitting. Please update the values.":"You must change the prices before submitting. Please update the values.",
-    "Failed to submit price update.":"Failed to submit price update."
+    "Failed to submit price update.":"Failed to submit price update.",
+    "Failed to load profile data":"Failed to load profile data",
+    "Failed to update phone numbers":"Failed to update phone numbers",
+    "Permission required":"Permission required,Please allow access to your photo library to upload a profile picture.",
+    "Sorry":"Sorry",
+    "Failed to load details":"Failed to load details",
+    "Details are missing for generating PDF":"Details are missing for generating PDF",
+    "Failed to save PDF to Downloads folder.":"Failed to save PDF to Downloads folder.",
+    "PDF was not generated.":"PDF was not generated.",
+    "Failed to search for farmer.":"Failed to search for farmer.",
+    "An unexpected error occurred.":"An unexpected error occurred.",
+    "no any prices found":"no any prices found !",
+    "Failed to submit crop details. Please try again.":"Failed to submit crop details. Please try again.",
+    "otpSendFailed":"otp Send Failed",
+    "Please fill in all required fields.":"Please fill in all required fields.",
+    "Account numbers do not match.":"Account numbers do not match.",
+    "Validation Errors":"Validation Errors",
+    "An error occurred while creating the officer.":"An error occurred while creating the officer.",
+    "ErrorEmail":"Email must end with 'gmail.com', 'yahoo.com', '.com', '.gov', or '.lk'.",
+    "setphoneError1":"Phone number 1 must be 9 digits.",
+    "setphoneError2":"Phone number 2 must be 9 digits.",
+    "User token not found. Please log in again.":"User token not found. Please log in again.",
+    "Failed to claim the officer. Please try again later.":"Failed to claim the officer. Please try again later.",
+    "Success":"Success",
+    "Officer successfully claimed.":"Officer successfully claimed.",
+    "Failed to generate PDF":"Failed to generate PDF",
+    "Sharing is not available on this device":"Sharing is not available on this device",
+    "User not authenticated.":"User not authenticated.",
+    "No task summary found for this officer.":"No task summary found for this officer.",
+    "Failed to fetch task summary.":"Failed to fetch task summary.",
+    "Missing collectionOfficerId":"Missing collectionOfficerId. Please try again.",
+    "Failed to disclaim officer.":"Failed to disclaim officer.",
+    "Failed to get officer status.":"Failed to get officer status.",
+    "Failed to fetch officers.":"Failed to fetch officers.",
+    "No officers available.":"No officers available.",
+    "An error occurred while fetching officers.":"An error occurred while fetching officers.",
+    "You have exceeded the maximum amount.":"You have exceeded the maximum amount.",
+    "Please select an officer.":"Please select an officer.",
+    "Please enter a valid amount.":"Please enter a valid amount.",
+    "You cannot transfer more than":"You cannot transfer more than",
+    "Target transferred successfully.":"Target transferred successfully.",
+    "Failed to transfer target.":"Failed to transfer target.",
+    "An error occurred while transferring the target.":"An error occurred while transferring the target.",
+    "No target data found for selected officer.":"No target data found for selected officer.",
+    "Failed to fetch daily target.":"Failed to fetch daily target.",
+    "Failed to receive target.":"Failed to receive target.",
+    "An error occurred while receiving the target.":"An error occurred while receiving the target.",
+    "Please select both start and end dates.":"Please select both start and end dates.",
+    "End date cannot be earlier than the start date.":"End date cannot be earlier than the start date.",
+    "PDF Generated Successfully":"PDF Generated Successfully!",
+    "Permission Denied":"Permission Denied, You need to grant storage permissions to save the file.",
+    "File saved as":"File saved as",
+    "in the Downloads folder":"in the Downloads folder",
+    "An error occurred while saving the file.":"An error occurred while saving the file.",
+    "Sharing is not available on this device.":"Sharing is not available on this device.",
+    "File saved to app's directory:":"File saved to app's directory:",
+    "Failed to fetch crop names.":"Failed to fetch crop names.",
+    "Failed to fetch varieties.":"Failed to fetch varieties.",
+    "Please fill in all fields.":"Please fill in all fields.",
+    "No targets to save.":"No targets to save.",
+    "Invalid date or time values provided.":"Invalid date or time values provided.",
+    "Authentication token is missing.":"Authentication token is missing.",
+    "An error occurred while saving the target.":"An error occurred while saving the target.",
+    "Daily target created successfully":"Daily target created successfully!",
+    "Failed to fetch data.":"Failed to fetch data. Please try again later.",
+    "Failed to load crop details":"Failed to load crop details",
+    "sorry":"sorry",
+    "Failed to submit complaint":"Failed to submit complaint. Please try again.",
+    "Please select a category and add your complaint.":"Please select a category and add your complaint.",
+    "Failed to fetch prices":"Failed to fetch prices",
+    "Phone number cannot exceed 9 digits.":"Phone number cannot exceed 9 digits.",
+    "The scanned QR code does not contain a valid user ID or is damaged.":"The scanned QR code does not contain a valid user ID or is damaged.",
+    "No prices to update":"No prices to update, Please edit the prices before submitting.",
+    "The price request was sent successfully":"The price request was sent successfully!",
+    "Officer created successfully":"Officer created successfully!",
+    "Phone numbers updated successfully":"Phone numbers updated successfully"
+
+
    
 
   },
@@ -75,7 +152,8 @@
     "Street":"Street Name",
     "City":"City",
     "District":"District",
-    "Province": "Province"
+    "Province": "Province",
+    "Update":"Update"
 
 
   },
@@ -137,7 +215,10 @@
     "Crop":"Crop Name",
     "Variety":"Variety",
     "UnitGrades":"Unit Prices according to Grades",
-    "Go":"Go Back"
+    "Go":"Go Back",
+    "Grade":"Grade",
+    "Request Price Update":"Request Price Update",
+    "Submit Request":"Submit Request"
 
   },
   "Otpverification":{
@@ -173,7 +254,8 @@
     "UnitGrades":"Unit Prices according to Grades",
     "Total":"Total (Rs.)",
     "Add":"Add more",
-    "Done":"Done"
+    "Done":"Done",
+    "Select Crop":"Select Crop"
 
   },
   "ReportPage":{
@@ -238,7 +320,8 @@
     "Close":"Close",
     "TapScan":"Tap to Scan Again",
     "Failed":"Failed",
-    "SearchNIC":"Search by User’s NIC number"
+    "SearchNIC":"Search by User’s NIC number",
+    "Requesting for camera permission":"Requesting for camera permission"
   },
   "Registeredfarmer":{
     "LNG": "en",
@@ -318,7 +401,11 @@
     "BankName":"--Bank Name--",
     "BranchName":"--Branch Name--",
     "Go":"Go Back",
-    "Submit":"Submit"
+    "Submit":"Submit",
+    "Select Province":"Select Province",
+    "Select District":"Select District"
+
+ 
     
   },
   "CenterTarget":{
@@ -431,7 +518,17 @@
  
   },
 
-
+"Provinces": {
+    "Western": "Western",
+    "Central": "Central",
+    "Southern": "Southern",
+    "Eastern":"Eastern",
+    "Northern":"Northern",
+    "North Western":"North Western",
+    "North Central":"North Central",
+    "Uva":"Uva",
+    "Sabaragamuwa":"Sabaragamuwa"
+  },
 
 
   "Districts": {

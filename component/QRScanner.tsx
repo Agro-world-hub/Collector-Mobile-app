@@ -291,7 +291,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
   if (hasPermission === null) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ fontSize: 18, color: '#333' }}>Requesting for camera permission</Text>
+        <Text style={{ fontSize: 18, color: '#333' }}>{t("QRScanner.Requesting for camera permission")}</Text>
       </View>
     );
   }
