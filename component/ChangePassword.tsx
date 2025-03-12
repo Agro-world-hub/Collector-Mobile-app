@@ -14,7 +14,7 @@ import { RootStackParamList } from "./types";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"; // Import the icon library
 import axios from "axios";
 import { ScrollView } from "react-native-gesture-handler";
-import {environment} from "@/environment/environment";
+import {environment }from '@/environment/environment';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -56,7 +56,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
         );
         console.log("Empid response:", response.data);
       } catch (error) {
-        Alert.alert("Error", t("Error.Failed to fetch empid."));
+        Alert.alert(t("Error.error"), t("Error.Failed to fetch empid."));
       }
     };
   }, []);
@@ -64,12 +64,12 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   const handleChangePassword = async () => {
 
     if (newPassword !== confirmPassword) {
-      Alert.alert("Error", t("Error.New password and confirm password do not match."));
+      Alert.alert(t("Error.error"), t("Error.New password and confirm password do not match."));
       return;
     }
 
     if (newPassword.length < 6) {
-      Alert.alert("Error", t("Error.New password must be at least 6 characters long."));
+      Alert.alert(t("Error.error"), t("Error.New password must be at least 6 characters long."));
       return;
     }
 
@@ -87,7 +87,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
       Alert.alert("Success", "Password updated successfully");
       navigation.navigate("Login");
     } catch (error) {
-      Alert.alert("Error", t("Error.Failed to update password."));
+      Alert.alert(t("Error.error"), t("Error.Failed to update password."));
     }
   };
 

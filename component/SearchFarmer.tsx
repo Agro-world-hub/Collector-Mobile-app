@@ -15,7 +15,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
-import {environment} from "../environment/environment";
+import {environment }from '@/environment/environment';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -41,6 +41,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
   const [NICnumber, setNICnumber] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [noResults, setNoResults] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
   const [farmers, setFarmers] = useState<
     {
       NICnumber: string;
@@ -93,11 +94,11 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
         } else {
           Alert.alert(
             "Error",
-            error.response?.data?.error || "Failed to search for farmer."
+            error.response?.data?.error || t("Error.Failed to search for farmer.")
           );
         }
       } else {
-        Alert.alert("Error", "An unexpected error occurred.");
+        Alert.alert(t("Error.error"), t("Error.An unexpected error occurred."));
       }
     }
   };
@@ -113,6 +114,16 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
   const DismisKeyboard = () => {
     Keyboard.dismiss();
   }
+
+  const getTextStyle = (language: string) => {
+    if (language === "si") {
+      return {
+        fontSize: 12, // Smaller text size for Sinhala
+        lineHeight: 20, // Space between lines
+      };
+    }
+   
+  };
 
   return (
     <KeyboardAvoidingView
@@ -138,7 +149,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
 
         {/* Search Form */}
         <View className="p-4">
-          <Text className="text-center text-lg  mt-5">
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-lg  mt-5">
           {t("SearchFarmer.EnterFarmer")}
           </Text>
 
@@ -179,7 +190,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
           {/* Searching status */}
           {isSearching && (
             <View className="mt-10 items-center">
-              <Text className="text-center text-lg">{t("SearchFarmer.Searching")}</Text>
+              <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-lg">{t("SearchFarmer.Searching")}</Text>
             </View>
           )}
 
@@ -191,7 +202,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
                 className="h-[200px] w-[200px] rounded-lg"
                 resizeMode="contain"
               />
-              <Text className="text-center text-lg mt-4 color-[#888888]">
+              <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-lg mt-4 color-[#888888]">
               {t("SearchFarmer.Noregistered")}
               </Text>
 
@@ -203,7 +214,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
                 }
                 className="mt-16 bg-[#2AAD7A]  rounded-full px-16 py-3  "
               >
-                <Text className="text-white text-lg">{t("SearchFarmer.RegisterFarmer")}</Text>
+                <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-white text-lg">{t("SearchFarmer.RegisterFarmer")}</Text>
               </TouchableOpacity>
             </View>
           )}

@@ -5,7 +5,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { scale } from 'react-native-size-matters';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { RootStackParamList } from '../types';
-import {environment} from "../../environment/environment";
+import {environment }from '@/environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AntDesign } from '@expo/vector-icons';
 import { useTranslation } from "react-i18next";
@@ -45,6 +45,23 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
   const {empId} = route.params;
   console.log('empId:', empId);
   const { t } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+
+      const fetchSelectedLanguage = async () => {
+        try {
+          const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+          setSelectedLanguage(lang || "en"); // Default to English if not set
+        } catch (error) {
+          console.error("Error fetching language preference:", error);
+        }
+      };
+
+      useEffect(() => {
+            const fetchData = async () => {
+              await fetchSelectedLanguage(); 
+            };
+            fetchData();
+          }, []);
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -134,6 +151,18 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
     }
   }, [selectedDate]);
 
+  const getTextStyle = (language: string) => {
+    if (language === "si") {
+      return {
+        fontSize: 14, // Smaller text size for Sinhala
+        lineHeight: 20, // Space between lines
+      };
+    }
+   
+  };
+
+  
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View>
@@ -142,9 +171,9 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
           <TouchableOpacity onPress={() => navigation.goBack()} className="absolute mt-[4%] left-4">
                     <AntDesign name="left" size={22} color="white" />
                   </TouchableOpacity>
-          <Text className="text-white text-lg font-bold ml-[28%] mt-[4%]">{t("ManagerTransactions.EMPID")}{empId} </Text>
+          <Text  className="text-white text-lg font-bold ml-[28%] mt-[4%]">{t("ManagerTransactions.EMPID")}{empId} </Text>
           <View className="flex-row items-center justify-between mt-2">
-            <Text className="text-white text-lg ml-[20%]">
+            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-white text-lg ml-[20%]">
             {t("ManagerTransactions.Selected Date")} {selectedDate ? selectedDate.toISOString().split('T')[0] : 'N/A'}
             </Text>
             <View className='mt-[-3%]'>
@@ -157,11 +186,13 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
 
         <View className="flex-row items-center bg-[#F7F7F7] px-4 py-2 rounded-full border border-[#444444] mt-[-18] mx-auto w-[90%] shadow-sm">
           <TextInput
+          style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
             placeholder={t("ManagerTransactions.Search")}
             placeholderTextColor="grey"
             className="flex-1 text-sm text-gray-800"
             value={searchQuery}
             onChangeText={handleSearch}
+            
           />
           <Image
             source={require('../../assets/images/searchhh.webp')}
@@ -184,7 +215,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
       </View>
 
       <View className="px-4 mt-4">
-        <Text className="text-lg font-semibold text-black mb-4">
+        <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-lg font-semibold text-black mb-4">
         {t("ManagerTransactions.Transaction List")} ( {t("ManagerTransactions.All")} {filteredTransactions.length})
         </Text>
       </View>
@@ -244,7 +275,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
         )}
         ListEmptyComponent={
           <View className="items-center mt-[50%]">
-            <Text className="text-gray-500 text-lg">{t("ManagerTransactions.Notransactions")}</Text>
+            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 text-lg">{t("ManagerTransactions.Notransactions")}</Text>
           </View>
         }
       />

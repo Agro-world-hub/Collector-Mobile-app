@@ -15,7 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
 import { useNavigation } from '@react-navigation/native';
-import {environment} from "../../environment/environment";
+import {environment }from '@/environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { SelectList } from 'react-native-dropdown-select-list';
@@ -51,7 +51,7 @@ const ClaimOfficer: React.FC = () => {
       const userToken = await AsyncStorage.getItem('token');
 
       if (!userToken) {
-        Alert.alert('Error', 'User token not found. Please log in again.');
+        Alert.alert(t("Error.error"), t("Error.User token not found. Please log in again."));
         return;
       }
 
@@ -83,7 +83,7 @@ const ClaimOfficer: React.FC = () => {
       }
     } catch (err) {
       console.error(err);
-      Alert.alert('Error', 'Something went wrong. Please try again later.');
+      Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
     }
   };
 
@@ -92,7 +92,7 @@ const ClaimOfficer: React.FC = () => {
       const userToken = await AsyncStorage.getItem('token');
 
       if (!userToken) {
-        Alert.alert('Error', 'User token not found. Please log in again.');
+        Alert.alert(t("Error.error"), t("Error.User token not found. Please log in again."));
         return;
       }
 
@@ -106,16 +106,16 @@ const ClaimOfficer: React.FC = () => {
       });
 
       if (!response.ok) {
-        Alert.alert('Error', 'Failed to claim the officer. Please try again later.');
+        Alert.alert(t("Error.error"), t("Error.Failed to claim the officer. Please try again later."));
       } else {
-        Alert.alert('Success', 'Officer successfully claimed.');
+        Alert.alert(t("Error.Success"), t("Error.Officer successfully claimed."));
         setOfficerFound(false);
         setOfficerDetails(null);
         setEmpID('');
       }
     } catch (err) {
       console.error(err);
-      Alert.alert('Error', 'Something went wrong. Please try again later.');
+      Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
     }
   };
   
@@ -132,7 +132,12 @@ const ClaimOfficer: React.FC = () => {
         >
            <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
-        <Text className="text-lg font-bold ml-[25%]"> {t("ClaimOfficer.ClaimOfficers")}</Text>
+        {/* <Text className="text-lg font-bold ml-[25%]"> {t("ClaimOfficer.ClaimOfficers")}</Text> */}
+        <View className="w-full">
+  <Text className="text-lg font-bold text-center">{t("ClaimOfficer.ClaimOfficers")}</Text>
+</View>
+
+
       </View>
 
       {/* Form */}

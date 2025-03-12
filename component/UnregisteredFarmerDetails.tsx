@@ -15,7 +15,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
 import CountryPicker, { Country, CountryCode } from "react-native-country-picker-modal";
 import axios from "axios";
-import {environment} from "../environment/environment";
+import {environment }from '@/environment/environment';
 import { Picker } from "@react-native-picker/picker";
 import {
   widthPercentageToDP as wp,
@@ -78,6 +78,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   const [filteredBranches, setFilteredBranches] = useState<allBranches[]>([]);
   const [callingCode, setCallingCode] = useState("+94"); 
   // const [loading, setLoading] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
 
 
   console.log(countryCode)
@@ -170,7 +171,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
           setFilteredBranches(sortedBranches);
         } catch (error) {
           console.error("Error loading branches", error);
-          Alert.alert(t("Main.error"), t("Main.somethingWentWrong"));
+          Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
         } finally {
           setLoading(false);
         }
@@ -317,7 +318,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
         branchName: branchName,
       });
     } catch (error) {
-      Alert.alert("Main.error", "SignupForum.otpSendFailed");
+      Alert.alert(t("Error.error"), t("Error.SignupForum.otpSendFailed"));
     }
   };
 
@@ -335,6 +336,16 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   const handleCountrySelect = (country: Country) => {
     setCountryCode(country.cca2 as CountryCode); // Update country code
     setCallingCode(`+${country.callingCode[0]}`); // Update dial code
+  };
+
+  const getTextStyle = (language: string) => {
+    if (language === "si") {
+      return {
+        fontSize: 14, // Smaller text size for Sinhala
+        lineHeight: 20, // Space between lines
+      };
+    }
+   
   };
 
   return (
@@ -569,7 +580,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   {loading ? (
     <ActivityIndicator color="white" size="small" />
   ) : (
-    <Text className="text-center text-xl font-light text-white">
+    <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-xl font-light text-white">
       {t("UnregisteredFarmerDetails.Submit")}
     </Text>
   )}

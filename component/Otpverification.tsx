@@ -20,7 +20,7 @@ import {
 } from "react-native-responsive-screen";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {environment} from '../environment/environment';
+import {environment }from '@/environment/environment';
 import { useTranslation } from "react-i18next";
 import { Dimensions } from "react-native";
 import { Modal } from "react-native";

@@ -25,6 +25,13 @@ interface ProfileData {
   lastNameEnglish: string;
   companyName: string;
   image: string;
+  firstNameSinhala: string;
+  lastNameSinhala:string;
+  firstNameTamil:string;
+  lastNameTamil:string;
+  companyNameSinhala:string;
+  companyNameEnglish:string;
+  companyNameTamil:string
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
@@ -33,6 +40,16 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
     const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
     const [refreshing, setRefreshing] = useState(false);
      const { t } = useTranslation();
+     const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+
+     const fetchSelectedLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+        setSelectedLanguage(lang || "en"); // Default to English if not set
+      } catch (error) {
+        console.error("Error fetching language preference:", error);
+      }
+    };
 
   const fetchUserProfile = async () => {
     try {
@@ -46,6 +63,8 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
         );
         setProfile(response.data.data);
         setEmpId(response.data.data.empId);
+        console.log("data:", response.data.data);
+
       }
     } catch (error) {
       console.error("Failed to fetch user profile:", error);
@@ -56,7 +75,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert("Error", "User not authenticated.");
+        Alert.alert(t("Error.error"), t("Error.User not authenticated."));
         return;
       }
       const response = await axios.get(
@@ -134,6 +153,40 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
   };
 
 
+  const getFullName = () => {
+    if (!profile) return "Loading...";
+    switch (selectedLanguage) {
+      case "si":
+        return `${profile.firstNameSinhala} ${profile.lastNameSinhala}`;
+      case "ta":
+        return `${profile.firstNameTamil} ${profile.lastNameTamil}`;
+      default:
+        return `${profile.firstNameEnglish} ${profile.lastNameEnglish}`;
+    }
+  };
+  const getcompanyName = () => {
+    if (!profile) return "Loading...";
+    switch (selectedLanguage) {
+      case "si":
+        return `${profile.companyNameSinhala}`;
+      case "ta":
+        return `${profile.companyNameTamil}`;
+      default:
+        return `${profile.companyNameEnglish} `;
+    }
+  };
+
+  const getTextStyle = (language: string) => {
+    if (language === "si") {
+      return {
+        fontSize: 14, // Smaller text size for Sinhala
+        lineHeight: 20, // Space between lines
+      };
+    }
+   
+  };
+
+
   return (
     <ScrollView
       className="flex-1 bg-white p-3"
@@ -159,13 +212,15 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
 
         <View>
           {/* Displaying name and company name if the profile is available */}
-          <Text className="text-lg font-bold">
+          {/* <Text className="text-lg font-bold">
             {profile?.firstNameEnglish || "Loading..."}{" "}
             {profile?.lastNameEnglish || "Loading..."}
-          </Text>
-          <Text className="text-gray-500">
+          </Text> */}
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-lg font-bold">{getFullName()}</Text>
+          {/* <Text className="text-gray-500">
             {profile?.companyName || "Loading..."}
-          </Text>
+          </Text> */}
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500">{getcompanyName()}</Text>
         </View>
       </TouchableOpacity>
 
@@ -218,8 +273,8 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
                    <Text className="text-2xl font-bold">{targetPercentage !== null ? `${targetPercentage}%` : "0%"}</Text>
                  </View>
   </View>
-  <Text className="text-gray-700 font-bold text-lg mt-2">{t("DashBoard.Yourtarget")} </Text>
-  <Text className="text-gray-700 font-bold text-lg "> {t("DashBoard.Progress")}</Text>
+  <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 font-bold text-lg mt-2">{t("DashBoard.Yourtarget")} </Text>
+  <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 font-bold text-lg "> {t("DashBoard.Progress")}</Text>
 </View>
 
 
@@ -233,7 +288,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
             source={require("../assets/images/qrrr.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
-          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("DashBoard.Scan")}</Text>
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 text-lg absolute bottom-2 left-2">{t("DashBoard.Scan")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -244,7 +299,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
             source={require("../assets/images/nic.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
-          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("DashBoard.Search")}</Text>
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 text-lg absolute bottom-2 left-2">{t("DashBoard.Search")}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

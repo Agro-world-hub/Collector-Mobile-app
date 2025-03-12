@@ -5,7 +5,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { SelectList } from "react-native-dropdown-select-list";
 import { RootStackParamList } from "../types";
 import axios from "axios";
-import {environment} from "../../environment/environment";
+import {environment }from '@/environment/environment';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 
@@ -51,7 +51,7 @@ const SetTargetScreen: React.FC<SetTargetScreenProps> = ({ navigation, route }) 
       }));
       setCropOptions(formattedData);
     } catch (error) {
-      Alert.alert("Error", "Failed to fetch crop names.");
+      Alert.alert(t("Error.error"), t("Error.Failed to fetch crop names."));
     } finally {
       setLoadingCrops(false);
     }
@@ -70,7 +70,7 @@ const SetTargetScreen: React.FC<SetTargetScreenProps> = ({ navigation, route }) 
       }));
       setVarietyOptions(formattedData);
     } catch (error) {
-      Alert.alert("Error", "Failed to fetch varieties.");
+      Alert.alert(t("Error.error"), t("Error.Failed to fetch varieties."));
     } finally {
       setLoadingVarieties(false);
     }
@@ -92,7 +92,7 @@ const SetTargetScreen: React.FC<SetTargetScreenProps> = ({ navigation, route }) 
 
   const handleAddMore = () => {
     if (!selectedCrop || !selectedVariety || !weights.gradeA || !weights.gradeB || !weights.gradeC) {
-      Alert.alert("Error", "Please fill in all fields.");
+      Alert.alert(t("Error.error"), t("Error.Please fill in all fields."));
       return;
     }
   
@@ -175,7 +175,7 @@ const SetTargetScreen: React.FC<SetTargetScreenProps> = ({ navigation, route }) 
 
   const handleSave = async () => {
     if (targets.length === 0) {
-      Alert.alert("Error", "No targets to save.");
+      Alert.alert(t("Error.error"), t("Error.No targets to save."));
       return;
     }
   
@@ -185,7 +185,7 @@ const SetTargetScreen: React.FC<SetTargetScreenProps> = ({ navigation, route }) 
     const formattedToTime = formatTimeToMySQL(toTime);
   
     if (!formattedFromDate || !formattedToDate || !formattedFromTime || !formattedToTime) {
-      Alert.alert("Error", "Invalid date or time values provided.");
+      Alert.alert(t("Error.error"), t("Error.Invalid date or time values provided."));
       return;
     }
   
@@ -205,7 +205,7 @@ const SetTargetScreen: React.FC<SetTargetScreenProps> = ({ navigation, route }) 
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert("Error", "Authentication token is missing.");
+        Alert.alert(t("Error.error"), t("Error.Authentication token is missing."));
         return;
       }
   
@@ -220,14 +220,14 @@ const SetTargetScreen: React.FC<SetTargetScreenProps> = ({ navigation, route }) 
       );
   
       if (response.data.status) {
-        Alert.alert("Success", "Daily target created successfully!");
+        Alert.alert(t("Error.Success"), t("Error.Daily target created successfully"));
         navigation.goBack();
       } else {
-        Alert.alert("Error", response.data.message || "Failed to save target.");
+        Alert.alert(t("Error.error"), response.data.message || "Failed to save target.");
       }
     } catch (error) {
       console.error("Error saving target:", error);
-      Alert.alert("Error", "An error occurred while saving the target.");
+      Alert.alert(t("Error.error"), t("Error.An error occurred while saving the target."));
     }
   };
   
