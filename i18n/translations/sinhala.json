@@ -40,11 +40,89 @@
        "No QR Code available.":"QR කේතයක් නොමැත.",
        "Failed to share QR Code.":"QR කේතය බෙදා ගැනීමට අසමත් විය.",
        "errorOccurred":"දෝෂයක් ඇති විය",
-       "somethingWentWrong":"යමක් වැරදී ඇත.",
+       "somethingWentWrong":"යමක් වැරදී ඇත.කරුණාකර පසුව නැවත උත්සාහ කරන්න.",
        "otpResent":"otp නැවත යැව්වා",
        "otpResendFailed":"otp නැවත යැවීම අසාර්ථක විය",
        "You must change the prices before submitting. Please update the values.":"ඉදිරිපත් කිරීමට පෙර ඔබ මිල ගණන් වෙනස් කළ යුතුය. කරුණාකර අගයන් යාවත්කාලීන කරන්න.",
-       "Failed to submit price update.":"මිල යාවත්කාලීන කිරීම ඉදිරිපත් කිරීමට අසමත් විය."
+       "Failed to submit price update.":"මිල යාවත්කාලීන කිරීම ඉදිරිපත් කිරීමට අසමත් විය.",
+       "Failed to load profile data":"පැතිකඩ දත්ත පූරණය කිරීමට අසමත් විය.",
+       "Failed to update phone numbers":"දුරකථන අංක යාවත්කාලීන කිරීමට අසමත් විය.",
+       "Permission required":"අවසරය අවශ්‍යයි, පැතිකඩ පින්තූරයක් උඩුගත කිරීමට කරුණාකර ඔබගේ ඡායාරූප පුස්තකාලයට ප්‍රවේශ වීමට ඉඩ දෙන්න.",
+       "Sorry":"සමාවෙන්න",
+      "Failed to load details":"විස්තර පූරණය කිරීමට අසමත් විය.",
+      "Details are missing for generating PDF":"PDF ජනනය කිරීම සඳහා විස්තර අස්ථානගත වී ඇත.",
+      "Failed to save PDF to Downloads folder.":"PDF බාගැනීම් ෆෝල්ඩරයට සුරැකීමට අසමත් විය.",
+      "PDF was not generated.":"PDF ජනනය නොවීය.",
+      "Failed to search for farmer.":"ගොවියා සෙවීමට නොහැකි විය.",
+      "An unexpected error occurred.":"අනපේක්ෂිත දෝෂයක් ඇති විය.",
+      "no any prices found":"කිසිදු මිලක් හමු නොවීය !",
+      "Failed to submit crop details. Please try again.":"කප්පාදු විස්තර ඉදිරිපත් කිරීමට අසමත් විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+      "otpSendFailed":"otp යැවීම අසාර්ථක විය",
+      "Please fill in all required fields.":"කරුණාකර අවශ්‍ය සියලුම ක්ෂේත්‍ර පුරවන්න.",
+      "Account numbers do not match.":"ගිණුම් අංක නොගැලපේ.",
+      "Validation Errors":"වලංගුකරණ දෝෂ",
+    "An error occurred while creating the officer.":"නිලධාරියා නිර්මාණය කිරීමේදී දෝෂයක් ඇති විය.",
+    "ErrorEmail":"විද්‍යුත් තැපෑල 'gmail.com', 'yahoo.com', '.com', '.gov', හෝ '.lk' වලින් අවසන් විය යුතුය.",
+    "setphoneError1":"දුරකථන අංකය 1 ඉලක්කම් 9 ක් විය යුතුය.",
+    "setphoneError2":"දුරකථන අංකය 2 ඉලක්කම් 9 ක් විය යුතුය.",
+    "User token not found. Please log in again.":"පරිශීලක ටෝකනය හමු නොවීය. කරුණාකර නැවත පුරනය වන්න.",
+    "Failed to claim the officer. Please try again later.":"නිලධාරියාට හිමිකම් පෑමට නොහැකි විය. කරුණාකර පසුව නැවත උත්සාහ කරන්න.",
+    "Success":"සාර්ථකයි!",
+    "Officer successfully claimed.":"නිලධාරියා සාර්ථකව කියා සිටියේය.",
+    "Failed to generate PDF":"PDF ජනනය කිරීමට අසමත් විය.",
+    "Sharing is not available on this device":"මෙම උපාංගයේ බෙදාගැනීම ලබා ගත නොහැක.",
+    "User not authenticated.":"පරිශීලකයා සත්‍යාපනය කර නොමැත.",
+    "No task summary found for this officer.":"මෙම නිලධාරියා සඳහා කාර්ය සාරාංශයක් හමු නොවීය.",
+    "Failed to fetch task summary.":"කාර්ය සාරාංශය ලබා ගැනීමට අසමත් විය.",
+    "Missing collectionOfficerId":"එකතු කිරීමේ නිලධාරී හැඳුනුම්පත අතුරුදහන්. කරුණාකර නැවත උත්සාහ කරන්න.",
+    "Failed to disclaim officer.":"නිලධාරියා ප්‍රතික්ෂේප කිරීමට අපොහොසත් විය.",
+    "Failed to get officer status.":"නිලධාරි තත්ත්වය ලබා ගැනීමට අපොහොසත් විය.",
+    "Failed to fetch officers.":"නිලධාරීන් ගෙන්වා ගැනීමට අපොහොසත් විය.",
+    "No officers available.":"නිලධාරීන් ගෙන්වා ගැනීමට අපොහොසත් විය.",
+    "An error occurred while fetching officers.":"නිලධාරීන් ගෙන්වා ගැනීමට අපොහොසත් විය",
+    "You have exceeded the maximum amount.":"ඔබ උපරිම මුදල ඉක්මවා ඇත",
+    "Please select an officer.":"කරුණාකර නිලධාරියෙකු තෝරන්න.",
+    "Please enter a valid amount.":"කරුණාකර වලංගු මුදලක් ඇතුළත් කරන්න.",
+    "You cannot transfer more than":"ඔබට වඩා මාරු කළ නොහැක",
+    "Target transferred successfully.":"ඉලක්කය සාර්ථකව මාරු කරන ලදී",
+    "Failed to transfer target.":"ඉලක්කය මාරු කරන ලදී",
+    "An error occurred while transferring the target.":"ඉලක්කය මාරු කරන විට දෝෂයක් ඇති විය.",
+    "No target data found for selected officer.":"තෝරාගත් නිලධාරියා සඳහා ඉලක්ක දත්ත හමු නොවීය.",
+    "Failed to fetch daily target.":"දෛනික ඉලක්කය ලබා ගැනීමට අසමත් විය.",
+    "Failed to receive target.":"ඉලක්කය ලබා ගැනීමට අසමත් විය.",
+    "An error occurred while receiving the target.":"ඉලක්කය ලබා ගැනීමේදී දෝෂයක් ඇති විය.",
+    "Please select both start and end dates.":"කරුණාකර ආරම්භක සහ අවසන් දින දෙකම තෝරන්න.",
+    "End date cannot be earlier than the start date.":"අවසන් දිනය ආරම්භක දිනයට වඩා කලින් විය නොහැක.",
+    "PDF Generated Successfully":"PDF සාර්ථකව ජනනය කරන ලදී!",
+    "Permission Denied":"අවසර ප්‍රතික්ෂේප කරන ලදී, ගොනුව සුරැකීමට ඔබට ගබඩා අවසර ලබා දිය යුතුය.",
+    "File saved as":"ගොනුව ලෙස සුරකින ලදී",
+    "in the Downloads folder":"බාගැනීම් ෆෝල්ඩරයේ",
+    "An error occurred while saving the file.":"ගොනුව සුරකින අතරතුර දෝෂයක් ඇති විය.",
+    "Sharing is not available on this device.":"මෙම උපාංගයේ බෙදාගැනීම ලබා ගත නොහැක.",
+    "File saved to app's directory:":"ගොනුව යෙදුමේ නාමාවලියට සුරකින ලදී:",
+    "Failed to fetch crop names.":"බෝග නාම ලබා ගැනීමට අපොහොසත් විය.",
+    "Failed to fetch varieties.":"ප්‍රවර්ග ලබා ගැනීමට අපොහොසත් විය.",
+    "Please fill in all fields.":"සියලු ක්ෂේත්‍ර පුරවන්න.",
+    "No targets to save.":"සුරකින්න ගමනාන්ත නොමැත.",
+    "Invalid date or time values provided.":"අවලංගු දිනය හෝ වේලාවේ අගයන් සපයා ඇත.",
+    "Authentication token is missing.":"සත්‍යාපන ටෝකනය අස්ථානගත වී ඇත.",
+    "An error occurred while saving the target.":"ගමනාන්තය සුරකින අතරතුර දෝෂයක් ඇති විය.",
+    "Daily target created successfully":"දෛනික ඉලක්කය සාර්ථකව නිර්මාණය කරන ලදී.",
+    "Failed to fetch data.":"දත්ත ලබා ගැනීමට අසමත් විය. කරුණාකර පසුව නැවත උත්සාහ කරන්න.",
+    "Failed to load crop details":"කප්පාදු විස්තර පූරණය කිරීමට අසමත් විය.",
+    "sorry":"සමාවෙන්න",
+     "Failed to submit complaint":"පැමිණිල්ල ඉදිරිපත් කිරීමට අපොහොසත් විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+     "Please select a category and add your complaint.":"කරුණාකර කාණ්ඩයක් තෝරා ඔබේ පැමිණිල්ල එක් කරන්න.",
+     "Failed to fetch prices":"මිල ගණන් ලබා ගැනීමට අසමත් විය.",
+     "Phone number cannot exceed 9 digits.":"දුරකථන අංකය ඉලක්කම් 9 ඉක්මවිය නොහැක.",
+     "The scanned QR code does not contain a valid user ID or is damaged.":"ස්කෑන් කරන ලද QR කේතයේ වලංගු පරිශීලක හැඳුනුම්පතක් නොමැත හෝ හානි වී ඇත.",
+      "No prices to update":"යාවත්කාලීන කිරීමට මිල ගණන් නොමැත, ඉදිරිපත් කිරීමට පෙර මිල ගණන් සංස්කරණය කරන්න.",
+      "The price request was sent successfully":"මිල ඉල්ලීම සාර්ථකව යවන ලදී!",
+      "Officer created successfully":"නිලධාරියා සාර්ථකව නිර්මාණය කරන ලදී!",
+      "Phone numbers updated successfully":"දුරකථන අංක සාර්ථකව යාවත්කාලීන කරන ලදී.",
+      "Submitted":"ඉදිරිපත් කරන ලදී",
+    "Your complaint has Submit successfuly":"ඔබගේ පැමිණිල්ල සාර්ථකව ඉදිරිපත් කර ඇත!:"
+
 
   
 
@@ -75,7 +153,8 @@
     "Street":"වීදියේ නම",
     "City":"නගරය",
     "District":"දිස්ත්‍රික්කය",
-    "Province": "පළාත"
+    "Province": "පළාත",
+    "Update":"යාවත්කාලීන කරන්න"
 
 
   },
@@ -136,7 +215,10 @@
     "Crop":"බෝග නාමය",
     "Variety":"විවිධත්වය",
     "UnitGrades":"ශ්‍රේණි අනුව ඒකක මිල ගණන්",
-    "Go":"ආපසු යන්න"
+    "Go":"ආපසු යන්න",
+    "Grade":"ශ්‍රේණිය",
+    "Request Price Update":"මිල යාවත්කාලීනය ඉල්ලන්න",
+    "Submit Request":"ඉල්ලීම ඉදිරිපත් කරන්න"
 
   },
 
@@ -173,7 +255,8 @@
     "UnitGrades":"ශ්‍රේණි අනුව ඒකක මිල ගණන්",
     "Total":"එකතුව (රු.)",
     "Add":"තවත් එකතු කරන්න",
-    "Done":"නිම"
+    "Done":"නිම",
+    "Select Crop":"කප්පාදුව තෝරන්න"
 
   },
   "ReportPage":{
@@ -230,7 +313,8 @@
     "Close":"වසන්න",
     "TapScan":"නැවත ස්කෑන් කිරීමට තට්ටු කරන්න",
     "Failed":"අසාර්ථක",
-    "SearchNIC":"පරිශීලකයාගේ NIC අංකය අනුව සොයන්න"
+    "SearchNIC":"පරිශීලකයාගේ NIC අංකය අනුව සොයන්න",
+    "Requesting for camera permission":"කැමරා අවසරය ඉල්ලා සිටීම"
   },
   "ChangePassword":{
     "LNG": "si",
@@ -318,7 +402,9 @@
     "BankName":"--බැංකු නම--",
     "BranchName":"--ශාඛාවේ නම--",
     "Go":"ආපසු යන්න",
-    "Submit":"ඉදිරිපත් කරන්න"
+    "Submit":"ඉදිරිපත් කරන්න",
+    "Select Province":"පළාත තෝරන්න",
+    "Select District":"දිස්ත්‍රික්කය තෝරන්න"
     
   },
 
@@ -368,7 +454,7 @@
     "EMPID":"EMP ID:",
     "Selected Date":"තෝරාගත් දිනය:",
     "Transaction List":"ගනුදෙනු ලැයිස්තුව",
-    "NIC":"ජාතික හැඳුනුම්පත් අංකය:",
+    "NIC":"ජා.හැ.අ:",
     "Notransactions":"තෝරාගත් දිනය සඳහා ගනුදෙනු හමු නොවීය.",
     "Search":"ජාතික හැඳුනුම්පත් අංකය, නම අනුව සොයන්න",
     "All":"සියල්ල"
@@ -433,35 +519,47 @@
  
   },
 
+  "Provinces": {
+    "Western": "බටහිර",
+    "Central": "මධ්‍යම",
+    "Southern": "දකුණු",
+    "Eastern":"නැගෙනහිර",
+    "Northern":"උතුරු",
+    "North Western":"වයඹ",
+    "North Central":"උතුරු මැද",
+    "Uva":"ඌව",
+    "Sabaragamuwa":"සබරගමුව"
+  },
 
 
+  
   "Districts": {
-    "selectDistrict": "Select a District",
-    "Ampara": "Ampara",
-    "Anuradhapura": "Anuradhapura",
-    "Badulla": "Badulla",
-    "Batticaloa": "Batticaloa",
-    "Colombo": "Colombo",
-    "Galle": "Galle",
-    "Gampaha": "Gampaha",
-    "Hambantota": "Hambantota",
-    "Jaffna": "Jaffna",
-    "Kalutara": "Kalutara",
-    "Kandy": "Kandy",
-    "Kegalle": "Kegalle",
-    "Kilinochchi": "Kilinochchi",
-    "Kurunegala": "Kurunegala",
-    "Mannar": "Mannar",
-    "Matale": "Matale",
-    "Matara": "Matara",
-    "Moneragala": "Moneragala",
-    "Mullaitivu": "Mullaitivu",
-    "NuwaraEliya": "Nuwara Eliya",
-    "Polonnaruwa": "Polonnaruwa",
-    "Puttalam": "Puttalam",
-    "Rathnapura": "Rathnapura",
-    "Trincomalee": "Trincomalee",
-    "Vavuniya": "Vavuniya"
+    "selectDistrict": "දිස්ත්‍රික්කයක් තෝරන්න",
+    "Ampara": "අම්පාර",
+    "Anuradhapura": "අනුරාධපුර",
+    "Badulla": "බදුල්ල",
+    "Batticaloa": "මඩකලපුව",
+    "Colombo": "කොළඹ",
+    "Galle": "ගාල්ල",
+    "Gampaha": "ගම්පහ",
+    "Hambantota": "හම්බන්තොට",
+    "Jaffna": "යාපනය",
+    "Kalutara": "කළුතර",
+    "Kandy": "මහනුවර",
+    "Kegalle": "කෑගල්ල",
+    "Kilinochchi": "කිලිනොච්චි",
+    "Kurunegala": "කුරුණෑගල",
+    "Mannar": "මන්නාරම",
+    "Matale": "මාතලේ",
+    "Matara": "මාතර",
+    "Moneragala": "මොනරාගල",
+    "Mullaitivu": "මුලතිව්",
+    "NuwaraEliya": "නුවරඑළිය",
+    "Polonnaruwa": "පොළොන්නරුව",
+    "Puttalam": "පුත්තලම",
+    "Rathnapura": "රත්නපුර",
+    "Trincomalee": "ත්‍රිකුණාමලය",
+    "Vavuniya": "වවුනියාව"
   },  
   "ReportComplaint": {
     "LNG": "si",
