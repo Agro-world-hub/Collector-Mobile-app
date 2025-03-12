@@ -24,6 +24,13 @@ interface ProfileData {
   lastNameEnglish: string;
   companyName: string;
   image: string;
+  firstNameSinhala: string;
+  lastNameSinhala:string;
+  firstNameTamil:string;
+  lastNameTamil:string;
+  companyNameSinhala:string;
+  companyNameEnglish:string;
+  companyNameTamil:string
 }
 
 const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
@@ -32,6 +39,16 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
   const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
   const [refreshing, setRefreshing] = useState(false);
       const { t } = useTranslation();
+      const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+
+      const fetchSelectedLanguage = async () => {
+        try {
+          const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+          setSelectedLanguage(lang || "en"); // Default to English if not set
+        } catch (error) {
+          console.error("Error fetching language preference:", error);
+        }
+      };
 
   const fetchUserProfile = async () => {
     try {
@@ -50,6 +67,25 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
       console.error("Failed to fetch user profile:", error);
     }
   };
+
+  // const getTextStyle = (language: string) => {
+  //   if (language === "si") {
+  //     return { fontSize: 14 }; // Smaller text size for Sinhala
+  //   }
+   
+  // };
+
+  const getTextStyle = (language: string) => {
+    if (language === "si") {
+      return {
+        fontSize: 14, // Smaller text size for Sinhala
+        lineHeight: 20, // Space between lines
+      };
+    }
+   
+  };
+  
+  
 
   const fetchTargetPercentage = async () => {
     try {
@@ -80,10 +116,19 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
     }
   };
 
+  // useEffect(() => {
+  //   fetchUserProfile();
+  //   fetchTargetPercentage();
+  // }, []);
   useEffect(() => {
-    fetchUserProfile();
-    fetchTargetPercentage();
-  }, []);
+      const fetchData = async () => {
+        await fetchSelectedLanguage(); 
+        await fetchUserProfile();
+        await fetchTargetPercentage();
+      };
+      fetchData();
+    }, []);
+  
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -100,6 +145,28 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
         BackHandler.removeEventListener("hardwareBackPress", onBackPress);
     }, [])
   );
+  const getFullName = () => {
+    if (!profile) return "Loading...";
+    switch (selectedLanguage) {
+      case "si":
+        return `${profile.firstNameSinhala} ${profile.lastNameSinhala}`;
+      case "ta":
+        return `${profile.firstNameTamil} ${profile.lastNameTamil}`;
+      default:
+        return `${profile.firstNameEnglish} ${profile.lastNameEnglish}`;
+    }
+  };
+  const getcompanyName = () => {
+    if (!profile) return "Loading...";
+    switch (selectedLanguage) {
+      case "si":
+        return `${profile.companyNameSinhala}`;
+      case "ta":
+        return `${profile.companyNameTamil}`;
+      default:
+        return `${profile.companyNameEnglish} `;
+    }
+  };
 
   return (
     <ScrollView
@@ -124,13 +191,15 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
         />
 
         <View>
-          <Text className="text-lg font-bold">
+          {/* <Text className="text-lg font-bold">
             {profile?.firstNameEnglish || "Loading..."}{" "}
             {profile?.lastNameEnglish || "Loading..."}
-          </Text>
-          <Text className="text-gray-500">
+          </Text> */}
+           <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-lg font-bold">{getFullName()}</Text>
+          {/* <Text className="text-gray-500">
             {profile?.companyName || "Loading..."}
-          </Text>
+          </Text> */}
+           <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500">{getcompanyName()}</Text>
         </View>
       </TouchableOpacity>
 
@@ -156,7 +225,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
 
       {/* Target Progress */}
       <View className="flex-row items-center justify-between mb-[-5%] p-7 mt-[4%]">
-        <Text className="text-gray-700 font-bold text-lg">{t("ManagerDashboard.Yourtarget")}</Text>
+        <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 font-bold text-lg">{t("ManagerDashboard.Yourtarget")}</Text>
         <View className="relative">
           <CircularProgress
             size={100}
@@ -183,7 +252,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             source={require("../../assets/images/ct.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
-          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.CenterTarget")}</Text>
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.CenterTarget")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -196,7 +265,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             source={require("../../assets/images/mycollect.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
-          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.MyCollection")}</Text>
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.MyCollection")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -207,7 +276,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             source={require("../../assets/images/qrrr.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
-          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.Scan")}</Text>
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.Scan")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -218,7 +287,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             source={require("../../assets/images/nic.webp")}
             className="w-8 h-8 absolute top-2 right-2"
           />
-          <Text className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.Search")}</Text>
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.Search")}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

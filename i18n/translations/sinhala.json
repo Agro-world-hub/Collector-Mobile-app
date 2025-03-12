@@ -115,7 +115,11 @@
      "Please select a category and add your complaint.":"කරුණාකර කාණ්ඩයක් තෝරා ඔබේ පැමිණිල්ල එක් කරන්න.",
      "Failed to fetch prices":"මිල ගණන් ලබා ගැනීමට අසමත් විය.",
      "Phone number cannot exceed 9 digits.":"දුරකථන අංකය ඉලක්කම් 9 ඉක්මවිය නොහැක.",
-     "The scanned QR code does not contain a valid user ID or is damaged.":"ස්කෑන් කරන ලද QR කේතයේ වලංගු පරිශීලක හැඳුනුම්පතක් නොමැත හෝ හානි වී ඇත."
+     "The scanned QR code does not contain a valid user ID or is damaged.":"ස්කෑන් කරන ලද QR කේතයේ වලංගු පරිශීලක හැඳුනුම්පතක් නොමැත හෝ හානි වී ඇත.",
+      "No prices to update":"යාවත්කාලීන කිරීමට මිල ගණන් නොමැත, ඉදිරිපත් කිරීමට පෙර මිල ගණන් සංස්කරණය කරන්න.",
+      "The price request was sent successfully":"මිල ඉල්ලීම සාර්ථකව යවන ලදී!",
+      "Officer created successfully":"නිලධාරියා සාර්ථකව නිර්මාණය කරන ලදී!",
+      "Phone numbers updated successfully":"දුරකථන අංක සාර්ථකව යාවත්කාලීන කරන ලදී."
 
 
   
@@ -147,7 +151,8 @@
     "Street":"වීදියේ නම",
     "City":"නගරය",
     "District":"දිස්ත්‍රික්කය",
-    "Province": "පළාත"
+    "Province": "පළාත",
+    "Update":"යාවත්කාලීන කරන්න"
 
 
   },
@@ -208,7 +213,10 @@
     "Crop":"බෝග නාමය",
     "Variety":"විවිධත්වය",
     "UnitGrades":"ශ්‍රේණි අනුව ඒකක මිල ගණන්",
-    "Go":"ආපසු යන්න"
+    "Go":"ආපසු යන්න",
+    "Grade":"ශ්‍රේණිය",
+    "Request Price Update":"මිල යාවත්කාලීනය ඉල්ලන්න",
+    "Submit Request":"ඉල්ලීම ඉදිරිපත් කරන්න"
 
   },
 
@@ -390,7 +398,9 @@
     "BankName":"--බැංකු නම--",
     "BranchName":"--ශාඛාවේ නම--",
     "Go":"ආපසු යන්න",
-    "Submit":"ඉදිරිපත් කරන්න"
+    "Submit":"ඉදිරිපත් කරන්න",
+    "Select Province":"පළාත තෝරන්න",
+    "Select District":"දිස්ත්‍රික්කය තෝරන්න"
     
   },
 
@@ -440,7 +450,7 @@
     "EMPID":"EMP ID:",
     "Selected Date":"තෝරාගත් දිනය:",
     "Transaction List":"ගනුදෙනු ලැයිස්තුව",
-    "NIC":"ජාතික හැඳුනුම්පත් අංකය:",
+    "NIC":"ජා.හැ.අ:",
     "Notransactions":"තෝරාගත් දිනය සඳහා ගනුදෙනු හමු නොවීය.",
     "Search":"ජාතික හැඳුනුම්පත් අංකය, නම අනුව සොයන්න",
     "All":"සියල්ල"
@@ -505,35 +515,47 @@
  
   },
 
+  "Provinces": {
+    "Western": "බටහිර",
+    "Central": "මධ්‍යම",
+    "Southern": "දකුණු",
+    "Eastern":"නැගෙනහිර",
+    "Northern":"උතුරු",
+    "North Western":"වයඹ",
+    "North Central":"උතුරු මැද",
+    "Uva":"ඌව",
+    "Sabaragamuwa":"සබරගමුව"
+  },
 
 
+  
   "Districts": {
-    "selectDistrict": "Select a District",
-    "Ampara": "Ampara",
-    "Anuradhapura": "Anuradhapura",
-    "Badulla": "Badulla",
-    "Batticaloa": "Batticaloa",
-    "Colombo": "Colombo",
-    "Galle": "Galle",
-    "Gampaha": "Gampaha",
-    "Hambantota": "Hambantota",
-    "Jaffna": "Jaffna",
-    "Kalutara": "Kalutara",
-    "Kandy": "Kandy",
-    "Kegalle": "Kegalle",
-    "Kilinochchi": "Kilinochchi",
-    "Kurunegala": "Kurunegala",
-    "Mannar": "Mannar",
-    "Matale": "Matale",
-    "Matara": "Matara",
-    "Moneragala": "Moneragala",
-    "Mullaitivu": "Mullaitivu",
-    "NuwaraEliya": "Nuwara Eliya",
-    "Polonnaruwa": "Polonnaruwa",
-    "Puttalam": "Puttalam",
-    "Rathnapura": "Rathnapura",
-    "Trincomalee": "Trincomalee",
-    "Vavuniya": "Vavuniya"
+    "selectDistrict": "දිස්ත්‍රික්කයක් තෝරන්න",
+    "Ampara": "අම්පාර",
+    "Anuradhapura": "අනුරාධපුර",
+    "Badulla": "බදුල්ල",
+    "Batticaloa": "මඩකලපුව",
+    "Colombo": "කොළඹ",
+    "Galle": "ගාල්ල",
+    "Gampaha": "ගම්පහ",
+    "Hambantota": "හම්බන්තොට",
+    "Jaffna": "යාපනය",
+    "Kalutara": "කළුතර",
+    "Kandy": "මහනුවර",
+    "Kegalle": "කෑගල්ල",
+    "Kilinochchi": "කිලිනොච්චි",
+    "Kurunegala": "කුරුණෑගල",
+    "Mannar": "මන්නාරම",
+    "Matale": "මාතලේ",
+    "Matara": "මාතර",
+    "Moneragala": "මොනරාගල",
+    "Mullaitivu": "මුලතිව්",
+    "NuwaraEliya": "නුවරඑළිය",
+    "Polonnaruwa": "පොළොන්නරුව",
+    "Puttalam": "පුත්තලම",
+    "Rathnapura": "රත්නපුර",
+    "Trincomalee": "ත්‍රිකුණාමලය",
+    "Vavuniya": "වවුනියාව"
   },  
   "ReportComplaint": {
     "LNG": "si",

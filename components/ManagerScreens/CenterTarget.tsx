@@ -193,10 +193,12 @@ interface CenterTargetProps {
 
 interface TargetData {
   complete: number;
-  varietyName: string;
+  varietyNameEnglish: string;
   grade: string;
   target: number;
   todo: number;
+  varietyNameSinhala:string;
+  varietyNameTamil:string
 }
 
 const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
@@ -207,6 +209,17 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
   const [selectedToggle, setSelectedToggle] = useState('ToDo');
   const [refreshing, setRefreshing] = useState(false);
    const { t } = useTranslation();
+   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+ 
+
+   const fetchSelectedLanguage = async () => {
+     try {
+       const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+       setSelectedLanguage(lang || "en"); // Default to English if not set
+     } catch (error) {
+       console.error("Error fetching language preference:", error);
+     }
+   };
 
   const fetchTargets = async () => {
     setLoading(true);
@@ -218,6 +231,7 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
           Authorization: `Bearer ${authToken}`,
         },
       });
+      console.log(response.data.data)
 
       const allData = response.data.data;
       console.log('--------all data----------', allData);
@@ -247,6 +261,25 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
   };
 
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
+
+   useEffect(() => {
+          const fetchData = async () => {
+            await fetchSelectedLanguage(); 
+     
+          };
+          fetchData();
+        }, []);
+  
+        const getvarietyName = (TargetData: TargetData) => {
+          switch (selectedLanguage) {
+            case "si":
+              return TargetData.varietyNameSinhala;
+            case "ta":
+              return TargetData.varietyNameTamil;
+            default:
+              return TargetData.varietyNameEnglish;
+          }
+        };
 
   return (
     <View className="flex-1 bg-[#282828] ">
@@ -332,7 +365,8 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
                   className="w-40 p-2 border-r border-gray-300 text-center flex-wrap"
                   numberOfLines={2}
                 >
-                  {item.varietyName}
+                  {/* {item.varietyName} */}
+                  {getvarietyName(item)}
                 </Text>
                 <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.grade}</Text>
                 <Text className="w-32 p-2 border-r border-gray-300 text-center">

@@ -115,7 +115,11 @@
      "Please select a category and add your complaint.":"தயவுசெய்து ஒரு வகையைத் தேர்ந்தெடுத்து உங்கள் புகாரைச் சேர்க்கவும்.",
      "Failed to fetch prices":"விலைகளைப் பெற முடியவில்லை.",
      "Phone number cannot exceed 9 digits.":"தொலைபேசி எண் 9 இலக்கங்களுக்கு மேல் இருக்கக்கூடாது.",
-     "The scanned QR code does not contain a valid user ID or is damaged.":"ஸ்கேன் செய்யப்பட்ட QR குறியீட்டில் செல்லுபடியாகும் பயனர் ஐடி இல்லை அல்லது அது சேதமடைந்துள்ளது."
+     "The scanned QR code does not contain a valid user ID or is damaged.":"ஸ்கேன் செய்யப்பட்ட QR குறியீட்டில் செல்லுபடியாகும் பயனர் ஐடி இல்லை அல்லது அது சேதமடைந்துள்ளது.",
+      "No prices to update":"புதுப்பிக்க விலைகள் எதுவும் இல்லை, சமர்ப்பிக்கும் முன் விலைகளைத் திருத்தவும்.",
+      "The price request was sent successfully":"விலை கோரிக்கை வெற்றிகரமாக அனுப்பப்பட்டது!",
+      "Officer created successfully":"அதிகாரி வெற்றிகரமாக உருவாக்கப்பட்டது!",
+      "Phone numbers updated successfully":"தொலைபேசி எண்கள் வெற்றிகரமாகப் புதுப்பிக்கப்பட்டன."
    
     
   },
@@ -145,7 +149,8 @@
     "Street":"தெரு பெயர்",
     "City":"நகரம்",
     "District":"மாவட்டம்",
-    "Province": "மாகாணம்"
+    "Province": "மாகாணம்",
+    "Update":"புதுப்பிப்பு"
 
 
   },
@@ -206,7 +211,10 @@
     "Crop":"பயிர் பெயர்",
     "Variety":"வகை",
     "UnitGrades":"தரங்களின்படி அலகு விலைகள்",
-    "Go":"திரும்பிச் செல்"
+    "Go":"திரும்பிச் செல்",
+    "Grade":"தரம்",
+    "Request Price Update":"விலை புதுப்பிப்பைக் கோருங்கள்",
+    "Submit Request":"கோரிக்கையைச் சமர்ப்பிக்கவும்"
 
   },
   "Otpverification":{
@@ -534,7 +542,9 @@
     "BankName":"--வங்கி பெயர்--",
     "BranchName":"--கிளை பெயர்--",
     "Go":"திரும்பிச் செல்",
-    "Submit":"சமர்ப்பி"
+    "Submit":"சமர்ப்பி",
+    "Select Province":"மாகாணத்தைத் தேர்ந்தெடுக்கவும்",
+    "Select District":"மாவட்டத்தைத் தேர்ந்தெடுக்கவும்"
     
   },
 

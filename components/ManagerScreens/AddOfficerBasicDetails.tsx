@@ -707,7 +707,12 @@ const handleNicNumberChange = (input: string) => {
             <AntDesign name="left" size={24} color="#000502" />
           </TouchableOpacity>
 
-          <Text className="text-lg font-bold ml-[25%]">{t("AddOfficerBasicDetails.AddOfficer")}</Text>
+          <View className="flex-1 justify-center items-center">
+  <Text className="text-lg font-bold text-center">
+    {t("AddOfficerBasicDetails.AddOfficer")}
+  </Text>
+</View>
+
         </View>
 
         {/* Profile Avatar */}
@@ -773,7 +778,7 @@ const handleNicNumberChange = (input: string) => {
           {t("AddOfficerBasicDetails.PreferredLanguages")}
           </Text>
           <View className="flex-row items-center">
-            {["Sinhala", "English", "Tamil"].map((lang) => (
+            {["සිංහල", "English", "தமிழ்"].map((lang) => (
               <TouchableOpacity
                 key={lang}
                 className="flex-row items-center mr-6"

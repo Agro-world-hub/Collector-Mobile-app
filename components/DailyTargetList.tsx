@@ -45,6 +45,7 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
       const allData = response.data.data;
       const todoItems = allData.filter((item: TargetData) => item.todo > 0);
       const completedItems = allData.filter((item: TargetData) => item.todo === 0);
+      console.log(allData)
 
       setTodoData(todoItems);
       setCompletedData(completedItems);

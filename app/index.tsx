@@ -98,8 +98,9 @@
 // export default index
 
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, TextInput, Dimensions , StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { NativeWindStyleSheet } from "nativewind";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -178,9 +179,25 @@ import ManagerDashboard from "@/components/ManagerScreens/ManagerDashboard";
 import CenterTarget from "@/components/ManagerScreens/CenterTarget";
 import ManagerTransactions from "@/components/ManagerScreens/ManagerTransactions";
 // import socket from "@/services/socket";
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
+
+(Text as any).defaultProps = {
+  ...(Text as any).defaultProps,
+  allowFontScaling: false,
+};
+
+(TextInput as any).defaultProps = {
+  ...(TextInput as any).defaultProps,
+  allowFontScaling: false,
+};
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+const windowDimensions = Dimensions.get("window");
 
 function MainTabNavigator() {
   return (
@@ -565,5 +582,16 @@ const index = () => {
     </LanguageProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: windowDimensions.width * 0.05, // 5% padding
+    paddingVertical: windowDimensions.height * 0.02, // 2% padding
+  },
+  header: {
+    fontSize: windowDimensions.width * 0.05, // 5% of screen width for font size
+  },
+});
 
 export default index;

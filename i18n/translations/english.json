@@ -115,7 +115,11 @@
     "Please select a category and add your complaint.":"Please select a category and add your complaint.",
     "Failed to fetch prices":"Failed to fetch prices",
     "Phone number cannot exceed 9 digits.":"Phone number cannot exceed 9 digits.",
-    "The scanned QR code does not contain a valid user ID or is damaged.":"The scanned QR code does not contain a valid user ID or is damaged."
+    "The scanned QR code does not contain a valid user ID or is damaged.":"The scanned QR code does not contain a valid user ID or is damaged.",
+    "No prices to update":"No prices to update, Please edit the prices before submitting.",
+    "The price request was sent successfully":"The price request was sent successfully!",
+    "Officer created successfully":"Officer created successfully!",
+    "Phone numbers updated successfully":"Phone numbers updated successfully"
 
 
    
@@ -148,7 +152,8 @@
     "Street":"Street Name",
     "City":"City",
     "District":"District",
-    "Province": "Province"
+    "Province": "Province",
+    "Update":"Update"
 
 
   },
@@ -210,7 +215,10 @@
     "Crop":"Crop Name",
     "Variety":"Variety",
     "UnitGrades":"Unit Prices according to Grades",
-    "Go":"Go Back"
+    "Go":"Go Back",
+    "Grade":"Grade",
+    "Request Price Update":"Request Price Update",
+    "Submit Request":"Submit Request"
 
   },
   "Otpverification":{
@@ -391,7 +399,11 @@
     "BankName":"--Bank Name--",
     "BranchName":"--Branch Name--",
     "Go":"Go Back",
-    "Submit":"Submit"
+    "Submit":"Submit",
+    "Select Province":"Select Province",
+    "Select District":"Select District"
+
+ 
     
   },
   "CenterTarget":{
@@ -504,7 +516,17 @@
  
   },
 
-
+"Provinces": {
+    "Western": "Western",
+    "Central": "Central",
+    "Southern": "Southern",
+    "Eastern":"Eastern",
+    "Northern":"Northern",
+    "North Western":"North Western",
+    "North Central":"North Central",
+    "Uva":"Uva",
+    "Sabaragamuwa":"Sabaragamuwa"
+  },
 
 
   "Districts": {

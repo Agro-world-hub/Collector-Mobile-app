@@ -275,9 +275,11 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
   const [error, setError] = useState<string | null>(null);
   const [editedPrices, setEditedPrices] = useState<any[]>([]);
   const [isEditable, setIsEditable] = useState(false);
-  const [buttonText, setButtonText] = useState("Request Price Update");
-  const [isLoading, setIsLoading] = useState(false);
   const { t } = useTranslation();
+  const [buttonText, setButtonText] = useState(t("PriceChart.Request Price Update"));
+
+  const [isLoading, setIsLoading] = useState(false);
+ 
 
   // Fetch prices
   const fetchPrices = async () => {
@@ -322,7 +324,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
         }));
   
         if (requestData.length === 0) {
-          Alert.alert("No prices to update", "Please edit the prices before submitting.");
+          Alert.alert(t("Error.No prices to update"));
           return;
         }
   
@@ -339,10 +341,10 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
   
         // Handle success response
         if (response.status === 201) {
-          Alert.alert("Success", "The price request was sent successfully!");
+          Alert.alert(t("Error.Success"), t("Error.The price request was sent successfully"));
           await fetchPrices(); // Refetch prices after submitting
           setIsEditable(false);
-          setButtonText("Request Price Update");
+          setButtonText(t("PriceChart.Request Price Update"));
         }
       } catch (error) {
         // Check if error status is 400 and show the message to update prices
@@ -360,7 +362,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
       }
     } else {
       setIsEditable(true);
-      setButtonText("Submit Request");
+      setButtonText(t("PriceChart.Submit Request"));
     }
   };
   
@@ -376,7 +378,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
       </View>
 
       {/* Content */}
-      <ScrollView className="flex-1" style={{ paddingHorizontal: wp(8), paddingVertical: hp(8) }}>
+      <ScrollView className="flex-1" style={{ paddingHorizontal: wp(8), paddingVertical: hp(2) }}>
         <View className="mb-4">
           <Text className="text-gray-600 text-sm mb-1">{t("PriceChart.Crop")}</Text>
           <TextInput className="border border-gray-300 rounded-lg px-4 py-2 text-gray-800" value={cropName} editable={false} />
@@ -405,7 +407,8 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
             <View className="border border-gray-300 rounded-lg p-4">
               {priceData.map((priceItem, index) => (
                 <View key={index} className="flex-row items-center mb-3">
-                  <Text className="w-32 text-gray-600">{`Grade ${priceItem.grade}`}</Text>
+                  {/* <Text className="w-32 text-gray-600">{`Grade ${priceItem.grade}`}</Text> */}
+                  <Text className="w-32 text-gray-600">{`${t("PriceChart.Grade")} ${priceItem.grade}`}</Text>
                   <TextInput
                     className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-gray-800"
                     value={editedPrices[index]?.price}
@@ -428,7 +431,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
             className="border border-gray-400  mt-4 py-3 h-12 rounded-full items-center w-3/4 mx-auto"
             onPress={() => {
               setIsEditable(false);
-              setButtonText("Request Price Update");
+              setButtonText(t("PriceChart.Request Price Update"));
               fetchPrices();
             }}
           >

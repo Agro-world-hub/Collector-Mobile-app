@@ -132,7 +132,12 @@ const ClaimOfficer: React.FC = () => {
         >
            <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
-        <Text className="text-lg font-bold ml-[25%]"> {t("ClaimOfficer.ClaimOfficers")}</Text>
+        {/* <Text className="text-lg font-bold ml-[25%]"> {t("ClaimOfficer.ClaimOfficers")}</Text> */}
+        <View className="w-full">
+  <Text className="text-lg font-bold text-center">{t("ClaimOfficer.ClaimOfficers")}</Text>
+</View>
+
+
       </View>
 
       {/* Form */}

@@ -78,6 +78,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   const [filteredBranches, setFilteredBranches] = useState<allBranches[]>([]);
   const [callingCode, setCallingCode] = useState("+94"); 
   // const [loading, setLoading] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
 
 
   console.log(countryCode)
@@ -337,6 +338,16 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
     setCallingCode(`+${country.callingCode[0]}`); // Update dial code
   };
 
+  const getTextStyle = (language: string) => {
+    if (language === "si") {
+      return {
+        fontSize: 14, // Smaller text size for Sinhala
+        lineHeight: 20, // Space between lines
+      };
+    }
+   
+  };
+
   return (
       <KeyboardAvoidingView 
             behavior={Platform.OS ==="ios" ? "padding" : "height"}
@@ -569,7 +580,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   {loading ? (
     <ActivityIndicator color="white" size="small" />
   ) : (
-    <Text className="text-center text-xl font-light text-white">
+    <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-xl font-light text-white">
       {t("UnregisteredFarmerDetails.Submit")}
     </Text>
   )}

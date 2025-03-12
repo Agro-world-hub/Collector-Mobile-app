@@ -25,6 +25,13 @@ interface ProfileData {
   lastNameEnglish: string;
   companyName: string;
   image: string;
+  firstNameSinhala: string;
+  lastNameSinhala:string;
+  firstNameTamil:string;
+  lastNameTamil:string;
+  companyNameSinhala:string;
+  companyNameEnglish:string;
+  companyNameTamil:string
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
@@ -33,6 +40,16 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
     const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
     const [refreshing, setRefreshing] = useState(false);
      const { t } = useTranslation();
+     const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+
+     const fetchSelectedLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+        setSelectedLanguage(lang || "en"); // Default to English if not set
+      } catch (error) {
+        console.error("Error fetching language preference:", error);
+      }
+    };
 
   const fetchUserProfile = async () => {
     try {
@@ -46,6 +63,8 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
         );
         setProfile(response.data.data);
         setEmpId(response.data.data.empId);
+        console.log("data:", response.data.data);
+
       }
     } catch (error) {
       console.error("Failed to fetch user profile:", error);
@@ -81,10 +100,20 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
     }
   };
 
+  // useEffect(() => {
+  //   fetchUserProfile();
+  //   fetchTargetPercentage();
+  // }, []);
+
   useEffect(() => {
-    fetchUserProfile();
-    fetchTargetPercentage();
+    const fetchData = async () => {
+      await fetchSelectedLanguage(); 
+      await fetchUserProfile();
+      await fetchTargetPercentage();
+    };
+    fetchData();
   }, []);
+
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -135,6 +164,30 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
     checkTokenExpiration();
   }, [navigation]);
 
+  const getFullName = () => {
+    if (!profile) return "Loading...";
+    switch (selectedLanguage) {
+      case "si":
+        return `${profile.firstNameSinhala} ${profile.lastNameSinhala}`;
+      case "ta":
+        return `${profile.firstNameTamil} ${profile.lastNameTamil}`;
+      default:
+        return `${profile.firstNameEnglish} ${profile.lastNameEnglish}`;
+    }
+  };
+  const getcompanyName = () => {
+    if (!profile) return "Loading...";
+    switch (selectedLanguage) {
+      case "si":
+        return `${profile.companyNameSinhala}`;
+      case "ta":
+        return `${profile.companyNameTamil}`;
+      default:
+        return `${profile.companyNameEnglish} `;
+    }
+  };
+
+
   return (
     <ScrollView
       className="flex-1 bg-white p-3"
@@ -160,13 +213,15 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
 
         <View>
           {/* Displaying name and company name if the profile is available */}
-          <Text className="text-lg font-bold">
+          {/* <Text className="text-lg font-bold">
             {profile?.firstNameEnglish || "Loading..."}{" "}
             {profile?.lastNameEnglish || "Loading..."}
-          </Text>
-          <Text className="text-gray-500">
+          </Text> */}
+          <Text className="text-lg font-bold">{getFullName()}</Text>
+          {/* <Text className="text-gray-500">
             {profile?.companyName || "Loading..."}
-          </Text>
+          </Text> */}
+          <Text className="text-gray-500">{getcompanyName()}</Text>
         </View>
       </TouchableOpacity>
 

@@ -229,12 +229,14 @@ interface CollectionOfficersListProps {
 
 interface Officer {
   empId: string;
-  fullName: string;
+  fullNameEnglish: string;
   phoneNumber1: string;
   phoneNumber2: string;
   collectionOfficerId: number;
   status: string;
   image: string;
+  fullNameSinhala: string;
+  fullNameTamil:string
 }
 
 const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
@@ -246,6 +248,17 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
   const [showMenu, setShowMenu] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+ 
+
+      const fetchSelectedLanguage = async () => {
+        try {
+          const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+          setSelectedLanguage(lang || "en"); // Default to English if not set
+        } catch (error) {
+          console.error("Error fetching language preference:", error);
+        }
+      };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -337,6 +350,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
           },
         }
       );
+      console.log("data",response.data)
   
       if (response.data.status === 'success') {
         // Separate approved and not approved officers
@@ -344,11 +358,18 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
         const notApprovedOfficers = response.data.data.filter((officer: Officer) => officer.status === 'Not Approved');
         
         // Sort both lists alphabetically
+        // const sortedApprovedOfficers = approvedOfficers.sort((a: Officer, b: Officer) =>
+        //   a.fullName.localeCompare(b.fullName)
+        // );
+        // const sortedNotApprovedOfficers = notApprovedOfficers.sort((a: Officer, b: Officer) =>
+        //   a.fullName.localeCompare(b.fullName)
+        // );
         const sortedApprovedOfficers = approvedOfficers.sort((a: Officer, b: Officer) =>
-          a.fullName.localeCompare(b.fullName)
+          getOfficerName(a).localeCompare(getOfficerName(b))
         );
+        
         const sortedNotApprovedOfficers = notApprovedOfficers.sort((a: Officer, b: Officer) =>
-          a.fullName.localeCompare(b.fullName)
+          getOfficerName(a).localeCompare(getOfficerName(b))
         );
   
         // Combine the sorted lists: approved officers first, then not approved
@@ -379,6 +400,26 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
       fetchOfficers();
     }, [])
   );
+
+  useEffect(() => {
+        const fetchData = async () => {
+          await fetchSelectedLanguage(); 
+   
+        };
+        fetchData();
+      }, []);
+
+      const getOfficerName = (officer: Officer) => {
+        switch (selectedLanguage) {
+          case "si":
+            return officer.fullNameSinhala;
+          case "ta":
+            return officer.fullNameTamil;
+          default:
+            return officer.fullNameEnglish;
+        }
+      };
+    
 
   // const fetchOfficers = async () => {
   //   try {
@@ -564,7 +605,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
         if (item.status !== "Not Approved") {
           navigation.navigate("OfficerSummary" as any, {
             officerId: item.empId,
-            officerName: item.fullName,
+            officerName: getOfficerName(item),
             phoneNumber1: item.phoneNumber1,
             phoneNumber2: item.phoneNumber2,
             collectionOfficerId: item.collectionOfficerId,
@@ -592,7 +633,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
 
       <View className="flex-1">
         <Text className="text-[18px] font-semibold text-gray-900">
-          {item.fullName}
+        {getOfficerName(item)}
         </Text>
         <Text className="text-sm text-gray-500">EMP ID : {item.empId}</Text>
       </View>

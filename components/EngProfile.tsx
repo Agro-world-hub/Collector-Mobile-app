@@ -379,13 +379,20 @@ interface UserProfile {
   lastNameEnglish: string;
   companyName: string;
   image: string;
+  firstNameSinhala: string;
+  lastNameSinhala:string;
+  firstNameTamil:string;
+  lastNameTamil:string;
+  companyNameSinhala:string;
+  companyNameEnglish:string;
+  companyNameTamil:string
 }
 
 const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const [isLanguageDropdownOpen, setLanguageDropdownOpen] =
     useState<boolean>(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  //const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const [empid, setEmpid] = useState<string>("");
   const [selectedComplaint, setSelectedComplaint] = useState<string | null>(
@@ -395,6 +402,26 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
     useState<boolean>(false);
   const { t } = useTranslation();
   const { changeLanguage } = useContext(LanguageContext);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+
+
+  const fetchSelectedLanguage = async () => {
+    try {
+      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+      setSelectedLanguage(lang || "en"); // Default to English if not set
+    } catch (error) {
+      console.error("Error fetching language preference:", error);
+    }
+  };
+useEffect(() => {
+    const fetchData = async () => {
+      await fetchSelectedLanguage(); 
+    
+    };
+    fetchData();
+  }, []);
+ 
+
 
 
   const route = useRoute();
@@ -546,6 +573,45 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       console.error("Online status error:", error);
     }
   };
+
+
+  const getTextStyle = (language: string) => {
+    if (language === "si") {
+      return {
+        fontSize: 14, // Smaller text size for Sinhala
+        lineHeight: 20, // Space between lines
+      };
+      
+    }
+    return {
+      fontSize: 16, // Default font size
+      lineHeight: 25, // Default line height
+    };
+   
+  };
+
+  const getFullName = () => {
+    if (!profile) return "Loading...";
+    switch (selectedLanguage) {
+      case "si":
+        return `${profile.firstNameSinhala} ${profile.lastNameSinhala}`;
+      case "ta":
+        return `${profile.firstNameTamil} ${profile.lastNameTamil}`;
+      default:
+        return `${profile.firstNameEnglish} ${profile.lastNameEnglish}`;
+    }
+  };
+  const getcompanyName = () => {
+    if (!profile) return "Loading...";
+    switch (selectedLanguage) {
+      case "si":
+        return `${profile.companyNameSinhala}`;
+      case "ta":
+        return `${profile.companyNameTamil}`;
+      default:
+        return `${profile.companyNameEnglish} `;
+    }
+  };
   return (
     <View
       className="flex-1 bg-white "
@@ -572,12 +638,14 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           />
 
           <View className="flex-1">
-            <Text className="text-lg mb-1">
+            {/* <Text className="text-lg mb-1">
               {profile?.firstNameEnglish} {profile?.lastNameEnglish}
-            </Text>
-            <Text className="text-sm text-gray-500">
+            </Text> */}
+             <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-lg font-bold">{getFullName()}</Text>
+            {/* <Text className="text-sm text-gray-500">
               {profile?.companyName}
-            </Text>
+            </Text> */}
+             <Text className="text-gray-500">{getcompanyName()}</Text>
           </View>
           <TouchableOpacity onPress={handleEditClick}>
             <Ionicons name="create-outline" size={30} color="#2fcd46" />
