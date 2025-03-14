@@ -17,7 +17,9 @@ interface RecieveTargetBetweenOfficersScreenProps {
   route: {
     params: {
       varietyId: number;
-      varietyName: string;
+      varietyNameEnglish: string;
+      varietyNameSinhala: string;  // ✅ Added this
+      varietyNameTamil: string;    // ✅ Added this
       grade: string;
       target: string;
       todo: string;
@@ -25,6 +27,15 @@ interface RecieveTargetBetweenOfficersScreenProps {
       collectionOfficerId: number;
     };
   };
+}
+
+interface Officer {
+  collectionOfficerId: number;
+  empId: string;
+  fullNameEnglish: string;
+  fullNameSinhala: string;
+  fullNameTamil: string;
+ 
 }
 
 const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenProps> = ({ navigation, route }) => {
@@ -38,13 +49,41 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
   const [maxAmount, setMaxAmount] = useState<number>(0);
   const { t } = useTranslation();
 
-  const { varietyName, grade, target, qty, varietyId,collectionOfficerId } = route.params;
+  const {  varietyNameEnglish, grade, target, qty, varietyId,collectionOfficerId,varietyNameSinhala, varietyNameTamil } = route.params;
   console.log(collectionOfficerId)
   
   const toOfficerId = collectionOfficerId;
   console.log('toOfficerId',toOfficerId);  // The officer transferring the target
 
   console.log("Initial Max Amount:", maxAmount);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+  
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const lang = await AsyncStorage.getItem("@user_language");
+        if (lang) {
+          setSelectedLanguage(lang);
+        }
+      } catch (error) {
+        console.error("Error fetching language preference:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const getOfficerName = (officer: Officer) => {
+    switch (selectedLanguage) {
+      case "si":
+        return officer.fullNameSinhala;
+      case "ta":
+        return officer.fullNameTamil;
+      default:
+        return officer.fullNameEnglish;
+    }
+  };
 
   // ✅ Fetch officers dynamically
   const fetchOfficers = async () => {
@@ -67,10 +106,10 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
       if (response.data.status === 'success') {
         const formattedOfficers = response.data.data.map((officer: any) => ({
           key: officer.collectionOfficerId.toString(),
-          value: officer.fullName,
+          value: getOfficerName(officer),
         }));
 
-        setOfficers([{ key: '0', value: '--Select an officer--' }, ...formattedOfficers]);
+        setOfficers([{ key: '0', value:  t("PassTargetBetweenOfficers.Select an officer") }, ...formattedOfficers]);
       } else {
         setErrorMessage(t("Error.Failed to fetch officers."));
       }
@@ -84,6 +123,8 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
       setLoading(false);
     }
   };
+
+ 
 
   // ✅ Fetch Daily Target when officer is selected
   const fetchDailyTarget = async (officerId: string) => {
@@ -204,6 +245,18 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
       setFetchingTarget(false);
     }
   };
+
+  const getvarietyName = () => {
+    switch (selectedLanguage) {
+      case "si":
+        return route.params.varietyNameSinhala;
+      case "ta":
+        return route.params.varietyNameTamil;
+      default:
+        return route.params.varietyNameEnglish;
+    }
+  };
+  
   
 
   return (
@@ -213,7 +266,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-semibold ml-[30%]">{varietyName}</Text>
+        <Text className="text-white text-lg font-semibold ml-[30%]">{getvarietyName()}</Text>
       </View>
 
       <View className="bg-white rounded-lg p-4">
@@ -233,7 +286,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
                 }}
                 data={officers}
                 save="key"
-                defaultOption={{ key: '0', value: '--Select an officer--' }}
+                defaultOption={{ key: '0', value:  t("PassTargetBetweenOfficers.Select an officer") }}
               />
             </View>
           )}

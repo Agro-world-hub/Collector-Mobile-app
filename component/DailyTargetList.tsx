@@ -16,10 +16,12 @@ interface DailyTargetListProps {
 }
 
 interface TargetData {
-  varietyName: string;
+  varietyNameEnglish: string;
   grade: string;
   target: number;
   todo: number;
+  varietyNameSinhala:string;
+  varietyNameTamil:string
 }
 
 const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
@@ -30,6 +32,18 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
   const [error, setError] = useState<string | null>(null);
   const [selectedToggle, setSelectedToggle] = useState('ToDo');
    const { t } = useTranslation();
+   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+ 
+
+   const fetchSelectedLanguage = async () => {
+     try {
+       const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+       setSelectedLanguage(lang || "en"); // Default to English if not set
+     } catch (error) {
+       console.error("Error fetching language preference:", error);
+     }
+   };
+
 
   // Function to fetch targets
   const fetchTargets = useCallback(async () => {
@@ -70,6 +84,24 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
   };
 
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
+   useEffect(() => {
+            const fetchData = async () => {
+              await fetchSelectedLanguage(); 
+       
+            };
+            fetchData();
+          }, []);
+    
+          const getvarietyName = (TargetData: TargetData) => {
+            switch (selectedLanguage) {
+              case "si":
+                return TargetData.varietyNameSinhala;
+              case "ta":
+                return TargetData.varietyNameTamil;
+              default:
+                return TargetData.varietyNameEnglish;
+            }
+          };
 
   return (
     <View className="flex-1 bg-[#282828]  w-full">
@@ -153,7 +185,7 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
                   className="w-40 p-2 border-r border-gray-300 text-center flex-wrap"
                   numberOfLines={2}
                 >
-                  {item.varietyName}
+                  {getvarietyName(item)}
                 </Text>
                 <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.grade}</Text>
                 <Text className="w-32 p-2 border-r border-gray-300 text-center">

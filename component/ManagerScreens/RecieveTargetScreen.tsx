@@ -17,7 +17,9 @@ interface RecieveTargetScreenProps {
   navigation: RecieveTargetScreenNavigationProps;
   route: {
     params: {
-      varietyName: string;
+      varietyNameEnglish: string;
+      varietyNameSinhala: string;  // ✅ Added this
+      varietyNameTamil: string;    // ✅ Added this
       grade: string;
       target: string;
       todo: string;
@@ -25,6 +27,15 @@ interface RecieveTargetScreenProps {
       varietyId: string;
     };
   };
+}
+
+interface Officer {
+  collectionOfficerId: number;
+  empId: string;
+  fullNameEnglish: string;
+  fullNameSinhala: string;
+  fullNameTamil: string;
+ 
 }
 
 const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, route }) => {
@@ -38,9 +49,37 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
   const [maxAmount, setMaxAmount] = useState<number>(0);
   const { t } = useTranslation();
 
-  const { varietyName, grade, target, qty, varietyId } = route.params;
+  const { varietyNameEnglish, grade, target, qty, varietyId,varietyNameSinhala, varietyNameTamil } = route.params;
 
   console.log("Initial Max Amount:", maxAmount);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+  
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const lang = await AsyncStorage.getItem("@user_language");
+        if (lang) {
+          setSelectedLanguage(lang);
+        }
+      } catch (error) {
+        console.error("Error fetching language preference:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const getOfficerName = (officer: Officer) => {
+    switch (selectedLanguage) {
+      case "si":
+        return officer.fullNameSinhala;
+      case "ta":
+        return officer.fullNameTamil;
+      default:
+        return officer.fullNameEnglish;
+    }
+  };
 
   // ✅ Fetch officers dynamically
   const fetchOfficers = async () => {
@@ -63,10 +102,10 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
       if (response.data.status === 'success') {
         const formattedOfficers = response.data.data.map((officer: any) => ({
           key: officer.collectionOfficerId.toString(),
-          value: officer.fullName,
+          value: getOfficerName(officer),
         }));
 
-        setOfficers([{ key: '0', value: '--Select an officer--' }, ...formattedOfficers]);
+        setOfficers([{ key: '0', value: t("PassTargetBetweenOfficers.Select an officer") }, ...formattedOfficers]);
       } else {
         setErrorMessage(t("Error.Failed to fetch officers."));
       }
@@ -80,6 +119,9 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
       setLoading(false);
     }
   };
+
+ 
+
 
   // ✅ Fetch Daily Target when officer is selected
   const fetchDailyTarget = async (officerId: string) => {
@@ -199,6 +241,19 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
       setFetchingTarget(false);
     }
   };
+
+  const getvarietyName = () => {
+    switch (selectedLanguage) {
+      case "si":
+        return route.params.varietyNameSinhala;
+      case "ta":
+        return route.params.varietyNameTamil;
+      default:
+        return route.params.varietyNameEnglish;
+    }
+  };
+  
+
   
 
   return (
@@ -217,7 +272,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
                 name: 'Main',
                 params: {
                   screen: 'EditTargetManager',
-                  params: { varietyId, varietyName, grade, target, todo: route.params.todo, qty }
+                  params: { varietyId, varietyNameEnglish, grade, target, todo: route.params.todo, qty, varietyNameSinhala, varietyNameTamil }
                 }
               }
             ],
@@ -225,7 +280,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
         }}>
           <Ionicons name="arrow-back" size={22} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-semibold ml-[30%]">{varietyName}</Text>
+        <Text className="text-white text-lg font-semibold ml-[30%]">{getvarietyName()}</Text>
       </View>
 
       <View className="bg-white rounded-lg p-4">
@@ -245,7 +300,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
                 }}
                 data={officers}
                 save="key"
-                defaultOption={{ key: '0', value: '--Select an officer--' }}
+                defaultOption={{ key: '0', value: t("PassTargetBetweenOfficers.Select an officer") }}
               />
             </View>
           )}

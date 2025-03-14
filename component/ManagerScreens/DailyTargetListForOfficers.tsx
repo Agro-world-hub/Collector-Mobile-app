@@ -32,7 +32,9 @@ interface DailyTargetListForOfficersProps {
 interface TargetData {
   varietyId: any;
   centerTarget: any;
-  varietyName: string;
+  varietyNameEnglish: string;
+      varietyNameSinhala: string;  // ✅ Added this
+      varietyNameTamil: string;    // ✅ Added this
   grade: string;
   target: number;
   todo: number;
@@ -47,6 +49,19 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
   const [refreshing, setRefreshing] = useState(false);
   const { collectionOfficerId, officerId } = route.params;
   const { t } = useTranslation();
+
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+  
+
+
+  const fetchSelectedLanguage = async () => {
+    try {
+      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+      setSelectedLanguage(lang || "en"); // Default to English if not set
+    } catch (error) {
+      console.error("Error fetching language preference:", error);
+    }
+  };
 
   // ✅ Fetch Targets API (Runs every time the page is visited or refreshed)
   const fetchTargets = async () => {
@@ -95,6 +110,25 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
   }, [collectionOfficerId]);
 
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
+
+  useEffect(() => {
+              const fetchData = async () => {
+                await fetchSelectedLanguage(); 
+         
+              };
+              fetchData();
+            }, []);
+      
+            const getvarietyName = (TargetData: TargetData) => {
+              switch (selectedLanguage) {
+                case "si":
+                  return TargetData.varietyNameSinhala;
+                case "ta":
+                  return TargetData.varietyNameTamil;
+                default:
+                  return TargetData.varietyNameEnglish;
+              }
+            };
 
   return (
     <View className="flex-1 bg-[#282828] ">
@@ -187,13 +221,15 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
                   }
 
                   navigation.navigate('EditTargetScreen' as any, {
-                    varietyName: item.varietyName,
+                    varietyNameEnglish: item.varietyNameEnglish,
                     varietyId: item.varietyId,
                     grade: item.grade,
                     target: item.target,
                     todo: item.todo,
                     qty: qty,
                     collectionOfficerId, 
+                    varietyNameSinhala: item.varietyNameSinhala,
+                    varietyNameTamil: item.varietyNameTamil,
                   });
                 }}
               >
@@ -205,7 +241,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
                     {selectedToggle === 'ToDo' ? index + 1 : <Ionicons name="flag" size={20} color="green" />}
                   </Text>
                   <Text className="w-40 p-2 border-r border-gray-300 text-center flex-wrap">
-                    {item.varietyName}
+                  {getvarietyName(item)}
                   </Text>
                   <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.grade}</Text>
                   <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.target.toFixed(2)}</Text>

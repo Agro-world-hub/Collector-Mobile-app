@@ -121,7 +121,12 @@
     "Officer created successfully":"Officer created successfully!",
     "Phone numbers updated successfully":"Phone numbers updated successfully",
     "Submitted":"Submitted",
-    "Your complaint has Submit successfuly":"Your complaint has Submit successfuly!:"
+    "Your complaint has Submit successfuly":"Your complaint has Submit successfuly!:",
+    "No Prices Available":"No Prices Available",
+    "No prices are available for the selected variety.":"No prices are available for the selected variety.",
+    "Prices for the selected variety were not found.":"Prices for the selected variety were not found.",
+    "All crop details submitted successfully!":"All crop details submitted successfully!"
+ 
 
 
    
@@ -257,7 +262,8 @@
     "Total":"Total (Rs.)",
     "Add":"Add more",
     "Done":"Done",
-    "Select Crop":"Select Crop"
+    "Select Crop":"Select Crop",
+    "Select Variety":"Select Variety"
 
   },
   "ReportPage":{
@@ -481,7 +487,8 @@
     "Short Stock Assignee":"Short Stock Assignee",
     "Amount":"Amount (kg)",
     "Save":"Save",
-   "maximum amount receive":"The maximum amount you can receive:"
+   "maximum amount receive":"The maximum amount you can receive:",
+   "Select an officer":"--Select an officer--"
   },
   "ReportGenerator":{
     "LNG": "ta",

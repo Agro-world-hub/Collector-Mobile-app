@@ -560,6 +560,7 @@ import {
   import generateInvoiceNumber from "@/utils/generateInvoiceNumber";
 import CameraComponent from "@/utils/CameraComponent";
 import { SelectList } from 'react-native-dropdown-select-list';
+import { useTranslation } from "react-i18next";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -568,6 +569,8 @@ const api = axios.create({
 interface Crop {
     id: string;
     cropNameEnglish: string;
+    cropNameSinhala: string;
+    cropNameTamil: string;
 }
 
 // Define navigation and route props
@@ -596,10 +599,30 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     const [donebutton1disabale, setdonebutton1disabale] = useState(true);
     const [donebutton2disabale, setdonebutton2disabale] = useState(false);
     const [addbutton, setaddbutton] = useState(true);
+    const { t } = useTranslation();
+ 
    
     const route = useRoute<UnregisteredCropDetailsRouteProp>();
     const { userId } = route.params;
     console.log(userId)
+
+    const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+
+  const fetchSelectedLanguage = async () => {
+    try {
+      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+      setSelectedLanguage(lang || "en"); // Default to English if not set
+    } catch (error) {
+      console.error("Error fetching language preference:", error);
+    }
+  };
+
+     useEffect(() => {
+    const fetchData = async () => {
+      await fetchSelectedLanguage();
+    };
+    fetchData();
+  }, []);
     
     useFocusEffect(
         React.useCallback(() => {
@@ -636,40 +659,53 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
         }, []) // Empty dependency array to ensure the effect only depends on screen focus
     );
     
-    const handleCropChange = async (crop: { id: string; cropNameEnglish: string }) => {
-        setSelectedCrop({ id: crop.id, name: crop.cropNameEnglish });
-        console.log(crop.cropNameEnglish);
+    // Modify the handleCropChange function to store all language versions
+const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cropNameSinhala: string; cropNameTamil: string }) => {
+    // Set selected crop with all language names
+    setSelectedCrop({ 
+        id: crop.id, 
+        name: selectedLanguage === 'en' ? crop.cropNameEnglish : 
+              selectedLanguage === 'si' ? crop.cropNameSinhala : crop.cropNameTamil 
+    });
     
-        setSelectedVariety(null);
-        setUnitPrices({ A: null, B: null, C: null });
-        setQuantities({ A: 0, B: 0, C: 0 });
-    
-        try {
-            const token = await AsyncStorage.getItem("token"); 
-    
-            const headers = {
-                'Authorization': `Bearer ${token}`
-            };
-    
-            const varietiesResponse = await api.get(
-                `api/unregisteredfarmercrop/crops/varieties/${crop.id}`,
-                { headers }
-            );
-    
-            console.log('Varieties response:', varietiesResponse.data);
-    
-            if (varietiesResponse.data && Array.isArray(varietiesResponse.data)) {
-                setVarieties(varietiesResponse.data.map((variety: { id: string, variety: string }) => ({
-                    id: variety.id,  
-                    variety: variety.variety // ✅ Corrected key
-                })));
-            } else {
-                console.error('Varieties response is not an array or is empty.');
-            }
-        } catch (error) {
-            console.error('Error fetching varieties:', error);
+    console.log(`Selected crop in ${selectedLanguage}: ${selectedCrop?.name}`);
+
+    setSelectedVariety(null);
+    setUnitPrices({ A: null, B: null, C: null });
+    setQuantities({ A: 0, B: 0, C: 0 });
+
+    try {
+        const token = await AsyncStorage.getItem("token"); 
+
+        const headers = {
+            'Authorization': `Bearer ${token}`
+        };
+
+        const varietiesResponse = await api.get(
+            `api/unregisteredfarmercrop/crops/varieties/${crop.id}`,
+            { headers }
+        );
+
+        console.log('Varieties response:', varietiesResponse.data);
+
+        if (varietiesResponse.data && Array.isArray(varietiesResponse.data)) {
+            setVarieties(varietiesResponse.data.map((variety: { 
+                id: string, 
+                varietyEnglish: string,
+                varietySinhala: string,
+                varietyTamil: string 
+            }) => ({
+                id: variety.id,
+                variety: selectedLanguage === 'en' ? variety.varietyEnglish : 
+                        selectedLanguage === 'si' ? variety.varietySinhala : variety.varietyTamil
+            })));
+        } else {
+            console.error('Varieties response is not an array or is empty.');
         }
-    };
+    } catch (error) {
+        console.error('Error fetching varieties:', error);
+    }
+};
     
     
 
@@ -688,7 +724,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     
             // Check if the response status is 404 (Not Found)
             if (pricesResponse.status === 404) {
-                Alert.alert('No Prices Available', 'Prices for the selected variety were not found.');
+                Alert.alert(t("Error.No Prices Available"), t("Error.Prices for the selected variety were not found."));
                 setUnitPrices({});  // Clear any previously set prices
                 return;  // Stop further execution
             }
@@ -698,7 +734,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
             // Check if there are no prices in the response body
             if (pricesResponse.data && pricesResponse.data.length === 0) {
                 // Show an alert if no prices are available
-                Alert.alert('No Prices Available', 'No prices are available for the selected variety.');
+                Alert.alert(t("Error.No Prices Available"), t("Error.No prices are available for the selected variety."));
                 setUnitPrices({});  // Clear any previously set prices
                 return;  // Do not proceed with setting prices or calculating the total
             }
@@ -713,7 +749,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
         } catch (error) {
             console.error('Error fetching unit prices for selected variety:', error);
             // You can handle other error cases here, for example:
-            Alert.alert('Error', 'no any prices found !');
+            Alert.alert(t("Error.error"), t("Error.no any prices found"));
         }
     };
     
@@ -928,7 +964,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
             const { registeredFarmerId } = response.data;
             console.log('registeredFarmerId:', registeredFarmerId);
     
-            alert('All crop details submitted successfully!');
+            alert(t("Error.All crop details submitted successfully!"));
             
             refreshCropForms();
     
@@ -936,7 +972,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
             navigation.navigate('ReportPage' as any, { userId, registeredFarmerId });
         } catch (error) {
             console.error('Error submitting crop data:', error);
-            alert('Failed to submit crop details. Please try again.');
+            alert(t("Error.Failed to submit crop details. Please try again."));
         }
     };
     
@@ -958,15 +994,15 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                       <TouchableOpacity onPress={() => navigation.goBack()} className="">
                         <AntDesign name="left" size={24} color="#000" />
                       </TouchableOpacity>
-                      <Text className="flex-1 text-center text-xl font-bold text-black">Fill Details</Text>
+                      <Text className="flex-1 text-center text-xl font-bold text-black">{t("UnregisteredCropDetails.FillDetails")}</Text>
                     </View>
 
-            <Text className="text-center text-md font-medium mt-2">Crop {cropCount}</Text>
+            <Text className="text-center text-md font-medium mt-2">{t("UnregisteredCropDetails.Crop")} {cropCount}</Text>
             <View className="mb-6 border-b p-2 border-gray-200 pb-6">
-            <Text className="text-gray-600 mt-4">Crop Name</Text>               
+            <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.CropName")}</Text>               
               <View className="border border-gray-300 rounded-md mt-2 p-2">                 
                 
-              <Picker
+              {/* <Picker
                     selectedValue={selectedCrop?.id || null} // Use the crop's id for selection
                     onValueChange={(itemValue: string | null) => {
                         const crop = cropNames.find(c => c.id === itemValue); // Find the crop by id
@@ -978,22 +1014,42 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                     {cropNames.map((crop) => (
                         <Picker.Item key={crop.id} label={crop.cropNameEnglish} value={crop.id} /> // Use id as the value
                     ))}
-                </Picker>
+                </Picker> */}
                 {/* <SelectList
   setSelected={(itemValue: string) => {
     const crop = cropNames.find(c => c.id === itemValue); // Find the crop by id
     if (crop) handleCropChange({ id: crop.id, cropNameEnglish: crop.cropNameEnglish });
   }}
-  boxStyles={{ height: 50, width: '100%',    borderColor: "#CFCFCF",paddingLeft: 14,paddingRight: 8,}}
+  boxStyles={{ height: 50, width: '100%',    borderColor: "white",paddingLeft: 14,paddingRight: 8,}}
   data={cropNames.map(crop => ({ key: crop.id, value: crop.cropNameEnglish }))}
   defaultOption={{ key: selectedCrop?.id, value: selectedCrop?.name }}
-/> */}
+/>  */}
+<SelectList
+                setSelected={(val: string) => {
+                    const selectedCropObj = cropNames.find(crop => 
+                        selectedLanguage === 'en' ? crop.cropNameEnglish === val :
+                        selectedLanguage === 'si' ? crop.cropNameSinhala === val : crop.cropNameTamil === val
+                    );
+                    if (selectedCropObj) {
+                        handleCropChange(selectedCropObj);
+                    }
+                }}
+                boxStyles={{ height: 50, width: '100%',  borderColor: 'white',paddingLeft: 14,paddingRight: 8,}}
+                data={cropNames.map(crop => ({
+                    key: crop.id,
+                    value: selectedLanguage === 'en' ? crop.cropNameEnglish : 
+                           selectedLanguage === 'si' ? crop.cropNameSinhala : crop.cropNameTamil
+                }))}
+                save="value"
+                placeholder={t("UnregisteredCropDetails.Select Crop")}
+                searchPlaceholder={t('search')}
+            />
 
                 </View>
 
-                <Text className="text-gray-600 mt-4">Variety</Text>
+                <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Variety")}</Text>
                 <View className="border border-gray-300 rounded-md mt-2 p-2">
-                <Picker
+                {/* <Picker
                     selectedValue={selectedVariety || null}
                     onValueChange={(itemValue: any) => handleVarietyChange(itemValue)}
                     style={{ height: 50, width: '100%' }}
@@ -1003,20 +1059,37 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                     {varieties.map((variety) => (
                         <Picker.Item key={variety.id} label={variety.variety} value={variety.id} />
                     ))}
-                </Picker>
-                {/* <SelectList
+                </Picker> */}
+                 {/* <SelectList
   setSelected={(itemValue: string) => handleVarietyChange(itemValue)}
   data={varieties.map(variety => ({ key: variety.id, value: variety.variety }))}
   defaultOption={{ key: selectedVariety, value: varieties.find(v => v.id === selectedVariety)?.variety }}
   placeholder='Select Variety'
-  boxStyles={{ height: 50, width: '100%',    borderColor: "#CFCFCF",paddingLeft: 14,paddingRight: 8,}}
+  boxStyles={{ height: 50, width: '100%',    borderColor: "white",paddingLeft: 14,paddingRight: 8,}}
   // Disable if no crop selected
-/> */}
+/>  */}
+<SelectList
+  setSelected={(itemValue: string) => selectedCrop ? handleVarietyChange(itemValue) : null}
+  data={[
+    { key: '', value: t("UnregisteredCropDetails.Select Variety")},
+    ...varieties.map(variety => ({ 
+      key: variety.id, 
+      value: variety.variety 
+    }))
+  ]}
+  save="key"
+  defaultOption={selectedVariety ? { 
+    key: selectedVariety, 
+    value: varieties.find(v => v.id === selectedVariety)?.variety || 'Select Variety'
+  } : undefined}
+  placeholder={t("UnregisteredCropDetails.Select Variety")}
+  boxStyles={{ height: 50, width: '100%',  borderColor: 'white',paddingLeft: 14,paddingRight: 8,}}
+/>
 
 
                 </View>
 
-                <Text className="text-gray-600 mt-4">Unit Prices according to Grades</Text>
+                <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.UnitGrades")}</Text>
                 <View className="border border-gray-300 rounded-lg mt-2 p-4">
                     {['A', 'B', 'C'].map((grade) => (
                         <View key={grade} className="flex-row items-center mb-3">
@@ -1050,7 +1123,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
 
 
                 {/* Total and Buttons */}
-                <Text className="text-gray-600 mt-4">Total (Rs.)</Text>
+                <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Total")}</Text>
                 <View className="border border-gray-300 rounded-md mt-2 p-2">
                     <TextInput 
                         placeholder="--Auto Fill--" 
@@ -1061,16 +1134,16 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                 </View>
 
                 <TouchableOpacity onPress={incrementCropCount} disabled={addbutton==true} className={`bg-green-500 rounded-md p-4 mt-2 ${addbutton ? 'opacity-50' : ''}`}>
-                    <Text className="text-center text-white font-semibold">Add more</Text>
+                    <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Total")}</Text>
                 </TouchableOpacity>
                {donebutton1visibale && 
                 <TouchableOpacity onPress={handelsubmit2} disabled={donebutton1disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton1disabale ? 'opacity-50' : ''}`}>
-                    <Text className="text-center text-black font-semibold">Done</Text>
+                    <Text className="text-center text-black font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
                 </TouchableOpacity>
                 }
                 {donebutton2visibale &&
                 <TouchableOpacity onPress={handleSubmit} disabled={donebutton2disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton2disabale ? 'opacity-50' : ''}`}>
-                   <Text className="text-center text-black font-semibold">Done</Text>
+                   <Text className="text-center text-black font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
                 </TouchableOpacity>
                 }  
             </View>

@@ -17,13 +17,24 @@ interface PassTargetScreenProps {
   route: {
     params: {
       varietyId: number;
-      varietyName: string;
+      varietyNameEnglish: string;
+      varietyNameSinhala: string;  // ✅ Added this
+      varietyNameTamil: string;    // ✅ Added this
       grade: string;
       target: string;
       todo: string;
       qty: string;
     };
   };
+}
+
+interface Officer {
+  collectionOfficerId: number;
+  empId: string;
+  fullNameEnglish: string;
+  fullNameSinhala: string;
+  fullNameTamil: string;
+ 
 }
 
 const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }) => {
@@ -36,8 +47,26 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { t } = useTranslation();
   
-  const { varietyName, grade, target, todo, qty, varietyId } = route.params;
+  const { varietyNameEnglish, grade, target, todo, qty, varietyId,varietyNameSinhala, varietyNameTamil  } = route.params;
   const maxAmount = parseFloat(todo);
+
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+  
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const lang = await AsyncStorage.getItem("@user_language");
+        if (lang) {
+          setSelectedLanguage(lang);
+        }
+      } catch (error) {
+        console.error("Error fetching language preference:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   console.log("Max Amount:", maxAmount);
 
@@ -46,6 +75,17 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
     setAmount(maxAmount.toString());
   }, [maxAmount]);
 
+
+  const getOfficerName = (officer: Officer) => {
+    switch (selectedLanguage) {
+      case "si":
+        return officer.fullNameSinhala;
+      case "ta":
+        return officer.fullNameTamil;
+      default:
+        return officer.fullNameEnglish;
+    }
+  };
   // Fetch officers from API
   const fetchOfficers = async () => {
     try {
@@ -67,10 +107,10 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
       if (response.data.status === 'success') {
         const formattedOfficers = response.data.data.map((officer: any) => ({
           key: officer.collectionOfficerId.toString(),
-          value: officer.fullName,
+          value: getOfficerName(officer),
         }));
 
-        setOfficers([{ key: '0', value: '--Select an officer--' }, ...formattedOfficers]);
+        setOfficers([{ key: '0', value: t("PassTargetBetweenOfficers.Select an officer") }, ...formattedOfficers]);
       } else {
         setErrorMessage(t("Error.Failed to fetch officers."));
       }
@@ -84,6 +124,8 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
       setLoading(false);
     }
   };
+
+ 
 
   // Reload the officers list every time the screen is focused
   useFocusEffect(
@@ -155,6 +197,17 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
       setSubmitting(false);
     }
   };
+
+  const getvarietyName = () => {
+    switch (selectedLanguage) {
+      case "si":
+        return route.params.varietyNameSinhala;
+      case "ta":
+        return route.params.varietyNameTamil;
+      default:
+        return route.params.varietyNameEnglish;
+    }
+  };
   
 
   return (
@@ -167,12 +220,12 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
 <TouchableOpacity onPress={() => {
   navigation.reset({
     index: 0,
-    routes: [{name: 'Main',params: { screen: 'EditTargetManager', params: { varietyId, varietyName, grade, target, todo, qty }, }, }, ],});
+    routes: [{name: 'Main',params: { screen: 'EditTargetManager', params: { varietyId, varietyNameEnglish, grade, target, todo, qty,varietyNameSinhala, varietyNameTamil }, }, }, ],});
   }}>
   <Ionicons name="arrow-back" size={22} color="white" />
 </TouchableOpacity>
 
-        <Text className="text-white text-lg font-semibold ml-[30%]">{varietyName}</Text>
+        <Text className="text-white text-lg font-semibold ml-[30%]">{getvarietyName()}</Text>
       </View>
 
       {/* ✅ Scrollable Content */}
@@ -196,7 +249,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
                   setSelected={(value: string) => setAssignee(value)}
                   data={officers}
                   save="key"
-                  defaultOption={{ key: '0', value: '--Select an officer--' }}
+                  defaultOption={{ key: '0', value: t("PassTargetBetweenOfficers.Select an officer") }}
                 />
               </View>
             )}

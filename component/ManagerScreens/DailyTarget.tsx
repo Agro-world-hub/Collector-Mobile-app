@@ -261,11 +261,13 @@ interface TargetData {
   complete: number;
   varietyId: number;
   centerTarget: any;
-  varietyName: string;
+  varietyNameEnglish: string;
   grade: string;
   target: number;
   todo: number;
   qty: number; 
+  varietyNameSinhala:string;
+  varietyNameTamil:string
 }
 
 const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
@@ -276,6 +278,17 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
   const [selectedToggle, setSelectedToggle] = useState('ToDo'); // Track selected toggle
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+
+
+  const fetchSelectedLanguage = async () => {
+    try {
+      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+      setSelectedLanguage(lang || "en"); // Default to English if not set
+    } catch (error) {
+      console.error("Error fetching language preference:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchTargets = async () => {
@@ -321,6 +334,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
             Authorization: `Bearer ${authToken}`,
           },
         });
+        console.log(response.data)
 
         const allData = response.data.data;
         const todoItems = allData.filter((item: TargetData) => item.todo > 0); // Move tasks with todo > 0 to ToDo
@@ -339,6 +353,25 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
   }, []);
 
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
+
+  useEffect(() => {
+            const fetchData = async () => {
+              await fetchSelectedLanguage(); 
+       
+            };
+            fetchData();
+          }, []);
+    
+          const getvarietyName = (TargetData: TargetData) => {
+            switch (selectedLanguage) {
+              case "si":
+                return TargetData.varietyNameSinhala;
+              case "ta":
+                return TargetData.varietyNameTamil;
+              default:
+                return TargetData.varietyNameEnglish;
+            }
+          };
 
   return (
     <View className="flex-1 bg-[#282828]  w-full">
@@ -430,19 +463,21 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
                   }
 
                   navigation.navigate('EditTargetManager' as any, {
-                    varietyName: item.varietyName,
+                    varietyNameEnglish: item.varietyNameEnglish,
                     varietyId: item.varietyId,
                     grade: item.grade,
                     target: item.target,
                     todo: item.todo,
                     qty: qty,
+                    varietyNameSinhala: item.varietyNameSinhala,
+                    varietyNameTamil: item.varietyNameTamil,
                   });
                 }}
               >
                 <Text className="w-16 p-2 text-center">
                   {selectedToggle === 'ToDo' ? index + 1 : <Ionicons name="flag" size={20} color="green" />}
                 </Text>
-                <Text className="w-40 p-2 text-center">{item.varietyName}</Text>
+                <Text className="w-40 p-2 text-center">{getvarietyName(item)}</Text>
                 <Text className="w-32 p-2 text-center">{item.grade}</Text>
                 <Text className="w-32 p-2 text-center">{item.target.toFixed(2)}</Text>
                 <Text className="w-32 p-2 text-center">
@@ -458,6 +493,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
 };
 
 export default DailyTarget;
+
 
 
 
