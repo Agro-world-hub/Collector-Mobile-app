@@ -13,6 +13,7 @@ import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import QRCode from 'react-native-qrcode-svg';
 import { useTranslation } from "react-i18next";
+import { AntDesign } from '@expo/vector-icons';
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -418,11 +419,12 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
   return (
     <ScrollView className="flex-1 bg-white p-4">
        <View className="flex-row items-center mb-4">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
+        <TouchableOpacity onPress={() => navigation.navigate("Main" as any)}>
+          {/* <Image
             source={require('../assets/images/back.webp')} // Path to your back icon
             style={{ width: 24, height: 24 }}
-          />
+          /> */}
+                        <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
         <Text className="text-xl font-bold ml-[25%]">{t("ReportPage.PurchaseReport")}</Text>
       </View>
