@@ -1453,7 +1453,6 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
             console.log('Adding new crop:', newCrop);
             return [...prevCrops, newCrop];
         });
-    
         resetCropEntry();
         
             // Toggle resetCameraImage to trigger the useEffect in CameraComponent
@@ -1466,20 +1465,26 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
         setSelectedCrop(null);
         setSelectedVariety(null);
         setUnitPrices({ A: null, B: null, C: null });
-        setQuantities({ A: 0, B: 0, C: 0 });
         setImages({ A: null, B: null, C: null });
+        setQuantities({ A: 0, B: 0, C: 0 });
         setShowCameraModels(false)
         setImage(null);
     };
     
 
     const handleImagePick = (base64Image: string | null, grade: 'A' | 'B' | 'C') => {
-        // setImage(base64Image); // Update image state with base64 string
-        setImages(prevImages => ({
-            ...prevImages,
-            [grade]: base64Image
-        }));
-      };
+        setImages(prevImages => {
+            return {
+                ...prevImages,
+                [grade]: base64Image
+            };
+        });
+        if (base64Image) {
+            console.log(`${grade} image is set.`);
+        } else {
+            console.log(`${grade} image has been removed.`);
+        }    };
+    
     
     const refreshCropForms = () => {
         setSelectedCrop(null);
@@ -1539,9 +1544,9 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
                     gradeCprice: crop.gradeCprice || 0,
                     gradeCquan: crop.gradeCquan || 0,
                     // image: crop.image || null,
-                    imageA: images.A || null, // Image for grade A
-                    imageB: images.B || null ,// Image for grade B
-                    imageC: images.C || null  // Image for grade C
+                    imageA: crop.imageA || null, // Image for grade A
+                    imageB: crop.imageB || null, // Image for grade B
+                    imageC: crop.imageC || null  
                 })),
             };
     
@@ -1717,6 +1722,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
 
 <SelectList
  key={selectedCrop ? selectedCrop.id : Math.random()} 
+defaultOption={selectedCrop ? { key: selectedCrop.id, value: selectedCrop.name } : undefined}
     setSelected={(val: string) => {
         const selectedCropObj = cropNames.find(crop => 
             selectedLanguage === 'en' ? crop.cropNameEnglish === val :
