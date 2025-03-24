@@ -121,8 +121,13 @@
       "Officer created successfully":"அதிகாரி வெற்றிகரமாக உருவாக்கப்பட்டது!",
       "Phone numbers updated successfully":"தொலைபேசி எண்கள் வெற்றிகரமாகப் புதுப்பிக்கப்பட்டன.",
       "Submitted":"சமர்ப்பிக்கப்பட்டது",
-    "Your complaint has Submit successfuly":"உங்கள் புகார் வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது!:"
-   
+    "Your complaint has Submit successfuly":"உங்கள் புகார் வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது!:",
+     "No Prices Available":"விலைகள் எதுவும் கிடைக்கவில்லை",
+    "No prices are available for the selected variety.":"தேர்ந்தெடுக்கப்பட்ட வகைக்கு விலைகள் எதுவும் கிடைக்கவில்லை.",
+    "Prices for the selected variety were not found.":"தேர்ந்தெடுக்கப்பட்ட வகைக்கான விலைகள் கிடைக்கவில்லை.",
+    "All crop details submitted successfully!":"அனைத்து பயிர் விவரங்களும் வெற்றிகரமாக சமர்ப்பிக்கப்பட்டன!",
+       "Phone number 1 must be at least 9 digits.":"போன் எண் 1 குறைந்தபட்சம் 9 எண்கள் இருக்க வேண்டும்",
+    "Phone number 2 must be at least 9 digits.":"போன் எண் 2 குறைந்தபட்சம் 9 எண்கள் இருக்க வேண்டும்"
     
   },
   "EngProfile":{
@@ -253,7 +258,8 @@
     "Total":"மொத்தம் (ரூ.)",
     "Add":"மேலும் சேர்",
     "Done":"முடிந்தது",
-    "Select Crop":"செதுக்கு என்பதைத் தேர்ந்தெடுக்கவும்"
+    "Select Crop":"செதுக்கு என்பதைத் தேர்ந்தெடுக்கவும்",
+    "Select Variety":"வகையைத் தேர்ந்தெடுக்கவும்"
 
   },
   "ReportPage":{
@@ -624,7 +630,8 @@
     "Short Stock Assignee":"குறுகிய பங்கு ஒதுக்கீட்டாளர்",
     "Amount":"தொகை (கிலோ)",
     "Save":"சேமி",
-    "maximum amount receive":"நீங்கள் பெறக்கூடிய அதிகபட்ச தொகை:"
+    "maximum amount receive":"நீங்கள் பெறக்கூடிய அதிகபட்ச தொகை:",
+    "Select an officer":"--ஒரு அதிகாரியைத் தேர்ந்தெடுக்கவும்--"
    
   },
   "ReportGenerator":{

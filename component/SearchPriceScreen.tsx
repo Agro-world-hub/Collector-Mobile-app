@@ -280,6 +280,7 @@ import { RootStackParamList } from './types';
 import {environment} from '../environment/environment';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from "react-i18next";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -298,6 +299,24 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
   const [selectedVariety, setSelectedVariety] = useState<string | null>(null);
   const [loadingCrops, setLoadingCrops] = useState(false);
   const [loadingVarieties, setLoadingVarieties] = useState(false);
+  const { t } = useTranslation();
+    const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+
+  const fetchSelectedLanguage = async () => {
+    try {
+      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+      setSelectedLanguage(lang || "en"); // Default to English if not set
+    } catch (error) {
+      console.error("Error fetching language preference:", error);
+    }
+  };
+
+     useEffect(() => {
+    const fetchData = async () => {
+      await fetchSelectedLanguage();
+    };
+    fetchData();
+  }, []);
   
   const fetchCropNames = async () => {
     setLoadingCrops(true);
@@ -309,19 +328,41 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log('Raw Crop Names Response:', response.data);
   
-      const formattedData = response.data.map((crop: any) => ({
-        key: crop.id.toString(),
-        value: crop.cropNameEnglish,
-      }));
-  
-      setCropOptions(formattedData);
-    } catch (error) {
-      console.error('Failed to fetch crop names:', error);
-    } finally {
-      setLoadingCrops(false);
-    }
-  };
+      const formattedData = response.data.map((crop: any) => {
+                let cropName;
+                switch (selectedLanguage) {
+                  case "si":
+                    cropName = crop.cropNameSinhala;
+                    break;
+                  case "ta":
+                    cropName = crop.cropNameTamil;
+                    break;
+                  default:
+                    cropName = crop.cropNameEnglish;
+                }
+          
+                return {
+                  key: crop.id.toString(),
+                  value: cropName,
+                };
+              });
+          
+              setCropOptions(formattedData);
+            } catch (error) {
+              console.error("Failed to fetch crop names:", error);
+            } finally {
+              setLoadingCrops(false);
+            }
+          };
+          
+          // Fetch crops whenever the language changes
+          useEffect(() => {
+            if (selectedLanguage) {
+              fetchCropNames();
+            }
+          }, [selectedLanguage]);
   
   // Function to fetch varieties based on the selected crop
   const fetchVarieties = async () => {
@@ -330,20 +371,38 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
     setLoadingVarieties(true);
     try {
       const token = await AsyncStorage.getItem("token"); // Retrieve token
-  
       const response = await api.get(`api/unregisteredfarmercrop/crops/varieties/${selectedCrop}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
   
-      // Map correctly to show variety name
-      const formattedData = response.data.map((variety: any) => ({
-        key: variety.id.toString(), // Keep id as key
-        value: variety.variety, // Use "variety" for display
-      }));
+      // Log the full response to inspect the structure
+      console.log("Raw Varieties Response:", response.data);
   
+      const formattedData = response.data.map((variety: any) => {
+        let varietyName;
+        switch (selectedLanguage) {
+          case "si":
+            varietyName = variety.varietySinhala; // Sinhala name if available
+            break;
+          case "ta":
+            varietyName = variety.varietyTamil; // Tamil name if available
+            break;
+          default:
+            varietyName = variety.varietyEnglish; // Default to English if no translation is found
+        }
+      
+        return {
+          key: variety.id.toString(), // Keep id as key
+          value: varietyName, // Assign the correct variety name based on the selected language
+        };
+      });
+      
+  
+      // Log the formatted data to ensure it's processed correctly
       console.log("Formatted Varieties:", formattedData);
+  
       setVarietyOptions(formattedData);
     } catch (error) {
       console.error("Failed to fetch varieties:", error);
@@ -352,18 +411,12 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
     }
   };
   
-  
-  
-
   // Reload data when the screen comes into focus
   useFocusEffect(
     useCallback(() => {
-      // Reset the selected values and variety options
       setSelectedCrop(null);
       setSelectedVariety(null);
       setVarietyOptions([]);
-
-      // Fetch crops again
       fetchCropNames();
     }, [])
   );
@@ -373,6 +426,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
     fetchVarieties();
   }, [selectedCrop]);
 
+
   return (
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -380,7 +434,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
     <ScrollView className="flex-1 bg-white "
     keyboardShouldPersistTaps="handled">
     <View className="flex-1 bg-white items-center px-6 pt-8">
-      <Text className="text-xl font-semibold mb-4">Search Price</Text>
+    <Text className="text-xl font-semibold mb-4">{t("SearchPrice.SearchPrice")}</Text>
       <Image
          source={require('../assets/images/marketprice.webp')} // Replace with your image path
         className="w-64 h-40 mb-6 mt-8"
@@ -389,14 +443,14 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
 
       {/* Crop Name Dropdown */}
       <View className="w-full mb-4">
-        <Text className="text-base mb-2 text-center">Crop Name</Text>
+         <Text className="text-base mb-2 text-center">{t("SearchPrice.Crop")}</Text>
         {loadingCrops ? (
           <ActivityIndicator size="small" color="#2AAD7A" />
         ) : (
           <SelectList
             setSelected={(val: any) => setSelectedCrop(val)}
             data={cropOptions}
-            placeholder="Select Crop"
+            placeholder={t("SearchPrice.SelectCrop")}
             boxStyles={{
               backgroundColor: 'white',
               borderColor: '#CFCFCF',
@@ -410,24 +464,24 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
 
       {/* Variety Dropdown */}
       <View className="w-full mb-8">
-        <Text className="text-base mb-2 text-center">Variety</Text>
-        {loadingVarieties ? (
-          <ActivityIndicator size="small" color="#2AAD7A" />
-        ) : (
-          <SelectList
-            setSelected={(val: any) => setSelectedVariety(val)}
-            data={varietyOptions}
-            placeholder="Select Variety"
-            boxStyles={{
-              backgroundColor: 'white',
-              borderColor: '#CFCFCF',
-            }}
-            dropdownTextStyles={{
-              color: '#000',
-            }}
-          />
-        )}
-      </View>
+            <Text className="text-base mb-2 text-center">{t("SearchPrice.Variety")}</Text>
+            {loadingVarieties ? (
+              <ActivityIndicator size="small" color="#2AAD7A" />
+            ) : (
+              <SelectList
+                setSelected={(val: any) => setSelectedVariety(val)}
+                data={varietyOptions}
+                placeholder={t("SearchPrice.SelectVariety")}
+                boxStyles={{
+                  backgroundColor: 'white',
+                  borderColor: '#CFCFCF',
+                }}
+                dropdownTextStyles={{
+                  color: '#000',
+                }}
+              />
+            )}
+          </View>
 
       {/* Search Button */}
       <TouchableOpacity
@@ -445,7 +499,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
           }
         }}
       >
-        <Text className="text-white font-semibold text-lg">Search</Text>
+        <Text className="text-white font-semibold text-lg">{t("SearchPrice.Search")}</Text>
       </TouchableOpacity>
     </View>
     </ScrollView>

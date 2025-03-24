@@ -121,7 +121,13 @@
       "Officer created successfully":"නිලධාරියා සාර්ථකව නිර්මාණය කරන ලදී!",
       "Phone numbers updated successfully":"දුරකථන අංක සාර්ථකව යාවත්කාලීන කරන ලදී.",
       "Submitted":"ඉදිරිපත් කරන ලදී",
-    "Your complaint has Submit successfuly":"ඔබගේ පැමිණිල්ල සාර්ථකව ඉදිරිපත් කර ඇත!:"
+    "Your complaint has Submit successfuly":"ඔබගේ පැමිණිල්ල සාර්ථකව ඉදිරිපත් කර ඇත!:",
+     "No Prices Available":"මිල ගණන් නොමැත",
+    "No prices are available for the selected variety.":"තෝරාගත් ප්‍රභේදය සඳහා මිල ගණන් නොමැත.",
+    "Prices for the selected variety were not found.":"තෝරාගත් ප්‍රභේදය සඳහා මිල ගණන් හමු නොවීය.",
+    "All crop details submitted successfully!":"සියලුම බෝග විස්තර සාර්ථකව ඉදිරිපත් කරන ලදී!",
+        "Phone number 1 must be at least 9 digits.":"දුරකථන අංකය 1 ඉලක්කම් 9 ක් විය යුතුය",
+    "Phone number 2 must be at least 9 digits.":"දුරකථන අංකය 2 ඉලක්කම් 9 ක් විය යුතුය"
 
 
   
@@ -254,9 +260,10 @@
     "Variety":"විවිධත්වය",
     "UnitGrades":"ශ්‍රේණි අනුව ඒකක මිල ගණන්",
     "Total":"එකතුව (රු.)",
-    "Add":"තවත් එකතු කරන්න",
+    "Add":"එකතු කරන්න",
     "Done":"නිම",
-    "Select Crop":"කප්පාදුව තෝරන්න"
+    "Select Crop":"කප්පාදුව තෝරන්න",
+    "Select Variety":"විවිධත්වය තෝරන්න"
 
   },
   "ReportPage":{
@@ -478,7 +485,8 @@
     "Short Stock Assignee":"කෙටි තොග පැවරුම්කරු",
     "Amount":"මුදල (kg)",
     "Save":"සුරකින්න",
-    "maximum amount receive":"ඔබට ලැබිය හැකි උපරිම මුදල:"
+    "maximum amount receive":"ඔබට ලැබිය හැකි උපරිම මුදල:",
+    "Select an officer":"--නිලධාරියෙකු තෝරන්න--"
    
   },
   "ReportGenerator":{

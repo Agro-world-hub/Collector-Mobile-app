@@ -194,6 +194,7 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useTranslation } from "react-i18next";
+import { goBack } from 'expo-router/build/global-state/routing';
 
 // Create API instance
 const api = axios.create({
@@ -353,7 +354,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
 
       {/* Farmer Name and NIC */}
       {loading ? (
-        <View className="items-center mt-[10%]" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View className="items-center -mt-4" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <FarmerQrSkeletonLoader />
       </View>
       
@@ -378,12 +379,15 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
       <View className="items-center mt-8">
         {/* Collect Button */}
         {/* <TouchableOpacity className="bg-[#2AAD7A] w-[300px] py-3 rounded-full items-center" onPress={() => navigation.navigate('UnregisteredCropDetails' as any, { userId })}> */}
-        <TouchableOpacity className="bg-[#2AAD7A] w-[300px] py-3 rounded-full items-center" onPress={() =>
-  navigation.navigate("Main", {
+        <TouchableOpacity  className={`w-[300px] py-3 rounded-full items-center ${!farmerQRCode ? 'bg-gray-400' : 'bg-[#2AAD7A]'}`} 
+        onPress={() =>
+    navigation.navigate("Main", {
     screen: "UnregisteredCropDetails",
     params: { userId },
   } as never)
 }
+disabled={!farmerQRCode}
+
         > 
           <Text className="text-white text-lg">{t("FarmerQr.Collect")}</Text>
         </TouchableOpacity>
@@ -396,6 +400,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
             farmerPhone,
             userId
           })}
+          disabled={!farmerQRCode}
         >
           <Text className="text-gray-700 text-lg">{t("FarmerQr.ReportComplain")}</Text>
         </TouchableOpacity>

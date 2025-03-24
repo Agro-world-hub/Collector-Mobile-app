@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Keyboard,
 } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import axios from "axios";
@@ -66,6 +67,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
 
   const [showUpdateButton, setShowUpdateButton] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorMessage2, setErrorMessage2] = useState<string | null>(null);
   const { t } = useTranslation();
   const [profileImage, setProfileImage] = useState({ uri: "" });
   // const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
@@ -103,23 +105,27 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
   const handlePhoneNumberChange = (text: string) => {
     setNewPhoneNumber(text);
 
-    if (text.length > 9) {
+    if (text.length < 9) {
+      setErrorMessage(t("Error.Phone number 1 must be at least 9 digits."));  // Tamil error message
+    } else if (text.length > 9) {
       setErrorMessage(t("Error.Phone number cannot exceed 9 digits."));
     } else {
       setErrorMessage("");
     }
-    toggleUpdateButton(text, newPhoneNumber2);
+    toggleUpdateButton(text, newPhoneNumber);
   };
 
   const handlePhoneNumber2Change = (text: string) => {
     setNewPhoneNumber2(text);
 
-    if (text.length > 9) {
-      setErrorMessage(t("Error.Phone number cannot exceed 9 digits."));
+    if (text.length < 9) {
+      setErrorMessage2(t("Error.Phone number 2 must be at least 9 digits."));  // Tamil error message
+    } else if (text.length > 9) {
+      setErrorMessage2(t("Error.Phone number cannot exceed 9 digits."));
     } else {
-      setErrorMessage("");
+      setErrorMessage2("");
     }
-    toggleUpdateButton(newPhoneNumber, text);
+    toggleUpdateButton(newPhoneNumber2, text);
   };
   
   const toggleUpdateButton = (phone1: string, phone2: string) => {
@@ -166,7 +172,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
         firstNameEnglish: data.firstNameEnglish,
         lastNameEnglish: data.lastNameEnglish,
         
-        regcode: data.centerId.toString(),
+        regcode: data.regCode,
         jobRole: data.jobRole,
         nicNumber: data.nic,
         houseNumber: data.houseNumber,
@@ -195,6 +201,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
   };
 
   const handleUpdatePhoneNumber = async () => {
+    Keyboard.dismiss();
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
@@ -202,7 +209,22 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             t("Error.No token found"));
         return;
       }
-  
+      if (newPhoneNumber.length < 9 ) {
+        Alert.alert(t("Error.error"), t("Error.Phone number 1 must be at least 9 digits."));
+        return;
+      }else if (newPhoneNumber2.length < 9 ) {
+        Alert.alert(t("Error.error"), t("Error.Phone number 2 must be at least 9 digits."));
+        return;
+      }else if (newPhoneNumber.length > 9 ) {
+        Alert.alert(t("Error.error"), t("Error.Phone number 1 must be at most 9 digits."));
+        return;
+      }else if (newPhoneNumber2.length > 9 ) {
+        Alert.alert(t("Error.error"), t("Error.Phone number 2 must be at most 9 digits."));
+        return;
+      }else if (newPhoneNumber === newPhoneNumber2) {
+        Alert.alert(t("Error.error"), t("Error.Phone numbers cannot be the same."));
+        return;
+      }
       // Always send both phone numbers
       const payload = {
         phoneNumber: newPhoneNumber,
@@ -226,6 +248,8 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
       }));
       setShowUpdateButton(false);
       Alert.alert(t("Error.Success"), t("Error.Phone numbers updated successfully"));
+      setErrorMessage("");
+      setErrorMessage2("");
     } catch (error) {
       console.error("Error updating phone numbers:", error);
       Alert.alert(t("Error.error"), t("Error.Failed to update phone numbers"));
@@ -1077,7 +1101,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
           
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 16 }}>
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 16 }} keyboardShouldPersistTaps="handled">
         <View className="space-y-4">
           <View>
             <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2">  {t("Profile.FirstName")}</Text>
@@ -1165,8 +1189,8 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               onChangeText={handlePhoneNumber2Change}
               maxLength={9}
             />
-            {errorMessage && (
-              <Text className="text-red-500">{errorMessage}</Text>
+            {errorMessage2 && (
+              <Text className="text-red-500">{errorMessage2}</Text>
             )}
           </View>
           <View>
