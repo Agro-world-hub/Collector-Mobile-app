@@ -69,6 +69,21 @@ import ManagerDashboard from "@/component/ManagerScreens/ManagerDashboard";
 import CenterTarget from "@/component/ManagerScreens/CenterTarget";
 import ManagerTransactions from "@/component/ManagerScreens/ManagerTransactions";
 import { environment } from "../environment/environment";
+
+import SearchFarmerScreen from "@/component/TMS/Searchfarmer";
+import RegisterFarmer from "@/component/TMS/Register Farmer";
+import OTPverification from "@/component/TMS/OTPverification";
+import CollectionRequestForm from "@/component/TMS/CollectionRequestForm"
+
+
+
+
+
+
+
+
+
+
 LogBox.ignoreAllLogs(true);
 NativeWindStyleSheet.setOutput({
   default: "native",
@@ -276,6 +291,24 @@ const Index = () => {
             name="Main"
             component={MainTabNavigator}
             options={{ headerShown: false }}
+          />
+
+<Stack.Screen
+            name="SearchFarmerScreen"
+            component={SearchFarmerScreen as any}
+          />
+
+<Stack.Screen
+            name="RegisterFarmer"
+            component={RegisterFarmer as any}
+          />
+          <Stack.Screen
+            name="OTPverification"
+            component={OTPverification as any}
+          />
+          <Stack.Screen
+            name="OTPSuccess"
+            component={CollectionRequestForm as any}
           />
         </Stack.Navigator>
     </LanguageProvider>

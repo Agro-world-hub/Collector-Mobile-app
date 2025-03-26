@@ -317,6 +317,15 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
           />
           <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.Search")}</Text>
         </TouchableOpacity>
+
+
+        <TouchableOpacity
+          className="bg-white p-4 rounded-lg w-[45%] h-20 mt-4 shadow-lg shadow-gray-500 relative mb-5"
+          onPress={() => navigation.navigate("SearchFarmerScreen" as any)}
+        >
+          
+          <Text >NAV.......</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
