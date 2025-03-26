@@ -69,6 +69,7 @@ import ManagerDashboard from "@/component/ManagerScreens/ManagerDashboard";
 import CenterTarget from "@/component/ManagerScreens/CenterTarget";
 import ManagerTransactions from "@/component/ManagerScreens/ManagerTransactions";
 import { environment } from "../environment/environment";
+import RegisterDriver from "@/component/Driver screens/RegisterDriver";
 LogBox.ignoreAllLogs(true);
 NativeWindStyleSheet.setOutput({
   default: "native",
@@ -129,6 +130,7 @@ function MainTabNavigator() {
       />
       <Stack.Screen name="TransactionList" component={TransactionList as any} />
       <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} />
+      <Stack.Screen name="RegisterDriver" component={RegisterDriver as any} />
     </Tab.Navigator>
   );
 }
