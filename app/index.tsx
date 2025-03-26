@@ -135,6 +135,7 @@ function MainTabNavigator() {
 const Index = () => {
   useEffect(() => {
     onlineStatus();
+    
   }, []);
 
   const onlineStatus = async () => {

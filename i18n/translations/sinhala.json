@@ -125,7 +125,9 @@
      "No Prices Available":"මිල ගණන් නොමැත",
     "No prices are available for the selected variety.":"තෝරාගත් ප්‍රභේදය සඳහා මිල ගණන් නොමැත.",
     "Prices for the selected variety were not found.":"තෝරාගත් ප්‍රභේදය සඳහා මිල ගණන් හමු නොවීය.",
-    "All crop details submitted successfully!":"සියලුම බෝග විස්තර සාර්ථකව ඉදිරිපත් කරන ලදී!"
+    "All crop details submitted successfully!":"සියලුම බෝග විස්තර සාර්ථකව ඉදිරිපත් කරන ලදී!",
+        "Phone number 1 must be at least 9 digits.":"දුරකථන අංකය 1 ඉලක්කම් 9 ක් විය යුතුය",
+    "Phone number 2 must be at least 9 digits.":"දුරකථන අංකය 2 ඉලක්කම් 9 ක් විය යුතුය"
 
 
   
@@ -258,7 +260,7 @@
     "Variety":"විවිධත්වය",
     "UnitGrades":"ශ්‍රේණි අනුව ඒකක මිල ගණන්",
     "Total":"එකතුව (රු.)",
-    "Add":"තවත් එකතු කරන්න",
+    "Add":"එකතු කරන්න",
     "Done":"නිම",
     "Select Crop":"කප්පාදුව තෝරන්න",
     "Select Variety":"විවිධත්වය තෝරන්න"
