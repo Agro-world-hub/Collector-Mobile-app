@@ -185,6 +185,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
     const [noResults, setNoResults] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
     const [foundFarmer, setFoundFarmer] = useState<{
+      id:number;
       NICnumber: string;
       firstName: string;
       lastName: string;
@@ -223,7 +224,9 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
   
         if (response.status === 200) {
           const farmer = response.data;
+          console.log("ggg",response.data)
           setFoundFarmer({
+            id: farmer.id,
             NICnumber: farmer.NICnumber,
             firstName: farmer.firstName,
             lastName: farmer.lastName
@@ -249,10 +252,13 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
   
     const handleAddCollectionRequest = () => {
       if (foundFarmer) {
-        navigation.navigate("FarmerQr" as any, {
+        navigation.navigate("CollectionRequestForm" as any, {
+          id: foundFarmer.id,
           NICnumber: foundFarmer.NICnumber,
         });
+         console.log(foundFarmer.id)
       }
+     
     };
   
     return (
@@ -342,7 +348,9 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                     </View>
                     
                     <TouchableOpacity
-                     // onPress={handleAddCollectionRequest}
+                      onPress={handleAddCollectionRequest}
+                      // onPress={() =>
+                      //   navigation.navigate("CollectionRequestForm" as any, )}
                       className="bg-[#2AAD7A] rounded-full py-3 mt-4 w-full mt-[50%]"
                     >
                       <Text className="text-center text-white text-lg">

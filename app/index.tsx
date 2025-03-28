@@ -307,7 +307,7 @@ const Index = () => {
             component={OTPverification as any}
           />
           <Stack.Screen
-            name="OTPSuccess"
+            name="CollectionRequestForm"
             component={CollectionRequestForm as any}
           />
         </Stack.Navigator>

@@ -128,7 +128,7 @@ export type RootStackParamList = {
       phoneNumber: string;
       district: string;
     };
-    CollectionRequestForm:undefined
+    CollectionRequestForm: { NICnumber: string ; id: number };
     
 
 };
