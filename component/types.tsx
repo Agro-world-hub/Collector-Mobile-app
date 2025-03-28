@@ -117,6 +117,18 @@ export type RootStackParamList = {
     ManagerDashboard:undefined;
     CenterTarget:undefined;
     ManagerTransactions:undefined;
+
+    SearchFarmerScreen:undefined;
+    //RegisterFarmer:undefined;
+    RegisterFarmer: { NIC: string };
+    OTPverification: {
+      firstName: string;
+      lastName: string;
+      NICnumber: string;
+      phoneNumber: string;
+      district: string;
+    };
+    CollectionRequestForm: { NICnumber: string ; id: number };
     
 
 };

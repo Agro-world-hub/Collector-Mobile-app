@@ -317,6 +317,9 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
           />
           <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.Search")}</Text>
         </TouchableOpacity>
+
+
+      
       </View>
     </ScrollView>
   );
