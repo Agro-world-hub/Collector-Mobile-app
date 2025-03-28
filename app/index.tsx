@@ -73,10 +73,11 @@ import RegisterDriver from "@/component/Driver screens/RegisterDriver";
 import AddDriverAddressDetails from "@/component/Driver screens/AddDriverAddressDetails";
 import AddVehicleDetails from "@/component/Driver screens/AddVehicleDetails";
 
-import SearchFarmerScreen from "@/component/TMS/Searchfarmer";
-import RegisterFarmer from "@/component/TMS/Register Farmer";
-import OTPverification from "@/component/TMS/OTPverification";
-import CollectionRequestForm from "@/component/TMS/CollectionRequestForm"
+import SearchFarmerScreen from "@/component/Driver screens/Searchfarmer";
+import RegisterFarmer from "@/component/Driver screens/Register Farmer";
+import OTPverification from "@/component/Driver screens/OTPverification";
+import CollectionRequestForm from "@/component/Driver screens/CollectionRequestForm";
+import CollectionRequests from "@/component/Driver screens/CollectionRequests";
 
 
 
@@ -318,7 +319,12 @@ const Index = () => {
             name="CollectionRequestForm"
             component={CollectionRequestForm as any}
           />
-        </Stack.Navigator>
+          <Stack.Screen
+            name="CollectionRequests"
+            component={CollectionRequests as any}
+          />
+        </Stack.Navigator> 
+        
     </LanguageProvider>
   );
 };

@@ -153,6 +153,7 @@ export type RootStackParamList = {
       district: string;
     };
     CollectionRequestForm: { NICnumber: string ; id: number };
+    CollectionRequests:undefined;
     
 
 };
