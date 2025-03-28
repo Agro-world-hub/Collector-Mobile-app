@@ -197,15 +197,15 @@ const RegisterDriver: React.FC = () => {
     );
 
     const prefixedUserId =
-      jobRole === "Driver" ? `DRV${formData.userId}` : formData.userId;
+      jobRole === "Driver" ? `DVR${formData.userId}` : formData.userId;
 
     // Commented out navigation as it was in the original code
-    // navigation.navigate("DriverAddressDetails", {
-    //   formData: { ...updatedFormData, userId: prefixedUserId },
-    //   type,
-    //   preferredLanguages,
-    //   jobRole,
-    // });
+    navigation.navigate("AddDriverAddressDetails" as any, {
+      formData: { ...updatedFormData, userId: prefixedUserId },
+      type,
+      preferredLanguages,
+      jobRole,
+    });
   };
 
   const jobRoles = [
