@@ -27,6 +27,7 @@ export type RootStackParamList = {
     TamUfarmercropdetails:undefined;
     TamUnregisteredFarmerDetails:undefined;
     TamUnregisteredCropDetails:{ cropCount: number,userId:any };
+    TransportComponent:undefined;
     SinProfile:undefined;
     TamProfile:undefined;
     SearchFarmer:{NICnumber: string; userId: any;};
@@ -44,6 +45,29 @@ export type RootStackParamList = {
    // Main:{screen: keyof RootStackParamList};
    Main: { screen: keyof RootStackParamList; params?: any };
     CollectionOfficersList:undefined;
+    RegisterDriver:undefined;
+    AddVehicleDetails: {
+      basicDetails:OfficerBasicDetailsFormData;
+      jobRole: string;
+      empType: string;
+      preferredLanguages: string[];
+      addressDetails:FormData
+    };
+    AddDriverAddressDetails: {
+      formData: {
+        // Basic details from previous screen, type inferred from the route.params destructuring
+        [key: string]: any;
+      };
+      type: string;
+      preferredLanguages: string[];
+      jobRole: string;
+    };
+  
+    
+
+  
+  
+    
 
     
 
@@ -145,5 +169,7 @@ export type OfficerBasicDetailsFormData = {
   nicNumber: string;
   email: string;
   jobRole:string;
+  
+  
 };
 
