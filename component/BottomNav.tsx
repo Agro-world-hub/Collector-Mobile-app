@@ -52,6 +52,8 @@
 
 // export default BottomNav;
 
+//This is the updated code for the BottomNav component
+
 import React, {useState, useEffect, useCallback} from 'react';
 import NetInfo from '@react-native-community/netinfo';
 import { View, TouchableOpacity, Image,  Animated, Keyboard  } from 'react-native';
