@@ -153,8 +153,9 @@ export type RootStackParamList = {
       district: string;
     };
     CollectionRequestForm: { NICnumber: string ; id: number };
-    CollectionRequests:undefined;
-    
+    CollectionRequests: { requestId: number ; crops:string };  // expect requestId in CollectionRequests
+  ViewScreen: { requestId: number ; crops:string  };  // expect requestId in ViewScreen
+  Cancelreson:{requestId : number , status: string}
 
 };
 
