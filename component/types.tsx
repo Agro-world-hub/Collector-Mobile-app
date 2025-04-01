@@ -51,7 +51,8 @@ export type RootStackParamList = {
       jobRole: string;
       empType: string;
       preferredLanguages: string[];
-      addressDetails:FormData
+      addressDetails:FormData;
+      type: 'Permanent' | 'Temporary';
     };
     AddDriverAddressDetails: {
       formData: {
@@ -149,14 +150,18 @@ export type OfficerBasicDetailsFormData = {
   userId: string;
   firstNameEnglish: string;
   lastNameEnglish: string;
-  firstNameSinhala: string;
-  lastNameSinhala: string;
-  firstNameTamil: string;
-  lastNameTamil: string;
-  profileImage:string
+  firstNameSinhala?: string;
+  lastNameSinhala?: string;
+  firstNameTamil?: string;
+  lastNameTamil?: string;
   nicNumber: string;
   email: string;
-  jobRole:string;
+  jobRole: string;
+  phoneCode1: string;
+  phoneNumber1: string;
+  phoneCode2?: string;
+  phoneNumber2?: string;
+  profileImage?: string;
   
   
 };

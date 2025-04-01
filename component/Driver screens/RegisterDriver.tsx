@@ -59,6 +59,10 @@ const RegisterDriver: React.FC = () => {
     email: "",
     profileImage: "",
     jobRole: "",
+    phoneCode1: "",
+    phoneNumber1: "",
+    phoneCode2: "",
+    phoneNumber2: "",
   });
 
   const [error1, setError1] = useState("");
@@ -209,7 +213,7 @@ const RegisterDriver: React.FC = () => {
   };
 
   const jobRoles = [
-    { key: "2", value: "Collection Officer" },
+    { key: "2", value: "Driver" },
     // Add more roles as necessary
   ];
 
@@ -374,7 +378,7 @@ const RegisterDriver: React.FC = () => {
               }}
             >
               <Text className="text-gray-700 text-center">
-                {jobRole === "Collection Officer" ? "COO" : ""}
+                {jobRole === "Driver" ? "DVR" : ""}
               </Text>
             </View>
 

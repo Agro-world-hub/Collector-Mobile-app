@@ -7,9 +7,33 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { RootStackParamList } from '../types';
 import CameraComponent from '@/utils/CamComponentForDrivers';
+import axios from 'axios';
+import { environment } from '@/environment/environment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-type AddVehicleDetailsRouteProp = RouteProp<RootStackParamList, 'AddVehicleDetails'>;
+type AddressDetails = {
+  houseNumber: string;
+  streetName: string;
+  city: string;
+  country: string;
+  province: string;
+  district: string;
+  accountHolderName?: string;
+  accountNumber?: string;
+  bankName?: string;
+  branchName?: string;
+};
+
+type AddVehicleDetailsRouteProp = RouteProp<RootStackParamList, 'AddVehicleDetails'> & {
+  params: {
+    basicDetails: any;
+    jobRole: string;
+    type: string;
+    preferredLanguages: string[];
+    addressDetails: AddressDetails;
+  };
+};
 type AddVehicleDetailsNavigationProp = StackNavigationProp<RootStackParamList, 'AddVehicleDetails'>;
 
 const AddVehicleDetails: React.FC = () => {
@@ -34,11 +58,10 @@ const AddVehicleDetails: React.FC = () => {
     'InsuranceBack': false,
     'VehicleFront': false,
     'VehicleBack': false,
-    'VehicleSide1': false,
-    'VehicleSide2': false
+    'Side-1': false,
+    'Side-2': false
   });
   
-
   // State for image storage
   const [images, setImages] = useState<{[key: string]: string}>({});
 
@@ -49,12 +72,30 @@ const AddVehicleDetails: React.FC = () => {
     { key: '3', value: 'Motorcycle' },
   ];
 
-  // Handle image picking
+  // Handle image picking - map display names to backend keys
   const handleImagePicked = (base64Image: string | null, imageType: string) => {
     if (base64Image) {
+      const imageMapping: {[key: string]: string} = {
+        // Driving License
+        'Front': 'Front',  // This will be mapped to licFrontImg in submission
+        'Back': 'Back',    // This will be mapped to licBackImg in submission
+        
+        // Insurance
+        'InsuranceFront': 'InsuranceFront',
+        'InsuranceBack': 'InsuranceBack',
+        
+        // Vehicle
+        'VehicleFront': 'VehicleFront',
+        'VehicleBack': 'VehicleBack',
+        'Side-1': 'VehicleSide1',
+        'Side-2': 'VehicleSide2'
+      };
+      
+      // Store image with the correct key for backend submission
+      const backendKey = imageMapping[imageType] || imageType;
       setImages(prev => ({
         ...prev,
-        [imageType]: base64Image
+        [backendKey]: base64Image
       }));
     }
   };
@@ -66,7 +107,7 @@ const AddVehicleDetails: React.FC = () => {
   };
 
   // Submit handler
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Validate required fields
     if (!drivingLicenseId || !vehicleType || !vehicleRegistrationNumber) {
       Alert.alert('Validation Error', 'Please fill in all required fields');
@@ -74,38 +115,150 @@ const AddVehicleDetails: React.FC = () => {
     }
 
     // Validate image capture
-    const requiredImages = [
+    const requiredImageTypes = [
       'Front', 'Back', 
-      'Front', 'Back', 
-      'Front', 'Back', 
-      'Side-1', 'Side-2'
+      'InsuranceFront', 'InsuranceBack', 
+      'VehicleFront', 'VehicleBack', 
+      'VehicleSide1', 'VehicleSide2'
     ];
 
-    const missingImages = requiredImages.filter(img => !images[img]);
+    const missingImages = requiredImageTypes.filter(img => !images[img]);
     
-    if (missingImages.length > 0) {
-      Alert.alert('Image Missing', `Please capture all required images: ${missingImages.join(', ')}`);
-      return;
+    // Uncomment if you want to enforce all images
+    // if (missingImages.length > 0) {
+    //   Alert.alert('Image Missing', `Please capture all required images: ${missingImages.join(', ')}`);
+    //   return;
+    // }
+
+    try {
+      // Get the data passed from the previous screen
+      const { basicDetails, jobRole, type, preferredLanguages, addressDetails } = route.params;
+      
+      console.log('-------------------last page -------------------------------------');
+      console.log('addressDetails in last page', addressDetails);
+      console.log('basicDetails in last page', basicDetails);
+      console.log('jobRole in last page', jobRole);
+      console.log('type in last page', type);
+      console.log('preferredLanguages in last page', preferredLanguages);
+      
+
+      // Format the data to match the backend's expected structure
+      
+      
+      const officerData = {
+        // Basic details
+        firstNameEnglish: basicDetails.firstNameEnglish,
+        lastNameEnglish: basicDetails.lastNameEnglish,
+        firstNameSinhala: basicDetails.firstNameSinhala,
+        lastNameSinhala: basicDetails.lastNameSinhala,
+        firstNameTamil: basicDetails.firstNameTamil,
+        lastNameTamil: basicDetails.lastNameTamil,
+        empId: basicDetails.userId,
+        empType: type,
+        nic: basicDetails.nicNumber,
+        email: basicDetails.email,
+        phoneCode01: basicDetails.phoneCode1,
+        phoneNumber01: basicDetails.phoneNumber1,
+        phoneCode02: basicDetails.phoneCode2,
+        phoneNumber02: basicDetails.phoneNumber2,
+        jobRole: jobRole,
+        preferredLanguages: Object.keys(preferredLanguages)
+        .filter(
+          (lang) => preferredLanguages[lang as keyof typeof preferredLanguages]
+        )
+        .join(", "),
+        
+        // Address details
+        houseNumber: addressDetails.houseNumber,
+        streetName: addressDetails.streetName,
+        city: addressDetails.city,
+        district: addressDetails.district,
+        province: addressDetails.province,
+        country: addressDetails.country,
+        
+        // Bank details
+        accHolderName: addressDetails.accountHolderName,
+        accNumber: addressDetails.accountNumber,
+        bankName: addressDetails.bankName,
+        branchName: addressDetails.branchName,
+        
+        // Profile image
+        profileImageUrl: images.profileImage,
+        
+        // Vehicle details
+        licNo: drivingLicenseId,
+        insNo: insuranceNumber,
+        insExpDate: insuranceExpireDate ? insuranceExpireDate.toISOString().split('T')[0] : null,
+        vType: vehicleType,
+        vCapacity: vehicleCapacity,
+        vRegNo: vehicleRegistrationNumber,
+        
+        // License and insurance images - map to the correct backend field names
+        licFrontImg: images.Front,
+        licBackImg: images.Back,
+        insFrontImg: images.InsuranceFront,
+        insBackImg: images.InsuranceBack,
+        
+        // Vehicle images
+        vehFrontImg: images.VehicleFront,
+        vehBackImg: images.VehicleBack,
+        vehSideImgA: images.VehicleSide1,
+        vehSideImgB: images.VehicleSide2
+      };
+      
+      console.log('officerData before sending', officerData);
+
+      // Get the auth token from AsyncStorage
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        Alert.alert('Authentication Error', 'No authentication token found');
+        return;
+      }
+
+     // Make the API call with authorization headers
+     const response = await axios.post(
+      `${environment.API_BASE_URL}api/collection-manager/driver/add`,
+      officerData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (response.data) {
+      // Clear stored form data after successful submission
+      await AsyncStorage.removeItem("driverFormData");
+      
+      // Refresh the form
+      onRefresh();
+      
+      Alert.alert('Success', 'Driver and vehicle information submitted successfully', [
+        { 
+          text: 'OK', 
+          onPress: () => navigation.navigate('RegisterDriver' as any) 
+        }
+      ]);
     }
-
-    // If all validations pass, proceed with submission
-    // You would typically send this data to your backend
-    console.log('Submission Data:', {
-      drivingLicenseId,
-      insuranceNumber,
-      insuranceExpireDate,
-      vehicleType,
-      vehicleCapacity,
-      vehicleRegistrationNumber,
-      images
-    });
-
-    // Reset form or navigate to next screen
-    // navigation.navigate('NextScreen');
+  } catch (error) {
+      console.error('Error submitting driver and vehicle data:', error);
+      
+      // More detailed error handling
+      let errorMessage = 'Failed to submit driver and vehicle information. Please try again.';
+      if (axios.isAxiosError(error)) {
+        errorMessage = error.response?.data?.message || error.message;
+      }
+      
+      Alert.alert('Submission Error', errorMessage);
+    }
   };
   
-   // Refresh handler
-   const onRefresh = React.useCallback(() => {
+  
+  
+
+  // Refresh handler
+  const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     
     // Reset all form fields
@@ -145,10 +298,9 @@ const AddVehicleDetails: React.FC = () => {
     }, 1000);
   }, []);
 
-
   return (
     <ScrollView 
-      className="flex-1 bg-white"
+    className="flex-1 bg-white"
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -177,14 +329,14 @@ const AddVehicleDetails: React.FC = () => {
         />
         <View className="flex-row space-x-2 mt-4">
           <CameraComponent 
-            onImagePicked={handleImagePicked}
+            onImagePicked={(image) => handleImagePicked(image, 'Front')}
             imageType="Front"
-            resetImage={resetImages['DrivingLicenseFront']}
+            resetImage={resetImages['Front']}
           />
           <CameraComponent 
-            onImagePicked={handleImagePicked}
+            onImagePicked={(image) => handleImagePicked(image, 'Back')}
             imageType="Back"
-            resetImage={resetImages['DrivingLicenseBack']}
+            resetImage={resetImages['Back']}
           />
         </View>
       </View>
@@ -219,13 +371,13 @@ const AddVehicleDetails: React.FC = () => {
         )}
 
         <View className="flex-row space-x-2 justify-center mt-4">
-          <CameraComponent 
-            onImagePicked={handleImagePicked}
+        <CameraComponent 
+            onImagePicked={(image) => handleImagePicked(image, 'InsuranceFront')}
             imageType="Front"
             resetImage={resetImages['InsuranceFront']}
           />
           <CameraComponent 
-            onImagePicked={handleImagePicked}
+            onImagePicked={(image) => handleImagePicked(image, 'InsuranceBack')}
             imageType="Back"
             resetImage={resetImages['InsuranceBack']}
           />
@@ -272,28 +424,28 @@ const AddVehicleDetails: React.FC = () => {
         />
 
         <View className="flex-row space-x-4 mb-4 mt-4">
-          <CameraComponent 
-            onImagePicked={handleImagePicked}
+        <CameraComponent 
+            onImagePicked={(image) => handleImagePicked(image, 'VehicleFront')}
             imageType="Front"
             resetImage={resetImages['VehicleFront']}
           />
           <CameraComponent 
-            onImagePicked={handleImagePicked}
+            onImagePicked={(image) => handleImagePicked(image, 'VehicleBack')}
             imageType="Back"
             resetImage={resetImages['VehicleBack']}
           />
         </View>
 
         <View className="flex-row space-x-4">
-          <CameraComponent 
-            onImagePicked={handleImagePicked}
+        <CameraComponent 
+            onImagePicked={(image) => handleImagePicked(image, 'Side-1')}
             imageType="Side-1"
-            resetImage={resetImages['VehicleSide1']}
+            resetImage={resetImages['Side-1']}
           />
           <CameraComponent 
-            onImagePicked={handleImagePicked}
+            onImagePicked={(image) => handleImagePicked(image, 'Side-2')}
             imageType="Side-2"
-            resetImage={resetImages['VehicleSide2']}
+            resetImage={resetImages['Side-2']}
           />
         </View>
       </View>
