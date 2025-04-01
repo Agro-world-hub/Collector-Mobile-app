@@ -76,7 +76,7 @@ const [cancelledBy, setCancelledBy] = useState("");
     // Determine if fields should be editable based on status
     const isEditable = scheduled === "Scheduled" || requestStatus === "Not Assigned" ;
     
-    // Determine which buttons to show based on status
+   
    // const showUpdateButton = scheduled === "Scheduled" || scheduled === "On way" || scheduled === "Collected" || scheduled === "Cancelled";
    const showUpdateButton = scheduled === "Scheduled" || requestStatus === "Not Assigned";
     const showCancelButton = scheduled === "Scheduled" || scheduled === "On way"|| requestStatus === "Not Assigned";
