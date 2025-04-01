@@ -69,6 +69,24 @@ import ManagerDashboard from "@/component/ManagerScreens/ManagerDashboard";
 import CenterTarget from "@/component/ManagerScreens/CenterTarget";
 import ManagerTransactions from "@/component/ManagerScreens/ManagerTransactions";
 import { environment } from "../environment/environment";
+import RegisterDriver from "@/component/Driver screens/RegisterDriver";
+import AddDriverAddressDetails from "@/component/Driver screens/AddDriverAddressDetails";
+import AddVehicleDetails from "@/component/Driver screens/AddVehicleDetails";
+
+import SearchFarmerScreen from "@/component/TMS/Searchfarmer";
+import RegisterFarmer from "@/component/TMS/Register Farmer";
+import OTPverification from "@/component/TMS/OTPverification";
+import CollectionRequestForm from "@/component/TMS/CollectionRequestForm"
+
+
+
+
+
+
+
+
+
+
 LogBox.ignoreAllLogs(true);
 NativeWindStyleSheet.setOutput({
   default: "native",
@@ -129,6 +147,11 @@ function MainTabNavigator() {
       />
       <Stack.Screen name="TransactionList" component={TransactionList as any} />
       <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} />
+      <Stack.Screen name="RegisterDriver" component={RegisterDriver as any} />
+      <Stack.Screen name="AddDriverAddressDetails" component={AddDriverAddressDetails as any} />
+      <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} />
+      
+      
     </Tab.Navigator>
   );
 }
@@ -276,6 +299,24 @@ const Index = () => {
             name="Main"
             component={MainTabNavigator}
             options={{ headerShown: false }}
+          />
+
+<Stack.Screen
+            name="SearchFarmerScreen"
+            component={SearchFarmerScreen as any}
+          />
+
+<Stack.Screen
+            name="RegisterFarmer"
+            component={RegisterFarmer as any}
+          />
+          <Stack.Screen
+            name="OTPverification"
+            component={OTPverification as any}
+          />
+          <Stack.Screen
+            name="CollectionRequestForm"
+            component={CollectionRequestForm as any}
           />
         </Stack.Navigator>
     </LanguageProvider>
