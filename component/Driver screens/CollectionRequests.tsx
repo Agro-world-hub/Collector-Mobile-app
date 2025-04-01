@@ -1,0 +1,402 @@
+// import React, { useState, useEffect, useCallback } from "react";
+// import {
+//   View,
+//   Text,
+//   TextInput,
+//   TouchableOpacity,
+//   Image,
+//   Alert,
+//   ScrollView,
+//   Keyboard,
+//   KeyboardAvoidingView,
+//   Platform
+// } from "react-native";
+// import FontAwesome from "react-native-vector-icons/FontAwesome";
+// import axios from "axios";
+// import { StackNavigationProp } from "@react-navigation/stack";
+//  import { RootStackParamList } from "../types"; // Ensure this file exists
+// import {environment }from '@/environment/environment';
+// import {
+//   widthPercentageToDP as wp,
+//   heightPercentageToDP as hp,
+// } from "react-native-responsive-screen";
+// import AntDesign from "react-native-vector-icons/AntDesign";
+// import { useFocusEffect } from "expo-router";
+// import { useTranslation } from "react-i18next";
+
+// type CollectionRequestsNavigationProp = StackNavigationProp<
+//   RootStackParamList,
+//   "CollectionRequests"
+// >;
+
+// interface CollectionRequestsProps {
+//   navigation: CollectionRequestsNavigationProp;
+// }
+
+// const CollectionRequests: React.FC<CollectionRequestsProps> = ({ navigation }) => {
+//     return (
+//         <View>
+//           <Text>Collection Requests Screen</Text>
+//         </View>
+//       );
+
+// }
+
+// export default CollectionRequests;
+
+import React, { useState, useCallback } from 'react';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Image, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { AntDesign } from '@expo/vector-icons';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import {environment }from '@/environment/environment';
+
+type NotAssignedRequest = {
+  id: number;
+  name: string;
+  route: string;
+  farmerId: number;
+  nic:string;
+  cropId: number;
+  items: any[];
+};
+
+type AssignedRequest = {
+  id: number;
+  name: string;
+  nic:string;
+  route: string;
+  farmerId: number;
+  cropId: number;
+  assignedStatus: 'Collected' | 'On way' | 'Cancelled' | 'Scheduled';
+  items: any[];
+};
+
+type RootStackParamList = {
+  CollectionRequests: undefined;
+  // Add other screens as needed
+};
+
+type CollectionRequestsNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "CollectionRequests"
+>;
+
+interface CollectionRequestsProps {
+  navigation: CollectionRequestsNavigationProp;
+}
+
+const CollectionRequests: React.FC<CollectionRequestsProps> = ({ navigation }) => {
+  const [activeTab, setActiveTab] = useState<'Not Assigned' | 'Assigned'>('Not Assigned');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+  const [notAssignedRequests, setNotAssignedRequests] = useState<NotAssignedRequest[]>([]);
+  const [assignedRequests, setAssignedRequests] = useState<AssignedRequest[]>([]);
+  const [filteredRequests, setFilteredRequests] = useState<(NotAssignedRequest | AssignedRequest)[]>([]);
+  const [searchText, setSearchText] = useState('');
+
+  // Helper function to get name
+  const getName = (name: string) => {
+    return name;
+  };
+
+  // Helper function to get route
+  const getRoute = (route: string) => {
+    return `Route: ${route}`;
+  };
+  const getNic = (nic: string) => {
+    return nic;
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchCollectionRequests = async () => {
+        try {
+          const token = await AsyncStorage.getItem("token");
+          if (!token) {
+            Alert.alert('Error', 'Authentication token not found');
+            return;
+          }
+      
+          const headers = {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          };
+      
+          // Build query params based on activeTab and selectedFilter
+          const queryParams = new URLSearchParams();
+          queryParams.append('status', activeTab);
+          if (selectedFilter && selectedFilter !== 'All') {
+            queryParams.append('requestStatus', selectedFilter); // Apply the selected filter
+          }
+      
+          const fullUrl = `${environment.API_BASE_URL}api/collectionrequest/all-collectionrequest?${queryParams.toString()}`;
+          console.log('Request URL:', fullUrl);
+      
+          const response = await axios.get(fullUrl, { headers });
+          const data = response.data;
+          console.log('Received Data:', data);
+      
+          if (activeTab === 'Not Assigned') {
+            setNotAssignedRequests(data);
+            setFilteredRequests(data);
+          } else {
+            setAssignedRequests(data);
+            
+            setFilteredRequests(
+              selectedFilter && selectedFilter !== 'All' 
+                ? data.filter((req: AssignedRequest) => req.assignedStatus === selectedFilter) 
+                : data
+            );
+          }
+        } catch (error) {
+          console.error('Fetch Collection Requests Error:', error);
+        }
+      };
+
+      fetchCollectionRequests();
+    }, [activeTab, selectedFilter])
+  );
+
+  // Handle view details
+  const handleViewDetails = (item: NotAssignedRequest | AssignedRequest) => {
+    // Log the item ID to the console
+    console.log('View details for item:', item.id);
+  
+    // Navigate to the "ViewScreen" with the item data
+    navigation.navigate("ViewScreen" as any, {
+      requestId: item.id,
+      crops: item.cropId
+    });
+  };
+
+  // Handle assign collection
+  const handleAssign = (item: NotAssignedRequest) => {
+    console.log('Assign collection for item:', item.id);
+    // Implement assign logic
+  };
+
+  
+// Add this function to your component
+const handleSearch = (text: string) => {
+  setSearchText(text);
+  
+  
+  const requestsToFilter = activeTab === 'Not Assigned' ? notAssignedRequests : assignedRequests;
+  
+  if (text.trim() === '') {
+    
+  
+    return;
+  }
+  
+ 
+  const searchLower = text.toLowerCase();
+  
+  // Filter requests based on NIC or route containing the search text
+  const filtered = requestsToFilter.filter(item => {
+    const nicMatch = item.nic.toLowerCase().includes(searchLower);
+    const routeMatch = item.route.toLowerCase().includes(searchLower);
+    return nicMatch || routeMatch;
+  });
+  
+  setFilteredRequests(filtered);
+};
+
+  const renderRequestItem = (item: NotAssignedRequest | AssignedRequest, index: number) => {
+    const name = getName(item.name);
+    const route = getRoute(item.route);
+    const nic = getNic(item.nic)
+    const itemNumber = String(index + 1).padStart(2, '0');
+
+    return (
+      <View key={item.id} className="mb-4 bg-white shadow rounded-lg ">
+ <View className="h-px bg-gray-200 w-full "></View>
+       <View className="flex-row justify-between items-center p-4">
+  <Text className="font-bold text-gray-700 w-8">{itemNumber}</Text>
+  <View className="flex-1 ml-2">
+    <TouchableOpacity onPress={() => handleViewDetails(item)}>
+      <Text className="font-bold">{name}</Text>
+      <Text className="text-gray-500 text-sm mt-1">{nic}</Text>
+      <Text className="text-gray-500 text-sm">{route}</Text>
+    </TouchableOpacity>
+    {/* Proper horizontal line */}
+    
+  </View>
+
+
+        
+
+          <View className="flex-row items-center">
+            {activeTab === 'Not Assigned' ? (
+              <>
+               <TouchableOpacity onPress={() => handleViewDetails(item)}>
+                <TouchableOpacity 
+                  onPress={() => handleAssign(item as NotAssignedRequest)}
+                  className="bg-green-100 px-3 py-1 rounded-lg mr-2"
+                >
+                  <Text className="text-green-700 font-medium">Assign</Text>
+                </TouchableOpacity>
+               
+                  {/* <Image
+                    source={require("../../assets/images/View.webp")}
+                    className="h-[24px] w-[24px]"
+                    defaultSource={require("../../assets/images/View.webp")}
+                    resizeMode="contain"
+                  /> */}
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <View 
+                  className={`px-3 py-1 rounded-lg mr-2
+                    ${(item as AssignedRequest).assignedStatus === 'Collected' ? 'bg-blue-100' :
+                      (item as AssignedRequest).assignedStatus === 'On way' ? 'bg-yellow-100' :
+                      (item as AssignedRequest).assignedStatus === 'Scheduled' ? 'bg-gray-200' :
+                      (item as AssignedRequest).assignedStatus === 'Cancelled' ? 'bg-red-100' : ''}`}
+                >
+                  <Text 
+                    className={`font-medium
+                      ${(item as AssignedRequest).assignedStatus === 'Collected' ? 'text-blue-600' :
+                        (item as AssignedRequest).assignedStatus === 'On way' ? 'text-yellow-600' :
+                        (item as AssignedRequest).assignedStatus === 'Scheduled' ? 'text-gray-600' :
+                        (item as AssignedRequest).assignedStatus === 'Cancelled' ? 'text-red-600' : ''}`}
+                  >
+                    {(item as AssignedRequest).assignedStatus}
+                  </Text>
+                </View>
+                <TouchableOpacity onPress={() => handleViewDetails(item)}>
+                  {/* <Image
+                    source={require("../../assets/images/View.webp")}
+                    className="h-[24px] w-[24px]"
+                    defaultSource={require("../../assets/images/View.webp")}
+                    resizeMode="contain"
+                  /> */}
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  return (
+    <SafeAreaView className="flex-1 bg-white">
+      {/* Header */}
+      <View className="p-4 bg-white">
+        {/* Navigation Header */}
+        <View className="flex-row items-center mb-6">
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <AntDesign name="left" size={24} color="#000" />
+          </TouchableOpacity>
+          <Text className="flex-1 text-center text-xl font-bold text-black">
+            Collection Requests
+          </Text>
+        </View>
+      </View>
+
+      {/* Tab Navigation */}
+      <View className="flex-row justify-center py-3 bg-white">
+        <TouchableOpacity
+          className={`px-6 py-2 rounded-full mx-2 border 
+            ${activeTab === 'Not Assigned' ? 'bg-[#2AAD7A] border-[#2AAD7A]' : 'bg-white border-gray-300'}`}
+          onPress={() => { 
+            setActiveTab('Not Assigned'); 
+            setSelectedFilter(null); 
+          }}
+        >
+          <Text className={`font-semibold 
+            ${activeTab === 'Not Assigned' ? 'text-white' : 'text-black'}`}>
+            Not Assigned ({notAssignedRequests.length})
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          className={`px-6 py-2 rounded-full mx-2 border 
+            ${activeTab === 'Assigned' ? 'bg-[#2AAD7A] border-[#2AAD7A]' : 'bg-white border-gray-300'}`}
+          onPress={() => setActiveTab('Assigned')}
+        >
+          <Text className={`font-semibold 
+            ${activeTab === 'Assigned' ? 'text-white' : 'text-black'}`}>
+            Assigned ({assignedRequests.length})
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Search and Filter */}
+      <View className="bg-white py-2 px-4 border-t border-gray-200 ">
+        <View className="flex-row items-center bg-gray-100 rounded-full px-4 mt-2">
+          <TextInput 
+            placeholder="Search Route / NIC here..." 
+            className="flex-1 ml-1 text-gray-600" 
+            value={searchText}
+        //    onChangeText={setSearchText}
+            onChangeText={handleSearch}
+          />
+          <Image
+            source={require("../../assets/images/Searchicon.webp")}
+            className="h-[20px] w-[20px]"
+            resizeMode="contain"
+          />
+        </View>
+
+        {activeTab === 'Not Assigned' && (
+          <View className='p-2'>
+            <Text className='text-base'>All ({filteredRequests.length})</Text>
+          </View>
+        )}
+
+        {/* Assigned Tab Filter */}
+        {activeTab === 'Assigned' && (
+          <View className="flex-row mt-3 items-center">
+            <TouchableOpacity 
+              onPress={() => setShowDropdown(!showDropdown)} 
+              className="flex-row items-center"
+            >
+              <Image
+                source={require("../../assets/images/Filter.webp")}
+                className="h-[24px] w-[24px]"
+                resizeMode="contain"
+              />
+              <Text className="ml-2 text-gray-700 font-medium">{selectedFilter || "All"} ({filteredRequests.length})</Text>
+            </TouchableOpacity>
+
+            {showDropdown && (
+              <View className="absolute top-10 left-0 z-50 w-40 bg-white border rounded-lg shadow-lg mt-1">
+                {['All', 'Collected', 'On way', 'Cancelled', 'Scheduled'].map((status) => (
+                  <TouchableOpacity
+                    key={status}
+                    onPress={() => {
+                      setSelectedFilter(status === 'All' ? null : status);
+                      setShowDropdown(false);
+                    }}
+                    className="p-2 border-b"
+                  >
+                    <Text>{status}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+          </View>
+        )}
+      </View>
+
+      {/* Request List */}
+      <ScrollView className="bg-gray-100 px-4 pt-4 pb-20 bg-white">
+        
+        {filteredRequests.length > 0 ? (
+          filteredRequests.map((item, index) => renderRequestItem(item, index))
+          
+        ) : (
+          <Text className="text-center py-8 text-gray-500">No collection requests found</Text>
+        )}
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+export default CollectionRequests;

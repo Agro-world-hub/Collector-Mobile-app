@@ -17,7 +17,7 @@ const TransportComponent: React.FC<TransportComponentProps> = ({ navigation }) =
         {/* Register Drivers */}
         <TouchableOpacity
           className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
-          onPress={() => navigation.navigate("AddVehicleDetails" as any)}
+          onPress={() => navigation.navigate("RegisterDriver" as any)}
         >
           <Image
             source={require('../../assets/images/pick.png')}
@@ -29,7 +29,7 @@ const TransportComponent: React.FC<TransportComponentProps> = ({ navigation }) =
         {/* Add Farmer Requests */}
         <TouchableOpacity
           className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
-          // onPress={() => navigation.navigate("AddFarmerRequests")}
+          onPress={() => navigation.navigate("SearchFarmerScreen" as any)}
         >
           <Image
             source={require('../../assets/images/brief.png')}
@@ -44,7 +44,7 @@ const TransportComponent: React.FC<TransportComponentProps> = ({ navigation }) =
         {/* View Farmer Requests */}
         <TouchableOpacity
           className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
-          // onPress={() => navigation.navigate("ViewFarmerRequests")}
+          onPress={() => navigation.navigate("CollectionRequests" as any)}
         >
           <Image
             source={require('../../assets/images/help.png')}
