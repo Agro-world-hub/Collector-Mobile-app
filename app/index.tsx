@@ -73,10 +73,13 @@ import RegisterDriver from "@/component/Driver screens/RegisterDriver";
 import AddDriverAddressDetails from "@/component/Driver screens/AddDriverAddressDetails";
 import AddVehicleDetails from "@/component/Driver screens/AddVehicleDetails";
 
-import SearchFarmerScreen from "@/component/TMS/Searchfarmer";
-import RegisterFarmer from "@/component/TMS/Register Farmer";
-import OTPverification from "@/component/TMS/OTPverification";
-import CollectionRequestForm from "@/component/TMS/CollectionRequestForm"
+import SearchFarmerScreen from "@/component/Driver screens/Searchfarmer";
+import RegisterFarmer from "@/component/Driver screens/Register Farmer";
+import OTPverification from "@/component/Driver screens/OTPverification";
+import CollectionRequestForm from "@/component/Driver screens/CollectionRequestForm";
+import CollectionRequests from "@/component/Driver screens/CollectionRequests";
+import ViewScreen from "@/component/Driver screens/ViewScreen";
+import Cancelreson from "@/component/Driver screens/Cancelreson"
 
 
 
@@ -145,11 +148,14 @@ function MainTabNavigator() {
         name="EditTargetManager"
         component={EditTargetManager as any}
       />
+       
       <Stack.Screen name="TransactionList" component={TransactionList as any} />
       <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} />
       <Stack.Screen name="RegisterDriver" component={RegisterDriver as any} />
       <Stack.Screen name="AddDriverAddressDetails" component={AddDriverAddressDetails as any} />
       <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} />
+   
+      
       
       
     </Tab.Navigator>
@@ -318,7 +324,17 @@ const Index = () => {
             name="CollectionRequestForm"
             component={CollectionRequestForm as any}
           />
-        </Stack.Navigator>
+          <Stack.Screen
+            name="CollectionRequests"
+            component={CollectionRequests as any}
+          />
+            <Stack.Screen name="ViewScreen" component={ViewScreen as any} />          
+            <Stack.Screen
+            name="Cancelreson"
+            component={Cancelreson as any}
+          />
+        </Stack.Navigator> 
+        
     </LanguageProvider>
   );
 };
