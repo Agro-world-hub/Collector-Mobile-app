@@ -17,7 +17,7 @@ const TransportComponent: React.FC<TransportComponentProps> = ({ navigation }) =
         {/* Register Drivers */}
         <TouchableOpacity
           className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
-          onPress={() => navigation.navigate("AddVehicleDetails" as any)}
+          onPress={() => navigation.navigate("RegisterDriver" as any)}
         >
           <Image
             source={require('../../assets/images/pick.png')}
