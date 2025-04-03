@@ -16,6 +16,7 @@ interface DailyTargetListProps {
 }
 
 interface TargetData {
+  officerTarget: number;
   varietyNameEnglish: string;
   grade: string;
   target: number;
@@ -189,9 +190,9 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
                 </Text>
                 <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.grade}</Text>
                 <Text className="w-32 p-2 border-r border-gray-300 text-center">
-                  {item.target.toFixed(2)}
+                  {item.officerTarget}
                 </Text>
-                <Text className="w-32 p-2 text-center">{item.todo.toFixed(2)}</Text>
+                <Text className="w-32 p-2 text-center">{item.todo}</Text>
               </View>
             ))
           )}

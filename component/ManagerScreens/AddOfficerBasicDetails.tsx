@@ -448,6 +448,10 @@ const AddOfficerBasicDetails: React.FC = () => {
     email: "",
     profileImage: "",
     jobRole: "",
+    phoneCode1: "",
+    phoneNumber1: "",
+    phoneCode2: "",
+    phoneNumber2: "",
   });
 
   const toggleLanguage = (language: keyof typeof preferredLanguages) => {
