@@ -141,9 +141,9 @@ interface EditTargetManagerProps {
       varietyNameSinhala: string;  // ✅ Added this
       varietyNameTamil: string;    // ✅ Added this
       grade: string;
-      target: string;
+      target: number;
       todo: string;
-      qty: string;
+      dailyTarget: any;
     };
   };
 }
@@ -171,7 +171,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
     fetchData();
   }, []);
   
-  const { varietyNameEnglish , grade, target, todo, qty ,varietyId,varietyNameSinhala ,varietyNameTamil  } = route.params;
+  const { varietyNameEnglish , grade, target, todo, dailyTarget ,varietyId,varietyNameSinhala ,varietyNameTamil  } = route.params;
  
   console.log('officers edit details',route.params);
   const getvarietyName = () => {
@@ -197,7 +197,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
         <TouchableOpacity onPress={() => {
           navigation.reset({
             index: 0,
-            routes: [{name: 'Main',params: { screen: 'DailyTarget', params: { varietyId, varietyNameEnglish, grade, target, todo, qty,varietyNameSinhala ,varietyNameTamil }, }, }, ],});
+            routes: [{name: 'Main',params: { screen: 'DailyTarget', params: { varietyId, varietyNameEnglish, grade, target, todo, dailyTarget,varietyNameSinhala ,varietyNameTamil }, }, }, ],});
           }}>
         <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
@@ -215,7 +215,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
           <Text className="text-gray-600 font-medium">{t("EditTargetManager.TotalTarget")}</Text>
           <TextInput
             className="border border-gray-300 rounded-md px-3 py-2 mt-2 text-gray-800"
-            value={qty.toString()}
+            value={dailyTarget.toString()}	
             editable={false}
           />
         </View>
@@ -244,14 +244,14 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
             <View className="flex-row justify-center space-x-4 mt-4 p-5">
               <TouchableOpacity
                 className="flex-1 bg-[#D16D6A] px-6 py-2 rounded-md items-center"
-                onPress={() => navigation.navigate('Main', {screen: 'PassTargetScreen',params: {varietyId, varietyNameEnglish, grade, target, todo, qty,varietyNameSinhala ,varietyNameTamil}})}                
+                onPress={() => navigation.navigate('Main', {screen: 'PassTargetScreen',params: {varietyId, varietyNameEnglish, grade, target, todo, dailyTarget,varietyNameSinhala ,varietyNameTamil}})}                
                 // onPress={() => navigation.navigate('PassTargetScreen'as any,{varietyName, grade, target, todo, qty ,varietyId})} // Save and exit edit mode
               >
                 <Text className="text-white font-medium">{t("EditTargetManager.Pass")}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex-1 bg-[#2AAD7A] px-6 py-2 rounded-md items-center"
-                onPress={() => navigation.navigate('Main', {screen: 'RecieveTargetScreen',params: {varietyId, varietyNameEnglish, grade, target, todo, qty,varietyNameSinhala ,varietyNameTamil}})}                
+                onPress={() => navigation.navigate('Main', {screen: 'RecieveTargetScreen',params: {varietyId, varietyNameEnglish, grade, target, todo, dailyTarget,varietyNameSinhala ,varietyNameTamil}})}                
 
                 // onPress={() => navigation.navigate('RecieveTargetScreen' as any,{varietyName, grade, target, todo, qty ,varietyId})} // Save and exit edit mode
               >
