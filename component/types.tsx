@@ -150,6 +150,10 @@ export type RootStackParamList = {
       firstName: string;
       lastName: string;
       NICnumber: string;
+      accNumber: string;
+      accHolderName: string;
+      bankName: string;
+      branchName: string
       phoneNumber: string;
       district: string;
     };

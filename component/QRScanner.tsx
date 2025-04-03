@@ -269,10 +269,11 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
       setIsUnsuccessfulModalVisible(true);
 
       // Start the decreasing animation
+      unsuccessfulLoadingBarWidth.setValue(100); // Reset width to 100%
       Animated.timing(unsuccessfulLoadingBarWidth, {
         toValue: 0,  // Animate to 0 (empty bar)
-        duration: 5000, // 5 seconds to empty the bar
-        useNativeDriver: false,  // We are animating width, not a transform property
+        duration: 5000, // 5 seconds duration
+        useNativeDriver: false,
       }).start();
 
       // After 5 seconds (for the bar animation), close the modal and navigate
@@ -396,7 +397,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
             </View>
 
             <TouchableOpacity
-              className="bg-red-500 p-2 rounded-full mt-4"
+              className="bg-red-500 p-2 rounded-xl mt-4 px-4"
               onPress={() => {
                 setIsUnsuccessfulModalVisible(false);
                 setErrorMessage(null); // Clear error message when closing

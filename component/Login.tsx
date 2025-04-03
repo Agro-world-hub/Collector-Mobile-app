@@ -200,7 +200,8 @@ import {
   Alert,
   ActivityIndicator,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  Keyboard
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -314,6 +315,11 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 // };
 
 const handleLogin = async () => {
+  Keyboard.dismiss(); // Dismiss the keyboard
+  if (!empid || !password) {
+    Alert.alert(t("Error.error"), t("Error.Password & Employee ID are not allowed to be empty"));
+    return;
+  }
   setLoading(true); // Show loader when login starts
   try {
     const response = await fetch(
