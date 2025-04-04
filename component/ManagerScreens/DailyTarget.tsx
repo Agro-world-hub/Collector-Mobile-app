@@ -258,6 +258,8 @@ interface DailyTargetProps {
 }
 
 interface TargetData {
+  dailyTarget: any;
+  officerTarget: number;
   complete: number;
   varietyId: number;
   centerTarget: any;
@@ -306,7 +308,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
         console.log('--------all data----------', allData);
         const todoItems = allData.filter((item: TargetData) => item.todo > 0); 
         // const completedItems = allData.filter((item: TargetData) => item.todo === 0); 
-        const completedItems = allData.filter((item: TargetData) => item.complete >= item.target); 
+        const completedItems = allData.filter((item: TargetData) => item.complete >= item.officerTarget); 
 
         setTodoData(todoItems);
         setCompletedData(completedItems);
@@ -339,7 +341,9 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
         const allData = response.data.data;
         const todoItems = allData.filter((item: TargetData) => item.todo > 0); // Move tasks with todo > 0 to ToDo
         // const completedItems = allData.filter((item: TargetData) => item.todo === 0); // Tasks with todo === 0 go to Completed
-        const completedItems = allData.filter((item: TargetData) => item.complete >= item.target); 
+        const completedItems = allData.filter((item: TargetData) => item.complete >= item.officerTarget); 
+        console.log('completedItems', completedItems)
+        console.log('todoItems', todoItems)
 
         setTodoData(todoItems);
         setCompletedData(completedItems);
@@ -353,6 +357,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
   }, []);
 
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
+  console.log('--------displayedData----------', displayedData)
 
   useEffect(() => {
             const fetchData = async () => {
@@ -451,24 +456,24 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
                   // If "Completed", prevent navigation
                   if (selectedToggle === 'Completed') return;
 
-                  let qty = 0;
-                  if (item.centerTarget) {
-                    if (item.grade === 'A' && item.centerTarget.total_qtyA !== undefined) {
-                      qty = parseFloat(item.centerTarget.total_qtyA);
-                    } else if (item.grade === 'B' && item.centerTarget.total_qtyB !== undefined) {
-                      qty = parseFloat(item.centerTarget.total_qtyB);
-                    } else if (item.grade === 'C' && item.centerTarget.total_qtyC !== undefined) {
-                      qty = parseFloat(item.centerTarget.total_qtyC);
-                    }
-                  }
+                  // let qty = 0;
+                  // if (item.centerTarget) {
+                  //   if (item.grade === 'A' && item.centerTarget.total_qtyA !== undefined) {
+                  //     qty = parseFloat(item.centerTarget.total_qtyA);
+                  //   } else if (item.grade === 'B' && item.centerTarget.total_qtyB !== undefined) {
+                  //     qty = parseFloat(item.centerTarget.total_qtyB);
+                  //   } else if (item.grade === 'C' && item.centerTarget.total_qtyC !== undefined) {
+                  //     qty = parseFloat(item.centerTarget.total_qtyC);
+                  //   }
+                  // }
 
                   navigation.navigate('EditTargetManager' as any, {
                     varietyNameEnglish: item.varietyNameEnglish,
                     varietyId: item.varietyId,
                     grade: item.grade,
-                    target: item.target,
+                    target: item.officerTarget,
                     todo: item.todo,
-                    qty: qty,
+                    dailyTarget: item.dailyTarget,
                     varietyNameSinhala: item.varietyNameSinhala,
                     varietyNameTamil: item.varietyNameTamil,
                   });
@@ -479,9 +484,9 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
                 </Text>
                 <Text className="w-40 p-2 text-center">{getvarietyName(item)}</Text>
                 <Text className="w-32 p-2 text-center">{item.grade}</Text>
-                <Text className="w-32 p-2 text-center">{item.target.toFixed(2)}</Text>
+                <Text className="w-32 p-2 text-center">{item.officerTarget}</Text>
                 <Text className="w-32 p-2 text-center">
-                  {selectedToggle === 'Completed' ? item.complete.toFixed(2) : item.todo.toFixed(2)}
+                  {selectedToggle === 'Completed' ? item.complete: item.todo}
                 </Text>
               </TouchableOpacity>
             ))

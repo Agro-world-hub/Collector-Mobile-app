@@ -42,22 +42,23 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
   const [isSearching, setIsSearching] = useState(false);
   const [noResults, setNoResults] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
-  const [farmers, setFarmers] = useState<
-    {
-      NICnumber: string;
-      firstName: string;
-      lastName: string;
-      phoneNumber: string;
-      userId: string;
-    }[]
-  >([]);
+  const [newQr, setNewQr] = useState<boolean>(false);
+  console.log(newQr)
+  const [farmers, setFarmers] = useState<{
+    NICnumber: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    id: string;
+  } | null>(null);
   const [ere, setEre] = useState("");
   const { t } = useTranslation();
 
   const validateNic = (nic: string) => {
+    console.log("Validating NIC:", nic);
     const regex = /^(\d{12}|\d{9}V|\d{9}X|\d{9}v|\d{9}x)$/;
     if (!regex.test(nic)) {
-      setEre("Enteravalidenic");
+      setEre("Enter Valid NIC");
     } else {
       setEre("");
     }
@@ -66,13 +67,16 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
   const handleNicChange = (text: string) => {
     const normalizedText = text.replace(/[vV]/g, "V");
     setNICnumber(normalizedText);
-    validateNic(normalizedText);
   };
 
   const handleSearch = async () => {
     Keyboard.dismiss();
     if (NICnumber.trim().length === 0) return;
+    validateNic(NICnumber);
 
+    if (ere) {
+      return;
+    }
     setIsSearching(true);
     setNoResults(false);
 
@@ -81,10 +85,21 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
 
       if (response.status === 200) {
         const farmer = response.data;
-        navigation.navigate("FarmerQr" as any, {
-          NICnumber: farmer.NICnumber,
-          userId: farmer.id,
-        });
+        console.log("Farmer data:", farmer.farmerQr);
+        if (farmer.farmerQr === "") {
+          setIsSearching(false);
+          setNewQr(true);
+          setFarmers(farmer);
+        } else {
+          navigation.navigate("FarmerQr" as any, {
+            NICnumber: farmer.NICnumber,
+            userId: farmer.id,
+          });
+        }
+        // navigation.navigate("FarmerQr" as any, {
+        //   NICnumber: farmer.NICnumber,
+        //   userId: farmer.id,
+        // });
       }
     } catch (error) {
       setIsSearching(false);
@@ -108,6 +123,8 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
     useCallback(() => {
       setNICnumber("");
       setNoResults(false);
+      setEre("");
+      setNewQr(false);
     }, [])
   );
 
@@ -195,7 +212,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
           )}
 
           {/* No Results Found */}
-          {!isSearching && noResults && NICnumber.length > 0 && (
+          {!isSearching && noResults && NICnumber.length > 0 && !ere &&(
             <View className="mt-6 items-center">
               <Image
                 source={require("../assets/images/notfound.webp")}
@@ -215,6 +232,38 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
                 className="mt-16 bg-[#2AAD7A]  rounded-full px-16 py-3  "
               >
                 <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-white text-lg">{t("SearchFarmer.RegisterFarmer")}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+{ newQr && farmers && (
+            <View className="mt-6 items-center">
+   
+              <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-lg mt-4 color-[#888888]">
+              {t("SearchFarmer.Result Found")}
+              </Text>
+              <View className="border border-[#A7A7A7] rounded-xl mt-4 px-6 py-2 w-full ">
+              <Text style={[{ fontSize: 20 }, getTextStyle(selectedLanguage)]} className="text-center text-lg mt-2">
+                {farmers.firstName} {farmers.lastName} 2dfdfd
+                </Text>
+                <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-lg mt-2 color-[#888888]">
+                {farmers.NICnumber}
+                </Text>
+              </View>
+              <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-lg mt-4 text-red-600">
+              {t("SearchFarmer.This Farmer does not have the QR")}
+              </Text>
+
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("UpdateFarmerBankDetails" as any, {
+                    id: farmers.id,
+                    NICnumber: farmers.NICnumber,
+                  })
+                }
+                className="mt-8 bg-[#2AAD7A]  rounded-full px-16 py-3  "
+              >
+                <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-white text-lg">{t("SearchFarmer.Set QR Code")}</Text>
               </TouchableOpacity>
             </View>
           )}

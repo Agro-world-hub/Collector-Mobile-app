@@ -468,6 +468,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
           <TextInput
             placeholder={t("UnregisteredFarmerDetails.AccountNum")}
             className="border border-gray-300  p-3 rounded-lg"
+            keyboardType="numeric"
             value={accNumber}
             onChangeText={setAccNumber}
           />
@@ -590,7 +591,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
       {/* Success Modal */}
       <Modal transparent={true} visible={isModalVisible} animationType="slide">
-        <View className="flex-1 justify-center items-center bg-gray-900 bg-opacity-50">
+        <View className="flex-1 justify-center items-center bg-black/50 bg-opacity-50">
           <View className="bg-white rounded-lg w-72 p-6 items-center">
             <Text className="text-xl font-bold mb-4"> {t("UnregisteredFarmerDetails.Success")}</Text>
             <View className="mb-4">

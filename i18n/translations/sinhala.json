@@ -127,7 +127,10 @@
     "Prices for the selected variety were not found.":"තෝරාගත් ප්‍රභේදය සඳහා මිල ගණන් හමු නොවීය.",
     "All crop details submitted successfully!":"සියලුම බෝග විස්තර සාර්ථකව ඉදිරිපත් කරන ලදී!",
         "Phone number 1 must be at least 9 digits.":"දුරකථන අංකය 1 ඉලක්කම් 9 ක් විය යුතුය",
-    "Phone number 2 must be at least 9 digits.":"දුරකථන අංකය 2 ඉලක්කම් 9 ක් විය යුතුය"
+    "Phone number 2 must be at least 9 digits.":"දුරකථන අංකය 2 ඉලක්කම් 9 ක් විය යුතුය",
+    "Password & Employee ID are not allowed to be empty": "Password & Employee ID are not allowed to be empty",
+    "Passwords are not allowed to be empty": "Passwords are not allowed to be empty",
+    "Invalid current password": "Invalid current password"
 
 
   
@@ -193,8 +196,10 @@
     "Searching":"සොයමින්...",
     "EnterNIC":"ජාතික හැඳුනුම්පත් අංකය ඇතුළත් කරන්න",
     "Noregistered":"ලියාපදිංචි ගොවියෙකු හමු නොවීය",
-    "RegisterFarmer":"ගොවි ලියාපදිංචි කරන්න"
-
+    "RegisterFarmer":"ගොවි ලියාපදිංචි කරන්න",
+    "Result Found":"ප්‍රතිඵල සොයා ගන්නා ලදී",
+    "Set QR Code":"QR කේතය සකසන්න",
+    "This Farmer does not have the QR" : "මෙම ගොවියාට QR කේතයක් නැත"
   },
   "UnregisteredFarmerDetails":{
    "LNG": "si",

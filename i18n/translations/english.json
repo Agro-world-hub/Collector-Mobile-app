@@ -127,8 +127,10 @@
     "Prices for the selected variety were not found.":"Prices for the selected variety were not found.",
     "All crop details submitted successfully!":"All crop details submitted successfully!",
     "Phone number 1 must be at least 9 digits.":"Phone number 1 must be at least 9 digits",
-    "Phone number 2 must be at least 9 digits.":"Phone number 2 must be at least 9 digits"
- 
+    "Phone number 2 must be at least 9 digits.":"Phone number 2 must be at least 9 digits",
+    "Password & Employee ID are not allowed to be empty": "Password & Employee ID are not allowed to be empty",
+ "Passwords are not allowed to be empty": "Passwords are not allowed to be empty",
+ "Invalid current password": "Invalid current password"
 
 
    
@@ -195,8 +197,10 @@
     "Searching":"Searching...",
     "EnterNIC":"Enter NIC number",
     "Noregistered":"No registered farmer found",
-    "RegisterFarmer":"Register Farmer"
-  
+    "RegisterFarmer":"Register Farmer",
+    "Result Found":"Result Found",
+    "Set QR Code":"Set QR Code",
+    "This Farmer does not have the QR" : "This Farmer does not have the QR"
 
   },
   "UnregisteredFarmerDetails":{

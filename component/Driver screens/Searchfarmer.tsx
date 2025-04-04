@@ -196,7 +196,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
     const validateNic = (nic: string) => {
       const regex = /^(\d{12}|\d{9}V|\d{9}X|\d{9}v|\d{9}x)$/;
       if (!regex.test(nic)) {
-        setEre("Enteravalidenic");
+        setEre("Enter Valide NIC");
       } else {
         setEre("");
       }
@@ -205,7 +205,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
     const handleNicChange = (text: string) => {
       const normalizedText = text.replace(/[vV]/g, "V");
       setNICnumber(normalizedText);
-      validateNic(normalizedText);
+      // validateNic(normalizedText);
       // Reset found farmer when NIC changes
       setFoundFarmer(null);
       setNoResults(false);
@@ -214,7 +214,11 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
     const handleSearch = async () => {
       Keyboard.dismiss();
       if (NICnumber.trim().length === 0) return;
-  
+      validateNic(NICnumber);
+
+      if (ere) {
+        return;
+      }
       setIsSearching(true);
       setNoResults(false);
       setFoundFarmer(null);
@@ -260,6 +264,14 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
       }
      
     };
+
+     useFocusEffect(
+        useCallback(() => {
+          setNICnumber("");
+          setNoResults(false);
+          setEre("");
+        }, [])
+      );
   
     return (
       <KeyboardAvoidingView
@@ -275,7 +287,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
           >
             {/* Header */}
             <View className="flex-row items-center mb-6">
-              <TouchableOpacity onPress={() => navigation.goBack()} className="">
+              <TouchableOpacity onPress={() => navigation.navigate("Main" as any)} className="">
                 <AntDesign name="left" size={24} color="#000" />
               </TouchableOpacity>
               <Text className="flex-1 text-center text-xl font-bold text-black">
@@ -351,7 +363,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                       onPress={handleAddCollectionRequest}
                       // onPress={() =>
                       //   navigation.navigate("CollectionRequestForm" as any, )}
-                      className="bg-[#2AAD7A] rounded-full py-3 mt-4 w-full mt-[50%]"
+                      className="bg-[#2AAD7A] rounded-full py-3 w-full mt-[30%]"
                     >
                       <Text className="text-center text-white text-lg">
                         {/* {t("SearchFarmer.AddCollectionRequest")} */}
