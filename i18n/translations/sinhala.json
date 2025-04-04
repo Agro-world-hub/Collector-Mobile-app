@@ -447,7 +447,10 @@
     "LNG": "si",
     "Collection Officers":" එකතු කිරීමේ නිලධාරියා",
     "Claim Officer":"හිමිකම් නිලධාරියා",
-    "Officers List":"නිලධාරීන්ගේ ලැයිස්තුව"
+    "Officers List":"නිලධාරීන්ගේ ලැයිස්තුව",
+        "Drivers List": "Drivers List",
+    "Officers / Drivers List": "Officers / Drivers List",
+     "Drivers": "Drivers"
    
   },
   "EditTargetManager":{

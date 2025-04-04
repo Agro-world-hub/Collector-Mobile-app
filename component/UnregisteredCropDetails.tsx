@@ -1658,7 +1658,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
                     enabled
                     className="flex-1"
                     >
-        <ScrollView className="flex-1 bg-gray-50 px-6 py-4" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }} keyboardShouldPersistTaps="handled">
+        <ScrollView className="flex-1 bg-gray-50 px-6 py-4 mb-8" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }} keyboardShouldPersistTaps="handled">
             {/* <View className="flex-row items-center mt-1 mb-6">
                 <TouchableOpacity onPress={() => navigation.goBack()} className="p-2">
                     <AntDesign name="left" size={24} color="#000" />

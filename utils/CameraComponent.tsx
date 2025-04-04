@@ -264,7 +264,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
   
   return (
     <View>
-      <TouchableOpacity onPress={handleCaptureImage}   disabled={disabled} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: backgroundColor, padding: 10, borderRadius: 5, marginTop:15 }}>
+      <TouchableOpacity onPress={handleCaptureImage}   disabled={disabled} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: backgroundColor, padding: 10, borderRadius: 5, marginTop:15, marginLeft: 10, marginRight: 10 }}>
         <Text style={{ color: 'white' }}>{grade}</Text>
         {/* <Ionicons name="camera" size={20} color="white" style={{ marginRight: 5, marginLeft:10 }} /> */}
         <Ionicons 

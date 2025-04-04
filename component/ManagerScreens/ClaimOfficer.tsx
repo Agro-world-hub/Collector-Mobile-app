@@ -7,6 +7,7 @@ import {
   Image,
   Alert,
   Keyboard,
+  Modal,
   // Picker,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -41,6 +42,7 @@ const ClaimOfficer: React.FC = () => {
   const [officerFound, setOfficerFound] = useState(false);
   const [officerDetails, setOfficerDetails] = useState<OfficerDetails | null>(null);
     const { t } = useTranslation();
+  const [modalVisible, setModalVisible] = useState(false);  
 
   const empPrefix = jobRole === 'Collection Officer' ? 'COO' : 'CUO';
 
@@ -112,12 +114,56 @@ const ClaimOfficer: React.FC = () => {
         setOfficerFound(false);
         setOfficerDetails(null);
         setEmpID('');
+        setModalVisible(false); 
       }
     } catch (err) {
       console.error(err);
       Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
     }
   };
+
+  const handleCancel = () => {
+    setModalVisible(false); // Close the modal without taking action
+  };
+
+  const ConfirmationModal = ({ visible, onConfirm, onCancel }: any) => {
+      return (
+        <Modal
+          transparent={true}
+          visible={visible}
+          animationType="fade"
+          onRequestClose={onCancel}
+        >
+          <View className="flex-1 justify-center items-center bg-black/60 bg-opacity-50">
+            <View className="bg-white items-center rounded-lg w-80 p-6">
+             <View className="flex items-center justify-center mb-4 rounded-lg bg-[#f7f8fa] p-2 w-12 h-12 ">
+          <Ionicons name="warning" size={30} color="#6c7e8c" />
+        </View>
+              <Text className="text-center text-sm font-semibold mb-4">
+              Are you sure you want to claim this officer?
+              </Text>
+            
+              
+              <View className="flex-row  justify-center gap-4">
+                <TouchableOpacity
+                  onPress={onCancel}
+                  className="px-6 py-2 bg-gray-300 rounded-lg"
+                >
+                  <Text className="text-sm text-gray-700">Cancel</Text>
+                </TouchableOpacity>
+    
+                <TouchableOpacity
+                  onPress={onConfirm}
+                  className="px-6 py-2 bg-[#2AAD7A] rounded-lg"
+                >
+                  <Text className="text-sm text-white">Claim</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      );
+    };
   
 
   return (
@@ -228,7 +274,7 @@ const ClaimOfficer: React.FC = () => {
           {/* Claim Officer Button */}
           <TouchableOpacity
             className="mt-6 mb-10 bg-[#2AAD7A]    py-4 rounded-full"
-            onPress={handleClaimOfficer}
+              onPress={() => setModalVisible(true)}
           >
             <Text className="text-white text-lg px-28 font-semibold text-center">
               {t("ClaimOfficer.Claim Officer")}
@@ -236,6 +282,11 @@ const ClaimOfficer: React.FC = () => {
           </TouchableOpacity>
         </View>
       )}
+            <ConfirmationModal
+        visible={modalVisible}
+        onConfirm={handleClaimOfficer}
+        onCancel={handleCancel}
+      />
     </ScrollView>
   );
 };
