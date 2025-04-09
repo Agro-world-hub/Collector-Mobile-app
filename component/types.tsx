@@ -160,7 +160,22 @@ export type RootStackParamList = {
     CollectionRequestForm: { NICnumber: string ; id: number };
     CollectionRequests: { requestId: number ; crops:string };  // expect requestId in CollectionRequests
   ViewScreen: { requestId: number ; crops:string  };  // expect requestId in ViewScreen
-  Cancelreson:{requestId : number , status: string}
+  Cancelreson:{requestId : number , status: string};
+  UpdateFarmerBankDetails: {
+    id: number;
+    NICnumber: string;
+  };
+  ReviewCollectionRequests: {
+    cropsList: any[];
+    address: {
+      buildingNo: string;
+      streetName: string;
+      city: string;
+      routeNumber: string;
+    };
+    scheduleDate: string;
+    farmerId: number;
+  };
 
 };
 

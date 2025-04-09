@@ -209,6 +209,14 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             t("Error.No token found"));
         return;
       }
+      if(newPhoneNumber.length === 0){
+        Alert.alert(t("Error.error"), t("Error.Phone number 1 cannot be empty"));
+        return;
+      }
+      if(newPhoneNumber2.length === 0){
+        Alert.alert(t("Error.error"), t("Error.Phone number 2 cannot be empty"));
+        return;
+      }
       if (newPhoneNumber.length < 9 ) {
         Alert.alert(t("Error.error"), t("Error.Phone number 1 must be at least 9 digits."));
         return;

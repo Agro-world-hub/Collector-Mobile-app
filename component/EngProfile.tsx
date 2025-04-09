@@ -384,7 +384,8 @@ interface UserProfile {
   lastNameTamil:string;
   companyNameSinhala:string;
   companyNameEnglish:string;
-  companyNameTamil:string
+  companyNameTamil:string;
+  empId: string;
 }
 
 const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
@@ -644,7 +645,7 @@ useEffect(() => {
             {/* <Text className="text-sm text-gray-500">
               {profile?.companyName}
             </Text> */}
-             <Text className="text-gray-500">{getcompanyName()}</Text>
+             <Text className="text-gray-500">{profile?.empId}</Text>
           </View>
           <TouchableOpacity onPress={handleEditClick}>
             <Ionicons name="create-outline" size={30} color="#2fcd46" />

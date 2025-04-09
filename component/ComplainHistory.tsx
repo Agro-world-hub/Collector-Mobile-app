@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Alert,
   Modal,
+  ActivityIndicator,
 } from "react-native";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
@@ -20,7 +21,7 @@ import {
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useFocusEffect } from "@react-navigation/native";
-
+import LottieView from "lottie-react-native";
 
 interface complainItem {
   id: number;
@@ -30,6 +31,7 @@ interface complainItem {
   complainCategory: string;
   status: "Opened" | "Closed";
     reply?: string;
+  refNo: string;
   }
 
 
@@ -69,7 +71,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
       setComplains(res.data);
       console.log(res.data);
     } catch (err) {
-      Alert.alert(t("ReportHistory.sorry"), t("ReportHistory.noData"));
+      // Alert.alert(t("ReportHistory.sorry"), t("ReportHistory.noData"));
     } finally {
       setLoading(false);
     }
@@ -116,9 +118,27 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
           <AntDesign name="left" size={24} color="#000502" />
         </TouchableOpacity>
 
-        <Text className="font-bold text-lg">{t("Complaints")}</Text>
+        <Text className="font-bold text-lg">{t("ReportHistory.Complaints")}</Text>
         <View style={{ width: 24 }} />
       </View>
+
+      {loading ? (
+          <View className="flex-1 items-center justify-center">
+            <ActivityIndicator size="large" color="#26D041" />
+          </View>
+        ) : complains.length === 0 ? (
+          <View className="flex-1 items-center justify-center">
+            <LottieView
+              source={require("../assets/lottie/NoComplaints.json")}
+              style={{ width: wp(50), height: hp(50) }}
+              autoPlay
+              loop
+            />
+            <Text className="text-center text-gray-600 mt-4">
+              {t("ReportHistory.noData")}
+            </Text>
+          </View>
+        ) : (
 
       <ScrollView
         className="p-4 flex-1"
@@ -132,8 +152,12 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
             key={complain.id}
             className="bg-white p-6 my-2 rounded-xl shadow-md border border-[#dfdfdfcc]"
           >
+                   <Text className="self-start mb-4 font-semibold">
+                  {t("ReportHistory.RefNo")} : {complain.refNo}
+                </Text>
             <Text className="self-start mb-4 text-[#6E6E6E]">
-              Sent {formatDateTime(complain.createdAt)}
+            {t("ReportHistory.Sent")} {" "}
+            {formatDateTime(complain.createdAt)}
             </Text>
 
             <Text className="self-start mb-4">{complain.complain}</Text>
@@ -144,7 +168,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
                   onPress={() => handleViewReply(complain.reply)}
                 >
                   <Text className="text-white text-xs">
-                    {t("View Response")}
+                    {t("ReportHistory.View")}
                   </Text>
                 </TouchableOpacity>
               )}
@@ -156,14 +180,14 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
                       : "bg-green-100 text-green-800"
                   }`}
                 >
-                  {complain.status === "Opened" ? t(".Opened") : t("Closed")}
+                  {complain.status === "Opened" ? t("ReportHistory.Opened") : t("ReportHistory.Closed")}
                 </Text>
               </View>
             </View>
           </View>
         ))}
       </ScrollView>
-
+ )}
       <Modal
         visible={modalVisible}
         animationType="slide"
@@ -186,7 +210,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
               className="bg-black py-4 rounded-lg items-center"
               onPress={() => setModalVisible(false)}
             >
-              <Text className="text-white text-lg">{t("Closed")}</Text>
+              <Text className="text-white text-lg">{t("ReportHistory.Closed")}</Text>
             </TouchableOpacity>
           </View>
         </View>

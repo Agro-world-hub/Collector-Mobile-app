@@ -297,7 +297,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             )}
 
       {/* Target Progress */}
-      <View className="flex-row items-center justify-between mb-[-5%] p-7 mt-[4%]">
+      <View className="flex-row items-center justify-between mb-[-5%] p-7 mt-[4%] ">
         <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 font-bold text-lg">{t("ManagerDashboard.Yourtarget")}</Text>
         <View className="relative">
           <CircularProgress
@@ -316,7 +316,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
       </View>
 
       {/* Action Buttons */}
-      <View className="flex-row flex-wrap justify-between p-5 mt-[5%] mb-[8%]">
+      <View className="flex-row flex-wrap justify-between p-5 mt-[5%] mb-[18%]">
         <TouchableOpacity
           className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
           onPress={() => navigation.navigate("CenterTarget" as any)}

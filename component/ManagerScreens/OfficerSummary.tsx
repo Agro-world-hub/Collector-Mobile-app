@@ -303,6 +303,7 @@ import {
   Alert,
   ScrollView,
   RefreshControl,
+  Modal
 } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { CircularProgress } from "react-native-circular-progress";
@@ -345,7 +346,46 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
   const [refreshing, setRefreshing] = useState(false);
   const [isOnline, setIsOnline] = useState(false); // Track the online status
   const { t } = useTranslation();
+  const [modalVisible, setModalVisible] = useState(false);  
 
+  const ConfirmationModal = ({ visible, onConfirm, onCancel }: any) => {
+    return (
+      <Modal
+        transparent={true}
+        visible={visible}
+        animationType="fade"
+        onRequestClose={onCancel}
+      >
+        <View className="flex-1 justify-center items-center bg-black/60 bg-opacity-50">
+          <View className="bg-white items-center rounded-lg w-80 p-6">
+           <View className="flex items-center justify-center mb-4 rounded-lg bg-[#f7f8fa] p-2 w-12 h-12 ">
+        <Ionicons name="warning" size={30} color="#6c7e8c" />
+      </View>
+            <Text className="text-center text-sm font-semibold mb-4">
+              Are you sure you want to disclaim this officer?
+            </Text>
+          
+            
+            <View className="flex-row  justify-center gap-4">
+              <TouchableOpacity
+                onPress={onCancel}
+                className="px-6 py-2 bg-gray-300 rounded-lg"
+              >
+                <Text className="text-sm text-gray-700">Cancel</Text>
+              </TouchableOpacity>
+  
+              <TouchableOpacity
+                onPress={onConfirm}
+                className="px-6 py-2 bg-[#D16D6A] rounded-lg"
+              >
+                <Text className="text-sm text-white">Disclaim</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
   const handleDial = (phoneNumber: string) => {
     const phoneUrl = `tel:${phoneNumber}`;
     Linking.openURL(phoneUrl).catch((err) =>
@@ -386,6 +426,9 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
     fetchTaskSummary();
   }, [collectionOfficerId]);
 
+  const handleCancel = () => {
+    setModalVisible(false); // Close the modal without taking action
+  };
   const handleDisclaim = async () => {
     setShowMenu(false);
 
@@ -420,6 +463,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
       console.log(data);
 
       if (data.status === "success") {
+        setModalVisible(false); // Close the modal
         Alert.alert("Success", "Officer disclaimed successfully.");
         navigation.navigate("Main", { screen: "CollectionOfficersList" });
       } else {
@@ -502,6 +546,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
 
   useFocusEffect(
     useCallback(() => {
+      setShowMenu(false)
       getOnlineStatus();
     }, [collectionOfficerId])
   );
@@ -570,7 +615,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
             <View className="absolute top-14 right-4 bg-white shadow-lg rounded-lg">
               <TouchableOpacity
                 className="px-4 py-2 bg-white rounded-lg shadow-lg"
-                onPress={handleDisclaim}
+                onPress={() => setModalVisible(true)}
               >
                 <Text className="text-gray-700 font-semibold">{t("OfficerSummary.Disclaim")}</Text>
               </TouchableOpacity>
@@ -685,10 +730,10 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
 
       {/* Stats Section */}
       <View className="mt-6 px-6">
-        <Text className="text-gray-800 font-bold mb-4 text-lg">{t("OfficerSummary.Today")} ▶</Text>
+        {/* <Text className="text-gray-800 font-bold mb-4 text-lg">{t("OfficerSummary.Today")} ▶</Text> */}
 
         {/* Vertical Progress Indicators */}
-        <View className="items-center">
+        <View className="items-center mt-4">
           {/* Total Weight */}
           <View className="items-center mb-8">
             <CircularProgress
@@ -725,6 +770,11 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
           </View>
         </View>
       </View>
+      <ConfirmationModal
+        visible={modalVisible}
+        onConfirm={handleDisclaim}
+        onCancel={handleCancel}
+      />
     </ScrollView>
   );
 };
