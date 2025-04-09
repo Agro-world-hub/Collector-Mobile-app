@@ -30,7 +30,7 @@ const api = axios.create({
 
 type UnregisteredFarmerDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
-  "UnregisteredFarmerDetails"
+  "UpdateFarmerBankDetails"
 >;
 
 interface UnregisteredFarmerDetailsProps {
@@ -178,7 +178,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
     <View className="flex-1 p-5 bg-white">
       {/* Header with Back Icon */}
       <View className="flex-row items-center mb-4">
-        <TouchableOpacity onPress={() => navigation.navigate("SearchFarmer" as any)}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
            <AntDesign name="left" size={22} color="#000" />
         </TouchableOpacity>
         <View className="w-full items-center">

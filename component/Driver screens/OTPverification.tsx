@@ -620,7 +620,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
 
   
   useEffect(() => {
-    const selectedLanguage = t("OtpVerification.LNG");
+    const selectedLanguage = t("Otpverification.LNG");
     setLanguage(selectedLanguage);
     const fetchReferenceId = async () => {
       try {
@@ -678,7 +678,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
 
     if (code.length !== 5) {
       Alert.alert(
-        t("Otpverification.invalidOTP"),
+        t("Error.Sorry"),
         t("Otpverification.completeOTP")
       );
       return;
@@ -726,18 +726,18 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         navigation.navigate("SearchFarmerScreen" as any);     
        } else if (statusCode === "1001") {
         Alert.alert(
-          t("OtpVerification.invalidOTP"),
-          t("OtpVerification.verificationFailed")
+          t("Error.Sorry"),
+          t("Otpverification.invalidOTP")
         );
       } else {
         Alert.alert(
-          t("Error.errorOccurred"),
+          t("Error.Sorry"),
           t("Error.somethingWentWrong")
         );
       }
     } catch (error) {
       Alert.alert(
-        t("Error.errorOccurred"),
+        t("Error.Sorry"),
         t("Error.somethingWentWrong")
       );
     }
@@ -766,20 +766,20 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         await AsyncStorage.setItem("referenceId", response.data.referenceId);
         setReferenceId(response.data.referenceId);
         Alert.alert(
-          t("OtpVerification.success"),
+          t("Otpverification.Success"),
           t("Error.otpResent")
         );
         setTimer(240);
         setDisabledResend(true);
       } else {
         Alert.alert(
-          t("Error.errorOccurred"),
+          t("Error.Sorry"),
           t("Error.otpResendFailed")
         );
       }
     } catch (error) {
       Alert.alert(
-        t("Error.errorOccurred"),
+        t("Error.Sorry"),
         t("Error.otpResendFailed")
       );
     }

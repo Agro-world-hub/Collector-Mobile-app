@@ -546,6 +546,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
 
   useFocusEffect(
     useCallback(() => {
+      setShowMenu(false)
       getOnlineStatus();
     }, [collectionOfficerId])
   );
@@ -729,10 +730,10 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
 
       {/* Stats Section */}
       <View className="mt-6 px-6">
-        <Text className="text-gray-800 font-bold mb-4 text-lg">{t("OfficerSummary.Today")} ▶</Text>
+        {/* <Text className="text-gray-800 font-bold mb-4 text-lg">{t("OfficerSummary.Today")} ▶</Text> */}
 
         {/* Vertical Progress Indicators */}
-        <View className="items-center">
+        <View className="items-center mt-4">
           {/* Total Weight */}
           <View className="items-center mb-8">
             <CircularProgress

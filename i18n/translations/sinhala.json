@@ -130,7 +130,9 @@
     "Phone number 2 must be at least 9 digits.":"දුරකථන අංකය 2 ඉලක්කම් 9 ක් විය යුතුය",
     "Password & Employee ID are not allowed to be empty": "Password & Employee ID are not allowed to be empty",
     "Passwords are not allowed to be empty": "Passwords are not allowed to be empty",
-    "Invalid current password": "Invalid current password"
+    "Invalid current password": "Invalid current password",
+    "Phone number 1 cannot be empty": "Phone number 1 cannot be empty",
+ "Phone number 2 cannot be empty": "Phone number 2 cannot be empty"
 
 
   
@@ -237,14 +239,14 @@
     "LNG": "si",
     "OTPVerification":"OTP සත්‍යාපනය",
     " EnterCode":"සත්‍යාපන කේතය ඇතුළත් කරන්න",
-    "OTPCode":"OTPCode",
-    "Didreceive":" මට කේතය ලැබුණේ නැහැ!",
+    "OTPCode":"OTP Code",
+    "Didreceive":"මට කේතය ලැබුණේ නැහැ!",
     "Verify":"තහවුරු කරන්න",
     "Success":"සාර්ථකයි!",
     "Registration":"ලියාපදිංචිය සාර්ථකයි",
     "OK":"හරි",
-    "invalidOTP":"අවලංගු OTP",
-    "completeOTP":"අවලංගු OTP"
+    "invalidOTP":"Incorrect verification code",
+    "completeOTP":"Please enter the full verification code"
 
   },
   "FarmerQr":{
@@ -596,5 +598,18 @@
     "Kindlysubmit": "කරුණාකර ඔබේ පැමිණිල්ල මෙහි ඉදිරිපත් කරන්න.",
     "Submit": "තහවුරු කරන්න",
     "Other": "වෙනත්"
+  },
+  "ReportHistory":{
+    "LNG": "en",    
+    "sorry": "Sorry",
+    "noData": "No complaints found.",
+    "Complaints": "Complaint History",
+    "Opened": "Opened",
+    "Closed": "Closed",
+    "View": "View Response",
+    "ThankYou": "Thank you for your patience!",
+    "NoReply": "No response yet for this complaint.",
+    "RefNo": "Ref No",
+    "Sent": "Sent"
   }
 }

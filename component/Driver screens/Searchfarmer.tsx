@@ -190,9 +190,17 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
       firstName: string;
       lastName: string;
     } | null>(null);
+    
     const [ere, setEre] = useState("");
     const { t } = useTranslation();
-  
+    const [newQr, setNewQr] = useState<boolean>(false);
+    const [farmers, setFarmers] = useState<{
+      NICnumber: string;
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+      id: string;
+    } | null>(null);
     const validateNic = (nic: string) => {
       const regex = /^(\d{12}|\d{9}V|\d{9}X|\d{9}v|\d{9}x)$/;
       if (!regex.test(nic)) {
@@ -229,12 +237,25 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
         if (response.status === 200) {
           const farmer = response.data;
           console.log("ggg",response.data)
-          setFoundFarmer({
-            id: farmer.id,
-            NICnumber: farmer.NICnumber,
-            firstName: farmer.firstName,
-            lastName: farmer.lastName
-          });
+          // setFoundFarmer({
+          //   id: farmer.id,
+          //   NICnumber: farmer.NICnumber,
+          //   firstName: farmer.firstName,
+          //   lastName: farmer.lastName
+          // });
+          if (farmer.farmerQr === "") {
+            setIsSearching(false);
+            setNewQr(true);
+            setFarmers(farmer);
+          } else {
+            setFoundFarmer({
+              id: farmer.id,
+              NICnumber: farmer.NICnumber,
+              firstName: farmer.firstName,
+              lastName: farmer.lastName,
+            });
+            setNewQr(false);
+          }
           setIsSearching(false);
         }
       } catch (error) {
@@ -270,9 +291,19 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
           setNICnumber("");
           setNoResults(false);
           setEre("");
+          setNewQr(false);
         }, [])
       );
   
+      const getTextStyle = (language: string) => {
+        if (language === "si") {
+          return {
+            fontSize: 12, // Smaller text size for Sinhala
+            lineHeight: 20, // Space between lines
+          };
+        }
+       
+      };
     return (
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -373,6 +404,37 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                  
                 </View>
               )}
+              { newQr && farmers && (
+                          <View className="mt-6 items-center">
+                 
+                            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-lg mt-4 color-[#888888]">
+                            {t("SearchFarmer.Result Found")}
+                            </Text>
+                            <View className="border border-[#A7A7A7] rounded-xl mt-4 px-6 py-2 w-full ">
+                            <Text style={[{ fontSize: 20 }, getTextStyle(selectedLanguage)]} className="text-center text-lg mt-2">
+                              {farmers.firstName} {farmers.lastName}
+                              </Text>
+                              <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-lg mt-2 color-[#888888]">
+                              {farmers.NICnumber}
+                              </Text>
+                            </View>
+                            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-lg mt-4 text-red-600">
+                            {t("SearchFarmer.This Farmer does not have the QR")}
+                            </Text>
+              
+                            <TouchableOpacity
+                              onPress={() =>
+                                navigation.navigate("UpdateFarmerBankDetails" as any, {
+                                  id: farmers.id,
+                                  NICnumber: farmers.NICnumber,
+                                })
+                              }
+                              className="mt-8 bg-[#2AAD7A]  rounded-full px-16 py-3  "
+                            >
+                              <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-white text-lg">{t("SearchFarmer.Set QR Code")}</Text>
+                            </TouchableOpacity>
+                          </View>
+                        )}
   
               {/* No Results Found */}
               {!isSearching && noResults && NICnumber.length > 0 && (

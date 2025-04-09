@@ -130,7 +130,9 @@
     "Phone number 2 must be at least 9 digits.":"Phone number 2 must be at least 9 digits",
     "Password & Employee ID are not allowed to be empty": "Password & Employee ID are not allowed to be empty",
  "Passwords are not allowed to be empty": "Passwords are not allowed to be empty",
- "Invalid current password": "Invalid current password"
+ "Invalid current password": "Invalid current password",
+ "Phone number 1 cannot be empty": "Phone number 1 cannot be empty",
+ "Phone number 2 cannot be empty": "Phone number 2 cannot be empty"
 
 
    
@@ -154,7 +156,7 @@
     "FirstName":"First Name",
     "LastName":"Last Name ",
     "Company":"Company Name",
-    "CenterCode":"Center Code",
+    "CenterCode":"Centre Code",
     "Job":"Job Role",
     "NIC":"NIC Number",
     "Phone1":"Phone Number - 1",
@@ -236,16 +238,16 @@
   },
   "Otpverification":{
     "LNG": "en",
-    "OTPVerification":"OTPVerification",
-    " EnterCode":" Enter Verification Code",
-    "OTPCode":"OTPCode",
+    "OTPVerification":"OTP Verification",
+    "EnterCode":"Enter Verification Code",
+    "OTPCode":"OTP Code",
     "Didreceive":" I didn’t receive the code!",
     "Verify":"Verify",
     "Success":"Success!",
     "Registration":"Registration Successful",
     "OK":"OK",
-    "invalidOTP":"invalidOTP",
-    "completeOTP":"completeOTP"
+    "invalidOTP":"Incorrect verification code",
+    "completeOTP":"Please enter the full verification code"
 
   },
   "FarmerQr":{
@@ -307,12 +309,12 @@
   "NoCollectionCenterScreen":{
     "LNG": "en",
     "ErrorFound":"Error Found!",
-    "NoCenter":"No Collection Center"
+    "NoCenter":"No Collection Centre"
 
   },
   "OfficerQr":{
     "LNG": "en",
-    "QRCode":"QR Code",
+    "QRCode":"My QR Code",
     "Noavailable":"No QR Code available.",
     "Download":"Download",
     "Share":"Share"
@@ -375,7 +377,7 @@
    
     "Scan":"Scan QR",
     "Search": "Search By NIC",
-    "CenterTarget":"Center Target",
+    "CenterTarget":"Centre Target",
     "MyCollection":"My Collection"
 
   },
@@ -425,7 +427,7 @@
   },
   "CenterTarget":{
     "LNG": "en",
-    "CenterTarget":"Center Target",
+    "CenterTarget":"Centre Target",
     "Todo":"To do",
     "Completed":"Completed",
     "No":"No",
@@ -460,7 +462,7 @@
 
   "EditTargetManager":{
     "LNG": "en",
-    "TotalTarget":"Total Target for the center",
+    "TotalTarget":"Total Target for the centre",
     "My Target":"My Target",
     "Pass":"Pass",
     "Receive":"Receive",
@@ -591,11 +593,24 @@
     "sorry": "Sorry",
     "Finance": "Finance",
     "Agriculture": "Agriculture",
-    "Call Center": "Call Center",
+    "Call Center": "Call Centre",
     "Procuiment": "Procuiment",
     "WewilRespond": "We will respond to you within two days of receiving your message.",
     "Kindlysubmit": "Kindly submit your complaint here..",
     "Submit": "Submit",
     "Other": "Other"
-  }  
+  }  ,
+  "ReportHistory":{
+    "LNG": "en",    
+    "sorry": "Sorry",
+    "noData": "No complaints found.",
+    "Complaints": "Complaint History",
+    "Opened": "Opened",
+    "Closed": "Closed",
+    "View": "View Response",
+    "ThankYou": "Thank you for your patience!",
+    "NoReply": "No response yet for this complaint.",
+    "RefNo": "Ref No",
+    "Sent": "Sent"
+  }
 }
