@@ -10,6 +10,8 @@ import {
   Animated,
   Modal,
   Image,
+  Button,
+  Keyboard,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
@@ -22,6 +24,7 @@ import axios from "axios";
 import { environment } from "@/environment/environment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 type CollectionRequestFormProps = {
   navigation: StackNavigationProp<RootStackParamList, "CollectionRequestForm">;
@@ -64,7 +67,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
   const { NICnumber } = route.params as { NICnumber: string };
   const { id } = route.params as { id: number };
   const [crop, setCrop] = useState<string | null>(null);
-  const [variety, setVariety] = useState(null);
+  const [variety, setVariety] = useState<string | null>(null);
   const [loadIn, setLoadIn] = useState("");
   // const [scheduleDate, setScheduleDate] = useState("");
   const [geoLocation, setGeoLocation] = useState("");
@@ -90,9 +93,11 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
   const [scheduleDate, setScheduleDate] = useState<string>("");
   const [showPicker, setShowPicker] = useState(false);
   const [cropsList, setCropsList] = useState<any[]>([]);
+  console.log("Crops List:", cropsList);
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
-    const [showAddmore, setShowAddMore] = useState(false);
-  
+  const [showAddmore, setShowAddMore] = useState(false);
+  const [previousCrop, setPreviousCrop] = useState<string | null>(null);
+
   console.log("gggg", NICnumber);
   console.log("kkkkkkk", id);
 
@@ -239,43 +244,82 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
   };
 
   const handleAddMore = async () => {
+    Keyboard.dismiss();
     setShowAddMore(false);
   };
-
-  const handleAddtoList  = () => {
-    
+  const handleAddtoList = () => {
     if (!crop || !variety || !loadIn) {
       Alert.alert("Error", "Please fill all fields before adding.");
       return;
     }
 
-    const cropName = cropOptions.find((item) => item.value === crop)?.label || "";
-    const varietyName = varietyOptions.find((item) => item.value === variety)?.label || "";
-    
-    const newCrop = { crop, variety, cropName, varietyName, loadIn };
+    // Get the crop name based on the selected crop ID
+    const selectedCropName = cropOptions.find(
+      (item) => item.value === crop
+    )?.label;
+    // Get the variety name based on the selected variety ID
+    const selectedVarietyName = varietyOptions.find(
+      (item) => item.value === variety
+    )?.label;
 
-    // Use functional update to ensure correct state updates
+    // Check if both crop name and variety name exist
+    if (!selectedCropName || !selectedVarietyName) {
+      Alert.alert("Error", "Invalid crop or variety selected.");
+      return;
+    }
+
+    // Add new crop request to the crops list with full information
+    const newCrop = {
+      crop, // Store crop ID
+      cropName: selectedCropName, // Store crop name
+      variety, // Store variety ID
+      varietyName: selectedVarietyName, // Store variety name
+      loadIn, // Store loadIn
+    };
+
     setCropsList((prevList) => {
-      const updatedList = [...prevList, newCrop];
-      return updatedList;
+      return [...prevList, newCrop]; // Add the new crop to the list
     });
-    console.log(",,", newCrop);
 
-    // Clear input fields after adding
-    setCrop("");
-    setVariety(null);
-    setLoadIn("");
-    setShowAddMore(true);
-    // navigation.navigate("ReviewCollectionRequests", {
-    //   cropsList: [...cropsList, newCrop], // Include the newly added crop
-    //   address: { buildingNo, streetName, city, routeNumber },
-    //   scheduleDate,
-    //   farmerId: id,
-    // });
+    // Reset input fields after adding the crop
+    setCrop(null); // Reset crop selection
+    setVariety(null); // Reset variety selection
+    setLoadIn(""); // Reset load input field
+    setShowAddMore(true); // Show the 'Add More' button
   };
+
+  // const handleAddtoList  = () => {
+
+  //   if (!crop || !variety || !loadIn) {
+  //     Alert.alert("Error", "Please fill all fields before adding.");
+  //     return;
+  //   }
+
+  //   const newCrop = { crop, variety, loadIn };
+
+  //   // Use functional update to ensure correct state updates
+  //   setCropsList((prevList) => {
+  //     const updatedList = [...prevList, newCrop];
+  //     return updatedList;
+  //   });
+  //   console.log(",,", newCrop);
+
+  //   // Clear input fields after adding
+  //   setCrop("");
+  //   setVariety(null);
+  //   setLoadIn("");
+  //   setShowAddMore(true);
+  //   // navigation.navigate("ReviewCollectionRequests", {
+  //   //   cropsList: [...cropsList, newCrop], // Include the newly added crop
+  //   //   address: { buildingNo, streetName, city, routeNumber },
+  //   //   scheduleDate,
+  //   //   farmerId: id,
+  //   // });
+  // };
   const handleSubmit = async () => {
     console.log("Submitting collection request...");
     console.log("Crops List:", cropsList);
+    Keyboard.dismiss(); // Dismiss the keyboard if it's open
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
@@ -355,6 +399,9 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
       );
     }
   };
+  const truncateText = (text: string, length: number) => {
+    return text.length > length ? text.substring(0, length) + "..." : text;
+  };
 
   return (
     <KeyboardAvoidingView
@@ -420,7 +467,12 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
               placeholder="Select Schedule Date"
               editable={false} // Prevent manual input
             />
-            <TouchableOpacity onPress={() => setShowPicker(true)}>
+            <TouchableOpacity
+              onPress={() => {
+                setShowPicker(true);
+                Keyboard.dismiss();
+              }}
+            >
               <Image
                 source={require("../../assets/images/Rescheduling.webp")}
                 className="h-[24px] w-[24px] ml-2"
@@ -440,97 +492,150 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
 
           <View className="h-0.5 bg-[#D2D2D2] mb-4" />
 
-          <View className="mb-4">
-            <Text className="text-gray-700 mb-2">Added Requests</Text>
-            {cropsList.map((item, index) => (
-              <View
-                key={index}
-                className="flex-row justify-between p-2 rounded-lg mb-1 border border-[#CFCFCF]"
-              >
-                <Text>
-                  {cropOptions.find((crop) => crop.value === item.crop)
-                    ?.label || "Unknown Crop"}
-                </Text>
-                <View className="h-[20px] border-l border-gray-400 mx-2" />{" "}
-                {/* Vertical Line */}
-                <Text>
-                  {varietyOptions.find(
-                    (variety) => variety.value === item.variety
-                  )?.label || "Unknown Variety"}
-                </Text>
+          {showAddmore && cropsList.length > 0 ? (
+            <View>
+              <View className="mb-4">
+                <Text className="text-gray-700 mb-2">Added Requests</Text>
+                {cropsList.map((item, index) => (
+                  <View
+                    key={index}
+                    className="flex-row justify-between  w-full mt-1"
+                  >
+                    <View className="flex-row mb-1  w-full items-center">
+                      <View className="flex-row items-center rounded-lg mb-1 border border-[#2AAD7A] p-2  min-w-[85%] ">
+                        <Text className="min-w-[25%]">
+                          {truncateText(item.cropName, 10)}
+                        </Text>
+                        <View className="h-[20px] border-l border-[#2AAD7A] mx-2" />{" "}
+                        {/* Vertical Line */}
+                        <Text>{truncateText(item.varietyName, 20)}</Text>
+                      </View>
+
+                      <TouchableOpacity
+                        className="bg-red-100 absolute rounded-md  p-2 justify-center right-0"
+                        onPress={() => {
+                          const updatedList = cropsList.filter(
+                            (_, i) => i !== index
+                          );
+                          setCropsList(updatedList);
+                        }}
+                      >
+                        <MaterialCommunityIcons
+                          name="delete"
+                          size={24}
+                          color="#d42c20"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                ))}
+                <View className="h-0.5 bg-[#D2D2D2]  mt-4" />
               </View>
-            ))}
-          </View>
-{showAddmore ? (
-        
-                   <View>
-                   <TouchableOpacity
-                     onPress={handleAddMore}
-                     className="bg-[#2AAD7A] mt-6 py-3 rounded-full"
-                   >
-                     <Text className="text-white text-center text-lg font-bold">Add more</Text>
-                   </TouchableOpacity>
-       
-                   <TouchableOpacity onPress={handleSubmit} className="mt-4 py-3 rounded-full border border-black">
-                     <Text className="text-black text-center text-lg font-bold">Submit</Text>
-                   </TouchableOpacity>
-                 </View>
-        ) : (
-          <View className="mb-8">
-          <Text className="text-gray-700 mb-2">Crop</Text>
-          <DropDownPicker
-            open={openCrop}
-            value={crop}
-            items={cropOptions}
-            setOpen={setOpenCrop}
-            setValue={setCrop}
-            placeholder="--Select Crop--"
-            dropDownContainerStyle={{
-              borderColor: "#CFCFCF",
-              borderWidth: 1,
-              backgroundColor: "#FFFFFF",
-              maxHeight: 200,
-              minHeight: 150,
-            }}
-            style={{ borderColor: "#CFCFCF", borderWidth: 1, marginBottom: 4 }}
-            textStyle={{ fontSize: 14 }}
-            zIndex={80000}
-            listMode="SCROLLVIEW"
-            loading={loading}
-          />
 
-          <Text className="text-gray-700 mb-2">Variety</Text>
-          <DropDownPicker
-            open={openVariety}
-            value={variety}
-            items={varietyOptions}
-            setOpen={setOpenVariety}
-            setValue={setVariety}
-            placeholder="--Select Variety--"
-            style={{
-              borderColor: "#CFCFCF",
-              borderWidth: 1,
-              marginBottom: 4,
-            }}
-          />
+              <View>
+                <TouchableOpacity
+                  onPress={handleAddMore}
+                  className="bg-[#2AAD7A] mt-6 py-3 rounded-full"
+                >
+                  <Text className="text-white text-center text-lg font-bold">
+                    Add more
+                  </Text>
+                </TouchableOpacity>
 
-          <Text className="text-gray-700 mb-2 mt-2">Load in kg (Approx)</Text>
-          <TextInput
-            className="border border-gray-300 rounded-lg px-4 py-2 mb-4"
-            value={loadIn}
-            onChangeText={setLoadIn}
-            keyboardType="numeric"
-            placeholder=" "
-          />
+                <TouchableOpacity
+                  onPress={handleSubmit}
+                  className="mt-4 py-3 rounded-full border border-black"
+                >
+                  <Text className="text-black text-center text-lg font-bold">
+                    Submit
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : (
+            <View className="mb-8">
+              <Text className="text-gray-700 mb-2">Crop</Text>
+              <DropDownPicker
+                open={openCrop}
+                value={crop}
+                items={cropOptions}
+                setOpen={(open) => {
+                  setOpenCrop(open);
+                  setOpenVariety(false);
+                  Keyboard.dismiss();
+                }}
+                setValue={setCrop}
+                placeholder="--Select Crop--"
+                placeholderStyle={{ color: "#CFCFCF", fontStyle: "italic" }}
+                dropDownContainerStyle={{
+                  borderColor: "#CFCFCF",
+                  borderWidth: 1,
+                  backgroundColor: "#FFFFFF",
+                  maxHeight: 200,
+                }}
+                style={{
+                  borderColor: "#CFCFCF",
+                  borderWidth: 1,
+                  marginBottom: 4,
+                }}
+                textStyle={{ fontSize: 14 }}
+                zIndex={80000}
+                zIndexInverse={1000}
+                dropDownDirection="BOTTOM"
+                listMode="SCROLLVIEW"
+                loading={loading}
+              />
 
-          <TouchableOpacity
-            onPress={handleAddtoList}
-            className="bg-[#2AAD7A] mt-6 py-3 rounded-full"
-          >
-            <Text className="text-white text-center text-lg font-bold">Add to the List</Text>
-          </TouchableOpacity>
-        </View>
-        )}
+              <Text className="text-gray-700 mb-2">Variety</Text>
+              <DropDownPicker
+                open={openVariety}
+                value={variety}
+                items={varietyOptions}
+                setOpen={(open) => {
+                  setOpenCrop(false);
+                  setOpenVariety(open);
+                  Keyboard.dismiss();
+                }}
+                setValue={setVariety}
+                placeholder="--Select Variety--"
+                placeholderStyle={{ color: "#CFCFCF", fontStyle: "italic" }}
+                dropDownContainerStyle={{
+                  borderColor: "#CFCFCF",
+                  borderWidth: 1,
+                  backgroundColor: "#FFFFFF",
+                  maxHeight: 200,
+                }}
+                dropDownDirection="BOTTOM"
+                style={{
+                  borderColor: "#CFCFCF",
+                  borderWidth: 1,
+                  marginBottom: 4,
+                }}
+                textStyle={{ fontSize: 14 }}
+                zIndex={50000}
+              />
+
+              <Text className="text-gray-700 mb-2 mt-2">
+                Load in kg (Approx)
+              </Text>
+              <TextInput
+                className="border border-gray-300 text-black rounded-lg px-4 py-3 mb-4  placeholder:italic"
+                value={loadIn}
+                onChangeText={setLoadIn}
+                keyboardType="numeric"
+                placeholder="ex : 100"
+              />
+
+              <TouchableOpacity
+                onPress={handleAddtoList}
+                className="bg-[#2AAD7A] mt-6 py-3 rounded-full"
+              >
+                <Text className="text-white text-center text-lg font-bold">
+                  Add to the List
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

@@ -300,7 +300,7 @@ const handleSearch = (text: string) => {
       </View>
 
       {/* Tab Navigation */}
-      <View className="flex-row justify-center py-3 bg-white">
+      {/* <View className="flex-row justify-center py-3 bg-white">
         <TouchableOpacity
           className={`px-6 py-2 rounded-full mx-2 border 
             ${activeTab === 'Not Assigned' ? 'bg-[#2AAD7A] border-[#2AAD7A]' : 'bg-white border-gray-300'}`}
@@ -325,7 +325,7 @@ const handleSearch = (text: string) => {
             Assigned ({assignedRequests.length})
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       {/* Search and Filter */}
       <View className="bg-white py-2 px-4 border-t border-gray-200 ">
@@ -386,7 +386,7 @@ const handleSearch = (text: string) => {
       </View>
 
       {/* Request List */}
-      <ScrollView className="bg-gray-100 px-4 pt-4 pb-20 bg-white">
+      <ScrollView className="px-4 pt-4 pb-20 bg-white">
         
         {filteredRequests.length > 0 ? (
           filteredRequests.map((item, index) => renderRequestItem(item, index))

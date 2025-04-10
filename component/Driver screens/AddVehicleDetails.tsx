@@ -110,7 +110,7 @@ const AddVehicleDetails: React.FC = () => {
   const handleSubmit = async () => {
     // Validate required fields
     if (!drivingLicenseId || !vehicleType || !vehicleRegistrationNumber) {
-      Alert.alert('Validation Error', 'Please fill in all required fields');
+      Alert.alert('Error', 'Please fill in all required fields');
       return;
     }
 
@@ -320,7 +320,7 @@ const AddVehicleDetails: React.FC = () => {
 
       {/* Driving License Details Section */}
       <View className="p-8 items-center">
-        <Text className="text-[16px] font-bold mb-2">Driving License ID</Text>
+        {/* <Text className="text-[16px] font-bold mb-2">Driving License ID</Text> */}
         <TextInput
           placeholder="--Driving License ID--"
           value={drivingLicenseId}
@@ -397,7 +397,7 @@ const AddVehicleDetails: React.FC = () => {
           searchPlaceholder="--Vehicle Type--"
           boxStyles={{
             borderWidth: 1,
-            borderColor: 'gray',
+            borderColor: "#cccccc",
             borderRadius: 8,
             marginBottom: 8,
             width: '100%',
@@ -406,7 +406,6 @@ const AddVehicleDetails: React.FC = () => {
             borderWidth: 1,
             borderColor: 'gray',
             borderRadius: 8,
-            width: '100%',
           }}
         />
 

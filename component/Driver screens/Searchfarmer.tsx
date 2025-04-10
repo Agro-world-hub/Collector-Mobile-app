@@ -318,7 +318,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
           >
             {/* Header */}
             <View className="flex-row items-center mb-6">
-              <TouchableOpacity onPress={() => navigation.navigate("Main" as any)} className="">
+              <TouchableOpacity onPress={() => navigation.goBack()} className="">
                 <AntDesign name="left" size={24} color="#000" />
               </TouchableOpacity>
               <Text className="flex-1 text-center text-xl font-bold text-black">

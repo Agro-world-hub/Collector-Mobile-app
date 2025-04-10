@@ -306,7 +306,10 @@ const AddDriverAddressDetails: React.FC = () => {
       !formData.accountHolderName ||
       !formData.accountNumber ||
       !formData.confirmAccountNumber ||
-      !formData.bankName
+      !formData.bankName ||
+      !formData.branchName ||
+      !formData.province ||
+      !formData.district
     ) {
       Alert.alert(t("Error.error"), t("Error.Please fill in all required fields."));
       return;
@@ -418,6 +421,7 @@ const AddDriverAddressDetails: React.FC = () => {
               borderColor: "#cccccc",
             }}
             search={true}
+            
             placeholder={t("AddOfficerAddressDetails.Select Province")}
           />
 
@@ -519,11 +523,13 @@ const AddDriverAddressDetails: React.FC = () => {
                 padding: 10,
                 paddingLeft: 15,
                 paddingRight: 15,
+                
               }}
               dropdownStyles={{
                 borderRadius: 5,
                 borderWidth: 1,
                 borderColor: "#cccccc",
+                
               }}
               search={true}
             />
@@ -571,7 +577,7 @@ const AddDriverAddressDetails: React.FC = () => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={handleNext}
-          className="bg-green-600 px-8 py-3 rounded-full"
+          className="bg-[#2AAD7A] px-8 py-3 rounded-full"
         >
           {loading ? (
             <ActivityIndicator color="white" size="small" />

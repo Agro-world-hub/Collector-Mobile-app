@@ -8,7 +8,6 @@ import {
   Image,
   Alert,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -35,11 +34,12 @@ const RegisterDriver: React.FC = () => {
 
   const [type, setType] = useState<"Permanent" | "Temporary">("Permanent");
   const [preferredLanguages, setPreferredLanguages] = useState({
-    Sinhala: false,
+    සිංහල: false,
     English: false,
     Tamil: false,
   });
-  const [jobRole, setJobRole] = useState<string>("Select Job Role");
+  console.log("Preferred Languages:", preferredLanguages);
+  const [jobRole, setJobRole] = useState<string>("");
   const [phoneCode1, setPhoneCode1] = useState<string>("+94");
   const [phoneCode2, setPhoneCode2] = useState<string>("+94");
   const [phoneNumber1, setPhoneNumber1] = useState("");
@@ -77,7 +77,7 @@ const RegisterDriver: React.FC = () => {
     }));
   };
 
-  const validateNicNumber = (input: string) => /^[0-9]{9}V$|^[0-9]{10}$/.test(input);
+  const validateNicNumber = (input: string) => /^[0-9]{9}V$|^[0-9]{12}$/.test(input);
   const validateEmail = (email: string) =>
     /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|\.com|\.gov|\.lk)$/i.test(email);
   const validatePhoneNumber = (input: string) => /^[0-9]{9}$/.test(input);
@@ -87,7 +87,7 @@ const RegisterDriver: React.FC = () => {
     setFormData({ ...formData, nicNumber: normalizedInput });
 
     if (!validateNicNumber(normalizedInput)) {
-      setError3("NIC Number must be 9 digits followed by 'V' or 10 digits.");
+      setError3("NIC Number must be 9 digits followed by 'V' or 12 digits.");
     } else {
       setError3("");
     }
@@ -170,15 +170,37 @@ const RegisterDriver: React.FC = () => {
   };
 
   const handleNext = () => {
+    console.log("joooooobRole", jobRole);
     if (
       !formData.userId ||
       !formData.firstNameEnglish ||
       !formData.lastNameEnglish ||
       !phoneNumber1 ||
       !formData.nicNumber ||
-      !formData.email
+      !formData.email ||
+      !phoneNumber2 ||
+      !formData.firstNameSinhala ||
+      !formData.lastNameSinhala ||
+      !formData.firstNameTamil ||
+      !formData.lastNameTamil ||
+      !jobRole ||
+      !type ||
+      Object.values(preferredLanguages).every((val) => !val)
     ) {
       Alert.alert(t("Error.error"), t("Error.Please fill in all required fields."));
+      return;
+    }
+    if(error1) {
+      Alert.alert(t("Error.error"), t("Error.Please correct phone number 1"));
+      return;
+    }else if(error2) {
+      Alert.alert(t("Error.error"), t("Error.Please correct phone number 2"));
+      return;
+    }else if(error3) {
+      Alert.alert(t("Error.error"), t("Error.Please correct NIC number"));
+      return;
+    }else if(errorEmail) {
+      Alert.alert(t("Error.error"), t("Error.Please correct email"));
       return;
     }
 
@@ -221,9 +243,9 @@ const RegisterDriver: React.FC = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
-      className="flex-1"
+      className="flex-1  bg-white  "
     >
-      <ScrollView className="flex-1 bg-white" keyboardShouldPersistTaps="handled">
+      <ScrollView className="flex-1" keyboardShouldPersistTaps="handled">
         {/* Header */}
         <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
           {/* <TouchableOpacity onPress={() => navigation.goBack()} className="pr-4">
@@ -349,11 +371,13 @@ const RegisterDriver: React.FC = () => {
                 setSelected={handleJobRoleChange}
                 data={jobRoles}
                 save="value"
-                defaultOption={{
-                  key: "1",
-                  value: formData.jobRole,
-                }}
+                // defaultOption={{
+                //   key: "1",
+                //   value: formData.jobRole,
+                // }}
                 placeholder="Select Job Role"
+              
+
                 boxStyles={{
                   height: 42,
                   borderWidth: 1,
@@ -362,7 +386,7 @@ const RegisterDriver: React.FC = () => {
                   paddingLeft: 10,
                   
                 }}
-                dropdownStyles={{ backgroundColor: "white", borderRadius: 5 }}
+                dropdownStyles={{ backgroundColor: "white", borderRadius: 5}}
               />
             </View>
           </View>
@@ -386,9 +410,11 @@ const RegisterDriver: React.FC = () => {
             <View style={{ flex: 7 }}>
               <TextInput
                 placeholder="--User ID--"
+                placeholderTextColor={"#CFCFCF"}
+                
                 value={formData.userId}
                 editable={false} // Make this field read-only
-                className="px-3 py-2 text-gray-700 bg-gray-100"
+                className="px-3 py-2 text-gray-700 bg-gray-100  "
                 style={{
                   height: 40, // Ensure the height matches the grey part
                 }}
@@ -402,8 +428,8 @@ const RegisterDriver: React.FC = () => {
             onChangeText={(text) =>
               setFormData({ ...formData, firstNameEnglish: text })
             }
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
-          />
+            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700 "
+          /> 
           <TextInput
             placeholder={t("AddOfficerBasicDetails.LastNameEnglish")}
             value={formData.lastNameEnglish}
@@ -558,6 +584,7 @@ const RegisterDriver: React.FC = () => {
             placeholder={t("AddOfficerBasicDetails.NIC")}
             value={formData.nicNumber}
             onChangeText={handleNicNumberChange}
+            maxLength={12} // Limit the input to 10 characters
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
           {error3 ? <Text className="mb-3" style={{ color: "red" }}>{error3}</Text> : null}
@@ -567,11 +594,11 @@ const RegisterDriver: React.FC = () => {
             onChangeText={handleEmailChange}
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
-          {errorEmail ? <Text className="mt-2" style={{ color: "red" }}>{errorEmail}</Text> : null}
+          {errorEmail ? <Text className="" style={{ color: "red" }}>{errorEmail}</Text> : null}
         </View>
 
         {/* Buttons */}
-        <View className="flex-row justify-center space-x-4 px-4 mt-8 mb-4">
+        <View className="flex-row justify-center space-x-4 px-4 mt-4 mb-4">
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             className="bg-gray-300 px-8 py-3 rounded-full"
