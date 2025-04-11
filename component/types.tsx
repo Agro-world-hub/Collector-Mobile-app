@@ -132,7 +132,8 @@ export type RootStackParamList = {
       accNumber: string;
       accHolderName: string;
       bankName: string;
-      branchName: string
+      branchName: string;
+      PreferdLanguage: string;
     }
     
     DailyTargetListForOfficers:{officerId:string,collectionOfficerId:number};
@@ -156,6 +157,7 @@ export type RootStackParamList = {
       branchName: string
       phoneNumber: string;
       district: string;
+      PreferdLanguage: string;
     };
     CollectionRequestForm: { NICnumber: string ; id: number };
     CollectionRequests: { requestId: number ; crops:string };  // expect requestId in CollectionRequests

@@ -189,6 +189,8 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
       NICnumber: string;
       firstName: string;
       lastName: string;
+      language: string;
+      phoneNumber: string;
     } | null>(null);
     
     const [ere, setEre] = useState("");
@@ -253,6 +255,8 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
               NICnumber: farmer.NICnumber,
               firstName: farmer.firstName,
               lastName: farmer.lastName,
+              language: farmer.language,
+              phoneNumber: farmer.phoneNumber,
             });
             setNewQr(false);
           }
@@ -280,6 +284,8 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
         navigation.navigate("CollectionRequestForm" as any, {
           id: foundFarmer.id,
           NICnumber: foundFarmer.NICnumber,
+          phoneNumber: foundFarmer.phoneNumber,
+          language: foundFarmer.language,
         });
          console.log(foundFarmer.id)
       }
@@ -318,7 +324,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
           >
             {/* Header */}
             <View className="flex-row items-center mb-6">
-              <TouchableOpacity onPress={() => navigation.goBack()} className="">
+              <TouchableOpacity onPress={() => navigation.navigate("Main" as any)} className="">
                 <AntDesign name="left" size={24} color="#000" />
               </TouchableOpacity>
               <Text className="flex-1 text-center text-xl font-bold text-black">

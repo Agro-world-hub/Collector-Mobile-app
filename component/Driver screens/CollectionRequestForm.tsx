@@ -66,6 +66,8 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
   const route = useRoute();
   const { NICnumber } = route.params as { NICnumber: string };
   const { id } = route.params as { id: number };
+  const { phoneNumber } = route.params as { phoneNumber: string };
+  const { language } = route.params as { language: string };
   const [crop, setCrop] = useState<string | null>(null);
   const [variety, setVariety] = useState<string | null>(null);
   const [loadIn, setLoadIn] = useState("");
@@ -100,7 +102,8 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
 
   console.log("gggg", NICnumber);
   console.log("kkkkkkk", id);
-
+  console.log("phoneNumber", phoneNumber);
+  console.log("language", language);
   useFocusEffect(
     React.useCallback(() => {
       const fetchCropNames = async () => {
@@ -382,6 +385,44 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
       if (collectionRequestResponse.status === 200) {
         // Clear the form after successful submission
         Alert.alert("Success", "Collection Requests Submitted!");
+        try {
+          const apiUrl = "https://api.getshoutout.com/coreservice/messages";
+          const headers = {
+            Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
+            "Content-Type": "application/json",
+          };
+
+          let Message = "";
+          if (language === "English") {
+            Message = `Thank you for placing a produce collection order with us. The allocated driver will contact you one day prior to the collection date.`;
+          } else if (language === "Sinhala") {
+            Message = `අප වෙත නිෂ්පාදන එකතු කිරීමේ ඇණවුමක් ලබා දීම ගැන ඔබට ස්තූතියි. ඔබ වෙනුවෙන් වෙන් කරන ලද රියදුරුමහතෙකු එකතු කිරීමේ දිනයට දිනකට පෙර ඔබව සම්බන්ධ කර ගනු ඇත.`;
+          } else if (language === "Tamil") {
+            Message = `எங்களிடம் விளைபொருள் சேகரிப்பு உத்தரவை வழங்கியதற்கு நன்றி. ஒதுக்கப்பட்ட ஓட்டுநர் சேகரிப்பு திகதிக்கு ஒரு நாள் முன்னதாக உங்களைத் தொடர்புகொள்வார்.`;
+          }
+          const formattedPhone = phoneNumber;
+
+          const body = {
+            source: "AgroWorld",
+            destinations: [formattedPhone],
+            content: {
+              sms: Message,
+            },
+            transports: ["sms"],
+          };
+
+          const response = await axios.post(apiUrl, body, { headers });
+
+          if (response.data.referenceId) {
+            Alert.alert("Success", "SMS notification sent successfully!");
+          }
+        } catch (error) {
+          console.error("Error sending SMS:", error);
+          Alert.alert(
+            "Error",
+            "Failed to send notification. Please try again."
+          );
+        }
         setCropsList([]); // Clear the crops list
         setRouteNumber("");
         setBuildingNo("");

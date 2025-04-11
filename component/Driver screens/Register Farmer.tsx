@@ -290,6 +290,7 @@ import {
   Modal,
   StyleSheet,
   Animated,
+  Keyboard,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types";
@@ -310,6 +311,7 @@ import { KeyboardAvoidingView } from "react-native";
 import { Platform } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { SelectList } from "react-native-dropdown-select-list";
+import { set } from "lodash";
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
@@ -360,6 +362,7 @@ const RegisterFarmer: React.FC<UnregisteredFarmerDetailsProps> = ({
   const [filteredBranches, setFilteredBranches] = useState<allBranches[]>([]);
   const [callingCode, setCallingCode] = useState("+94"); 
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+  const [PreferdLanguage, setPreferdLanguage] = useState<string>("");
 
   useEffect(() => {
     if (bankName) {
@@ -444,9 +447,11 @@ const RegisterFarmer: React.FC<UnregisteredFarmerDetailsProps> = ({
   }, [NIC]);
 
   const handleNext = async () => {
+    Keyboard.dismiss();
     if (
       !firstName ||
       !lastName ||
+      !PreferdLanguage ||
       !NICnumber ||
       !phoneNumber ||
       !district ||
@@ -459,7 +464,7 @@ const RegisterFarmer: React.FC<UnregisteredFarmerDetailsProps> = ({
       setLoading(false);
       return;
     }
-
+    await AsyncStorage.removeItem("referenceId");
     try {
       const checkApiUrl = `api/farmer/farmer-register-checker`;
       const checkBody = {
@@ -475,15 +480,18 @@ const RegisterFarmer: React.FC<UnregisteredFarmerDetailsProps> = ({
 
       if (checkResponse.data.message === "This Phone Number already exists.") {
         Alert.alert("Sorry", "This Phone Number already exists.");
+        setLoading(false);
         return;
       } else if (checkResponse.data.message === "This NIC already exists.") {
         Alert.alert("Sorry", "This NIC already exists.");
+        setLoading(false);
         return;
       } else if (
         checkResponse.data.message ===
         "This Phone Number and NIC already exist."
       ) {
         Alert.alert("Sorry", "This Phone Number and NIC already exist.");
+        setLoading(false);
         return;
       }
 
@@ -495,17 +503,68 @@ const RegisterFarmer: React.FC<UnregisteredFarmerDetailsProps> = ({
 
       console.log(phoneNumber)
       
+      let otpMessage = "";
 
+      // const body = {
+      //   source: "ShoutDEMO",
+      //   transport: "sms",
+      //   content: {
+      //     sms: "Your code is {{code}}",
+      //   },
+      //   destination: `${callingCode}${phoneNumber}`,
+      // };
+
+
+      //Dont cahange this massage body pretier when change it spaces of massage will be change
+      if(PreferdLanguage === "English"){
+        otpMessage = `Your OTP for bank detail verification with XYZ is: {{code}}
+        
+${accHolderName}
+${accNumber}
+${bankName}
+${branchName}
+        
+If correct, share OTP only with the XYZ representative who contacts you.`;
+
+      }else if(PreferdLanguage === "Sinhala"){
+        otpMessage = `XYZ සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
+        
+${accHolderName}
+${accNumber}
+${bankName}
+${branchName}
+        
+නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා XYZ නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
+      }else if(PreferdLanguage === "Tamil"){
+        otpMessage = `XYZ உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
+        
+${accHolderName}
+${accNumber}
+${bankName}
+${branchName}
+        
+சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் XYZ பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
+      }
+//       const otpMessage = `Agro World වෙත ලබා දී ඇති බැංකු තොරතුරු තහවුරු කිරීම සඳහා ඔබගේ එක්-කාලීන මුරපදය (OTP) {{code}} වේ.
+         
+//       බැංකු විස්තර
+      
+//       ගිණුමේ නම: ${accHolderName}
+//       ගිණුම් අංකය: ${accNumber}
+//       බැංකුව: ${bankName}
+//       ශාඛාව: ${branchName}
+      
+// ඉහත විස්තර නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා පාරිභෝගික සේවා නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.
+      
+// Agro World සමඟ එක්වූ ඔබට ස්තූතියි!`;
       const body = {
-        source: "ShoutDEMO",
+        source: "AgroWorld",
         transport: "sms",
         content: {
-          sms: "Your code is {{code}}",
+          sms: otpMessage,
         },
         destination: `${callingCode}${phoneNumber}`,
       };
-
-
 
       const response = await axios.post(apiUrl, body, { headers });
       console.log("OTP Response:", response.data);
@@ -522,9 +581,12 @@ const RegisterFarmer: React.FC<UnregisteredFarmerDetailsProps> = ({
         accHolderName: accHolderName,
         bankName: bankName,
         branchName: branchName,
+        PreferdLanguage: PreferdLanguage,
       });
+      setLoading(false);
     } catch (error) {
-      Alert.alert(t("Error.error"), t("Error.SignupForum.otpSendFailed"));
+      Alert.alert(t("Error.error"), t("Error.otpSendFailed"));
+      setLoading(false);
     }
   };
 
@@ -594,6 +656,22 @@ const RegisterFarmer: React.FC<UnregisteredFarmerDetailsProps> = ({
             className="border border-gray-300  p-3 rounded-lg"
             value={lastName}
             onChangeText={setLastName}
+          />
+        </View>
+
+        <View className="mb-4">
+        <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.Preferd Language")}</Text>
+        <SelectList
+          setSelected={setPreferdLanguage}
+          data={[
+            { key: "Engilsh", value: "English" },
+            { key: "Sinhala", value: "සිංහල" },
+            { key: "Tamil", value: "தமிழ்" },
+          ]}
+          placeholder="Select Language"
+          boxStyles={{ borderColor: "#ccc", borderRadius: 8 }}
+          dropdownStyles={{ borderColor: "#ccc" }}
+          search={false} // Optional: hide search inside dropdown
           />
         </View>
 
