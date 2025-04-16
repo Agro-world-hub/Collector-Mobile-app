@@ -1570,7 +1570,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
             refreshCropForms();
     
             // Navigate to the ReportPage, passing registeredFarmerId and userId
-            navigation.navigate('ReportPage' as any, { userId, registeredFarmerId });
+            navigation.navigate('NewReport' as any, { userId, registeredFarmerId });
         } catch (error) {
             console.error('Error submitting crop data:', error);
             alert('Failed to submit crop details. Please try again.');
@@ -1642,7 +1642,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
             refreshCropForms();
     
             // Navigate to the ReportPage, passing registeredFarmerId and userId
-            navigation.navigate('ReportPage' as any, { userId, registeredFarmerId });
+            navigation.navigate('NewReport' as any, { userId, registeredFarmerId });
         } catch (error) {
             console.error('Error submitting crop data:', error);
             alert(t("Error.Failed to submit crop details. Please try again."));

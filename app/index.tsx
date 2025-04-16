@@ -80,6 +80,8 @@ import CollectionRequestForm from "@/component/Driver screens/CollectionRequestF
 import CollectionRequests from "@/component/Driver screens/CollectionRequests";
 import ViewScreen from "@/component/Driver screens/ViewScreen";
 import Cancelreson from "@/component/Driver screens/Cancelreson"
+import NewReport from "@/component/NewReport";
+import TransactionReport from "@/component/ManagerScreens/TransactionReport";
 
 
 
@@ -154,6 +156,8 @@ function MainTabNavigator() {
       <Stack.Screen name="RegisterDriver" component={RegisterDriver as any} />
       <Stack.Screen name="AddDriverAddressDetails" component={AddDriverAddressDetails as any} />
       <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} />
+      <Stack.Screen name="NewReport" component={NewReport as any} />
+      <Stack.Screen name="TransactionReport" component={TransactionReport as any} />
    
       
       
@@ -333,6 +337,7 @@ const Index = () => {
             name="Cancelreson"
             component={Cancelreson as any}
           />
+          <Stack.Screen name="TransactionReport" component={TransactionReport as any} />
         </Stack.Navigator> 
         
     </LanguageProvider>
