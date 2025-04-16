@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { environment } from '@/environment/environment';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { set } from 'lodash';
 
 type RootStackParamList = {
   Cancelreson: { requestId: string; status: string };
@@ -46,7 +47,7 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
 
   const handleSubmit = async () => {
     if (!reason.trim()) {
-      Alert.alert(t('Error'), t('Please provide a reason for cancellation'));
+      Alert.alert(('Error'), t('Please provide a reason for cancellation'));
       return;
     }
 
@@ -76,18 +77,23 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
         Alert.alert(
           t('Success'),
           t('Request cancelled successfully'),
-          [{ text: t('OK'), onPress: () => navigation.navigate('RequestList') }]
+          [{ text: ('OK'), onPress: () => navigation.navigate('RequestList') }]
         );
+        navigation.navigate('CollectionRequests' as any);
+        setLoading(false);
       } else {
-        Alert.alert(t('Error'), result.message || t('Failed to cancel request'));
+        setLoading(false);
+        Alert.alert(('Error'), result.message || t('Failed to cancel request'));
       }
     } catch (error) {
+      setLoading(false);
       console.error('Error cancelling request:', error);
       // Log more details about the error
       if (error instanceof SyntaxError) {
         console.error('This appears to be a parsing error. The server likely returned non-JSON content.');
       }
-      Alert.alert(t('Error'), t('Failed to connect to server'));
+      setLoading(false);
+      Alert.alert(('Error'), t('Failed to connect to server'));
     }
   };
 
@@ -99,17 +105,15 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
+      className="flex-1 bg-white"
+
     >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
+
       >
-        <View
-          className="flex-1 bg-white"
-          style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
-        >
-          {/* Header */}
-          <View className="flex-row items-center mb-6">
+                 <View className="flex-row items-center "  style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
             <TouchableOpacity onPress={() => navigation.goBack()} className="">
               <AntDesign name="left" size={24} color="#000" />
             </TouchableOpacity>
@@ -117,13 +121,17 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
               Reason to Cancel
             </Text>
           </View>
-
-          <View className="justify-center mb-4 items-center mt-[10%]">
-            <Text className="font-bold">
+        <View
+          className="flex-1 bg-white"
+         
+        >
+          <View className=" p-8 -mt-8">
+          <View className="justify-center items-center ">
+            <Text className="text-base">
               Please mention below the reason
             </Text>
             <TextInput
-              className="w-[80%] h-[50%] border border-[#CFCFCF] rounded-lg bg-white mt-[5%] text-gray-800"
+              className="h-[65%] w-full p-4 border border-[#CFCFCF] rounded-lg bg-white mt-[5%] text-gray-800 "
               placeholder="Enter here.."
               multiline
               value={reason}
@@ -132,15 +140,13 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
               editable={!loading}
             />
           </View>
-          
-          <View className="p-6">
             <TouchableOpacity 
-              className={`${loading ? 'bg-gray-400' : 'bg-black'} rounded-full py-3 mb-3`}
+              className={`${loading ? 'bg-gray-400' : 'bg-black'} rounded-full py-3 mb-3 p-4 `}
               onPress={handleSubmit}
               disabled={loading}
             >
-              <Text className="text-white text-center font-medium">
-                {loading ? 'Processing...' : 'Confirm'}
+              <Text className="text-white text-center text-base">
+                {loading ? 'Processing...' : 'Submit'}
               </Text>
             </TouchableOpacity>
             
@@ -149,7 +155,7 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
               onPress={handleCancelConfirm}
               disabled={loading}
             >
-              <Text className="text-gray-700 text-center">Cancel</Text>
+              <Text className="text-gray-700 text-center text-base">Go Back</Text>
             </TouchableOpacity>
           </View>
         </View>

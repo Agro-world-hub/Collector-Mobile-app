@@ -20,6 +20,8 @@ import { useFocusEffect } from "expo-router";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CropItemsScrollView from '../Driver screens/CropItemsScrollView';
+import moment from "moment";
+import { set } from "lodash";
 
 type ViewScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -71,21 +73,37 @@ const ViewScreen: React.FC<ViewScreenProps> = ({ navigation, route }) => {
     const [varieties, setVarieties] = useState<Record<number, string>>({});
     const [alertVisible, setAlertVisible] = useState(false);
     const [cancellationReason, setCancellationReason] = useState("");
+    const [reuestCode, setRequestCode] = useState("");
 const [cancelledBy, setCancelledBy] = useState("");
+const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
   
     // Determine if fields should be editable based on status
     const isEditable = scheduled === "Scheduled" || requestStatus === "Not Assigned" ;
-    
-   
+    const [originalScheduleDate, setOriginalScheduleDate] = useState(""); // To track the original date
+
+
    // const showUpdateButton = scheduled === "Scheduled" || scheduled === "On way" || scheduled === "Collected" || scheduled === "Cancelled";
    const showUpdateButton = scheduled === "Scheduled" || requestStatus === "Not Assigned";
     const showCancelButton = scheduled === "Scheduled" || scheduled === "On way"|| requestStatus === "Not Assigned";
   
     const handleDateChange = (event: any, selectedDate?: Date) => {
       setShowDatePicker(false);
+      
       if (selectedDate) {
+        // Only update the scheduleDate if a new date (not current date) is selected
         const formattedDate = `${selectedDate.getFullYear()}/${String(selectedDate.getMonth() + 1).padStart(2, '0')}/${String(selectedDate.getDate()).padStart(2, '0')}`;
-        setScheduleDate(formattedDate);
+        // Check if the selected date is the current date, if so, don't update
+        const currentDate = new Date();
+        const currentFormattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
+        if (formattedDate === currentFormattedDate) {
+          return; // Do not update if current date is selected
+        }
+        setScheduleDate(formattedDate); // Update scheduleDate only if it's not the current date
+        if (formattedDate !== originalScheduleDate) {
+          setIsUpdateEnabled(true);
+        } else {
+          setIsUpdateEnabled(false);
+        }
       }
     };
   
@@ -104,7 +122,6 @@ const [cancelledBy, setCancelledBy] = useState("");
           };
     
           const url = `${environment.API_BASE_URL}api/collectionrequest/view-details/${requestId}`;
-          console.log("Fetching URL:", url);
     
           const response = await fetch(url, {
             method: 'GET',
@@ -149,13 +166,14 @@ const [cancelledBy, setCancelledBy] = useState("");
                 setVarieties(varietyMapping);
               }
               console.log("jjjjjjj")
-              setScheduleDate(new Date(responseData.scheduleDate).toISOString().split('T')[0]);
+              setScheduleDate( moment(responseData.scheduleDate).format('YYYY-MM-DD'));
               setRouteNumber(responseData.route);
               setScheduled(responseData.assignedStatus);
               SetRequestStatus(responseData.requestStatus)
               setBuildingNo(responseData.houseNo);
               setStreetName(responseData.streetName);
               setCity(responseData.city);
+              setRequestCode(responseData.requestID);
 
               if (responseData.assignedStatus === "Cancelled" ) {
                 setCancellationReason(responseData.cancelReason || "");
@@ -215,10 +233,52 @@ const [cancelledBy, setCancelledBy] = useState("");
     };
   
     
-     const handleUpdate = () => {
-        console.log("Updating request:", requestId);
-        setAlertVisible(false);
-      };
+    const handleUpdate = async () => {
+      console.log(scheduleDate);
+    
+      // Only allow update if the schedule date has changed
+      if (isUpdateEnabled && scheduleDate !== originalScheduleDate) {
+        try {
+          const token = await AsyncStorage.getItem("token");
+          if (!token) {
+            Alert.alert('Error', 'Authentication token not found');
+            return;
+          }
+    
+          const response = await fetch(
+            `${environment.API_BASE_URL}api/collectionrequest/update-collectionrequest/${requestId}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,  
+              },
+              body: JSON.stringify({
+                scheduleDate: scheduleDate,
+              }),
+            }
+          );
+    
+          if (response.status === 200) {
+            Alert.alert("Success", "Schedule Date updated successfully.");
+            setOriginalScheduleDate(scheduleDate); 
+            setIsUpdateEnabled(false);
+          } else if (response.status === 400) {
+            const errorData = await response.json();
+            Alert.alert("Error", errorData.message || "Failed to update schedule date.");
+          } else {
+            // Generic error
+            Alert.alert("Error", "Failed to update schedule date.");
+          }
+        } catch (error) {
+          console.error("Update error:", error);
+          Alert.alert("Error", "An error occurred while updating the schedule date.");
+        }
+      } else {
+        Alert.alert("No changes detected", "Schedule Date has not been changed.");
+      }
+    };
+    
     
       const handleConfirm = () => {
         
@@ -239,20 +299,23 @@ const [cancelledBy, setCancelledBy] = useState("");
         setAlertVisible(false);
       }
   
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() ); 
+      
     return (
       <SafeAreaView className="flex-1 bg-white">
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           className="flex-1"
         >
-          <ScrollView className="flex-1 bg-white">
+          <ScrollView className="flex-1 bg-white" keyboardShouldPersistTaps="handled"> 
             {/* Header with back button and ID */}
             <View className="flex-row px-4 py-4 border-b border-white">
               <TouchableOpacity onPress={() => navigation.goBack()}>
                 <AntDesign name="left" size={24} color="black" />
               </TouchableOpacity>
               <View className="flex-1 items-center justify-center">
-                <Text className="text-base font-medium">ID : {requestId}</Text>
+                <Text className="text-base font-medium">ID : {reuestCode}</Text>
               </View>
             </View>
   
@@ -331,34 +394,7 @@ const [cancelledBy, setCancelledBy] = useState("");
     </Text>
   </View>
 )}
-  
-              <View className="mb-4">
-                <Text className="text-sm text-gray-600 mb-1">Driver Name</Text>
-                <View className="flex-row items-center">
-                  <TextInput
-                    className="border border-gray-300 rounded px-3 py-2 text-base flex-1"
-                    value={driverName}
-                    onChangeText={setDriverName}
-                    editable={isEditable}
-                  />
-                  {isEditable && (
-                    <TouchableOpacity className="ml-2">
-                      <FontAwesome name="pencil" size={20} color="green" />
-                    </TouchableOpacity>
-                  )}
-                </View>
-              </View>
-  
-              <View className="mb-4">
-                <Text className="text-sm text-gray-600 mb-1">Driver ID</Text>
-                <TextInput
-                  className="border border-gray-300 rounded px-3 py-2 text-base"
-                  value={driverId}
-                  onChangeText={setDriverId}
-                  editable={isEditable}
-                />
-              </View>
-  
+
               <View className="mb-4">
                 <Text className="text-sm text-gray-600 mb-1">Schedule Date</Text>
                 <View className="flex-row items-center">
@@ -377,15 +413,23 @@ const [cancelledBy, setCancelledBy] = useState("");
                     </TouchableOpacity>
                   )}
                
-                {showDatePicker && (
+       
+                 </View>
+              
+                 {showDatePicker && (
+                     <View className="items-end  mt-4">
                   <DateTimePicker
                     value={new Date()}
                     mode="date"
                     display="default"
                     onChange={handleDateChange}
+                    minimumDate={tomorrow} 
                   />
+                    </View>
                 )}
-                 </View>
+
+               
+      
               </View>
   
               <View className="mb-4">
@@ -394,7 +438,7 @@ const [cancelledBy, setCancelledBy] = useState("");
                   className="border border-gray-300 rounded px-3 py-2 text-base"
                   value={buildingNo}
                   onChangeText={setBuildingNo}
-                  editable={isEditable}
+                  editable={false}
                 />
               </View>
   
@@ -404,7 +448,8 @@ const [cancelledBy, setCancelledBy] = useState("");
                   className="border border-gray-300 rounded px-3 py-2 text-base"
                   value={streetName}
                   onChangeText={setStreetName}
-                  editable={isEditable}
+                  // editable={isEditable}
+                  editable={false}
                 />
               </View>
   
@@ -414,17 +459,17 @@ const [cancelledBy, setCancelledBy] = useState("");
                   className="border border-gray-300 rounded px-3 py-2 text-base"
                   value={city}
                   onChangeText={setCity}
-                  editable={isEditable}
-                />
+                  editable={false}
+                  />
               </View>
   
               <View className="mb-4">
-                <Text className="text-sm text-gray-600 mb-1">Route Number</Text>
+                <Text className="text-sm text-gray-600 mb-1">Closest Landmark</Text>
                 <TextInput
                   className="border border-gray-300 rounded px-3 py-2 text-base"
                   value={routeNumber}
                   onChangeText={setRouteNumber}
-                  editable={isEditable}
+                  editable={false}
                 />
               </View>
   
@@ -432,8 +477,9 @@ const [cancelledBy, setCancelledBy] = useState("");
               <View className="mt-4 mb-8">
                 {showUpdateButton && (
                   <TouchableOpacity
-                    className="bg-[#2AAD7A] rounded-full py-3 items-center mb-3"
-                    onPress={handleUpdate}
+                  className={`rounded-full py-3 items-center mb-3 ${isUpdateEnabled ? 'bg-[#2AAD7A]' : 'bg-gray-400'}`}
+                  onPress={handleUpdate}
+                    disabled={!isUpdateEnabled}
                   >
                     <Text className="text-white text-base">Update</Text>
                   </TouchableOpacity>

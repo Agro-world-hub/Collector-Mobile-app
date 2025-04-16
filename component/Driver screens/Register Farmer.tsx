@@ -516,7 +516,7 @@ const RegisterFarmer: React.FC<UnregisteredFarmerDetailsProps> = ({
 
 
       //Dont cahange this massage body pretier when change it spaces of massage will be change
-      if(PreferdLanguage === "English"){
+      if(PreferdLanguage === "Engilsh"){
         otpMessage = `Your OTP for bank detail verification with XYZ is: {{code}}
         
 ${accHolderName}

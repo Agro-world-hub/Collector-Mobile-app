@@ -66,6 +66,13 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
   const route = useRoute();
   const { NICnumber } = route.params as { NICnumber: string };
   const { id } = route.params as { id: number };
+  const { oldcity,oldstreet,oldlandmark,  oldhouseno } =
+  route.params as {
+    oldcity?: string;
+    oldstreet?: string;
+    oldlandmark?: string;
+    oldhouseno?: string;
+  };
   const { phoneNumber } = route.params as { phoneNumber: string };
   const { language } = route.params as { language: string };
   const [crop, setCrop] = useState<string | null>(null);
@@ -88,10 +95,10 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
   const [varietyOptions, setVarietyOptions] = useState<
     { label: string; value: string }[]
   >([]);
-  const [buildingNo, setBuildingNo] = useState("");
-  const [streetName, setStreetName] = useState("");
-  const [city, setCity] = useState("");
-  const [routeNumber, setRouteNumber] = useState("");
+  const [buildingNo, setBuildingNo] = useState( oldhouseno || "");
+  const [streetName, setStreetName] = useState(oldstreet || "");
+  const [city, setCity] = useState(oldcity || "");
+  const [routeNumber, setRouteNumber] = useState(oldlandmark || "");
   const [scheduleDate, setScheduleDate] = useState<string>("");
   const [showPicker, setShowPicker] = useState(false);
   const [cropsList, setCropsList] = useState<any[]>([]);
@@ -364,7 +371,6 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
         Alert.alert("Error", "Failed to update user details");
         return;
       }
-
       // 2. Submit multiple collection requests with a single schedule date
       const collectionRequestData = cropsList.map((crop) => ({
         farmerId,
@@ -372,6 +378,10 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
         variety: crop.variety,
         loadIn: crop.loadIn,
         scheduleDate: scheduleDate, // Use the single schedule date for all crops
+        buildingNo,
+        streetName,
+        city,
+        routeNumber
       }));
 
       console.log("Submission Data:", collectionRequestData);
@@ -491,19 +501,18 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
           />
 
           {/* Root Number Input */}
-          <Text className="text-gray-700 mb-2">Route Number</Text>
+          <Text className="text-gray-700 mb-2">Closest Landmark</Text>
           <TextInput
             className="border border-gray-300 rounded-lg px-4 py-2 mb-6"
             value={routeNumber}
             onChangeText={setRouteNumber}
-            keyboardType="numeric"
             placeholder=" "
           />
 
           <Text className="text-gray-700 mb-2">Schedule Date</Text>
-          <View className="border border-gray-300 rounded-lg px-4 mb-6 flex-row items-center">
+          <View className="border border-gray-300 rounded-lg px-4 mb-4 flex-row items-center">
             <TextInput
-              className="flex-1 text-gray-700"
+              className="flex-1 text-gray-700 p-2"
               value={scheduleDate}
               placeholder="Select Schedule Date"
               editable={false} // Prevent manual input
@@ -531,7 +540,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
             />
           )}
 
-          <View className="h-0.5 bg-[#D2D2D2] mb-4" />
+          <View className="h-0.5 bg-[#D2D2D2] mb-4 mt-2" />
 
           {showAddmore && cropsList.length > 0 ? (
             <View>

@@ -191,6 +191,10 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
       lastName: string;
       language: string;
       phoneNumber: string;
+      city?: string;
+      streetName?: string;
+      route?: string;
+      houseNo?: string;
     } | null>(null);
     
     const [ere, setEre] = useState("");
@@ -257,6 +261,10 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
               lastName: farmer.lastName,
               language: farmer.language,
               phoneNumber: farmer.phoneNumber,
+              city: farmer.city,
+              streetName: farmer.streetName,
+              route: farmer.route,
+              houseNo: farmer.houseNo
             });
             setNewQr(false);
           }
@@ -286,6 +294,10 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
           NICnumber: foundFarmer.NICnumber,
           phoneNumber: foundFarmer.phoneNumber,
           language: foundFarmer.language,
+          oldcity: foundFarmer.city,
+          oldstreet: foundFarmer.streetName,
+          oldlandmark: foundFarmer.route,
+          oldhouseno: foundFarmer.houseNo
         });
          console.log(foundFarmer.id)
       }
@@ -433,6 +445,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                                 navigation.navigate("UpdateFarmerBankDetails" as any, {
                                   id: farmers.id,
                                   NICnumber: farmers.NICnumber,
+
                                 })
                               }
                               className="mt-8 bg-[#2AAD7A]  rounded-full px-16 py-3  "
