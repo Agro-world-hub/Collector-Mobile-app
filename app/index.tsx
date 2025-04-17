@@ -154,8 +154,8 @@ function MainTabNavigator() {
       <Stack.Screen name="TransactionList" component={TransactionList as any} />
       <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} />
      {/* <Stack.Screen name="RegisterDriver" component={RegisterDriver as any} /> */}
-      <Stack.Screen name="AddDriverAddressDetails" component={AddDriverAddressDetails as any} />
-      <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} />
+      {/* <Stack.Screen name="AddDriverAddressDetails" component={AddDriverAddressDetails as any} /> */}
+      {/* <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} /> */}
       <Stack.Screen name="NewReport" component={NewReport as any} />
       <Stack.Screen name="TransactionReport" component={TransactionReport as any} />
    
