@@ -136,6 +136,23 @@ export type RootStackParamList = {
       PreferdLanguage: string;
     }
     
+    NewReport:{userId:any,registeredFarmerId:number};
+    TransactionReport:{ registeredFarmerId: number;
+      userId: number;
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+      address: string;
+      NICnumber: string;
+      totalAmount: number;
+      bankAddress: string | null;
+      accountNumber: string | null;
+      accountHolderName: string | null;
+      bankName: string | null;
+      branchName: string | null;
+      selectedDate: string;
+      empId: string;};
+    
     DailyTargetListForOfficers:{officerId:string,collectionOfficerId:number};
     EditTargetManager:undefined;
     PassTargetBetweenOfficers:undefined;
