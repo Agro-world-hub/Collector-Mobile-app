@@ -11,7 +11,7 @@ export type RootStackParamList = {
     EngProfile:undefined;
     UnregisteredFarmerDetails:{ cropCount: 1, userId:number };
     //UnregisteredCropDetails: { cropCount: number, userId:number };
-    UnregisteredCropDetails: { userId: number; cropCount: number };
+    UnregisteredCropDetails: { userId: number; cropCount: number, farmerPhone: number, farmerLanguage: string; };
     SinChangePassword:undefined;
     SinLogin:undefined;
     Lanuage:undefined;

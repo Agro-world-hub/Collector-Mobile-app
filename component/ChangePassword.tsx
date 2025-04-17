@@ -99,7 +99,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
             Alert.alert(t("Error.error"),  t("Error.Failed to update password"));
         }
     } else {
-        Alert.alert(t("Error.error"), "Error.Somthing went wrong");
+        Alert.alert(t("Error.error"), "Error.somethingWentWrong");
     }
     }
   };

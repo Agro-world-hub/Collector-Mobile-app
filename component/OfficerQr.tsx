@@ -319,7 +319,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
       setJobRole(data.jobRole || "");
       setQR(data.QRcode || ""); // Store QR Code URL
     } else {
-      Alert.alert("Error", response.data.message);
+      Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
     }
   } catch (error) {
     console.error("Error fetching registration details:", error);
@@ -377,7 +377,7 @@ const downloadQRCode = async () => {
     const asset = await MediaLibrary.createAssetAsync(response.uri);
     await MediaLibrary.createAlbumAsync("Download", asset, false);
 
-    Alert.alert("Success", "QR Code saved to gallery.");
+    Alert.alert(t("Error.Success"), t("Error.QR Code saved to gallery."));
   } catch (error) {
     console.error("Download error:", error);
     Alert.alert(t("Error.error"), t("Error.failedSaveQRCode"));

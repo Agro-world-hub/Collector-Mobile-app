@@ -247,7 +247,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
               className={`w-6 h-6 mr-2 ${activeTab === 'Collection' ? 'opacity-100' : 'opacity-50'}`}
             />
             <Text className={`text-base font-bold ${activeTab === 'Collection' ? 'text-black' : 'text-gray-500'}`}>
-              Collection
+             { t("ManagerDashboard.Collection")}
             </Text>
           </TouchableOpacity>
 
@@ -260,7 +260,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
               className={`w-6 h-6 mr-2 ${activeTab === 'Transport' ? 'opacity-100' : 'opacity-50'}`}
             />
             <Text className={`text-base font-bold ${activeTab === 'Transport' ? 'text-black' : 'text-gray-500'}`}>
-              Transport
+              {t("ManagerDashboard.Transport")}
             </Text>
           </TouchableOpacity>
         </View>

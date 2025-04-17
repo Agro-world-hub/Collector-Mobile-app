@@ -130,7 +130,7 @@ const formatNumber = (value: number | string): string => {
         const qrData = JSON.stringify(officerDetails);
         setQrValue(qrData);
       } else {
-        Alert.alert("Error", response.data.message);
+        Alert.alert(t("Error"), t("Error.somethingWentWrong"));
       }
     } catch (error) {
       console.error("Error fetching officer details:", error);
@@ -215,7 +215,7 @@ const formatNumber = (value: number | string): string => {
       
     } catch (error) {
       console.error('Error in fetchDetails:', error);
-      Alert.alert(t("Error.error"), t("Error.Failed to load details"));
+      Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
       setCrops([]);
     } finally {
       setIsLoading(false);
@@ -567,7 +567,7 @@ const formatNumber = (value: number | string): string => {
         });
       }
     } else {
-      Alert.alert(t("Error.error"), t("Error.Sharing is not available on this device"));
+      Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
     }
   };
 

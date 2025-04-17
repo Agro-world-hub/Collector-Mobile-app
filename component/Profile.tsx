@@ -268,6 +268,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       Alert.alert(
+        t("Error.error"),
         t("Error.Permission required")
       );
       return;
@@ -298,7 +299,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert(t("Error.errorOccurred"),
+        Alert.alert(t("Error.error"),
         t("Error.somethingWentWrong"));
         return;
       }
@@ -1000,12 +1001,12 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
         "name": { "en": "Sabaragamuwa", "si": "සබරගමුව", "ta": "சபரகமுவ" },
         "districts": [
           {
-            "en": "Ratnapura", 
+            "en": "Rathnapura", 
             "si": "රත්නපුර", 
             "ta": "ரத்நாபுர", 
             "cities": [
               {
-                "en": "Ratnapura",
+                "en": "Rathnapura",
                 "si": "රත්නපුර",
                 "ta": "ரத்நாபுர"
               },

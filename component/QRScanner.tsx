@@ -258,7 +258,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
       console.log('User ID:', userId);
 
       if (!userId) {
-        throw new Error('User ID not found in QR code');
+        throw new Error(t('Error.User ID not found in QR code'));
       }
 
       // Navigate to the desired screen and pass the userId
