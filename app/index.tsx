@@ -129,7 +129,7 @@ function MainTabNavigator() {
         component={UnregisteredCropDetails as any}
       />
       <Tab.Screen name="SearchFarmer" component={SearchFarmer} />
-      <Tab.Screen name="ManagerDashboard" component={ManagerDashboard} />
+      <Tab.Screen name="ManagerDashboard" component={ManagerDashboard as any} />
       <Stack.Screen name="DailyTargetList" component={DailyTargetList} />
       <Stack.Screen
         name="CollectionOfficersList"

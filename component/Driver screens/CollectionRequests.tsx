@@ -335,7 +335,7 @@ useEffect(() => {
         {/* Navigation Header */}
      <View className=" bg-white">
         <View className="flex-row p-4 -mt-2 items-center mb-4">
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.navigate("Main" as any)}>
             <AntDesign name="left" size={24} color="#000" />
           </TouchableOpacity>
           <Text className="flex-1 text-center text-xl font-bold text-black">

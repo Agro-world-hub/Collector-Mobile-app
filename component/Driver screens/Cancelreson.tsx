@@ -41,6 +41,7 @@ interface CancelresonProps {
 const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
   const { t } = useTranslation();
   const { requestId, status } = route.params;
+  console.log('Request ID:', requestId);
   
   const [reason, setReason] = useState('');
   const [loading, setLoading] = useState(false);
@@ -76,9 +77,7 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
       if (result.success) {
         Alert.alert(
           t('Success'),
-          t('Request cancelled successfully'),
-          [{ text: ('OK'), onPress: () => navigation.navigate('RequestList') }]
-        );
+          t('Request cancelled successfully')        );
         navigation.navigate('CollectionRequests' as any);
         setLoading(false);
       } else {
