@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -23,6 +23,8 @@ import { KeyboardAvoidingView } from "react-native";
 import { Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
+import DropDownPicker from "react-native-dropdown-picker";
+import { useFocusEffect } from "expo-router";
 
 type RegisterDriverNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -39,11 +41,12 @@ const RegisterDriver: React.FC = () => {
     Tamil: false,
   });
   console.log("Preferred Languages:", preferredLanguages);
-  const [jobRole, setJobRole] = useState<string>("");
+  const [jobRole, setJobRole] = useState<string>("Driver");
   const [phoneCode1, setPhoneCode1] = useState<string>("+94");
   const [phoneCode2, setPhoneCode2] = useState<string>("+94");
   const [phoneNumber1, setPhoneNumber1] = useState("");
   const [phoneNumber2, setPhoneNumber2] = useState("");
+  const [open, setOpen] = useState(false);
   const { t } = useTranslation();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -139,12 +142,20 @@ const RegisterDriver: React.FC = () => {
     }
   };
 
-  const handleJobRoleChange = (role: string) => {
-    setJobRole(role);
-    if (role !== "Select Job Role") {
-      fetchEmpId(role);
+  // const handleJobRoleChange = (role: string) => {
+  //   setJobRole(role);
+  //   if (role !== "Select Job Role") {
+  //     fetchEmpId(role);
+  //   }
+  // };
+useFocusEffect(
+  React.useCallback(() => {
+    console.log(jobRole);
+    if (jobRole) {
+      fetchEmpId(jobRole);
     }
-  };
+  }, [jobRole])
+);
 
   const handleImagePick = async () => {
     const permissionResult =
@@ -235,7 +246,7 @@ const RegisterDriver: React.FC = () => {
   };
 
   const jobRoles = [
-    { key: "2", value: "Driver" },
+    { key: "2", value: "Driver", label: t("Transport.Driver") },
     // Add more roles as necessary
   ];
 
@@ -364,35 +375,34 @@ const RegisterDriver: React.FC = () => {
         {/* Input Fields */}
         <View className="px-8">
           {/* Job Role Dropdown */}
-          <View className="mt-[-2] ">
+          {/* <View className="mt-[-2] ">
             <Text className="font-semibold text-sm mb-2">{t("AddOfficerBasicDetails.JobRole")}</Text>
             <View className=" rounded-lg pb-3 " >
-              <SelectList
-                setSelected={handleJobRoleChange}
-                data={jobRoles}
-                save="value"
-                // defaultOption={{
-                //   key: "1",
-                //   value: formData.jobRole,
-                // }}
-                placeholder="Select Job Role"
-              
 
-                boxStyles={{
-                  height: 42,
-                  borderWidth: 1,
-                  borderColor: "#CFCFCF",
-                  borderRadius: 5,
-                  paddingLeft: 10,
-                  
-                }}
-                dropdownStyles={{ backgroundColor: "white", borderRadius: 5}}
-              />
+  <DropDownPicker
+    open={open}
+    setOpen={setOpen}
+    value={jobRole}  // The value selected in the dropdown
+    setValue={setJobRole}  // Function to update the selected value
+    items={jobRoles}  // The data for the dropdown (using value/label format)
+    placeholder={t("AddOfficerBasicDetails.SelectJobRole")}  // Placeholder text
+    containerStyle={{
+      borderWidth: 0,
+      borderColor: "#CFCFCF",
+      borderRadius: 5,
+   
+    }}
+    placeholderStyle={{
+      fontSize: 14,
+      color: '#888',
+    }}
+  />
+
             </View>
-          </View>
+          </View> */}
 
           {/* User ID Field */}
-          <View className="flex-row items-center border border-gray-300 rounded-lg mb-4 bg-gray-100">
+          <View className="flex-row items-center border border-gray-300 rounded-lg mb-4 mt-2 bg-gray-100">
             {/* Prefix (30% width) */}
             <View
               className="bg-gray-300 justify-center items-center"

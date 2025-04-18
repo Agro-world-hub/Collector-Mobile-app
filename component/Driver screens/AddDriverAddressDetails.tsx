@@ -316,7 +316,7 @@ const AddDriverAddressDetails: React.FC = () => {
     }
 
     if (formData.accountNumber !== formData.confirmAccountNumber) {
-      Alert.alert(t("Error.error"), t("Account numbers do not match."));
+      Alert.alert(t("Error.error"), t("Error.Account numbers do not match."));
       return;
     }
 

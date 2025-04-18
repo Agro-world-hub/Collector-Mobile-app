@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, Alert, Platform, RefreshControl } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Alert, Platform, RefreshControl, Keyboard , ActivityIndicator} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -10,7 +10,9 @@ import CameraComponent from '@/utils/CamComponentForDrivers';
 import axios from 'axios';
 import { environment } from '@/environment/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useTranslation } from "react-i18next";
+import DropDownPicker from 'react-native-dropdown-picker';
+import LottieView from 'lottie-react-native';
 
 type AddressDetails = {
   houseNumber: string;
@@ -46,10 +48,27 @@ const AddVehicleDetails: React.FC = () => {
   const [insuranceExpireDate, setInsuranceExpireDate] = useState<Date | null>(null);
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [vehicleType, setVehicleType] = useState<string>('');
+  console.log('vehicleType', vehicleType);
   const [vehicleCapacity, setVehicleCapacity] = useState<string>('');
   const [vehicleRegistrationNumber, setVehicleRegistrationNumber] = useState<string>('');
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
   
+
+  useEffect(() => {
+    const fetchLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+        setSelectedLanguage(lang || "en"); // Default to English if not set
+      } catch (error) {
+        console.error("Error fetching language preference:", error);
+      }
+    };
+    fetchLanguage();
+  }, []);
   // State to control image reset
   const [resetImages, setResetImages] = useState<{[key: string]: boolean}>({
     'Front': false,
@@ -67,9 +86,9 @@ const AddVehicleDetails: React.FC = () => {
 
   // Vehicle types for dropdown
   const vehicleTypes = [
-    { key: '1', value: 'Car' },
-    { key: '2', value: 'Truck' },
-    { key: '3', value: 'Motorcycle' },
+    { key: '1', value: 'Car', label : t('VehicleDetails.Car') },
+    { key: '2', value: 'Truck' , label : t('VehicleDetails.Truck') },
+    { key: '3', value: 'Motorcycle' , label : t('VehicleDetails.Motorcycle') },
   ];
 
   // Handle image picking - map display names to backend keys
@@ -110,7 +129,7 @@ const AddVehicleDetails: React.FC = () => {
   const handleSubmit = async () => {
     // Validate required fields
     if (!drivingLicenseId || !vehicleType || !vehicleRegistrationNumber) {
-      Alert.alert('Error', 'Please fill in all required fields');
+      Alert.alert(t('Error.error'), t('Error.Please fill in all required fields.'));
       return;
     }
 
@@ -123,14 +142,15 @@ const AddVehicleDetails: React.FC = () => {
     ];
 
     const missingImages = requiredImageTypes.filter(img => !images[img]);
-    
+    const translatedMissingImages = missingImages.map(img => t(`VehicleDetails.${img}`)).join(', ');
     // Uncomment if you want to enforce all images
-    // if (missingImages.length > 0) {
-    //   Alert.alert('Image Missing', `Please capture all required images: ${missingImages.join(', ')}`);
-    //   return;
-    // }
+    if (missingImages.length > 0) {
+      Alert.alert(t('Error.error'), `${t("VehicleDetails.Please capture all required images")} , ${translatedMissingImages}`);
+      return;
+    }
 
     try {
+      setLoading(true)
       // Get the data passed from the previous screen
       const { basicDetails, jobRole, type, preferredLanguages, addressDetails } = route.params;
       
@@ -232,17 +252,13 @@ const AddVehicleDetails: React.FC = () => {
       await AsyncStorage.removeItem("driverFormData");
       
       // Refresh the form
-      onRefresh();
-      
-      Alert.alert('Success', 'Driver and vehicle information submitted successfully', [
-        { 
-          text: 'OK', 
-          onPress: () => navigation.navigate('RegisterDriver' as any) 
-        }
-      ]);
+      Alert.alert(t('Error.Success'), t("VehicleDetails.Driver and vehicle information submitted successfully"));
+      setLoading(false)
+      navigation.navigate('Main' as any);
     }
   } catch (error) {
       console.error('Error submitting driver and vehicle data:', error);
+      setLoading(false)
       
       // More detailed error handling
       let errorMessage = 'Failed to submit driver and vehicle information. Please try again.';
@@ -250,7 +266,7 @@ const AddVehicleDetails: React.FC = () => {
         errorMessage = error.response?.data?.message || error.message;
       }
       
-      Alert.alert('Submission Error', errorMessage);
+      Alert.alert( t("Error.error"), t("VehicleDetails.Failed to submit driver and vehicle information. Please try again."));
     }
   };
   
@@ -258,7 +274,7 @@ const AddVehicleDetails: React.FC = () => {
   
 
   // Refresh handler
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = React.useCallback(async() => {
     setRefreshing(true);
     
     // Reset all form fields
@@ -294,9 +310,26 @@ const AddVehicleDetails: React.FC = () => {
 
       setRefreshing(false);
       // Optional: Show a refresh confirmation
-      Alert.alert('Form Refreshed', 'All fields have been reset');
     }, 1000);
   }, []);
+
+  const handleDismissDropdown = () => {
+    setOpen(false);
+    Keyboard.dismiss(); // Close the keyboard if it's open
+  };
+
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center bg-black/20 ">
+        <LottieView
+          source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
+          autoPlay
+          loop
+          style={{ width: 300, height: 300 }}
+        />
+      </View>
+    );
+  }
 
   return (
     <ScrollView 
@@ -315,17 +348,17 @@ const AddVehicleDetails: React.FC = () => {
         <TouchableOpacity onPress={() => navigation.goBack()} className="pr-4">
           <AntDesign name="left" size={24} color="#000502" />
         </TouchableOpacity>
-        <Text className="text-lg font-bold ml-[23%]">Driving Details</Text>
+        <Text className="text-lg font-bold ml-[23%]">{t("VehicleDetails.Driving Details")}</Text>
       </View>
 
       {/* Driving License Details Section */}
       <View className="p-8 items-center">
         {/* <Text className="text-[16px] font-bold mb-2">Driving License ID</Text> */}
         <TextInput
-          placeholder="--Driving License ID--"
+          placeholder={t("VehicleDetails.--Driving License ID--")}
           value={drivingLicenseId}
           onChangeText={setDrivingLicenseId}
-          className="border border-gray-300 rounded-md p-2 mb-2 w-full"
+          className="border border-gray-300 rounded-md p-3 mb-2 w-full"
         />
         <View className="flex-row space-x-2 mt-4">
           <CameraComponent 
@@ -345,19 +378,19 @@ const AddVehicleDetails: React.FC = () => {
 
       {/* Vehicle Insurance Details Section */}
       <View className="p-8 items-center">
-        <Text className="text-[16px] font-bold mb-2">Vehicle Insurance Details</Text>
+        <Text className="text-[16px] font-bold mb-2">{t("VehicleDetails.Vehicle Insurance Details")}</Text>
         <TextInput
-          placeholder="--Insurance Number--"
+          placeholder={t("VehicleDetails.--Insurance Number--")}
           value={insuranceNumber}
           onChangeText={setInsuranceNumber}
-          className="border border-gray-300 rounded-md p-2 mb-2 w-full"
+          className="border border-gray-300 rounded-md p-3 mb-2 w-full"
         />
 
         <TouchableOpacity 
           onPress={() => setShowDatePicker(true)}
-          className="border border-gray-300 rounded-md p-2 mb-2 flex-row justify-between items-center w-full"
+          className="border border-gray-300 rounded-md p-3 mb-2 flex-row justify-between items-center w-full"
         >
-          <Text>{insuranceExpireDate ? insuranceExpireDate.toDateString() : '--Insurance Expire Date--'}</Text>
+          <Text>{insuranceExpireDate ? insuranceExpireDate.toDateString() : t("VehicleDetails.--Insurance Expire Date--")}</Text>
           <Ionicons name="calendar" size={20} color="gray" />
         </TouchableOpacity>
 
@@ -388,13 +421,13 @@ const AddVehicleDetails: React.FC = () => {
 
       {/* Vehicle Details Section */}
       <View className="p-8 items-center">
-        <Text className="text-[16px] font-bold mb-2">Vehicle Details</Text>
-        <SelectList
+        <Text className="text-[16px] font-bold mb-2">{t("VehicleDetails.Vehicle Details")}</Text>
+        {/* <SelectList
           setSelected={(val: string) => setVehicleType(val)}
           data={vehicleTypes}
           save="value"
           placeholder="--Vehicle Type--"
-          searchPlaceholder="--Vehicle Type--"
+          searchPlaceholder="search"
           boxStyles={{
             borderWidth: 1,
             borderColor: "#cccccc",
@@ -407,22 +440,53 @@ const AddVehicleDetails: React.FC = () => {
             borderColor: 'gray',
             borderRadius: 8,
           }}
-        />
-
+        /> */}
+  <DropDownPicker
+    open={open}
+    setOpen={setOpen}
+    value={vehicleType}  // The value selected in the dropdown
+    setValue={setVehicleType}  // Function to update the selected value
+    items={vehicleTypes}  // The data for the dropdown (using value/label format)
+    placeholder={t("VehicleDetails.--Vehicle Type--")}  // Placeholder text
+    containerStyle={{
+      borderWidth: 1,
+      borderColor: "#CFCFCF",
+      borderRadius: 5,
+      marginBottom: 8,
+   
+    }}
+    dropDownDirection='BOTTOM'
+    dropDownContainerStyle={{
+      borderWidth: 1,
+      borderColor: "#CFCFCF",
+      borderRadius: 5,
+    }}
+    style={{
+      backgroundColor: '#fff',
+      borderWidth: 0,
+      borderColor: '#CFCFCF',
+    }}
+    placeholderStyle={{
+      fontSize: 14,
+      color: '#888',
+    }}
+  />
         <TextInput
-          placeholder="--Vehicle Capacity--"
+          placeholder={t("VehicleDetails.--Vehicle Capacity--")}
           value={vehicleCapacity}
+          inputMode='numeric'
           onChangeText={setVehicleCapacity}
-          className="border border-gray-300 rounded-md p-2 mb-2 w-full"
+          className="border border-gray-300 rounded-md p-3 mb-2 w-full"
         />
         <TextInput
-          placeholder="--Vehicle Registration Number--"
+          placeholder={t("VehicleDetails.--Vehicle Registration Number--")}
           value={vehicleRegistrationNumber}
           onChangeText={setVehicleRegistrationNumber}
-          className="border border-gray-300 rounded-md p-2 mb-2 w-full"
+          className="border border-gray-300 rounded-md p-3 mb-2 w-full"
         />
+        
 
-        <View className="flex-row space-x-4 mb-4 mt-4">
+        <View className="flex-row  space-x-4 mb-4 mt-4">
         <CameraComponent 
             onImagePicked={(image) => handleImagePicked(image, 'VehicleFront')}
             imageType="Front"
@@ -450,19 +514,20 @@ const AddVehicleDetails: React.FC = () => {
       </View>
 
       {/* Submit Buttons Section */}
-      <View className="items-center p-4">
-        <View className="flex-row space-x-4">
+      <View className="items-center p-2 mb-4">
+        <View className="flex-row space-x-6">
           <TouchableOpacity 
             onPress={() => navigation.goBack()} 
-            className="bg-[#D9D9D9] px-6 py-3 items-center rounded-full w-32"
+            className="bg-[#D9D9D9] px-6 py-3 w-40 items-center rounded-full "
           >
-            <Text className='text-[#686868]'>Go Back</Text>
+            <Text className='text-[#686868]'>{t("VehicleDetails.Go Back")}</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={handleSubmit} 
-            className="bg-[#959595] px-6 py-3 rounded-full items-center w-32"
+            className="bg-[#2AAD7A] px-6 py-3 w-40 rounded-full items-center "
           >
-            <Text className="text-white">Submit</Text>
+   
+            <Text className="text-white">{t("VehicleDetails.Submit")}</Text>
           </TouchableOpacity>
         </View>
       </View>

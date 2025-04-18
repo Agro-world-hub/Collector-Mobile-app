@@ -3,6 +3,7 @@ import { View, Alert, Text, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next'; // Import useTranslation hook
 
 interface CameraComponentProps {
   onImagePicked: (base64Image: string | null, imageType: string) => void;
@@ -18,6 +19,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
   disabled = false
 }) => {
   const [image, setImage] = useState<any>(null);
+  const { t } = useTranslation(); // Initialize translation hook
 
   // Watch for resetImage prop changes to clear the image
   useEffect(() => {
@@ -100,10 +102,11 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
           borderRadius: 5,
           marginTop: 15,
           marginLeft: 15,
+          marginRight: 10,
           width: 130
         }}
       >
-        <Text style={{ color: 'white', marginRight: 5, marginLeft: 20 }}>{imageType}</Text>
+        <Text style={{ color: 'white', marginRight: 5, marginLeft: 20 }}>{t(`VehicleDetails.${imageType}`)}</Text>
         <Ionicons
           name={image ? "reload" : "camera"}
           size={20}

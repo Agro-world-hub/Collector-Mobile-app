@@ -142,8 +142,17 @@
  "NIC number is invalid.": "NIC number is invalid.",
  "QR Code saved to gallery.": "QR Code saved to gallery.",
  "User ID not found in QR code": "User ID not found in QR code",
- "Downloaded PDF": "{{fileName}} has been saved to your Downloads folder."
+ "Downloaded PDF": "{{fileName}} has been saved to your Downloads folder.",
 
+
+ "This Phone Number already exists." : "This Phone Number already exists.",
+ "This NIC already exists." : "This NIC already exists.",
+ "This Phone Number and NIC already exist." : "This Phone Number and NIC already exist.",
+ "Authentication required. Please log in.":"Authentication required. Please log in.",
+ "Please fill all fields, add crops, and select a schedule date.":"Please fill all fields, add crops, and select a schedule date.",
+ "Failed to update user details":"Failed to update user details.",
+ "Collection Requests Submitted!":"Collection Requests Submitted!",
+ "Invalid crop or variety selected.":"Invalid crop or variety selected."
 
 
    
@@ -233,7 +242,11 @@
     "Successful":"Registration Successful",
     "Oops":"Oops!",
     "Unsuccessful":"Registration Unsuccessful",
-    "Close":"Close"
+    "Close":"Close",
+    "Preferd Language":"Preferred Language",
+    "Select Language":"Select Language",
+    "Select Bank":"Select Bank",
+    "Select Branch":"Select Branch"
   },
   "PriceChart":{
     "LNG": "en",
@@ -434,9 +447,6 @@
     "Select Province":"Select Province",
     "Select District":"Select District",
     "next":"next"
-
- 
-    
   },
   "CenterTarget":{
     "LNG": "en",
@@ -643,5 +653,62 @@
     "failedShareQRCode": "Unable to share QR code. Please try again later.",
     "NoQrText": "To obtain access to your unique QR code, please register as a member by entering your bank details. This code will ensure smooth transactions and secure payments directly to your bank at our collection centers.",
     "GenerateQr": "Generate My QR"
+  },
+  "Transport":{
+    "LNG": "en",
+    "Register Drivers":"Register Drivers",
+    "Add Farmer Requests":"Add Farmer Requests",
+    "View Farmer Requests":"View Farmer Requests",
+    "Driver":"Driver",
+    "Add Collection Request":"Add Collection Request",
+    "Enter Valide NIC" :"Enter Valid NIC"
+  },
+  "VehicleDetails":{
+    "LNG": "en",
+    "Driving Details":"Driving Details",
+    "Front":"Front",
+    "Back":"Back",
+    "Side-1":"Side-1",
+    "Side-2":"Side-2",
+    "--Driving License ID--":"--Driving License ID--",
+    "Vehicle Insurance Details":"Vehicle Insurance Details",
+    "--Insurance Number--": "--Insurance Number--",
+    "--Insurance Expire Date--":"--Insurance Expire Date--",
+   "Vehicle Details":"Vehicle Details",
+   "Car":"Car",
+   "Truck":"Truck",
+   "Motorcycle":"Motorcycle",
+   "--Vehicle Type--":"--Vehicle Type--",
+   "--Vehicle Capacity--":"--Vehicle Capacity--",
+   "--Vehicle Registration Number--":"--Vehicle Registration Number--",
+   "Go Back":"Go Back",
+   "Submit":"Submit",
+   "Please capture all required images":"Please capture all required images",
+    "InsuranceFront": "Insurance Front Image",
+    "InsuranceBack": "Insurance Back Image",
+    "VehicleFront": "Vehicle Front Image",
+    "VehicleBack": "Vehicle Back Image",
+    "VehicleSide1": "Vehicle Side 1 Image",
+    "VehicleSide2": "Vehicle Side 2 Image",
+    "Driver and vehicle information submitted successfully": "Driver and vehicle information submitted successfully",
+     "Failed to submit driver and vehicle information. Please try again." :"Failed to submit driver and vehicle information. Please try again."
+  },
+  "CollectionRequest":{
+    "Collection Request Form": "Collection Request Form",
+    "Building / House No": "Building / House Number",
+    "Street Name": "Street Name",
+    "City": "City",
+    "Closest Landmark": "Closest Landmark",
+    "Schedule Date": "Schedule Date",
+    "Select Schedule Date": "Select Schedule Date",
+    "Added Requests": "Added Requests",
+    "Crop": "Crop",
+    "Variety": "Variety",
+    "Load in kg (Approx)": "Load in kg (Approx)",
+    "--Select Crop--": "--Select Crop--",
+    "--Select Variety--": "--Select Variety--",
+    "Add to the List": "Add to the List",
+    "Add more": "Add more",
+    "Submit": "Submit"
   }
 }

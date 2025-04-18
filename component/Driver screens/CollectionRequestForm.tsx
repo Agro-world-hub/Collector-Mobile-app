@@ -25,6 +25,10 @@ import { environment } from "@/environment/environment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 type CollectionRequestFormProps = {
   navigation: StackNavigationProp<RootStackParamList, "CollectionRequestForm">;
@@ -34,11 +38,15 @@ type CollectionRequestFormProps = {
 interface Crop {
   id: number;
   cropNameEnglish: string;
+  cropNameSinhala: string;
+  cropNameTamil: string;
 }
 
 interface CropVariety {
   id: number;
   varietyEnglish: string;
+  varietySinhala: string;
+  varietyTamil: string;
 }
 
 interface Farmer {
@@ -77,6 +85,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
   const { language } = route.params as { language: string };
   const [crop, setCrop] = useState<string | null>(null);
   const [variety, setVariety] = useState<string | null>(null);
+  console.log("variety", variety)
   const [loadIn, setLoadIn] = useState("");
   // const [scheduleDate, setScheduleDate] = useState("");
   const [geoLocation, setGeoLocation] = useState("");
@@ -106,11 +115,70 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
   const [showAddmore, setShowAddMore] = useState(false);
   const [previousCrop, setPreviousCrop] = useState<string | null>(null);
+      const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
 
   console.log("gggg", NICnumber);
   console.log("kkkkkkk", id);
   console.log("phoneNumber", phoneNumber);
   console.log("language", language);
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const fetchCropNames = async () => {
+  //       try {
+  //         const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+  //         setSelectedLanguage(lang || "en"); // Default to English if not set
+  //         const token = await AsyncStorage.getItem("token");
+  //         if (!token) {
+  //           console.error("No authentication token found");
+  //           return;
+  //         }
+
+  //         const headers = { Authorization: `Bearer ${token}` };
+  //         const response = await axios.get<Crop[]>(
+  //           `${environment.API_BASE_URL}api/unregisteredfarmercrop/get-crop-names/for-collection`,
+  //           { headers }
+  //         );
+
+  //         // Remove duplicates based on cropNameEnglish
+  //         const uniqueCropNames = response.data.reduce<Crop[]>((acc, crop) => {
+  //           if (
+  //             !acc.some((item) => item.cropNameEnglish === crop.cropNameEnglish)
+  //           ) {
+  //             acc.push(crop);
+  //           }
+  //           return acc;
+  //         }, []);
+  //         const mappedCrops = uniqueCropNames.map((crop) => {
+  //           let label = crop.cropNameEnglish; // Default to English
+  //           if (selectedLanguage === "si") {
+  //             label = crop.cropNameSinhala; // Sinhala
+  //           } else if (selectedLanguage === "ta") {
+  //             label = crop.cropNameTamil; // Tamil
+  //           }
+  //           setCropOptions(mappedCrops);
+
+  //           return {
+  //             label,
+  //             value: crop.id.toString(),
+  //           };
+  //         });
+  //         // setCropOptions(
+  //         //   uniqueCropNames.map((crop) => ({
+  //         //     label: crop.cropNameEnglish,
+  //         //     value: crop.id.toString(),
+  //         //   }))
+  //         // );
+
+  //         console.log("Unique Crop Names:", uniqueCropNames);
+  //       } catch (error) {
+  //         console.error("Error fetching crop names:", error);
+  //       }
+  //     };
+
+  //     fetchCropNames();
+  //   }, [selectedLanguage])
+  // );
+
   useFocusEffect(
     React.useCallback(() => {
       const fetchCropNames = async () => {
@@ -123,7 +191,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
 
           const headers = { Authorization: `Bearer ${token}` };
           const response = await axios.get<Crop[]>(
-            `${environment.API_BASE_URL}api/unregisteredfarmercrop/get-crop-names`,
+            `${environment.API_BASE_URL}api/unregisteredfarmercrop/get-crop-names/for-collection`,
             { headers }
           );
 
@@ -137,12 +205,22 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
             return acc;
           }, []);
 
-          setCropOptions(
-            uniqueCropNames.map((crop) => ({
-              label: crop.cropNameEnglish,
+          // Map crops to the correct language based on selectedLanguage
+          const mappedCrops = uniqueCropNames.map((crop) => {
+            let label = crop.cropNameEnglish; // Default to English
+            if (selectedLanguage === "si") {
+              label = crop.cropNameSinhala; // Sinhala
+            } else if (selectedLanguage === "ta") {
+              label = crop.cropNameTamil; // Tamil
+            }
+
+            return {
+              label,
               value: crop.id.toString(),
-            }))
-          );
+            };
+          });
+
+          setCropOptions(mappedCrops); // Set crop options once after mapping
 
           console.log("Unique Crop Names:", uniqueCropNames);
         } catch (error) {
@@ -151,10 +229,65 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
       };
 
       fetchCropNames();
-    }, [])
+    }, [selectedLanguage]) // Re-run fetch if the selectedLanguage changes
   );
 
+  const getTextStyle = (language: string) => {
+    if (language === "si") {
+      return {
+        fontSize: 14, // Smaller text size for Sinhala
+        lineHeight: 20, // Space between lines
+      };
+    }
+   
+  };
+  
   // Fetch Crop Varieties
+  // useEffect(() => {
+  //   const fetchVarieties = async () => {
+  //     if (!crop) return;
+
+  //     try {
+  //       const token = await AsyncStorage.getItem("token");
+  //       if (!token) {
+  //         console.error("No authentication token found");
+  //         return;
+  //       }
+
+  //       const headers = { Authorization: `Bearer ${token}` };
+  //       const cropId = Number(crop);
+
+  //       console.log("Fetching varieties for crop ID:", cropId);
+  //       console.log("...", cropOptions);
+
+  //       // Important: Verify the correct API endpoint for varieties
+  //       const response = await axios.get<CropVariety[]>(
+  //         `${environment.API_BASE_URL}api/unregisteredfarmercrop/crops/varieties/collection/${cropId}`,
+  //         { headers }
+  //       );
+
+  //       console.log("Fetched Varieties:", response.data);
+
+  //       setVarietyOptions(
+  //         response.data.map((variety) => ({
+  //           label: variety.varietyEnglish,
+  //           value: variety.id.toString(),
+  //         }))
+  //       );
+  //     } catch (error) {
+  //       if (axios.isAxiosError(error)) {
+  //         console.error(
+  //           "Error fetching crop varieties:",
+  //           error.response?.data || error.message
+  //         );
+  //       } else {
+  //         console.error("Unexpected error fetching crop varieties:", error);
+  //       }
+  //     }
+  //   };
+
+  //   fetchVarieties();
+  // }, [crop]);
   useEffect(() => {
     const fetchVarieties = async () => {
       if (!crop) return;
@@ -170,9 +303,8 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
         const cropId = Number(crop);
 
         console.log("Fetching varieties for crop ID:", cropId);
-        console.log("...", cropOptions);
-
-        // Important: Verify the correct API endpoint for varieties
+        
+        // Fetch the crop varieties for the selected crop
         const response = await axios.get<CropVariety[]>(
           `${environment.API_BASE_URL}api/unregisteredfarmercrop/crops/varieties/collection/${cropId}`,
           { headers }
@@ -180,12 +312,23 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
 
         console.log("Fetched Varieties:", response.data);
 
-        setVarietyOptions(
-          response.data.map((variety) => ({
-            label: variety.varietyEnglish,
+        // Map varieties based on the selected language
+        const mappedVarieties = response.data.map((variety) => {
+          let label = variety.varietyEnglish; // Default to English
+
+          if (selectedLanguage === "si") {
+            label = variety.varietySinhala; // Sinhala
+          } else if (selectedLanguage === "ta") {
+            label = variety.varietyTamil; // Tamil
+          }
+
+          return {
+            label,
             value: variety.id.toString(),
-          }))
-        );
+          };
+        });
+
+        setVarietyOptions(mappedVarieties); // Set variety options once after mapping
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(
@@ -199,7 +342,8 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
     };
 
     fetchVarieties();
-  }, [crop]);
+  }, [crop, selectedLanguage]); // Only re-run when the `crop` state changes
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -259,7 +403,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
   };
   const handleAddtoList = () => {
     if (!crop || !variety || !loadIn) {
-      Alert.alert("Error", "Please fill all fields before adding.");
+      Alert.alert(t("Error.error"), t("Error.Please fill in all required fields."));
       return;
     }
 
@@ -274,7 +418,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
 
     // Check if both crop name and variety name exist
     if (!selectedCropName || !selectedVarietyName) {
-      Alert.alert("Error", "Invalid crop or variety selected.");
+      Alert.alert(t("Error.error"), t("Error.Invalid crop or variety selected."));
       return;
     }
 
@@ -334,7 +478,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
       const token = await AsyncStorage.getItem("token");
       if (!token) {
         console.error("No authentication token found");
-        Alert.alert("Error", "Authentication required. Please log in.");
+        Alert.alert(t("Error.error"), t("Error.Authentication required. Please log in."));
         return;
       }
 
@@ -347,8 +491,8 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
         !scheduleDate
       ) {
         Alert.alert(
-          "Error",
-          "Please fill all fields, add crops, and select a schedule date."
+          t("Error.error"),
+         t( "Error.Please fill all fields, add crops, and select a schedule date.")
         );
         return;
       }
@@ -368,7 +512,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
       );
 
       if (updateUserResponse.status !== 200) {
-        Alert.alert("Error", "Failed to update user details");
+        Alert.alert(t("Error.error"), t("Error.Failed to update user details"));
         return;
       }
       // 2. Submit multiple collection requests with a single schedule date
@@ -394,7 +538,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
 
       if (collectionRequestResponse.status === 200) {
         // Clear the form after successful submission
-        Alert.alert("Success", "Collection Requests Submitted!");
+        Alert.alert(t("Error.Success"), t("Error.Collection Requests Submitted!"));
         try {
           const apiUrl = "https://api.getshoutout.com/coreservice/messages";
           const headers = {
@@ -424,14 +568,15 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
           const response = await axios.post(apiUrl, body, { headers });
 
           if (response.data.referenceId) {
-            Alert.alert("Success", "SMS notification sent successfully!");
+            console.log("SMS notification sent successfully!")
+            // Alert.alert("Success", "SMS notification sent successfully!");
           }
         } catch (error) {
           console.error("Error sending SMS:", error);
-          Alert.alert(
-            "Error",
-            "Failed to send notification. Please try again."
-          );
+          // Alert.alert(
+          //   "Error",
+          //   "Failed to send notification. Please try again."
+          // );
         }
         setCropsList([]); // Clear the crops list
         setRouteNumber("");
@@ -440,14 +585,12 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
         setCity("");
         setScheduleDate("");
       } else {
-        Alert.alert("Error", "Something went wrong, please try again.");
+        Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
       }
     } catch (error) {
       console.error("Error submitting request:", error);
-      Alert.alert(
-        "Error",
-        "Failed to submit the request. Please check your connection."
-      );
+      Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+
     }
   };
   const truncateText = (text: string, length: number) => {
@@ -457,26 +600,26 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1 bg-white px-6 pt-8"
+      className="flex-1 bg-white  "
     >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="flex-row items-center mb-6">
+        <View className="flex-row items-center "  style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
           <TouchableOpacity onPress={() => navigation.goBack()} className="">
             <AntDesign name="left" size={24} color="#000" />
           </TouchableOpacity>
-          <Text className="flex-1 text-center text-xl font-bold text-black">
-            Collection Request Form
+          <Text className="flex-1 text-center text-xl font-bold text-black" style={{ fontSize: 18 }}>
+           {t("CollectionRequest.Collection Request Form")}
           </Text>
         </View>
 
-        <View className="px-2 py-1">
+        <View className=" p-8 -mt-2">
           {/* Crop Dropdown */}
 
           {/* Address Input */}
-          <Text className="text-gray-700 mb-2">Building / House No</Text>
+          <Text className="text-gray-700 mb-2">{t("CollectionRequest.Building / House No")}</Text>
           <TextInput
             className="border border-gray-300 rounded-lg px-4 py-2 mb-4"
             value={buildingNo}
@@ -484,7 +627,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
             placeholder=" "
           />
           {/* Address Input */}
-          <Text className="text-gray-700 mb-2">Street Name</Text>
+          <Text className="text-gray-700 mb-2">{t("CollectionRequest.Street Name")}</Text>
           <TextInput
             className="border border-gray-300 rounded-lg px-4 py-2 mb-4"
             value={streetName}
@@ -492,7 +635,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
             placeholder=" "
           />
           {/* Address Input */}
-          <Text className="text-gray-700 mb-2">City</Text>
+          <Text className="text-gray-700 mb-2">{t("CollectionRequest.City")}</Text>
           <TextInput
             className="border border-gray-300 rounded-lg px-4 py-2 mb-4"
             value={city}
@@ -501,7 +644,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
           />
 
           {/* Root Number Input */}
-          <Text className="text-gray-700 mb-2">Closest Landmark</Text>
+          <Text className="text-gray-700 mb-2">{t("CollectionRequest.Closest Landmark")}</Text>
           <TextInput
             className="border border-gray-300 rounded-lg px-4 py-2 mb-6"
             value={routeNumber}
@@ -509,12 +652,12 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
             placeholder=" "
           />
 
-          <Text className="text-gray-700 mb-2">Schedule Date</Text>
+          <Text className="text-gray-700 mb-2">{t("CollectionRequest.Schedule Date")}</Text>
           <View className="border border-gray-300 rounded-lg px-4 mb-4 flex-row items-center">
             <TextInput
               className="flex-1 text-gray-700 p-2"
               value={scheduleDate}
-              placeholder="Select Schedule Date"
+              placeholder={t("CollectionRequest.Select Schedule Date")}
               editable={false} // Prevent manual input
             />
             <TouchableOpacity
@@ -545,7 +688,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
           {showAddmore && cropsList.length > 0 ? (
             <View>
               <View className="mb-4">
-                <Text className="text-gray-700 mb-2">Added Requests</Text>
+                <Text className="text-gray-700 mb-2">{t("CollectionRequest.Added Requests")}</Text>
                 {cropsList.map((item, index) => (
                   <View
                     key={index}
@@ -588,7 +731,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
                   className="bg-[#2AAD7A] mt-6 py-3 rounded-full"
                 >
                   <Text className="text-white text-center text-lg font-bold">
-                    Add more
+                    {t("CollectionRequest.Add more")}
                   </Text>
                 </TouchableOpacity>
 
@@ -597,14 +740,14 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
                   className="mt-4 py-3 rounded-full border border-black"
                 >
                   <Text className="text-black text-center text-lg font-bold">
-                    Submit
+                    {t("CollectionRequest.Submit")}
                   </Text>
                 </TouchableOpacity>
               </View>
             </View>
           ) : (
             <View className="mb-8">
-              <Text className="text-gray-700 mb-2">Crop</Text>
+              <Text className="text-gray-700 mb-2">{t("CollectionRequest.Crop")}</Text>
               <DropDownPicker
                 open={openCrop}
                 value={crop}
@@ -615,7 +758,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
                   Keyboard.dismiss();
                 }}
                 setValue={setCrop}
-                placeholder="--Select Crop--"
+                placeholder={t("CollectionRequest.--Select Crop--")}
                 placeholderStyle={{ color: "#CFCFCF", fontStyle: "italic" }}
                 dropDownContainerStyle={{
                   borderColor: "#CFCFCF",
@@ -636,7 +779,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
                 loading={loading}
               />
 
-              <Text className="text-gray-700 mb-2">Variety</Text>
+              <Text className="text-gray-700 mb-2 mt-2">{t("CollectionRequest.Variety")}</Text>
               <DropDownPicker
                 open={openVariety}
                 value={variety}
@@ -647,7 +790,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
                   Keyboard.dismiss();
                 }}
                 setValue={setVariety}
-                placeholder="--Select Variety--"
+                placeholder={t("CollectionRequest.--Select Variety--")}
                 placeholderStyle={{ color: "#CFCFCF", fontStyle: "italic" }}
                 dropDownContainerStyle={{
                   borderColor: "#CFCFCF",
@@ -666,7 +809,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
               />
 
               <Text className="text-gray-700 mb-2 mt-2">
-                Load in kg (Approx)
+                {t("CollectionRequest.Load in kg (Approx)")}
               </Text>
               <TextInput
                 className="border border-gray-300 text-black rounded-lg px-4 py-3 mb-4  placeholder:italic"
@@ -680,8 +823,8 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
                 onPress={handleAddtoList}
                 className="bg-[#2AAD7A] mt-6 py-3 rounded-full"
               >
-                <Text className="text-white text-center text-lg font-bold">
-                  Add to the List
+                <Text className="text-white text-center text-lg font-bold" style={{fontSize:16}}>
+                  {t("CollectionRequest.Add to the List")}
                 </Text>
               </TouchableOpacity>
             </View>

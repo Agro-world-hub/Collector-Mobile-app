@@ -460,7 +460,7 @@ const RegisterFarmer: React.FC<UnregisteredFarmerDetailsProps> = ({
       !bankName ||
       !branchName // Removed trailing comma
     ) {
-      Alert.alert("Sorry", "Please fill all fields");
+      Alert.alert(t("Error.error"), t("Error.Please fill in all required fields."));
       setLoading(false);
       return;
     }
@@ -479,18 +479,18 @@ const RegisterFarmer: React.FC<UnregisteredFarmerDetailsProps> = ({
 
 
       if (checkResponse.data.message === "This Phone Number already exists.") {
-        Alert.alert("Sorry", "This Phone Number already exists.");
+        Alert.alert(t("Error.error"), t("Error.This Phone Number already exists."));
         setLoading(false);
         return;
       } else if (checkResponse.data.message === "This NIC already exists.") {
-        Alert.alert("Sorry", "This NIC already exists.");
+        Alert.alert(t("Error.error"), t("Error.This NIC already exists."));
         setLoading(false);
         return;
       } else if (
         checkResponse.data.message ===
         "This Phone Number and NIC already exist."
       ) {
-        Alert.alert("Sorry", "This Phone Number and NIC already exist.");
+        Alert.alert(t("Error.error"), t("Error.This Phone Number and NIC already exist."));
         setLoading(false);
         return;
       }
@@ -629,7 +629,7 @@ ${branchName}
            <AntDesign name="left" size={22} color="#000" />
         </TouchableOpacity>
         <View className="w-full items-center">
-  <Text className="text-xl font-bold text-center">{t("UnregisteredFarmerDetails.FillDetails")}</Text>
+  <Text style={[{ fontSize: 18 }]} className="text-xl font-bold text-center">{t("UnregisteredFarmerDetails.FillDetails")}</Text>
 </View>
 
 
@@ -668,7 +668,7 @@ ${branchName}
             { key: "Sinhala", value: "සිංහල" },
             { key: "Tamil", value: "தமிழ்" },
           ]}
-          placeholder="Select Language"
+          placeholder={t("UnregisteredFarmerDetails.Select Language")}
           boxStyles={{ borderColor: "#ccc", borderRadius: 8 }}
           dropdownStyles={{ borderColor: "#ccc" }}
           search={false} // Optional: hide search inside dropdown
@@ -738,7 +738,7 @@ ${branchName}
                 key: district.value,
                 value: district.translationKey,
               }))}
-              placeholder="Select District"
+              placeholder={t("AddOfficerAddressDetails.Select District")}
               boxStyles={{ borderColor: '#ccc', borderRadius: 8 }}
               dropdownStyles={{ borderColor: '#ccc' }}
               search={false}  // Optional: hide search inside dropdown
@@ -798,7 +798,7 @@ ${branchName}
                 key: bank.name,
                 value: bank.name,
               }))}
-              placeholder="Select Bank"
+              placeholder={t("UnregisteredFarmerDetails.Select Bank")}
               boxStyles={{ borderColor: '#ccc', borderRadius: 8 }}
               dropdownStyles={{ borderColor: '#ccc' }}
               search={true}  
@@ -833,7 +833,7 @@ ${branchName}
                 key: branch.name,
                 value: branch.name,
               }))}
-              placeholder="Select Branch"
+              placeholder={t("UnregisteredFarmerDetails.Select Branch")}
               boxStyles={{ borderColor: '#ccc', borderRadius: 8 }}
               dropdownStyles={{ borderColor: '#ccc' }}
               search={true}  
