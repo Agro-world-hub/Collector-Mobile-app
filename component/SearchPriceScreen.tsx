@@ -444,7 +444,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
       {/* Crop Name Dropdown */}
       <View className="w-full mb-4">
          <Text className="text-base mb-2 text-center">{t("SearchPrice.Crop")}</Text>
-        {loadingCrops ? (
+        {/* {loadingCrops ? (
           <ActivityIndicator size="small" color="#2AAD7A" />
         ) : (
           <SelectList
@@ -459,7 +459,20 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
               color: '#000',
             }}
           />
-        )}
+        )} */}
+        
+          <SelectList
+            setSelected={(val: any) => setSelectedCrop(val)}
+            data={cropOptions}
+            placeholder={t("SearchPrice.SelectCrop")}
+            boxStyles={{
+              backgroundColor: 'white',
+              borderColor: '#CFCFCF',
+            }}
+            dropdownTextStyles={{
+              color: '#000',
+            }}
+          />
       </View>
 
       {/* Variety Dropdown */}
