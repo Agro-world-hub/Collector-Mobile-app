@@ -196,7 +196,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
                 </View>
 
           {loading ? (
-             <View className="flex-1 justify-center items-center mr-[45%]">
+             <View className="flex-1 justify-center items-center mr-[40%] -mt-[10%]">
                   <LottieView
                     source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
                     autoPlay

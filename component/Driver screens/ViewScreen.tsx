@@ -23,6 +23,7 @@ import CropItemsScrollView from '../Driver screens/CropItemsScrollView';
 import moment from "moment";
 import { set } from "lodash";
 
+
 type ViewScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   "ViewScreen"
@@ -85,6 +86,19 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
    // const showUpdateButton = scheduled === "Scheduled" || scheduled === "On way" || scheduled === "Collected" || scheduled === "Cancelled";
    const showUpdateButton = scheduled === "Scheduled" || requestStatus === "Not Assigned";
     const showCancelButton = scheduled === "Scheduled" || scheduled === "On way"|| requestStatus === "Not Assigned";
+
+      const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+      useEffect(() => {
+        const fetchLanguage = async () => {
+          try {
+            const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+            setSelectedLanguage(lang || "en"); // Default to English if not set
+          } catch (error) {
+            console.error("Error fetching language preference:", error);
+          }
+        };
+        fetchLanguage();
+      }, []);
   
     const handleDateChange = (event: any, selectedDate?: Date) => {
       setShowDatePicker(false);
@@ -143,6 +157,28 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
             const jsonData = JSON.parse(textResponse);
             console.log("Parsed JSON:", jsonData);
     
+            // if (jsonData.success) {
+            //   const responseData = jsonData.data;
+              
+            //   // Set state with the fetched data
+            //   setRequestId(responseData.id.toString());
+              
+            //   // Handle multiple items if they exist
+            //   if (responseData.items && responseData.items.length > 0) {
+            //     setItems(responseData.items);
+                
+            //     // Create mapping of crop IDs to crop Name
+            //     const cropMapping: Record<number, string> = {};
+            //     const varietyMapping: Record<number, string> = {};
+                
+            //     responseData.items.forEach((item: any) => {
+            //       cropMapping[item.cropId] = item.cropName || `Crop ${item.cropId}`;
+            //       varietyMapping[item.varietyId] = item.varietyName || `Variety ${item.varietyId}`;
+            //     });
+                
+            //     setCrops(cropMapping);
+            //     setVarieties(varietyMapping);
+            //   }
             if (jsonData.success) {
               const responseData = jsonData.data;
               
@@ -152,17 +188,26 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
               // Handle multiple items if they exist
               if (responseData.items && responseData.items.length > 0) {
                 setItems(responseData.items);
-                
-                // Create mapping of crop IDs to crop Name
+      
+                // Create mapping of crop IDs to crop Name based on selected language
                 const cropMapping: Record<number, string> = {};
                 const varietyMapping: Record<number, string> = {};
-                
+      
                 responseData.items.forEach((item: any) => {
-                  cropMapping[item.cropId] = item.cropName || `Crop ${item.cropId}`;
-                  varietyMapping[item.varietyId] = item.varietyName || `Variety ${item.varietyId}`;
+                  if (selectedLanguage === 'si') {
+                    cropMapping[item.cropId] = item.cropNameSinhala || `Crop ${item.cropId}`;
+                    varietyMapping[item.varietyId] = item.varietyNameSinhala || `Variety ${item.varietyId}`;
+                  } else if (selectedLanguage === 'ta') {
+                    cropMapping[item.cropId] = item.cropNameTamil || `Crop ${item.cropId}`;
+                    varietyMapping[item.varietyId] = item.varietyNameTamil || `Variety ${item.varietyId}`;
+                  } else {
+                    cropMapping[item.cropId] = item.cropName || `Crop ${item.cropId}`;
+                    varietyMapping[item.varietyId] = item.varietyName || `Variety ${item.varietyId}`;
+                  }
                 });
-                
+      
                 setCrops(cropMapping);
+                console.log("Crops:", cropMapping);
                 setVarieties(varietyMapping);
               }
               console.log("jjjjjjj")
@@ -260,22 +305,22 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
           );
     
           if (response.status === 200) {
-            Alert.alert("Success", "Schedule Date updated successfully.");
+            Alert.alert(t("Error.Success"), t("CollectionRequest.Schedule Date updated successfully"));
             setOriginalScheduleDate(scheduleDate); 
             setIsUpdateEnabled(false);
           } else if (response.status === 400) {
             const errorData = await response.json();
-            Alert.alert("Error", errorData.message || "Failed to update schedule date.");
+            Alert.alert(t("Error.error"), t("CollectionRequest.Failed to update schedule date"));
           } else {
             // Generic error
-            Alert.alert("Error", "Failed to update schedule date.");
+            Alert.alert(t("Error.error"), t("CollectionRequest.Failed to update schedule date"));
           }
         } catch (error) {
           console.error("Update error:", error);
-          Alert.alert("Error", "An error occurred while updating the schedule date.");
+      Alert.alert(t('Error.error'), t('Error.somethingWentWrong'));
         }
       } else {
-        Alert.alert("No changes detected", "Schedule Date has not been changed.");
+        Alert.alert(t("Error.error"), t("CollectionRequest.Schedule Date has not been changed"));
       }
     };
     
@@ -315,7 +360,7 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
                 <AntDesign name="left" size={24} color="black" />
               </TouchableOpacity>
               <View className="flex-1 items-center justify-center">
-                <Text className="text-base font-medium">ID : {reuestCode}</Text>
+                <Text className="text-base font-medium">{t("CollectionRequest.ID")} : {reuestCode}</Text>
               </View>
             </View>
   
@@ -332,7 +377,7 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
                 // Fallback for when there are no items
                 <>
                   <View className="mb-4">
-                    <Text className="text-sm text-gray-600 mb-1">Crop</Text>
+                    <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.Crop")}</Text>
                     <TextInput
                       className="border border-gray-300 rounded px-3 py-2 text-base"
                       value={crop}
@@ -342,7 +387,7 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
                   </View>
   
                   <View className="mb-4">
-                    <Text className="text-sm text-gray-600 mb-1">Variety</Text>
+                    <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.Variety")}</Text>
                     <TextInput
                       className="border border-gray-300 rounded px-3 py-2 text-base"
                       value={variety}
@@ -376,7 +421,7 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
     }}
   >
     <Text className="text-gray-700 text-sm">
-      {requestStatus === "Not Assigned" ? requestStatus : scheduled}
+     { t(`CollectionRequest.${requestStatus === "Not Assigned" ? requestStatus : scheduled}`)}
     </Text>
   </View>
 </View>
@@ -396,7 +441,7 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
 )}
 
               <View className="mb-4">
-                <Text className="text-sm text-gray-600 mb-1">Schedule Date</Text>
+                <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.Schedule Date")}</Text>
                 <View className="flex-row items-center">
                   <TextInput
                     className="border border-gray-300 rounded px-3 py-2 text-base flex-1"
@@ -433,7 +478,7 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
               </View>
   
               <View className="mb-4">
-                <Text className="text-sm text-gray-600 mb-1">Building / House No</Text>
+                <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.Building / House No")}</Text>
                 <TextInput
                   className="border border-gray-300 rounded px-3 py-2 text-base"
                   value={buildingNo}
@@ -443,7 +488,7 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
               </View>
   
               <View className="mb-4">
-                <Text className="text-sm text-gray-600 mb-1">Street Name</Text>
+                <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.Street Name")}</Text>
                 <TextInput
                   className="border border-gray-300 rounded px-3 py-2 text-base"
                   value={streetName}
@@ -454,7 +499,7 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
               </View>
   
               <View className="mb-4">
-                <Text className="text-sm text-gray-600 mb-1">City</Text>
+                <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.City")}</Text>
                 <TextInput
                   className="border border-gray-300 rounded px-3 py-2 text-base"
                   value={city}
@@ -464,7 +509,7 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
               </View>
   
               <View className="mb-4">
-                <Text className="text-sm text-gray-600 mb-1">Closest Landmark</Text>
+                <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.Closest Landmark")}</Text>
                 <TextInput
                   className="border border-gray-300 rounded px-3 py-2 text-base"
                   value={routeNumber}
@@ -481,7 +526,7 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
                   onPress={handleUpdate}
                     disabled={!isUpdateEnabled}
                   >
-                    <Text className="text-white text-base">Update</Text>
+                    <Text className="text-white text-base">{t("CollectionRequest.Update")}</Text>
                   </TouchableOpacity>
                 )}
   
@@ -490,7 +535,7 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
                     className="bg-[#E14242] rounded-full py-3 items-center"
                     onPress={handleCancel}
                   >
-                    <Text className="text-white text-base">Cancel Request</Text>
+                    <Text className="text-white text-base">{t("CollectionRequest.Cancel Request")}</Text>
                   </TouchableOpacity>
                 )}
               </View>
@@ -502,23 +547,22 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
 >
   <View className="flex-1 justify-center items-center bg-black/50">
     <View className="bg-white rounded-lg w-4/5 p-5">
-      <Text className="text-center text-lg font-medium mb-2">Are you sure?</Text>
-      <Text className="text-center text-gray-600 mb-6">This will permanently delete the
-request placed by farmer and cannot be undone.
+      <Text className="text-center text-lg font-medium mb-2" style={{fontSize:16}}>{t("CollectionRequest.Are you sure?")}</Text>
+      <Text className="text-center text-gray-600 mb-6">{t("CollectionRequest.Are you sure Massage")}
 </Text>
       
       <TouchableOpacity 
         className="bg-black rounded-full py-3 mb-3" 
         onPress={handleConfirm}  
       >
-        <Text className="text-white text-center font-medium">Confirm</Text>
+        <Text className="text-white text-center font-medium">{t("CollectionRequest.Confirm")}</Text>
       </TouchableOpacity>
       
       <TouchableOpacity 
         className="bg-gray-200 rounded-full py-3" 
         onPress={handleCancelConfim}  
       >
-        <Text className="text-gray-700 text-center">Cancel</Text>
+        <Text className="text-gray-700 text-center">{t("CollectionRequest.Cancel")}</Text>
       </TouchableOpacity>
     </View>
   </View>

@@ -468,8 +468,13 @@
     "EMPID":"EMP ID",
     "Search":"Search",
     "Claim Officer":"Claim Officer",
-    "No Disclaimed":" - No Disclaimed officer was found -"
-   
+    "No Disclaimed":"- No Disclaimed officer was found -",
+    "Are you sure you want to claim this officer?":"Are you sure you want to claim this officer?",
+    "Cancel":"Cancel",
+    "Claim":"Claim",
+    "Select Job Role":"Select Job Role",
+    "Collection Officer":"Collection Officer",
+    "Customer Officer": "Customer Officer"
   },
 
   "CollectionOfficersList":{
@@ -478,7 +483,7 @@
     "Claim Officer":"Claim Officer",
     "Officers List":"Officers List",
     "Drivers List": "Drivers List",
-    "Officers / Drivers List": "Officers / Drivers List",
+    "Officers / Drivers List": "Officers / Drivers List ",
     "Drivers": "Drivers"
    
   },
@@ -709,6 +714,36 @@
     "--Select Variety--": "--Select Variety--",
     "Add to the List": "Add to the List",
     "Add more": "Add more",
-    "Submit": "Submit"
+    "Submit": "Submit",
+    "Collection Requests":"Collection Requests",
+    "Request ID":"Request ID",
+    "Search NIC here...": "Search NIC here...",
+    "NIC":"NIC",
+    "Date":"Date",
+    "All":"All",
+    "No collection requests found": "No collection requests found",
+    "ID":"ID",
+    "Update":"Update",
+    "Cancel Request":"Cancel Request",
+    "Are you sure?":"Are you sure?",
+    "Are you sure Massage":"This will permanently delete the request placed by farmer and cannot be undone.",
+    "Confirm":"Confirm",  
+    "Cancel":"Cancel",
+    "Reason to Cancel":"Reason to Cancel",
+    "Please mention below the reason":"Please mention below the reason.",
+    "Enter here..": "Enter here..",
+    "Processing...": "Processing...",
+    "Go Back":"Go Back",
+    "Failed to cancel request":"Failed to cancel request",
+    "Request cancelled successfully":"Request cancelled successfully",
+    "Failed to update schedule date":"Failed to update schedule date",
+    "Schedule Date has not been changed":"Schedule Date has not been changed",
+    "Schedule Date updated successfully":"Schedule Date updated successfully",
+    "Please provide a reason for cancellation":"Please provide a reason for cancellation",
+    "Not Assigned":"Not Assigned",
+    "Assigned":"Assigned",
+    "Cancelled":"Cancelled",
+    "On way":"On way",
+    "Scheduled":"Scheduled"
   }
 }

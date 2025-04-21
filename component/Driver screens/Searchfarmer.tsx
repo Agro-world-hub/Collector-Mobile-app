@@ -281,7 +281,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
             );
           }
         } else {
-          Alert.alert(t("Error.error"), t("Error.An unexpected error occurred."));
+          Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
         }
       }
     };

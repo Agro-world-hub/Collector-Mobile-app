@@ -21,15 +21,23 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { SelectList } from "react-native-dropdown-select-list";
 import { useTranslation } from "react-i18next";
+import DropDownPicker from "react-native-dropdown-picker";
+import i18n from "@/i18n/i18n";
+import { set } from "lodash";
 
 interface OfficerDetails {
-  name: string;
   id: number;
   jobRole: string;
   empId: string;
   companyNameEnglish: string;
   companyNameSinhala: string;
   companyNameTamil: string;
+  firstNameEnglish: string;
+  firstNameSinhala: string;
+  firstNameTamil: string;
+  lastNameEnglish: string;
+  lastNameSinhala: string;
+  lastNameTamil: string;
   image: string;
 }
 type ClaimOfficerNavigationProp = StackNavigationProp<
@@ -48,6 +56,8 @@ const ClaimOfficer: React.FC = () => {
   );
   const { t } = useTranslation();
   const [modalVisible, setModalVisible] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // const empPrefix = jobRole === 'Collection Officer' ? 'COO' : 'CUO';
   const empPrefix =
@@ -89,7 +99,7 @@ const ClaimOfficer: React.FC = () => {
       if (response.ok && data.result && data.result.length > 0) {
         const officer = data.result[0];
         setOfficerDetails({
-          name: `${officer.firstNameEnglish} ${officer.lastNameEnglish}`,
+          // name: `${officer.firstNameEnglish} ${officer.lastNameEnglish}`,
           companyNameEnglish: officer.companyNameEnglish,
           companyNameSinhala: officer.companyNameSinhala,
           companyNameTamil: officer.companyNameTamil,
@@ -97,7 +107,14 @@ const ClaimOfficer: React.FC = () => {
           jobRole: officer.jobRole,
           empId: officer.empId,
           image: officer.image,
+          firstNameEnglish: officer.firstNameEnglish,
+          firstNameSinhala: officer.firstNameSinhala,
+          firstNameTamil: officer.firstNameTamil,
+          lastNameEnglish: officer.lastNameEnglish,
+          lastNameSinhala: officer.lastNameSinhala,
+          lastNameTamil: officer.lastNameTamil,
         });
+        console.log("officer details", officerDetails);
         setOfficerFound(true);
       } else {
         setOfficerFound(false);
@@ -114,11 +131,11 @@ const ClaimOfficer: React.FC = () => {
 
       if (!userToken) {
         Alert.alert(
-          t("Error.error"),
-          t("Error.User token not found. Please log in again.")
+          t("Error.error"),t("Error.User token not found. Please log in again.")
         );
         return;
       }
+      setLoading(true);
 
       const response = await fetch(
         `${environment.API_BASE_URL}api/collection-manager/claim-officer`,
@@ -150,6 +167,8 @@ const ClaimOfficer: React.FC = () => {
     } catch (err) {
       console.error(err);
       Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -157,7 +176,7 @@ const ClaimOfficer: React.FC = () => {
     setModalVisible(false); // Close the modal without taking action
   };
 
-  const ConfirmationModal = ({ visible, onConfirm, onCancel }: any) => {
+  const ConfirmationModal = ({ visible, onConfirm, onCancel, onLoading }: any) => {
     return (
       <Modal
         transparent={true}
@@ -166,27 +185,29 @@ const ClaimOfficer: React.FC = () => {
         onRequestClose={onCancel}
       >
         <View className="flex-1 justify-center items-center bg-black/60 bg-opacity-50">
-          <View className="bg-white items-center rounded-lg w-80 p-6">
+          <View className="bg-white items-center rounded-lg w-80  p-6">
             <View className="flex items-center justify-center mb-4 rounded-lg bg-[#f7f8fa] p-2 w-12 h-12 ">
               <Ionicons name="warning" size={30} color="#6c7e8c" />
             </View>
             <Text className="text-center text-sm font-semibold mb-4">
-              Are you sure you want to claim this officer?
+              {t("ClaimOfficer.Are you sure you want to claim this officer?")}
             </Text>
 
             <View className="flex-row  justify-center gap-4">
               <TouchableOpacity
                 onPress={onCancel}
-                className="px-6 py-2 bg-gray-300 rounded-lg"
+                className="p-2 py-2 bg-gray-300 rounded-lg"
               >
-                <Text className="text-sm text-gray-700">Cancel</Text>
+                <Text className="text-sm text-gray-700">{t("ClaimOfficer.Cancel")}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={onConfirm}
-                className="px-6 py-2 bg-[#2AAD7A] rounded-lg"
+                // className="p-2 py-2 bg-[#2AAD7A] rounded-lg"
+                disabled={onLoading} // Disable the button when loading is true
+                className={`p-2 py-2 rounded-lg ${onLoading ? 'bg-gray-400' : 'bg-[#2AAD7A]'}`}
               >
-                <Text className="text-sm text-white">Claim</Text>
+                <Text className="text-sm text-white">{t("ClaimOfficer.Claim")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -216,26 +237,46 @@ const ClaimOfficer: React.FC = () => {
           {t("ClaimOfficer.JobRole")}
         </Text>
         <View className=" rounded-lg pb-3">
-          {/* <Picker
-            selectedValue={jobRole}
-            onValueChange={(itemValue) => setJobRole(itemValue)}
-            style={{ height: 50, width: '100%' }}
-          >
-            <Picker.Item label="Collection Officer" value="Collection Officer" />
-            <Picker.Item label="Customer Officer" value="Customer Officer" />
-          </Picker> */}
-          <SelectList
+          {/* <SelectList
             setSelected={(value: React.SetStateAction<string>) =>
               setJobRole(value)
             }
             data={[
-              { key: "Collection Officer", value: "Collection Officer" },
+              { key: "Collection Officer", value: "Collection Officer", label:t("ClaimOfficer.Collection Officer")},
               { key: "Customer Officer", value: "Customer Officer" },
             ]}
             save="key"
-            placeholder="Select Job Role"
+            placeholder={t("ClaimOfficer.Select Job Role")}
             // defaultOption={{ key: 'Collection Officer', value: 'Collection Officer' }}
-          />
+          /> */}
+
+<DropDownPicker
+    open={open}
+    setOpen={setOpen}
+    value={jobRole}  // The value selected in the dropdown
+    setValue={setJobRole}  // Function to update the selected value
+    items={[  // Array of items with value and label for dropdown
+      { value: "Collection Officer", label: t("ClaimOfficer.Collection Officer") },
+      { value: "Customer Officer", label: t("ClaimOfficer.Customer Officer") },
+    ]}    placeholder={t("AddOfficerBasicDetails.SelectJobRole")}  // Placeholder text
+    containerStyle={{
+      borderWidth: 1,
+      borderColor: "#CFCFCF",
+      borderRadius: 5,
+    }}
+    style={{
+      borderColor:"#CFCFCF",
+      borderWidth:0
+    }}
+    dropDownDirection="BOTTOM"
+    dropDownContainerStyle={{
+      borderColor:"#CFCFCF"
+    }}
+    placeholderStyle={{
+      fontSize: 14,
+      color: '#888',
+    }}
+  />
         </View>
 
         {/* EMP ID Input */}
@@ -243,7 +284,7 @@ const ClaimOfficer: React.FC = () => {
           {t("ClaimOfficer.EMPID")}
         </Text>
         <View className="flex-row items-center border border-gray-300 rounded-lg mb-4">
-          <View className="bg-gray-200 px-4 py-2 rounded-l-lg">
+          <View className="bg-gray-200 px-4 py-3 rounded-l-lg">
             <Text className="text-gray-600 font-bold">{empPrefix}</Text>
           </View>
           <TextInput
@@ -286,7 +327,7 @@ const ClaimOfficer: React.FC = () => {
 
       {/* Officer Found */}
       {officerFound && (
-        <View className="px-4 mt-10 items-center">
+        <View className=" mt-10 items-center">
           {/* Officer Avatar */}
 
           <Image
@@ -298,7 +339,7 @@ const ClaimOfficer: React.FC = () => {
             className="w-20 h-20 rounded-full mb-4"
           />
           {/* Officer Details */}
-          <Text className="text-lg font-bold text-gray-800">
+          {/* <Text className="text-lg font-bold text-gray-800">
             {officerDetails?.name}
           </Text>
           <Text className="text-sm text-gray-500">
@@ -306,23 +347,63 @@ const ClaimOfficer: React.FC = () => {
           </Text>
           <Text className="text-sm text-gray-500">
             {officerDetails?.companyNameEnglish}
-          </Text>
+          </Text> */}
+           { i18n.language === "si" ? (
+      <>
+        <Text className="text-lg font-bold mb-1 text-gray-800">
+          {officerDetails?.firstNameSinhala} {officerDetails?.lastNameSinhala}
+        </Text>
+        <Text className="text-sm mb-1 text-gray-500">
+        {t(`ClaimOfficer.${officerDetails?.jobRole}`)} - {officerDetails?.empId}
+        </Text>
+        <Text className="text-sm text-gray-500">
+          {officerDetails?.companyNameSinhala}
+        </Text>
+      </>
+    ) : i18n.language === "ta" ? (
+      <>
+        <Text className="text-lg font-bold text-gray-800">
+          {officerDetails?.firstNameTamil} {officerDetails?.lastNameTamil}
+        </Text>
+        <Text className="text-sm text-gray-500">
+        {t(`ClaimOfficer.${officerDetails?.jobRole}`)} - {officerDetails?.empId}
+        </Text>
+        <Text className="text-sm text-gray-500">
+          {officerDetails?.companyNameTamil}
+        </Text>
+      </>
+    ) : 
+    <>
+    <Text className="text-lg font-bold text-gray-800">
+      {officerDetails?.firstNameEnglish} {officerDetails?.lastNameEnglish}
+    </Text>
+    <Text className="text-sm text-gray-500">
+    {t(`ClaimOfficer.${officerDetails?.jobRole}`)} - {officerDetails?.empId}
+    </Text>
+    <Text className="text-sm text-gray-500">
+      {officerDetails?.companyNameEnglish}
+    </Text>
+  </>
+  }
 
           {/* Claim Officer Button */}
           <TouchableOpacity
             className="mt-6 mb-10 bg-[#2AAD7A]    py-4 rounded-full"
             onPress={() => setModalVisible(true)}
           >
-            <Text className="text-white text-lg px-28 font-semibold text-center">
+            <Text className={`text-white text-lg ${i18n.language === 'en' ? "px-28" : "px-24"} font-semibold text-center`} style={[{fontSize:16}]}>
               {t("ClaimOfficer.Claim Officer")}
             </Text>
           </TouchableOpacity>
+
+          
         </View>
       )}
       <ConfirmationModal
         visible={modalVisible}
         onConfirm={handleClaimOfficer}
         onCancel={handleCancel}
+        onLoading={loading}
       />
     </ScrollView>
   );
