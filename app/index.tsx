@@ -80,7 +80,8 @@ import CollectionRequestForm from "@/component/Driver screens/CollectionRequestF
 import CollectionRequests from "@/component/Driver screens/CollectionRequests";
 import ViewScreen from "@/component/Driver screens/ViewScreen";
 import Cancelreson from "@/component/Driver screens/Cancelreson"
-// import ReviewCollectionRequests from '@/component/Driver screens/ReviewCollectionRequests'
+import NewReport from "@/component/NewReport";
+import TransactionReport from "@/component/ManagerScreens/TransactionReport";
 
 import UpdateFarmerBankDetails from "@/component/UpdateFarmerBankDetails";
 
@@ -129,7 +130,7 @@ function MainTabNavigator() {
         component={UnregisteredCropDetails as any}
       />
       <Tab.Screen name="SearchFarmer" component={SearchFarmer} />
-      <Tab.Screen name="ManagerDashboard" component={ManagerDashboard} />
+      <Tab.Screen name="ManagerDashboard" component={ManagerDashboard as any} />
       <Stack.Screen name="DailyTargetList" component={DailyTargetList} />
       <Stack.Screen
         name="CollectionOfficersList"
@@ -152,9 +153,10 @@ function MainTabNavigator() {
        
       <Stack.Screen name="TransactionList" component={TransactionList as any} />
       <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} />
-      <Stack.Screen name="RegisterDriver" component={RegisterDriver as any} />
-      <Stack.Screen name="AddDriverAddressDetails" component={AddDriverAddressDetails as any} />
-      <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} />
+     {/* <Stack.Screen name="RegisterDriver" component={RegisterDriver as any} /> */}
+      {/* <Stack.Screen name="AddDriverAddressDetails" component={AddDriverAddressDetails as any} /> */}
+      {/* <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} /> */}
+
    
       
       
@@ -334,9 +336,13 @@ const Index = () => {
             name="Cancelreson"
             component={Cancelreson as any}
           />
+          <Stack.Screen name="TransactionReport" component={TransactionReport as any} />
                 <Stack.Screen name="UpdateFarmerBankDetails" component={UpdateFarmerBankDetails as any} />
                 {/* <Stack.Screen name="ReviewCollectionRequests" component={ReviewCollectionRequests as any} /> */}
-
+                <Stack.Screen name="RegisterDriver" component={RegisterDriver as any} />
+      <Stack.Screen name="AddDriverAddressDetails" component={AddDriverAddressDetails as any} />
+      <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} />
+      <Stack.Screen name="NewReport" component={NewReport as any} />
         </Stack.Navigator> 
         
     </LanguageProvider>

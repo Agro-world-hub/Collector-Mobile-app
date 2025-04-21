@@ -1947,14 +1947,16 @@ const AddOfficerAddressDetails: React.FC = () => {
       !formData.accountHolderName ||
       !formData.accountNumber ||
       !formData.confirmAccountNumber ||
-      !formData.bankName
+      !formData.bankName ||
+      !formData.branchName ||
+      !formData.province 
     ) {
       Alert.alert(t("Error.error"), t("Error.Please fill in all required fields."));
       return;
     }
 
     if (formData.accountNumber !== formData.confirmAccountNumber) {
-      Alert.alert(t("Error.error"), t("Account numbers do not match."));
+      Alert.alert(t("Error.error"), t("Error.Account numbers do not match."));
       return;
     }
 
@@ -2006,7 +2008,7 @@ const AddOfficerAddressDetails: React.FC = () => {
             Alert.alert("Error", serverErrors);
           } else {
             const errorMessages = Object.values(serverErrors).join("\n");
-            Alert.alert(t("Error.Validation Errors"), errorMessages);
+            Alert.alert(t("Error.error"), errorMessages);
           }
         } else {
           Alert.alert(t("Error.error"), t("Error.An error occurred while creating the officer."));

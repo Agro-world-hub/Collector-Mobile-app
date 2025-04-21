@@ -105,7 +105,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       !bankName ||
       !branchName // Removed trailing comma
     ) {
-      Alert.alert("Sorry", "Please fill all fields");
+      Alert.alert(t("Error.error"), t("Error.Please fill in all required fields."));
       setLoading(false);
       return;
     }
@@ -139,7 +139,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
           });
       } else {
         setLoading(false);
-        Alert.alert("Error", "Failed to submit Bank Details");
+        Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
       }
     } catch (error) {
         console.error("Error submitting form", error);

@@ -20,7 +20,7 @@
 
   },
   "Error":{
-    "error":"Error",
+    "error":"Sorry",
     "Failed to fetch empid.":"Failed to fetch empid.",
     "New password and confirm password do not match.":"New password and confirm password do not match.",
     "New password must be at least 6 characters long.":"New password must be at least 6 characters long.",
@@ -47,7 +47,8 @@
     "Failed to submit price update.":"Failed to submit price update.",
     "Failed to load profile data":"Failed to load profile data",
     "Failed to update phone numbers":"Failed to update phone numbers",
-    "Permission required":"Permission required,Please allow access to your photo library to upload a profile picture.",
+    "Permission required":"Permission required",
+    "Permission required message":"Please allow access to your photo library to upload a profile picture.",
     "Sorry":"Sorry",
     "Failed to load details":"Failed to load details",
     "Details are missing for generating PDF":"Details are missing for generating PDF",
@@ -94,7 +95,8 @@
     "Please select both start and end dates.":"Please select both start and end dates.",
     "End date cannot be earlier than the start date.":"End date cannot be earlier than the start date.",
     "PDF Generated Successfully":"PDF Generated Successfully!",
-    "Permission Denied":"Permission Denied, You need to grant storage permissions to save the file.",
+    "Permission Denied":"Permission Denied",
+    "Permission Denied Message": "You need to grant storage permissions to save the file.",
     "File saved as":"File saved as",
     "in the Downloads folder":"in the Downloads folder",
     "An error occurred while saving the file.":"An error occurred while saving the file.",
@@ -110,7 +112,7 @@
     "Daily target created successfully":"Daily target created successfully!",
     "Failed to fetch data.":"Failed to fetch data. Please try again later.",
     "Failed to load crop details":"Failed to load crop details",
-    "sorry":"sorry",
+    "sorry":"Sorry",
     "Failed to submit complaint":"Failed to submit complaint. Please try again.",
     "Please select a category and add your complaint.":"Please select a category and add your complaint.",
     "Failed to fetch prices":"Failed to fetch prices",
@@ -132,7 +134,25 @@
  "Passwords are not allowed to be empty": "Passwords are not allowed to be empty",
  "Invalid current password": "Invalid current password",
  "Phone number 1 cannot be empty": "Phone number 1 cannot be empty",
- "Phone number 2 cannot be empty": "Phone number 2 cannot be empty"
+ "Phone number 2 cannot be empty": "Phone number 2 cannot be empty",
+ "InvaidEmail": "Invalid Email",
+ "Phone number 1 is invalid.": "Phone number 1 is invalid.",
+ "Phone number 2 is invalid.": "Phone number 2 is invalid.",
+ "Email is invalid.": "Email is invalid.",
+ "NIC number is invalid.": "NIC number is invalid.",
+ "QR Code saved to gallery.": "QR Code saved to gallery.",
+ "User ID not found in QR code": "User ID not found in QR code",
+ "Downloaded PDF": "{{fileName}} has been saved to your Downloads folder.",
+
+
+ "This Phone Number already exists." : "This Phone Number already exists.",
+ "This NIC already exists." : "This NIC already exists.",
+ "This Phone Number and NIC already exist." : "This Phone Number and NIC already exist.",
+ "Authentication required. Please log in.":"Authentication required. Please log in.",
+ "Please fill all fields, add crops, and select a schedule date.":"Please fill all fields, add crops, and select a schedule date.",
+ "Failed to update user details":"Failed to update user details.",
+ "Collection Requests Submitted!":"Collection Requests Submitted!",
+ "Invalid crop or variety selected.":"Invalid crop or variety selected."
 
 
    
@@ -222,7 +242,11 @@
     "Successful":"Registration Successful",
     "Oops":"Oops!",
     "Unsuccessful":"Registration Unsuccessful",
-    "Close":"Close"
+    "Close":"Close",
+    "Preferd Language":"Preferred Language",
+    "Select Language":"Select Language",
+    "Select Bank":"Select Bank",
+    "Select Branch":"Select Branch"
   },
   "PriceChart":{
     "LNG": "en",
@@ -378,7 +402,9 @@
     "Scan":"Scan QR",
     "Search": "Search By NIC",
     "CenterTarget":"Centre Target",
-    "MyCollection":"My Collection"
+    "MyCollection":"My Collection",
+    "Collection": "Collection",
+    "Transport":"Transport"
 
   },
   "AddOfficerBasicDetails":{
@@ -421,9 +447,6 @@
     "Select Province":"Select Province",
     "Select District":"Select District",
     "next":"next"
-
- 
-    
   },
   "CenterTarget":{
     "LNG": "en",
@@ -612,5 +635,80 @@
     "NoReply": "No response yet for this complaint.",
     "RefNo": "Ref No",
     "Sent": "Sent"
+  },
+  "QRcode": {
+    "LNG": "en",
+    "QRcode": "My QR Code",
+    "Download": "Download",
+    "Share": "Share",
+    "failedFetchDetails": "Failed to fetch registration details. Please try again.",
+    "permissionDeniedTitle": "Access Required",
+    "permissionDeniedMessage": "Please enable permission to save the QR to your gallery.",
+    "successTitle": "Success",
+    "savedToGallery": "Your QR Code has been saved to your gallery.",
+    "failedSaveQRCode": "Unable to save QR code. Please try again.",
+    "sharingUnavailableTitle": "Sharing feature unavailable",
+    "sharingUnavailableMessage": "This device does not support sharing QR codes.",
+    "shareQRCode": "Share QR Code",
+    "failedShareQRCode": "Unable to share QR code. Please try again later.",
+    "NoQrText": "To obtain access to your unique QR code, please register as a member by entering your bank details. This code will ensure smooth transactions and secure payments directly to your bank at our collection centers.",
+    "GenerateQr": "Generate My QR"
+  },
+  "Transport":{
+    "LNG": "en",
+    "Register Drivers":"Register Drivers",
+    "Add Farmer Requests":"Add Farmer Requests",
+    "View Farmer Requests":"View Farmer Requests",
+    "Driver":"Driver",
+    "Add Collection Request":"Add Collection Request",
+    "Enter Valide NIC" :"Enter Valid NIC"
+  },
+  "VehicleDetails":{
+    "LNG": "en",
+    "Driving Details":"Driving Details",
+    "Front":"Front",
+    "Back":"Back",
+    "Side-1":"Side-1",
+    "Side-2":"Side-2",
+    "--Driving License ID--":"--Driving License ID--",
+    "Vehicle Insurance Details":"Vehicle Insurance Details",
+    "--Insurance Number--": "--Insurance Number--",
+    "--Insurance Expire Date--":"--Insurance Expire Date--",
+   "Vehicle Details":"Vehicle Details",
+   "Car":"Car",
+   "Truck":"Truck",
+   "Motorcycle":"Motorcycle",
+   "--Vehicle Type--":"--Vehicle Type--",
+   "--Vehicle Capacity--":"--Vehicle Capacity--",
+   "--Vehicle Registration Number--":"--Vehicle Registration Number--",
+   "Go Back":"Go Back",
+   "Submit":"Submit",
+   "Please capture all required images":"Please capture all required images",
+    "InsuranceFront": "Insurance Front Image",
+    "InsuranceBack": "Insurance Back Image",
+    "VehicleFront": "Vehicle Front Image",
+    "VehicleBack": "Vehicle Back Image",
+    "VehicleSide1": "Vehicle Side 1 Image",
+    "VehicleSide2": "Vehicle Side 2 Image",
+    "Driver and vehicle information submitted successfully": "Driver and vehicle information submitted successfully",
+     "Failed to submit driver and vehicle information. Please try again." :"Failed to submit driver and vehicle information. Please try again."
+  },
+  "CollectionRequest":{
+    "Collection Request Form": "Collection Request Form",
+    "Building / House No": "Building / House Number",
+    "Street Name": "Street Name",
+    "City": "City",
+    "Closest Landmark": "Closest Landmark",
+    "Schedule Date": "Schedule Date",
+    "Select Schedule Date": "Select Schedule Date",
+    "Added Requests": "Added Requests",
+    "Crop": "Crop",
+    "Variety": "Variety",
+    "Load in kg (Approx)": "Load in kg (Approx)",
+    "--Select Crop--": "--Select Crop--",
+    "--Select Variety--": "--Select Variety--",
+    "Add to the List": "Add to the List",
+    "Add more": "Add more",
+    "Submit": "Submit"
   }
 }

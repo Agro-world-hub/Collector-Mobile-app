@@ -11,7 +11,7 @@ export type RootStackParamList = {
     EngProfile:undefined;
     UnregisteredFarmerDetails:{ cropCount: 1, userId:number };
     //UnregisteredCropDetails: { cropCount: number, userId:number };
-    UnregisteredCropDetails: { userId: number; cropCount: number };
+    UnregisteredCropDetails: { userId: number; cropCount: number, farmerPhone: number, farmerLanguage: string; };
     SinChangePassword:undefined;
     SinLogin:undefined;
     Lanuage:undefined;
@@ -132,8 +132,26 @@ export type RootStackParamList = {
       accNumber: string;
       accHolderName: string;
       bankName: string;
-      branchName: string
+      branchName: string;
+      PreferdLanguage: string;
     }
+    
+    NewReport:{userId:any,registeredFarmerId:number};
+    TransactionReport:{ registeredFarmerId: number;
+      userId: number;
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+      address: string;
+      NICnumber: string;
+      totalAmount: number;
+      bankAddress: string | null;
+      accountNumber: string | null;
+      accountHolderName: string | null;
+      bankName: string | null;
+      branchName: string | null;
+      selectedDate: string;
+      empId: string;};
     
     DailyTargetListForOfficers:{officerId:string,collectionOfficerId:number};
     EditTargetManager:undefined;
@@ -156,6 +174,7 @@ export type RootStackParamList = {
       branchName: string
       phoneNumber: string;
       district: string;
+      PreferdLanguage: string;
     };
     CollectionRequestForm: { NICnumber: string ; id: number };
     CollectionRequests: { requestId: number ; crops:string };  // expect requestId in CollectionRequests

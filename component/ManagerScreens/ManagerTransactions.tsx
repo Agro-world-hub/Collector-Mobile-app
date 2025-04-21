@@ -227,7 +227,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route ,naviga
           <TouchableOpacity
             className="flex-row items-center p-4 mb-3 rounded-[35px] bg-gray-100 shadow-sm"
             onPress={() => {
-              navigation.navigate('FarmerReport', {
+              navigation.navigate('TransactionReport', {
                 registeredFarmerId: item.registeredFarmerId,
                 userId: item.userId,
                 firstName: item.firstName,

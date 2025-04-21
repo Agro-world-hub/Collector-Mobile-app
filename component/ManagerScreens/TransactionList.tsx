@@ -179,7 +179,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
           <TouchableOpacity
             className="flex-row items-center p-4 mb-3 rounded-[35px] bg-gray-100 shadow-sm"
             onPress={() => {
-              navigation.navigate('FarmerReport'as any,  {
+              navigation.navigate('TransactionReport'as any,  {
                 registeredFarmerId: item.registeredFarmerId,
                 userId: item.userId,
                 firstName: item.firstName,

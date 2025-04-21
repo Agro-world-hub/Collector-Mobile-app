@@ -427,7 +427,7 @@ const AddOfficerBasicDetails: React.FC = () => {
     English: false,
     Tamil: false,
   });
-  const [jobRole, setJobRole] = useState<string>("Select Job Role");
+  const [jobRole, setJobRole] = useState<string>("");
   const [phoneCode1, setPhoneCode1] = useState<string>("+94"); // Default Sri Lanka calling code
   const [phoneCode2, setPhoneCode2] = useState<string>("+94"); // Default Sri Lanka calling code
   const [phoneNumber1, setPhoneNumber1] = useState("");
@@ -474,8 +474,7 @@ const AddOfficerBasicDetails: React.FC = () => {
   //     setError3("");
   //   }
   // };
-
-  const validateNicNumber = (input: string) => /^[0-9]{9}V$|^[0-9]{10}$/.test(input);
+  const validateNicNumber = (input: string) => /^[0-9]{9}V$|^[0-9]{12}$/.test(input);
 
 const handleNicNumberChange = (input: string) => {
   // Normalize 'v' or 'V' to uppercase 'V'
@@ -484,7 +483,7 @@ const handleNicNumberChange = (input: string) => {
   setFormData({ ...formData, nicNumber: normalizedInput });
 
   if (!validateNicNumber(normalizedInput)) {
-    setError3("NIC Number must be 9 digits followed by 'V' or 10 digits.");
+    setError3("NIC Number must be 9 digits followed by 'V' or 12 digits.");
   } else {
     setError3("");
   }
@@ -524,8 +523,8 @@ const handleNicNumberChange = (input: string) => {
       await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissionResult.granted === false) {
       Alert.alert(
-        "Permission required",
-        "You need to grant camera roll permissions to select an image"
+        t("Error.Permission required"),
+        t("Error.Permission required message")
       );
       return;
     }
@@ -593,14 +592,31 @@ const handleNicNumberChange = (input: string) => {
   // };
 
   const handleNext = () => {
+    console.log("jobRole",preferredLanguages);
+    if(error1 ) {
+      Alert.alert(t("Error.error"), t("Error.Phone number 1 is invalid."));
+      return;
+    }else if(error2) {
+      Alert.alert(t("Error.error"), t("Error.Phone number 2 is invalid."));
+      return;
+    }else if(errorEmail) {
+      Alert.alert(t("Error.error"), t("Error.Email is invalid."));
+      return;
+    }else if(error3) {
+      Alert.alert(t("Error.error"), t("Error.NIC number is invalid."));
+      return;
+    }
     if (
       !formData.userId ||
       !formData.firstNameEnglish ||
       !formData.lastNameEnglish ||
       !phoneNumber1 || // Ensure phone number 1 is provided
       !formData.nicNumber ||
-      !formData.email
-    ) {
+      !formData.email ||
+      !jobRole||
+      !type||
+      Object.values(preferredLanguages).every((val) => !val)
+        ) {
       Alert.alert(t("Error.error"), t("Error.Please fill in all required fields."));
       return;
     }
@@ -651,7 +667,7 @@ const handleNicNumberChange = (input: string) => {
   const handleEmailChange = (input: string) => {
     setFormData({ ...formData, email: input });
     if (!validateEmail(input)) {
-      setErrorEmail(t("ErrorEmail"));
+      setErrorEmail(t("Error.InvaidEmail"));
     } else {
       setErrorEmail("");
     }
@@ -817,10 +833,10 @@ const handleNicNumberChange = (input: string) => {
                 setSelected={handleJobRoleChange}
                 data={jobRoles}
                 save="value"
-                defaultOption={{
-                  key: "1",
-                  value: formData.jobRole,
-                }}
+                // defaultOption={{
+                //   key: "1",
+                //   value: formData.jobRole,
+                // }}
                 placeholder="Select Job Role"
                 boxStyles={{
                   height: 42,
@@ -1026,6 +1042,7 @@ const handleNicNumberChange = (input: string) => {
             placeholder={t("AddOfficerBasicDetails.NIC")}
             value={formData.nicNumber}
             onChangeText={handleNicNumberChange}
+            maxLength={12}
             className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
           />
           {error3 ? <Text className="mb-3" style={{ color: "red" }}>{error3}</Text> : null}
@@ -1033,9 +1050,9 @@ const handleNicNumberChange = (input: string) => {
             placeholder={t("AddOfficerBasicDetails.Email")}
             value={formData.email}
             onChangeText={handleEmailChange}
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border border-gray-300 rounded-lg px-3 py-2 mb-2 text-gray-700"
           />
-          {errorEmail ? <Text className="mt-2" style={{ color: "red" }}>{errorEmail}</Text> : null}
+          {errorEmail ? <Text className="" style={{ color: "red" }}>{errorEmail}</Text> : null}
         </View>
 
         {/* Buttons */}

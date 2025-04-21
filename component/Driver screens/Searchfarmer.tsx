@@ -189,6 +189,12 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
       NICnumber: string;
       firstName: string;
       lastName: string;
+      language: string;
+      phoneNumber: string;
+      city?: string;
+      streetName?: string;
+      route?: string;
+      houseNo?: string;
     } | null>(null);
     
     const [ere, setEre] = useState("");
@@ -204,7 +210,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
     const validateNic = (nic: string) => {
       const regex = /^(\d{12}|\d{9}V|\d{9}X|\d{9}v|\d{9}x)$/;
       if (!regex.test(nic)) {
-        setEre("Enter Valide NIC");
+        setEre(t("Transport.Enter Valide NIC"));
       } else {
         setEre("");
       }
@@ -253,6 +259,12 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
               NICnumber: farmer.NICnumber,
               firstName: farmer.firstName,
               lastName: farmer.lastName,
+              language: farmer.language,
+              phoneNumber: farmer.phoneNumber,
+              city: farmer.city,
+              streetName: farmer.streetName,
+              route: farmer.route,
+              houseNo: farmer.houseNo
             });
             setNewQr(false);
           }
@@ -265,8 +277,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
             setNoResults(true);
           } else {
             Alert.alert(
-              "Error",
-              error.response?.data?.error || t("Error.Failed to search for farmer.")
+            t("Error.error"), t("Error.Failed to search for farmer.")
             );
           }
         } else {
@@ -280,6 +291,12 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
         navigation.navigate("CollectionRequestForm" as any, {
           id: foundFarmer.id,
           NICnumber: foundFarmer.NICnumber,
+          phoneNumber: foundFarmer.phoneNumber,
+          language: foundFarmer.language,
+          oldcity: foundFarmer.city,
+          oldstreet: foundFarmer.streetName,
+          oldlandmark: foundFarmer.route,
+          oldhouseno: foundFarmer.houseNo
         });
          console.log(foundFarmer.id)
       }
@@ -328,7 +345,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
   
             {/* Search Form */}
             <View className="p-4">
-              <Text style={[{ fontSize: 16 }]} className="text-center text-lg mt-5">
+              <Text style={[{ fontSize: 16 } , getTextStyle(selectedLanguage)]}  className="text-center text-lg mt-5">
                 {t("SearchFarmer.EnterFarmer")}
               </Text>
   
@@ -336,8 +353,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                 <TextInput
                   value={NICnumber}
                   onChangeText={handleNicChange}
-                  placeholder={t("SearchFarmer.EnterNIC")}
-                  className="flex-1 text-center"
+                  placeholder={t("SearchFarmer.EnterNIC").length > 20 ? t("SearchFarmer.EnterNIC").slice(0, 28) + "..." : t("SearchFarmer.EnterNIC")}                  className="flex-1 text-center"
                   maxLength={12}
                   style={{ color: "#000" }}
                 />
@@ -378,7 +394,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                   
                     <Text className="text-center text-lg  mt-[20%]">
                       {/* {t("SearchFarmer.ResultsFound")} */}
-                      Results Found :
+                     {t("SearchFarmer.Result Found")} :
                     </Text>
                     <View className="w-full bg-white border border-gray-200 rounded-lg p-4 mt-4">
                     <Text className="text-center text-lg">
@@ -396,15 +412,14 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                       //   navigation.navigate("CollectionRequestForm" as any, )}
                       className="bg-[#2AAD7A] rounded-full py-3 w-full mt-[30%]"
                     >
-                      <Text className="text-center text-white text-lg">
-                        {/* {t("SearchFarmer.AddCollectionRequest")} */}
-                        Add Collection Request
+                      <Text className="text-center text-white text-lg"  style={[{ fontSize: 16 } , getTextStyle(selectedLanguage)]} >
+                        {t("Transport.Add Collection Request")}
                       </Text>
                     </TouchableOpacity>
                  
                 </View>
               )}
-              { newQr && farmers && (
+              { newQr && farmers &&  (
                           <View className="mt-6 items-center">
                  
                             <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-lg mt-4 color-[#888888]">
@@ -427,6 +442,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                                 navigation.navigate("UpdateFarmerBankDetails" as any, {
                                   id: farmers.id,
                                   NICnumber: farmers.NICnumber,
+
                                 })
                               }
                               className="mt-8 bg-[#2AAD7A]  rounded-full px-16 py-3  "
@@ -437,7 +453,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                         )}
   
               {/* No Results Found */}
-              {!isSearching && noResults && NICnumber.length > 0 && (
+              {!isSearching && noResults && NICnumber.length > 0 && !ere &&(
                 <View className="mt-6 items-center">
                   <Image
                     source={require("../../assets/images/notfound.webp")}

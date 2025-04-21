@@ -498,6 +498,9 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -531,14 +534,16 @@ interface userItem {
   accNumber: string;
   accHolderName: string;
   bankName: string;
-  branchName: string
+  branchName: string;
+  PreferdLanguage: string;
 
 }
 interface SuccessModalProps {
   visible: boolean;
   onClose: () => void;
+  onComplete: () => void;
 }
-const ShowSuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => {
+const ShowSuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose , onComplete}) => {
   const progress = useRef(new Animated.Value(0)).current; // Start from 0
   const { t } = useTranslation();
 
@@ -551,7 +556,7 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => 
         useNativeDriver: false,
       }).start(() => {
         setTimeout(() => {
-          onClose(); // Auto-close after completion
+          onComplete(); // Trigger navigation or any completion action
         }, 500);
       });
     }
@@ -567,7 +572,7 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => 
 
           <Text className="text-gray-500 mb-4">{t("Otpverification.Registration")}</Text>
 
-          <TouchableOpacity className="bg-[#2AAD7A] px-6 py-2 rounded-full mt-6" onPress={onClose}>
+          <TouchableOpacity className="bg-[#2AAD7A] px-6 py-2 rounded-full mt-6" onPress={() => { onClose(); onComplete(); }}>
             <Text className="text-white font-semibold">{t("Otpverification.OK")}</Text>
           </TouchableOpacity>
 
@@ -601,7 +606,8 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
     accNumber,
     accHolderName,
     bankName,
-    branchName, } = route.params;
+    branchName, 
+    PreferdLanguage } = route.params;
   const [otpCode, setOtpCode] = useState<string>("");
   const [maskedCode, setMaskedCode] = useState<string>("XXXXX");
   const [referenceId, setReferenceId] = useState<string | null>(null);
@@ -616,7 +622,11 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
 
   const inputRefs = useRef<TextInput[]>([]);
   
-
+  const handleSuccessCompletion = () => {
+    // This function will handle navigation after success
+    setModalVisible(false);
+    navigation.navigate("SearchFarmerScreen" as any); // Navigate to main screen
+  };
 
   
   useEffect(() => {
@@ -671,6 +681,9 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
     if (text && inputRefs.current[index + 1]) {
       inputRefs.current[index + 1].focus();
     }
+    if(updatedOtpCode.length === 5){
+      Keyboard.dismiss();
+    }
   };
 
   const handleVerify = async () => {
@@ -697,6 +710,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         accHolderName: accHolderName,
         bankName: bankName,
         branchName: branchName,
+        PreferdLanguage: PreferdLanguage
       };
       // Shoutout verify endpoint
       const url = "https://api.getshoutout.com/otpservice/verify";
@@ -721,8 +735,9 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
           `${environment.API_BASE_URL}api/farmer/register-farmer`,
           data
         );
+        await AsyncStorage.removeItem("referenceId");
         //Alert.alert("Success","Farmer Registration successful");
-        <ShowSuccessModal visible={modalVisible} onClose={() => setModalVisible(false)} />
+<ShowSuccessModal visible={modalVisible} onClose={() => setModalVisible(false)} onComplete={handleSuccessCompletion} />;
         navigation.navigate("SearchFarmerScreen" as any);     
        } else if (statusCode === "1001") {
         Alert.alert(
@@ -746,6 +761,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
   
   // Resend OTP
   const handleResendOTP = async () => {
+    await AsyncStorage.removeItem("referenceId");
     try {
       const apiUrl = "https://api.getshoutout.com/otpservice/send";
       const headers = {
@@ -753,11 +769,43 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         "Content-Type": "application/json",
       };
 
+      let otpMessage = "";
+      if(PreferdLanguage === "English"){
+        otpMessage = `Your OTP for bank detail verification with XYZ is: {{code}}
+        
+${accHolderName}
+${accNumber}
+${bankName}
+${branchName}
+        
+If correct, share OTP only with the XYZ representative who contacts you.`;
+
+      }else if(PreferdLanguage === "Sinhala"){
+        otpMessage = `XYZ සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
+        
+${accHolderName}
+${accNumber}
+${bankName}
+${branchName}
+        
+නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා XYZ නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
+      }else if(PreferdLanguage === "Tamil"){
+        otpMessage = `XYZ உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
+        
+${accHolderName}
+${accNumber}
+${bankName}
+${branchName}
+        
+சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் XYZ பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
+      }
       const body = {
-        source: "ShoutDEMO",
+        source: "AgroWorld",
         transport: "sms",
-        content: { sms: "Your code is {{code}}" },
-        destination: phoneNumber,
+        content: {
+          sms: otpMessage,
+        },
+        destination: `${phoneNumber}`,
       };
 
       const response = await axios.post(apiUrl, body, { headers });
@@ -800,9 +848,14 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
   };
 
   return (
-
+    <KeyboardAvoidingView 
+            behavior={Platform.OS ==="ios" ? "padding" : "height"}
+            enabled
+            className="flex-1"
+            >
     <ScrollView
       className="flex-1 "
+      keyboardShouldPersistTaps="handled"
       style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}
     >
       <View>
@@ -920,12 +973,16 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
           </Text>
         </View>
 
-        <ShowSuccessModal visible={modalVisible} onClose={() => setModalVisible(false)} />
 
+        <ShowSuccessModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          onComplete={handleSuccessCompletion} // Pass the navigation function
+        />
         <View style={{ marginTop: dynamicStyles.margingTopForBtn }}>
           <TouchableOpacity
             style={{ height: hp(7), width: wp(80) }}
-            className={`flex items-center justify-center mx-auto rounded-full ${
+            className={`flex items-center justify-center mx-auto rounded-full mb-8 ${
               !isOtpValid || isVerified ? "bg-[#2AAD7A]" : "bg-[#2AAD7A]"
             }`}
             onPress={handleVerify}
@@ -939,6 +996,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         </View>
       </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
