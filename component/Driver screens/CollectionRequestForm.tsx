@@ -116,6 +116,17 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
   const [showAddmore, setShowAddMore] = useState(false);
   const [previousCrop, setPreviousCrop] = useState<string | null>(null);
       const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+     useEffect(() => {
+        const fetchLanguage = async () => {
+          try {
+            const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+            setSelectedLanguage(lang || "en"); // Default to English if not set
+          } catch (error) {
+            console.error("Error fetching language preference:", error);
+          }
+        };
+        fetchLanguage();
+      }, []);
 
   console.log("gggg", NICnumber);
   console.log("kkkkkkk", id);
@@ -205,13 +216,16 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
             return acc;
           }, []);
 
+          console.log("Selected Language", selectedLanguage)
           // Map crops to the correct language based on selectedLanguage
           const mappedCrops = uniqueCropNames.map((crop) => {
-            let label = crop.cropNameEnglish; // Default to English
+            let label = ""; // Default to English
             if (selectedLanguage === "si") {
               label = crop.cropNameSinhala; // Sinhala
             } else if (selectedLanguage === "ta") {
               label = crop.cropNameTamil; // Tamil
+            }else if (selectedLanguage === "en"){
+              label = crop.cropNameEnglish;
             }
 
             return {
@@ -221,6 +235,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
           });
 
           setCropOptions(mappedCrops); // Set crop options once after mapping
+          console.log("crop names", mappedCrops)
 
           console.log("Unique Crop Names:", uniqueCropNames);
         } catch (error) {
@@ -730,7 +745,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
                   onPress={handleAddMore}
                   className="bg-[#2AAD7A] mt-6 py-3 rounded-full"
                 >
-                  <Text className="text-white text-center text-lg font-bold">
+                  <Text className="text-white text-center text-lg font-bold" style={{ fontSize: 16 }}>
                     {t("CollectionRequest.Add more")}
                   </Text>
                 </TouchableOpacity>
@@ -739,7 +754,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
                   onPress={handleSubmit}
                   className="mt-4 py-3 rounded-full border border-black"
                 >
-                  <Text className="text-black text-center text-lg font-bold">
+                  <Text className="text-black text-center text-lg font-bold" style={{ fontSize: 16 }}>
                     {t("CollectionRequest.Submit")}
                   </Text>
                 </TouchableOpacity>

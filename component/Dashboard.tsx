@@ -104,6 +104,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
     fetchUserProfile();
     fetchTargetPercentage();
     checkTokenExpiration();
+    fetchSelectedLanguage();
   }, []);
 
   const onRefresh = async () => {

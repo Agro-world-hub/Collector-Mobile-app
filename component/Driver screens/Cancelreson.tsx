@@ -48,7 +48,7 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
 
   const handleSubmit = async () => {
     if (!reason.trim()) {
-      Alert.alert(('Error'), t('Please provide a reason for cancellation'));
+      Alert.alert(t('Error.error'), t('CollectionRequest.Please provide a reason for cancellation'));
       return;
     }
 
@@ -56,7 +56,7 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
     try {
       const token = await AsyncStorage.getItem('token');
       if (!token) {
-        Alert.alert(t('Error'), t('Authentication token not found'));
+        Alert.alert(t('Error.error'), t("Error.User token not found. Please log in again."));
         return;
       }
 
@@ -76,13 +76,12 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
 
       if (result.success) {
         Alert.alert(
-          t('Success'),
-          t('Request cancelled successfully')        );
+          t('Error.Success'),t('CollectionRequest.Request cancelled successfully')        );
         navigation.navigate('CollectionRequests' as any);
         setLoading(false);
       } else {
         setLoading(false);
-        Alert.alert(('Error'), result.message || t('Failed to cancel request'));
+        Alert.alert(t('Error.error'), t('CollectionRequest.Failed to cancel request'));
       }
     } catch (error) {
       setLoading(false);
@@ -92,7 +91,7 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
         console.error('This appears to be a parsing error. The server likely returned non-JSON content.');
       }
       setLoading(false);
-      Alert.alert(('Error'), t('Failed to connect to server'));
+      Alert.alert(t('Error.error'), t('Error.somethingWentWrong'));
     }
   };
 
@@ -116,8 +115,8 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
             <TouchableOpacity onPress={() => navigation.goBack()} className="">
               <AntDesign name="left" size={24} color="#000" />
             </TouchableOpacity>
-            <Text className="flex-1 text-center text-xl font-bold text-black">
-              Reason to Cancel
+            <Text className="flex-1 text-center text-xl font-bold text-black" style={{fontSize:18}}>
+             {t("CollectionRequest.Reason to Cancel")}
             </Text>
           </View>
         <View
@@ -127,11 +126,11 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
           <View className=" p-8 -mt-8">
           <View className="justify-center items-center ">
             <Text className="text-base">
-              Please mention below the reason
+             {t("CollectionRequest.Please mention below the reason")}
             </Text>
             <TextInput
               className="h-[65%] w-full p-4 border border-[#CFCFCF] rounded-lg bg-white mt-[5%] text-gray-800 "
-              placeholder="Enter here.."
+              placeholder={t("CollectionRequest.Enter here..")}
               multiline
               value={reason}
               onChangeText={(text) => setReason(text)}
@@ -145,7 +144,7 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
               disabled={loading}
             >
               <Text className="text-white text-center text-base">
-                {loading ? 'Processing...' : 'Submit'}
+                {loading ? t('CollectionRequest.Processing...') : t('CollectionRequest.Submit')}
               </Text>
             </TouchableOpacity>
             
@@ -154,7 +153,7 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
               onPress={handleCancelConfirm}
               disabled={loading}
             >
-              <Text className="text-gray-700 text-center text-base">Go Back</Text>
+              <Text className="text-gray-700 text-center text-base">{t('CollectionRequest.Go Back')}</Text>
             </TouchableOpacity>
           </View>
         </View>

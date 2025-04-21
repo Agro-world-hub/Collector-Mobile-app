@@ -362,23 +362,23 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
         <Ionicons name="warning" size={30} color="#6c7e8c" />
       </View>
             <Text className="text-center text-sm font-semibold mb-4">
-              Are you sure you want to disclaim this officer?
+              {t("DisclaimOfficer.Are you sure you want to disclaim this officer?")}
             </Text>
           
             
             <View className="flex-row  justify-center gap-4">
               <TouchableOpacity
                 onPress={onCancel}
-                className="px-6 py-2 bg-gray-300 rounded-lg"
+                className="p-2 py-2 bg-gray-300 rounded-lg"
               >
-                <Text className="text-sm text-gray-700">Cancel</Text>
+                <Text className="text-sm text-gray-700">{t("ClaimOfficer.Cancel")}</Text>
               </TouchableOpacity>
   
               <TouchableOpacity
                 onPress={onConfirm}
-                className="px-6 py-2 bg-[#D16D6A] rounded-lg"
+                className="p-2 py-2 bg-[#D16D6A] rounded-lg"
               >
-                <Text className="text-sm text-white">Disclaim</Text>
+                <Text className="text-sm text-white">{t("DisclaimOfficer.Disclaim")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -419,6 +419,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
     setRefreshing(true);
     fetchTaskSummary(); // Re-fetch task summary
     setRefreshing(false);
+    setShowMenu(false)
     getOnlineStatus();
   }, [collectionOfficerId]);
 
@@ -428,6 +429,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
 
   const handleCancel = () => {
     setModalVisible(false); // Close the modal without taking action
+    setShowMenu(false)
   };
   const handleDisclaim = async () => {
     setShowMenu(false);
@@ -453,8 +455,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
         const errorData = await res.json();
         console.error("Disclaim failed:", errorData);
         Alert.alert(
-          "Error",
-          errorData.message || t("Error.Failed to disclaim officer.")
+          t("Error.error"), t("Error.Failed to disclaim officer.")
         );
         return;
       }
@@ -464,14 +465,14 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
 
       if (data.status === "success") {
         setModalVisible(false); // Close the modal
-        Alert.alert("Success", "Officer disclaimed successfully.");
+        Alert.alert(t("Error.Success"), t("DisclaimOfficer.Officer disclaimed successfully."));
         navigation.navigate("Main", { screen: "CollectionOfficersList" });
       } else {
-        Alert.alert("Failed", data.message || "Failed to disclaim officer.");
+        Alert.alert("QRScanner.Failed", t("DisclaimOfficer.Failed to disclaim officer."));
       }
     } catch (error) {
       console.error("Failed to disclaim:", error);
-      Alert.alert(t("Error.error"), t("Error.Failed to disclaim officer."));
+      Alert.alert("QRScanner.Failed", t("DisclaimOfficer.Failed to disclaim officer."));
     }
   };
 
@@ -612,9 +613,9 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
           </TouchableOpacity>
 
           {showMenu && (
-            <View className="absolute top-14 right-4 bg-white shadow-lg rounded-lg">
+            <View className="absolute z-50 top-14 right-4 bg-white shadow-lg rounded-lg">
               <TouchableOpacity
-                className="px-4 py-2 bg-white rounded-lg shadow-lg"
+                className="p-2 py-2 bg-white rounded-lg shadow-lg"
                 onPress={() => setModalVisible(true)}
               >
                 <Text className="text-gray-700 font-semibold">{t("OfficerSummary.Disclaim")}</Text>

@@ -250,7 +250,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
   const [showFilter, setShowFilter] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+      const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
   const [selectedJobRole, setSelectedJobRole] = useState<string | null>(null);
   const [filteredOfficers, setFilteredOfficers] = useState<Officer[]>(officers);
 
@@ -268,7 +268,15 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
       setShowMenu(false);
     }, [])
   );
-
+  const getTextStyle = (language: string) => {
+    if (language === "si") {
+      return {
+        fontSize: 14, // Smaller text size for Sinhala
+        lineHeight: 20, // Space between lines
+      };
+    }
+   
+  };
   const fetchOfficers = async () => {
     try {
       setLoading(true);
@@ -526,7 +534,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
   <View className="mt-4 px-4">
     {selectedJobRole === "Collection Officer" ? (
       <>
-        <Text style={{ fontSize: scale(16) }} className="font-bold text-[#21202B] mb-2">
+        <Text style={[{ fontSize: scale(16) }, getTextStyle(selectedLanguage)]} className="font-bold text-[#21202B] mb-2">
           {t("CollectionOfficersList.Officers List")}
           <Text className="text-[#21202B] font-semibold">
             ({filteredOfficers.length})
@@ -544,10 +552,10 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
       </>
     ) : (
       <>
-        <Text style={{ fontSize: scale(16) }} className="font-bold text-[#21202B] mb-2">
+        <Text style={{ fontSize: 16 }} className="font-bold text-[#21202B] mb-2">
           {t("CollectionOfficersList.Officers / Drivers List")}
           <Text className="text-[#21202B] font-semibold">
-            (All {officers.length})
+            ({t("ManagerTransactions.All")} {officers.length})
           </Text>
         </Text>
       </>
@@ -557,7 +565,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
 
         {loading ? (
           // Lottie Loader for 4 seconds
-          <View className="flex-1 justify-center items-center">
+          <View className="flex-1 justify-center items-center -mt-[25%]">
             <LottieView
               source={require("../../assets/lottie/collector.json")} // Ensure JSON file is correct
               autoPlay

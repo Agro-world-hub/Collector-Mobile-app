@@ -25,6 +25,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useFocusEffect } from "expo-router";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 
 type RegisterDriverNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -258,7 +260,7 @@ useFocusEffect(
     >
       <ScrollView className="flex-1" keyboardShouldPersistTaps="handled">
         {/* Header */}
-        <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
+        <View className="flex-row items-center  bg-white shadow-sm" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
           {/* <TouchableOpacity onPress={() => navigation.goBack()} className="pr-4">
            <AntDesign name="left" size={24} color="#000502" />
         </TouchableOpacity> */}
@@ -271,7 +273,7 @@ useFocusEffect(
                 console.error("Error clearing form data:", error);
               }
             }}
-            className="pr-4"
+            className=""
           >
             <AntDesign name="left" size={24} color="#000502" />
           </TouchableOpacity>

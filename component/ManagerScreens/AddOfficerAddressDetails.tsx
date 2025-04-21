@@ -2005,10 +2005,11 @@ const AddOfficerAddressDetails: React.FC = () => {
         const serverErrors = error.response.data.error;
         if (serverErrors) {
           if (typeof serverErrors === "string") {
-            Alert.alert("Error", serverErrors);
+            Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
           } else {
             const errorMessages = Object.values(serverErrors).join("\n");
-            Alert.alert(t("Error.error"), errorMessages);
+            // Alert.alert(t("Error.error"), errorMessages);
+            Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
           }
         } else {
           Alert.alert(t("Error.error"), t("Error.An error occurred while creating the officer."));
