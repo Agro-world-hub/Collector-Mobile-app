@@ -325,7 +325,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
         }));
   
         if (requestData.length === 0) {
-          Alert.alert(t("Error.No prices to update"));
+          Alert.alert(t("Error.error"),t("Error.No prices to update"));
           return;
         }
   

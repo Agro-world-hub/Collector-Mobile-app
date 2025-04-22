@@ -30,13 +30,14 @@ interface DailyTargetListForOfficersProps {
 }
 
 interface TargetData {
+  dailyTarget: any;
   varietyId: any;
   centerTarget: any;
   varietyNameEnglish: string;
       varietyNameSinhala: string;  // ✅ Added this
       varietyNameTamil: string;    // ✅ Added this
   grade: string;
-  target: number;
+  officerTarget: number;
   todo: number;
 }
 
@@ -195,7 +196,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
                 </View>
 
           {loading ? (
-             <View className="flex-1 justify-center items-center mr-[45%]">
+             <View className="flex-1 justify-center items-center mr-[40%] -mt-[10%]">
                   <LottieView
                     source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
                     autoPlay
@@ -224,9 +225,9 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
                     varietyNameEnglish: item.varietyNameEnglish,
                     varietyId: item.varietyId,
                     grade: item.grade,
-                    target: item.target,
+                    target: item.officerTarget,
                     todo: item.todo,
-                    qty: qty,
+                    qty: item.dailyTarget,
                     collectionOfficerId, 
                     varietyNameSinhala: item.varietyNameSinhala,
                     varietyNameTamil: item.varietyNameTamil,
@@ -244,8 +245,8 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
                   {getvarietyName(item)}
                   </Text>
                   <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.grade}</Text>
-                  <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.target.toFixed(2)}</Text>
-                  <Text className="w-32 p-2 text-center">{item.todo.toFixed(2)}</Text>
+                  <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.officerTarget}</Text>
+                  <Text className="w-32 p-2 text-center">{item.todo}</Text>
                 </View>
               </TouchableOpacity>
             ))

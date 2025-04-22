@@ -20,6 +20,9 @@ import { useFocusEffect } from "expo-router";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CropItemsScrollView from '../Driver screens/CropItemsScrollView';
+import moment from "moment";
+import { set } from "lodash";
+
 
 type ViewScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -71,21 +74,50 @@ const ViewScreen: React.FC<ViewScreenProps> = ({ navigation, route }) => {
     const [varieties, setVarieties] = useState<Record<number, string>>({});
     const [alertVisible, setAlertVisible] = useState(false);
     const [cancellationReason, setCancellationReason] = useState("");
+    const [reuestCode, setRequestCode] = useState("");
 const [cancelledBy, setCancelledBy] = useState("");
+const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
   
     // Determine if fields should be editable based on status
     const isEditable = scheduled === "Scheduled" || requestStatus === "Not Assigned" ;
-    
-   
+    const [originalScheduleDate, setOriginalScheduleDate] = useState(""); // To track the original date
+
+
    // const showUpdateButton = scheduled === "Scheduled" || scheduled === "On way" || scheduled === "Collected" || scheduled === "Cancelled";
    const showUpdateButton = scheduled === "Scheduled" || requestStatus === "Not Assigned";
     const showCancelButton = scheduled === "Scheduled" || scheduled === "On way"|| requestStatus === "Not Assigned";
+
+      const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+      useEffect(() => {
+        const fetchLanguage = async () => {
+          try {
+            const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+            setSelectedLanguage(lang || "en"); // Default to English if not set
+          } catch (error) {
+            console.error("Error fetching language preference:", error);
+          }
+        };
+        fetchLanguage();
+      }, []);
   
     const handleDateChange = (event: any, selectedDate?: Date) => {
       setShowDatePicker(false);
+      
       if (selectedDate) {
+        // Only update the scheduleDate if a new date (not current date) is selected
         const formattedDate = `${selectedDate.getFullYear()}/${String(selectedDate.getMonth() + 1).padStart(2, '0')}/${String(selectedDate.getDate()).padStart(2, '0')}`;
-        setScheduleDate(formattedDate);
+        // Check if the selected date is the current date, if so, don't update
+        const currentDate = new Date();
+        const currentFormattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
+        if (formattedDate === currentFormattedDate) {
+          return; // Do not update if current date is selected
+        }
+        setScheduleDate(formattedDate); // Update scheduleDate only if it's not the current date
+        if (formattedDate !== originalScheduleDate) {
+          setIsUpdateEnabled(true);
+        } else {
+          setIsUpdateEnabled(false);
+        }
       }
     };
   
@@ -104,7 +136,6 @@ const [cancelledBy, setCancelledBy] = useState("");
           };
     
           const url = `${environment.API_BASE_URL}api/collectionrequest/view-details/${requestId}`;
-          console.log("Fetching URL:", url);
     
           const response = await fetch(url, {
             method: 'GET',
@@ -126,6 +157,28 @@ const [cancelledBy, setCancelledBy] = useState("");
             const jsonData = JSON.parse(textResponse);
             console.log("Parsed JSON:", jsonData);
     
+            // if (jsonData.success) {
+            //   const responseData = jsonData.data;
+              
+            //   // Set state with the fetched data
+            //   setRequestId(responseData.id.toString());
+              
+            //   // Handle multiple items if they exist
+            //   if (responseData.items && responseData.items.length > 0) {
+            //     setItems(responseData.items);
+                
+            //     // Create mapping of crop IDs to crop Name
+            //     const cropMapping: Record<number, string> = {};
+            //     const varietyMapping: Record<number, string> = {};
+                
+            //     responseData.items.forEach((item: any) => {
+            //       cropMapping[item.cropId] = item.cropName || `Crop ${item.cropId}`;
+            //       varietyMapping[item.varietyId] = item.varietyName || `Variety ${item.varietyId}`;
+            //     });
+                
+            //     setCrops(cropMapping);
+            //     setVarieties(varietyMapping);
+            //   }
             if (jsonData.success) {
               const responseData = jsonData.data;
               
@@ -135,27 +188,37 @@ const [cancelledBy, setCancelledBy] = useState("");
               // Handle multiple items if they exist
               if (responseData.items && responseData.items.length > 0) {
                 setItems(responseData.items);
-                
-                // Create mapping of crop IDs to crop Name
+      
+                // Create mapping of crop IDs to crop Name based on selected language
                 const cropMapping: Record<number, string> = {};
                 const varietyMapping: Record<number, string> = {};
-                
+      
                 responseData.items.forEach((item: any) => {
-                  cropMapping[item.cropId] = item.cropName || `Crop ${item.cropId}`;
-                  varietyMapping[item.varietyId] = item.varietyName || `Variety ${item.varietyId}`;
+                  if (selectedLanguage === 'si') {
+                    cropMapping[item.cropId] = item.cropNameSinhala || `Crop ${item.cropId}`;
+                    varietyMapping[item.varietyId] = item.varietyNameSinhala || `Variety ${item.varietyId}`;
+                  } else if (selectedLanguage === 'ta') {
+                    cropMapping[item.cropId] = item.cropNameTamil || `Crop ${item.cropId}`;
+                    varietyMapping[item.varietyId] = item.varietyNameTamil || `Variety ${item.varietyId}`;
+                  } else {
+                    cropMapping[item.cropId] = item.cropName || `Crop ${item.cropId}`;
+                    varietyMapping[item.varietyId] = item.varietyName || `Variety ${item.varietyId}`;
+                  }
                 });
-                
+      
                 setCrops(cropMapping);
+                console.log("Crops:", cropMapping);
                 setVarieties(varietyMapping);
               }
               console.log("jjjjjjj")
-              setScheduleDate(new Date(responseData.scheduleDate).toISOString().split('T')[0]);
+              setScheduleDate( moment(responseData.scheduleDate).format('YYYY-MM-DD'));
               setRouteNumber(responseData.route);
               setScheduled(responseData.assignedStatus);
               SetRequestStatus(responseData.requestStatus)
               setBuildingNo(responseData.houseNo);
               setStreetName(responseData.streetName);
               setCity(responseData.city);
+              setRequestCode(responseData.requestID);
 
               if (responseData.assignedStatus === "Cancelled" ) {
                 setCancellationReason(responseData.cancelReason || "");
@@ -215,10 +278,52 @@ const [cancelledBy, setCancelledBy] = useState("");
     };
   
     
-     const handleUpdate = () => {
-        console.log("Updating request:", requestId);
-        setAlertVisible(false);
-      };
+    const handleUpdate = async () => {
+      console.log(scheduleDate);
+    
+      // Only allow update if the schedule date has changed
+      if (isUpdateEnabled && scheduleDate !== originalScheduleDate) {
+        try {
+          const token = await AsyncStorage.getItem("token");
+          if (!token) {
+            Alert.alert('Error', 'Authentication token not found');
+            return;
+          }
+    
+          const response = await fetch(
+            `${environment.API_BASE_URL}api/collectionrequest/update-collectionrequest/${requestId}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,  
+              },
+              body: JSON.stringify({
+                scheduleDate: scheduleDate,
+              }),
+            }
+          );
+    
+          if (response.status === 200) {
+            Alert.alert(t("Error.Success"), t("CollectionRequest.Schedule Date updated successfully"));
+            setOriginalScheduleDate(scheduleDate); 
+            setIsUpdateEnabled(false);
+          } else if (response.status === 400) {
+            const errorData = await response.json();
+            Alert.alert(t("Error.error"), t("CollectionRequest.Failed to update schedule date"));
+          } else {
+            // Generic error
+            Alert.alert(t("Error.error"), t("CollectionRequest.Failed to update schedule date"));
+          }
+        } catch (error) {
+          console.error("Update error:", error);
+      Alert.alert(t('Error.error'), t('Error.somethingWentWrong'));
+        }
+      } else {
+        Alert.alert(t("Error.error"), t("CollectionRequest.Schedule Date has not been changed"));
+      }
+    };
+    
     
       const handleConfirm = () => {
         
@@ -239,20 +344,23 @@ const [cancelledBy, setCancelledBy] = useState("");
         setAlertVisible(false);
       }
   
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() ); 
+      
     return (
       <SafeAreaView className="flex-1 bg-white">
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           className="flex-1"
         >
-          <ScrollView className="flex-1 bg-white">
+          <ScrollView className="flex-1 bg-white" keyboardShouldPersistTaps="handled"> 
             {/* Header with back button and ID */}
             <View className="flex-row px-4 py-4 border-b border-white">
               <TouchableOpacity onPress={() => navigation.goBack()}>
                 <AntDesign name="left" size={24} color="black" />
               </TouchableOpacity>
               <View className="flex-1 items-center justify-center">
-                <Text className="text-base font-medium">ID : {requestId}</Text>
+                <Text className="text-base font-medium">{t("CollectionRequest.ID")} : {reuestCode}</Text>
               </View>
             </View>
   
@@ -269,7 +377,7 @@ const [cancelledBy, setCancelledBy] = useState("");
                 // Fallback for when there are no items
                 <>
                   <View className="mb-4">
-                    <Text className="text-sm text-gray-600 mb-1">Crop</Text>
+                    <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.Crop")}</Text>
                     <TextInput
                       className="border border-gray-300 rounded px-3 py-2 text-base"
                       value={crop}
@@ -279,7 +387,7 @@ const [cancelledBy, setCancelledBy] = useState("");
                   </View>
   
                   <View className="mb-4">
-                    <Text className="text-sm text-gray-600 mb-1">Variety</Text>
+                    <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.Variety")}</Text>
                     <TextInput
                       className="border border-gray-300 rounded px-3 py-2 text-base"
                       value={variety}
@@ -313,7 +421,7 @@ const [cancelledBy, setCancelledBy] = useState("");
     }}
   >
     <Text className="text-gray-700 text-sm">
-      {requestStatus === "Not Assigned" ? requestStatus : scheduled}
+     { t(`CollectionRequest.${requestStatus === "Not Assigned" ? requestStatus : scheduled}`)}
     </Text>
   </View>
 </View>
@@ -331,36 +439,9 @@ const [cancelledBy, setCancelledBy] = useState("");
     </Text>
   </View>
 )}
-  
+
               <View className="mb-4">
-                <Text className="text-sm text-gray-600 mb-1">Driver Name</Text>
-                <View className="flex-row items-center">
-                  <TextInput
-                    className="border border-gray-300 rounded px-3 py-2 text-base flex-1"
-                    value={driverName}
-                    onChangeText={setDriverName}
-                    editable={isEditable}
-                  />
-                  {isEditable && (
-                    <TouchableOpacity className="ml-2">
-                      <FontAwesome name="pencil" size={20} color="green" />
-                    </TouchableOpacity>
-                  )}
-                </View>
-              </View>
-  
-              <View className="mb-4">
-                <Text className="text-sm text-gray-600 mb-1">Driver ID</Text>
-                <TextInput
-                  className="border border-gray-300 rounded px-3 py-2 text-base"
-                  value={driverId}
-                  onChangeText={setDriverId}
-                  editable={isEditable}
-                />
-              </View>
-  
-              <View className="mb-4">
-                <Text className="text-sm text-gray-600 mb-1">Schedule Date</Text>
+                <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.Schedule Date")}</Text>
                 <View className="flex-row items-center">
                   <TextInput
                     className="border border-gray-300 rounded px-3 py-2 text-base flex-1"
@@ -377,54 +458,63 @@ const [cancelledBy, setCancelledBy] = useState("");
                     </TouchableOpacity>
                   )}
                
-                {showDatePicker && (
+       
+                 </View>
+              
+                 {showDatePicker && (
+                     <View className="items-end  mt-4">
                   <DateTimePicker
                     value={new Date()}
                     mode="date"
                     display="default"
                     onChange={handleDateChange}
+                    minimumDate={tomorrow} 
                   />
+                    </View>
                 )}
-                 </View>
+
+               
+      
               </View>
   
               <View className="mb-4">
-                <Text className="text-sm text-gray-600 mb-1">Building / House No</Text>
+                <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.Building / House No")}</Text>
                 <TextInput
                   className="border border-gray-300 rounded px-3 py-2 text-base"
                   value={buildingNo}
                   onChangeText={setBuildingNo}
-                  editable={isEditable}
+                  editable={false}
                 />
               </View>
   
               <View className="mb-4">
-                <Text className="text-sm text-gray-600 mb-1">Street Name</Text>
+                <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.Street Name")}</Text>
                 <TextInput
                   className="border border-gray-300 rounded px-3 py-2 text-base"
                   value={streetName}
                   onChangeText={setStreetName}
-                  editable={isEditable}
+                  // editable={isEditable}
+                  editable={false}
                 />
               </View>
   
               <View className="mb-4">
-                <Text className="text-sm text-gray-600 mb-1">City</Text>
+                <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.City")}</Text>
                 <TextInput
                   className="border border-gray-300 rounded px-3 py-2 text-base"
                   value={city}
                   onChangeText={setCity}
-                  editable={isEditable}
-                />
+                  editable={false}
+                  />
               </View>
   
               <View className="mb-4">
-                <Text className="text-sm text-gray-600 mb-1">Route Number</Text>
+                <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.Closest Landmark")}</Text>
                 <TextInput
                   className="border border-gray-300 rounded px-3 py-2 text-base"
                   value={routeNumber}
                   onChangeText={setRouteNumber}
-                  editable={isEditable}
+                  editable={false}
                 />
               </View>
   
@@ -432,10 +522,11 @@ const [cancelledBy, setCancelledBy] = useState("");
               <View className="mt-4 mb-8">
                 {showUpdateButton && (
                   <TouchableOpacity
-                    className="bg-[#2AAD7A] rounded-full py-3 items-center mb-3"
-                    onPress={handleUpdate}
+                  className={`rounded-full py-3 items-center mb-3 ${isUpdateEnabled ? 'bg-[#2AAD7A]' : 'bg-gray-400'}`}
+                  onPress={handleUpdate}
+                    disabled={!isUpdateEnabled}
                   >
-                    <Text className="text-white text-base">Update</Text>
+                    <Text className="text-white text-base">{t("CollectionRequest.Update")}</Text>
                   </TouchableOpacity>
                 )}
   
@@ -444,7 +535,7 @@ const [cancelledBy, setCancelledBy] = useState("");
                     className="bg-[#E14242] rounded-full py-3 items-center"
                     onPress={handleCancel}
                   >
-                    <Text className="text-white text-base">Cancel Request</Text>
+                    <Text className="text-white text-base">{t("CollectionRequest.Cancel Request")}</Text>
                   </TouchableOpacity>
                 )}
               </View>
@@ -456,23 +547,22 @@ const [cancelledBy, setCancelledBy] = useState("");
 >
   <View className="flex-1 justify-center items-center bg-black/50">
     <View className="bg-white rounded-lg w-4/5 p-5">
-      <Text className="text-center text-lg font-medium mb-2">Are you sure?</Text>
-      <Text className="text-center text-gray-600 mb-6">This will permanently delete the
-request placed by farmer and cannot be undone.
+      <Text className="text-center text-lg font-medium mb-2" style={{fontSize:16}}>{t("CollectionRequest.Are you sure?")}</Text>
+      <Text className="text-center text-gray-600 mb-6">{t("CollectionRequest.Are you sure Massage")}
 </Text>
       
       <TouchableOpacity 
         className="bg-black rounded-full py-3 mb-3" 
         onPress={handleConfirm}  
       >
-        <Text className="text-white text-center font-medium">Confirm</Text>
+        <Text className="text-white text-center font-medium">{t("CollectionRequest.Confirm")}</Text>
       </TouchableOpacity>
       
       <TouchableOpacity 
         className="bg-gray-200 rounded-full py-3" 
         onPress={handleCancelConfim}  
       >
-        <Text className="text-gray-700 text-center">Cancel</Text>
+        <Text className="text-gray-700 text-center">{t("CollectionRequest.Cancel")}</Text>
       </TouchableOpacity>
     </View>
   </View>

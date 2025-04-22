@@ -200,7 +200,8 @@ import {
   Alert,
   ActivityIndicator,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  Keyboard
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -314,6 +315,11 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 // };
 
 const handleLogin = async () => {
+  Keyboard.dismiss(); // Dismiss the keyboard
+  if (!empid || !password) {
+    Alert.alert(t("Error.error"), t("Error.Password & Employee ID are not allowed to be empty"));
+    return;
+  }
   setLoading(true); // Show loader when login starts
   try {
     const response = await fetch(
@@ -336,12 +342,12 @@ const handleLogin = async () => {
     if (!response.ok) {
       setLoading(false);
       if (response.status === 404) {
-        Alert.alert(t("Error.error"), t("Error.Invalid EMP ID & Password "));
+        Alert.alert(t("Error.error"), t("Error.Invalid EMP ID & Password"));
       } else if (response.status === 401) {
         Alert.alert(t("Error.error"), t("Error.Invalid Password. Please try again."));
       } else {
         console.log("Login error:", data);
-        Alert.alert(t("Error.error"), data.message || t("Error.An error occurred. Try again."));
+        Alert.alert(t("Error.error"),t("Error.somethingWentWrong"));
       }
       return;
     }
@@ -389,7 +395,7 @@ const handleLogin = async () => {
   } catch (error) {
     setLoading(false);
     console.error("Login error:", error);
-    Alert.alert(t("Error.error"), t("Error.Something went wrong. Please try again."));
+    Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
   }
 };
 

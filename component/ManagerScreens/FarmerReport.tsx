@@ -117,7 +117,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
         const qrData = JSON.stringify(officerDetails);
         setQrValue(qrData);  // Assuming setQrValue is for QR code
       } else {
-        Alert.alert("Error", response.data.message);
+        Alert.alert(t("Error.error"), t("Error.Failed to fetch officer details"));
       }
     } catch (error) {
       console.error("Error fetching officer details:", error);
@@ -373,9 +373,9 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
              await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
            }
    
-           Alert.alert('Download Success', `${fileName} has been saved to your Downloads folder.`);
+          Alert.alert(t('Error.Success'), t('Error.Downloaded PDF"', { fileName }));
          } else {
-           Alert.alert('Permission Denied', 'You need to grant permission to save the PDF.');
+          Alert.alert(t('Error.Permission Denied'), t('Error.Permission Denied Message'));
          }
        } catch (error) {
          console.error('Error saving PDF:', error);

@@ -1232,8 +1232,8 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
 
    
     const route = useRoute<UnregisteredCropDetailsRouteProp>();
-    const { userId } = route.params;
-    console.log(userId)
+    const { userId, farmerPhone, farmerLanguage } = route.params;
+    console.log(userId, farmerPhone)
 
     const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
 
@@ -1531,6 +1531,16 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
                 return;
             }
     
+            let totalPrice = 0;
+
+            crops.forEach(crop => {
+                // For each crop, calculate the total for each grade (A, B, C)
+                totalPrice += (crop.gradeAprice * crop.gradeAquan) || 0;
+                totalPrice += (crop.gradeBprice * crop.gradeBquan) || 0;
+                totalPrice += (crop.gradeCprice * crop.gradeCquan) || 0;
+            });
+    
+            console.log('Total Price:', totalPrice); 
             // Construct the payload including invoice number
             const payload = {
                 farmerId: userId, 
@@ -1566,11 +1576,13 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
             console.log('registeredFarmerId:', registeredFarmerId);
     
             alert('All crop details submitted successfully!');
+   
+            await sendSMS(farmerLanguage, farmerPhone, totalPrice, invoiceNumber);
             
             refreshCropForms();
     
             // Navigate to the ReportPage, passing registeredFarmerId and userId
-            navigation.navigate('ReportPage' as any, { userId, registeredFarmerId });
+            navigation.navigate('NewReport' as any, { userId, registeredFarmerId });
         } catch (error) {
             console.error('Error submitting crop data:', error);
             alert('Failed to submit crop details. Please try again.');
@@ -1602,6 +1614,15 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
                 alert("Failed to generate invoice number.");
                 return;
             }
+
+            let totalPrice = 0;
+
+            // Safely handle possible null values for unitPrices
+            totalPrice += (unitPrices.A || 0) * (quantities.A || 0);
+            totalPrice += (unitPrices.B || 0) * (quantities.B || 0);
+            totalPrice += (unitPrices.C || 0) * (quantities.C || 0);
+    
+            console.log('Total Price:', totalPrice); 
     
             // Construct the payload including invoice number
             const payload = {
@@ -1621,9 +1642,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
                     imageC: images.C || null  // Image for grade C
                 },
             };
-    
-            console.log('Payload before sending:', payload);
-    
+        
             const config = {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -1638,16 +1657,75 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
             console.log('registeredFarmerId:', registeredFarmerId);
     
             alert(t("Error.All crop details submitted successfully!"));
+            await sendSMS(farmerLanguage, farmerPhone, totalPrice, invoiceNumber);
             
             refreshCropForms();
     
             // Navigate to the ReportPage, passing registeredFarmerId and userId
-            navigation.navigate('ReportPage' as any, { userId, registeredFarmerId });
+            navigation.navigate('NewReport' as any, { userId, registeredFarmerId });
         } catch (error) {
             console.error('Error submitting crop data:', error);
             alert(t("Error.Failed to submit crop details. Please try again."));
         }
     };
+
+    const sendSMS = async (language: string | null, farmerPhone: number, totalPrice: number, invoiceNumber: string) => {
+            // Clear the form after successful submission
+            console.log('Sending SMS with details:', { language, farmerPhone, totalPrice, invoiceNumber });
+            const formattedPrice = new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 2,  // Ensures at least two decimal places
+                maximumFractionDigits: 2   // Limits to two decimal places
+            }).format(totalPrice);
+    
+            // Log the formatted price for debugging
+            console.log('Formatted Price:', formattedPrice);
+            try {
+              const apiUrl = "https://api.getshoutout.com/coreservice/messages";
+              const headers = {
+                Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
+                "Content-Type": "application/json",
+              };
+    
+              let Message = "";
+              if (language === "English") {
+                Message = `Thank you for providing your produce to AgroWorld.
+Rs. ${formattedPrice} will be credited to your bank account within 48 hours.
+TID: ${invoiceNumber}
+`;
+              } else if (language === "Sinhala") {
+                Message = `ඔබේ නිෂ්පාදන AgroWorld වෙත ලබා දීම ගැන ඔබට ස්තූතියි.
+පැය 48ක් ඇතුළත රු. ${formattedPrice} ඔබේ බැංකු ගිණුමට බැර කෙරේ.
+TID: ${invoiceNumber}`;
+              } else if (language === "Tamil") {
+                Message = `உங்கள் விளைபொருட்களை Agroworld நிறுவனத்திற்கு வழங்கியதற்கு நன்றி.
+ரூ. ${formattedPrice} 48 மணி நேரத்திற்குள் உங்கள் வங்கிக் கணக்கில் வரவு வைக்கப்படும்.
+TID: ${invoiceNumber}
+`;
+              }
+              const formattedPhone = farmerPhone;
+    
+              const body = {
+                source: "AgroWorld",
+                destinations: [formattedPhone],
+                content: {
+                  sms: Message,
+                },
+                transports: ["sms"],
+              };
+    
+              const response = await axios.post(apiUrl, body, { headers });
+    
+              if (response.data.referenceId) {
+                Alert.alert("Success", "SMS notification sent successfully!");
+              }
+            } catch (error) {
+              console.error("Error sending SMS:", error);
+              Alert.alert(
+                "Error",
+                "Failed to send notification. Please try again."
+              );
+            }
+    }
     const isGradeACameraEnabled = quantities.A == 0;
     const isGradeBCameraEnabled = quantities.B == 0;
     const isGradeCCameraEnabled = quantities.C == 0;
@@ -1658,7 +1736,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
                     enabled
                     className="flex-1"
                     >
-        <ScrollView className="flex-1 bg-gray-50 px-6 py-4" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }} keyboardShouldPersistTaps="handled">
+        <ScrollView className="flex-1 bg-gray-50 px-6 py-4 mb-8" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }} keyboardShouldPersistTaps="handled">
             {/* <View className="flex-row items-center mt-1 mb-6">
                 <TouchableOpacity onPress={() => navigation.goBack()} className="p-2">
                     <AntDesign name="left" size={24} color="#000" />

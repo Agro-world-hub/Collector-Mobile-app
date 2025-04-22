@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { environment } from '@/environment/environment';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { set } from 'lodash';
 
 type RootStackParamList = {
   Cancelreson: { requestId: string; status: string };
@@ -40,13 +41,14 @@ interface CancelresonProps {
 const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
   const { t } = useTranslation();
   const { requestId, status } = route.params;
+  console.log('Request ID:', requestId);
   
   const [reason, setReason] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (!reason.trim()) {
-      Alert.alert(t('Error'), t('Please provide a reason for cancellation'));
+      Alert.alert(t('Error.error'), t('CollectionRequest.Please provide a reason for cancellation'));
       return;
     }
 
@@ -54,7 +56,7 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
     try {
       const token = await AsyncStorage.getItem('token');
       if (!token) {
-        Alert.alert(t('Error'), t('Authentication token not found'));
+        Alert.alert(t('Error.error'), t("Error.User token not found. Please log in again."));
         return;
       }
 
@@ -74,20 +76,22 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
 
       if (result.success) {
         Alert.alert(
-          t('Success'),
-          t('Request cancelled successfully'),
-          [{ text: t('OK'), onPress: () => navigation.navigate('RequestList') }]
-        );
+          t('Error.Success'),t('CollectionRequest.Request cancelled successfully')        );
+        navigation.navigate('CollectionRequests' as any);
+        setLoading(false);
       } else {
-        Alert.alert(t('Error'), result.message || t('Failed to cancel request'));
+        setLoading(false);
+        Alert.alert(t('Error.error'), t('CollectionRequest.Failed to cancel request'));
       }
     } catch (error) {
+      setLoading(false);
       console.error('Error cancelling request:', error);
       // Log more details about the error
       if (error instanceof SyntaxError) {
         console.error('This appears to be a parsing error. The server likely returned non-JSON content.');
       }
-      Alert.alert(t('Error'), t('Failed to connect to server'));
+      setLoading(false);
+      Alert.alert(t('Error.error'), t('Error.somethingWentWrong'));
     }
   };
 
@@ -99,32 +103,34 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
+      className="flex-1 bg-white"
+
     >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
+
       >
-        <View
-          className="flex-1 bg-white"
-          style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
-        >
-          {/* Header */}
-          <View className="flex-row items-center mb-6">
+                 <View className="flex-row items-center "  style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
             <TouchableOpacity onPress={() => navigation.goBack()} className="">
               <AntDesign name="left" size={24} color="#000" />
             </TouchableOpacity>
-            <Text className="flex-1 text-center text-xl font-bold text-black">
-              Reason to Cancel
+            <Text className="flex-1 text-center text-xl font-bold text-black" style={{fontSize:18}}>
+             {t("CollectionRequest.Reason to Cancel")}
             </Text>
           </View>
-
-          <View className="justify-center mb-4 items-center mt-[10%]">
-            <Text className="font-bold">
-              Please mention below the reason
+        <View
+          className="flex-1 bg-white"
+         
+        >
+          <View className=" p-8 -mt-8">
+          <View className="justify-center items-center ">
+            <Text className="text-base">
+             {t("CollectionRequest.Please mention below the reason")}
             </Text>
             <TextInput
-              className="w-[80%] h-[50%] border border-[#CFCFCF] rounded-lg bg-white mt-[5%] text-gray-800"
-              placeholder="Enter here.."
+              className="h-[65%] w-full p-4 border border-[#CFCFCF] rounded-lg bg-white mt-[5%] text-gray-800 "
+              placeholder={t("CollectionRequest.Enter here..")}
               multiline
               value={reason}
               onChangeText={(text) => setReason(text)}
@@ -132,15 +138,13 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
               editable={!loading}
             />
           </View>
-          
-          <View className="p-6">
             <TouchableOpacity 
-              className={`${loading ? 'bg-gray-400' : 'bg-black'} rounded-full py-3 mb-3`}
+              className={`${loading ? 'bg-gray-400' : 'bg-black'} rounded-full py-3 mb-3 p-4 `}
               onPress={handleSubmit}
               disabled={loading}
             >
-              <Text className="text-white text-center font-medium">
-                {loading ? 'Processing...' : 'Confirm'}
+              <Text className="text-white text-center text-base">
+                {loading ? t('CollectionRequest.Processing...') : t('CollectionRequest.Submit')}
               </Text>
             </TouchableOpacity>
             
@@ -149,7 +153,7 @@ const Cancelreson: React.FC<CancelresonProps> = ({ navigation, route }) => {
               onPress={handleCancelConfirm}
               disabled={loading}
             >
-              <Text className="text-gray-700 text-center">Cancel</Text>
+              <Text className="text-gray-700 text-center text-base">{t('CollectionRequest.Go Back')}</Text>
             </TouchableOpacity>
           </View>
         </View>

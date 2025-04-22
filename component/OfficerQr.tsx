@@ -265,6 +265,21 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
   const [jobRole, setJobRole] = useState<string>("");
   const [QR, setQR] = useState<string>("");
    const { t } = useTranslation();
+   const [language, setLanguage] = useState<string>("en");
+   const [profile, setProfile] = useState<any>(null);
+   console.log("Language:", language);
+
+   useEffect(() => {
+    const fetchLanguage = async () => {
+      const storedLanguage = await AsyncStorage.getItem("@user_language"); 
+          if (storedLanguage) {
+        setLanguage(storedLanguage);
+      }
+    };
+
+    fetchLanguage();
+  }
+  , []);
 
   const fetchRegistrationDetails = async () => {
   try {
@@ -282,17 +297,56 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
     console.log(data);
 
     if (response.data.status === "success") {
-      setFirstName(data.firstNameEnglish || "");
-      setLastName(data.lastNameEnglish || "");
-      setCompanyName(data.companyName || "");
+      // setFirstName(data.firstNameEnglish || "");
+      // setLastName(data.lastNameEnglish || "");
+      // setCompanyName(data.companyName || "");
+      // setFirstName({
+      //   en: data.firstNameEnglish || "",
+      //   si: data.firstNameSinhala || "",
+      //   ta: data.firstNameTamil || "",
+      // });
+      // setLastName({
+      //   en: data.lastNameEnglish || "",
+      //   si: data.lastNameSinhala || "",
+      //   ta: data.lastNameTamil || "",
+      // });
+      // setCompanyName({
+      //   en: data.companyNameEnglish || "",
+      //   si: data.companyNameSinhala || "",
+      //   ta: data.companyNameTamil || "",
+      // });
+      setProfile(data);
       setJobRole(data.jobRole || "");
       setQR(data.QRcode || ""); // Store QR Code URL
     } else {
-      Alert.alert("Error", response.data.message);
+      Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
     }
   } catch (error) {
     console.error("Error fetching registration details:", error);
     Alert.alert(t("Error.error"), t("Error.Failed to fetch details"));
+  }
+};
+
+const getFullName = () => {
+  if (!profile) return "Loading...";
+  switch (language) {
+    case "si":
+      return `${profile.firstNameSinhala} ${profile.lastNameSinhala}`;
+    case "ta":
+      return `${profile.firstNameTamil} ${profile.lastNameTamil}`;
+    default:
+      return `${profile.firstNameEnglish} ${profile.lastNameEnglish}`;
+  }
+};
+const getCompanyName = () => {
+  if (!profile) return "Loading...";
+  switch (language) {
+    case "si":
+      return profile.companyNameSinhala;
+    case "ta":
+      return profile.companyNameTamil;
+    default:
+      return profile.companyNameEnglish;
   }
 };
 
@@ -323,7 +377,7 @@ const downloadQRCode = async () => {
     const asset = await MediaLibrary.createAssetAsync(response.uri);
     await MediaLibrary.createAlbumAsync("Download", asset, false);
 
-    Alert.alert("Success", "QR Code saved to gallery.");
+    Alert.alert(t("Error.Success"), t("Error.QR Code saved to gallery."));
   } catch (error) {
     console.error("Download error:", error);
     Alert.alert(t("Error.error"), t("Error.failedSaveQRCode"));
@@ -387,15 +441,22 @@ const shareQRCode = async () => {
 
 
       {/* Profile Info */}
-      <View className="flex-row items-center justify-center mb-4 px-4 mt-[9sssssss%]">
-        <Image
-          source={require("../assets/images/profile.webp")}
-          className="w-20 h-20 rounded-full border-2 border-gray-300 mr-4"
-        />
+      <View className="flex-row items-center justify-center mb-4 px-4 mt-[10%]">
+        {profile && profile.image ? (
+          <Image
+            source={{ uri: profile.image }}
+            className="w-20 h-20 rounded-full border-2 border-gray-300 mr-4"
+          />
+        ) : (
+          <Image
+            source={require("../assets/images/pcprofile 1.webp")}
+            className="w-20 h-20 rounded-full border-2 border-gray-300 mr-4"
+          />
+        )}
+ 
         <View>
-          <Text className="text-lg font-semibold">{`${firstName} ${lastName}`}</Text>
-          <Text className="text-gray-600">{companyName}</Text>
-          <Text className="text-gray-500">{jobRole}</Text>
+          <Text className="text-lg font-semibold">{getFullName()}</Text>
+          <Text className="text-gray-600">{getCompanyName()}</Text>
         </View>
       </View>
 

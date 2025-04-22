@@ -44,8 +44,8 @@
 
 // export default CollectionRequests;
 
-import React, { useState, useCallback } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, Image, Alert } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Image, Alert , RefreshControl} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -53,7 +53,14 @@ import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {environment }from '@/environment/environment';
-
+import moment from "moment";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { useTranslation } from 'react-i18next';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import LottieView from 'lottie-react-native';
 type NotAssignedRequest = {
   id: number;
   name: string;
@@ -62,6 +69,7 @@ type NotAssignedRequest = {
   nic:string;
   cropId: number;
   items: any[];
+  scheduleDate: string;
 };
 
 type AssignedRequest = {
@@ -73,6 +81,7 @@ type AssignedRequest = {
   cropId: number;
   assignedStatus: 'Collected' | 'On way' | 'Cancelled' | 'Scheduled';
   items: any[];
+  scheduleDate: string;
 };
 
 type RootStackParamList = {
@@ -97,7 +106,24 @@ const CollectionRequests: React.FC<CollectionRequestsProps> = ({ navigation }) =
   const [assignedRequests, setAssignedRequests] = useState<AssignedRequest[]>([]);
   const [filteredRequests, setFilteredRequests] = useState<(NotAssignedRequest | AssignedRequest)[]>([]);
   const [searchText, setSearchText] = useState('');
-
+  const [showPicker, setShowPicker] = useState(false);  // State to control date picker visibility
+  const [scheduleDate, setScheduleDate] = useState<string | null>(null); 
+  const { t } = useTranslation();
+  const [loading, setLoading] = useState<boolean>(false);
+    const [refreshing, setRefreshing] = useState(false);
+  
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+     useEffect(() => {
+        const fetchLanguage = async () => {
+          try {
+            const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+            setSelectedLanguage(lang || "en"); // Default to English if not set
+          } catch (error) {
+            console.error("Error fetching language preference:", error);
+          }
+        };
+        fetchLanguage();
+      }, []);
   // Helper function to get name
   const getName = (name: string) => {
     return name;
@@ -110,56 +136,126 @@ const CollectionRequests: React.FC<CollectionRequestsProps> = ({ navigation }) =
   const getNic = (nic: string) => {
     return nic;
   };
+  const getScheduleDate = (nic: string) => {
+    return nic;
+  };
 
-  useFocusEffect(
-    useCallback(() => {
-      const fetchCollectionRequests = async () => {
-        try {
-          const token = await AsyncStorage.getItem("token");
-          if (!token) {
-            Alert.alert('Error', 'Authentication token not found');
-            return;
-          }
+  const handleDateChange = (event: any, selectedDate: Date | undefined) => {
+    if (selectedDate) {
+      const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
+      setScheduleDate(formattedDate);  // Save the selected date
+      setShowPicker(false);  // Close the date picker
+    }
+  };
+
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const fetchCollectionRequests = async () => {
+  //       setLoading(true); 
+  //       try {
+  //         const token = await AsyncStorage.getItem("token");
+  //         if (!token) {
+  //           Alert.alert('Error', 'Authentication token not found');
+  //           return;
+  //         }
       
-          const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          };
+  //         const headers = {
+  //           'Authorization': `Bearer ${token}`,
+  //           'Content-Type': 'application/json',
+  //         };
       
-          // Build query params based on activeTab and selectedFilter
-          const queryParams = new URLSearchParams();
-          queryParams.append('status', activeTab);
-          if (selectedFilter && selectedFilter !== 'All') {
-            queryParams.append('requestStatus', selectedFilter); // Apply the selected filter
-          }
+  //         // Build query params based on activeTab and selectedFilter
+  //         const queryParams = new URLSearchParams();
+  //         queryParams.append('status', activeTab);
+  //         if (selectedFilter && selectedFilter !== 'All') {
+  //           queryParams.append('requestStatus', selectedFilter); // Apply the selected filter
+  //         }
       
-          const fullUrl = `${environment.API_BASE_URL}api/collectionrequest/all-collectionrequest?${queryParams.toString()}`;
-          console.log('Request URL:', fullUrl);
+  //         const fullUrl = `${environment.API_BASE_URL}api/collectionrequest/all-collectionrequest?${queryParams.toString()}`;
+  //         console.log('Request URL:', fullUrl);
       
-          const response = await axios.get(fullUrl, { headers });
-          const data = response.data;
-          console.log('Received Data:', data);
+  //         const response = await axios.get(fullUrl, { headers });
+  //         const data = response.data;
+  //         console.log('Received Data:', data);
       
-          if (activeTab === 'Not Assigned') {
-            setNotAssignedRequests(data);
-            setFilteredRequests(data);
-          } else {
-            setAssignedRequests(data);
+  //         if (activeTab === 'Not Assigned') {
+  //           setNotAssignedRequests(data);
+  //           setFilteredRequests(data);
+  //         } else {
+  //           setAssignedRequests(data);
             
-            setFilteredRequests(
-              selectedFilter && selectedFilter !== 'All' 
-                ? data.filter((req: AssignedRequest) => req.assignedStatus === selectedFilter) 
-                : data
-            );
-          }
-        } catch (error) {
-          console.error('Fetch Collection Requests Error:', error);
-        }
-      };
+  //           setFilteredRequests(
+  //             selectedFilter && selectedFilter !== 'All' 
+  //               ? data.filter((req: AssignedRequest) => req.assignedStatus === selectedFilter) 
+  //               : data
+  //           );
+  //         }
+  //       } catch (error) {
+  //         console.error('Fetch Collection Requests Error:', error);
+  //       }finally {
+  //         setLoading(false); // Set loading to false once data is fetched
+  //       }
+  //     };
 
-      fetchCollectionRequests();
-    }, [activeTab, selectedFilter])
-  );
+  //     fetchCollectionRequests();
+  //   }, [activeTab, selectedFilter])
+  // );
+useFocusEffect(
+  useCallback(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      await fetchCollectionRequests();
+      setLoading(false); // Set loading to false once data is fetched
+    };
+
+    fetchData();
+  }, [activeTab, selectedFilter])
+);
+  const fetchCollectionRequests = async () => {
+ 
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) {
+        Alert.alert(t('Error.error'), t("Error.User token not found. Please log in again."));
+      return;
+    }
+
+    const headers = {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    };
+
+    // Build query params based on activeTab and selectedFilter
+    const queryParams = new URLSearchParams();
+    queryParams.append('status', activeTab);
+    if (selectedFilter && selectedFilter !== 'All') {
+      queryParams.append('requestStatus', selectedFilter); // Apply the selected filter
+    }
+
+    const fullUrl = `${environment.API_BASE_URL}api/collectionrequest/all-collectionrequest?${queryParams.toString()}`;
+    console.log('Request URL:', fullUrl);
+
+    const response = await axios.get(fullUrl, { headers });
+    const data = response.data;
+    console.log('Received Data:', data);
+
+    if (activeTab === 'Not Assigned') {
+      setNotAssignedRequests(data);
+      setFilteredRequests(data);
+    } else {
+      setAssignedRequests(data);
+
+      setFilteredRequests(
+        selectedFilter && selectedFilter !== 'All' 
+          ? data.filter((req: AssignedRequest) => req.assignedStatus === selectedFilter) 
+          : data
+      );
+    }
+  } catch (error) {
+    console.error('Fetch Collection Requests Error:', error);
+  } 
+};
 
   // Handle view details
   const handleViewDetails = (item: NotAssignedRequest | AssignedRequest) => {
@@ -179,7 +275,11 @@ const CollectionRequests: React.FC<CollectionRequestsProps> = ({ navigation }) =
     // Implement assign logic
   };
 
-  
+    const onRefresh = async () => {
+    setRefreshing(true); // Set refreshing to true when pulling to refresh
+    await fetchCollectionRequests(); // Call the same fetch function for a refresh
+    setRefreshing(false); // Set refreshing to false once the data is fetched
+  };
 // Add this function to your component
 const handleSearch = (text: string) => {
   setSearchText(text);
@@ -205,12 +305,33 @@ const handleSearch = (text: string) => {
   
   setFilteredRequests(filtered);
 };
+const filterDataByDate = (selectedDate: string | null) => {
+  if (!selectedDate) {
+    // If no date is selected, show all requests for the current tab
+    setFilteredRequests(activeTab === 'Not Assigned' ? notAssignedRequests : assignedRequests);
+  } else {
+    // Filter the requests based on the selected date
+    const filtered = (activeTab === 'Not Assigned' ? notAssignedRequests : assignedRequests).filter(
+      (request) => moment(request.scheduleDate).format('YYYY-MM-DD') === selectedDate
+    );
+    setFilteredRequests(filtered);
+  }
+};
+
+
+
+// When the selected date changes, filter data accordingly
+useEffect(() => {
+  filterDataByDate(scheduleDate);
+}, [scheduleDate, activeTab]);
+
 
   const renderRequestItem = (item: NotAssignedRequest | AssignedRequest, index: number) => {
     const name = getName(item.name);
     const route = getRoute(item.route);
     const nic = getNic(item.nic)
     const itemNumber = String(index + 1).padStart(2, '0');
+    const scheduleDate = getScheduleDate(item.scheduleDate)
 
     return (
       <View key={item.id} className="mb-4 bg-white shadow rounded-lg ">
@@ -220,8 +341,8 @@ const handleSearch = (text: string) => {
   <View className="flex-1 ml-2">
     <TouchableOpacity onPress={() => handleViewDetails(item)}>
       <Text className="font-bold">{name}</Text>
-      <Text className="text-gray-500 text-sm mt-1">{nic}</Text>
-      <Text className="text-gray-500 text-sm">{route}</Text>
+      <Text className="text-gray-500 text-sm mt-1">{t("CollectionRequest.NIC")} : {nic}</Text>
+      <Text className="text-gray-500 text-sm">{t("CollectionRequest.Date")} : {moment(scheduleDate).format('YYYY-MM-DD')}</Text>
     </TouchableOpacity>
     {/* Proper horizontal line */}
     
@@ -234,12 +355,12 @@ const handleSearch = (text: string) => {
             {activeTab === 'Not Assigned' ? (
               <>
                <TouchableOpacity onPress={() => handleViewDetails(item)}>
-                <TouchableOpacity 
+                {/* <TouchableOpacity 
                   onPress={() => handleAssign(item as NotAssignedRequest)}
                   className="bg-green-100 px-3 py-1 rounded-lg mr-2"
                 >
                   <Text className="text-green-700 font-medium">Assign</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                
                   {/* <Image
                     source={require("../../assets/images/View.webp")}
@@ -286,21 +407,43 @@ const handleSearch = (text: string) => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/* Header */}
-      <View className="p-4 bg-white">
-        {/* Navigation Header */}
+      {/* <View className="p-4 bg-white">
         <View className="flex-row items-center mb-6">
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <AntDesign name="left" size={24} color="#000" />
           </TouchableOpacity>
           <Text className="flex-1 text-center text-xl font-bold text-black">
             Collection Requests
-          </Text>
+          </Text>S
         </View>
+      </View> */}
+            {/* <View className="p-4 bg-white">
+        {/* Navigation Header */}
+     <View className=" bg-white">
+        <View className="flex-row items-center mb-4" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
+          <TouchableOpacity onPress={() => navigation.navigate("Main" as any)}>
+            <AntDesign name="left" size={24} color="#000" />
+          </TouchableOpacity>
+          <Text className="flex-1 text-center text-xl font-bold text-black" style={{ fontSize: 18 }}>
+            {t("CollectionRequest.Collection Requests")}
+          </Text>
+          <TouchableOpacity onPress={() => setShowPicker(true)}>
+              <AntDesign name="calendar" size={24} color="#CFCFCF" />
+          </TouchableOpacity>
+    
+        </View>
+        {showPicker && (
+        <DateTimePicker
+          value={scheduleDate ? new Date(scheduleDate) : new Date()}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+        />
+      )}
       </View>
-
+  
       {/* Tab Navigation */}
-      <View className="flex-row justify-center py-3 bg-white">
+      {/* <View className="flex-row justify-center py-3 bg-white">
         <TouchableOpacity
           className={`px-6 py-2 rounded-full mx-2 border 
             ${activeTab === 'Not Assigned' ? 'bg-[#2AAD7A] border-[#2AAD7A]' : 'bg-white border-gray-300'}`}
@@ -325,14 +468,14 @@ const handleSearch = (text: string) => {
             Assigned ({assignedRequests.length})
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       {/* Search and Filter */}
-      <View className="bg-white py-2 px-4 border-t border-gray-200 ">
+      <View className="bg-white px-4  border-gray-200 ">
         <View className="flex-row items-center bg-gray-100 rounded-full px-4 mt-2">
           <TextInput 
-            placeholder="Search Route / NIC here..." 
-            className="flex-1 ml-1 text-gray-600" 
+            placeholder={t("CollectionRequest.Search NIC here...")}
+            className="flex-1 ml-1 p-3 text-gray-600" 
             value={searchText}
         //    onChangeText={setSearchText}
             onChangeText={handleSearch}
@@ -345,8 +488,9 @@ const handleSearch = (text: string) => {
         </View>
 
         {activeTab === 'Not Assigned' && (
-          <View className='p-2'>
-            <Text className='text-base'>All ({filteredRequests.length})</Text>
+          <View className='p-2 mt-4 flex-row'>
+            <Text className='text-base'>{t("CollectionRequest.All")} ({filteredRequests.length})</Text>
+            <Text className='text-base text-[#2AAD7A] '> {scheduleDate}</Text>
           </View>
         )}
 
@@ -385,16 +529,41 @@ const handleSearch = (text: string) => {
         )}
       </View>
 
+
       {/* Request List */}
-      <ScrollView className="bg-gray-100 px-4 pt-4 pb-20 bg-white">
-        
-        {filteredRequests.length > 0 ? (
+      <ScrollView className="px-4 pt-4 pb-20 bg-white" 
+      refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
+              {loading && (
+             <View className="flex-1  mt-[25%] justify-center items-center ">
+                <LottieView
+                  source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
+                  autoPlay
+                  loop
+                  style={{ width: 300, height: 300 }}
+                />
+              </View>
+      )}
+     {!loading && filteredRequests.length > 0 ? (
           filteredRequests.map((item, index) => renderRequestItem(item, index))
-          
         ) : (
-          <Text className="text-center py-8 text-gray-500">No collection requests found</Text>
+          !loading &&      
+          <View className="flex-1 items-center justify-center">
+                      <LottieView
+                        source={require("../../assets/lottie/NoComplaints.json")}
+                        style={{ width: wp(50), height: hp(50) }}
+                        autoPlay
+                        loop
+                      />
+                      <Text className="text-center text-gray-600 mt-4">
+                        {t("CollectionRequest.No collection requests found")}
+                      </Text>
+                    </View>
         )}
+
       </ScrollView>
+
     </SafeAreaView>
   );
 };
