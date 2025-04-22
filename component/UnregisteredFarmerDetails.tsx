@@ -394,17 +394,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
 
       //Dont cahange this massage body pretier when change it spaces of massage will be change
-      if(PreferdLanguage === "English"){
-        otpMessage = `Your OTP for bank detail verification with XYZ is: {{code}}
-        
-${accHolderName}
-${accNumber}
-${bankName}
-${branchName}
-        
-If correct, share OTP only with the XYZ representative who contacts you.`;
-
-      }else if(PreferdLanguage === "Sinhala"){
+   if(PreferdLanguage === "Sinhala"){
         otpMessage = `XYZ සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
         
 ${accHolderName}
@@ -422,6 +412,16 @@ ${bankName}
 ${branchName}
         
 சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் XYZ பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
+      }    else {
+        otpMessage = `Your OTP for bank detail verification with XYZ is: {{code}}
+        
+${accHolderName}
+${accNumber}
+${bankName}
+${branchName}
+        
+If correct, share OTP only with the XYZ representative who contacts you.`;
+
       }
 //       const otpMessage = `Agro World වෙත ලබා දී ඇති බැංකු තොරතුරු තහවුරු කිරීම සඳහා ඔබගේ එක්-කාලීන මුරපදය (OTP) {{code}} වේ.
          

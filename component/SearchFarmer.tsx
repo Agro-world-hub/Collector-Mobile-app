@@ -244,7 +244,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
               </Text>
               <View className="border border-[#A7A7A7] rounded-xl mt-4 px-6 py-2 w-full ">
               <Text style={[{ fontSize: 20 }, getTextStyle(selectedLanguage)]} className="text-center text-lg mt-2">
-                {farmers.firstName} {farmers.lastName} 2dfdfd
+                {farmers.firstName} {farmers.lastName} 
                 </Text>
                 <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-lg mt-2 color-[#888888]">
                 {farmers.NICnumber}

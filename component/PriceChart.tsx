@@ -310,6 +310,9 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
     setEditedPrices(updatedPrices);
   };
 
+  console.log("cropp",cropName)
+  console.log("verity",varietyName)
+
   const handleButtonClick = async () => {
     if (isEditable) {
       try {

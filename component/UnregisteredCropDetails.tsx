@@ -1687,12 +1687,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
               };
     
               let Message = "";
-              if (language === "English") {
-                Message = `Thank you for providing your produce to AgroWorld.
-Rs. ${formattedPrice} will be credited to your bank account within 48 hours.
-TID: ${invoiceNumber}
-`;
-              } else if (language === "Sinhala") {
+           if (language === "Sinhala") {
                 Message = `ඔබේ නිෂ්පාදන AgroWorld වෙත ලබා දීම ගැන ඔබට ස්තූතියි.
 පැය 48ක් ඇතුළත රු. ${formattedPrice} ඔබේ බැංකු ගිණුමට බැර කෙරේ.
 TID: ${invoiceNumber}`;
@@ -1700,8 +1695,13 @@ TID: ${invoiceNumber}`;
                 Message = `உங்கள் விளைபொருட்களை Agroworld நிறுவனத்திற்கு வழங்கியதற்கு நன்றி.
 ரூ. ${formattedPrice} 48 மணி நேரத்திற்குள் உங்கள் வங்கிக் கணக்கில் வரவு வைக்கப்படும்.
 TID: ${invoiceNumber}
+`;  }  else {
+    Message = `Thank you for providing your produce to AgroWorld.
+Rs. ${formattedPrice} will be credited to your bank account within 48 hours.
+TID: ${invoiceNumber}
 `;
-              }
+  }
+              
               const formattedPhone = farmerPhone;
     
               const body = {
@@ -1720,10 +1720,10 @@ TID: ${invoiceNumber}
               }
             } catch (error) {
               console.error("Error sending SMS:", error);
-              Alert.alert(
-                "Error",
-                "Failed to send notification. Please try again."
-              );
+            //   Alert.alert(
+            //     "Error",
+            //     "Failed to send notification. Please try again."
+            //   );
             }
     }
     const isGradeACameraEnabled = quantities.A == 0;
@@ -1859,13 +1859,25 @@ defaultOption={selectedCrop ? { key: selectedCrop.id, value: selectedCrop.name }
                                 value={unitPrices[grade]?.toString() || ''}
                                 editable={false}
                             />
-                            <TextInput
+                            {/* <TextInput
                                 placeholder="kg"
                                 keyboardType="numeric"
                                 className="flex-1 border border-gray-300 rounded-md p-2 text-gray-600"
                                 value={quantities[grade].toString()}
                                 onChangeText={value => handleQuantityChange(grade, value)}
-                            />
+                            /> */}
+                            <TextInput
+    placeholder="kg"
+    keyboardType="numeric"
+    className="flex-1 border border-gray-300 rounded-md p-2 text-gray-600"
+    value={quantities[grade].toString()}
+    onChangeText={value => {
+       
+        const numericValue = value.replace(/[^0-9]/g, '');
+        handleQuantityChange(grade, numericValue);
+    }}
+/>
+
                         </View>
                     ))}
                 </View>
