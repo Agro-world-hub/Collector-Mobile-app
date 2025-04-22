@@ -149,7 +149,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
         const qrData = JSON.stringify(officerDetails);
         setQrValue(qrData);  // Assuming setQrValue is for QR code
       } else {
-        Alert.alert("Error", response.data.message);
+        Alert.alert(t("Error.error"), t("Error.Failed to fetch details"));
       }
     } catch (error) {
       console.error("Error fetching officer details:", error);
@@ -210,7 +210,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
     } catch (error) {
       console.error('Error fetching details:', error);
       Alert.alert(t("Error.error"),
-                    t("Error.Failed to load details"));
+                    t("Error.somethingWentWrong"));
     }
   };
 
@@ -387,9 +387,9 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
             await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
           }
   
-          Alert.alert('Download Success', `${fileName} has been saved to your Downloads folder.`);
+          Alert.alert(t('Error.Success'), t('Error.Downloaded PDF"', { fileName }));
         } else {
-          Alert.alert('Permission Denied', 'You need to grant permission to save the PDF.');
+          Alert.alert(t('Error.Permission Denied'), t('Error.Permission Denied Message'));
         }
       } catch (error) {
         console.error('Error saving PDF:', error);
@@ -411,7 +411,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
     if (uri && (await Sharing.isAvailableAsync())) {
       await Sharing.shareAsync(uri);
     } else {
-      Alert.alert('Error', 'Sharing is not available on this device');
+      Alert.alert('Error.error', t('Error.somethingWentWrong'));
     }
   };
 

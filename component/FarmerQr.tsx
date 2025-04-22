@@ -215,6 +215,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
   const [farmerQRCode, setFarmerQRCode] = useState<string | null>(null);
   const [permissionsGranted, setPermissionsGranted] = useState(false);
   const [farmerPhone, setFarmerPhone] = useState('');
+  const [farmerLanguage, setFarmerLanguage] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
   const { t } = useTranslation();
 
@@ -225,7 +226,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
     const fetchFarmerData = async () => {
       try {
         const response = await api.get(`api/farmer/register-farmer/${userId}`);
-        const { firstName, lastName, NICnumber, qrCode, phoneNumber } = response.data;
+        const { firstName, lastName, NICnumber, qrCode, phoneNumber , language} = response.data;
         console.log(response.data);  // Log the response to check
 
       
@@ -239,12 +240,13 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
           }
 
           setFarmerPhone(phoneNumber);
+          setFarmerLanguage(language);
           setTimeout(() => {
           setLoading(false); // Stop loading after data is ready
         }, 2000);
       
       } catch (error) {
-        Alert.alert('Error', t("Error.Failed to fetch farmer details"));
+        Alert.alert(t('Error.error'), t("Error.Failed to fetch farmer details"));
         setLoading(false);
       } 
     };
@@ -282,7 +284,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
       const asset = await MediaLibrary.createAssetAsync(response.uri);
       await MediaLibrary.createAlbumAsync("Download", asset, false);
 
-      Alert.alert(("QRcode.successTitle"), ("QRcode.savedToGallery"));
+      Alert.alert(t("QRcode.successTitle"), t("QRcode.savedToGallery"));
     } catch (error) {
       console.error("Download error:", error);
       Alert.alert(t("Error.error"), t("Error.failedSaveQRCode"));
@@ -306,13 +308,13 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
         });
       } else {
         Alert.alert(
-          ("QRcode.sharingUnavailableTitle"),
-          ("QRcode.sharingUnavailableMessage")
+          t("QRcode.sharingUnavailableTitle"),
+          t("QRcode.sharingUnavailableMessage")
         );
       }
     } catch (error) {
       console.error("Share error:", error);
-      Alert.alert(("Main.error"), ("QRcode.failedShareQRCode"));
+      Alert.alert(t("Main.error"), t("QRcode.failedShareQRCode"));
     }
   };
 
@@ -345,7 +347,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
     <View className="flex-1 " >
       {/* Header with Back Icon */}
           <View className="flex-row items-center  mb-6">
-               <TouchableOpacity onPress={() => navigation.goBack()} className="">
+               <TouchableOpacity onPress={() => navigation.navigate("Main" as any)} className="">
                  <AntDesign name="left" size={24} color="#000" />
                </TouchableOpacity>
                <Text className="flex-1 text-center text-xl font-bold text-black">{t("FarmerQr.FarmerDetails")}</Text>
@@ -383,7 +385,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
         onPress={() =>
     navigation.navigate("Main", {
     screen: "UnregisteredCropDetails",
-    params: { userId },
+    params: { userId , farmerPhone, farmerLanguage},
   } as never)
 }
 disabled={!farmerQRCode}

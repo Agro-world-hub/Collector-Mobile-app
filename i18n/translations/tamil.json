@@ -127,7 +127,13 @@
     "Prices for the selected variety were not found.":"Prices for the selected variety were not found.",
     "All crop details submitted successfully!":"All crop details submitted successfully!",
     "Phone number 1 must be at least 9 digits.":"Phone number 1 must be at least 9 digits",
-    "Phone number 2 must be at least 9 digits.":"Phone number 2 must be at least 9 digits"
+    "Phone number 2 must be at least 9 digits.":"Phone number 2 must be at least 9 digits",
+    "Password & Employee ID are not allowed to be empty": "Password & Employee ID are not allowed to be empty",
+    "Passwords are not allowed to be empty": "Passwords are not allowed to be empty",
+    "Invalid current password": "Invalid current password",
+"Phone number 1 cannot be empty": "Phone number 1 cannot be empty",
+ "Phone number 2 cannot be empty": "Phone number 2 cannot be empty"
+
  
 
 
@@ -195,8 +201,10 @@
     "Searching":"Searching...",
     "EnterNIC":"Enter NIC number",
     "Noregistered":"No registered farmer found",
-    "RegisterFarmer":"Register Farmer"
-  
+    "RegisterFarmer":"Register Farmer",
+    "Result Found":"ප්‍රතිඵල සොයා ගන්නා ලදී",
+    "Set QR Code":"QR කේතය සකසන්න",
+    "This Farmer does not have the QR" : "මෙම ගොවියාට QR කේතයක් නැත"
 
   },
   "UnregisteredFarmerDetails":{
@@ -446,7 +454,10 @@
     "LNG": "en",
     "Collection Officers":" Collection Officers",
     "Claim Officer":"Claim Officer",
-    "Officers List":" Officers List"
+    "Officers List":" Officers List",
+        "Drivers List": "Drivers List",
+    "Officers / Drivers List": "Officers / Drivers List",
+     "Drivers": "Drivers"
    
   },
 

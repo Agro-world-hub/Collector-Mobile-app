@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, TextInput, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 interface CropItem {
   itemId: number;
@@ -7,6 +8,10 @@ interface CropItem {
   varietyId: number;
   loadWeight: number;
   cropName?: string;
+  cropNameSinhala?: string;
+  varietyNameSinhala?: string;
+  cropNameTamil?: string;
+  varietyNameTamil?: string;
   varietyName?: string;
   crop?: string;
   variety?: string;
@@ -29,8 +34,31 @@ const CropItemsScrollView: React.FC<CropItemsScrollViewProps> = ({
   onItemUpdate
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const {t, i18n} = useTranslation();
   const scrollViewRef = useRef<ScrollView>(null);
 
+
+  const getLocalizedCropName = (item: CropItem) => {
+    switch (i18n.language) {
+      case 'si': // Sinhala
+        return item.cropNameSinhala || item.cropName;
+      case 'ta': // Tamil
+        return item.cropNameTamil || item.cropName;
+      default:
+        return item.cropName;
+    }
+  };
+
+  const getLocalizedVarietyName = (item: CropItem) => {
+    switch (i18n.language) {
+      case 'si': // Sinhala
+        return item.varietyNameSinhala || item.varietyName;
+      case 'ta': // Tamil
+        return item.varietyNameTamil || item.varietyName;
+      default:
+        return item.varietyName;
+    }
+  };
   const handleScroll = (event: any) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const newIndex = Math.round(contentOffsetX / ITEM_WIDTH);
@@ -61,25 +89,25 @@ const CropItemsScrollView: React.FC<CropItemsScrollViewProps> = ({
         {items.map((item, index) => (
           <View key={item.itemId || index} style={{ width: ITEM_WIDTH }}>
             <View className="mb-4">
-              <Text className="text-sm text-gray-600 mb-1">Crop</Text>
+              <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.Crop")}</Text>
               <TextInput
                 className="border border-gray-300 rounded px-3 py-2 text-base"
-                value={item.cropName || ''}
+                value={getLocalizedCropName(item) || ''}
                 editable={false}
               />
             </View>
 
             <View className="mb-4">
-              <Text className="text-sm text-gray-600 mb-1">Variety</Text>
+              <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.Variety")}</Text>
               <TextInput
                 className="border border-gray-300 rounded px-3 py-2 text-base"
-                value={item.varietyName || ''}
+                value={getLocalizedVarietyName(item) || ''}
                 editable={false}
               />
             </View>
 
             <View className="mb-4">
-              <Text className="text-sm text-gray-600 mb-1">Load in kg (Approx)</Text>
+              <Text className="text-sm text-gray-600 mb-1">{t("CollectionRequest.Load in kg (Approx)")}</Text>
               <TextInput
                 className="border border-gray-300 rounded px-3 py-2 text-base"
                 value={item.loadWeight.toString()}
