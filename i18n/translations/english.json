@@ -31,6 +31,7 @@
     "Failed to fetch farmer details":"Failed to fetch farmer details",
     "noQRCodeAvailable":"no QRCode Available",
     "failedSaveQRCode":"failed Save QRCode",
+    "Invalid EMP ID":"Invalid EMP ID",
     "Invalid EMP ID & Password":"Invalid EMP ID & Password",
     "Invalid Password. Please try again.":"Invalid Password. Please try again.",
     "An error occurred. Try again.":"An error occurred. Try again.",
@@ -657,7 +658,7 @@
     "sharingUnavailableMessage": "This device does not support sharing QR codes.",
     "shareQRCode": "Share QR Code",
     "failedShareQRCode": "Unable to share QR code. Please try again later.",
-    "NoQrText": "To obtain access to your unique QR code, please register as a member by entering your bank details. This code will ensure smooth transactions and secure payments directly to your bank at our collection centers.",
+    "NoQrText": "To obtain access to your unique QR code, please register as a member by entering your bank details. This code will ensure smooth transactions and secure payments directly to your bank at our collection centres.",
     "GenerateQr": "Generate My QR"
   },
   "Transport":{
@@ -757,7 +758,7 @@
     "Phone":"Phone:",
     "Received By":"Received By:",
     "Company Name":"Company Name:",
-    "Centre":"Center:",
+    "Centre":"Centre:",
     "Received Items":"Received Items",
     "Crop Name":"Crop Name",
     "Variety":"Variety",
@@ -782,5 +783,11 @@
     "Generated PDF file not found":"Generated PDF file not found",
     "Failed to share PDF file":"Failed to share PDF file",
     "No transactions found for this date": "No transactions found for this date"
+  },
+  "BankDetailsUpdate":{
+    "Success":"Success",
+    "SuccessMessage":"Bank Details Update Success!",
+    "Failed":"Failed",
+    "FailedMessage":"Bank Details Update Failed!"
   }
 }

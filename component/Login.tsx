@@ -345,8 +345,10 @@ const handleLogin = async () => {
         Alert.alert(t("Error.error"), t("Error.Invalid EMP ID & Password"));
       } else if (response.status === 401) {
         Alert.alert(t("Error.error"), t("Error.Invalid Password. Please try again."));
-      } else {
+      } else if (data.status === "error") {
         console.log("Login error:", data);
+        Alert.alert(t("Error.error"), t("Error.Invalid EMP ID"));
+      } else {
         Alert.alert(t("Error.error"),t("Error.somethingWentWrong"));
       }
       return;

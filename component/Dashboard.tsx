@@ -8,6 +8,7 @@ import {environment }from '@/environment/environment';
 import { useFocusEffect } from 'expo-router';
 import { RootStackParamList } from './types';
 import { useTranslation } from "react-i18next";
+import DashboardSkeleton from './Skeleton/DashboardSkeleton';
 
 
 
@@ -187,6 +188,9 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
    
   };
 
+  if (!profile) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <ScrollView
