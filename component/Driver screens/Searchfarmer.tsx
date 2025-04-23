@@ -250,7 +250,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
           //   firstName: farmer.firstName,
           //   lastName: farmer.lastName
           // });
-          if (farmer.farmerQr === "") {
+          if (farmer.farmerQr === null || farmer.farmerQr === "") {
             setIsSearching(false);
             setNewQr(true);
             setFarmers(farmer);

@@ -277,6 +277,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
   const [isEditable, setIsEditable] = useState(false);
   const { t } = useTranslation();
   const [buttonText, setButtonText] = useState(t("PriceChart.Request Price Update"));
+  
 
   const [isLoading, setIsLoading] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
@@ -312,6 +313,18 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
 
   console.log("cropp",cropName)
   console.log("verity",varietyName)
+
+  // Add this to reset the state when the component is focused
+useFocusEffect(
+  useCallback(() => {
+    // Reset button states
+    setIsEditable(false);
+    setButtonText(t("PriceChart.Request Price Update"));
+    
+    // Fetch prices (your existing code)
+    fetchPrices();
+  }, [varietyId])
+);
 
   const handleButtonClick = async () => {
     if (isEditable) {
@@ -440,7 +453,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
           <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-base text-white font-semibold">{buttonText}</Text>
         </TouchableOpacity>
 
-        {isEditable && (
+        {/* {isEditable && (
           <TouchableOpacity
             className="border border-gray-400  mt-4 py-3 h-12 rounded-full items-center w-3/4 mx-auto"
             onPress={() => {
@@ -453,7 +466,20 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
           </TouchableOpacity>
 
          
-        )}
+          
+        )} */}
+        {isEditable && (
+  <TouchableOpacity
+    className="border border-gray-400  mt-4 py-3 h-12 rounded-full items-center w-3/4 mx-auto"
+    onPress={() => {
+      setIsEditable(false);
+      setButtonText(t("PriceChart.Request Price Update"));
+      fetchPrices();
+    }}
+  >
+    <Text className="text-gray-700 text-base font-semibold">{t("PriceChart.Go")}</Text>
+  </TouchableOpacity>
+)}
       </ScrollView>
     </SafeAreaView>
   );

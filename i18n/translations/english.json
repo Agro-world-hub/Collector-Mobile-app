@@ -211,7 +211,10 @@
     "SelectCrop":"Select Crop",
     "Variety":"Variety",
     "SelectVariety":"Select Variety",
-    "Search":"Search"
+    "Search":"Search",
+    "Selection Required":"Selection Required",
+    "Please select both Crop and Variety to continue":"Please select both Crop and Variety to continue.",
+    "OK":"OK"
 
   },
   "SearchFarmer":{
@@ -248,7 +251,9 @@
     "Preferd Language":"Preferred Language",
     "Select Language":"Select Language",
     "Select Bank":"Select Bank",
-    "Select Branch":"Select Branch"
+    "Select Branch":"Select Branch",
+    "AccountNumberError":"Please enter a valid account number",
+    "InvalidNIC":"NIC must be either 12 digits or 9 digits followed by V or v"
   },
   "PriceChart":{
     "LNG": "en",
