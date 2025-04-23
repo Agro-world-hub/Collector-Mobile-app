@@ -81,9 +81,12 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   // const [loading, setLoading] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
   const [PreferdLanguage, setPreferdLanguage] = useState<string>("");
+  const [NICError, setNICError] = useState('');
 
 
   console.log(countryCode)
+
+  const [accNumberError, setAccNumberError] = useState('');
 
   // const handleNext = async () => {
   //   setLoading(true); // Start loading
@@ -238,6 +241,23 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       setNICnumber(NIC);
     }
   }, [NIC]);
+
+  const validateAccountNumber = (value : any) => {
+    // Check if the value contains only numbers
+    const numericRegex = /^[0-9]*$/;
+    if (!numericRegex.test(value)) {
+      setAccNumberError(t("UnregisteredFarmerDetails.AccountNumberError"));
+      return false;
+    }
+    setAccNumberError('');
+    return true;
+  };
+  
+  const handleAccountNumberChange = (value : any) => {
+    if (validateAccountNumber(value)) {
+      setAccNumber(value);
+    }
+  };
 
   // const handleNext = async () => {
   //   if (
@@ -493,6 +513,7 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
     }
    
   };
+  
 
   return (
       <KeyboardAvoidingView 
@@ -517,7 +538,7 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
       <ScrollView className="flex-1 p-3">
         {/* First Name */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.FirstName")}</Text>
+          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.FirstName")}</Text>
           <TextInput
             placeholder={t("UnregisteredFarmerDetails.FirstName")}
             className="border border-gray-300  p-3 rounded-lg"
@@ -528,7 +549,7 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
 
         {/* Last Name */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.LastName")}</Text>
+          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.LastName")}</Text>
           <TextInput
             placeholder={t("UnregisteredFarmerDetails.LastName")}
             className="border border-gray-300  p-3 rounded-lg"
@@ -538,7 +559,7 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
         </View>
 
               <View className="mb-4">
-                <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.Preferd Language")}</Text>
+                <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.Preferd Language")}</Text>
                 <SelectList
                   setSelected={setPreferdLanguage}
                   data={[
@@ -554,19 +575,51 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
                 </View>
 
         {/* NIC Number */}
-        <View className="mb-4">
-          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.NIC")}</Text>
+        {/* <View className="mb-4">
+          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.NIC")}</Text>
           <TextInput
             placeholder="NIC Number"
             className="border border-gray-300  p-3 rounded-lg"
             value={NICnumber}
             onChangeText={setNICnumber}
           />
-        </View>
+        </View> */}
+        <View className="mb-4">
+  <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.NIC")}</Text>
+  <TextInput
+    placeholder={t("UnregisteredFarmerDetails.NIC")}
+    className={`border ${NICError ? 'border-red-500' : 'border-gray-300'} p-3 rounded-lg`}
+    value={NICnumber}
+    onChangeText={(text) => {
+      setNICnumber(text);
+      
+      // Check if the text is empty
+      if (!text) {
+        setNICError('');
+        return;
+      }
+      
+      // Validate NIC format while typing
+      const is12Digits = /^\d{12}$/.test(text);
+      const is9DigitsWithV = /^\d{9}[vV]$/.test(text);
+      
+      if (is12Digits || is9DigitsWithV || text.length < 10) {
+        // Valid or still typing
+        setNICError('');
+      } else {
+        // Invalid format
+        setNICError(t("UnregisteredFarmerDetails.InvalidNIC"));
+      }
+    }}
+  />
+  {NICError ? (
+    <Text className="text-red-500 text-sm mt-1">{NICError}</Text>
+  ) : null}
+</View>
 
         {/* Phone Number */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.Phone")}</Text>
+          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.Phone")}</Text>
           <View className="flex-row items-center border border-gray-300  p-3 rounded-lg">
             <CountryPicker
               countryCode={countryCode}
@@ -589,7 +642,7 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
 
         {/* Address */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.District")}</Text>
+          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.District")}</Text>
           <View className="  rounded-lg">
             {/* <Picker
               selectedValue={district}
@@ -625,7 +678,7 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
         </View>
 
         {/* Account Number */}
-        <View className="mb-4">
+        {/* <View className="mb-4">
           <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.AccountNum")}</Text>
           <TextInput
             placeholder={t("UnregisteredFarmerDetails.AccountNum")}
@@ -634,11 +687,31 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
             value={accNumber}
             onChangeText={setAccNumber}
           />
-        </View>
+        </View> */}
+        <View className="mb-4">
+    <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.AccountNum")}</Text>
+    <TextInput
+      placeholder={t("UnregisteredFarmerDetails.AccountNum")}
+      className={`border ${accNumberError ? 'border-red-500' : 'border-gray-300'} p-3 rounded-lg`}
+      keyboardType="numeric"
+      value={accNumber}
+      onChangeText={(text) => {
+        if (/^\d*$/.test(text)) {
+          setAccNumber(text);
+          setAccNumberError('');
+        } else {
+          setAccNumberError(t("UnregisteredFarmerDetails.AccountNumberError"));
+        }
+      }}
+    />
+    {accNumberError ? (
+      <Text className="text-red-500 text-sm mt-1">{accNumberError}</Text>
+    ) : null}
+  </View>
 
         {/* Account Holder's Name */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.AccountName")}</Text>
+          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.AccountName")}</Text>
           <TextInput
             placeholder={t("UnregisteredFarmerDetails.AccountName")}
             className="border border-gray-300  p-3 rounded-lg"
@@ -649,7 +722,7 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
 
         {/* Bank Name */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.Bank")}</Text>
+          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.Bank")}</Text>
           <View className="  rounded-lg">
             {/* <Picker
               selectedValue={bankName}
@@ -686,7 +759,7 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
 
         {/* Branch Name */}
         <View className="mb-8">
-          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.Branch")}</Text>
+          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.Branch")}</Text>
           <View className=" rounded-lg">
             {/* <Picker
               selectedValue={branchName}

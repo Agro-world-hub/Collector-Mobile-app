@@ -83,11 +83,12 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
 
     try {
       const response = await api.get(`api/auth/get-users/${NICnumber}`);
+      console.log("farmerdata",response.data)
 
       if (response.status === 200) {
         const farmer = response.data;
-        console.log("Farmer data:", farmer.farmerQr);
-        if (farmer.farmerQr === "") {
+        console.log("Farmer data-----:", farmer);
+        if (farmer.farmerQr === null || farmer.farmerQr === "") {
           setIsSearching(false);
           setNewQr(true);
           setFarmers(farmer);
