@@ -195,6 +195,16 @@ export type RootStackParamList = {
     scheduleDate: string;
     farmerId: number;
   };
+  otpBankDetailsupdate :{
+    accNumber: string;
+    accHolderName: string;
+    bankName: string;
+    branchName: string
+    phoneNumber: string;
+    PreferdLanguage: string;
+    farmerId:number;
+    officerRole:string
+  }
 
 };
 

@@ -84,6 +84,7 @@ import NewReport from "@/component/NewReport";
 import TransactionReport from "@/component/ManagerScreens/TransactionReport";
 
 import UpdateFarmerBankDetails from "@/component/UpdateFarmerBankDetails";
+import otpBankDetailsupdate from "@/component/otpBankDetailsupdate"
 
 
 
@@ -343,6 +344,8 @@ const Index = () => {
       <Stack.Screen name="AddDriverAddressDetails" component={AddDriverAddressDetails as any} />
       <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} />
       <Stack.Screen name="NewReport" component={NewReport as any} />
+      <Stack.Screen name="otpBankDetailsupdate" component={otpBankDetailsupdate as any} /> 
+      
         </Stack.Navigator> 
         
     </LanguageProvider>
