@@ -197,7 +197,9 @@
     "Variety":"විවිධ",
     "Grade":"ශ්‍රේණිය",
     "Target":"ඉලක්කය (kg)",
-    "Todo()":"කරන්න (kg)"
+    "Todo()":"කරන්න (kg)",
+      "noCompletedTargets":"සම්පූර්ණ කළ ඉලක්ක හමු නොවීය",
+     "NoTodoItems":" ඉලක්ක හමු නොවීය"
 
   },
   "SearchPrice":{

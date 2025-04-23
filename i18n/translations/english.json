@@ -199,8 +199,9 @@
     "Variety":"Variety",
     "Grade":"Grade",
     "Target":"Target (kg)",
-    "Todo()":"Todo (kg)"
-
+    "Todo()":"Todo (kg)",
+     "noCompletedTargets":"No Completed Target founds",
+     "NoTodoItems":"No Todo Target founds"
   },
   "SearchPrice":{
     "LNG": "en",

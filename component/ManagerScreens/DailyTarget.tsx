@@ -292,6 +292,78 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
     }
   };
 
+  // useEffect(() => {
+  //   const fetchTargets = async () => {
+  //     setLoading(true);
+  //     const startTime = Date.now(); // Capture the start time for the spinner
+  //     try {
+  //       const authToken = await AsyncStorage.getItem('token');
+  //       const response = await axios.get(`${environment.API_BASE_URL}api/target/officer`, {
+  //         headers: {
+  //           Authorization: `Bearer ${authToken}`,
+  //         },
+  //       });
+
+  //       const allData = response.data.data;
+  //       console.log('--------all data----------', allData);
+  //       const todoItems = allData.filter((item: TargetData) => item.todo > 0); 
+  //       // const completedItems = allData.filter((item: TargetData) => item.todo === 0); 
+  //       const completedItems = allData.filter((item: TargetData) => item.complete >= item.officerTarget); 
+
+  //       setTodoData(todoItems);
+  //       setCompletedData(completedItems);
+  //       setError(null);
+  //     } catch (err) {
+  //       setError(t("Error.Failed to fetch data."));
+  //     } finally {
+  //       const elapsedTime = Date.now() - startTime;
+  //       const remainingTime = 3000 - elapsedTime; // Ensure at least 3 seconds loading time
+  //       setTimeout(() => setLoading(false), remainingTime > 0 ? remainingTime : 0);
+  //     }
+  //   };
+
+  //   fetchTargets();
+  // }, []);
+
+  const getGradePriority = (grade: string): number => {
+    switch (grade) {
+      case 'A': return 1;
+      case 'B': return 2;
+      case 'C': return 3;
+      default: return 4; // Any other grades come after A, B, C
+    }
+  };
+
+  // Sort function that first sorts by variety name, then by grade (A, B, C)
+  const sortByVarietyAndGrade = (data: TargetData[]) => {
+    return [...data].sort((a, b) => {
+      // First sort by variety name
+      const nameA = getVarietyNameForSort(a);
+      const nameB = getVarietyNameForSort(b);
+      
+      const nameComparison = nameA.localeCompare(nameB);
+      
+      // If variety names are the same, sort by grade (A, B, C)
+      if (nameComparison === 0) {
+        return getGradePriority(a.grade) - getGradePriority(b.grade);
+      }
+      
+      return nameComparison;
+    });
+  };
+
+  // Helper function to get the variety name based on selected language
+  const getVarietyNameForSort = (item: TargetData) => {
+    switch (selectedLanguage) {
+      case "si":
+        return item.varietyNameSinhala || '';
+      case "ta":
+        return item.varietyNameTamil || '';
+      default:
+        return item.varietyNameEnglish || '';
+    }
+  };
+
   useEffect(() => {
     const fetchTargets = async () => {
       setLoading(true);
@@ -306,12 +378,13 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
 
         const allData = response.data.data;
         console.log('--------all data----------', allData);
-        const todoItems = allData.filter((item: TargetData) => item.todo > 0); 
-        // const completedItems = allData.filter((item: TargetData) => item.todo === 0); 
-        const completedItems = allData.filter((item: TargetData) => item.complete >= item.officerTarget); 
+        const todoItems = allData.filter((item: TargetData) => item.todo > 0);
+        const completedItems = allData.filter((item: TargetData) => item.complete >= item.officerTarget);
 
-        setTodoData(todoItems);
-        setCompletedData(completedItems);
+        // Sort the data by variety name and then by grade
+        // Sort the data by variety name and then by grade
+setTodoData(sortByVarietyAndGrade(todoItems));
+setCompletedData(sortByVarietyAndGrade(completedItems));
         setError(null);
       } catch (err) {
         setError(t("Error.Failed to fetch data."));
@@ -323,7 +396,8 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
     };
 
     fetchTargets();
-  }, []);
+  }, [selectedLanguage]); // Re-fetch when language changes
+
 
   // Refreshing function
   const onRefresh = useCallback(() => {
@@ -345,8 +419,8 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
         console.log('completedItems', completedItems)
         console.log('todoItems', todoItems)
 
-        setTodoData(todoItems);
-        setCompletedData(completedItems);
+        setTodoData(sortByVarietyAndGrade(todoItems));
+        setCompletedData(sortByVarietyAndGrade(completedItems));
         setRefreshing(false); // Stop refreshing once data is loaded
       } catch (err) {
         setError(t("Error.Failed to fetch data."));
@@ -378,13 +452,134 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
             }
           };
 
+
+         
+
+  // return (
+  //   <View className="flex-1 bg-[#282828]  w-full">
+  //     {/* Header */}
+  //     <View className="bg-[#282828] px-4 py-3 flex-row justify-between items-center">
+  //       <Text className="text-white text-lg font-bold ml-[35%]">{t("DailyTarget.DailyTarget")}</Text>
+  //     </View>
+
+  //     {/* Toggle Buttons */}
+  //     <View className="flex-row justify-center items-center py-4 bg-[#282828]">
+  //       {/* To Do Button */}
+  //       <TouchableOpacity
+  //         className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
+  //           selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
+  //         }`}
+  //         onPress={() => setSelectedToggle('ToDo')}
+  //       >
+  //         <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
+  //           {t("DailyTarget.Todo")}
+  //         </Text>
+  //         <View className="bg-white rounded-full px-2">
+  //           <Text className="text-green-500 font-bold text-xs">{todoData.length}</Text>
+  //         </View>
+  //       </TouchableOpacity>
+
+  //       {/* Completed Button */}
+  //       <TouchableOpacity
+  //         className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
+  //           selectedToggle === 'Completed' ? 'bg-[#2AAD7A]' : 'bg-white'
+  //         }`}
+  //         onPress={() => setSelectedToggle('Completed')}
+  //       >
+  //         <Text className={`font-bold ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}>
+  //           {t("DailyTarget.Completed")}
+  //         </Text>
+  //         <View className="bg-white rounded-full px-2 ml-2">
+  //           <Text className="text-green-500 font-bold text-xs">{completedData.length}</Text>
+  //         </View>
+  //       </TouchableOpacity>
+  //     </View>
+
+  //     {/* Target List Table */}
+  //     <ScrollView
+  //       horizontal
+  //       className="bg-white w-full"
+  //       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+  //     >
+  //       <View className="w-full bg-white">
+  //         {/* Table Header */}
+  //         <View className="flex-row bg-[#2AAD7A] h-[7%]">
+  //           <Text className="w-16 p-2 text-center text-white">{t("DailyTarget.No")}</Text>
+  //           <Text className="w-40 p-2 text-center text-white">{t("DailyTarget.Variety")}</Text>
+  //           <Text className="w-32 p-2 text-center text-white">{t("DailyTarget.Grade")}</Text>
+  //           <Text className="w-32 p-2 text-center text-white">{t("DailyTarget.Target")}</Text>
+  //           {/* Dynamic Column Name */}
+  //           <Text className="w-32 p-2 text-center text-white">
+  //             {selectedToggle === 'ToDo' ? t("DailyTarget.Todo") : t("DailyTarget.Completed")}
+  //           </Text>
+  //         </View>
+
+  //         {/* Table Data */}
+  //         {loading ? (
+  //           <View className="flex-1 justify-center items-center mr-[40%] -mt-[10%]">
+  //             <LottieView
+  //               source={require('../../assets/lottie/collector.json')}
+  //               autoPlay
+  //               loop
+  //               style={{ width: 350, height: 350 }}
+  //             />
+  //           </View>
+  //         ) : (
+  //           displayedData.map((item, index) => (
+  //             <TouchableOpacity
+  //               key={index}
+  //               className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
+  //               onPress={() => {
+  //                 // If "Completed", prevent navigation
+  //                 if (selectedToggle === 'Completed') return;
+
+  //                 // let qty = 0;
+  //                 // if (item.centerTarget) {
+  //                 //   if (item.grade === 'A' && item.centerTarget.total_qtyA !== undefined) {
+  //                 //     qty = parseFloat(item.centerTarget.total_qtyA);
+  //                 //   } else if (item.grade === 'B' && item.centerTarget.total_qtyB !== undefined) {
+  //                 //     qty = parseFloat(item.centerTarget.total_qtyB);
+  //                 //   } else if (item.grade === 'C' && item.centerTarget.total_qtyC !== undefined) {
+  //                 //     qty = parseFloat(item.centerTarget.total_qtyC);
+  //                 //   }
+  //                 // }
+
+  //                 navigation.navigate('EditTargetManager' as any, {
+  //                   varietyNameEnglish: item.varietyNameEnglish,
+  //                   varietyId: item.varietyId,
+  //                   grade: item.grade,
+  //                   target: item.officerTarget,
+  //                   todo: item.todo,
+  //                   dailyTarget: item.dailyTarget,
+  //                   varietyNameSinhala: item.varietyNameSinhala,
+  //                   varietyNameTamil: item.varietyNameTamil,
+  //                 });
+  //               }}
+  //             >
+  //               <Text className="w-16 p-2 text-center">
+  //                 {selectedToggle === 'ToDo' ? index + 1 : <Ionicons name="flag" size={20} color="green" />}
+  //               </Text>
+  //               <Text className="w-40 p-2 text-center">{getvarietyName(item)}</Text>
+  //               <Text className="w-32 p-2 text-center">{item.grade}</Text>
+  //               <Text className="w-32 p-2 text-center">{item.officerTarget}</Text>
+  //               <Text className="w-32 p-2 text-center">
+  //                 {selectedToggle === 'Completed' ? item.complete: item.todo}
+  //               </Text>
+  //             </TouchableOpacity>
+  //           ))
+  //         )}
+  //       </View>
+  //     </ScrollView>
+  //   </View>
+  // );
+
   return (
-    <View className="flex-1 bg-[#282828]  w-full">
+    <View className="flex-1 bg-[#282828] w-full">
       {/* Header */}
       <View className="bg-[#282828] px-4 py-3 flex-row justify-between items-center">
         <Text className="text-white text-lg font-bold ml-[35%]">{t("DailyTarget.DailyTarget")}</Text>
       </View>
-
+  
       {/* Toggle Buttons */}
       <View className="flex-row justify-center items-center py-4 bg-[#282828]">
         {/* To Do Button */}
@@ -401,7 +596,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
             <Text className="text-green-500 font-bold text-xs">{todoData.length}</Text>
           </View>
         </TouchableOpacity>
-
+  
         {/* Completed Button */}
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
@@ -417,7 +612,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
           </View>
         </TouchableOpacity>
       </View>
-
+  
       {/* Target List Table */}
       <ScrollView
         horizontal
@@ -436,18 +631,18 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
               {selectedToggle === 'ToDo' ? t("DailyTarget.Todo") : t("DailyTarget.Completed")}
             </Text>
           </View>
-
+  
           {/* Table Data */}
           {loading ? (
             <View className="flex-1 justify-center items-center mr-[40%] -mt-[10%]">
               <LottieView
-                source={require('../../assets/lottie/collector.json')}
+                source={require('../../assets/lottie/NoComplaints.json')}
                 autoPlay
                 loop
-                style={{ width: 350, height: 350 }}
+                style={{ width: 150, height: 150 }}
               />
             </View>
-          ) : (
+          ) : displayedData.length > 0 ? (
             displayedData.map((item, index) => (
               <TouchableOpacity
                 key={index}
@@ -455,18 +650,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
                 onPress={() => {
                   // If "Completed", prevent navigation
                   if (selectedToggle === 'Completed') return;
-
-                  // let qty = 0;
-                  // if (item.centerTarget) {
-                  //   if (item.grade === 'A' && item.centerTarget.total_qtyA !== undefined) {
-                  //     qty = parseFloat(item.centerTarget.total_qtyA);
-                  //   } else if (item.grade === 'B' && item.centerTarget.total_qtyB !== undefined) {
-                  //     qty = parseFloat(item.centerTarget.total_qtyB);
-                  //   } else if (item.grade === 'C' && item.centerTarget.total_qtyC !== undefined) {
-                  //     qty = parseFloat(item.centerTarget.total_qtyC);
-                  //   }
-                  // }
-
+  
                   navigation.navigate('EditTargetManager' as any, {
                     varietyNameEnglish: item.varietyNameEnglish,
                     varietyId: item.varietyId,
@@ -486,10 +670,26 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
                 <Text className="w-32 p-2 text-center">{item.grade}</Text>
                 <Text className="w-32 p-2 text-center">{item.officerTarget}</Text>
                 <Text className="w-32 p-2 text-center">
-                  {selectedToggle === 'Completed' ? item.complete: item.todo}
+                  {selectedToggle === 'Completed' ? item.complete : item.todo}
                 </Text>
               </TouchableOpacity>
             ))
+          ) : (
+            // Empty state with Lottie animation
+            <View className="flex-1 justify-center items-center py-16 w-full">
+              <LottieView
+                source={require('../../assets/lottie/NoComplaints.json')} // Make sure you have this animation file
+                autoPlay
+                loop
+                style={{ width: 150, height: 150 }}
+              />
+              <Text className="text-gray-500 text-lg mt-4">
+                {selectedToggle === 'ToDo' 
+                  ? t("DailyTarget.NoTodoItems") || "No items to do"
+                  : t("DailyTarget.noCompletedTargets") || "No completed items"
+                }
+              </Text>
+            </View>
           )}
         </View>
       </ScrollView>
