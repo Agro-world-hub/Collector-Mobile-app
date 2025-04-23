@@ -205,6 +205,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
       firstName: string;
       lastName: string;
       phoneNumber: string;
+      PreferdLanguage:string
       id: string;
     } | null>(null);
     const validateNic = (nic: string) => {
@@ -442,7 +443,9 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                                 navigation.navigate("UpdateFarmerBankDetails" as any, {
                                   id: farmers.id,
                                   NICnumber: farmers.NICnumber,
-
+                                  phoneNumber: farmers.phoneNumber,
+                                  PreferdLanguage: farmers.PreferdLanguage,
+                                  officerRole:"CCM"
                                 })
                               }
                               className="mt-8 bg-[#2AAD7A]  rounded-full px-16 py-3  "

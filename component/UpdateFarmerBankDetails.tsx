@@ -23,6 +23,7 @@ import { Platform } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { SelectList } from "react-native-dropdown-select-list";
 import { navigate } from "expo-router/build/global-state/routing";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
@@ -48,7 +49,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   navigation,
   route,
 }) => {
-  const { id, NICnumber} = route.params;
+  const { id, NICnumber, phoneNumber, PreferdLanguage, officerRole} = route.params;
   console.log(id);
   console.log(NICnumber);
   const [accNumber, setAccNumber] = useState("");
@@ -110,41 +111,119 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       return;
     }
 
-   try {
-      const response = await api.post("api/farmer/FarmerBankDetails", {
-        accNumber: accNumber,
-        accHolderName: accHolderName,
-        bankName: bankName,
-        branchName: branchName,
-        userId: id,
-        NICnumber: NICnumber,
-      });
+  //  try {
+  //     const response = await api.post("api/farmer/FarmerBankDetails", {
+  //       accNumber: accNumber,
+  //       accHolderName: accHolderName,
+  //       bankName: bankName,
+  //       branchName: branchName,
+  //       userId: id,
+  //       NICnumber: NICnumber,
+  //     });
 
-      if (response.status === 200) {
-        setLoading(false);
-        setIsModalVisible(true); // Show success modal
-        Animated.timing(progress, {
-          toValue: 100,
-          duration: 2000,
-          useNativeDriver: false,
-        }).start(() => {
-            // Close modal after animation completes
-            setIsModalVisible(false);
+  //     if (response.status === 200) {
+  //       setLoading(false);
+  //       setIsModalVisible(true); // Show success modal
+  //       Animated.timing(progress, {
+  //         toValue: 100,
+  //         duration: 2000,
+  //         useNativeDriver: false,
+  //       }).start(() => {
+  //           // Close modal after animation completes
+  //           setIsModalVisible(false);
             
-            // Navigate to FarmerQr after closing the modal
-            navigation.navigate("FarmerQr" as any, {
-              NICnumber,
-              userId: id,
-            });
-          });
-      } else {
-        setLoading(false);
-        Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
-      }
-    } catch (error) {
-        console.error("Error submitting form", error);
-        setLoading(false);
+  //           // Navigate to FarmerQr after closing the modal
+            // navigation.navigate("FarmerQr" as any, {
+            //   NICnumber,
+            //   userId: id,
+            // });
+            // navigation.navigate("otpBankDetailsupdate", {
+            //   phoneNumber: phoneNumber,
+            //   accNumber: accNumber,
+            //   accHolderName: accHolderName,
+            //   bankName: bankName,
+            //   branchName: branchName,
+            //   PreferdLanguage: PreferdLanguage,
+            // });
+  //         });
+  //     } else {
+  //       setLoading(false);
+  //       Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+  //     }
+  //   } catch (error) {
+  //       console.error("Error submitting form", error);
+  //       setLoading(false);
+  //   }
+  try {
+    const apiUrl = "https://api.getshoutout.com/otpservice/send";
+    const headers = {
+      Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
+      "Content-Type": "application/json",
+    };
+
+    console.log(phoneNumber)
+    
+    let otpMessage = "";
+
+if(PreferdLanguage === "Sinhala"){
+      otpMessage = `XYZ සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
+      
+${accHolderName}
+${accNumber}
+${bankName}
+${branchName}
+      
+නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා XYZ නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
+    }else if(PreferdLanguage === "Tamil"){
+      otpMessage = `XYZ உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
+      
+${accHolderName}
+${accNumber}
+${bankName}
+${branchName}
+      
+சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் XYZ பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
+    } else {
+      otpMessage = `Your OTP for bank detail verification with XYZ is: {{code}}
+      
+${accHolderName}
+${accNumber}
+${bankName}
+${branchName}
+      
+If correct, share OTP only with the XYZ representative who contacts you.`;
+
     }
+
+    const body = {
+      source: "AgroWorld",
+      transport: "sms",
+      content: {
+        sms: otpMessage,
+      },
+      destination: `${phoneNumber}`,
+    };
+
+    const response = await axios.post(apiUrl, body, { headers });
+    console.log("OTP Response:", response.data);
+    await AsyncStorage.setItem("referenceId", response.data.referenceId);
+
+
+    navigation.navigate("otpBankDetailsupdate", {
+      phoneNumber: phoneNumber,
+      accNumber: accNumber,
+      accHolderName: accHolderName,
+      bankName: bankName,
+      branchName: branchName,
+      PreferdLanguage: PreferdLanguage,
+      farmerId: id,
+      officerRole:officerRole
+    });
+    setLoading(false);
+  } catch (error) {
+    Alert.alert(t("Error.error"), t("Error.otpSendFailed"));
+    setLoading(false);
+  }
   };
 
   // Interpolating the animated value for width
@@ -182,14 +261,14 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
            <AntDesign name="left" size={22} color="#000" />
         </TouchableOpacity>
         <View className="w-full items-center">
-  <Text className="text-xl font-bold text-center">{t("UnregisteredFarmerDetails.FillDetails")}</Text>
+  <Text className="text-xl font-bold text-center" style={{fontSize:18}}>{t("UnregisteredFarmerDetails.FillDetails")}</Text>
 </View>
 
 
       </View>
 
       {/* Scrollable Form */}
-      <ScrollView className="flex-1 p-3">
+      <ScrollView className="flex-1 p-3 mt-4">
         {/* Account Number */}
         <View className="mb-4">
           <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.AccountNum")}</Text>

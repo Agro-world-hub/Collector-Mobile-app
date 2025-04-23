@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
@@ -12,6 +8,8 @@ import {
   TouchableOpacity,
   Alert,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -37,22 +35,27 @@ type RootStackParamList = {
 };
 
 interface userItem {
-  firstName: string;
-  lastName: string;
   phoneNumber: number;
   NICnumber: string;
-  district: string;
   accNumber: string;
   accHolderName: string;
   bankName: string;
-  branchName: string
+  branchName: string;
   PreferdLanguage: string;
+  farmerId : number
 }
 interface SuccessModalProps {
   visible: boolean;
   onClose: () => void;
+  onComplete: () => void;
 }
-const ShowSuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => {
+
+interface FailModalProps {
+    visible:boolean;
+    onClose: () => void;
+    onFail: ()=>void;
+}
+const ShowSuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose , onComplete}) => {
   const progress = useRef(new Animated.Value(0)).current; // Start from 0
   const { t } = useTranslation();
 
@@ -65,7 +68,7 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => 
         useNativeDriver: false,
       }).start(() => {
         setTimeout(() => {
-          onClose(); // Auto-close after completion
+          onComplete(); // Trigger navigation or any completion action
         }, 500);
       });
     }
@@ -75,13 +78,13 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => 
     <Modal visible={visible} transparent animationType="fade">
       <View className="flex-1 justify-center items-center bg-black/50">
         <View className="bg-white p-6 rounded-2xl items-center w-72 h-80 shadow-lg relative">
-          <Text className="text-xl font-bold mt-4 text-center"> {t("Otpverification.Success")}</Text>
+          <Text className="text-xl font-bold mt-4 text-center"> {t("BankDetailsUpdate.Success")}</Text>
 
           <Image source={require("../assets/images/success.webp")} style={{ width: 100, height: 100 }} />
 
-          <Text className="text-gray-500 mb-4">{t("Otpverification.Registration")}</Text>
+          <Text className="text-gray-500 mb-4">{t("BankDetailsUpdate.SuccessMessage")}</Text>
 
-          <TouchableOpacity className="bg-[#2AAD7A] px-6 py-2 rounded-full mt-6" onPress={onClose}>
+          <TouchableOpacity className="bg-[#2AAD7A] px-6 py-2 rounded-full mt-6" onPress={() => { onClose(); onComplete(); }}>
             <Text className="text-white font-semibold">{t("Otpverification.OK")}</Text>
           </TouchableOpacity>
 
@@ -104,19 +107,71 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => 
   );
 };
 
+const ShowFailModal: React.FC<FailModalProps> = ({ visible, onClose , onFail}) => {
+    const progress = useRef(new Animated.Value(0)).current; // Start from 0
+    const { t } = useTranslation();
+  
+    useEffect(() => {
+      if (visible) {
+        progress.setValue(0); // Reset progress
+        Animated.timing(progress, {
+          toValue: 100, // Full progress
+          duration: 2000, // Adjust timing
+          useNativeDriver: false,
+        }).start(() => {
+          setTimeout(() => {
+            onFail(); // Trigger navigation or any completion action
+          }, 500);
+        });
+      }
+    }, [visible]);
+  
+    return (
+      <Modal visible={visible} transparent animationType="fade">
+        <View className="flex-1 justify-center items-center bg-black/50">
+          <View className="bg-white p-6 rounded-2xl items-center w-72 h-80 shadow-lg relative">
+            <Text className="text-xl font-bold mt-4 text-center"> {t("BankDetailsUpdate.Failed")}</Text>
+  
+            <Image source={require("../assets/images/success.webp")} style={{ width: 100, height: 100 }} />
+  
+            <Text className="text-gray-500 mb-4">{t("BankDetailsUpdate.FailedMessage")}</Text>
+  
+            <TouchableOpacity className="bg-[#ef4444] px-6 py-2 rounded-full mt-6" onPress={() => { onClose(); onFail(); }}>
+              <Text className="text-white font-semibold">{t("Otpverification.OK")}</Text>
+            </TouchableOpacity>
+  
+            {/* Progress Bar - Fixed to Bottom */}
+            <View className="absolute bottom-0 left-0 right-0 h-2 bg-gray-200 rounded-b-2xl overflow-hidden">
+              <Animated.View
+                style={{
+                  height: "100%",
+                  backgroundColor: "#ef4444",
+                  width: progress.interpolate({
+                    inputRange: [0, 100],
+                    outputRange: ["0%", "100%"],
+                  }),
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+
 
 const Otpverification: React.FC = ({ navigation, route }: any) => {
-  const {         
-    firstName,
-    lastName,
+  const { 
+    farmerId,        
     NICnumber,
     phoneNumber,
-    district,
     accNumber,
     accHolderName,
     bankName,
-    branchName,
-    PreferdLanguage } = route.params;
+    branchName, 
+    PreferdLanguage,
+    officerRole
+   } = route.params;
   const [otpCode, setOtpCode] = useState<string>("");
   const [maskedCode, setMaskedCode] = useState<string>("XXXXX");
   const [referenceId, setReferenceId] = useState<string | null>(null);
@@ -131,8 +186,24 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
 
   const inputRefs = useRef<TextInput[]>([]);
   
+  const handleSuccessCompletion = () => {
+    // This function will handle navigation after success
+    setModalVisible(false);
+  
+    if (officerRole === "COO") {
+      navigation.navigate("FarmerQr" as any, {
+        NICnumber,
+        userId: farmerId,
+      });
+    } else if (officerRole === "CCM") {
+      navigation.navigate("SearchFarmerScreen" as any);
+    }
+  };
+  
 
-
+const handleFailCompletion = () =>{
+    setModalVisible(false);
+}
   
   useEffect(() => {
     const selectedLanguage = t("Otpverification.LNG");
@@ -187,13 +258,14 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
       inputRefs.current[index + 1].focus();
     }
     if(updatedOtpCode.length === 5){
-          Keyboard.dismiss();
-        }
+      Keyboard.dismiss();
+    }
   };
 
   const handleVerify = async () => {
     const code = otpCode;
     Keyboard.dismiss()
+
     if (code.length !== 5) {
       Alert.alert(
         t("Error.Sorry"),
@@ -205,18 +277,16 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
     try {
       const refId = referenceId;
 
-      const data: userItem = {
-        phoneNumber: parseInt(phoneNumber, 10),
-        firstName: firstName,
-        lastName: lastName,
-        NICnumber: NICnumber,
-        district: district,
-        accNumber: accNumber,
-        accHolderName: accHolderName,
-        bankName: bankName,
-        branchName: branchName,
-        PreferdLanguage: language,
-      };
+    //   const data: userItem = {
+    //     phoneNumber: parseInt(phoneNumber, 10),
+    //     NICnumber: NICnumber,
+    //     accNumber: accNumber,
+    //     accHolderName: accHolderName,
+    //     bankName: bankName,
+    //     branchName: branchName,
+    //     PreferdLanguage: PreferdLanguage,
+    //     farmerId  : farmerId 
+    //   }; 
       // Shoutout verify endpoint
       const url = "https://api.getshoutout.com/otpservice/verify";
       const headers = {
@@ -236,27 +306,34 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         setIsVerified(true);
         setModalVisible(true);
 
-        const response1 = await axios.post(
-          `${environment.API_BASE_URL}api/farmer/register-farmer`,
-          data
-        );
+        // const response1 = await axios.post(
+        //   `${environment.API_BASE_URL}api/farmer/register-farmer`,
+        //   data
+        // );
+
+     const response = await axios.post(`${environment.API_BASE_URL}api/farmer/FarmerBankDetails`, {
+        accNumber: accNumber,
+        accHolderName: accHolderName,
+        bankName: bankName,
+        branchName: branchName,
+        userId: farmerId,
+        NICnumber: NICnumber,
+      });
+
+      if (response.status === 200) {
         await AsyncStorage.removeItem("referenceId");
-        //Alert.alert("Success","Farmer Registration successful");
-        <ShowSuccessModal visible={modalVisible} onClose={() => setModalVisible(false)} />
-        navigation.navigate("FarmerQr" as any, {
-          NICnumber: response1.data.NICnumber,
-          userId: response1.data.userId,
-        });      } else if (statusCode === "1001") {
-        Alert.alert(
-          t("Error.Sorry"),
-          t("Otpverification.invalidOTP")
-        );
+        <ShowSuccessModal visible={modalVisible} onClose={() => setModalVisible(false)} onComplete={handleSuccessCompletion} />;
       } else {
-        Alert.alert(
-          t("Error.Sorry"),
-          t("Error.somethingWentWrong")
-        );
+        // setLoading(false);
+        <ShowFailModal visible={modalVisible} onClose={() => setModalVisible(false)} onFail={handleFailCompletion} />;
+
+        Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
       }
+    } 
+
+       
+        //Alert.alert("Success","Farmer Registration successful");
+{/* <ShowSuccessModal visible={modalVisible} onClose={() => setModalVisible(false)} onComplete={handleSuccessCompletion} />; */}
     } catch (error) {
       Alert.alert(
         t("Error.Sorry"),
@@ -267,45 +344,6 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
 
   
   // Resend OTP
-  // const handleResendOTP = async () => {
-  //   try {
-  //     const apiUrl = "https://api.getshoutout.com/otpservice/send";
-  //     const headers = {
-  //       Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
-  //       "Content-Type": "application/json",
-  //     };
-
-  //     const body = {
-  //       source: "ShoutDEMO",
-  //       transport: "sms",
-  //       content: { sms: "Your code is {{code}}" },
-  //       destination: phoneNumber,
-  //     };
-
-  //     const response = await axios.post(apiUrl, body, { headers });
-
-  //     if (response.data.referenceId) {
-  //       await AsyncStorage.setItem("referenceId", response.data.referenceId);
-  //       setReferenceId(response.data.referenceId);
-  //       Alert.alert(
-  //         t("Otpverification.Success"),
-  //         t("Error.otpResent")
-  //       );
-  //       setTimer(240);
-  //       setDisabledResend(true);
-  //     } else {
-  //       Alert.alert(
-  //         t("Error.Sorry"),
-  //         t("Error.otpResendFailed")
-  //       );
-  //     }
-  //   } catch (error) {
-  //     Alert.alert(
-  //       t("Error.Sorry"),
-  //       t("Error.otpResendFailed")
-  //     );
-  //   }
-  // };
   const handleResendOTP = async () => {
     await AsyncStorage.removeItem("referenceId");
     try {
@@ -315,12 +353,6 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         "Content-Type": "application/json",
       };
 
-      // const body = {
-      //   source: "ShoutDEMO",
-      //   transport: "sms",
-      //   content: { sms: "Your code is {{code}}" },
-      //   destination: phoneNumber,
-      // };
       let otpMessage = "";
       if(PreferdLanguage === "English"){
         otpMessage = `Your OTP for bank detail verification with XYZ is: {{code}}
@@ -400,9 +432,14 @@ ${branchName}
   };
 
   return (
-
+    <KeyboardAvoidingView 
+            behavior={Platform.OS ==="ios" ? "padding" : "height"}
+            enabled
+            className="flex-1"
+            >
     <ScrollView
       className="flex-1 "
+      keyboardShouldPersistTaps="handled"
       style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}
     >
       <View>
@@ -453,27 +490,6 @@ ${branchName}
             </Text>
           </View>
         )}
-
-        {/* <View className="pt-6">
-          <TextInput
-            style={{
-              width: wp(60),
-              height: hp(7),
-              textAlign: "center",
-              fontSize: wp(6),
-              letterSpacing: wp(6),
-              borderBottomWidth: 1,
-              borderBottomColor: "gray",
-              color: "black",
-            }}
-            keyboardType="numeric"
-            maxLength={5}
-            value={otpCode}
-            onChangeText={handleInputChange}
-            placeholder={maskedCode}
-            placeholderTextColor="lightgray"
-          />
-        </View> */}
         <View className="flex-row justify-center gap-3 mt-4 px-4">
           {Array.from({ length: 5 }).map((_, index) => (
             <TextInput
@@ -520,12 +536,16 @@ ${branchName}
           </Text>
         </View>
 
-        <ShowSuccessModal visible={modalVisible} onClose={() => setModalVisible(false)} />
 
+        <ShowSuccessModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          onComplete={handleSuccessCompletion} // Pass the navigation function
+        />
         <View style={{ marginTop: dynamicStyles.margingTopForBtn }}>
           <TouchableOpacity
             style={{ height: hp(7), width: wp(80) }}
-            className={`flex items-center justify-center mx-auto rounded-full ${
+            className={`flex items-center justify-center mx-auto rounded-full mb-8 ${
               !isOtpValid || isVerified ? "bg-[#2AAD7A]" : "bg-[#2AAD7A]"
             }`}
             onPress={handleVerify}
@@ -539,6 +559,7 @@ ${branchName}
         </View>
       </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
