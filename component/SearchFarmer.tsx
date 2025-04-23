@@ -49,6 +49,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
     firstName: string;
     lastName: string;
     phoneNumber: string;
+    PreferdLanguage:string
     id: string;
   } | null>(null);
   const [ere, setEre] = useState("");
@@ -58,7 +59,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
     console.log("Validating NIC:", nic);
     const regex = /^(\d{12}|\d{9}V|\d{9}X|\d{9}v|\d{9}x)$/;
     if (!regex.test(nic)) {
-      setEre("Enter Valid NIC");
+      setEre(t("Transport.Enter Valide NIC"));
     } else {
       setEre("");
     }
@@ -82,11 +83,12 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
 
     try {
       const response = await api.get(`api/auth/get-users/${NICnumber}`);
+      console.log("farmerdata",response.data)
 
       if (response.status === 200) {
         const farmer = response.data;
-        console.log("Farmer data:", farmer.farmerQr);
-        if (farmer.farmerQr === "") {
+        console.log("Farmer data-----:", farmer);
+        if (farmer.farmerQr === null || farmer.farmerQr === "") {
           setIsSearching(false);
           setNewQr(true);
           setFarmers(farmer);
@@ -259,6 +261,9 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
                   navigation.navigate("UpdateFarmerBankDetails" as any, {
                     id: farmers.id,
                     NICnumber: farmers.NICnumber,
+                    phoneNumber: farmers.phoneNumber,
+                    PreferdLanguage: farmers.PreferdLanguage,
+                    officerRole:"COO"
                   })
                 }
                 className="mt-8 bg-[#2AAD7A]  rounded-full px-16 py-3  "

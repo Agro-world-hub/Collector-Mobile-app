@@ -1905,25 +1905,35 @@ defaultOption={selectedCrop ? { key: selectedCrop.id, value: selectedCrop.name }
                 {/* Total and Buttons */}
                 <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Total")}</Text>
                 <View className="border border-gray-300 rounded-md mt-2 p-2">
-                    <TextInput 
+                    {/* <TextInput 
                         placeholder="--Auto Fill--" 
                         editable={false} 
                         value={total.toString()} 
                         className="text-gray-600" 
-                    />
+                    /> */}
+  <TextInput
+  placeholder="--Auto Fill--"
+  editable={false}
+  value={` ${total.toLocaleString('en-IN', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })}`}
+  className="text-gray-600"
+/>
+
                 </View>
 
-<TouchableOpacity onPress={incrementCropCount} disabled={addbutton==true} className={`bg-[#2AAD7A] rounded-md p-4 mt-2 ${addbutton ? 'opacity-50' : ''}`}>
+<TouchableOpacity onPress={incrementCropCount} disabled={addbutton==true} className={`bg-[#2AAD7A] rounded-full p-4 mt-2 ${addbutton ? 'opacity-50' : ''}`}>
                     <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Add")}</Text>
                 </TouchableOpacity>
                {donebutton1visibale && 
-                <TouchableOpacity onPress={handelsubmit2} disabled={donebutton1disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton1disabale ? 'opacity-50' : ''}`}>
-                    <Text className="text-center text-black font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
+                <TouchableOpacity onPress={handelsubmit2} disabled={donebutton1disabale==true}  className={`bg-black  rounded-full p-4 mt-4 ${donebutton1disabale ? 'opacity-50' : ''}`}>
+                    <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
                 </TouchableOpacity>
                 }
                 {donebutton2visibale &&
-                <TouchableOpacity onPress={handleSubmit} disabled={donebutton2disabale==true}  className={`border border-black rounded-md p-4 mt-4 ${donebutton2disabale ? 'opacity-50' : ''}`}>
-                   <Text className="text-center text-black font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
+                <TouchableOpacity onPress={handleSubmit} disabled={donebutton2disabale==true}  className={`bg-black  rounded-full p-4 mt-4 ${donebutton2disabale ? 'opacity-50' : ''}`}>
+                   <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
                 </TouchableOpacity>
                 }  
             </View>

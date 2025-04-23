@@ -31,6 +31,7 @@
        "Failed to fetch farmer details":"ගොවි විස්තර ලබා ගැනීමට අසමත් විය.",
        "noQRCodeAvailable":"QR කේතයක් නොමැත",
        "failedSaveQRCode":"QR කේතය සුරැකීම අසාර්ථක විය.",
+       "Invalid EMP ID":"අවලංගු EMP හැඳුනුම්පත",
        "Invalid EMP ID & Password":"අවලංගු EMP හැඳුනුම්පත සහ මුරපදය",
        "Invalid Password. Please try again.":"අවලංගු මුරපදය. කරුණාකර නැවත උත්සාහ කරන්න.",
        "An error occurred. Try again.":"දෝෂයක් ඇති විය. නැවත උත්සාහ කරන්න.",
@@ -197,7 +198,9 @@
     "Variety":"විවිධ",
     "Grade":"ශ්‍රේණිය",
     "Target":"ඉලක්කය (kg)",
-    "Todo()":"කරන්න (kg)"
+    "Todo()":"කරන්න (kg)",
+      "noCompletedTargets":"සම්පූර්ණ කළ ඉලක්ක හමු නොවීය",
+     "NoTodoItems":" ඉලක්ක හමු නොවීය"
 
   },
   "SearchPrice":{
@@ -207,7 +210,10 @@
     "SelectCrop":"බෝග තෝරන්න",
     "Variety":"විවිධත්වය",
     "SelectVariety":"ප්‍රභේදය තෝරන්න",
-    "Search":"සොයන්න"
+    "Search":"සොයන්න",
+    "Selection Required":"තේරීම අවශ්‍යයි",
+    "Please select both Crop and Variety to continue":"කරුණාකර ඉදිරියට යාමට බෝග සහ ප්‍රභේද දෙකම තෝරන්න.",
+    "OK":"හරි"
 
   },
   "SearchFarmer":{
@@ -243,7 +249,9 @@
     "Preferd Language":"පෙරනිමිය භාෂාව",
     "Select Language":"භාෂාව තෝරන්න",
     "Select Bank":"බැංකුව තෝරන්න",
-    "Select Branch":"ශාඛාව තෝරන්න"
+    "Select Branch":"ශාඛාව තෝරන්න",
+     "AccountNumberError":"කරුණාකර වලංගු ගිණුම් අංකයක් ඇතුළත් කරන්න.",
+      "InvalidNIC":"NIC එක ඉලක්කම් 12 කින් හෝ ඉලක්කම් 9 කින් පසුව V හෝ v විය යුතුය"
   },
   "PriceChart":{
     "LNG": "si",
@@ -789,5 +797,11 @@
     "Failed to share PDF file":"PDF ගොනුව බෙදාහැරීමට අසමත් විය",
     "No transactions found for this date": "මෙම දිනය සඳහා ගනුදෙනු කිසිවක් සොයාගත නොමැත"
 
+  },
+  "BankDetailsUpdate":{
+    "Success":"සාර්ථකයි",
+    "SuccessMessage":"බැංකු විස්තර යාවත්කාලීන කිරීම සාර්ථකයි!",
+    "Failed":"අසාර්ථකයි",
+    "FailedMessage":"බැංකු විස්තර යාවත්කාලීන කිරීම අසාර්ථකයි!"
   }
 }
