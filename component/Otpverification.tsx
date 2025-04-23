@@ -45,7 +45,7 @@ interface userItem {
   accHolderName: string;
   bankName: string;
   branchName: string
-
+  PreferdLanguage: string;
 }
 interface SuccessModalProps {
   visible: boolean;
@@ -114,7 +114,8 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
     accNumber,
     accHolderName,
     bankName,
-    branchName, } = route.params;
+    branchName,
+    PreferdLanguage } = route.params;
   const [otpCode, setOtpCode] = useState<string>("");
   const [maskedCode, setMaskedCode] = useState<string>("XXXXX");
   const [referenceId, setReferenceId] = useState<string | null>(null);
@@ -133,7 +134,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
 
   
   useEffect(() => {
-    const selectedLanguage = t("OtpVerification.LNG");
+    const selectedLanguage = t("Otpverification.LNG");
     setLanguage(selectedLanguage);
     const fetchReferenceId = async () => {
       try {
@@ -191,7 +192,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
 
     if (code.length !== 5) {
       Alert.alert(
-        t("Otpverification.invalidOTP"),
+        t("Error.Sorry"),
         t("Otpverification.completeOTP")
       );
       return;
@@ -210,6 +211,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         accHolderName: accHolderName,
         bankName: bankName,
         branchName: branchName,
+        PreferdLanguage: language,
       };
       // Shoutout verify endpoint
       const url = "https://api.getshoutout.com/otpservice/verify";
@@ -234,6 +236,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
           `${environment.API_BASE_URL}api/farmer/register-farmer`,
           data
         );
+        await AsyncStorage.removeItem("referenceId");
         //Alert.alert("Success","Farmer Registration successful");
         <ShowSuccessModal visible={modalVisible} onClose={() => setModalVisible(false)} />
         navigation.navigate("FarmerQr" as any, {
@@ -241,18 +244,18 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
           userId: response1.data.userId,
         });      } else if (statusCode === "1001") {
         Alert.alert(
-          t("OtpVerification.invalidOTP"),
-          t("OtpVerification.verificationFailed")
+          t("Error.Sorry"),
+          t("Otpverification.invalidOTP")
         );
       } else {
         Alert.alert(
-          t("Error.errorOccurred"),
+          t("Error.Sorry"),
           t("Error.somethingWentWrong")
         );
       }
     } catch (error) {
       Alert.alert(
-        t("Error.errorOccurred"),
+        t("Error.Sorry"),
         t("Error.somethingWentWrong")
       );
     }
@@ -260,7 +263,47 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
 
   
   // Resend OTP
+  // const handleResendOTP = async () => {
+  //   try {
+  //     const apiUrl = "https://api.getshoutout.com/otpservice/send";
+  //     const headers = {
+  //       Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
+  //       "Content-Type": "application/json",
+  //     };
+
+  //     const body = {
+  //       source: "ShoutDEMO",
+  //       transport: "sms",
+  //       content: { sms: "Your code is {{code}}" },
+  //       destination: phoneNumber,
+  //     };
+
+  //     const response = await axios.post(apiUrl, body, { headers });
+
+  //     if (response.data.referenceId) {
+  //       await AsyncStorage.setItem("referenceId", response.data.referenceId);
+  //       setReferenceId(response.data.referenceId);
+  //       Alert.alert(
+  //         t("Otpverification.Success"),
+  //         t("Error.otpResent")
+  //       );
+  //       setTimer(240);
+  //       setDisabledResend(true);
+  //     } else {
+  //       Alert.alert(
+  //         t("Error.Sorry"),
+  //         t("Error.otpResendFailed")
+  //       );
+  //     }
+  //   } catch (error) {
+  //     Alert.alert(
+  //       t("Error.Sorry"),
+  //       t("Error.otpResendFailed")
+  //     );
+  //   }
+  // };
   const handleResendOTP = async () => {
+    await AsyncStorage.removeItem("referenceId");
     try {
       const apiUrl = "https://api.getshoutout.com/otpservice/send";
       const headers = {
@@ -268,11 +311,49 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         "Content-Type": "application/json",
       };
 
+      // const body = {
+      //   source: "ShoutDEMO",
+      //   transport: "sms",
+      //   content: { sms: "Your code is {{code}}" },
+      //   destination: phoneNumber,
+      // };
+      let otpMessage = "";
+      if(PreferdLanguage === "English"){
+        otpMessage = `Your OTP for bank detail verification with XYZ is: {{code}}
+        
+${accHolderName}
+${accNumber}
+${bankName}
+${branchName}
+        
+If correct, share OTP only with the XYZ representative who contacts you.`;
+
+      }else if(PreferdLanguage === "Sinhala"){
+        otpMessage = `XYZ සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
+        
+${accHolderName}
+${accNumber}
+${bankName}
+${branchName}
+        
+නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා XYZ නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
+      }else if(PreferdLanguage === "Tamil"){
+        otpMessage = `XYZ உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
+        
+${accHolderName}
+${accNumber}
+${bankName}
+${branchName}
+        
+சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் XYZ பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
+      }
       const body = {
-        source: "ShoutDEMO",
+        source: "AgroWorld",
         transport: "sms",
-        content: { sms: "Your code is {{code}}" },
-        destination: phoneNumber,
+        content: {
+          sms: otpMessage,
+        },
+        destination: `${phoneNumber}`,
       };
 
       const response = await axios.post(apiUrl, body, { headers });
@@ -281,20 +362,20 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         await AsyncStorage.setItem("referenceId", response.data.referenceId);
         setReferenceId(response.data.referenceId);
         Alert.alert(
-          t("OtpVerification.success"),
+          t("Otpverification.Success"),
           t("Error.otpResent")
         );
         setTimer(240);
         setDisabledResend(true);
       } else {
         Alert.alert(
-          t("Error.errorOccurred"),
+          t("Error.Sorry"),
           t("Error.otpResendFailed")
         );
       }
     } catch (error) {
       Alert.alert(
-        t("Error.errorOccurred"),
+        t("Error.Sorry"),
         t("Error.otpResendFailed")
       );
     }

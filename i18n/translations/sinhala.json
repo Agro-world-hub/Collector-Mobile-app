@@ -20,7 +20,7 @@
 
   },
   "Error":{
-    "error":"දෝෂය",
+    "error":"සමාවෙන්න",
     "Failed to fetch empid.":"empid ලබා ගැනීමට අසමත් විය.",
     "New password and confirm password do not match.":"නව මුරපදය සහ තහවුරු කිරීමේ මුරපදය නොගැලපේ.",
     "New password must be at least 6 characters long.":"නව මුරපදය අවම වශයෙන් අක්ෂර 6 ක් දිග විය යුතුය.",
@@ -94,7 +94,8 @@
     "Please select both start and end dates.":"කරුණාකර ආරම්භක සහ අවසන් දින දෙකම තෝරන්න.",
     "End date cannot be earlier than the start date.":"අවසන් දිනය ආරම්භක දිනයට වඩා කලින් විය නොහැක.",
     "PDF Generated Successfully":"PDF සාර්ථකව ජනනය කරන ලදී!",
-    "Permission Denied":"අවසර ප්‍රතික්ෂේප කරන ලදී, ගොනුව සුරැකීමට ඔබට ගබඩා අවසර ලබා දිය යුතුය.",
+    "Permission Denied":"අවසර ප්‍රතික්ෂේප කරන ලදී",
+    "Permission Denied Message": "ගොනුව සුරැකීමට ඔබට ගබඩා අවසර ලබා දිය යුතුය.",
     "File saved as":"ගොනුව ලෙස සුරකින ලදී",
     "in the Downloads folder":"බාගැනීම් ෆෝල්ඩරයේ",
     "An error occurred while saving the file.":"ගොනුව සුරකින අතරතුර දෝෂයක් ඇති විය.",
@@ -127,10 +128,33 @@
     "Prices for the selected variety were not found.":"තෝරාගත් ප්‍රභේදය සඳහා මිල ගණන් හමු නොවීය.",
     "All crop details submitted successfully!":"සියලුම බෝග විස්තර සාර්ථකව ඉදිරිපත් කරන ලදී!",
         "Phone number 1 must be at least 9 digits.":"දුරකථන අංකය 1 ඉලක්කම් 9 ක් විය යුතුය",
-    "Phone number 2 must be at least 9 digits.":"දුරකථන අංකය 2 ඉලක්කම් 9 ක් විය යුතුය"
+    "Phone number 2 must be at least 9 digits.":"දුරකථන අංකය 2 ඉලක්කම් 9 ක් විය යුතුය",
+    "Password & Employee ID are not allowed to be empty": "Password & Employee ID are not allowed to be empty",
+    "Passwords are not allowed to be empty": "Passwords are not allowed to be empty",
+    "Invalid current password": "Invalid current password",
+    "Phone number 1 cannot be empty": "Phone number 1 cannot be empty",
+ "Phone number 2 cannot be empty": "Phone number 2 cannot be empty",
+ "InvaidEmail": "Invalid Email",
+ "Phone number 1 is invalid.": "Phone number 1 is invalid.",
+ "Phone number 2 is invalid.": "Phone number 2 is invalid.",
+ "Email is invalid.": "Email is invalid.",
+ "NIC number is invalid.": "NIC number is invalid.",
+ "QR Code saved to gallery.": "QR Code saved to gallery.",
+ "User ID not found in QR code": "User ID not found in QR code",
+ "Downloaded PDF": "{{fileName}} has been saved to your Downloads folder.",
 
 
-  
+
+ "This Phone Number already exists." : "මෙම දුරකථන අංකය දැනට පවතියි.",
+ "This NIC already exists." : "මෙම ජාතික හැඳුනුම් අංකය දැනට පවතියි.",
+ "This Phone Number and NIC already exist." : "මෙම දුරකථන අංකය සහ ජාතික හැඳුනුම් අංකය දැනට පවතියි.",
+ "Authentication required. Please log in.":"සත්‍යාපනය අවශ්‍යයි. කරුණාකර පුරනය වන්න.",
+ "Please fill all fields, add crops, and select a schedule date.":"කරුණාකර සියලුම ක්ෂේත්‍ර පුරවා, බෝග එකතු කර, කාලසටහනක් තෝරන්න.",
+ "Failed to update user details":"පරිශීලක විස්තර යාවත්කාලීන කිරීමට අසමත් විය.",
+ "Collection Requests Submitted!":"එකතු කිරීමේ ඉල්ලීම් ඉදිරිපත් කරන ලදී!",
+ "Invalid crop or variety selected.":"වලංගු නොවන බෝගයක් හෝ ප්‍රභේදයක් තෝරාගෙන ඇත."
+
+
 
   },
 "EngProfile":{
@@ -193,8 +217,10 @@
     "Searching":"සොයමින්...",
     "EnterNIC":"ජාතික හැඳුනුම්පත් අංකය ඇතුළත් කරන්න",
     "Noregistered":"ලියාපදිංචි ගොවියෙකු හමු නොවීය",
-    "RegisterFarmer":"ගොවි ලියාපදිංචි කරන්න"
-
+    "RegisterFarmer":"ගොවි ලියාපදිංචි කරන්න",
+    "Result Found":"ප්‍රතිඵල සොයා ගන්නා ලදී",
+    "Set QR Code":"QR කේතය සකසන්න",
+    "This Farmer does not have the QR" : "මෙම ගොවියාට QR කේතයක් නැත"
   },
   "UnregisteredFarmerDetails":{
    "LNG": "si",
@@ -206,14 +232,18 @@
     "District":"දිස්ත්‍රික්කය",
     "AccountNum":"ගිණුම් අංකය",
     "AccountName":"ගිණුම් හිමියාගේ නම",
-    "Back":"බැංකු නම",
+    "Bank":"බැංකු නම",
     "Branch":"ශාඛාවේ නම",
     "Submit":"ඉදිරිපත් කරන්න",
     "Success":"සාර්ථකයි!",
     "Successful":"ලියාපදිංචිය සාර්ථකයි",
     "Oops":"අහෝ!",
     "Unsuccessful":"ලියාපදිංචිය අසාර්ථකයි",
-    "Close":"වසන්න"
+    "Close":"වසන්න",
+    "Preferd Language":"පෙරනිමිය භාෂාව",
+    "Select Language":"භාෂාව තෝරන්න",
+    "Select Bank":"බැංකුව තෝරන්න",
+    "Select Branch":"ශාඛාව තෝරන්න"
   },
   "PriceChart":{
     "LNG": "si",
@@ -232,14 +262,14 @@
     "LNG": "si",
     "OTPVerification":"OTP සත්‍යාපනය",
     " EnterCode":"සත්‍යාපන කේතය ඇතුළත් කරන්න",
-    "OTPCode":"OTPCode",
-    "Didreceive":" මට කේතය ලැබුණේ නැහැ!",
+    "OTPCode":"OTP Code",
+    "Didreceive":"මට කේතය ලැබුණේ නැහැ!",
     "Verify":"තහවුරු කරන්න",
     "Success":"සාර්ථකයි!",
     "Registration":"ලියාපදිංචිය සාර්ථකයි",
     "OK":"හරි",
-    "invalidOTP":"අවලංගු OTP",
-    "completeOTP":"අවලංගු OTP"
+    "invalidOTP":"Incorrect verification code",
+    "completeOTP":"Please enter the full verification code"
 
   },
   "FarmerQr":{
@@ -365,12 +395,14 @@
      "Youhavenotachieved":"අද ඔබේ දෛනික ඉලක්කය ඔබ සාක්ෂාත් කර ගෙන නැත",
      "Completed":"සම්පූර්ණ කරන ලදී!",
      "Youhaveachieved":"ඔබ අද ඔබේ දෛනික ඉලක්කය සාක්ෂාත් කර ගෙන ඇත",
-    "Yourtarget": "ඔබේ ඉලක්කය ප්‍රගතිය",
+    "Yourtarget": "ඔබේ ඉලක්ක ප්‍රගතිය",
     
     "Scan":"QR ස්කෑන් කරන්න",
     "Search": "ජාතික හැඳුනුම්පත අනුව සොයන්න",
     "CenterTarget":"මධ්‍යස්ථාන ඉලක්කය",
-    "MyCollection":"මගේ එකතුව"
+    "MyCollection":"මගේ එකතුව",
+      "Collection": "එකතුව ",
+    "Transport":"ප්රවාහනය"
 
   },
   "AddOfficerBasicDetails":{
@@ -411,8 +443,8 @@
     "Go":"ආපසු යන්න",
     "Submit":"ඉදිරිපත් කරන්න",
     "Select Province":"පළාත තෝරන්න",
-    "Select District":"දිස්ත්‍රික්කය තෝරන්න"
-    
+    "Select District":"දිස්ත්‍රික්කය තෝරන්න",
+    "next":"ඊළඟ"
   },
 
   "CenterTarget":{
@@ -435,14 +467,28 @@
     "EMPID":"EMP හැඳුනුම්පත",
     "Search":"සෙවීම",
     "Claim Officer":"හිමිකම් නිලධාරියා",
-     "No Disclaimed":" - කිසිදු ප්‍රකාශ නොකළ නිලධාරියෙකු හමු නොවීය -"
-   
+    "No Disclaimed":"- කිසිදු ප්‍රකාශ නොකළ නිලධාරියෙකු හමු නොවීය -",
+    "Are you sure you want to claim this officer?":"ඔබට මෙම නිලධාරියාට හිමිකම් පෑමට අවශ්‍ය බව ඔබට විශ්වාසද?",
+    "Cancel":"අවලංගු කරන්න",
+    "Claim":"හිමිකම් දෙන්න",
+    "Select Job Role":"රැකියා භූමිකාව තෝරන්න",
+    "Collection Officer":"එකතු කිරීමේ නිලධාරියා",
+    "Customer Officer": "පාරිභෝගික නිලධාරියා"
+  },
+  "DisclaimOfficer":{
+    "Are you sure you want to disclaim this officer?":"මෙම නිලධාරියාගේ හිමිකම ඉවත් කිරීමට ඔබට අවශ්‍ය බව, ඔබට විශ්වාසද?",
+    "Disclaim":"ඉවත් කරන්න",
+    "Officer disclaimed successfully.":"නිලධාරි හිමිකම සාර්ථකව ඉවත් කරන ලදී.",
+    "Failed to disclaim officer.":"නිලධාරියා හිමිකම ඉවත් කිරීම කිරීමට අපොහොසත් විය."
   },
   "CollectionOfficersList":{
     "LNG": "si",
     "Collection Officers":" එකතු කිරීමේ නිලධාරියා",
     "Claim Officer":"හිමිකම් නිලධාරියා",
-    "Officers List":"නිලධාරීන්ගේ ලැයිස්තුව"
+    "Officers List":"නිලධාරීන්ගේ ලැයිස්තුව",
+        "Drivers List": "Drivers List",
+    "Officers / Drivers List": "නිලධාරීන් / රියදුරු ලැයිස්තුව ",
+     "Drivers": "Drivers"
    
   },
   "EditTargetManager":{
@@ -468,7 +514,7 @@
   },
   "OfficerSummary":{
     "LNG": "si",
-    "Disclaim":"වියාචනය",
+    "Disclaim":"හිමිකම් ඉවත් කරන්න",
     "EMPID":"EMP ID : ",
     "Num1":"අංකය 1",
     "Num2":"අංකය 2",
@@ -588,5 +634,160 @@
     "Kindlysubmit": "කරුණාකර ඔබේ පැමිණිල්ල මෙහි ඉදිරිපත් කරන්න.",
     "Submit": "තහවුරු කරන්න",
     "Other": "වෙනත්"
+  },
+  "ReportHistory":{
+    "LNG": "si",    
+    "sorry": "සමාවන්න",
+    "noData": "පැමිණිලි කිසිවක් හමු නොවීය.",
+    "Complaints": "පැමිණිලි ඉතිහාසය",
+    "Opened": "විවෘත කර ඇත",
+    "Closed": "අවසන් කර ඇත",
+    "View": "ප්‍රතිචාරය බලන්න",
+    "ThankYou": "ප්‍රතිචාරය ලැබෙන තෙක් රැදී සිටියාට ස්තූතියි!",
+    "NoReply": "මෙම පැමිණිල්ලට තවමත් ප්‍රතිචාරයක් නොමැත.",
+    "RefNo": "යොමු අංකය",
+    "Sent": "යැවූ දිනය"
+  },
+  "QRcode": {
+    "LNG": "si",
+    "QRcode": "මගේ QR කේතය",
+    "Download": "බාගත කරන්න",
+    "Share": "යවන්න",
+    "failedFetchDetails": "ගිණුමේ තොරතුරු පිරික්සීම අසාර්ථක විය.",
+    "permissionDeniedTitle": "ප්‍රවේශ වීම අසාර්ථකයි.",
+    "permissionDeniedMessage": "QR කේතය ඔබේ ගැලරියට සුරැකීමට පෙර ගැලරියට ප්‍රවේශ වීමට අවසර ලබාදිය යුතුය.",
+    "successTitle": "සාර්ථකයි",
+    "savedToGallery": "QR කේතය ඔබේ ගැලරියට සුරැකීම සාර්ථකයි.",
+    "failedSaveQRCode": "QR කේතය ඔබේ ගැලරියට සුරැකීම අසාර්ථක විය.",
+    "sharingUnavailableTitle": "බෙදාගැනීමේ විශේෂාංගය නොමැත",
+    "sharingUnavailableMessage": "මෙම දුරකථනය හරහා QR කේත බෙදා ගැනීමට නොහැක.",
+    "shareQRCode": "QR කේතය බෙදා ගන්න",
+    "failedShareQRCode": "QR කේතය බෙදා ගැනීම අසාර්ථක විය.",
+    "NoQrText": "ඔබගේ QR කේතය වෙත ප්‍රවේශය ලබා ගැනීමට, කරුණාකර ඔබගේ බැංකු තොරතුරු ඇතුලත් කිරීමෙන් සාමාජිකයෙකු ලෙස ලියාපදිංචි වන්න. මෙම කේතය අපගේ එකතු කිරීමේ මධ්‍යස්ථාන වලදී ඔබගේ බැංකුව වෙත සෘජුවම ගනුදෙනු සහ සුරක්ෂිත ගෙවීම් සහතික කරනු ඇත.",
+    "GenerateQr": "මගේ QR සකසන්න"
+  },
+  "Transport":{
+    "LNG": "si",
+    "Register Drivers":"නියෝජිතයන් ලියාපදිංචි කරන්න",
+    "Add Farmer Requests":"ගොවි අයදුම්පත් එකතු කරන්න",
+    "View Farmer Requests":"ගොවි අයදුම්පත් බලන්න",
+    "Driver":"රියදුරු",
+    "Add Collection Request":"එකතු කිරීමේ ඉල්ලීම එකතු කරන්න",
+    "Enter Valide NIC" :"වලංගු ජාතික හැඳුනුම්පත් අංකය ඇතුළත් කරන්න"
+    },
+    "VehicleDetails":{
+      "LNG": "si",
+      "Driving Details":"රියදුරු විස්තර",
+      "Front":"ඉදිරිපස",
+      "Back":"පසුපස",
+      "Side-1":"පැත්ත 1",
+      "Side-2":"පැත්ත 2",
+      "--Driving License ID--":"--රියදුරු බලපත්‍ර හැඳුනුම්පත--",
+      "Vehicle Insurance Details":"රියදුරු රක්ෂණ විස්තර",
+      "--Insurance Number--":"--රක්ෂණ අංකය--",
+      "--Insurance Expire Date--":"--රක්ෂණ කල් ඉකුත් වීමේ දිනය--",
+     "Vehicle Details":"වාහන විස්තර",
+     "Car":"මෝටර් රථය",
+     "Truck":"ලොරි",
+     "Motorcycle":"මෝටර් සයිකලය",
+     "--Vehicle Type--":"--වාහන වර්ගය--",
+     "--Vehicle Capacity--":"--වාහන ධාරිතාව--",
+     "--Vehicle Registration Number--":"--වාහන ලියාපදිංචි අංකය--",
+     "Go Back":"ආපසු යන්න",
+     "Submit":"ඉදිරිපත් කරන්න",
+     "Please capture all required images":"කරුණාකර අවශ්‍ය සියලු පින්තූර ගන්න",
+     "InsuranceFront": "ඉන්ෂුවරන්ස් මුහුණු පින්තුරය",
+     "InsuranceBack": "ඉන්ෂුවරන්ස් පසුපස පින්තුරය",
+     "VehicleFront": "වාහන මුහුණු පින්තුරය",
+     "VehicleBack": "වාහන පසුපස පින්තුරය",
+     "VehicleSide1": "වාහන පසෙහි පින්තුරය 1",
+     "VehicleSide2": "වාහන පසෙහි පින්තුරය 2",
+     "Driver and vehicle information submitted successfully":"රියදුරු සහ වාහන තොරතුරු සාර්ථකව ඉදිරිපත් කරන ලදී" ,
+     "Failed to submit driver and vehicle information. Please try again." :"රියදුරු සහ වාහන තොරතුරු ඉදිරිපත් කිරීමට අපොහොසත් විය. කරුණාකර නැවත උත්සාහ කරන්න."
+    },
+    "CollectionRequest":{
+      "Collection Request Form":"එකතු කිරීමේ ඉල්ලීම් පෝරමය",
+      "Building / House No" :"ගොඩනැගිල්ල / නිවාස අංකය",
+      "Street Name": "වීදි නම",
+      "City":"නගරය",
+      "Closest Landmark":"ආසන්නතම බිම් සලකුණ",
+      "Schedule Date": "කාලසටහන් දිනය",
+      "Select Schedule Date":"කාලසටහන් දිනය තෝරන්න",
+      "Added Requests":"එකතු කළ ඉල්ලීම්",
+      "Crop":"බෝගය",
+      "Variety":"විවිධත්වය",
+      "Load in kg (Approx)":"බර කිලෝග්‍රෑම් වලින් (දළ වශයෙන්)",
+      "--Select Crop--":"--බෝගය තෝරන්න--",
+      "--Selcect Vareity--": "--විවිධත්වය තෝරන්න--",
+      "Add to the List": "ලැයිස්තුවට එකතු කරන්න",
+      "Add more":"තවත් එකතු කරන්න",
+      "Submit":"තහවුරු කරන්න",
+      "Collection Requests":"එකතු කිරීමේ ඉල්ලීම්",
+      "Request ID":"ඉල්ලීමේ හැඳුනුම්පත",
+      "Search NIC here...": "හැඳුනුම්පත් අංකය සොයන්න...",
+      "NIC":"ජා.හැ.අ.",
+      "Date":"දිනය",
+      "All":"සියල්ල",
+      "No collection requests found": "එකතු කිරීමේ ඉල්ලීම් කිසිවක් හමු නොවීය",
+      "ID":"යොමු අංකය",
+      "Update":"යාවත්කාලීන කරන්න",
+      "Cancel Request":"ඉල්ලීම අවලංගු කරන්න",
+      "Are you sure?":"ඔබට විශ්වාසද?",
+      "Are you sure Massage":"මෙය ගොවියා විසින් කරන ලද ඉල්ලීම ස්ථිරවම මකා දමන අතර එය අහෝසි කළ නොහැක.",
+      "Confirm":"තහවුරු කරන්න",
+      "Cancel":"අවලංගු කරන්න",
+      "Reason to Cancel":"අවලංගු කිරීමට හේතුව",
+      "Please mention below the reason":"හේතුව පහතින් සඳහන් කරන්න.",
+      "Enter here..": "මෙතන ඇතුලත කරන්න..",
+      "Processing...": "සකසමින්...",
+      "Go Back":"ආපසු යන්න",
+      "Failed to cancel request":"ඉල්ලීම අවලංගු කිරීමට අසමත් විය, පසුව නැවත උත්සාහ කරන්න.",
+      "Request cancelled successfully":"ඉල්ලීම සාර්ථකව අවලංගු කරන ලදී",
+      "Failed to update schedule date":"කාලසටහන් දිනය යාවත්කාලීන කිරීමට අසමත් විය, පසුව නැවත උත්සාහ කරන්න.",
+      "Schedule Date has not been changed":"කාලසටහන් දිනය වෙනස් කර නොමැත",
+      "Schedule Date updated successfully":"කාලසටහන් දිනය සාර්ථකව යාවත්කාලීන කරන ලදී",
+      "Please provide a reason for cancellation":"අවලංගු කිරීමට හේතුවක් සපයන්න",
+      "Not Assigned":"පවරා නැති",
+      "Assigned":"පවරා ඇති",
+      "Cancelled":"අවලංගු කළා",
+      "On way":"යන ගමන්",
+      "Scheduled":"කාලසටහන්ගත කර ඇති"
+    },
+    "NewReport":{
+    "LNG": "en",
+    "Goods Received Note":"ලැබුණු භාණ්ඩ සටහන",
+    "GRN No":"GRN අංකය:",
+    "Date":"දිනය:",
+    "Supplier Details":"සැපයුම්කරු විස්තර:",
+    "Name":"නම:",
+    "Phone":"දුරකථන:",
+    "Received By":"ලැබුණු අය:",
+    "Company Name":"සමාගමේ නම:",
+    "Centre":"මධ්‍යස්ථානය:",
+    "Received Items":"ලැබුණු අයිතම",
+    "Crop Name":"බෝග නම",
+    "Variety":"වර්ගය",
+    "Grade":"ගුණාත්මකත්වය",
+    "Unit Price(Rs.)":"ඒකක මිල(රු.)",
+    "Quantity(kg)":"ප්‍රමාණය(කිලෝග්‍රෑම්)",
+    "Sub Total(Rs.)":"අනු මුදල (රු.)",
+    "Full Total (Rs.) Rs.":"සම්පූර්ණ එකතුව (රු.): රු..",
+    "Note":"සටහන:",
+    "GRNnote":"මෙම භාණ්ඩ රිසිට්පත් සටහන (GRN) ඉදිරි පෙළ කාර්ය මණ්ඩලය විසින් ගනු ලබන මූලික මිනුම් මත පදනම් වූ තාවකාලික පිළිගැනීමක් ලෙස ක්‍රියා කරයි. අවසාන සත්‍යාපනය එකතු කිරීමේ මධ්‍යස්ථානයේදී පවත්වනු ලැබේ. එකතු කිරීමේ මධ්‍යස්ථානයේ සටහන් කර ඇති මිනුම සියලු විෂමතා අවස්ථාවන්හිදී තීරණාත්මක සහ බැඳීමක් ලෙස සලකනු ලැබේ. මිනුම් විචලනයන්ගෙන් පැන නගින ඕනෑම ආදායම් බලපෑම් නිවැරදි කිරීමට සංවිධානයට අයිතියක් ඇති අතර මූලික වැරදි ගණනය කිරීම් හේතුවෙන් සිදුවන පාඩු සඳහා වගකිව යුතු නොවේ.",
+    "Download":"බාගත කරන්න",
+    "Share":"යවන්න",
+    "Sorry":"සමාවන්න",
+    "PDF was not generated.":"PDF එක නිර්මාණය කර නොමැත.",
+    "Failed to load details":"විස්තර පූර්ණ කිරීමට අසමත් විය",
+    "Success":"සාර්ථකයි",
+    "GRN report has been saved to your Downloads folder.":"GRN වාර්තාව ඔබේ බාගත කිරීම් ෆෝල්ඩරයට සුරකින ලදී.",
+    "Permission Denied":"අවසර ප්‍රතික්ෂේපිතයි",
+    "You need to grant permission to save the PDF.":"PDF එක සුරැකීමට අවසර ලබා දිය යුතුය.",
+    "Failed to save PDF to Downloads folder.":"බාගත කිරීම් ෆෝල්ඩරයට PDF එක සුරැකීමට අසමත් විය.",
+    "Sharing is not available on this device":"මෙම උපාංගයේ බෙදාහැරීම ලබා ගත නොහැක",
+    "Generated PDF file not found":"නිර්මාණය කළ PDF ගොනුව සොයාගත නොහැක",
+    "Failed to share PDF file":"PDF ගොනුව බෙදාහැරීමට අසමත් විය",
+    "No transactions found for this date": "මෙම දිනය සඳහා ගනුදෙනු කිසිවක් සොයාගත නොමැත"
+
   }
 }

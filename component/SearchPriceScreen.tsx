@@ -281,10 +281,17 @@ import {environment} from '../environment/environment';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from "react-i18next";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
+
+type CropOption = {
+  label: string;
+  value: string;
+  cropName: string;
+};
 
 type SearchPriceScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SearchPriceScreen'>;
 
@@ -293,29 +300,30 @@ interface SearchPriceScreenProps {
 }
 
 const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => {
-  const [cropOptions, setCropOptions] = useState<{ key: string; value: string }[]>([]);
+  //const [cropOptions, setCropOptions] = useState<{ key: string; value: string }[]>([]);
+  const [cropOptions, setCropOptions] = useState<CropOption[]>([]);
+
   const [varietyOptions, setVarietyOptions] = useState<{ key: string; value: string }[]>([]);
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
   const [selectedVariety, setSelectedVariety] = useState<string | null>(null);
   const [loadingCrops, setLoadingCrops] = useState(false);
   const [loadingVarieties, setLoadingVarieties] = useState(false);
-  const { t } = useTranslation();
-    const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);  // ✅ correct
+  const [vopen, setVopen] = useState(false);  // ✅ correct
 
-  const fetchSelectedLanguage = async () => {
-    try {
-      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
-      setSelectedLanguage(lang || "en"); // Default to English if not set
-    } catch (error) {
-      console.error("Error fetching language preference:", error);
-    }
-  };
-
-     useEffect(() => {
-    const fetchData = async () => {
-      await fetchSelectedLanguage();
+  const { t, i18n } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
+console.log(";;;;;;;;",selectedLanguage)
+  useEffect(() => {
+    const fetchLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+        setSelectedLanguage(lang || "en"); // Default to English if not set
+      } catch (error) {
+        console.error("Error fetching language preference:", error);
+      }
     };
-    fetchData();
+    fetchLanguage();
   }, []);
   
   const fetchCropNames = async () => {
@@ -330,26 +338,50 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
       });
       console.log('Raw Crop Names Response:', response.data);
   
-      const formattedData = response.data.map((crop: any) => {
-                let cropName;
-                switch (selectedLanguage) {
-                  case "si":
-                    cropName = crop.cropNameSinhala;
-                    break;
-                  case "ta":
-                    cropName = crop.cropNameTamil;
-                    break;
-                  default:
-                    cropName = crop.cropNameEnglish;
-                }
+      // const formattedData = response.data.map((crop: any) => {
+      //           let cropName;
+      //           switch (selectedLanguage) {
+      //             case "si":
+      //               cropName = crop.cropNameSinhala;
+      //               break;
+      //             case "ta":
+      //               cropName = crop.cropNameTamil;
+      //               break;
+      //             default:
+      //               cropName = crop.cropNameEnglish;
+      //           }
           
-                return {
-                  key: crop.id.toString(),
-                  value: cropName,
-                };
-              });
+      //           return {
+      //             key: crop.id.toString(),
+      //             value: cropName,
+      //           };
+      //         });
+      const formattedData = response.data.map((crop: any) => {
+        let cropName;
+        switch (selectedLanguage) {
+          case "si":
+            cropName = crop.cropNameSinhala;
+            break;
+          case "ta":
+            cropName = crop.cropNameTamil;
+            break;
+          default:
+            cropName = crop.cropNameEnglish;
+        }
+      
+        return {
+          label: cropName,         // shown in dropdown
+          value: crop.id.toString(), // selected value
+          cropName: cropName,      // extra, can be used later
+        };
+      });
+      
+      setCropOptions(formattedData);
+     
           
               setCropOptions(formattedData);
+              console.log("crop",formattedData)
+              console.log("language",selectedLanguage)
             } catch (error) {
               console.error("Failed to fetch crop names:", error);
             } finally {
@@ -444,7 +476,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
       {/* Crop Name Dropdown */}
       <View className="w-full mb-4">
          <Text className="text-base mb-2 text-center">{t("SearchPrice.Crop")}</Text>
-        {loadingCrops ? (
+        {/* {loadingCrops ? (
           <ActivityIndicator size="small" color="#2AAD7A" />
         ) : (
           <SelectList
@@ -459,7 +491,50 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
               color: '#000',
             }}
           />
-        )}
+        )} */}
+        
+          {/* <SelectList
+            setSelected={(val: any) => setSelectedCrop(val)}
+            data={cropOptions}
+            placeholder={t("SearchPrice.SelectCrop")}
+            boxStyles={{
+              backgroundColor: 'white',
+              borderColor: '#CFCFCF',
+            }}
+            dropdownTextStyles={{
+              color: '#000',
+            }}
+          /> */}
+          
+          
+          <DropDownPicker
+  open={open}
+  value={selectedCrop}
+  items={cropOptions}
+  setOpen={setOpen}
+  setValue={setSelectedCrop}
+  setItems={setCropOptions}
+  placeholder={t("SearchPrice.SelectCrop")}
+  style={{
+    backgroundColor: 'white',
+    borderColor: '#CFCFCF',
+  }}
+  textStyle={{
+    color: '#000',
+  }}
+  dropDownContainerStyle={{
+    borderColor: '#CFCFCF',
+  }}
+  listMode="SCROLLVIEW"
+  scrollViewProps={{
+    nestedScrollEnabled: true,
+  }}
+/>
+
+
+
+
+          
       </View>
 
       {/* Variety Dropdown */}
@@ -480,6 +555,31 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
                   color: '#000',
                 }}
               />
+            //   <DropDownPicker
+            //   open={vopen}
+            //   value={selectedVariety}
+            //   items={varietyOptions}
+            //   setOpen={setVopen}
+            //   setValue={setSelectedVariety}
+            //   setItems={setVarietyOptions}
+            //   placeholder={t("SearchPrice.SelectVariety")}
+            //   style={{
+            //     backgroundColor: 'white',
+            //     borderColor: '#CFCFCF',
+            //   }}
+            //   textStyle={{
+            //     color: '#000',
+            //   }}
+            //   dropDownContainerStyle={{
+            //     borderColor: '#CFCFCF',
+            //   }}
+            //   listMode="SCROLLVIEW"         
+            //   scrollViewProps={{             
+            //     nestedScrollEnabled: true,
+            //   }}
+            // />
+
+              
             )}
           </View>
 
@@ -488,14 +588,17 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
         className="bg-[#2AAD7A] w-full py-3 mb-4 rounded-[35px] items-center"
         onPress={() => {
           if (selectedCrop && selectedVariety) {
-            const cropName = cropOptions.find(option => option.key === selectedCrop)?.value || '';
+            const cropName = cropOptions.find(option => option.value === selectedCrop)?.label || '';
             const varietyName = varietyOptions.find(option => option.key === selectedVariety)?.value || '';
 
             navigation.navigate('PriceChart', {
+
+              
               cropName: cropName,
               varietyId: selectedVariety,
               varietyName: varietyName,
             });
+            console.log("cropnameee",selectedCrop)
           }
         }}
       >

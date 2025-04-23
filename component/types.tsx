@@ -11,7 +11,7 @@ export type RootStackParamList = {
     EngProfile:undefined;
     UnregisteredFarmerDetails:{ cropCount: 1, userId:number };
     //UnregisteredCropDetails: { cropCount: number, userId:number };
-    UnregisteredCropDetails: { userId: number; cropCount: number };
+    UnregisteredCropDetails: { userId: number; cropCount: number, farmerPhone: number, farmerLanguage: string; };
     SinChangePassword:undefined;
     SinLogin:undefined;
     Lanuage:undefined;
@@ -27,6 +27,7 @@ export type RootStackParamList = {
     TamUfarmercropdetails:undefined;
     TamUnregisteredFarmerDetails:undefined;
     TamUnregisteredCropDetails:{ cropCount: number,userId:any };
+    TransportComponent:undefined;
     SinProfile:undefined;
     TamProfile:undefined;
     SearchFarmer:{NICnumber: string; userId: any;};
@@ -44,6 +45,30 @@ export type RootStackParamList = {
    // Main:{screen: keyof RootStackParamList};
    Main: { screen: keyof RootStackParamList; params?: any };
     CollectionOfficersList:undefined;
+    RegisterDriver:undefined;
+    AddVehicleDetails: {
+      basicDetails:OfficerBasicDetailsFormData;
+      jobRole: string;
+      empType: string;
+      preferredLanguages: string[];
+      addressDetails:FormData;
+      type: 'Permanent' | 'Temporary';
+    };
+    AddDriverAddressDetails: {
+      formData: {
+        // Basic details from previous screen, type inferred from the route.params destructuring
+        [key: string]: any;
+      };
+      type: string;
+      preferredLanguages: string[];
+      jobRole: string;
+    };
+  
+    
+
+  
+  
+    
 
     
 
@@ -107,8 +132,26 @@ export type RootStackParamList = {
       accNumber: string;
       accHolderName: string;
       bankName: string;
-      branchName: string
+      branchName: string;
+      PreferdLanguage: string;
     }
+    
+    NewReport:{userId:any,registeredFarmerId:number};
+    TransactionReport:{ registeredFarmerId: number;
+      userId: number;
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+      address: string;
+      NICnumber: string;
+      totalAmount: number;
+      bankAddress: string | null;
+      accountNumber: string | null;
+      accountHolderName: string | null;
+      bankName: string | null;
+      branchName: string | null;
+      selectedDate: string;
+      empId: string;};
     
     DailyTargetListForOfficers:{officerId:string,collectionOfficerId:number};
     EditTargetManager:undefined;
@@ -117,7 +160,41 @@ export type RootStackParamList = {
     ManagerDashboard:undefined;
     CenterTarget:undefined;
     ManagerTransactions:undefined;
-    
+
+    SearchFarmerScreen:undefined;
+    //RegisterFarmer:undefined;
+    RegisterFarmer: { NIC: string };
+    OTPverification: {
+      firstName: string;
+      lastName: string;
+      NICnumber: string;
+      accNumber: string;
+      accHolderName: string;
+      bankName: string;
+      branchName: string
+      phoneNumber: string;
+      district: string;
+      PreferdLanguage: string;
+    };
+    CollectionRequestForm: { NICnumber: string ; id: number };
+    CollectionRequests: { requestId: number ; crops:string };  // expect requestId in CollectionRequests
+  ViewScreen: { requestId: number ; crops:string  };  // expect requestId in ViewScreen
+  Cancelreson:{requestId : number , status: string};
+  UpdateFarmerBankDetails: {
+    id: number;
+    NICnumber: string;
+  };
+  ReviewCollectionRequests: {
+    cropsList: any[];
+    address: {
+      buildingNo: string;
+      streetName: string;
+      city: string;
+      routeNumber: string;
+    };
+    scheduleDate: string;
+    farmerId: number;
+  };
 
 };
 
@@ -125,13 +202,19 @@ export type OfficerBasicDetailsFormData = {
   userId: string;
   firstNameEnglish: string;
   lastNameEnglish: string;
-  firstNameSinhala: string;
-  lastNameSinhala: string;
-  firstNameTamil: string;
-  lastNameTamil: string;
-  profileImage:string
+  firstNameSinhala?: string;
+  lastNameSinhala?: string;
+  firstNameTamil?: string;
+  lastNameTamil?: string;
   nicNumber: string;
   email: string;
-  jobRole:string;
+  jobRole: string;
+  phoneCode1: string;
+  phoneNumber1: string;
+  phoneCode2?: string;
+  phoneNumber2?: string;
+  profileImage?: string;
+  
+  
 };
 

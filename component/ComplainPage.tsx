@@ -512,7 +512,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
       navigation.goBack();
     } catch (error) {
       console.error("Error submitting complaint:", error);
-      Alert.alert(t("Error.error"), t("Error.Failed to submit complaint"));
+      Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
     }
   };
 

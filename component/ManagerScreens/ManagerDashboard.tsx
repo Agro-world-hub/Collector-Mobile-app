@@ -8,6 +8,8 @@ import {environment }from '@/environment/environment';
 import { useFocusEffect } from 'expo-router';
 import { RootStackParamList } from '../types';
 import { useTranslation } from "react-i18next";
+import TransportComponent, { GenericNavigationProp } from '../Driver screens/TransportComponent';
+
 
 
 type ManagerDashboardNavigationProps = StackNavigationProp<
@@ -15,8 +17,10 @@ type ManagerDashboardNavigationProps = StackNavigationProp<
   "ManagerDashboard"
 >;
 
+
 interface ManagerDashboardProps {
   navigation: ManagerDashboardNavigationProps;
+
 }
 
 interface ProfileData {
@@ -36,6 +40,7 @@ interface ProfileData {
 const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [empId, setEmpId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'Collection' | 'Transport'>('Collection');
   const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
   const [refreshing, setRefreshing] = useState(false);
       const { t } = useTranslation();
@@ -230,6 +235,46 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500">{getcompanyName()}</Text>
         </View>
       </TouchableOpacity>
+      
+      <View className="bg-white shadow-sm mb-6">
+        <View className="flex-row p-2">
+          <TouchableOpacity
+            className="flex-1 p-2 items-center flex-row justify-center"
+            onPress={() => setActiveTab('Collection')}
+          >
+            <Image
+              source={require("../../assets/images/shop.png")}
+              className={`w-6 h-6 mr-2 ${activeTab === 'Collection' ? 'opacity-100' : 'opacity-50'}`}
+            />
+            <Text className={`text-base font-bold ${activeTab === 'Collection' ? 'text-black' : 'text-gray-500'}`}>
+             { t("ManagerDashboard.Collection")}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            className="flex-1 p-2 items-center flex-row justify-center"
+            onPress={() => setActiveTab('Transport')}
+          >
+            <Image
+              source={require("../../assets/images/truck.png")}
+              className={`w-6 h-6 mr-2 ${activeTab === 'Transport' ? 'opacity-100' : 'opacity-50'}`}
+            />
+            <Text className={`text-base font-bold ${activeTab === 'Transport' ? 'text-black' : 'text-gray-500'}`}>
+              {t("ManagerDashboard.Transport")}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Horizontal line with active tab indicator */}
+        <View className="h-[3px] bg-gray-300 flex-row">
+          <View className={`flex-1 ${activeTab === 'Collection' ? 'bg-black' : ''}`} />
+          <View className={`flex-1 ${activeTab === 'Transport' ? 'bg-black' : ''}`} />
+        </View>
+      </View>
+
+      
+      {activeTab === 'Collection' ? (
+        <>
 
        {/* Conditional Rendering for Daily Target */}
           {targetPercentage !== null && targetPercentage < 100 ? (
@@ -252,7 +297,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             )}
 
       {/* Target Progress */}
-      <View className="flex-row items-center justify-between mb-[-5%] p-7 mt-[4%]">
+      <View className="flex-row items-center justify-between mb-[-5%] p-7 mt-[4%] ">
         <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 font-bold text-lg">{t("ManagerDashboard.Yourtarget")}</Text>
         <View className="relative">
           <CircularProgress
@@ -271,7 +316,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
       </View>
 
       {/* Action Buttons */}
-      <View className="flex-row flex-wrap justify-between p-5 mt-[5%] mb-[8%]">
+      <View className="flex-row flex-wrap justify-between p-5 mt-[5%] mb-[18%]">
         <TouchableOpacity
           className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
           onPress={() => navigation.navigate("CenterTarget" as any)}
@@ -317,7 +362,14 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
           />
           <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.Search")}</Text>
         </TouchableOpacity>
+
+
+      
       </View>
+      </>
+      ) : (
+        <TransportComponent navigation={navigation} />
+      )}
     </ScrollView>
   );
 };

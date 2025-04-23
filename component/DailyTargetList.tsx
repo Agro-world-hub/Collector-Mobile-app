@@ -16,6 +16,7 @@ interface DailyTargetListProps {
 }
 
 interface TargetData {
+  officerTarget: number;
   varietyNameEnglish: string;
   grade: string;
   target: number;
@@ -164,7 +165,7 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
 
           {/* Table Data */}
           {loading ? (
-            <View className="flex-1 justify-center items-center mr-[45%]">
+            <View className="flex-1 justify-center items-center mr-[40%] -mt-[10%]">
               <LottieView
                 source={require('../assets/lottie/collector.json')}
                 autoPlay
@@ -189,9 +190,9 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
                 </Text>
                 <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.grade}</Text>
                 <Text className="w-32 p-2 border-r border-gray-300 text-center">
-                  {item.target.toFixed(2)}
+                  {item.officerTarget}
                 </Text>
-                <Text className="w-32 p-2 text-center">{item.todo.toFixed(2)}</Text>
+                <Text className="w-32 p-2 text-center">{item.todo}</Text>
               </View>
             ))
           )}

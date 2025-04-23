@@ -69,6 +69,29 @@ import ManagerDashboard from "@/component/ManagerScreens/ManagerDashboard";
 import CenterTarget from "@/component/ManagerScreens/CenterTarget";
 import ManagerTransactions from "@/component/ManagerScreens/ManagerTransactions";
 import { environment } from "../environment/environment";
+import RegisterDriver from "@/component/Driver screens/RegisterDriver";
+import AddDriverAddressDetails from "@/component/Driver screens/AddDriverAddressDetails";
+import AddVehicleDetails from "@/component/Driver screens/AddVehicleDetails";
+
+import SearchFarmerScreen from "@/component/Driver screens/Searchfarmer";
+import RegisterFarmer from "@/component/Driver screens/Register Farmer";
+import OTPverification from "@/component/Driver screens/OTPverification";
+import CollectionRequestForm from "@/component/Driver screens/CollectionRequestForm";
+import CollectionRequests from "@/component/Driver screens/CollectionRequests";
+import ViewScreen from "@/component/Driver screens/ViewScreen";
+import Cancelreson from "@/component/Driver screens/Cancelreson"
+import NewReport from "@/component/NewReport";
+import TransactionReport from "@/component/ManagerScreens/TransactionReport";
+
+import UpdateFarmerBankDetails from "@/component/UpdateFarmerBankDetails";
+
+
+
+
+
+
+
+
 LogBox.ignoreAllLogs(true);
 NativeWindStyleSheet.setOutput({
   default: "native",
@@ -107,7 +130,7 @@ function MainTabNavigator() {
         component={UnregisteredCropDetails as any}
       />
       <Tab.Screen name="SearchFarmer" component={SearchFarmer} />
-      <Tab.Screen name="ManagerDashboard" component={ManagerDashboard} />
+      <Tab.Screen name="ManagerDashboard" component={ManagerDashboard as any} />
       <Stack.Screen name="DailyTargetList" component={DailyTargetList} />
       <Stack.Screen
         name="CollectionOfficersList"
@@ -127,8 +150,17 @@ function MainTabNavigator() {
         name="EditTargetManager"
         component={EditTargetManager as any}
       />
+       
       <Stack.Screen name="TransactionList" component={TransactionList as any} />
       <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} />
+     {/* <Stack.Screen name="RegisterDriver" component={RegisterDriver as any} /> */}
+      {/* <Stack.Screen name="AddDriverAddressDetails" component={AddDriverAddressDetails as any} /> */}
+      {/* <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} /> */}
+
+   
+      
+      
+      
     </Tab.Navigator>
   );
 }
@@ -277,7 +309,42 @@ const Index = () => {
             component={MainTabNavigator}
             options={{ headerShown: false }}
           />
-        </Stack.Navigator>
+
+<Stack.Screen
+            name="SearchFarmerScreen"
+            component={SearchFarmerScreen as any}
+          />
+
+<Stack.Screen
+            name="RegisterFarmer"
+            component={RegisterFarmer as any}
+          />
+          <Stack.Screen
+            name="OTPverification"
+            component={OTPverification as any}
+          />
+          <Stack.Screen
+            name="CollectionRequestForm"
+            component={CollectionRequestForm as any}
+          />
+          <Stack.Screen
+            name="CollectionRequests"
+            component={CollectionRequests as any}
+          />
+            <Stack.Screen name="ViewScreen" component={ViewScreen as any} />          
+            <Stack.Screen
+            name="Cancelreson"
+            component={Cancelreson as any}
+          />
+          <Stack.Screen name="TransactionReport" component={TransactionReport as any} />
+                <Stack.Screen name="UpdateFarmerBankDetails" component={UpdateFarmerBankDetails as any} />
+                {/* <Stack.Screen name="ReviewCollectionRequests" component={ReviewCollectionRequests as any} /> */}
+                <Stack.Screen name="RegisterDriver" component={RegisterDriver as any} />
+      <Stack.Screen name="AddDriverAddressDetails" component={AddDriverAddressDetails as any} />
+      <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} />
+      <Stack.Screen name="NewReport" component={NewReport as any} />
+        </Stack.Navigator> 
+        
     </LanguageProvider>
   );
 };

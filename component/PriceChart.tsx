@@ -310,6 +310,9 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
     setEditedPrices(updatedPrices);
   };
 
+  console.log("cropp",cropName)
+  console.log("verity",varietyName)
+
   const handleButtonClick = async () => {
     if (isEditable) {
       try {
@@ -325,7 +328,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
         }));
   
         if (requestData.length === 0) {
-          Alert.alert(t("Error.No prices to update"));
+          Alert.alert(t("Error.error"),t("Error.No prices to update"));
           return;
         }
   

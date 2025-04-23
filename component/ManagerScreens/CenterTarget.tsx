@@ -221,34 +221,43 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
      }
    };
 
-  const fetchTargets = async () => {
+   const fetchTargets = async () => {
     setLoading(true);
     const startTime = Date.now();
     try {
-      const authToken = await AsyncStorage.getItem('token');
-      const response = await axios.get(`${environment.API_BASE_URL}api/target/get-center-target`, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-      console.log(response.data.data)
+        const authToken = await AsyncStorage.getItem('token');
+        const response = await axios.get(`${environment.API_BASE_URL}api/target/get-center-target`, {
+            headers: {
+                Authorization: `Bearer ${authToken}`,
+            },
+        });
 
-      const allData = response.data.data;
-      console.log('--------all data----------', allData);
-      const todoItems = allData.filter((item: TargetData) => item.todo > 0);
-      const completedItems = allData.filter((item: TargetData) => item.complete >= item.target); 
+        // Safely process the data
+        const allData = response.data.data.map((item: any) => ({
+            ...item,
+            // Ensure numeric values with fallback to 0
+            target: Number(item.target || 0),
+            complete: Number(item.complete || 0),
+            todo: Number(item.todo || 0)
+        }));
 
-      setTodoData(todoItems);
-      setCompletedData(completedItems);
-      setError(null);
+        console.log('Processed data:', allData);
+
+        const todoItems = allData.filter((item: TargetData) => item.todo > 0);
+        const completedItems = allData.filter((item: TargetData) => item.complete >= item.target); 
+
+        setTodoData(todoItems);
+        setCompletedData(completedItems);
+        setError(null);
     } catch (err) {
-      setError(t("Error.Failed to fetch data."));
+        console.error('Fetch error:', err);
+        setError(t("Error.Failed to fetch data."));
     } finally {
-      const elapsedTime = Date.now() - startTime;
-      const remainingTime = 4000 - elapsedTime;
-      setTimeout(() => setLoading(false), remainingTime > 0 ? remainingTime : 0);
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = 4000 - elapsedTime;
+        setTimeout(() => setLoading(false), remainingTime > 0 ? remainingTime : 0);
     }
-  };
+};
 
   useEffect(() => {
     fetchTargets();

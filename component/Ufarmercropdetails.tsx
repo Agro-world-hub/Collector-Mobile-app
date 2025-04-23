@@ -82,7 +82,7 @@ const Ufarmercropdetails: React.FC<UfarmercropdetailsProps> = ({ navigation }) =
     <View className='flex-1 bg-white'>
       <View className='flex-row pt-[7%] pl-[3%] pb-[5%]'>
         <AntDesign name="left" size={24} color="#000502"  onPress={() => navigation.goBack()} />
-        <Text className='text-xl pl-[22%] text-center'>{t("Ufarmercropdetails.FillCropDetails")}</Text>
+        <Text className='text-xl pl-[22%] text-center'>{t("Ufarmercropdetails.FillCropDetails")} </Text>
       </View>
 
       <View className='ml-[10%] mr-[10%] flex-1'>

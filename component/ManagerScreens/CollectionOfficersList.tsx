@@ -204,7 +204,7 @@ import {
   Dimensions,
   RefreshControl,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons , FontAwesome} from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { RootStackParamList } from "../types";
@@ -236,7 +236,8 @@ interface Officer {
   status: string;
   image: string;
   fullNameSinhala: string;
-  fullNameTamil:string
+  fullNameTamil:string;
+  jobRole: string;
 }
 
 const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
@@ -246,10 +247,12 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showMenu, setShowMenu] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
- 
+      const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+  const [selectedJobRole, setSelectedJobRole] = useState<string | null>(null);
+  const [filteredOfficers, setFilteredOfficers] = useState<Officer[]>(officers);
 
       const fetchSelectedLanguage = async () => {
         try {
@@ -265,77 +268,15 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
       setShowMenu(false);
     }, [])
   );
-
-  // const fetchOfficers = async () => {
-  //   try {
-  //     setLoading(true);
-  //     setErrorMessage(null);
-
-  //     const token = await AsyncStorage.getItem('token');
-  //     const response = await axios.get(
-  //       `${environment.API_BASE_URL}api/collection-manager/collection-officers`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-
-  //     if (response.data.status === 'success') {
-  //       setOfficers(response.data.data);
-  //     } else {
-  //       setErrorMessage('Failed to fetch officers.');
-  //     }
-  //   } catch (error: any) {
-  //     if (error.response?.status === 404) {
-  //       setErrorMessage('No officers available.');
-  //     } else {
-  //       setErrorMessage('An error occurred while fetching officers.');
-  //     }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const fetchOfficers = async () => {
-  //   try {
-  //     setLoading(true);
-  //     setErrorMessage(null);
-  
-  //     const token = await AsyncStorage.getItem('token');
-  //     const response = await axios.get(
-  //       `${environment.API_BASE_URL}api/collection-manager/collection-officers`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  
-  //     if (response.data.status === 'success') {
-  //       console.log("Backend status:", response.data.status); // Log the status field
-      
-  //       console.log("Raw officer data from backend:", response.data.data); // Log officer list
-  //       // Sort officers alphabetically by fullName (A-Z)
-  //       const sortedOfficers = response.data.data.sort((a: Officer, b: Officer) =>
-  //         a.fullName.localeCompare(b.fullName)
-  //       );
-  
-  //       setOfficers(sortedOfficers);
-  //     } else {
-  //       setErrorMessage('Failed to fetch officers.');
-  //     }
-  //   } catch (error: any) {
-  //     if (error.response?.status === 404) {
-  //       setErrorMessage('No officers available.');
-  //     } else {
-  //       setErrorMessage('An error occurred while fetching officers.');
-  //     }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
+  const getTextStyle = (language: string) => {
+    if (language === "si") {
+      return {
+        fontSize: 14, // Smaller text size for Sinhala
+        lineHeight: 20, // Space between lines
+      };
+    }
+   
+  };
   const fetchOfficers = async () => {
     try {
       setLoading(true);
@@ -420,48 +361,9 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
             return officer.fullNameEnglish;
         }
       };
-    
-
-  // const fetchOfficers = async () => {
-  //   try {
-  //     setLoading(true);
-  //     setErrorMessage(null);
-
-  //     const token = await AsyncStorage.getItem('token');
-  //     const response = await axios.get(
-  //       `${environment.API_BASE_URL}api/collection-manager/collection-officers`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-
-  //     if (response.data.status === 'success') {
-  //       console.log("Raw officer data from backend:", response.data.data); // Log all officer data
-
-  //       // Check if the status field exists for each officer
-  //       response.data.data.forEach((officer: Officer) => {
-  //         console.log(`Officer: ${officer.fullName}, Status: ${officer.status}`);
-  //       });
-
-  //       const sortedOfficers = response.data.data.sort((a: Officer, b: Officer) =>
-  //         a.fullName.localeCompare(b.fullName)
-  //       );
-
-  //       setOfficers(sortedOfficers);
-  //     } else {
-  //       setErrorMessage('Failed to fetch officers.');
-  //     }
-  //   } catch (error: any) {
-  //     console.error("Error fetching officers:", error);
-  //     setErrorMessage('An error occurred while fetching officers.');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const onRefresh = async () => {
+ setSelectedJobRole(null); 
     setRefreshing(true);
     await fetchOfficers();
     setRefreshing(false);
@@ -470,135 +372,24 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
   useFocusEffect(
     React.useCallback(() => {
       fetchOfficers();
+      setSelectedJobRole(null); 
+      setShowFilter(false)
     }, [])
   );
 
-  // const renderOfficer = ({ item }: { item: Officer }) => (
-  //   <TouchableOpacity
-  //     className="flex-row items-center p-4 mb-3 rounded-[35px] bg-gray-100 shadow-sm mx-4"
-  //     onPress={() =>
-  //       navigation.navigate('OfficerSummary' as any, {
-  //         officerId: item.empId,
-  //         officerName: item.fullName,
-  //         phoneNumber1: item.phoneNumber1,
-  //         phoneNumber2: item.phoneNumber2,
-  //         collectionOfficerId: item.collectionOfficerId,
-  //       })
-  //     }
-  //   >
-  //     <View className="w-14 h-14 rounded-full overflow-hidden justify-center items-center mr-4 shadow-md">
-  //       <Image
-  //         source={require('../../assets/images/ava.webp')}
-  //         className="w-full h-full"
-  //         resizeMode="cover"
-  //       />
-  //     </View>
+  useEffect(() => {
+    if (selectedJobRole) {
+      const filtered = officers.filter((officer) => officer.jobRole === selectedJobRole);
+      setFilteredOfficers(filtered);
+    } else {
+      setFilteredOfficers(officers); // Show all officers when no filter is selected
+    }
+  }, [selectedJobRole, officers]);
 
-  //     <View className="flex-1">
-  //       <Text className="text-[18px] font-semibold text-gray-900">{item.fullName}</Text>
-  //       <Text className="text-sm text-gray-500">EMP ID : {item.empId}</Text>
-  //     </View>
-
-  //     <Ionicons name="chevron-forward" size={scale(20)} color="#9CA3AF" />
-  //   </TouchableOpacity>
-
-  // const renderOfficer = ({ item }: { item: Officer & { status?: string } }) => (
-  //   <TouchableOpacity
-  //     className={`flex-row items-center p-4 mb-3 rounded-[35px] shadow-sm mx-4 ${
-  //       item.status === "Not Approved" ? "border border-red-500 bg-red-50" : "bg-gray-100"
-  //     }`}
-  //     onPress={() =>
-  //       navigation.navigate('OfficerSummary' as any, {
-  //         officerId: item.empId,
-  //         officerName: item.fullName,
-  //         phoneNumber1: item.phoneNumber1,
-  //         phoneNumber2: item.phoneNumber2,
-  //         collectionOfficerId: item.collectionOfficerId,
-  //       })
-  //     }
-  //   >
-  //     <View className="w-14 h-14 rounded-full overflow-hidden justify-center items-center mr-4 shadow-md">
-  //       <Image
-  //         source={require('../../assets/images/ava.webp')}
-  //         className="w-full h-full"
-  //         resizeMode="cover"
-  //       />
-  //     </View>
-
-  //     <View className="flex-1">
-  //       <Text className="text-[18px] font-semibold text-gray-900">{item.fullName}</Text>
-  //       <Text className="text-sm text-gray-500">EMP ID : {item.empId}</Text>
-  //     </View>
-
-  //     {item.status === "Not Approved" && (
-  //       <Text className="text-red-500 text-xs font-semibold mr-2">Not Approved</Text>
-  //     )}
-
-  //     <Ionicons name="chevron-forward" size={scale(20)} color="#9CA3AF" />
-  //   </TouchableOpacity>
-  // );
-
-  // const renderOfficer = ({ item }: { item: Officer & { status?: string } }) => (
-  //   <TouchableOpacity
-  //     className={`flex-row items-center p-4 mb-3 rounded-[35px] shadow-sm mx-4 ${
-  //       item.status === "Not Approved" ? "bg-gray-100" : "bg-gray-100"
-  //     }`}
-  //     onPress={() => {
-  //       // Prevent navigation if officer status is "Not Approved"
-  //       if (item.status !== "Not Approved") {
-  //         navigation.navigate('OfficerSummary' as any, {
-  //           officerId: item.empId,
-  //           officerName: item.fullName,
-  //           phoneNumber1: item.phoneNumber1,
-  //           phoneNumber2: item.phoneNumber2,
-  //           collectionOfficerId: item.collectionOfficerId,
-  //         });
-  //       }
-  //     }}
-  //     disabled={item.status === "Not Approved"} // Disable the TouchableOpacity when status is "Not Approved"
-  //   >
-  //     <View className="w-14 h-14 rounded-full overflow-hidden justify-center items-center mr-4 shadow-md">
-  //       <Image
-  //         source={require('../../assets/images/ava.webp')}
-  //         className="w-full h-full"
-  //         resizeMode="cover"
-  //       />
-  //     </View>
-
-  //     <View className="flex-1">
-  //       <Text className="text-[18px] font-semibold text-gray-900">{item.fullName}</Text>
-  //       <Text className="text-sm text-gray-500">EMP ID : {item.empId}</Text>
-  //     </View>
-  
-  //     {item.status === "Not Approved" && (
-  //       <Text className="text-red-500 text-xs font-semibold mr-2 mt-[-12%]">Not Approved</Text>
-  //     )}
-  
-  //     {/* Conditionally render the chevron icon based on the officer's status */}
-  //     {item.status !== "Not Approved" && (
-  //       <Ionicons name="chevron-forward" size={scale(20)} color="#9CA3AF" />
-  //     )}
-  //   </TouchableOpacity>
-  // );
-  
-  // // Handling the button for adding new officers
-  // <TouchableOpacity
-  //   onPress={async () => {
-  //     try {
-  //       await AsyncStorage.removeItem('officerFormData'); // Clear stored data
-  //       navigation.navigate('AddOfficerBasicDetails' as any);
-  //     } catch (error) {
-  //       console.error("Error clearing form data:", error);
-  //     }
-  //   }}
-  //   className="absolute bottom-5 right-5 bg-black w-14 h-14 rounded-full justify-center items-center shadow-lg"
-  // >
-  //   <Ionicons name="add" size={scale(24)} color="#fff" />
-  // </TouchableOpacity>
 
   const renderOfficer = ({ item }: { item: Officer & { status?: string } }) => (
     <TouchableOpacity
-      className={`flex-row items-center p-4 mb-3 rounded-[35px] shadow-sm mx-4 ${
+      className={`flex-row items-center p-4 mb-8 rounded-[35px] shadow-sm mx-4 ${
         item.status === "Not Approved" ? "bg-gray-100" : "bg-gray-100"
       }`}
       onPress={() => {
@@ -670,13 +461,55 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
   return (
     <View className="flex-1 bg-[#2AAD7A]">
       <View className="bg-[#2AAD7A] py-6 px-4  relative">
+      <TouchableOpacity
+          className="absolute top-6 left-4 z-50"
+          onPress={() => {
+            setShowFilter((prev) => !prev)
+            setShowMenu(false)
+          }}
+        >
+          <FontAwesome name="filter" size={24} color="#fff" />
+        </TouchableOpacity>
+        {showFilter && (
+  <View className="absolute z-50 flex-col top-14 left-6 bg-white shadow-lg rounded-lg">
+        <TouchableOpacity
+      className={`px-4 py-2 bg-white rounded-lg  ${selectedJobRole === "Driver" ? "bg-gray-200" : ""}`}
+      onPress={() => {
+        setSelectedJobRole("Driver");
+        setShowFilter(false); // Close the filter
+      }}
+    >
+      <Text className="text-gray-700 font-semibold">
+        {t("CollectionOfficersList.Drivers")}
+      </Text>
+    </TouchableOpacity>
+    <TouchableOpacity
+      className={`px-4 py-2 bg-white rounded-lg  ${selectedJobRole === "Collection Officer" ? "bg-gray-200" : ""}`}
+      onPress={() => {
+        setSelectedJobRole("Collection Officer");
+        setShowFilter(false); // Close the filter
+      }}
+    >
+      <Text className="text-gray-700 font-semibold">
+        {t("CollectionOfficersList.Collection Officers")}
+      </Text>
+    </TouchableOpacity>
+
+
+  </View>
+)}
+
+
         <Text style={{ fontSize: 18 }} className="text-white text-center font-bold">
          {t("CollectionOfficersList.Collection Officers")}
         </Text>
 
         <TouchableOpacity
           className="absolute top-6 right-4"
-          onPress={() => setShowMenu((prev) => !prev)}
+          onPress={() => {
+            setShowMenu((prev) => !prev)
+            setShowFilter(false)
+          }}
         >
           <Ionicons name="ellipsis-vertical" size={24} color="#fff" />
         </TouchableOpacity>
@@ -691,16 +524,48 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
       </View>
 
       <View className="flex-1  mt-3 rounded-t-2xl bg-white">
-        <View className='mt-4 px-4'>
+        {/* <View className='mt-4 px-4'>
         <Text style={{ fontSize: scale(16) }} className="font-bold text-[#21202B] mb-2">
         {t("CollectionOfficersList.Officers List")} <Text className="text-[#21202B] font-semibold">(All {officers.length})</Text>
          
         </Text>
-        </View>
+        </View> */}
+      
+  <View className="mt-4 px-4">
+    {selectedJobRole === "Collection Officer" ? (
+      <>
+        <Text style={[{ fontSize: scale(16) }, getTextStyle(selectedLanguage)]} className="font-bold text-[#21202B] mb-2">
+          {t("CollectionOfficersList.Officers List")}
+          <Text className="text-[#21202B] font-semibold">
+            ({filteredOfficers.length})
+          </Text>
+        </Text>
+      </>
+    ) : selectedJobRole === "Driver" ? (
+      <>
+        <Text style={{ fontSize: scale(16) }} className="font-bold text-[#21202B] mb-2">
+          {t("CollectionOfficersList.Drivers List")}
+          <Text className="text-[#21202B] font-semibold">
+            ({filteredOfficers.length})
+          </Text>
+        </Text>
+      </>
+    ) : (
+      <>
+        <Text style={{ fontSize: 16 }} className="font-bold text-[#21202B] mb-2">
+          {t("CollectionOfficersList.Officers / Drivers List")}
+          <Text className="text-[#21202B] font-semibold">
+            ({t("ManagerTransactions.All")} {officers.length})
+          </Text>
+        </Text>
+      </>
+    )}
+  </View>
+
 
         {loading ? (
           // Lottie Loader for 4 seconds
-          <View className="flex-1 justify-center items-center">
+          <View className="flex-1 justify-center items-center -mt-[25%]">
             <LottieView
               source={require("../../assets/lottie/collector.json")} // Ensure JSON file is correct
               autoPlay
@@ -714,7 +579,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
           </View>
         ) : (
           <FlatList
-            data={officers}
+          data={filteredOfficers.length > 0 ? filteredOfficers : officers}
             keyExtractor={(item) => item.empId}
             renderItem={renderOfficer}
             contentContainerStyle={{
@@ -742,7 +607,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
               console.error("Error clearing form data:", error);
             }
           }}
-          className="absolute bottom-5 right-5 bg-black w-14 h-14 rounded-full justify-center items-center shadow-lg"
+          className="absolute bottom-20 right-5 bg-black w-14 h-14 rounded-full justify-center items-center shadow-lg"
         >
           <Ionicons name="add" size={scale(24)} color="#fff" />
         </TouchableOpacity>

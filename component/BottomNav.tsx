@@ -52,6 +52,8 @@
 
 // export default BottomNav;
 
+//This is the updated code for the BottomNav component
+
 import React, {useState, useEffect, useCallback} from 'react';
 import NetInfo from '@react-native-community/netinfo';
 import { View, TouchableOpacity, Image,  Animated, Keyboard  } from 'react-native';
@@ -512,7 +514,7 @@ const onlineStatus = async () => {
     <View className={` ${
         currentTabName === 'QRScanner' ? 'bg-black' : 'bg-white'
       }`}>
-    <View className="flex-row  justify-between items-center bg-[#21202B] py-3 px-6 rounded-t-3xl w-full">
+    <View className="absolute bottom-0 flex-row  justify-between items-center bg-[#21202B] py-3 px-6 rounded-t-3xl w-full">
       {tabs.map((tab, index) => {
         // Check if the current tab is focused
         const isFocused = currentTabName === tab.name;

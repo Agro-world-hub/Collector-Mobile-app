@@ -62,7 +62,10 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   }, []);
 
   const handleChangePassword = async () => {
-
+    if(!newPassword || !confirmPassword || !currentPassword) {
+      Alert.alert(t("Error.error"), t("Error.Passwords are not allowed to be empty"));
+      return;
+    }
     if (newPassword !== confirmPassword) {
       Alert.alert(t("Error.error"), t("Error.New password and confirm password do not match."));
       return;
@@ -72,6 +75,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
       Alert.alert(t("Error.error"), t("Error.New password must be at least 6 characters long."));
       return;
     }
+
 
     try {
       const response = await axios.post(
@@ -87,7 +91,16 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
       Alert.alert("Success", "Password updated successfully");
       navigation.navigate("Login");
     } catch (error) {
-      Alert.alert(t("Error.error"), t("Error.Failed to update password."));
+      // Alert.alert(t("Error.error"), t("Error.Failed to update password."));
+      if (axios.isAxiosError(error) && error.response) {
+        if (error.response.status === 401) {
+            Alert.alert(t("Error.error"), t("Error.Invalid current password"));
+        } else {
+            Alert.alert(t("Error.error"),  t("Error.Failed to update password"));
+        }
+    } else {
+        Alert.alert(t("Error.error"), "Error.somethingWentWrong");
+    }
     }
   };
 
