@@ -134,6 +134,7 @@
 "Phone number 1 cannot be empty": "Phone number 1 cannot be empty",
  "Phone number 2 cannot be empty": "Phone number 2 cannot be empty"
 
+
  
 
 
@@ -205,6 +206,7 @@
     "Result Found":"ප්‍රතිඵල සොයා ගන්නා ලදී",
     "Set QR Code":"QR කේතය සකසන්න",
     "This Farmer does not have the QR" : "මෙම ගොවියාට QR කේතයක් නැත"
+
 
   },
   "UnregisteredFarmerDetails":{
@@ -644,4 +646,5 @@
      "No transactions found for this date": "இந்த திகதிக்கு எந்த பரிவர்த்தனைகளும் இல்லை."
 
   }   
+  
 }
