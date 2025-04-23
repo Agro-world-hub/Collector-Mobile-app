@@ -752,5 +752,42 @@
       "Cancelled":"අවලංගු කළා",
       "On way":"යන ගමන්",
       "Scheduled":"කාලසටහන්ගත කර ඇති"
-    }
+    },
+    "NewReport":{
+    "LNG": "en",
+    "Goods Received Note":"ලැබුණු භාණ්ඩ සටහන",
+    "GRN No":"GRN අංකය:",
+    "Date":"දිනය:",
+    "Supplier Details":"සැපයුම්කරු විස්තර:",
+    "Name":"නම:",
+    "Phone":"දුරකථන:",
+    "Received By":"ලැබුණු අය:",
+    "Company Name":"සමාගමේ නම:",
+    "Centre":"මධ්‍යස්ථානය:",
+    "Received Items":"ලැබුණු අයිතම",
+    "Crop Name":"බෝග නම",
+    "Variety":"වර්ගය",
+    "Grade":"ගුණාත්මකත්වය",
+    "Unit Price(Rs.)":"ඒකක මිල(රු.)",
+    "Quantity(kg)":"ප්‍රමාණය(කිලෝග්‍රෑම්)",
+    "Sub Total(Rs.)":"අනු මුදල (රු.)",
+    "Full Total (Rs.) Rs.":"සම්පූර්ණ එකතුව (රු.): රු..",
+    "Note":"සටහන:",
+    "GRNnote":"මෙම භාණ්ඩ රිසිට්පත් සටහන (GRN) ඉදිරි පෙළ කාර්ය මණ්ඩලය විසින් ගනු ලබන මූලික මිනුම් මත පදනම් වූ තාවකාලික පිළිගැනීමක් ලෙස ක්‍රියා කරයි. අවසාන සත්‍යාපනය එකතු කිරීමේ මධ්‍යස්ථානයේදී පවත්වනු ලැබේ. එකතු කිරීමේ මධ්‍යස්ථානයේ සටහන් කර ඇති මිනුම සියලු විෂමතා අවස්ථාවන්හිදී තීරණාත්මක සහ බැඳීමක් ලෙස සලකනු ලැබේ. මිනුම් විචලනයන්ගෙන් පැන නගින ඕනෑම ආදායම් බලපෑම් නිවැරදි කිරීමට සංවිධානයට අයිතියක් ඇති අතර මූලික වැරදි ගණනය කිරීම් හේතුවෙන් සිදුවන පාඩු සඳහා වගකිව යුතු නොවේ.",
+    "Download":"බාගත කරන්න",
+    "Share":"යවන්න",
+    "Sorry":"සමාවන්න",
+    "PDF was not generated.":"PDF එක නිර්මාණය කර නොමැත.",
+    "Failed to load details":"විස්තර පූර්ණ කිරීමට අසමත් විය",
+    "Success":"සාර්ථකයි",
+    "GRN report has been saved to your Downloads folder.":"GRN වාර්තාව ඔබේ බාගත කිරීම් ෆෝල්ඩරයට සුරකින ලදී.",
+    "Permission Denied":"අවසර ප්‍රතික්ෂේපිතයි",
+    "You need to grant permission to save the PDF.":"PDF එක සුරැකීමට අවසර ලබා දිය යුතුය.",
+    "Failed to save PDF to Downloads folder.":"බාගත කිරීම් ෆෝල්ඩරයට PDF එක සුරැකීමට අසමත් විය.",
+    "Sharing is not available on this device":"මෙම උපාංගයේ බෙදාහැරීම ලබා ගත නොහැක",
+    "Generated PDF file not found":"නිර්මාණය කළ PDF ගොනුව සොයාගත නොහැක",
+    "Failed to share PDF file":"PDF ගොනුව බෙදාහැරීමට අසමත් විය",
+    "No transactions found for this date": "මෙම දිනය සඳහා ගනුදෙනු කිසිවක් සොයාගත නොමැත"
+
+  }
 }
