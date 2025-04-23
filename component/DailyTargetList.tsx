@@ -376,7 +376,7 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
                 loop
                 style={{ width: 150, height: 150 }}
               />
-              <Text className="text-gray-500 mt-4 text-lg">{t("DailyTarget.NoTodoItems")}</Text>
+              <Text className="text-gray-500 mt-4 ">{t("DailyTarget.NoTodoItems")}</Text>
             </View>
           ) : (selectedToggle === 'Completed' && completedData.length === 0) ? (
             <View className="flex-1 justify-center items-center py-10">
@@ -386,7 +386,7 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
                 loop
                 style={{ width: 150, height: 150 }}
               />
-              <Text className="text-gray-500 mt-4 text-lg">{t("DailyTarget.noCompletedTargets")}</Text>
+              <Text className="text-gray-500 mt-4 ">{t("DailyTarget.noCompletedTargets")}</Text>
             </View>
           ) : (
             displayedData.map((item, index) => (

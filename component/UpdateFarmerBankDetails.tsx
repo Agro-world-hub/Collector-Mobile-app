@@ -69,6 +69,25 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   const [filteredBranches, setFilteredBranches] = useState<allBranches[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
 
+  const [accNumberError, setAccNumberError] = useState('');
+
+const validateAccountNumber = (value : any) => {
+  // Check if the value contains only numbers
+  const numericRegex = /^[0-9]*$/;
+  if (!numericRegex.test(value)) {
+    setAccNumberError(t("UnregisteredFarmerDetails.AccountNumberError"));
+    return false;
+  }
+  setAccNumberError('');
+  return true;
+};
+
+const handleAccountNumberChange = (value : any) => {
+  if (validateAccountNumber(value)) {
+    setAccNumber(value);
+  }
+};
+
 
   useEffect(() => {
     if (bankName) {
@@ -270,7 +289,7 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
       {/* Scrollable Form */}
       <ScrollView className="flex-1 p-3 mt-4">
         {/* Account Number */}
-        <View className="mb-4">
+        {/* <View className="mb-4">
           <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.AccountNum")}</Text>
           <TextInput
             placeholder={t("UnregisteredFarmerDetails.AccountNum")}
@@ -278,7 +297,27 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
             value={accNumber}
             onChangeText={setAccNumber}
           />
-        </View>
+        </View> */}
+        <View className="mb-4">
+    <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.AccountNum")}</Text>
+    <TextInput
+      placeholder={t("UnregisteredFarmerDetails.AccountNum")}
+      className={`border ${accNumberError ? 'border-red-500' : 'border-gray-300'} p-3 rounded-lg`}
+      keyboardType="numeric"
+      value={accNumber}
+      onChangeText={(text) => {
+        if (/^\d*$/.test(text)) {
+          setAccNumber(text);
+          setAccNumberError('');
+        } else {
+          setAccNumberError(t("UnregisteredFarmerDetails.AccountNumberError"));
+        }
+      }}
+    />
+    {accNumberError ? (
+      <Text className="text-red-500 text-sm mt-1">{accNumberError}</Text>
+    ) : null}
+  </View>
 
         {/* Account Holder's Name */}
         <View className="mb-4">

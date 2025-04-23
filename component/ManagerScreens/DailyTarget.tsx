@@ -683,7 +683,7 @@ setCompletedData(sortByVarietyAndGrade(completedItems));
                 loop
                 style={{ width: 150, height: 150 }}
               />
-              <Text className="text-gray-500 text-lg mt-4">
+              <Text className="text-gray-500  mt-4">
                 {selectedToggle === 'ToDo' 
                   ? t("DailyTarget.NoTodoItems") || "No items to do"
                   : t("DailyTarget.noCompletedTargets") || "No completed items"

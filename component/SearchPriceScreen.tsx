@@ -271,7 +271,7 @@
 
 // export default SearchPriceScreen;
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, TouchableOpacity, Image, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -325,6 +325,21 @@ console.log(";;;;;;;;",selectedLanguage)
     };
     fetchLanguage();
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // Reset dropdown states
+      setSelectedCrop(null);
+      setSelectedVariety(null);
+      setVarietyOptions([]);
+      setOpen(false);
+      setVopen(false);
+      fetchCropNames();
+    });
+  
+    // Return the cleanup function
+    return unsubscribe;
+  }, [navigation]);
   
   const fetchCropNames = async () => {
     setLoadingCrops(true);
@@ -584,7 +599,7 @@ console.log(";;;;;;;;",selectedLanguage)
           </View>
 
       {/* Search Button */}
-      <TouchableOpacity
+      {/* <TouchableOpacity
         className="bg-[#2AAD7A] w-full py-3 mb-4 rounded-[35px] items-center"
         onPress={() => {
           if (selectedCrop && selectedVariety) {
@@ -601,7 +616,31 @@ console.log(";;;;;;;;",selectedLanguage)
             console.log("cropnameee",selectedCrop)
           }
         }}
-      >
+      > */}
+      <TouchableOpacity
+  className="bg-[#2AAD7A] w-full py-3 mb-4 rounded-[35px] items-center"
+  onPress={() => {
+    if (selectedCrop && selectedVariety) {
+      const cropName = cropOptions.find(option => option.value === selectedCrop)?.label || '';
+      const varietyName = varietyOptions.find(option => option.key === selectedVariety)?.value || '';
+      
+      navigation.navigate('PriceChart', {
+        cropName: cropName,
+        varietyId: selectedVariety,
+        varietyName: varietyName,
+      });
+      console.log("cropnameee", selectedCrop);
+    } else {
+      // Show alert if crop or variety is not selected
+      Alert.alert(
+        t("SearchPrice.Selection Required"),
+        t("SearchPrice.Please select both Crop and Variety to continue"),
+        [{ text: t("SearchPrice.OK") }]
+      );
+    }
+  }}
+>
+ 
         <Text className="text-white font-semibold text-lg">{t("SearchPrice.Search")}</Text>
       </TouchableOpacity>
     </View>

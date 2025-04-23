@@ -210,7 +210,10 @@
     "SelectCrop":"බෝග තෝරන්න",
     "Variety":"විවිධත්වය",
     "SelectVariety":"ප්‍රභේදය තෝරන්න",
-    "Search":"සොයන්න"
+    "Search":"සොයන්න",
+    "Selection Required":"තේරීම අවශ්‍යයි",
+    "Please select both Crop and Variety to continue":"කරුණාකර ඉදිරියට යාමට බෝග සහ ප්‍රභේද දෙකම තෝරන්න.",
+    "OK":"හරි"
 
   },
   "SearchFarmer":{
@@ -246,7 +249,9 @@
     "Preferd Language":"පෙරනිමිය භාෂාව",
     "Select Language":"භාෂාව තෝරන්න",
     "Select Bank":"බැංකුව තෝරන්න",
-    "Select Branch":"ශාඛාව තෝරන්න"
+    "Select Branch":"ශාඛාව තෝරන්න",
+     "AccountNumberError":"කරුණාකර වලංගු ගිණුම් අංකයක් ඇතුළත් කරන්න.",
+      "InvalidNIC":"NIC එක ඉලක්කම් 12 කින් හෝ ඉලක්කම් 9 කින් පසුව V හෝ v විය යුතුය"
   },
   "PriceChart":{
     "LNG": "si",
