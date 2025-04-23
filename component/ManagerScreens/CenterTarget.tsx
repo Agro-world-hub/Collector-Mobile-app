@@ -293,11 +293,11 @@ const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
   return (
     <View className="flex-1 bg-[#282828] ">
       {/* Header */}
-      <View className="bg-[#282828] px-4 py-3 flex-row justify-between items-center">
+      <View className="bg-[#282828] px-4 py-3 flex-row  items-center justify-center">
       <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-6 left-4">
           <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-bold ml-[35%] mt-[3%]">{t("CenterTarget.CenterTarget")}</Text>
+        <Text className="text-white text-lg font-bold mt-[3%]">{t("CenterTarget.CenterTarget")}</Text>
       </View>
 
       {/* Toggle Buttons */}
