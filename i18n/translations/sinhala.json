@@ -31,6 +31,7 @@
        "Failed to fetch farmer details":"ගොවි විස්තර ලබා ගැනීමට අසමත් විය.",
        "noQRCodeAvailable":"QR කේතයක් නොමැත",
        "failedSaveQRCode":"QR කේතය සුරැකීම අසාර්ථක විය.",
+       "Invalid EMP ID":"අවලංගු EMP හැඳුනුම්පත",
        "Invalid EMP ID & Password":"අවලංගු EMP හැඳුනුම්පත සහ මුරපදය",
        "Invalid Password. Please try again.":"අවලංගු මුරපදය. කරුණාකර නැවත උත්සාහ කරන්න.",
        "An error occurred. Try again.":"දෝෂයක් ඇති විය. නැවත උත්සාහ කරන්න.",
@@ -789,5 +790,11 @@
     "Failed to share PDF file":"PDF ගොනුව බෙදාහැරීමට අසමත් විය",
     "No transactions found for this date": "මෙම දිනය සඳහා ගනුදෙනු කිසිවක් සොයාගත නොමැත"
 
+  },
+  "BankDetailsUpdate":{
+    "Success":"සාර්ථකයි",
+    "SuccessMessage":"බැංකු විස්තර යාවත්කාලීන කිරීම සාර්ථකයි!",
+    "Failed":"අසාර්ථකයි",
+    "FailedMessage":"බැංකු විස්තර යාවත්කාලීන කිරීම අසාර්ථකයි!"
   }
 }

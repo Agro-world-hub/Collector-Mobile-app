@@ -357,18 +357,18 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
 
       if (checkResponse.data.message === "This Phone Number already exists.") {
-        Alert.alert("Sorry", "This Phone Number already exists.");
+        Alert.alert(t("Error.error"), t("Error.This Phone Number already exists."));
         setLoading(false);
         return;
       } else if (checkResponse.data.message === "This NIC already exists.") {
-        Alert.alert("Sorry", "This NIC already exists.");
+        Alert.alert(t("Error.error"), t("Error.This NIC already exists."));
         setLoading(false);
         return;
       } else if (
         checkResponse.data.message ===
         "This Phone Number and NIC already exist."
       ) {
-        Alert.alert("Sorry", "This Phone Number and NIC already exist.");
+        Alert.alert(t("Error.error"), t("Error.This Phone Number and NIC already exist."));
         setLoading(false);
         return;
       }
@@ -463,7 +463,7 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
       });
       setLoading(false);
     } catch (error) {
-      Alert.alert(t("Error.error"), t("Error.SignupForum.otpSendFailed"));
+      Alert.alert(t("Error.error"), t("Error.otpSendFailed"));
       setLoading(false);
     }
   };

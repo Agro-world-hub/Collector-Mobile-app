@@ -31,6 +31,7 @@
     "Failed to fetch farmer details":"Failed to fetch farmer details",
     "noQRCodeAvailable":"no QRCode Available",
     "failedSaveQRCode":"failed Save QRCode",
+    "Invalid EMP ID":"Invalid EMP ID",
     "Invalid EMP ID & Password":"Invalid EMP ID & Password",
     "Invalid Password. Please try again.":"Invalid Password. Please try again.",
     "An error occurred. Try again.":"An error occurred. Try again.",
@@ -643,5 +644,11 @@
      "Failed to share PDF file":"PDF கோப்பைப் பகிர முடியவில்லை.",
      "No transactions found for this date": "இந்த திகதிக்கு எந்த பரிவர்த்தனைகளும் இல்லை."
 
-  }   
+  },
+  "BankDetailsUpdate":{
+    "Success":"Success",
+    "SuccessMessage":"Bank Details Update Success!",
+    "Failed":"Failed",
+    "FailedMessage":"Bank Details Update Failed!"
+  }
 }
