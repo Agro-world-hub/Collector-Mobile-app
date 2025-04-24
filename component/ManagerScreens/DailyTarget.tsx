@@ -639,7 +639,7 @@ setCompletedData(sortByVarietyAndGrade(completedItems));
                 source={require('../../assets/lottie/collector.json')}
                 autoPlay
                 loop
-                style={{ width: 150, height: 150 }}
+                style={{ width: 250, height: 250 }}
               />
             </View>
           ) : displayedData.length > 0 ? (
@@ -676,7 +676,7 @@ setCompletedData(sortByVarietyAndGrade(completedItems));
             ))
           ) : (
             // Empty state with Lottie animation
-            <View className="flex-1 justify-center items-center py-16 w-full">
+            <View className="flex-1 justify-center items-center mr-[40%] -mt-[10%]">
               <LottieView
                 source={require('../../assets/lottie/NoComplaints.json')} 
                 autoPlay

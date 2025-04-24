@@ -82,6 +82,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
   const [PreferdLanguage, setPreferdLanguage] = useState<string>("");
   const [NICError, setNICError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
 
 
   console.log(countryCode)
@@ -584,7 +585,7 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
             onChangeText={setNICnumber}
           />
         </View> */}
-        <View className="mb-4">
+    <View className="mb-4">
   <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.NIC")}</Text>
   <TextInput
     placeholder={t("UnregisteredFarmerDetails.NIC")}
@@ -593,32 +594,43 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
     onChangeText={(text) => {
       setNICnumber(text);
       
-      // Check if the text is empty
+      // Clear error if empty
       if (!text) {
         setNICError('');
         return;
       }
       
-      // Validate NIC format while typing
+      // Allow digits and V/v at the end
+      const isValidCharacters = /^(\d+|[\d]+[vV]?)$/.test(text);
+      if (!isValidCharacters) {
+        setNICError(t("UnregisteredFarmerDetails.InvalidNIC"));
+        return;
+      }
+      
+      // Show error until 9 digits are entered
+      if (text.length < 9) {
+        setNICError(t("UnregisteredFarmerDetails.InvalidNIC"));
+        return;
+      }
+      
+      // Check valid formats: 12 digits OR 9 digits + V/v
       const is12Digits = /^\d{12}$/.test(text);
       const is9DigitsWithV = /^\d{9}[vV]$/.test(text);
       
-      if (is12Digits || is9DigitsWithV || text.length < 10) {
-        // Valid or still typing
-        setNICError('');
+      if (is12Digits || is9DigitsWithV) {
+        setNICError(''); // Valid format
       } else {
-        // Invalid format
         setNICError(t("UnregisteredFarmerDetails.InvalidNIC"));
       }
     }}
+    maxLength={12} // This limits input to maximum 12 characters
   />
   {NICError ? (
     <Text className="text-red-500 text-sm mt-1">{NICError}</Text>
   ) : null}
 </View>
-
         {/* Phone Number */}
-        <View className="mb-4">
+        {/* <View className="mb-4">
           <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.Phone")}</Text>
           <View className="flex-row items-center border border-gray-300  p-3 rounded-lg">
             <CountryPicker
@@ -638,7 +650,58 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
               maxLength={9}
             />
           </View>
-        </View>
+        </View> */}
+
+<View className="mb-4">
+  <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.Phone")}</Text>
+  <View className={`flex-row items-center border ${phoneError ? 'border-red-500' : 'border-gray-300'} p-3 rounded-lg`}>
+    <CountryPicker
+      countryCode={countryCode}
+      withFilter
+      withFlag
+      withCallingCode
+      onSelect={handleCountrySelect}
+    />
+    <TextInput
+      placeholder="7XXXXXXXX"
+      keyboardType="phone-pad"
+      value={phoneNumber}
+      onChangeText={(text) => {
+        // Only allow digits
+        if (!/^\d*$/.test(text)) {
+          setPhoneError(t("UnregisteredFarmerDetails.OnlyDigitsAllowed"));
+          return;
+        }
+        
+        setPhoneNumber(text);
+        
+        // Clear error if empty
+        if (!text) {
+          setPhoneError('');
+          return;
+        }
+        
+        // Validate first digit is 7
+        if (text.length > 0 && text[0] !== '7') {
+          setPhoneError(t("UnregisteredFarmerDetails.MustStartWith7"));
+          return;
+        }
+        
+        // Display error until 9 digits are entered
+        if (text.length === 9) {
+          setPhoneError('');
+        } else {
+          setPhoneError(t("UnregisteredFarmerDetails.InvalidPhoneLength"));
+        }
+      }}
+      className="flex-1"
+      maxLength={9}
+    />
+  </View>
+  {phoneError ? (
+    <Text className="text-red-500 text-sm mt-1">{phoneError}</Text>
+  ) : null}
+</View>
 
         {/* Address */}
         <View className="mb-4">
