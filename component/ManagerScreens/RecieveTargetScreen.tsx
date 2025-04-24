@@ -311,7 +311,10 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
           {fetchingTarget ? (
             <ActivityIndicator size="small" color="#2AAD7A" />
           ) : (
-            <Text className="text-xl font-bold text-center text-black mb-4">{maxAmount}{t("PassTargetBetweenOfficers.kg")}</Text>
+            // <Text className="text-xl font-bold text-center text-black mb-4">{maxAmount"" || "--"}{t("PassTargetBetweenOfficers.kg")}</Text>
+            <Text className="text-xl font-bold text-center text-black mb-4">
+  {maxAmount ? `${maxAmount} ${t("PassTargetBetweenOfficers.kg")}` : "--"}
+</Text>
           )}
         </View>
 
@@ -320,7 +323,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
           <TextInput
             className="border border-gray-300 rounded-lg p-2 text-gray-800"
             keyboardType="numeric"
-            value={amount}
+            value={amount || "--"}
             onChangeText={handleAmountChange}
           />
           {error ? <Text className="text-red-500 mt-2">{error}</Text> : null}
