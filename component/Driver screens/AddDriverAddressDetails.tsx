@@ -20,6 +20,7 @@ import { Platform } from "react-native";
 import bankNames from "../../assets/jsons/banks.json";
 import { useTranslation } from "react-i18next";
 
+//this is a temporary fix for the error "Type 'string' is not assignable to type 'never'"
 type AddDriverAddressDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
   "AddDriverAddressDetails"
