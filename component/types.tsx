@@ -32,7 +32,7 @@ export type RootStackParamList = {
     TamProfile:undefined;
     SearchFarmer:{NICnumber: string; userId: any;};
     FarmerQr:{ cropCount: number,userId:any,NICnumber: string; };
-    ComplainPage:{farmerName:any, farmerPhone:any, userId:number};
+    ComplainPage:{farmerName:any, farmerPhone:any, userId:number, farmerLanguage:string};
     OfficerQr:undefined;
     Profile:undefined;
     ReportPage:{userId:string,registeredFarmerId:Number};

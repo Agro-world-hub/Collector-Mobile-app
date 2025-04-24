@@ -400,7 +400,8 @@ disabled={!farmerQRCode}
           onPress={() => navigation.navigate('ComplainPage' as any, {
             farmerName,
             farmerPhone,
-            userId
+            userId,
+            farmerLanguage
           })}
           disabled={!farmerQRCode}
         >
