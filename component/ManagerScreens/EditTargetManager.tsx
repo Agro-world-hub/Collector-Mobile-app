@@ -143,7 +143,7 @@ interface EditTargetManagerProps {
       grade: string;
       target: number;
       todo: string;
-      dailyTarget: any;
+      dailyTarget: number;
     };
   };
 }
@@ -215,7 +215,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
           <Text className="text-gray-600 font-medium">{t("EditTargetManager.TotalTarget")}</Text>
           <TextInput
             className="border border-gray-300 rounded-md px-3 py-2 mt-2 text-gray-800"
-            value={dailyTarget.toString()}	
+            value={dailyTarget ? dailyTarget.toString() : '0'}
             editable={false}
           />
         </View>
@@ -224,12 +224,12 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
         <View>
           <Text className="text-gray-600 font-medium">{t("EditTargetManager.My Target")}</Text>
           <View className="flex-row items-center mt-2 border border-gray-300 rounded-md px-3 py-2">
-            <TextInput
-              className="flex-1 text-gray-800"
-              value={target.toString()}
-              editable={isEditing}
-              onChangeText={(text) => setMyTarget(text)}
-            />
+          <TextInput
+            className="flex-1 text-gray-800"
+            value={target ? target.toString() : '0'}
+            editable={isEditing}
+            onChangeText={(text) => setMyTarget(text)}
+          />
             <TouchableOpacity onPress={() => setIsEditing((prev) => !prev)}>
               <Ionicons
                 name={isEditing ? 'pencil' : 'pencil'}
@@ -266,10 +266,10 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
         <View>
           <Text className="text-gray-600 font-medium">{t("EditTargetManager.Amount")}</Text>
           <TextInput
-            className="border border-gray-300 rounded-md px-3 py-2 mt-2 text-gray-800"
-            value={todo.toString()}
-            editable={false}
-          />
+          className="border border-gray-300 rounded-md px-3 py-2 mt-2 text-gray-800"
+          value={todo ? todo.toString() : '0'}
+          editable={false}
+        />
         </View>
       </View>
     </View>

@@ -24,6 +24,7 @@ interface PassTargetScreenProps {
       target: string;
       todo: string;
       qty: string;
+      dailyTarget: number;
     };
   };
 }
@@ -47,7 +48,9 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { t } = useTranslation();
   
-  const { varietyNameEnglish, grade, target, todo, qty, varietyId,varietyNameSinhala, varietyNameTamil  } = route.params;
+  const { varietyNameEnglish, grade, target, todo, qty, varietyId,varietyNameSinhala, varietyNameTamil ,dailyTarget } = route.params;
+  
+  console.log("Collection Officer ID:", route.params); // Log the collection officer ID
   const maxAmount = parseFloat(todo);
 
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
@@ -220,7 +223,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
 <TouchableOpacity onPress={() => {
   navigation.reset({
     index: 0,
-    routes: [{name: 'Main',params: { screen: 'EditTargetManager', params: { varietyId, varietyNameEnglish, grade, target, todo, qty,varietyNameSinhala, varietyNameTamil }, }, }, ],});
+    routes: [{name: 'Main',params: { screen: 'EditTargetManager', params: { varietyId, varietyNameEnglish, grade, target, todo, qty,varietyNameSinhala, varietyNameTamil ,dailyTarget}, }, }, ],});
   }}>
   <Ionicons name="arrow-back" size={22} color="white" />
 </TouchableOpacity>
