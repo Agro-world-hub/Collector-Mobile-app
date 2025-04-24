@@ -254,7 +254,10 @@
     "Select Bank":"Select Bank",
     "Select Branch":"Select Branch",
     "AccountNumberError":"Please enter a valid account number",
-    "InvalidNIC":"NIC must be either 12 digits or 9 digits followed by V or v"
+    "InvalidNIC":"NIC must be either 12 digits or 9 digits followed by V or v",
+    "OnlyDigitsAllowed":"Only Digits Allowed",
+    "MustStartWith7":"Must Start With 7",
+    "InvalidPhoneLength":"Invalid Phone Length"
   },
   "PriceChart":{
     "LNG": "en",

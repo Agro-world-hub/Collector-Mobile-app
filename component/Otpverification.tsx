@@ -215,7 +215,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         accHolderName: accHolderName,
         bankName: bankName,
         branchName: branchName,
-        PreferdLanguage: language,
+        PreferdLanguage:  PreferdLanguage ,
       };
       // Shoutout verify endpoint
       const url = "https://api.getshoutout.com/otpservice/verify";
