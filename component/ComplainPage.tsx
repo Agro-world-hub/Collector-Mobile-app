@@ -367,7 +367,7 @@ interface ComplainPageProps {
 const ComplainPage: React.FC<ComplainPageProps> = () => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<RootStackParamList, "ComplainPage">>();
-  const { userId } = route.params;
+  const { userId, farmerLanguage } = route.params;
   console.log("User ID:", userId);
   const [complain, setComplain] = useState<string>("");
   const [authToken, setAuthToken] = useState<string | null>(null);
@@ -493,7 +493,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
           "api/complain/farmer-complaint", 
           {
             complain,
-            language: storedLanguage,
+            language: farmerLanguage,
             category: selectedCategory,
             userId,
           },

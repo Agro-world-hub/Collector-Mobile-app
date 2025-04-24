@@ -54,6 +54,13 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
   const maxAmount = parseFloat(todo);
 
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+  const [selectingOfficer, setSelectingOfficer] = useState<boolean>(false);
+  
+  // Determine if the Save button should be disabled
+  const isSaveDisabled = () => {
+    // Only disable the button when selecting an officer
+    return selectingOfficer || submitting;
+  };
   
 
 
