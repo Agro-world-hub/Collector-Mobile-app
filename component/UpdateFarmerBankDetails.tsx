@@ -321,14 +321,18 @@ If correct, share OTP only with the XYZ representative who contacts you.`;
 
         {/* Account Holder's Name */}
         <View className="mb-4">
-          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.AccountName")}</Text>
-          <TextInput
-            placeholder={t("UnregisteredFarmerDetails.AccountName")}
-            className="border border-gray-300  p-3 rounded-lg"
-            value={accHolderName}
-            onChangeText={setAccHolderName}
-          />
-        </View>
+  <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.AccountName")}</Text>
+  <TextInput
+    placeholder={t("UnregisteredFarmerDetails.AccountName")}
+    className="border border-gray-300 p-3 rounded-lg"
+    value={accHolderName}
+    onChangeText={(text) => {
+      // Only allow letters, spaces, and dots (for initials)
+      const sanitizedText = text.replace(/[^a-zA-Z.\s]/g, '');
+      setAccHolderName(sanitizedText);
+    }}
+  />
+</View>
 
         {/* Bank Name */}
         <View className="mb-4">

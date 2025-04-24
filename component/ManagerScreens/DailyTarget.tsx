@@ -577,7 +577,7 @@ setCompletedData(sortByVarietyAndGrade(completedItems));
     <View className="flex-1 bg-[#282828] w-full">
       {/* Header */}
       <View className="bg-[#282828] px-4 py-3 flex-row justify-between items-center">
-        <Text className="text-white text-lg font-bold ml-[35%]">{t("DailyTarget.DailyTarget")}</Text>
+        <Text className="text-white text-lg font-bold ml-[35%]">{t("DailyTarget.MyTarget")}</Text>
       </View>
   
       {/* Toggle Buttons */}
@@ -636,7 +636,7 @@ setCompletedData(sortByVarietyAndGrade(completedItems));
           {loading ? (
             <View className="flex-1 justify-center items-center mr-[40%] -mt-[10%]">
               <LottieView
-                source={require('../../assets/lottie/NoComplaints.json')}
+                source={require('../../assets/lottie/collector.json')}
                 autoPlay
                 loop
                 style={{ width: 150, height: 150 }}
@@ -678,7 +678,7 @@ setCompletedData(sortByVarietyAndGrade(completedItems));
             // Empty state with Lottie animation
             <View className="flex-1 justify-center items-center py-16 w-full">
               <LottieView
-                source={require('../../assets/lottie/NoComplaints.json')} // Make sure you have this animation file
+                source={require('../../assets/lottie/NoComplaints.json')} 
                 autoPlay
                 loop
                 style={{ width: 150, height: 150 }}

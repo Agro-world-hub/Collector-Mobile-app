@@ -194,6 +194,7 @@
   "DailyTarget":{
     "LNG": "en",
     "DailyTarget":"Daily Target",
+    "MyTarget":"My Target",
     "Todo":"To do",
     "Completed":"Completed",
     "No":"No",
@@ -225,7 +226,7 @@
     "EnterNIC":"Enter NIC number",
     "Noregistered":"No registered farmer found",
     "RegisterFarmer":"Register Farmer",
-    "Result Found":"Result Found",
+    "Result Found":"Results Found :",
     "Set QR Code":"Set QR Code",
     "This Farmer does not have the QR" : "This Farmer does not have the QR"
 
