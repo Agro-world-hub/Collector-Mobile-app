@@ -354,6 +354,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
             t("Error.error"),
             t("Error.You must change the prices before submitting. Please update the values.")
           );
+          console.log("Error:", error.response.data.message);
         } else {
           console.error("Error submitting price request:", error);
           setError("Failed to submit price update.");
