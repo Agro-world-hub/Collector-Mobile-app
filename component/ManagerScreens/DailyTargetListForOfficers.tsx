@@ -64,6 +64,45 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
     }
   };
 
+  const getGradePriority = (grade: string): number => {
+    switch (grade) {
+      case 'A': return 1;
+      case 'B': return 2;
+      case 'C': return 3;
+      default: return 4; // Any other grades come after A, B, C
+    }
+  };
+
+  // Sort function that first sorts by variety name, then by grade (A, B, C)
+  const sortByVarietyAndGrade = (data: TargetData[]) => {
+    return [...data].sort((a, b) => {
+      // First sort by variety name
+      const nameA = getVarietyNameForSort(a);
+      const nameB = getVarietyNameForSort(b);
+      
+      const nameComparison = nameA.localeCompare(nameB);
+      
+      // If variety names are the same, sort by grade (A, B, C)
+      if (nameComparison === 0) {
+        return getGradePriority(a.grade) - getGradePriority(b.grade);
+      }
+      
+      return nameComparison;
+    });
+  };
+
+  // Helper function to get the variety name based on selected language
+  const getVarietyNameForSort = (item: TargetData) => {
+    switch (selectedLanguage) {
+      case "si":
+        return item.varietyNameSinhala || '';
+      case "ta":
+        return item.varietyNameTamil || '';
+      default:
+        return item.varietyNameEnglish || '';
+    }
+  };
+
   // ✅ Fetch Targets API (Runs every time the page is visited or refreshed)
   const fetchTargets = async () => {
     setLoading(true);
@@ -84,8 +123,10 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
       const todoItems = allData.filter((item: TargetData) => item.todo > 0);
       const completedItems = allData.filter((item: TargetData) => item.todo === 0);
 
-      setTodoData(todoItems);
-      setCompletedData(completedItems);
+      // setTodoData(todoItems);
+      // setCompletedData(completedItems);
+      setTodoData(sortByVarietyAndGrade(todoItems));
+setCompletedData(sortByVarietyAndGrade(completedItems));
       setError(null);
     } catch (err) {
       setError(t("Error.Failed to fetch data."));
@@ -131,17 +172,140 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
               }
             };
 
+  // return (
+  //   <View className="flex-1 bg-[#282828] ">
+  //     {/* Header */}
+  //     <View className="bg-[#282828] px-4 py-3 flex-row  justify-center  items-center">
+  //        <TouchableOpacity onPress={() => navigation.goBack()} className='absolute left-4'>
+  //       <AntDesign name="left" size={22} color="white" />
+  //             </TouchableOpacity>
+  //             <Text className="text-white text-lg font-bold">{officerId}</Text>
+
+  //     </View>
+
+  //     {/* Toggle Buttons */}
+  //     <View className="flex-row justify-center items-center py-4 bg-[#282828]">
+  //       {/* To Do Button */}
+  //       <TouchableOpacity
+  //         className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
+  //           selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
+  //         }`}
+  //         style={{ height: 40 }}
+  //         onPress={() => setSelectedToggle('ToDo')}
+  //       >
+  //         <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
+  //         {t("DailyTarget.Todo")}
+  //         </Text>
+  //         <View className="bg-white rounded-full px-2">
+  //           <Text className="text-green-500 font-bold text-xs">{todoData.length}</Text>
+  //         </View>
+  //       </TouchableOpacity>
+
+  //       {/* Completed Button */}
+  //       <TouchableOpacity
+  //         className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
+  //           selectedToggle === 'Completed' ? 'bg-[#2AAD7A]' : 'bg-white'
+  //         }`}
+  //         style={{ height: 40 }}
+  //         onPress={() => setSelectedToggle('Completed')}
+  //       >
+  //         <Text
+  //           className={`font-bold ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
+  //         >
+  //           {t("DailyTarget.Completed")}
+  //         </Text>
+  //         <View className="bg-white rounded-full px-2 ml-2">
+  //           <Text className="text-green-500 font-bold text-xs">{completedData.length}</Text>
+  //         </View>
+  //       </TouchableOpacity>
+  //     </View>
+
+  //     {/* Scrollable Table */}
+  //     <ScrollView
+  //       horizontal
+  //       className=" bg-white"
+  //       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+  //     >
+  //       <View>
+  //         {/* Table Header */}
+  //         <View className="flex-row bg-[#2AAD7A] h-[7%]">
+  //                 <Text className="w-16 p-2  text-center text-white">{t("DailyTarget.No")}</Text>
+  //                 <Text className="w-40 p-2  text-center text-white">{t("DailyTarget.Variety")}</Text>
+  //                 <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Grade")}</Text>
+  //                 <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Target")}</Text>
+  //                 <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Todo()")}</Text>
+  //               </View>
+
+  //         {loading ? (
+  //            <View className="flex-1 justify-center items-center mr-[40%] -mt-[10%]">
+  //                 <LottieView
+  //                   source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
+  //                   autoPlay
+  //                   loop
+  //                   style={{ width: 350, height: 350 }}
+  //                 />
+  //               </View>
+  //         ) : (
+  //           displayedData.map((item, index) => (
+  //             <TouchableOpacity
+  //               key={index}
+  //               className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
+  //               onPress={() => {
+  //                 let qty = 0;
+  //                 if (item.centerTarget) {
+  //                   if (item.grade === 'A' && item.centerTarget.total_qtyA !== undefined) {
+  //                     qty = parseFloat(item.centerTarget.total_qtyA);
+  //                   } else if (item.grade === 'B' && item.centerTarget.total_qtyB !== undefined) {
+  //                     qty = parseFloat(item.centerTarget.total_qtyB);
+  //                   } else if (item.grade === 'C' && item.centerTarget.total_qtyC !== undefined) {
+  //                     qty = parseFloat(item.centerTarget.total_qtyC);
+  //                   }
+  //                 }
+
+  //                 navigation.navigate('EditTargetScreen' as any, {
+  //                   varietyNameEnglish: item.varietyNameEnglish,
+  //                   varietyId: item.varietyId,
+  //                   grade: item.grade,
+  //                   target: item.officerTarget,
+  //                   todo: item.todo,
+  //                   qty: item.dailyTarget,
+  //                   collectionOfficerId, 
+  //                   varietyNameSinhala: item.varietyNameSinhala,
+  //                   varietyNameTamil: item.varietyNameTamil,
+  //                 });
+  //               }}
+  //             >
+  //               <View
+  //                 key={index}
+  //                 className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
+  //               >
+  //                 <Text className="w-16 p-2 border-r border-gray-300 text-center">
+  //                   {selectedToggle === 'ToDo' ? index + 1 : <Ionicons name="flag" size={20} color="green" />}
+  //                 </Text>
+  //                 <Text className="w-40 p-2 border-r border-gray-300 text-center flex-wrap">
+  //                 {getvarietyName(item)}
+  //                 </Text>
+  //                 <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.grade}</Text>
+  //                 <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.officerTarget}</Text>
+  //                 <Text className="w-32 p-2 text-center">{item.todo}</Text>
+  //               </View>
+  //             </TouchableOpacity>
+  //           ))
+  //         )}
+  //       </View>
+  //     </ScrollView>
+  //   </View>
+  // );
   return (
     <View className="flex-1 bg-[#282828] ">
       {/* Header */}
-      <View className="bg-[#282828] px-4 py-3 flex-row  justify-center  items-center">
-         <TouchableOpacity onPress={() => navigation.goBack()} className='absolute left-4'>
-        <AntDesign name="left" size={22} color="white" />
-              </TouchableOpacity>
-              <Text className="text-white text-lg font-bold">{officerId}</Text>
-
+      <View className="bg-[#282828] px-4 py-3 flex-row justify-center items-center">
+        <TouchableOpacity onPress={() => navigation.goBack()} className='absolute left-4'>
+          <AntDesign name="left" size={22} color="white" />
+        </TouchableOpacity>
+        <Text className="text-white text-lg font-bold">{officerId}</Text>
       </View>
-
+  
       {/* Toggle Buttons */}
       <View className="flex-row justify-center items-center py-4 bg-[#282828]">
         {/* To Do Button */}
@@ -153,13 +317,13 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
           onPress={() => setSelectedToggle('ToDo')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
-          {t("DailyTarget.Todo")}
+            {t("DailyTarget.Todo")}
           </Text>
           <View className="bg-white rounded-full px-2">
             <Text className="text-green-500 font-bold text-xs">{todoData.length}</Text>
           </View>
         </TouchableOpacity>
-
+  
         {/* Completed Button */}
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
@@ -178,33 +342,33 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
           </View>
         </TouchableOpacity>
       </View>
-
+  
       {/* Scrollable Table */}
       <ScrollView
         horizontal
-        className=" bg-white"
+        className="bg-white"
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <View>
           {/* Table Header */}
           <View className="flex-row bg-[#2AAD7A] h-[7%]">
-                  <Text className="w-16 p-2  text-center text-white">{t("DailyTarget.No")}</Text>
-                  <Text className="w-40 p-2  text-center text-white">{t("DailyTarget.Variety")}</Text>
-                  <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Grade")}</Text>
-                  <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Target")}</Text>
-                  <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Todo()")}</Text>
-                </View>
-
+            <Text className="w-16 p-2 text-center text-white">{t("DailyTarget.No")}</Text>
+            <Text className="w-40 p-2 text-center text-white">{t("DailyTarget.Variety")}</Text>
+            <Text className="w-32 p-2 text-center text-white">{t("DailyTarget.Grade")}</Text>
+            <Text className="w-32 p-2 text-center text-white">{t("DailyTarget.Target")}</Text>
+            <Text className="w-32 p-2 text-center text-white">{t("DailyTarget.Todo()")}</Text>
+          </View>
+  
           {loading ? (
-             <View className="flex-1 justify-center items-center mr-[40%] -mt-[10%]">
-                  <LottieView
-                    source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
-                    autoPlay
-                    loop
-                    style={{ width: 350, height: 350 }}
-                  />
-                </View>
-          ) : (
+            <View className="flex-1 justify-center items-center mr-[40%] -mt-[10%]">
+              <LottieView
+                source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
+                autoPlay
+                loop
+                style={{ width: 350, height: 350 }}
+              />
+            </View>
+          ) : displayedData.length > 0 ? (
             displayedData.map((item, index) => (
               <TouchableOpacity
                 key={index}
@@ -220,7 +384,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
                       qty = parseFloat(item.centerTarget.total_qtyC);
                     }
                   }
-
+  
                   navigation.navigate('EditTargetScreen' as any, {
                     varietyNameEnglish: item.varietyNameEnglish,
                     varietyId: item.varietyId,
@@ -242,7 +406,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
                     {selectedToggle === 'ToDo' ? index + 1 : <Ionicons name="flag" size={20} color="green" />}
                   </Text>
                   <Text className="w-40 p-2 border-r border-gray-300 text-center flex-wrap">
-                  {getvarietyName(item)}
+                    {getvarietyName(item)}
                   </Text>
                   <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.grade}</Text>
                   <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.officerTarget}</Text>
@@ -250,6 +414,21 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
                 </View>
               </TouchableOpacity>
             ))
+          ) : (
+            <View className="flex-1 justify-center items-center py-16 w-screen">
+              <LottieView
+                source={require('../../assets/lottie/NoComplaints.json')} 
+                autoPlay
+                loop
+                style={{ width: 150, height: 150 }}
+              />
+             <Text className="text-gray-500  mt-4">
+                             {selectedToggle === 'ToDo' 
+                               ? t("DailyTarget.NoTodoItems") || "No items to do"
+                               : t("DailyTarget.noCompletedTargets") || "No completed items"
+                             }
+                           </Text>
+            </View>
           )}
         </View>
       </ScrollView>
