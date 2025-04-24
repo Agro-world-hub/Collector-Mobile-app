@@ -26,6 +26,7 @@ interface PassTargetBetweenOfficersScreenProps {
       todo: string;
       qty: string;
       collectionOfficerId: number;
+      dailyTarget: number;
     };
   };
 }
@@ -49,7 +50,7 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { t } = useTranslation();
   
-  const { varietyNameEnglish, grade, target, todo, qty, varietyId,collectionOfficerId, varietyNameSinhala, varietyNameTamil } = route.params;
+  const { varietyNameEnglish, grade, target, todo, qty, varietyId,collectionOfficerId, varietyNameSinhala, varietyNameTamil,dailyTarget } = route.params;
   console.log(collectionOfficerId)
   const maxAmount = parseFloat(todo);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
@@ -269,14 +270,7 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
             disabled={submitting}
           >
             {submitting ? (
-              <View className="flex-1 justify-center items-center mr-[45%] ">
-                                <LottieView
-                                  source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
-                                  autoPlay
-                                  loop
-                                  style={{ width: 350, height: 350 }}
-                                />
-                              </View>
+             <ActivityIndicator size="small" color="white" />
             ) : (
               <Text className="text-white text-center font-medium">{t("PassTargetBetweenOfficers.Save")}</Text>
             )}
