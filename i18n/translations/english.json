@@ -124,7 +124,7 @@
     "Officer created successfully":"Officer created successfully!",
     "Phone numbers updated successfully":"Phone numbers updated successfully",
     "Submitted":"Submitted",
-    "Your complaint has Submit successfuly":"Your complaint has Submit successfuly!:",
+    "Your complaint has Submit successfuly":"Your complaint has Submit successfuly!",
     "No Prices Available":"No Prices Available",
     "No prices are available for the selected variety.":"No prices are available for the selected variety.",
     "Prices for the selected variety were not found.":"Prices for the selected variety were not found.",
@@ -153,8 +153,8 @@
  "Please fill all fields, add crops, and select a schedule date.":"Please fill all fields, add crops, and select a schedule date.",
  "Failed to update user details":"Failed to update user details.",
  "Collection Requests Submitted!":"Collection Requests Submitted!",
- "Invalid crop or variety selected.":"Invalid crop or variety selected."
-
+ "Invalid crop or variety selected.":"Invalid crop or variety selected.",
+"Please enter prices for all grades before submitting":"Please enter prices for all grades before submitting"
 
    
 
@@ -266,6 +266,7 @@
     "Variety":"Variety",
     "UnitGrades":"Unit Prices according to Grades",
     "Go":"Go Back",
+    "Cancel":"Cancel",
     "Grade":"Grade",
     "Request Price Update":"Request Price Update",
     "Submit Request":"Submit Request"

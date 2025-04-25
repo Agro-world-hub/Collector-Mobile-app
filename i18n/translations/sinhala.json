@@ -123,7 +123,7 @@
       "Officer created successfully":"නිලධාරියා සාර්ථකව නිර්මාණය කරන ලදී!",
       "Phone numbers updated successfully":"දුරකථන අංක සාර්ථකව යාවත්කාලීන කරන ලදී.",
       "Submitted":"ඉදිරිපත් කරන ලදී",
-    "Your complaint has Submit successfuly":"ඔබගේ පැමිණිල්ල සාර්ථකව ඉදිරිපත් කර ඇත!:",
+    "Your complaint has Submit successfuly":"ඔබගේ පැමිණිල්ල සාර්ථකව ඉදිරිපත් කර ඇත!",
      "No Prices Available":"මිල ගණන් නොමැත",
     "No prices are available for the selected variety.":"තෝරාගත් ප්‍රභේදය සඳහා මිල ගණන් නොමැත.",
     "Prices for the selected variety were not found.":"තෝරාගත් ප්‍රභේදය සඳහා මිල ගණන් හමු නොවීය.",
@@ -153,8 +153,8 @@
  "Please fill all fields, add crops, and select a schedule date.":"කරුණාකර සියලුම ක්ෂේත්‍ර පුරවා, බෝග එකතු කර, කාලසටහනක් තෝරන්න.",
  "Failed to update user details":"පරිශීලක විස්තර යාවත්කාලීන කිරීමට අසමත් විය.",
  "Collection Requests Submitted!":"එකතු කිරීමේ ඉල්ලීම් ඉදිරිපත් කරන ලදී!",
- "Invalid crop or variety selected.":"වලංගු නොවන බෝගයක් හෝ ප්‍රභේදයක් තෝරාගෙන ඇත."
-
+ "Invalid crop or variety selected.":"වලංගු නොවන බෝගයක් හෝ ප්‍රභේදයක් තෝරාගෙන ඇත.",
+"Please enter prices for all grades before submitting":"ඉදිරිපත් කිරීමට පෙර සියලුම ශ්‍රේණි සඳහා මිල ගණන් ඇතුළත් කරන්න."
 
 
   },
@@ -260,6 +260,7 @@
     "Variety":"විවිධත්වය",
     "UnitGrades":"ශ්‍රේණි අනුව ඒකක මිල ගණන්",
     "Go":"ආපසු යන්න",
+    "Cancel":"අවලංගු කරන්න",
     "Grade":"ශ්‍රේණිය",
     "Request Price Update":"මිල යාවත්කාලීනය ඉල්ලන්න",
     "Submit Request":"ඉල්ලීම ඉදිරිපත් කරන්න"
