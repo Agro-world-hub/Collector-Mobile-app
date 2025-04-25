@@ -326,8 +326,77 @@ useFocusEffect(
   }, [varietyId])
 );
 
+  // const handleButtonClick = async () => {
+  //   if (isEditable) {
+  //     try {
+  //       const token = await AsyncStorage.getItem("token");
+  //       if (!token) {
+  //         throw new Error("No authentication token found.");
+  //       }
+  
+  //       const requestData = editedPrices.map((priceItem) => ({
+  //         varietyId,
+  //         grade: priceItem.grade,
+  //         requestPrice: priceItem.price,
+  //       }));
+  
+  //       if (requestData.length === 0) {
+  //         Alert.alert(t("Error.error"),t("Error.No prices to update"));
+  //         return;
+  //       }
+  
+  //       // Send the price update request
+  //       const response = await api.post(
+  //         "api/auth/marketpricerequest",
+  //         { prices: requestData },
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         }
+  //       );
+  
+  //       // Handle success response
+  //       if (response.status === 201) {
+  //         Alert.alert(t("Error.Success"), t("Error.The price request was sent successfully"));
+  //         await fetchPrices(); // Refetch prices after submitting
+  //         setIsEditable(false);
+  //         setButtonText(t("PriceChart.Request Price Update") );
+  //       }
+  //     } catch (error) {
+  //       // Check if error status is 400 and show the message to update prices
+  //       if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+  //         Alert.alert(
+  //           t("Error.error"),
+  //           t("Error.You must change the prices before submitting. Please update the values.")
+  //         );
+  //         console.log("Error:", error.response.data.message);
+  //       } else {
+  //         console.error("Error submitting price request:", error);
+  //         setError("Failed to submit price update.");
+  //         Alert.alert(t("Error.error"),
+  //           t("Error.Failed to submit price update."));
+  //       }
+  //     }
+  //   } else {
+  //     setIsEditable(true);
+  //     setButtonText(t("PriceChart.Submit Request"));
+  //   }
+  // };
+
   const handleButtonClick = async () => {
     if (isEditable) {
+      // Check if any price fields are empty
+      const hasEmptyPrices = editedPrices.some(item => !item.price || item.price.trim() === '' || item.price === '0');
+      
+      if (hasEmptyPrices) {
+        Alert.alert(
+          t("Error.error"),
+          t("Error.Please enter prices for all grades before submitting")
+        );
+        return;
+      }
+      
       try {
         const token = await AsyncStorage.getItem("token");
         if (!token) {
@@ -341,7 +410,7 @@ useFocusEffect(
         }));
   
         if (requestData.length === 0) {
-          Alert.alert(t("Error.error"),t("Error.No prices to update"));
+          Alert.alert(t("Error.error"), t("Error.No prices to update"));
           return;
         }
   
@@ -361,7 +430,7 @@ useFocusEffect(
           Alert.alert(t("Error.Success"), t("Error.The price request was sent successfully"));
           await fetchPrices(); // Refetch prices after submitting
           setIsEditable(false);
-          setButtonText(t("PriceChart.Request Price Update") );
+          setButtonText(t("PriceChart.Request Price Update"));
         }
       } catch (error) {
         // Check if error status is 400 and show the message to update prices
@@ -450,9 +519,9 @@ useFocusEffect(
           </View>
         )}
 
-        <TouchableOpacity className="bg-[#2AAD7A] rounded-[45px] py-3 h-12 mt-4 w-3/4 mx-auto" onPress={handleButtonClick}>
+        {/* <TouchableOpacity className="bg-[#2AAD7A] rounded-[45px] py-3 h-12 mt-4 w-3/4 mx-auto" onPress={handleButtonClick}>
           <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-base text-white font-semibold">{buttonText}</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* {isEditable && (
           <TouchableOpacity
@@ -469,7 +538,7 @@ useFocusEffect(
          
           
         )} */}
-        {isEditable && (
+        {/* {isEditable && (
   <TouchableOpacity
     className="border border-gray-400  mt-4 py-3 h-12 rounded-full items-center w-3/4 mx-auto"
     onPress={() => {
@@ -480,7 +549,31 @@ useFocusEffect(
   >
     <Text className="text-gray-700 text-base font-semibold">{t("PriceChart.Go")}</Text>
   </TouchableOpacity>
-)}
+)} */}
+
+<TouchableOpacity className="bg-[#2AAD7A] rounded-[45px] py-3 h-12 mt-4 w-3/4 mx-auto" onPress={handleButtonClick}>
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-base text-white font-semibold">{buttonText}</Text>
+        </TouchableOpacity>
+
+        {/* Secondary Button - Changes based on state */}
+        <TouchableOpacity 
+          className="border border-gray-400 mt-4 py-3 h-12 rounded-full items-center w-3/4 mx-auto" 
+          onPress={() => {
+            if (isEditable) {
+              // If in edit mode, this acts as "Cancel"
+              setIsEditable(false);
+              setButtonText(t("PriceChart.Request Price Update"));
+              fetchPrices();
+            } else {
+              // If not in edit mode, this acts as "Go Back"
+              navigation.goBack();
+            }
+          }}
+        >
+          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-base text-[#606060] font-semibold">
+            {isEditable ? t("PriceChart.Cancel") : t("PriceChart.Go")}
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
