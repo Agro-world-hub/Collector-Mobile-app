@@ -114,7 +114,7 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
           value: getOfficerName(officer),
         }));
 
-        setOfficers([{ key: '0', value: t("PassTargetBetweenOfficers.Select an officer") }, ...formattedOfficers]);
+        setOfficers([ ...formattedOfficers]);
       } else {
         setErrorMessage(t("Error.Failed to fetch officers."));
       }
@@ -223,7 +223,7 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-semibold ml-[30%]">{getvarietyName()}</Text>
+        <Text className="text-white text-lg font-semibold text-center w-full">{getvarietyName()}</Text>
       </View>
 
       {/* ✅ Scrollable Content */}
@@ -242,19 +242,32 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
             ) : errorMessage ? (
               <Text className="text-red-500">{errorMessage}</Text>
             ) : (
-              <View className="border border-gray-300 rounded-lg mb-4">
+              <View className=" rounded-lg mb-4">
                 <SelectList
                   setSelected={(value: string) => setAssignee(value)}
                   data={officers}
                   save="key"
                   defaultOption={{ key: '0', value: t("PassTargetBetweenOfficers.Select an officer")}}
+                  boxStyles={{ 
+                    borderWidth: 1,
+                    borderColor: '#CFCFCF',
+                    backgroundColor: 'white'
+                  }}
+                  inputStyles={{
+                    color: '#000000'
+                  }}
+                  dropdownStyles={{  // Fixed: changed from dropDownStyles to dropdownStyles
+                    borderColor: '#CFCFCF',
+                    backgroundColor: 'white'
+                  }}
                 />
+                
               </View>
             )}
 
             <Text className="text-gray-700 mb-2">{t("PassTargetBetweenOfficers.Amount")}</Text>
             <TextInput
-              className="border border-gray-300 rounded-lg p-2 text-gray-800"
+              className="border border-gray-300 rounded-lg p-3 text-gray-800"
               keyboardType="numeric"
               value={amount}
               onChangeText={handleAmountChange}

@@ -172,9 +172,9 @@ export const handleGeneratePDF = async (
           }
           .footer {
             margin-top: 20px;
-            font-style: italic;
+            
             font-size: 12px;
-            text-align: center;
+            
             color: #555;
           }
         </style>

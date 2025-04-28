@@ -104,12 +104,21 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
       console.log("Officers:", response.data.data);
 
       if (response.data.status === 'success') {
-        const formattedOfficers = response.data.data.map((officer: any) => ({
+        // const formattedOfficers = response.data.data.map((officer: any) => ({
+        //   key: officer.collectionOfficerId.toString(),
+        //   value: getOfficerName(officer),
+        // }));
+        const filteredOfficers = response.data.data.filter(
+          (officer: any) => officer.collectionOfficerId !== toOfficerId
+        );
+  
+        // Format the officers to be displayed
+        const formattedOfficers = filteredOfficers.map((officer: any) => ({
           key: officer.collectionOfficerId.toString(),
           value: getOfficerName(officer),
         }));
 
-        setOfficers([{ key: '0', value:  t("PassTargetBetweenOfficers.Select an officer") }, ...formattedOfficers]);
+        setOfficers([ ...formattedOfficers]);
       } else {
         setErrorMessage(t("Error.Failed to fetch officers."));
       }
@@ -146,8 +155,8 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
   
       console.log("Daily Target Response:", response.data);
   
-      if (response.data.status === 'success' && response.data.data.length > 0) {
-        const { target, complete } = response.data.data[0];
+      if (response.data.status === 'success' && response.data.data) {
+        const { target, complete } = response.data.data;
         const calculatedTodo = parseFloat(target) - parseFloat(complete);
   
         setMaxAmount(calculatedTodo > 0 ? calculatedTodo : 0); // Ensure todo is not negative
@@ -266,7 +275,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-semibold ml-[30%]">{getvarietyName()}</Text>
+        <Text className="text-white text-lg font-semibold text-center w-full">{getvarietyName()}</Text>
       </View>
 
       <View className="bg-white rounded-lg p-4">
@@ -278,7 +287,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
           ) : errorMessage ? (
             <Text className="text-red-500">{errorMessage}</Text>
           ) : (
-            <View className="border border-gray-300 rounded-lg mb-4">
+            <View className=" rounded-lg mb-4">
               <SelectList
                 setSelected={(value: string) => {
                   setAssignee(value);
@@ -287,6 +296,18 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
                 data={officers}
                 save="key"
                 defaultOption={{ key: '0', value:  t("PassTargetBetweenOfficers.Select an officer") }}
+                boxStyles={{ 
+                  borderWidth: 1,
+                  borderColor: '#CFCFCF',
+                  backgroundColor: 'white'
+                }}
+                inputStyles={{
+                  color: '#000000'
+                }}
+                dropdownStyles={{  // Fixed: changed from dropDownStyles to dropdownStyles
+                  borderColor: '#CFCFCF',
+                  backgroundColor: 'white'
+                }}
               />
             </View>
           )}

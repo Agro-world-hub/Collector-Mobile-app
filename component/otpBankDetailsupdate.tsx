@@ -300,18 +300,14 @@ const handleFailCompletion = () =>{
       };
 
       const response = await axios.post(url, body, { headers });
+      console.log("Response from Shoutout:", response.data);
       const { statusCode } = response.data;
 
       if (statusCode === "1000") {
         setIsVerified(true);
         setModalVisible(true);
 
-        // const response1 = await axios.post(
-        //   `${environment.API_BASE_URL}api/farmer/register-farmer`,
-        //   data
-        // );
-
-     const response = await axios.post(`${environment.API_BASE_URL}api/farmer/FarmerBankDetails`, {
+      const response = await axios.post(`${environment.API_BASE_URL}api/farmer/FarmerBankDetails`, {
         accNumber: accNumber,
         accHolderName: accHolderName,
         bankName: bankName,
@@ -319,21 +315,25 @@ const handleFailCompletion = () =>{
         userId: farmerId,
         NICnumber: NICnumber,
       });
-
+      
       if (response.status === 200) {
         await AsyncStorage.removeItem("referenceId");
         <ShowSuccessModal visible={modalVisible} onClose={() => setModalVisible(false)} onComplete={handleSuccessCompletion} />;
       } else {
-        // setLoading(false);
         <ShowFailModal visible={modalVisible} onClose={() => setModalVisible(false)} onFail={handleFailCompletion} />;
-
-        Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
       }
     } 
-
-       
-        //Alert.alert("Success","Farmer Registration successful");
-{/* <ShowSuccessModal visible={modalVisible} onClose={() => setModalVisible(false)} onComplete={handleSuccessCompletion} />; */}
+      else if (statusCode === "1001") {
+        Alert.alert(
+          t("Error.Sorry"),
+          t("Otpverification.invalidOTP")
+        );
+      } else {
+        Alert.alert(
+          t("Error.Sorry"),
+          t("Error.somethingWentWrong")
+        );
+      }
     } catch (error) {
       Alert.alert(
         t("Error.Sorry"),
@@ -344,45 +344,49 @@ const handleFailCompletion = () =>{
 
   
   // Resend OTP
+
   const handleResendOTP = async () => {
     await AsyncStorage.removeItem("referenceId");
+    console.log("Phone Number:", phoneNumber); // Log phone number for debugging
     try {
       const apiUrl = "https://api.getshoutout.com/otpservice/send";
       const headers = {
         Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
         "Content-Type": "application/json",
       };
-
+  
       let otpMessage = "";
-      if(PreferdLanguage === "English"){
-        otpMessage = `Your OTP for bank detail verification with XYZ is: {{code}}
-        
-${accHolderName}
-${accNumber}
-${bankName}
-${branchName}
-        
-If correct, share OTP only with the XYZ representative who contacts you.`;
-
-      }else if(PreferdLanguage === "Sinhala"){
+  
+      if (PreferdLanguage === "Sinhala") {
         otpMessage = `XYZ සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
-        
-${accHolderName}
-${accNumber}
-${bankName}
-${branchName}
-        
-නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා XYZ නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
-      }else if(PreferdLanguage === "Tamil"){
+          
+  ${accHolderName}
+  ${accNumber}
+  ${bankName}
+  ${branchName}
+          
+  නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා XYZ නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
+      } else if (PreferdLanguage === "Tamil") {
         otpMessage = `XYZ உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
-        
-${accHolderName}
-${accNumber}
-${bankName}
-${branchName}
-        
-சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் XYZ பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
+          
+  ${accHolderName}
+  ${accNumber}
+  ${bankName}
+  ${branchName}
+          
+  சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் XYZ பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
+      } else {
+        otpMessage = `Your OTP for bank detail verification with XYZ is: {{code}}
+          
+  ${accHolderName}
+  ${accNumber}
+  ${bankName}
+  ${branchName}
+          
+  If correct, share OTP only with the XYZ representative who contacts you.`;
       }
+  
+      // Prepare the body of the request
       const body = {
         source: "AgroWorld",
         transport: "sms",
@@ -391,18 +395,21 @@ ${branchName}
         },
         destination: `${phoneNumber}`,
       };
-
-      const response = await axios.post(apiUrl, body, { headers });
-
+  
+      console.log("Sending OTP Request Body:", body);
+  
+      const response = await axios.post(apiUrl, body, { headers });  
+      // Check if the response contains a referenceId
       if (response.data.referenceId) {
         await AsyncStorage.setItem("referenceId", response.data.referenceId);
         setReferenceId(response.data.referenceId);
+  
         Alert.alert(
           t("Otpverification.Success"),
           t("Error.otpResent")
         );
-        setTimer(240);
-        setDisabledResend(true);
+        setTimer(240);  
+        setDisabledResend(true);  
       } else {
         Alert.alert(
           t("Error.Sorry"),
@@ -410,12 +417,91 @@ ${branchName}
         );
       }
     } catch (error) {
+      console.error("Error sending OTP:", error);
+  
       Alert.alert(
         t("Error.Sorry"),
         t("Error.otpResendFailed")
       );
-    }
+    } 
   };
+
+  
+//   const handleResendOTP = async () => {
+//     console.log(phoneNumber)
+//     try {
+//       const apiUrl = "https://api.getshoutout.com/otpservice/send";
+//       const headers = {
+//         Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
+//         "Content-Type": "application/json",
+//       };
+
+//       let otpMessage = "";
+//       if(PreferdLanguage === "English"){
+//         otpMessage = `Your OTP for bank detail verification with XYZ is: {{code}}
+        
+// ${accHolderName}
+// ${accNumber}
+// ${bankName}
+// ${branchName}
+        
+// If correct, share OTP only with the XYZ representative who contacts you.`;
+
+//       }else if(PreferdLanguage === "Sinhala"){
+//         otpMessage = `XYZ සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
+        
+// ${accHolderName}
+// ${accNumber}
+// ${bankName}
+// ${branchName}
+        
+// නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා XYZ නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
+//       }else if(PreferdLanguage === "Tamil"){
+//         otpMessage = `XYZ உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
+        
+// ${accHolderName}
+// ${accNumber}
+// ${bankName}
+// ${branchName}
+        
+// சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் XYZ பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
+//       }
+//       const body = {
+//         source: "AgroWorld",
+//         transport: "sms",
+//         content: {
+//           sms: otpMessage,
+//         },
+//         destination: `${phoneNumber}`,
+//       };
+
+//       console.log("hit1")
+//       const response = await axios.post(apiUrl, body, { headers });
+//       console.log("Response from Shoutout:", response.data);
+
+
+//       if (response.data.referenceId) {
+//         await AsyncStorage.setItem("referenceId", response.data.referenceId);
+//         setReferenceId(response.data.referenceId);
+//         Alert.alert(
+//           t("Otpverification.Success"),
+//           t("Error.otpResent")
+//         );
+//         setTimer(240);
+//         setDisabledResend(true);
+//       } else {
+//         Alert.alert(
+//           t("Error.Sorry"),
+//           t("Error.otpResendFailed")
+//         );
+//       }
+//     } catch (error) {
+//       Alert.alert(
+//         t("Error.Sorry"),
+//         t("Error.otpResendFailed")
+//       );
+//     }
+//   };
 
   // Format the timer for display
   const formatTime = (time: number) => {

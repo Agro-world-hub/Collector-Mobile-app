@@ -151,7 +151,9 @@
  "Failed to update user details":"පරිශීලක විස්තර යාවත්කාලීන කිරීමට අසමත් විය.",
  "Collection Requests Submitted!":"එකතු කිරීමේ ඉල්ලීම් ඉදිරිපත් කරන ලදී!",
  "Invalid crop or variety selected.":"වලංගු නොවන බෝගයක් හෝ ප්‍රභේදයක් තෝරාගෙන ඇත.",
-"Please enter prices for all grades before submitting":"ඉදිරිපත් කිරීමට පෙර සියලුම ශ්‍රේණි සඳහා මිල ගණන් ඇතුළත් කරන්න."
+"Please enter prices for all grades before submitting":"ඉදිරිපත් කිරීමට පෙර සියලුම ශ්‍රේණි සඳහා මිල ගණන් ඇතුළත් කරන්න.",
+"incorrectOTPCode":"ඔබ ඇතුළත් කළ කේතය අවලංගුයි. කරුණාකර නැවත උත්සාහ කරන්න.",
+"Ok":"හරි"
   },
 "EngProfile":{
     "LNG": "si",
@@ -484,7 +486,7 @@
     "My Target":"මගේ ඉලක්කය",
     "Pass":"සමත්",
     "Receive":"ලැබෙන්න",
-    "Amount":"කළ යුතු මුදල",
+    "Amount":"කළ යුතු අගය (kg)",
     "Assigned Target":"පවරන ලද ඉලක්කය" 
   },
   "ManagerTransactions":{
@@ -514,7 +516,7 @@
     "maximum amount":"ඔබට සමත් විය හැකි උපරිම මුදල:",
     "kg":"kg",
     "Short Stock Assignee":"කෙටි තොග පැවරුම්කරු",
-    "Amount":"මුදල (kg)",
+    "Amount":"අගය (kg)",
     "Save":"සුරකින්න",
     "maximum amount receive":"ඔබට ලැබිය හැකි උපරිම මුදල:",
     "Select an officer":"--නිලධාරියෙකු තෝරන්න--"

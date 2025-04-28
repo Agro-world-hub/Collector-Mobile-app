@@ -202,8 +202,8 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
         <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
         
-        <Text className="text-white text-lg font-semibold ml-[30%]">
-        {getvarietyName()}
+        <Text className="text-white text-lg font-semibold text-center w-full">
+  {getvarietyName()}
 </Text>
 
       </View>

@@ -415,7 +415,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
           value: getOfficerName(officer),
         }));
 
-        setOfficers([{ key: '0', value: t("PassTargetBetweenOfficers.Select an officer") }, ...formattedOfficers]);
+        setOfficers([ ...formattedOfficers]);
       } else {
         setErrorMessage(t("Error.Failed to fetch officers."));
       }
@@ -432,6 +432,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
 
   // ✅ Fetch Daily Target when officer is selected
   const fetchDailyTarget = async (officerId: string) => {
+    console.log("Selected Officer ID:", officerId);
     if (officerId === '0') {
       setAmount('');
       setMaxAmount(0);
@@ -454,8 +455,9 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
   
       console.log("Daily Target Response:", response.data);
   
-      if (response.data.status === 'success' && response.data.data.length > 0) {
-        const { target, complete } = response.data.data[0];
+      if (response.data.status === 'success' && response.data.data) {
+        console.log("Daily Target Data:", response.data.data);
+        const { target, complete } = response.data.data;
         const calculatedTodo = parseFloat(target) - parseFloat(complete);
   
         setMaxAmount(calculatedTodo > 0 ? calculatedTodo : 0); // Ensure todo is not negative
@@ -609,7 +611,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
           }}>
             <Ionicons name="arrow-back" size={22} color="white" />
           </TouchableOpacity>
-          <Text className="text-white text-lg font-semibold ml-[30%]">{getvarietyName()}</Text>
+          <Text className="text-white text-lg font-semibold text-center w-full">{getvarietyName()}</Text>
         </View>
 
         <View className="bg-white rounded-lg p-4">
@@ -621,17 +623,30 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
             ) : errorMessage ? (
               <Text className="text-red-500">{errorMessage}</Text>
             ) : (
-              <View className="border border-gray-300 rounded-lg mb-4">
-                <SelectList
-                  setSelected={(value: string) => {
-                    setAssignee(value);
-                    fetchDailyTarget(value); // Fetch daily target when an officer is selected
-                  }}
-                  data={officers}
-                  save="key"
-                  defaultOption={{ key: '0', value: t("PassTargetBetweenOfficers.Select an officer") }}
-                />
-              </View>
+              <View className="mb-4">
+              <SelectList
+                setSelected={(value: string) => {
+                  setAssignee(value);
+                  fetchDailyTarget(value); // Fetch daily target when an officer is selected
+                }}
+                data={officers}
+                save="key"
+                defaultOption={{ key: '0', value: t("PassTargetBetweenOfficers.Select an officer") }}
+                boxStyles={{ 
+                  borderWidth: 1,
+                  borderColor: '#CFCFCF',
+                  backgroundColor: 'white'
+                }}
+                inputStyles={{
+                  color: '#000000'
+                }}
+                dropdownStyles={{  // Fixed: changed from dropDownStyles to dropdownStyles
+                  borderColor: '#CFCFCF',
+                  backgroundColor: 'white'
+                }}
+              />
+            </View>
+
             )}
 
             <View className="border-b border-gray-300 my-4" />
