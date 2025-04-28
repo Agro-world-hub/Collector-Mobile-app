@@ -1578,7 +1578,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
             const { registeredFarmerId } = response.data;
             console.log('registeredFarmerId:', registeredFarmerId);
     
-            alert('All crop details submitted successfully!');
+            Alert.alert(t("BankDetailsUpdate.Success"),t("Error.All crop details submitted successfully!"));
    
             await sendSMS(farmerLanguage, farmerPhone, totalPrice, invoiceNumber);
             
@@ -1660,7 +1660,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
             const { registeredFarmerId } = response.data;
             console.log('registeredFarmerId:', registeredFarmerId);
     
-            alert(t("Error.All crop details submitted successfully!"));
+           Alert.alert(t("BankDetailsUpdate.Success"),t("Error.All crop details submitted successfully!"));
             await sendSMS(farmerLanguage, farmerPhone, totalPrice, invoiceNumber);
             
             refreshCropForms();
