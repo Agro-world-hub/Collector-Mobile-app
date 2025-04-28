@@ -151,7 +151,9 @@
  "Failed to update user details":"Failed to update user details.",
  "Collection Requests Submitted!":"Collection Requests Submitted!",
  "Invalid crop or variety selected.":"Invalid crop or variety selected.",
-"Please enter prices for all grades before submitting":"Please enter prices for all grades before submitting"
+"Please enter prices for all grades before submitting":"Please enter prices for all grades before submitting",
+"incorrectOTPCode":"The code you entered is invalid. Please try again.",
+"Ok":"Ok"
   },
   "EngProfile":{
     "LNG": "en",

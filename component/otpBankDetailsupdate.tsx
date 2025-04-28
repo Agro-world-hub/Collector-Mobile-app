@@ -307,12 +307,7 @@ const handleFailCompletion = () =>{
         setIsVerified(true);
         setModalVisible(true);
 
-        // const response1 = await axios.post(
-        //   `${environment.API_BASE_URL}api/farmer/register-farmer`,
-        //   data
-        // );
-
-     const response = await axios.post(`${environment.API_BASE_URL}api/farmer/FarmerBankDetails`, {
+      const response = await axios.post(`${environment.API_BASE_URL}api/farmer/FarmerBankDetails`, {
         accNumber: accNumber,
         accHolderName: accHolderName,
         bankName: bankName,
@@ -320,12 +315,11 @@ const handleFailCompletion = () =>{
         userId: farmerId,
         NICnumber: NICnumber,
       });
-
+      
       if (response.status === 200) {
         await AsyncStorage.removeItem("referenceId");
         <ShowSuccessModal visible={modalVisible} onClose={() => setModalVisible(false)} onComplete={handleSuccessCompletion} />;
       } else {
-        // setLoading(false);
         <ShowFailModal visible={modalVisible} onClose={() => setModalVisible(false)} onFail={handleFailCompletion} />;
       }
     } 

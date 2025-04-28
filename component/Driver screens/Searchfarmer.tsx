@@ -369,7 +369,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
               
                */}
              {/* Only show this search bar with icon when searching (no results found yet) */}
-{(!foundFarmer && !newQr) && (
+{(!foundFarmer && !newQr && !noResults) && (
   <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2 bg-white">
     <TextInput
       value={NICnumber}
@@ -386,7 +386,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
 )}
 
 {/* Show only the value without search icon when any results are found (either foundFarmer or newQr) */}
-{(foundFarmer || (newQr && farmers && noResults)) && (
+{(foundFarmer || (newQr || farmers || noResults)) && (
   <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2 bg-white">
     <TextInput
       value={NICnumber}
@@ -403,7 +403,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
               ) : null}
   
               {/* Display search image when no NIC is entered */}
-              {!isSearching && !foundFarmer && NICnumber.length === 0 && (
+              {/* {!isSearching && !foundFarmer && NICnumber.length === 0 && (
                 <View className="mt-10 items-center">
                   <Image
                     source={require("../../assets/images/search.webp")}
@@ -411,7 +411,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                     resizeMode="contain"
                   />
                 </View>
-              )}
+              )} */}
   
               {/* Searching status */}
               {isSearching && (

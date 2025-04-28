@@ -72,7 +72,7 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-semibold ml-[30%]">{getvarietyName()}</Text>
+        <Text className="text-white text-lg font-semibold text-center w-full">{getvarietyName()}</Text>
       </View>
 
       {/* Content */}
