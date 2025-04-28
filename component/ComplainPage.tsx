@@ -504,7 +504,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
       }
   
       Alert.alert(
-        t("Error.Submitted"),
+        t("Error.Success"),
         t("Error.Your complaint has Submit successfuly")
       );
       setComplain("");
