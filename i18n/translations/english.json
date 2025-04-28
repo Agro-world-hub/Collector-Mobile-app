@@ -292,7 +292,8 @@
     "Add":"Add",
     "Done":"Done",
     "Select Crop":"Select Crop",
-    "Select Variety":"Select Variety"
+    "Select Variety":"Select Variety",
+    "Processing...":"Processing..."
   },
   "ReportPage":{
     "LNG": "en",
