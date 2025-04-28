@@ -227,16 +227,20 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
     };
   
     const handleSearch = async () => {
-      Keyboard.dismiss();
-      if (NICnumber.trim().length === 0) return;
-      validateNic(NICnumber);
-
-      if (ere) {
-        return;
-      }
-      setIsSearching(true);
-      setNoResults(false);
-      setFoundFarmer(null);
+  Keyboard.dismiss();
+  if (NICnumber.trim().length === 0) return;
+  
+  // Validate directly within the function
+  const regex = /^(\d{12}|\d{9}V|\d{9}X|\d{9}v|\d{9}x)$/;
+  if (!regex.test(NICnumber)) {
+    setEre(t("Transport.Enter Valide NIC"));
+    return;
+  }
+  
+  setEre("");
+  setIsSearching(true);
+  setNoResults(false);
+  setFoundFarmer(null);
   
       try {
         const response = await api.get(`api/auth/get-users/${NICnumber}`);
@@ -350,7 +354,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                 {t("SearchFarmer.EnterFarmer")}
               </Text>
   
-              <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2 bg-white">
+              {/* <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2 bg-white">
                 <TextInput
                   value={NICnumber}
                   onChangeText={handleNicChange}
@@ -363,6 +367,35 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                 </TouchableOpacity>
               </View>
               
+               */}
+             {/* Only show this search bar with icon when searching (no results found yet) */}
+{(!foundFarmer && !newQr) && (
+  <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2 bg-white">
+    <TextInput
+      value={NICnumber}
+      onChangeText={handleNicChange}
+      placeholder={t("SearchFarmer.EnterNIC").length > 20 ? t("SearchFarmer.EnterNIC").slice(0, 28) + "..." : t("SearchFarmer.EnterNIC")}
+      className="flex-1 text-center"
+      maxLength={12}
+      style={{ color: "#000" }}
+    />
+    <TouchableOpacity className="ml-2" onPress={handleSearch}>
+      <FontAwesome name="search" size={24} color="green" />
+    </TouchableOpacity>
+  </View>
+)}
+
+{/* Show only the value without search icon when any results are found (either foundFarmer or newQr) */}
+{(foundFarmer || (newQr && farmers && noResults)) && (
+  <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2 bg-white">
+    <TextInput
+      value={NICnumber}
+      editable={false}
+      className="flex-1 text-center"
+      style={{ color: "#000" }}
+    />
+  </View>
+)}
               {ere ? (
                 <Text className="text-red-500 mt-2 justify-center text-center">
                   {ere}
@@ -395,7 +428,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                   
                     <Text className="text-center text-lg  mt-[20%]">
                       {/* {t("SearchFarmer.ResultsFound")} */}
-                     {t("SearchFarmer.Result Found")} :
+                     {t("SearchFarmer.Result Found")} 
                     </Text>
                     <View className="w-full bg-white border border-gray-200 rounded-lg p-4 mt-4">
                     <Text className="text-center text-lg">
