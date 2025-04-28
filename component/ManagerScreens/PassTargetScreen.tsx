@@ -488,7 +488,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
           <Ionicons name="arrow-back" size={22} color="white" />
         </TouchableOpacity>
 
-        <Text className="text-white text-lg font-semibold ml-[30%]">{getvarietyName()}</Text>
+        <Text className="text-white text-lg font-semibold text-center w-full">{getvarietyName()}</Text>
       </View>
 
       {/* Scrollable Content */}
@@ -516,9 +516,9 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
                   setValue={setAssignee}
                   setItems={setOfficers}
                   placeholder={t("PassTargetBetweenOfficers.Select an officer")}
-                  style={{ borderColor: "#e5e7eb", borderWidth: 1 }}
+                  style={{ borderColor: "#CFCFCF", borderWidth: 1 }}
                   dropDownContainerStyle={{ borderColor: "#e5e7eb" }}
-                  placeholderStyle={{ color: "#9ca3af" }}
+                  placeholderStyle={{ color: "#000000" }}
                   zIndex={3000}
                   zIndexInverse={1000}
                   listMode="SCROLLVIEW"
@@ -528,7 +528,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({ navigation, route }
 
             <Text className="text-gray-700 mb-2">{t("PassTargetBetweenOfficers.Amount")}</Text>
             <TextInput
-              className="border border-gray-300 rounded-lg p-2 text-gray-800"
+              className="border border-gray-300 rounded-lg p-3.5 text-gray-800"
               keyboardType="numeric"
               value={amount}
               onChangeText={handleAmountChange}

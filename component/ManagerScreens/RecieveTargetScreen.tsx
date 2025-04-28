@@ -415,7 +415,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
           value: getOfficerName(officer),
         }));
 
-        setOfficers([{ key: '0', value: t("PassTargetBetweenOfficers.Select an officer") }, ...formattedOfficers]);
+        setOfficers([ ...formattedOfficers]);
       } else {
         setErrorMessage(t("Error.Failed to fetch officers."));
       }
@@ -609,7 +609,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
           }}>
             <Ionicons name="arrow-back" size={22} color="white" />
           </TouchableOpacity>
-          <Text className="text-white text-lg font-semibold ml-[30%]">{getvarietyName()}</Text>
+          <Text className="text-white text-lg font-semibold text-center w-full">{getvarietyName()}</Text>
         </View>
 
         <View className="bg-white rounded-lg p-4">
@@ -621,17 +621,30 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
             ) : errorMessage ? (
               <Text className="text-red-500">{errorMessage}</Text>
             ) : (
-              <View className="border border-gray-300 rounded-lg mb-4">
-                <SelectList
-                  setSelected={(value: string) => {
-                    setAssignee(value);
-                    fetchDailyTarget(value); // Fetch daily target when an officer is selected
-                  }}
-                  data={officers}
-                  save="key"
-                  defaultOption={{ key: '0', value: t("PassTargetBetweenOfficers.Select an officer") }}
-                />
-              </View>
+              <View className="mb-4">
+              <SelectList
+                setSelected={(value: string) => {
+                  setAssignee(value);
+                  fetchDailyTarget(value); // Fetch daily target when an officer is selected
+                }}
+                data={officers}
+                save="key"
+                defaultOption={{ key: '0', value: t("PassTargetBetweenOfficers.Select an officer") }}
+                boxStyles={{ 
+                  borderWidth: 1,
+                  borderColor: '#CFCFCF',
+                  backgroundColor: 'white'
+                }}
+                inputStyles={{
+                  color: '#000000'
+                }}
+                dropdownStyles={{  // Fixed: changed from dropDownStyles to dropdownStyles
+                  borderColor: '#CFCFCF',
+                  backgroundColor: 'white'
+                }}
+              />
+            </View>
+
             )}
 
             <View className="border-b border-gray-300 my-4" />
