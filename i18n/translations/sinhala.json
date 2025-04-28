@@ -17,7 +17,6 @@
     "Progress": "ප්‍රගතිය",
     "Scan":"QR ස්කෑන් කරන්න",
     "Search": "ජාතික හැඳුනුම්පත අනුව සොයන්න"
-
   },
   "Error":{
     "error":"සමාවෙන්න",
@@ -48,7 +47,8 @@
        "Failed to submit price update.":"මිල යාවත්කාලීන කිරීම ඉදිරිපත් කිරීමට අසමත් විය.",
        "Failed to load profile data":"පැතිකඩ දත්ත පූරණය කිරීමට අසමත් විය.",
        "Failed to update phone numbers":"දුරකථන අංක යාවත්කාලීන කිරීමට අසමත් විය.",
-       "Permission required":"අවසරය අවශ්‍යයි, පැතිකඩ පින්තූරයක් උඩුගත කිරීමට කරුණාකර ඔබගේ ඡායාරූප පුස්තකාලයට ප්‍රවේශ වීමට ඉඩ දෙන්න.",
+       "Permission required":"අවසරය අවශ්‍යයි",
+       "Permission required message":"පැතිකඩ පින්තූරයක් උඩුගත කිරීමට කරුණාකර ඔබගේ ඡායාරූප පුස්තකාලයට ප්‍රවේශ වීමට ඉඩ දෙන්න.",
        "Sorry":"සමාවෙන්න",
       "Failed to load details":"විස්තර පූරණය කිරීමට අසමත් විය.",
       "Details are missing for generating PDF":"PDF ජනනය කිරීම සඳහා විස්තර අස්ථානගත වී ඇත.",
@@ -123,29 +123,26 @@
       "Officer created successfully":"නිලධාරියා සාර්ථකව නිර්මාණය කරන ලදී!",
       "Phone numbers updated successfully":"දුරකථන අංක සාර්ථකව යාවත්කාලීන කරන ලදී.",
       "Submitted":"ඉදිරිපත් කරන ලදී",
-    "Your complaint has Submit successfuly":"ඔබගේ පැමිණිල්ල සාර්ථකව ඉදිරිපත් කර ඇත!:",
+    "Your complaint has Submit successfuly":"ඔබගේ පැමිණිල්ල සාර්ථකව ඉදිරිපත් කර ඇත!",
      "No Prices Available":"මිල ගණන් නොමැත",
     "No prices are available for the selected variety.":"තෝරාගත් ප්‍රභේදය සඳහා මිල ගණන් නොමැත.",
     "Prices for the selected variety were not found.":"තෝරාගත් ප්‍රභේදය සඳහා මිල ගණන් හමු නොවීය.",
     "All crop details submitted successfully!":"සියලුම බෝග විස්තර සාර්ථකව ඉදිරිපත් කරන ලදී!",
         "Phone number 1 must be at least 9 digits.":"දුරකථන අංකය 1 ඉලක්කම් 9 ක් විය යුතුය",
     "Phone number 2 must be at least 9 digits.":"දුරකථන අංකය 2 ඉලක්කම් 9 ක් විය යුතුය",
-    "Password & Employee ID are not allowed to be empty": "Password & Employee ID are not allowed to be empty",
-    "Passwords are not allowed to be empty": "Passwords are not allowed to be empty",
-    "Invalid current password": "Invalid current password",
-    "Phone number 1 cannot be empty": "Phone number 1 cannot be empty",
- "Phone number 2 cannot be empty": "Phone number 2 cannot be empty",
- "InvaidEmail": "Invalid Email",
- "Phone number 1 is invalid.": "Phone number 1 is invalid.",
- "Phone number 2 is invalid.": "Phone number 2 is invalid.",
- "Email is invalid.": "Email is invalid.",
- "NIC number is invalid.": "NIC number is invalid.",
- "QR Code saved to gallery.": "QR Code saved to gallery.",
- "User ID not found in QR code": "User ID not found in QR code",
- "Downloaded PDF": "{{fileName}} has been saved to your Downloads folder.",
-
-
-
+    "Password & Employee ID are not allowed to be empty": "මුරපදය සහ සේවක හැඳුනුම්පත හිස්ව තැබීමට අවසර නැත.",
+    "Passwords are not allowed to be empty": "මුරපද හිස්ව තැබීමට අවසර නැත.",
+    "Invalid current password": "වත්මන් මුරපදය වලංගු නොවේ",
+    "Phone number 1 cannot be empty": "දුරකථන අංකය 1 හිස් විය නොහැක.",
+ "Phone number 2 cannot be empty": "දුරකථන අංකය 2 හිස් විය නොහැක.",
+ "InvaidEmail": "විද්‍යුත් තැපෑල වලංගු නොවේ",
+ "Phone number 1 is invalid.": "දුරකථන අංකය 1 වලංගු නොවේ.",
+ "Phone number 2 is invalid.": "දුරකථන අංකය 2 වලංගු නොවේ.",
+ "Email is invalid.": "විද්‍යුත් තැපෑල වලංගු නොවේ",
+ "NIC number is invalid.": "ජාතික හැඳුනුම්පත් අංකය අවලංගුයි.",
+ "QR Code saved to gallery.": "QR කේතය ගැලරියට සුරකින ලදී.",
+ "User ID not found in QR code": "QR කේතයේ පරිශීලක හැඳුනුම්පත හමු නොවීය.",
+ "Downloaded PDF": "{{fileName}} ඔබගේ බාගැනීම් ෆෝල්ඩරයට සුරකින ලදී.",
  "This Phone Number already exists." : "මෙම දුරකථන අංකය දැනට පවතියි.",
  "This NIC already exists." : "මෙම ජාතික හැඳුනුම් අංකය දැනට පවතියි.",
  "This Phone Number and NIC already exist." : "මෙම දුරකථන අංකය සහ ජාතික හැඳුනුම් අංකය දැනට පවතියි.",
@@ -153,10 +150,8 @@
  "Please fill all fields, add crops, and select a schedule date.":"කරුණාකර සියලුම ක්ෂේත්‍ර පුරවා, බෝග එකතු කර, කාලසටහනක් තෝරන්න.",
  "Failed to update user details":"පරිශීලක විස්තර යාවත්කාලීන කිරීමට අසමත් විය.",
  "Collection Requests Submitted!":"එකතු කිරීමේ ඉල්ලීම් ඉදිරිපත් කරන ලදී!",
- "Invalid crop or variety selected.":"වලංගු නොවන බෝගයක් හෝ ප්‍රභේදයක් තෝරාගෙන ඇත."
-
-
-
+ "Invalid crop or variety selected.":"වලංගු නොවන බෝගයක් හෝ ප්‍රභේදයක් තෝරාගෙන ඇත.",
+"Please enter prices for all grades before submitting":"ඉදිරිපත් කිරීමට පෙර සියලුම ශ්‍රේණි සඳහා මිල ගණන් ඇතුළත් කරන්න."
   },
 "EngProfile":{
     "LNG": "si",
@@ -167,7 +162,6 @@
     "Report Complaint":"පැමිණිල්ල වාර්තා කරන්න",
     "View Complaint History":"පැමිණිලි ඉතිහාසය බලන්න",
     "Logout": "පිටවීම"
-
   },
   "Profile":{
     "LNG": "si",
@@ -186,12 +180,11 @@
     "District":"දිස්ත්‍රික්කය",
     "Province": "පළාත",
     "Update":"යාවත්කාලීන කරන්න"
-
-
   },
   "DailyTarget":{
     "LNG": "si",
     "DailyTarget":"දෛනික ඉලක්කය",
+    "MyTarget":"මගේ ඉලක්කය",
     "Todo":"කරන්න",
     "Completed":"සම්පූර්ණයි",
     "No":"අංකය",
@@ -201,7 +194,6 @@
     "Todo()":"කරන්න (kg)",
       "noCompletedTargets":"සම්පූර්ණ කළ ඉලක්ක හමු නොවීය",
      "NoTodoItems":" ඉලක්ක හමු නොවීය"
-
   },
   "SearchPrice":{
     "LNG": "si",
@@ -214,7 +206,6 @@
     "Selection Required":"තේරීම අවශ්‍යයි",
     "Please select both Crop and Variety to continue":"කරුණාකර ඉදිරියට යාමට බෝග සහ ප්‍රභේද දෙකම තෝරන්න.",
     "OK":"හරි"
-
   },
   "SearchFarmer":{
     "LNG": "si",
@@ -251,7 +242,10 @@
     "Select Bank":"බැංකුව තෝරන්න",
     "Select Branch":"ශාඛාව තෝරන්න",
      "AccountNumberError":"කරුණාකර වලංගු ගිණුම් අංකයක් ඇතුළත් කරන්න.",
-      "InvalidNIC":"NIC එක ඉලක්කම් 12 කින් හෝ ඉලක්කම් 9 කින් පසුව V හෝ v විය යුතුය"
+      "InvalidNIC":"NIC එක ඉලක්කම් 12 කින් හෝ ඉලක්කම් 9 කින් පසුව V හෝ v විය යුතුය",
+      "OnlyDigitsAllowed":"ඉලක්කම් සඳහා පමණක් අවසර ඇත",
+      "MustStartWith7":"7 න් පටන් ගත යුතුයි",
+      "InvalidPhoneLength":"වලංගු නොවන දුරකථන අංක දිග"
   },
   "PriceChart":{
     "LNG": "si",
@@ -260,12 +254,11 @@
     "Variety":"විවිධත්වය",
     "UnitGrades":"ශ්‍රේණි අනුව ඒකක මිල ගණන්",
     "Go":"ආපසු යන්න",
+    "Cancel":"අවලංගු කරන්න",
     "Grade":"ශ්‍රේණිය",
     "Request Price Update":"මිල යාවත්කාලීනය ඉල්ලන්න",
     "Submit Request":"ඉල්ලීම ඉදිරිපත් කරන්න"
-
   },
-
   "Otpverification":{
     "LNG": "si",
     "OTPVerification":"OTP සත්‍යාපනය",
@@ -276,9 +269,8 @@
     "Success":"සාර්ථකයි!",
     "Registration":"ලියාපදිංචිය සාර්ථකයි",
     "OK":"හරි",
-    "invalidOTP":"Incorrect verification code",
-    "completeOTP":"Please enter the full verification code"
-
+    "invalidOTP":"සත්‍යාපන කේතය වැරදියි",
+    "completeOTP":"කරුණාකර සම්පූර්ණ සත්‍යාපන කේතය ඇතුළත් කරන්න."
   },
   "FarmerQr":{
     "LNG": "si",
@@ -288,7 +280,6 @@
     "ReportComplain":"පැමිණිල්ලක් වාර්තා කරන්න",
     "Download":"බාගන්න",
     "Share":"බෙදාගන්න"
-
   },
   "UnregisteredCropDetails":{
     "LNG": "si",
@@ -301,8 +292,8 @@
     "Add":"එකතු කරන්න",
     "Done":"නිම",
     "Select Crop":"කප්පාදුව තෝරන්න",
-    "Select Variety":"විවිධත්වය තෝරන්න"
-
+    "Select Variety":"විවිධත්වය තෝරන්න",
+    "Processing...":"සකසමින්..."
   },
   "ReportPage":{
     "LNG": "si",
@@ -334,14 +325,11 @@
     "OfficerQR":"නිලධාරියාගේ QR කේතය",
     "Download":"බාගන්න",
     "Share":"බෙදාගන්න"
-
   },
-
   "NoCollectionCenterScreen":{
     "LNG": "si",
     "ErrorFound":"දෝෂය හමු විය!",
     "NoCenter":"එකතු කිරීමේ මධ්‍යස්ථානයක් නොමැත"
-
   },
   "OfficerQr":{
    "LNG": "si",
@@ -349,7 +337,14 @@
     "Noavailable":"QR කේතයක් නොමැත.",
     "Download":"බාගන්න",
     "Share":"බෙදාගන්න"
-
+  },
+  "ChangePassword":{
+    "LNG": "si",
+    "ChoosePassword":"නව මුරපදයක් තෝරන්න",
+    "Changepassword":" මුරපදය වෙනස් කර එය ආරක්ෂිතව තබා ගන්න",
+    "CurrentPassword":"වත්මන් මුරපදය",
+    "NewPassword":"නව මුරපදය",
+    "ConfirmNewPassword":"නව මුරපදය තහවුරු කරන්න"
   },
   "QRScanner":{
     "LNG": "si",
@@ -360,15 +355,6 @@
     "Failed":"අසාර්ථක",
     "SearchNIC":"පරිශීලකයාගේ NIC අංකය අනුව සොයන්න",
     "Requesting for camera permission":"කැමරා අවසරය ඉල්ලා සිටීම"
-  },
-  "ChangePassword":{
-    "LNG": "si",
-    "ChoosePassword":"නව මුරපදයක් තෝරන්න",
-    "Changepassword":" මුරපදය වෙනස් කර එය ආරක්ෂිතව තබා ගන්න",
-    "CurrentPassword":"වත්මන් මුරපදය",
-    "NewPassword":"නව මුරපදය",
-    "ConfirmNewPassword":"නව මුරපදය තහවුරු කරන්න"
-
   },
   "Registeredfarmer":{
     "LNG": "si",
@@ -383,7 +369,6 @@
     "Bank":"බැංකුවේ නම",
     "Branch":"ශාඛාවේ නම",
     "Next":"ඊළඟ"
-    
   },
   "Ufarmercropdetails":{
     "LNG": "si",
@@ -404,14 +389,12 @@
      "Completed":"සම්පූර්ණ කරන ලදී!",
      "Youhaveachieved":"ඔබ අද ඔබේ දෛනික ඉලක්කය සාක්ෂාත් කර ගෙන ඇත",
     "Yourtarget": "ඔබේ ඉලක්ක ප්‍රගතිය",
-    
     "Scan":"QR ස්කෑන් කරන්න",
     "Search": "ජාතික හැඳුනුම්පත අනුව සොයන්න",
     "CenterTarget":"මධ්‍යස්ථාන ඉලක්කය",
     "MyCollection":"මගේ එකතුව",
       "Collection": "එකතුව ",
     "Transport":"ප්රවාහනය"
-
   },
   "AddOfficerBasicDetails":{
     "LNG": "si",
@@ -454,7 +437,6 @@
     "Select District":"දිස්ත්‍රික්කය තෝරන්න",
     "next":"ඊළඟ"
   },
-
   "CenterTarget":{
     "LNG": "si",
     "CenterTarget":"මධ්‍යස්ථාන ඉලක්කය",
@@ -465,9 +447,7 @@
     "Grade":"ශ්‍රේණිය",
     "Target":"ඉලක්කය (kg)",
     "Todo()":"කරන්න (kg)"
-
   },
-
   "ClaimOfficer":{
     "LNG": "si",
     "ClaimOfficers":"හිමිකම් කියන නිලධාරීන්",
@@ -494,10 +474,9 @@
     "Collection Officers":" එකතු කිරීමේ නිලධාරියා",
     "Claim Officer":"හිමිකම් නිලධාරියා",
     "Officers List":"නිලධාරීන්ගේ ලැයිස්තුව",
-        "Drivers List": "Drivers List",
+    "Drivers List": "රියදුරු ලැයිස්තුව",
     "Officers / Drivers List": "නිලධාරීන් / රියදුරු ලැයිස්තුව ",
-     "Drivers": "Drivers"
-   
+    "Drivers": "රියදුරන්"
   },
   "EditTargetManager":{
     "LNG": "si",
@@ -506,9 +485,7 @@
     "Pass":"සමත්",
     "Receive":"ලැබෙන්න",
     "Amount":"කළ යුතු මුදල",
-    "Assigned Target":"පවරන ලද ඉලක්කය"
-  
-   
+    "Assigned Target":"පවරන ලද ඉලක්කය" 
   },
   "ManagerTransactions":{
     "LNG": "si",
@@ -541,7 +518,6 @@
     "Save":"සුරකින්න",
     "maximum amount receive":"ඔබට ලැබිය හැකි උපරිම මුදල:",
     "Select an officer":"--නිලධාරියෙකු තෝරන්න--"
-   
   },
   "ReportGenerator":{
     "LNG": "si",
@@ -555,7 +531,6 @@
     "Share":"බෙදාගන්න",
     "Time Duration first":"- ඔබ පළමුව කාල සීමාව සැකසිය යුතුය -"
   },
-
 "SetTargetScreen":{
    "LNG": "si",
     "Set Target":"ඉලක්කය සකසන්න",
@@ -570,7 +545,6 @@
  "kg":"(kg)",
    "Action":"ක්‍රියාව",
      "Save":"සුරකින්න"
-  
   },
   "TargetValidPeriod":{
    "LNG": "si",
@@ -578,9 +552,7 @@
     "Select Crop":"සිට",
     "To":"වෙත",
     "Add Target":"ඉලක්කය එක් කරන්න"
- 
   },
-
   "Provinces": {
     "Western": "බටහිර",
     "Central": "මධ්‍යම",
@@ -592,9 +564,6 @@
     "Uva":"ඌව",
     "Sabaragamuwa":"සබරගමුව"
   },
-
-
-  
   "Districts": {
     "selectDistrict": "දිස්ත්‍රික්කයක් තෝරන්න",
     "Ampara": "අම්පාර",
@@ -796,7 +765,6 @@
     "Generated PDF file not found":"නිර්මාණය කළ PDF ගොනුව සොයාගත නොහැක",
     "Failed to share PDF file":"PDF ගොනුව බෙදාහැරීමට අසමත් විය",
     "No transactions found for this date": "මෙම දිනය සඳහා ගනුදෙනු කිසිවක් සොයාගත නොමැත"
-
   },
   "BankDetailsUpdate":{
     "Success":"සාර්ථකයි",

@@ -1175,6 +1175,7 @@ import {
 import CameraComponent from "@/utils/CameraComponent";
 import { SelectList } from 'react-native-dropdown-select-list';
 import { useTranslation } from "react-i18next";
+import LottieView from 'lottie-react-native';
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -1214,6 +1215,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     const [donebutton2disabale, setdonebutton2disabale] = useState(false);
     const [showCameraModels, setShowCameraModels] = useState(false);
     const [addbutton, setaddbutton] = useState(true);
+    const [loading, setLoading] = useState(false);
     const { t } = useTranslation();
     const [images, setImages] = useState<{ A: string | null, B: string | null, C: string | null }>({
         A: null,
@@ -1505,6 +1507,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
       };
     
       const handleSubmit = async () => {
+        setLoading(true);
         try {
             if (crops.length === 0) {
                 alert("Please add at least one crop to proceed.");
@@ -1592,6 +1595,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
     // ============================ HANDLE SUBMIT 2 ============================
     const handelsubmit2 = async () => {
         console.log('Submitting crops:', crops);
+        setLoading(true);
 
         try {
             if (quantities.A > 0 && !images.A) {
@@ -1730,159 +1734,100 @@ TID: ${invoiceNumber}
     const isGradeBCameraEnabled = quantities.B == 0;
     const isGradeCCameraEnabled = quantities.C == 0;
     console.log('isGradeACameraEnabled:', isGradeACameraEnabled);
-    return (
-         <KeyboardAvoidingView 
-                    behavior={Platform.OS ==="ios" ? "padding" : "height"}
-                    enabled
-                    className="flex-1"
-                    >
-        <ScrollView className="flex-1 bg-gray-50 px-6 py-4 mb-8" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }} keyboardShouldPersistTaps="handled">
-            {/* <View className="flex-row items-center mt-1 mb-6">
-                <TouchableOpacity onPress={() => navigation.goBack()} className="p-2">
-                    <AntDesign name="left" size={24} color="#000" />
-                </TouchableOpacity>
-                <Text className="text-center ml-[26%] text-lg font-semibold">Fill Details</Text>
-            </View> */}
-                 <View className="flex-row items-center  mb-6">
-                      <TouchableOpacity onPress={() => navigation.goBack()} className="">
-                        <AntDesign name="left" size={24} color="#000" />
-                      </TouchableOpacity>
-                      <Text className="flex-1 text-center text-xl font-bold text-black">{t("UnregisteredCropDetails.FillDetails")}</Text>
-                    </View>
+  // Add this to your component's state declarations
 
-            <Text className="text-center text-md font-medium mt-2">{t("UnregisteredCropDetails.Crop")} {cropCount}</Text>
-            <View className="mb-6 border-b p-2 border-gray-200 pb-6">
-            <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.CropName")}</Text>               
-              <View className=" mt-2 ">                 
-                
-{/* <SelectList
-                setSelected={(val: string) => {
-                    const selectedCropObj = cropNames.find(crop => 
-                        selectedLanguage === 'en' ? crop.cropNameEnglish === val :
-                        selectedLanguage === 'si' ? crop.cropNameSinhala === val : crop.cropNameTamil === val
-                    );
-                    if (selectedCropObj) {
-                        handleCropChange(selectedCropObj);
-                    }
+
+// Then in your JSX:
+return (
+  <KeyboardAvoidingView 
+    behavior={Platform.OS ==="ios" ? "padding" : "height"}
+    enabled
+    className="flex-1"
+  >
+    <ScrollView className="flex-1 bg-gray-50 px-6 py-4 mb-8" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }} keyboardShouldPersistTaps="handled">
+      <View className="flex-row items-center mb-6">
+        <TouchableOpacity onPress={() => navigation.goBack()} className="">
+          <AntDesign name="left" size={24} color="#000" />
+        </TouchableOpacity>
+        <Text className="flex-1 text-center text-xl font-bold text-black">{t("UnregisteredCropDetails.FillDetails")}</Text>
+      </View>
+
+      <Text className="text-center text-md font-medium mt-2">{t("UnregisteredCropDetails.Crop")} {cropCount}</Text>
+      <View className="mb-6 border-b p-2 border-gray-200 pb-6">
+        <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.CropName")}</Text>               
+        <View className="mt-2">                 
+          <SelectList
+            key={selectedCrop ? selectedCrop.id : Math.random()} 
+            defaultOption={selectedCrop ? { key: selectedCrop.id, value: selectedCrop.name } : undefined}
+            setSelected={(val: string) => {
+              const selectedCropObj = cropNames.find(crop => 
+                selectedLanguage === 'en' ? crop.cropNameEnglish === val :
+                selectedLanguage === 'si' ? crop.cropNameSinhala === val : crop.cropNameTamil === val
+              );
+              if (selectedCropObj) {
+                handleCropChange(selectedCropObj);
+              }
+            }}
+            boxStyles={{ height: 50, width: '100%', borderColor: '#ccc', paddingLeft: 14, paddingRight: 8 }}
+            data={cropNames.map(crop => ({
+              key: crop.id,
+              value: selectedLanguage === 'en' ? crop.cropNameEnglish : 
+                    selectedLanguage === 'si' ? crop.cropNameSinhala : crop.cropNameTamil
+            }))}
+            save="value"
+            placeholder={t("UnregisteredCropDetails.Select Crop")}
+            searchPlaceholder={t('search')}
+          />
+        </View>
+
+        <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Variety")}</Text>
+        <View className="mt-2">
+          <SelectList
+            key={selectedVariety ? selectedVariety : Math.random()}
+            setSelected={(itemValue: string) => selectedCrop ? handleVarietyChange(itemValue) : null}
+            data={[
+              ...varieties.map(variety => ({
+                key: variety.id,
+                value: variety.variety
+              }))
+            ]}
+            save="key"
+            defaultOption={selectedVariety ? { 
+              key: selectedVariety, 
+              value: varieties.find(v => v.id === selectedVariety)?.variety || 'Select Variety'
+            } : undefined}
+            placeholder={t("UnregisteredCropDetails.Select Variety")}
+            boxStyles={{ height: 50, width: '100%', borderColor: '#ccc', paddingLeft: 14, paddingRight: 8 }}
+          />
+        </View>
+
+        <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.UnitGrades")}</Text>
+        <View className="border border-gray-300 rounded-lg mt-2 p-4">
+          {['A', 'B', 'C'].map((grade) => (
+            <View key={grade} className="flex-row items-center mb-3">
+              <Text className="w-8 text-gray-600">{grade}</Text>
+              <TextInput
+                placeholder="Rs."
+                keyboardType="numeric"
+                className="flex-1 border border-gray-300 rounded-md p-2 mx-2 text-gray-600"
+                value={unitPrices[grade]?.toString() || ''}
+                editable={false}
+              />
+              <TextInput
+                placeholder="kg"
+                keyboardType="numeric"
+                className="flex-1 border border-gray-300 rounded-md p-2 text-gray-600"
+                value={quantities[grade].toString()}
+                onChangeText={value => {
+                  const numericValue = value.replace(/[^0-9]/g, '');
+                  handleQuantityChange(grade, numericValue);
                 }}
-                boxStyles={{ height: 50, width: '100%',  borderColor: '#ccc',paddingLeft: 14,paddingRight: 8,}}
-                data={cropNames.map(crop => ({
-                    key: crop.id,
-                    value: selectedLanguage === 'en' ? crop.cropNameEnglish : 
-                           selectedLanguage === 'si' ? crop.cropNameSinhala : crop.cropNameTamil
-                }))}
-                save="value"
-                placeholder={t("UnregisteredCropDetails.Select Crop")}
-                searchPlaceholder={t('search')}
-            />
-
-                </View>
-
-                <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Variety")}</Text>
-                <View className=" mt-2 ">
-
-<SelectList
-  setSelected={(itemValue: string) => selectedCrop ? handleVarietyChange(itemValue) : null}
-  data={[
-    ...varieties.map(variety => ({ 
-      key: variety.id, 
-      value: variety.variety 
-    }))
-  ]}
-  save="key"
-  defaultOption={selectedVariety ? { 
-    key: selectedVariety, 
-    value: varieties.find(v => v.id === selectedVariety)?.variety || 'Select Variety'
-  } : undefined}
-  placeholder={t("UnregisteredCropDetails.Select Variety")}
-  boxStyles={{ height: 50, width: '100%',  borderColor: '#ccc',paddingLeft: 14,paddingRight: 8,}}
-/> */}
-
-<SelectList
- key={selectedCrop ? selectedCrop.id : Math.random()} 
-defaultOption={selectedCrop ? { key: selectedCrop.id, value: selectedCrop.name } : undefined}
-    setSelected={(val: string) => {
-        const selectedCropObj = cropNames.find(crop => 
-            selectedLanguage === 'en' ? crop.cropNameEnglish === val :
-            selectedLanguage === 'si' ? crop.cropNameSinhala === val : crop.cropNameTamil === val
-        );
-        if (selectedCropObj) {
-            handleCropChange(selectedCropObj);
-        }
-    }}
-    boxStyles={{ height: 50, width: '100%', borderColor: '#ccc', paddingLeft: 14, paddingRight: 8 }}
-    data={cropNames.map(crop => ({
-        key: crop.id,
-        value: selectedLanguage === 'en' ? crop.cropNameEnglish : 
-               selectedLanguage === 'si' ? crop.cropNameSinhala : crop.cropNameTamil
-    }))}
-    save="value"
-    placeholder={t("UnregisteredCropDetails.Select Crop")}
-    searchPlaceholder={t('search')}
-    
-/>
-</View>
-
-<Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Variety")}</Text>
-<View className=" mt-2 ">
-
-<SelectList
-    key={selectedVariety ? selectedVariety : Math.random()}  // Key forces re-render
-    setSelected={(itemValue: string) => selectedCrop ? handleVarietyChange(itemValue) : null}
-    data={[
-        ...varieties.map(variety => ({
-            key: variety.id,
-            value: variety.variety
-        }))
-    ]}
-    save="key"
-    defaultOption={selectedVariety ? { 
-        key: selectedVariety, 
-        value: varieties.find(v => v.id === selectedVariety)?.variety || 'Select Variety'
-    } : undefined}
-    placeholder={t("UnregisteredCropDetails.Select Variety")}
-    boxStyles={{ height: 50, width: '100%',  borderColor: '#ccc',paddingLeft: 14,paddingRight: 8,}}/>
-
-
-
-                </View>
-
-                <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.UnitGrades")}</Text>
-                <View className="border border-gray-300 rounded-lg mt-2 p-4">
-                    {['A', 'B', 'C'].map((grade) => (
-                        <View key={grade} className="flex-row items-center mb-3">
-                            <Text className="w-8 text-gray-600">{grade}</Text>
-                            <TextInput
-                                placeholder="Rs."
-                                keyboardType="numeric"
-                                className="flex-1 border border-gray-300 rounded-md p-2 mx-2 text-gray-600"
-                                value={unitPrices[grade]?.toString() || ''}
-                                editable={false}
-                            />
-                            {/* <TextInput
-                                placeholder="kg"
-                                keyboardType="numeric"
-                                className="flex-1 border border-gray-300 rounded-md p-2 text-gray-600"
-                                value={quantities[grade].toString()}
-                                onChangeText={value => handleQuantityChange(grade, value)}
-                            /> */}
-                            <TextInput
-    placeholder="kg"
-    keyboardType="numeric"
-    className="flex-1 border border-gray-300 rounded-md p-2 text-gray-600"
-    value={quantities[grade].toString()}
-    onChangeText={value => {
-       
-        const numericValue = value.replace(/[^0-9]/g, '');
-        handleQuantityChange(grade, numericValue);
-    }}
-/>
-
-                        </View>
-                    ))}
-                </View>
-         
-            {showCameraModels && (
+              />
+            </View>
+          ))}
+        </View>
+        
+        {showCameraModels && (
           <View className="flex-row items-center justify-between">
             <CameraComponent
               onImagePicked={(image) => handleImagePick(image, 'A')}
@@ -1902,44 +1847,74 @@ defaultOption={selectedCrop ? { key: selectedCrop.id, value: selectedCrop.name }
           </View>
         )}
 
-                {/* Total and Buttons */}
-                <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Total")}</Text>
-                <View className="border border-gray-300 rounded-md mt-2 p-2">
-                    {/* <TextInput 
-                        placeholder="--Auto Fill--" 
-                        editable={false} 
-                        value={total.toString()} 
-                        className="text-gray-600" 
-                    /> */}
-  <TextInput
-  placeholder="--Auto Fill--"
-  editable={false}
-  value={` ${total.toLocaleString('en-IN', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  })}`}
-  className="text-gray-600"
-/>
+        <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Total")}</Text>
+        <View className="border border-gray-300 rounded-md mt-2 p-2">
+          <TextInput
+            placeholder="--Auto Fill--"
+            editable={false}
+            value={` ${total.toLocaleString('en-IN', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            })}`}
+            className="text-gray-600"
+          />
+        </View>
 
-                </View>
-
-<TouchableOpacity onPress={incrementCropCount} disabled={addbutton==true} className={`bg-[#2AAD7A] rounded-full p-4 mt-2 ${addbutton ? 'opacity-50' : ''}`}>
-                    <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Add")}</Text>
-                </TouchableOpacity>
-               {donebutton1visibale && 
-                <TouchableOpacity onPress={handelsubmit2} disabled={donebutton1disabale==true}  className={`bg-black  rounded-full p-4 mt-4 ${donebutton1disabale ? 'opacity-50' : ''}`}>
-                    <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
-                </TouchableOpacity>
-                }
-                {donebutton2visibale &&
-                <TouchableOpacity onPress={handleSubmit} disabled={donebutton2disabale==true}  className={`bg-black  rounded-full p-4 mt-4 ${donebutton2disabale ? 'opacity-50' : ''}`}>
-                   <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
-                </TouchableOpacity>
-                }  
-            </View>
-        </ScrollView>
-        </KeyboardAvoidingView>
-    );
+        <TouchableOpacity 
+          onPress={incrementCropCount} 
+          disabled={addbutton || loading} 
+          className={`bg-[#2AAD7A] rounded-full p-4 mt-2 ${(addbutton || loading) ? 'opacity-50' : ''}`}
+        >
+          <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Add")}</Text>
+        </TouchableOpacity>
+        
+        {donebutton1visibale && 
+          <TouchableOpacity 
+            onPress={handelsubmit2} 
+            disabled={donebutton1disabale || loading} 
+            className={`bg-black rounded-full p-4 mt-4 ${(donebutton1disabale || loading) ? 'opacity-50' : ''}`}
+          >
+            {loading ? (
+              <View className="flex-row justify-center items-center">
+                <LottieView
+                  source={require('../assets/lottie/collector.json')}
+                  autoPlay
+                  loop
+                  style={{ width: 30, height: 30 }}
+                />
+                <Text className="text-center text-white font-semibold ml-2">{t("UnregisteredCropDetails.Processing...")}</Text>
+              </View>
+            ) : (
+              <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
+            )}
+          </TouchableOpacity>
+        }
+        
+        {donebutton2visibale &&
+          <TouchableOpacity 
+            onPress={handleSubmit} 
+            disabled={donebutton2disabale || loading} 
+            className={`bg-black rounded-full p-4 mt-4 ${(donebutton2disabale || loading) ? 'opacity-50' : ''}`}
+          >
+            {loading ? (
+              <View className="flex-row justify-center items-center">
+                <LottieView
+                  source={require('../assets/lottie/collector.json')}
+                  autoPlay
+                  loop
+                  style={{ width: 30, height: 30 }}
+                />
+                <Text className="text-center text-white font-semibold ml-2">{t("UnregisteredCropDetails.Processing...")}</Text>
+              </View>
+            ) : (
+              <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
+            )}
+          </TouchableOpacity>
+        }
+      </View>
+    </ScrollView>
+  </KeyboardAvoidingView>
+);
 };
 
 export default UnregisteredCropDetails;

@@ -17,10 +17,9 @@
     "Progress": "Progress",
     "Scan":"Scan QR",
     "Search": "Search By NIC"
-
   },
   "Error":{
-    "error":"Error",
+    "error":"Sorry",
     "Failed to fetch empid.":"Failed to fetch empid.",
     "New password and confirm password do not match.":"New password and confirm password do not match.",
     "New password must be at least 6 characters long.":"New password must be at least 6 characters long.",
@@ -48,7 +47,8 @@
     "Failed to submit price update.":"Failed to submit price update.",
     "Failed to load profile data":"Failed to load profile data",
     "Failed to update phone numbers":"Failed to update phone numbers",
-    "Permission required":"Permission required,Please allow access to your photo library to upload a profile picture.",
+    "Permission required":"Permission required",
+    "Permission required message":"Please allow access to your photo library to upload a profile picture.",
     "Sorry":"Sorry",
     "Failed to load details":"Failed to load details",
     "Details are missing for generating PDF":"Details are missing for generating PDF",
@@ -95,7 +95,8 @@
     "Please select both start and end dates.":"Please select both start and end dates.",
     "End date cannot be earlier than the start date.":"End date cannot be earlier than the start date.",
     "PDF Generated Successfully":"PDF Generated Successfully!",
-    "Permission Denied":"Permission Denied, You need to grant storage permissions to save the file.",
+    "Permission Denied":"Permission Denied",
+    "Permission Denied Message": "You need to grant storage permissions to save the file.",
     "File saved as":"File saved as",
     "in the Downloads folder":"in the Downloads folder",
     "An error occurred while saving the file.":"An error occurred while saving the file.",
@@ -111,7 +112,7 @@
     "Daily target created successfully":"Daily target created successfully!",
     "Failed to fetch data.":"Failed to fetch data. Please try again later.",
     "Failed to load crop details":"Failed to load crop details",
-    "sorry":"sorry",
+    "sorry":"Sorry",
     "Failed to submit complaint":"Failed to submit complaint. Please try again.",
     "Please select a category and add your complaint.":"Please select a category and add your complaint.",
     "Failed to fetch prices":"Failed to fetch prices",
@@ -122,7 +123,7 @@
     "Officer created successfully":"Officer created successfully!",
     "Phone numbers updated successfully":"Phone numbers updated successfully",
     "Submitted":"Submitted",
-    "Your complaint has Submit successfuly":"Your complaint has Submit successfuly!:",
+    "Your complaint has Submit successfuly":"Your complaint has Submit successfuly!",
     "No Prices Available":"No Prices Available",
     "No prices are available for the selected variety.":"No prices are available for the selected variety.",
     "Prices for the selected variety were not found.":"Prices for the selected variety were not found.",
@@ -130,17 +131,27 @@
     "Phone number 1 must be at least 9 digits.":"Phone number 1 must be at least 9 digits",
     "Phone number 2 must be at least 9 digits.":"Phone number 2 must be at least 9 digits",
     "Password & Employee ID are not allowed to be empty": "Password & Employee ID are not allowed to be empty",
-    "Passwords are not allowed to be empty": "Passwords are not allowed to be empty",
-    "Invalid current password": "Invalid current password",
-"Phone number 1 cannot be empty": "Phone number 1 cannot be empty",
- "Phone number 2 cannot be empty": "Phone number 2 cannot be empty"
-
-
- 
-
-
-   
-
+ "Passwords are not allowed to be empty": "Passwords are not allowed to be empty",
+ "Invalid current password": "Invalid current password",
+ "Phone number 1 cannot be empty": "Phone number 1 cannot be empty",
+ "Phone number 2 cannot be empty": "Phone number 2 cannot be empty",
+ "InvaidEmail": "Invalid Email",
+ "Phone number 1 is invalid.": "Phone number 1 is invalid.",
+ "Phone number 2 is invalid.": "Phone number 2 is invalid.",
+ "Email is invalid.": "Email is invalid.",
+ "NIC number is invalid.": "NIC number is invalid.",
+ "QR Code saved to gallery.": "QR Code saved to gallery.",
+ "User ID not found in QR code": "User ID not found in QR code",
+ "Downloaded PDF": "{{fileName}} has been saved to your Downloads folder.",
+ "This Phone Number already exists." : "This Phone Number already exists.",
+ "This NIC already exists." : "This NIC already exists.",
+ "This Phone Number and NIC already exist." : "This Phone Number and NIC already exist.",
+ "Authentication required. Please log in.":"Authentication required. Please log in.",
+ "Please fill all fields, add crops, and select a schedule date.":"Please fill all fields, add crops, and select a schedule date.",
+ "Failed to update user details":"Failed to update user details.",
+ "Collection Requests Submitted!":"Collection Requests Submitted!",
+ "Invalid crop or variety selected.":"Invalid crop or variety selected.",
+"Please enter prices for all grades before submitting":"Please enter prices for all grades before submitting"
   },
   "EngProfile":{
     "LNG": "en",
@@ -151,8 +162,6 @@
     "Report Complaint":"Report Complaint",
     "View Complaint History":"View Complaint History",
     "Logout": "Logout"
-   
-
   },
   "Profile":{
     "LNG": "en",
@@ -160,7 +169,7 @@
     "FirstName":"First Name",
     "LastName":"Last Name ",
     "Company":"Company Name",
-    "CenterCode":"Center Code",
+    "CenterCode":"Centre Code",
     "Job":"Job Role",
     "NIC":"NIC Number",
     "Phone1":"Phone Number - 1",
@@ -171,20 +180,20 @@
     "District":"District",
     "Province": "Province",
     "Update":"Update"
-
-
   },
   "DailyTarget":{
     "LNG": "en",
     "DailyTarget":"Daily Target",
+    "MyTarget":"My Target",
     "Todo":"To do",
     "Completed":"Completed",
     "No":"No",
     "Variety":"Variety",
     "Grade":"Grade",
     "Target":"Target (kg)",
-    "Todo()":"Todo (kg)"
-
+    "Todo()":"Todo (kg)",
+     "noCompletedTargets":"No Completed Target founds",
+     "NoTodoItems":"No Todo Target founds"
   },
   "SearchPrice":{
     "LNG": "en",
@@ -193,8 +202,10 @@
     "SelectCrop":"Select Crop",
     "Variety":"Variety",
     "SelectVariety":"Select Variety",
-    "Search":"Search"
-
+    "Search":"Search",
+    "Selection Required":"Selection Required",
+    "Please select both Crop and Variety to continue":"Please select both Crop and Variety to continue.",
+    "OK":"OK"
   },
   "SearchFarmer":{
     "LNG": "en",
@@ -204,11 +215,9 @@
     "EnterNIC":"Enter NIC number",
     "Noregistered":"No registered farmer found",
     "RegisterFarmer":"Register Farmer",
-    "Result Found":"ප්‍රතිඵල සොයා ගන්නා ලදී",
-    "Set QR Code":"QR කේතය සකසන්න",
-    "This Farmer does not have the QR" : "මෙම ගොවියාට QR කේතයක් නැත"
-
-
+    "Result Found":"Results Found :",
+    "Set QR Code":"Set QR Code",
+    "This Farmer does not have the QR" : "This Farmer does not have the QR"
   },
   "UnregisteredFarmerDetails":{
     "LNG": "en",
@@ -227,7 +236,16 @@
     "Successful":"Registration Successful",
     "Oops":"Oops!",
     "Unsuccessful":"Registration Unsuccessful",
-    "Close":"Close"
+    "Close":"Close",
+    "Preferd Language":"Preferred Language",
+    "Select Language":"Select Language",
+    "Select Bank":"Select Bank",
+    "Select Branch":"Select Branch",
+    "AccountNumberError":"Please enter a valid account number",
+    "InvalidNIC":"NIC must be either 12 digits or 9 digits followed by V or v",
+    "OnlyDigitsAllowed":"Only Digits Allowed",
+    "MustStartWith7":"Must Start With 7",
+    "InvalidPhoneLength":"Invalid phone number length"
   },
   "PriceChart":{
     "LNG": "en",
@@ -236,24 +254,23 @@
     "Variety":"Variety",
     "UnitGrades":"Unit Prices according to Grades",
     "Go":"Go Back",
+    "Cancel":"Cancel",
     "Grade":"Grade",
     "Request Price Update":"Request Price Update",
     "Submit Request":"Submit Request"
-
   },
   "Otpverification":{
     "LNG": "en",
-    "OTPVerification":"OTPVerification",
-    " EnterCode":" Enter Verification Code",
-    "OTPCode":"OTPCode",
+    "OTPVerification":"OTP Verification",
+    "EnterCode":"Enter Verification Code",
+    "OTPCode":"OTP Code",
     "Didreceive":" I didn’t receive the code!",
     "Verify":"Verify",
     "Success":"Success!",
     "Registration":"Registration Successful",
     "OK":"OK",
-    "invalidOTP":"invalidOTP",
-    "completeOTP":"completeOTP"
-
+    "invalidOTP":"verification code is Incorrect",
+    "completeOTP":"Please enter the full verification code"
   },
   "FarmerQr":{
     "LNG": "en",
@@ -263,7 +280,6 @@
     "ReportComplain":"Report a Complain",
     "Download":"Download",
     "Share":"Share"
-
   },
   "UnregisteredCropDetails":{
     "LNG": "en",
@@ -277,7 +293,6 @@
     "Done":"Done",
     "Select Crop":"Select Crop",
     "Select Variety":"Select Variety"
-
   },
   "ReportPage":{
     "LNG": "en",
@@ -309,21 +324,18 @@
     "OfficerQR":"Officer's QR Code",
     "Download":"Download",
     "Share":"Share"
-
   },
   "NoCollectionCenterScreen":{
     "LNG": "en",
     "ErrorFound":"Error Found!",
-    "NoCenter":"No Collection Center"
-
+    "NoCenter":"No Collection Centre"
   },
   "OfficerQr":{
     "LNG": "en",
-    "QRCode":"QR Code",
+    "QRCode":"My QR Code",
     "Noavailable":"No QR Code available.",
     "Download":"Download",
     "Share":"Share"
-
   },
   "ChangePassword":{
     "LNG": "en",
@@ -332,7 +344,6 @@
     "CurrentPassword":"Current Password",
     "NewPassword":"New Password",
     "ConfirmNewPassword":"Confirm New Password"
-
   },
   "QRScanner":{
     "LNG": "en",
@@ -357,9 +368,7 @@
     "Bank":"Bank Name",
     "Branch":"Branch Name",
     "Next":"Next"
-    
   },
-
   "Ufarmercropdetails":{
     "LNG": "en",
     "FillCropDetails":"Fill Crop Details",
@@ -379,12 +388,12 @@
      "Completed":"Completed!",
      "Youhaveachieved":"You have achieved your daily target today",
     "Yourtarget": "Your Target Progress",
-   
     "Scan":"Scan QR",
     "Search": "Search By NIC",
-    "CenterTarget":"Center Target",
-    "MyCollection":"My Collection"
-
+    "CenterTarget":"Centre Target",
+    "MyCollection":"My Collection",
+    "Collection": "Collection",
+    "Transport":"Transport"
   },
   "AddOfficerBasicDetails":{
     "LNG": "en",
@@ -424,14 +433,12 @@
     "Go":"Go Back",
     "Submit":"Submit",
     "Select Province":"Select Province",
-    "Select District":"Select District"
-
- 
-    
+    "Select District":"Select District",
+    "next":"next"
   },
   "CenterTarget":{
     "LNG": "en",
-    "CenterTarget":"Center Target",
+    "CenterTarget":"Centre Target",
     "Todo":"To do",
     "Completed":"Completed",
     "No":"No",
@@ -439,9 +446,7 @@
     "Grade":"Grade",
     "Target":"Target (kg)",
     "Todo()":"Todo (kg)"
-
   },
-
   "ClaimOfficer":{
     "LNG": "en",
     "ClaimOfficers":"Claim Officers",
@@ -449,30 +454,37 @@
     "EMPID":"EMP ID",
     "Search":"Search",
     "Claim Officer":"Claim Officer",
-    "No Disclaimed":" - No Disclaimed officer was found -"
-   
+    "No Disclaimed":"- No Disclaimed officer was found -",
+    "Are you sure you want to claim this officer?":"Are you sure you want to claim this officer?",
+    "Cancel":"Cancel",
+    "Claim":"Claim",
+    "Select Job Role":"Select Job Role",
+    "Collection Officer":"Collection Officer",
+    "Customer Officer": "Customer Officer"
   },
-
+  "DisclaimOfficer":{
+    "Are you sure you want to disclaim this officer?":"Are you sure you want to disclaim this officer?",
+    "Disclaim":"Disclaim",
+    "Officer disclaimed successfully.":"Officer disclaimed successfully.",
+    "Failed to disclaim officer.":"Failed to disclaim officer."
+  },
   "CollectionOfficersList":{
     "LNG": "en",
-    "Collection Officers":" Collection Officers",
+    "Collection Officers":"Collection Officers",
     "Claim Officer":"Claim Officer",
-    "Officers List":" Officers List",
-        "Drivers List": "Drivers List",
-    "Officers / Drivers List": "Officers / Drivers List",
-     "Drivers": "Drivers"
-   
+    "Officers List":"Officers List",
+    "Drivers List": "Drivers List",
+    "Officers / Drivers List": "Officers / Drivers List ",
+    "Drivers": "Drivers"
   },
-
   "EditTargetManager":{
     "LNG": "en",
-    "TotalTarget":"Total Target for the center",
+    "TotalTarget":"Total Target for the centre",
     "My Target":"My Target",
     "Pass":"Pass",
     "Receive":"Receive",
     "Amount":"To Do Amount",
     "Assigned Target":"Assigned Target"
-   
   },
   "ManagerTransactions":{
     "LNG": "en",
@@ -532,7 +544,6 @@
  "kg":"(kg)",
    "Action":"Action",
      "Save":"Save"
-  
   },
   "TargetValidPeriod":{
     "LNG": "en",
@@ -540,9 +551,7 @@
     "From":"From",
     "To":"To",
     "Add Target":"Add Target"
- 
   },
-
 "Provinces": {
     "Western": "Western",
     "Central": "Central",
@@ -554,8 +563,6 @@
     "Uva":"Uva",
     "Sabaragamuwa":"Sabaragamuwa"
   },
-
-
   "Districts": {
     "selectDistrict": "Select a District",
     "Ampara": "Ampara",
@@ -597,54 +604,166 @@
     "sorry": "Sorry",
     "Finance": "Finance",
     "Agriculture": "Agriculture",
-    "Call Center": "Call Center",
+    "Call Center": "Call Centre",
     "Procuiment": "Procuiment",
     "WewilRespond": "We will respond to you within two days of receiving your message.",
     "Kindlysubmit": "Kindly submit your complaint here..",
     "Submit": "Submit",
     "Other": "Other"
-  } 
-  ,  
-  "NewReport": {
-    "Transactions" : "பரிவர்த்தனைகள்",
-     "Transaction History" : "பரிவர்த்தனைகள் வரலாறு",
-     "Transactions on" : "பரிவர்த்தனைகள் நடந்தது ",
-     "GRN No" : "GRN இல ",
-     "Amount" : "தொகை",
-     "of Items" : "பொருட்களின்",
-     "Delivered on" : "வழங்கப்பட்டது",
-     "Goods Received Note" : "பொருட்கள் பெறப்பட்ட குறிப்பு",
-     "Date": "திகதி",
-     "Supplier Details" : "வழங்குநர் விபரம்",
-     "Name" : "பெயர்",
-     "Phone" : "தொலைபேசி",
-     "Received By" : "ஆல் பெறப்பட்டது",
-     "Company Name" : "நிறுவனத்தின் பெயர்",
-     "Centre" : "மையம்",
-     "Received Items" : "பெறப்பட்ட பொருட்கள்",
-     "Crop Name" : "பயிர் பெயர்",
-     "Variety": "வகை",
-     "Grade" : "தரம்",
-     "Unit Price(Rs.)" : "அலகு விலை (ரூ.)",
-     "Quantity(kg)" : "அளவு(கிலோ)",
-     "Sub Total(Rs.)": "உப மொத்தம்(ரூ.)",
-     "Full Total (Rs.) Rs." : "மொத்த தொகை (ரூ.)",
-     "Note":"குறிப்பு",
-     "GRNnote":"இந்தப் பொருட்கள் ரசீது குறிப்பு (GRN), முன்னணி ஊழியர்களால் எடுக்கப்பட்ட ஆரம்ப அளவீடுகளின் அடிப்படையில் ஒரு தற்காலிக ஒப்புதலாக செயல்படுகிறது. இறுதி சரிபார்ப்பு சேகரிப்பு மையத்தில் நடத்தப்படும். சேகரிப்பு மையத்தில் பதிவு செய்யப்பட்ட அளவீடு, முரண்பாடுகள் உள்ள அனைத்து நிகழ்வுகளிலும் முடிவானதாகவும் பிணைக்கப்பட்டதாகவும் கருதப்படும். அளவீட்டு மாறுபாடுகளால் ஏற்படும் எந்தவொரு வருவாய் தாக்கங்களையும் சரிசெய்யும் உரிமையை நிறுவனம் கொண்டுள்ளது மற்றும் ஆரம்ப தவறான கணக்கீடுகள் காரணமாக ஏற்படும் இழப்புகளுக்கு பொறுப்பேற்காது.",
-     "Download":"பதிவிறக்கம்",
-     "Share":"பகிர்",
-     "Sorry":"மன்னிக்கவும்",
-     "PDF was not generated.":"PDF உருவாக்கப்படவில்லை.",
-     "Failed to load details":"விவரங்களை ஏற்றுவதில் தோல்வி",
-     "Success":"வெற்றி",
-     "GRN report has been saved to your Downloads folder.":"GRN அறிக்கை உங்கள் பதிவிறக்கங்கள் கோப்புறையில் சேமிக்கப்பட்டுள்ளது..",
-     "Permission Denied":"அனுமதி மறுக்கப்பட்டது",
-     "You need to grant permission to save the PDF.":"PDF-ஐச் சேமிக்க நீங்கள் அனுமதி வழங்க வேண்டும்..",
-     "Failed to save PDF to Downloads folder.":"பதிவிறக்கங்கள் கோப்புறையில் PDF ஐச் சேமிப்பதில் தோல்வி.",
-     "Sharing is not available on this device":"இந்தச் சாதனத்தில் பகிர்தல் கிடைக்கவில்லை",
-     "Generated PDF file not found":"உருவாக்கப்பட்ட PDF கோப்பு கிடைக்கவில்லை",
-     "Failed to share PDF file":"PDF கோப்பைப் பகிர முடியவில்லை.",
-     "No transactions found for this date": "இந்த திகதிக்கு எந்த பரிவர்த்தனைகளும் இல்லை."
+  }  ,
+  "ReportHistory":{
+    "LNG": "en",    
+    "sorry": "Sorry",
+    "noData": "No complaints found.",
+    "Complaints": "Complaint History",
+    "Opened": "Opened",
+    "Closed": "Closed",
+    "View": "View Response",
+    "ThankYou": "Thank you for your patience!",
+    "NoReply": "No response yet for this complaint.",
+    "RefNo": "Ref No",
+    "Sent": "Sent"
+  },
+  "QRcode": {
+    "LNG": "en",
+    "QRcode": "My QR Code",
+    "Download": "Download",
+    "Share": "Share",
+    "failedFetchDetails": "Failed to fetch registration details. Please try again.",
+    "permissionDeniedTitle": "Access Required",
+    "permissionDeniedMessage": "Please enable permission to save the QR to your gallery.",
+    "successTitle": "Success",
+    "savedToGallery": "Your QR Code has been saved to your gallery.",
+    "failedSaveQRCode": "Unable to save QR code. Please try again.",
+    "sharingUnavailableTitle": "Sharing feature unavailable",
+    "sharingUnavailableMessage": "This device does not support sharing QR codes.",
+    "shareQRCode": "Share QR Code",
+    "failedShareQRCode": "Unable to share QR code. Please try again later.",
+    "NoQrText": "To obtain access to your unique QR code, please register as a member by entering your bank details. This code will ensure smooth transactions and secure payments directly to your bank at our collection centres.",
+    "GenerateQr": "Generate My QR"
+  },
+  "Transport":{
+    "LNG": "en",
+    "Register Drivers":"Register Drivers",
+    "Add Farmer Requests":"Add Farmer Requests",
+    "View Farmer Requests":"View Farmer Requests",
+    "Driver":"Driver",
+    "Add Collection Request":"Add Collection Request",
+    "Enter Valide NIC" :"Enter Valid NIC"
+  },
+  "VehicleDetails":{
+    "LNG": "en",
+    "Driving Details":"Driving Details",
+    "Front":"Front",
+    "Back":"Back",
+    "Side-1":"Side-1",
+    "Side-2":"Side-2",
+    "--Driving License ID--":"--Driving License ID--",
+    "Vehicle Insurance Details":"Vehicle Insurance Details",
+    "--Insurance Number--": "--Insurance Number--",
+    "--Insurance Expire Date--":"--Insurance Expire Date--",
+   "Vehicle Details":"Vehicle Details",
+   "Car":"Car",
+   "Truck":"Truck",
+   "Motorcycle":"Motorcycle",
+   "--Vehicle Type--":"--Vehicle Type--",
+   "--Vehicle Capacity--":"--Vehicle Capacity--",
+   "--Vehicle Registration Number--":"--Vehicle Registration Number--",
+   "Go Back":"Go Back",
+   "Submit":"Submit",
+   "Please capture all required images":"Please capture all required images",
+    "InsuranceFront": "Insurance Front Image",
+    "InsuranceBack": "Insurance Back Image",
+    "VehicleFront": "Vehicle Front Image",
+    "VehicleBack": "Vehicle Back Image",
+    "VehicleSide1": "Vehicle Side 1 Image",
+    "VehicleSide2": "Vehicle Side 2 Image",
+    "Driver and vehicle information submitted successfully": "Driver and vehicle information submitted successfully",
+     "Failed to submit driver and vehicle information. Please try again." :"Failed to submit driver and vehicle information. Please try again."
+  },
+  "CollectionRequest":{
+    "Collection Request Form": "Collection Request Form",
+    "Building / House No": "Building / House Number",
+    "Street Name": "Street Name",
+    "City": "City",
+    "Closest Landmark": "Closest Landmark",
+    "Schedule Date": "Schedule Date",
+    "Select Schedule Date": "Select Schedule Date",
+    "Added Requests": "Added Requests",
+    "Crop": "Crop",
+    "Variety": "Variety",
+    "Load in kg (Approx)": "Load in kg (Approx)",
+    "--Select Crop--": "--Select Crop--",
+    "--Select Variety--": "--Select Variety--",
+    "Add to the List": "Add to the List",
+    "Add more": "Add more",
+    "Submit": "Submit",
+    "Collection Requests":"Collection Requests",
+    "Request ID":"Request ID",
+    "Search NIC here...": "Search NIC here...",
+    "NIC":"NIC",
+    "Date":"Date",
+    "All":"All",
+    "No collection requests found": "No collection requests found",
+    "ID":"ID",
+    "Update":"Update",
+    "Cancel Request":"Cancel Request",
+    "Are you sure?":"Are you sure?",
+    "Are you sure Massage":"This will permanently delete the request placed by farmer and cannot be undone.",
+    "Confirm":"Confirm",  
+    "Cancel":"Cancel",
+    "Reason to Cancel":"Reason to Cancel",
+    "Please mention below the reason":"Please mention below the reason.",
+    "Enter here..": "Enter here..",
+    "Processing...": "Processing...",
+    "Go Back":"Go Back",
+    "Failed to cancel request":"Failed to cancel request",
+    "Request cancelled successfully":"Request cancelled successfully",
+    "Failed to update schedule date":"Failed to update schedule date",
+    "Schedule Date has not been changed":"Schedule Date has not been changed",
+    "Schedule Date updated successfully":"Schedule Date updated successfully",
+    "Please provide a reason for cancellation":"Please provide a reason for cancellation",
+    "Not Assigned":"Not Assigned",
+    "Assigned":"Assigned",
+    "Cancelled":"Cancelled",
+    "On way":"On way",
+    "Scheduled":"Scheduled"
+  },
+  "NewReport":{
+    "LNG": "en",
+    "Goods Received Note":"Goods Received Note",
+    "GRN No":"GRN No",
+    "Date":"Date:",
+    "Supplier Details":"Supplier Details:",
+    "Name":"Name:",
+    "Phone":"Phone:",
+    "Received By":"Received By:",
+    "Company Name":"Company Name:",
+    "Centre":"Centre:",
+    "Received Items":"Received Items",
+    "Crop Name":"Crop Name",
+    "Variety":"Variety",
+    "Grade":"Grade",
+    "Unit Price(Rs.)":"Unit Price(Rs.)",
+    "Quantity(kg)":"Quantity(kg)",
+    "Sub Total(Rs.)":"Sub Total(Rs.)",
+    "Full Total (Rs.) Rs.":"Full Total (Rs.): Rs.",
+    "Note":"Note:",
+    "GRNnote":"This Goods Receipt Note (GRN) serves as a provisional acknowledgment based on initial measurements taken by front-line staff. Final verification will be conducted at the Collection Centre. The measurement recorded at the Collection Centre shall be deemed conclusive and binding in all cases of discrepancy. The organization reserves the right to rectify any revenue impacts arising from measurement variances and shall not be liable for losses due to initial miscalculations.",
+    "Download":"Download",
+    "Share":"Share",
+    "Sorry":"Sorry",
+    "PDF was not generated.":"PDF was not generated.",
+    "Failed to load details":"Failed to load details",
+    "Success":"Success",
+    "GRN report has been saved to your Downloads folder.":"GRN report has been saved to your Downloads folder.",
+    "Permission Denied":"Permission Denied",
+    "You need to grant permission to save the PDF.":"You need to grant permission to save the PDF.",
+    "Failed to save PDF to Downloads folder.":"Failed to save PDF to Downloads folder.",
+    "Sharing is not available on this device":"Sharing is not available on this device",
+    "Generated PDF file not found":"Generated PDF file not found",
+    "Failed to share PDF file":"Failed to share PDF file",
+    "No transactions found for this date": "No transactions found for this date"
   },
   "BankDetailsUpdate":{
     "Success":"Success",

@@ -96,7 +96,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "bcf132dd-10be-4c02-84c3-79d97800d773"
+        "projectId": "8bb4d04a-ae5a-4f46-a28f-416b084d6c28"
       }
     },
     "plugins": [
@@ -119,6 +119,6 @@
       "recordAudioAndroid": true
     },
     "newArchEnabled": true,
-    "owner": "dilshankaluhennadi"
+    "owner": "kaluhennadigeravin"
   }
 }

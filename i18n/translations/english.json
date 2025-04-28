@@ -17,7 +17,6 @@
     "Progress": "Progress",
     "Scan":"Scan QR",
     "Search": "Search By NIC"
-
   },
   "Error":{
     "error":"Sorry",
@@ -124,7 +123,7 @@
     "Officer created successfully":"Officer created successfully!",
     "Phone numbers updated successfully":"Phone numbers updated successfully",
     "Submitted":"Submitted",
-    "Your complaint has Submit successfuly":"Your complaint has Submit successfuly!:",
+    "Your complaint has Submit successfuly":"Your complaint has Submit successfuly!",
     "No Prices Available":"No Prices Available",
     "No prices are available for the selected variety.":"No prices are available for the selected variety.",
     "Prices for the selected variety were not found.":"Prices for the selected variety were not found.",
@@ -144,8 +143,6 @@
  "QR Code saved to gallery.": "QR Code saved to gallery.",
  "User ID not found in QR code": "User ID not found in QR code",
  "Downloaded PDF": "{{fileName}} has been saved to your Downloads folder.",
-
-
  "This Phone Number already exists." : "This Phone Number already exists.",
  "This NIC already exists." : "This NIC already exists.",
  "This Phone Number and NIC already exist." : "This Phone Number and NIC already exist.",
@@ -153,11 +150,8 @@
  "Please fill all fields, add crops, and select a schedule date.":"Please fill all fields, add crops, and select a schedule date.",
  "Failed to update user details":"Failed to update user details.",
  "Collection Requests Submitted!":"Collection Requests Submitted!",
- "Invalid crop or variety selected.":"Invalid crop or variety selected."
-
-
-   
-
+ "Invalid crop or variety selected.":"Invalid crop or variety selected.",
+"Please enter prices for all grades before submitting":"Please enter prices for all grades before submitting"
   },
   "EngProfile":{
     "LNG": "en",
@@ -168,8 +162,6 @@
     "Report Complaint":"Report Complaint",
     "View Complaint History":"View Complaint History",
     "Logout": "Logout"
-   
-
   },
   "Profile":{
     "LNG": "en",
@@ -188,8 +180,6 @@
     "District":"District",
     "Province": "Province",
     "Update":"Update"
-
-
   },
   "DailyTarget":{
     "LNG": "en",
@@ -216,7 +206,6 @@
     "Selection Required":"Selection Required",
     "Please select both Crop and Variety to continue":"Please select both Crop and Variety to continue.",
     "OK":"OK"
-
   },
   "SearchFarmer":{
     "LNG": "en",
@@ -229,7 +218,6 @@
     "Result Found":"Results Found :",
     "Set QR Code":"Set QR Code",
     "This Farmer does not have the QR" : "This Farmer does not have the QR"
-
   },
   "UnregisteredFarmerDetails":{
     "LNG": "en",
@@ -257,7 +245,7 @@
     "InvalidNIC":"NIC must be either 12 digits or 9 digits followed by V or v",
     "OnlyDigitsAllowed":"Only Digits Allowed",
     "MustStartWith7":"Must Start With 7",
-    "InvalidPhoneLength":"Invalid Phone Length"
+    "InvalidPhoneLength":"Invalid phone number length"
   },
   "PriceChart":{
     "LNG": "en",
@@ -266,10 +254,10 @@
     "Variety":"Variety",
     "UnitGrades":"Unit Prices according to Grades",
     "Go":"Go Back",
+    "Cancel":"Cancel",
     "Grade":"Grade",
     "Request Price Update":"Request Price Update",
     "Submit Request":"Submit Request"
-
   },
   "Otpverification":{
     "LNG": "en",
@@ -281,9 +269,8 @@
     "Success":"Success!",
     "Registration":"Registration Successful",
     "OK":"OK",
-    "invalidOTP":"Incorrect verification code",
+    "invalidOTP":"verification code is Incorrect",
     "completeOTP":"Please enter the full verification code"
-
   },
   "FarmerQr":{
     "LNG": "en",
@@ -293,7 +280,6 @@
     "ReportComplain":"Report a Complain",
     "Download":"Download",
     "Share":"Share"
-
   },
   "UnregisteredCropDetails":{
     "LNG": "en",
@@ -306,8 +292,8 @@
     "Add":"Add",
     "Done":"Done",
     "Select Crop":"Select Crop",
-    "Select Variety":"Select Variety"
-
+    "Select Variety":"Select Variety",
+    "Processing...":"Processing..."
   },
   "ReportPage":{
     "LNG": "en",
@@ -339,13 +325,11 @@
     "OfficerQR":"Officer's QR Code",
     "Download":"Download",
     "Share":"Share"
-
   },
   "NoCollectionCenterScreen":{
     "LNG": "en",
     "ErrorFound":"Error Found!",
     "NoCenter":"No Collection Centre"
-
   },
   "OfficerQr":{
     "LNG": "en",
@@ -353,7 +337,6 @@
     "Noavailable":"No QR Code available.",
     "Download":"Download",
     "Share":"Share"
-
   },
   "ChangePassword":{
     "LNG": "en",
@@ -362,7 +345,6 @@
     "CurrentPassword":"Current Password",
     "NewPassword":"New Password",
     "ConfirmNewPassword":"Confirm New Password"
-
   },
   "QRScanner":{
     "LNG": "en",
@@ -387,9 +369,7 @@
     "Bank":"Bank Name",
     "Branch":"Branch Name",
     "Next":"Next"
-    
   },
-
   "Ufarmercropdetails":{
     "LNG": "en",
     "FillCropDetails":"Fill Crop Details",
@@ -409,14 +389,12 @@
      "Completed":"Completed!",
      "Youhaveachieved":"You have achieved your daily target today",
     "Yourtarget": "Your Target Progress",
-   
     "Scan":"Scan QR",
     "Search": "Search By NIC",
     "CenterTarget":"Centre Target",
     "MyCollection":"My Collection",
     "Collection": "Collection",
     "Transport":"Transport"
-
   },
   "AddOfficerBasicDetails":{
     "LNG": "en",
@@ -469,9 +447,7 @@
     "Grade":"Grade",
     "Target":"Target (kg)",
     "Todo()":"Todo (kg)"
-
   },
-
   "ClaimOfficer":{
     "LNG": "en",
     "ClaimOfficers":"Claim Officers",
@@ -487,7 +463,12 @@
     "Collection Officer":"Collection Officer",
     "Customer Officer": "Customer Officer"
   },
-
+  "DisclaimOfficer":{
+    "Are you sure you want to disclaim this officer?":"Are you sure you want to disclaim this officer?",
+    "Disclaim":"Disclaim",
+    "Officer disclaimed successfully.":"Officer disclaimed successfully.",
+    "Failed to disclaim officer.":"Failed to disclaim officer."
+  },
   "CollectionOfficersList":{
     "LNG": "en",
     "Collection Officers":"Collection Officers",
@@ -496,9 +477,7 @@
     "Drivers List": "Drivers List",
     "Officers / Drivers List": "Officers / Drivers List ",
     "Drivers": "Drivers"
-   
   },
-
   "EditTargetManager":{
     "LNG": "en",
     "TotalTarget":"Total Target for the centre",
@@ -507,7 +486,6 @@
     "Receive":"Receive",
     "Amount":"To Do Amount",
     "Assigned Target":"Assigned Target"
-   
   },
   "ManagerTransactions":{
     "LNG": "en",
@@ -567,7 +545,6 @@
  "kg":"(kg)",
    "Action":"Action",
      "Save":"Save"
-  
   },
   "TargetValidPeriod":{
     "LNG": "en",
@@ -575,9 +552,7 @@
     "From":"From",
     "To":"To",
     "Add Target":"Add Target"
- 
   },
-
 "Provinces": {
     "Western": "Western",
     "Central": "Central",
@@ -589,8 +564,6 @@
     "Uva":"Uva",
     "Sabaragamuwa":"Sabaragamuwa"
   },
-
-
   "Districts": {
     "selectDistrict": "Select a District",
     "Ampara": "Ampara",
