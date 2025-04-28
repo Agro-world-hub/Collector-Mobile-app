@@ -432,6 +432,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
 
   // ✅ Fetch Daily Target when officer is selected
   const fetchDailyTarget = async (officerId: string) => {
+    console.log("Selected Officer ID:", officerId);
     if (officerId === '0') {
       setAmount('');
       setMaxAmount(0);
@@ -454,8 +455,9 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
   
       console.log("Daily Target Response:", response.data);
   
-      if (response.data.status === 'success' && response.data.data.length > 0) {
-        const { target, complete } = response.data.data[0];
+      if (response.data.status === 'success' && response.data.data) {
+        console.log("Daily Target Data:", response.data.data);
+        const { target, complete } = response.data.data;
         const calculatedTodo = parseFloat(target) - parseFloat(complete);
   
         setMaxAmount(calculatedTodo > 0 ? calculatedTodo : 0); // Ensure todo is not negative
