@@ -41,7 +41,7 @@
     "Failed to share QR Code.":"Failed to share QR Code.",
     "errorOccurred":"error Occurred",
     "somethingWentWrong":"something Went Wrong. Please try again later.",
-    "otpResent":"otpResent",
+    "otpResent":"OPT Resent",
     "otpResendFailed":"otp Resend Failed",
     "You must change the prices before submitting. Please update the values.":"You must change the prices before submitting. Please update the values.",
     "Failed to submit price update.":"Failed to submit price update.",
@@ -151,7 +151,9 @@
  "Failed to update user details":"Failed to update user details.",
  "Collection Requests Submitted!":"Collection Requests Submitted!",
  "Invalid crop or variety selected.":"Invalid crop or variety selected.",
-"Please enter prices for all grades before submitting":"Please enter prices for all grades before submitting"
+"Please enter prices for all grades before submitting":"Please enter prices for all grades before submitting",
+"incorrectOTPCode":"The code you entered is invalid. Please try again.",
+"Ok":"Ok"
   },
   "EngProfile":{
     "LNG": "en",
