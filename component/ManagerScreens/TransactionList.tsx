@@ -171,13 +171,14 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
         {t("ManagerTransactions.Transaction List")} ( {t("ManagerTransactions.All")} {filteredTransactions.length})
         </Text>
       </View>
+      <View className='mb-8'>
       <FlatList
         data={filteredTransactions}
         keyExtractor={(item) => (item.id ? item.id.toString() : Math.random().toString())}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}
         renderItem={({ item }) => (
           <TouchableOpacity
-            className="flex-row items-center p-4 mb-3 rounded-[35px] bg-gray-100 shadow-sm"
+            className="flex-row items-center mb-8 p-4  rounded-[35px] bg-gray-100 shadow-sm"
             onPress={() => {
               navigation.navigate('TransactionReport'as any,  {
                 registeredFarmerId: item.registeredFarmerId,
@@ -197,6 +198,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
               });
             }}
           >
+            
             <View className="w-14 h-14 rounded-full overflow-hidden justify-center items-center mr-4 shadow-md">
               <Image
                 source={require('../../assets/images/ava.webp')}
@@ -222,6 +224,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
           </View>
         }
       />
+      </View>
 
     </SafeAreaView>
     </KeyboardAvoidingView>
