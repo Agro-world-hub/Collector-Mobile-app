@@ -764,7 +764,11 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
     }
   };
           
-
+useEffect(()=>{
+if(vopen && !selectedCrop){
+  Alert.alert(t("Error.error"),"Please select crop first")
+}
+},[vopen])
   
   const fetchVarieties = async () => {
     if (!selectedCrop) {
@@ -908,7 +912,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
                 scrollViewProps={{             
                   nestedScrollEnabled: true,
                 }}
-                disabled={!selectedCrop}
+              //  disabled={!selectedCrop}
                 zIndex={1000}
                 zIndexInverse={3000}
               />

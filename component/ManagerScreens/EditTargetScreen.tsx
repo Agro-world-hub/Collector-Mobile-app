@@ -91,12 +91,13 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
         <View>
           <Text className="text-gray-600 font-medium">{t("EditTargetManager.Assigned Target")}</Text>
           <View className="flex-row items-center mt-2 border border-gray-300 rounded-md px-3 py-2">
-            <TextInput
+            {/* <TextInput
               className="flex-1 text-gray-800"
               value={target.toString()}
               editable={isEditing}
               onChangeText={(text) => setMyTarget(text)}
-            />
+            /> */}
+             <Text  className="flex-1 text-gray-800" >  {target ? target.toString() : '0'} </Text>
             <TouchableOpacity onPress={() => setIsEditing((prev) => !prev)}>
               <Ionicons
                 name={isEditing ? 'pencil' : 'pencil'}

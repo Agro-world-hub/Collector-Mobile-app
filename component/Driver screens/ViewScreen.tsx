@@ -428,14 +428,14 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
 
 {(scheduled === "Cancelled" || requestStatus === "Cancelled") && (
   <View className="mb-4   rounded-md p-3">
-    <Text className="text-sm text-black mb-1 text-center">Reason to Cancel :</Text>
+    <Text className="text-sm text-black mb-1 text-center"> {t("CollectionRequest.Reason to Cancel")}</Text>
     <View className="border border-red-300 rounded-md p-2 ">
       <Text className="text-red-500 text-center">
         {cancellationReason || "The Farmer called and requested to cancel"}
       </Text>
     </View>
     <Text className="text-sm text-gray-500 text-center mt-1">
-      Canceled by : {cancelledBy}
+       {t("CollectionRequest.Canceled by")}: {cancelledBy}
     </Text>
   </View>
 )}

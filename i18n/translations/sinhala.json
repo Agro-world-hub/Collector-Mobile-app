@@ -153,7 +153,8 @@
  "Invalid crop or variety selected.":"වලංගු නොවන බෝගයක් හෝ ප්‍රභේදයක් තෝරාගෙන ඇත.",
 "Please enter prices for all grades before submitting":"ඉදිරිපත් කිරීමට පෙර සියලුම ශ්‍රේණි සඳහා මිල ගණන් ඇතුළත් කරන්න.",
 "incorrectOTPCode":"ඔබ ඇතුළත් කළ කේතය අවලංගුයි. කරුණාකර නැවත උත්සාහ කරන්න.",
-"Ok":"හරි"
+"Ok":"හරි",
+"Please select crop first":"කරුණාකර පළමුව බෝගයක් තෝරන්න."
   },
 "EngProfile":{
     "LNG": "si",
@@ -730,7 +731,8 @@
       "Assigned":"පවරා ඇති",
       "Cancelled":"අවලංගු කළා",
       "On way":"යන ගමන්",
-      "Scheduled":"කාලසටහන්ගත කර ඇති"
+      "Scheduled":"කාලසටහන්ගත කර ඇති",
+       "Canceled by":"විසින් අවලංගු කරන ලදී"
     },
     "NewReport":{
     "LNG": "en",
