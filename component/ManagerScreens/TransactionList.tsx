@@ -127,7 +127,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
         <TouchableOpacity onPress={() =>         navigation.navigate('OfficerSummary'as any,{collectionOfficerId, officerId,phoneNumber1,phoneNumber2,officerName})} className='absolute left-4 mt-[4%]'>
         <AntDesign name="left" size={22} color="white" />
               </TouchableOpacity>
-          <Text className="text-white text-lg font-bold ml-[28%] mt-[4%]">EMP ID: {officerId}</Text>
+          <Text className="text-white text-lg font-bold ml-[28%] mt-[4%]">EMP {t("ManagerTransactions.ID")}: {officerId}</Text>
           <View className="flex-row items-center justify-between mt-2">
           <Text className="text-white text-lg ml-[20%]">
           {t("ManagerTransactions.Selected Date")} {selectedDate ? selectedDate.toISOString().split('T')[0] : 'N/A'}
@@ -212,7 +212,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
               </Text>
               <Text className="text-sm text-gray-500">{t("ManagerTransactions.NIC")} {item.NICnumber}</Text>
               <Text className="text-sm text-gray-500">
-                Total: Rs.{item.totalAmount ? item.totalAmount.toLocaleString() : 'N/A'}
+              {t("ManagerTransactions.TotalRs")}{item.totalAmount ? item.totalAmount.toLocaleString() : 'N/A'}
               </Text>
             </View>
             <Ionicons name="chevron-forward" size={scale(20)} color="#9CA3AF" />
