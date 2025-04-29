@@ -403,7 +403,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
               ) : null}
   
               {/* Display search image when no NIC is entered */}
-              {/* {!isSearching && !foundFarmer && NICnumber.length === 0 && (
+              {!isSearching && !foundFarmer && NICnumber.length === 0 && (
                 <View className="mt-10 items-center">
                   <Image
                     source={require("../../assets/images/search.webp")}
@@ -411,7 +411,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                     resizeMode="contain"
                   />
                 </View>
-              )} */}
+              )}
   
               {/* Searching status */}
               {isSearching && (
