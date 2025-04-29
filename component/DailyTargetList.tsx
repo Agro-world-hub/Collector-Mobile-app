@@ -23,6 +23,7 @@ interface TargetData {
   todo: number;
   varietyNameSinhala:string;
   varietyNameTamil:string
+  complete: number;
 }
 
 const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
@@ -156,7 +157,7 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
 
       const allData = response.data.data;
       const todoItems = allData.filter((item: TargetData) => item.todo > 0);
-      const completedItems = allData.filter((item: TargetData) => item.todo === 0);
+      const completedItems = allData.filter((item: TargetData) => item.todo === 0 && item.complete !==0);
       console.log(allData);
 
       // Sort data by variety name and grade

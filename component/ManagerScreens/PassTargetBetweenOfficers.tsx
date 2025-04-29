@@ -113,11 +113,21 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
       console.log("Officers:", response.data.data);
 
       if (response.data.status === 'success') {
-        const formattedOfficers = response.data.data.map((officer: any) => ({
+        // const formattedOfficers = response.data.data.map((officer: any) => ({
+        //   key: officer.collectionOfficerId.toString(),
+        //   value: getOfficerName(officer),
+        // }));
+
+
+        const filteredOfficers = response.data.data.filter(
+          (officer: any) => officer.collectionOfficerId !== collectionOfficerId
+        );
+  
+        // Format the officers to be displayed
+        const formattedOfficers = filteredOfficers.map((officer: any) => ({
           key: officer.collectionOfficerId.toString(),
           value: getOfficerName(officer),
         }));
-
         setOfficers([ ...formattedOfficers]);
       } else {
         setErrorMessage(t("Error.Failed to fetch officers."));
