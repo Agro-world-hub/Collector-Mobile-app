@@ -485,6 +485,130 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
   //   //   farmerId: id,
   //   // });
   // };
+  // const handleSubmit = async () => {
+  //   console.log("Submitting collection request...");
+  //   console.log("Crops List:", cropsList);
+  //   Keyboard.dismiss(); // Dismiss the keyboard if it's open
+  //   try {
+  //     const token = await AsyncStorage.getItem("token");
+  //     if (!token) {
+  //       console.error("No authentication token found");
+  //       Alert.alert(t("Error.error"), t("Error.Authentication required. Please log in."));
+  //       return;
+  //     }
+
+  //     if (
+  //       !routeNumber ||
+  //       !buildingNo ||
+  //       !streetName ||
+  //       !city ||
+  //       cropsList.length === 0 ||
+  //       !scheduleDate
+  //     ) {
+  //       Alert.alert(
+  //         t("Error.error"),
+  //        t( "Error.Please fill all fields, add crops, and select a schedule date.")
+  //       );
+  //       return;
+  //     }
+
+  //     const farmerId = id; // Ensure `id` is properly set
+
+  //     const headers = {
+  //       Authorization: `Bearer ${token}`,
+  //       "Content-Type": "application/json",
+  //     };
+
+  //     // 1. Update user address details
+  //     const updateUserResponse = await axios.put(
+  //       `${environment.API_BASE_URL}api/unregisteredfarmercrop/user/update/${farmerId}`,
+  //       { routeNumber, buildingNo, streetName, city },
+  //       { headers }
+  //     );
+
+  //     if (updateUserResponse.status !== 200) {
+  //       Alert.alert(t("Error.error"), t("Error.Failed to update user details"));
+  //       return;
+  //     }
+  //     // 2. Submit multiple collection requests with a single schedule date
+  //     const collectionRequestData = cropsList.map((crop) => ({
+  //       farmerId,
+  //       crop: crop.crop,
+  //       variety: crop.variety,
+  //       loadIn: crop.loadIn,
+  //       scheduleDate: scheduleDate, // Use the single schedule date for all crops
+  //       buildingNo,
+  //       streetName,
+  //       city,
+  //       routeNumber
+  //     }));
+
+  //     console.log("Submission Data:", collectionRequestData);
+
+  //     const collectionRequestResponse = await axios.post(
+  //       `${environment.API_BASE_URL}api/unregisteredfarmercrop/submit-collection-request`,
+  //       { requests: collectionRequestData }, // Send as an array
+  //       { headers }
+  //     );
+
+  //     if (collectionRequestResponse.status === 200) {
+  //       // Clear the form after successful submission
+  //       Alert.alert(t("Error.Success"), t("Error.Collection Requests Submitted!"));
+  //       try {
+  //         const apiUrl = "https://api.getshoutout.com/coreservice/messages";
+  //         const headers = {
+  //           Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
+  //           "Content-Type": "application/json",
+  //         };
+
+  //         let Message = "";
+  //         if (language === "English") {
+  //           Message = `Thank you for placing a produce collection order with us. The allocated driver will contact you one day prior to the collection date.`;
+  //         } else if (language === "Sinhala") {
+  //           Message = `අප වෙත නිෂ්පාදන එකතු කිරීමේ ඇණවුමක් ලබා දීම ගැන ඔබට ස්තූතියි. ඔබ වෙනුවෙන් වෙන් කරන ලද රියදුරුමහතෙකු එකතු කිරීමේ දිනයට දිනකට පෙර ඔබව සම්බන්ධ කර ගනු ඇත.`;
+  //         } else if (language === "Tamil") {
+  //           Message = `எங்களிடம் விளைபொருள் சேகரிப்பு உத்தரவை வழங்கியதற்கு நன்றி. ஒதுக்கப்பட்ட ஓட்டுநர் சேகரிப்பு திகதிக்கு ஒரு நாள் முன்னதாக உங்களைத் தொடர்புகொள்வார்.`;
+  //         }
+  //         const formattedPhone = phoneNumber;
+
+  //         const body = {
+  //           source: "AgroWorld",
+  //           destinations: [formattedPhone],
+  //           content: {
+  //             sms: Message,
+  //           },
+  //           transports: ["sms"],
+  //         };
+
+  //         const response = await axios.post(apiUrl, body, { headers });
+
+  //         if (response.data.referenceId) {
+  //           console.log("SMS notification sent successfully!")
+  //           // Alert.alert("Success", "SMS notification sent successfully!");
+  //         }
+  //       } catch (error) {
+  //         console.error("Error sending SMS:", error);
+  //         // Alert.alert(
+  //         //   "Error",
+  //         //   "Failed to send notification. Please try again."
+  //         // );
+  //       }
+  //       setCropsList([]); // Clear the crops list
+  //       setRouteNumber("");
+  //       setBuildingNo("");
+  //       setStreetName("");
+  //       setCity("");
+  //       setScheduleDate("");
+  //     } else {
+  //       Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+  //     }
+  //   } catch (error) {
+  //     console.error("Error submitting request:", error);
+  //     Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+
+  //   }
+  // };
+
   const handleSubmit = async () => {
     console.log("Submitting collection request...");
     console.log("Crops List:", cropsList);
@@ -498,7 +622,6 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
       }
 
       if (
-        !routeNumber ||
         !buildingNo ||
         !streetName ||
         !city ||
@@ -507,7 +630,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
       ) {
         Alert.alert(
           t("Error.error"),
-         t( "Error.Please fill all fields, add crops, and select a schedule date.")
+          t("Error.Please fill all fields, add crops, and select a schedule date.")
         );
         return;
       }
@@ -519,93 +642,150 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
         "Content-Type": "application/json",
       };
 
-      // 1. Update user address details
-      const updateUserResponse = await axios.put(
-        `${environment.API_BASE_URL}api/unregisteredfarmercrop/user/update/${farmerId}`,
-        { routeNumber, buildingNo, streetName, city },
-        { headers }
-      );
+      try {
+        // 1. Update user address details
+        // Always include routeNumber in the request, even if it's empty
+        const addressData = { 
+          routeNumber: routeNumber || "", // Send empty string if null/undefined
+          buildingNo, 
+          streetName, 
+          city 
+        };
+        
+        console.log("Updating user address with:", addressData);
+        
+        const updateUserResponse = await axios.put(
+          `${environment.API_BASE_URL}api/unregisteredfarmercrop/user/update/${farmerId}`,
+          addressData,
+          { headers }
+        );
 
-      if (updateUserResponse.status !== 200) {
-        Alert.alert(t("Error.error"), t("Error.Failed to update user details"));
+        console.log("Update user response:", updateUserResponse.status, updateUserResponse.data);
+
+        if (updateUserResponse.status !== 200) {
+          Alert.alert(t("Error.error"), t("Error.Failed to update user details"));
+          return;
+        }
+      } catch (error: unknown) {
+        // Properly type the error
+        if (axios.isAxiosError(error)) {
+          console.error("Error updating user details:", error.response?.data || error.message);
+        } else {
+          console.error("Error updating user details:", error);
+        }
+        Alert.alert(t("Error.error"), t("Error.Failed to update user address"));
         return;
       }
-      // 2. Submit multiple collection requests with a single schedule date
-      const collectionRequestData = cropsList.map((crop) => ({
-        farmerId,
-        crop: crop.crop,
-        variety: crop.variety,
-        loadIn: crop.loadIn,
-        scheduleDate: scheduleDate, // Use the single schedule date for all crops
-        buildingNo,
-        streetName,
-        city,
-        routeNumber
-      }));
+      
+      try {
+        // 2. Submit multiple collection requests with a single schedule date
+        const collectionRequestData = cropsList.map((crop) => ({
+          farmerId,
+          crop: crop.crop,
+          variety: crop.variety,
+          loadIn: crop.loadIn,
+          scheduleDate: scheduleDate, // Use the single schedule date for all crops
+          buildingNo,
+          streetName,
+          city,
+          routeNumber: routeNumber || "" // Always include routeNumber, empty string if null
+        }));
 
-      console.log("Submission Data:", collectionRequestData);
+        console.log("Submission Data:", JSON.stringify(collectionRequestData, null, 2));
 
-      const collectionRequestResponse = await axios.post(
-        `${environment.API_BASE_URL}api/unregisteredfarmercrop/submit-collection-request`,
-        { requests: collectionRequestData }, // Send as an array
-        { headers }
-      );
+        const collectionRequestResponse = await axios.post(
+          `${environment.API_BASE_URL}api/unregisteredfarmercrop/submit-collection-request`,
+          { requests: collectionRequestData }, // Send as an array
+          { headers }
+        );
 
-      if (collectionRequestResponse.status === 200) {
-        // Clear the form after successful submission
-        Alert.alert(t("Error.Success"), t("Error.Collection Requests Submitted!"));
-        try {
-          const apiUrl = "https://api.getshoutout.com/coreservice/messages";
-          const headers = {
-            Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
-            "Content-Type": "application/json",
-          };
+        console.log("Collection request response:", collectionRequestResponse.status, collectionRequestResponse.data);
 
-          let Message = "";
-          if (language === "English") {
-            Message = `Thank you for placing a produce collection order with us. The allocated driver will contact you one day prior to the collection date.`;
-          } else if (language === "Sinhala") {
-            Message = `අප වෙත නිෂ්පාදන එකතු කිරීමේ ඇණවුමක් ලබා දීම ගැන ඔබට ස්තූතියි. ඔබ වෙනුවෙන් වෙන් කරන ලද රියදුරුමහතෙකු එකතු කිරීමේ දිනයට දිනකට පෙර ඔබව සම්බන්ධ කර ගනු ඇත.`;
-          } else if (language === "Tamil") {
-            Message = `எங்களிடம் விளைபொருள் சேகரிப்பு உத்தரவை வழங்கியதற்கு நன்றி. ஒதுக்கப்பட்ட ஓட்டுநர் சேகரிப்பு திகதிக்கு ஒரு நாள் முன்னதாக உங்களைத் தொடர்புகொள்வார்.`;
+        if (collectionRequestResponse.status === 200) {
+          // Clear the form after successful submission
+          Alert.alert(t("Error.Success"), t("Error.Collection Requests Submitted!"));
+          try {
+            const apiUrl = "https://api.getshoutout.com/coreservice/messages";
+            const smsHeaders = {
+              Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
+              "Content-Type": "application/json",
+            };
+
+            let Message = "";
+            if (language === "English") {
+              Message = `Thank you for placing a produce collection order with us. The allocated driver will contact you one day prior to the collection date.`;
+            } else if (language === "Sinhala") {
+              Message = `අප වෙත නිෂ්පාදන එකතු කිරීමේ ඇණවුමක් ලබා දීම ගැන ඔබට ස්තූතියි. ඔබ වෙනුවෙන් වෙන් කරන ලද රියදුරුමහතෙකු එකතු කිරීමේ දිනයට දිනකට පෙර ඔබව සම්බන්ධ කර ගනු ඇත.`;
+            } else if (language === "Tamil") {
+              Message = `எங்களிடம் விளைபொருள் சேகரிப்பு உத்தரவை வழங்கியதற்கு நன்றி. ஒதுக்கப்பட்ட ஓட்டுநர் சேகரிப்பு திகதிக்கு ஒரு நாள் முன்னதாக உங்களைத் தொடர்புகொள்வார்.`;
+            }
+            const formattedPhone = phoneNumber;
+
+            const body = {
+              source: "AgroWorld",
+              destinations: [formattedPhone],
+              content: {
+                sms: Message,
+              },
+              transports: ["sms"],
+            };
+
+            const response = await axios.post(apiUrl, body, { headers: smsHeaders });
+
+            if (response.data.referenceId) {
+              console.log("SMS notification sent successfully!")
+              // Alert.alert("Success", "SMS notification sent successfully!");
+            }
+          } catch (error: unknown) {
+            if (error instanceof Error) {
+              console.error("Error sending SMS:", error.message);
+            } else {
+              console.error("Error sending SMS:", error);
+            }
+            // Alert.alert(
+            //   "Error",
+            //   "Failed to send notification. Please try again."
+            // );
           }
-          const formattedPhone = phoneNumber;
-
-          const body = {
-            source: "AgroWorld",
-            destinations: [formattedPhone],
-            content: {
-              sms: Message,
-            },
-            transports: ["sms"],
-          };
-
-          const response = await axios.post(apiUrl, body, { headers });
-
-          if (response.data.referenceId) {
-            console.log("SMS notification sent successfully!")
-            // Alert.alert("Success", "SMS notification sent successfully!");
-          }
-        } catch (error) {
-          console.error("Error sending SMS:", error);
-          // Alert.alert(
-          //   "Error",
-          //   "Failed to send notification. Please try again."
-          // );
+          setCropsList([]); // Clear the crops list
+          setRouteNumber("");
+          setBuildingNo("");
+          setStreetName("");
+          setCity("");
+          setScheduleDate("");
+        } else {
+          Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
         }
-        setCropsList([]); // Clear the crops list
-        setRouteNumber("");
-        setBuildingNo("");
-        setStreetName("");
-        setCity("");
-        setScheduleDate("");
-      } else {
-        Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+      } catch (error: unknown) {
+        // Type-safe error handling
+        if (axios.isAxiosError(error)) {
+          console.error("Error submitting collection request:", error.response?.data || error.message);
+          let errorMessage = t("Error.somethingWentWrong");
+          
+          // Check for specific error responses from the server
+          if (error.response?.data?.message) {
+            errorMessage = error.response.data.message;
+          } else if (error.response?.data?.error) {
+            errorMessage = error.response.data.error;
+          }
+          
+          Alert.alert(t("Error.error"), errorMessage);
+        } else if (error instanceof Error) {
+          console.error("Error submitting collection request:", error.message);
+          Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+        } else {
+          console.error("Unknown error submitting collection request:", error);
+          Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+        }
       }
-    } catch (error) {
-      console.error("Error submitting request:", error);
+    } catch (error: unknown) {
+      // Type-safe error handling for the main try-catch block
+      if (error instanceof Error) {
+        console.error("Main error in handleSubmit:", error.message);
+      } else {
+        console.error("Main error in handleSubmit:", error);
+      }
       Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
-
     }
   };
   const truncateText = (text: string, length: number) => {
@@ -690,13 +870,14 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
           </View>
 
           {showPicker && (
-            <DateTimePicker
-              value={scheduleDate ? new Date(scheduleDate) : new Date()}
-              mode="date"
-              display="default"
-              onChange={handleDateChange}
-            />
-          )}
+  <DateTimePicker
+    value={scheduleDate ? new Date(scheduleDate) : new Date()}
+    mode="date"
+    display="default"
+    minimumDate={new Date()} // Prevent selection of past dates
+    onChange={handleDateChange}
+  />
+)}
 
           <View className="h-0.5 bg-[#D2D2D2] mb-4 mt-2" />
 

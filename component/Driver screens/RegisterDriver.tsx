@@ -705,6 +705,7 @@ const RegisterDriver: React.FC = () => {
   const [errorEmail, setErrorEmail] = useState("");
   const [nicExists, setNicExists] = useState(false);
   const [phoneExists, setPhoneExists] = useState(false);
+  const [phone2Exists, setPhone2Exists] = useState(false);
 
   const toggleLanguage = (language: keyof typeof preferredLanguages) => {
     setPreferredLanguages((prev) => ({
@@ -818,12 +819,44 @@ const RegisterDriver: React.FC = () => {
     }
   };
 
+  const checkPhone2Exists = async (phoneNumber: string) => {
+    if (!validatePhoneNumber(phoneNumber)) return;
+    
+    try {
+      setIsValidating(true);
+      const token = await AsyncStorage.getItem('token');
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/collection-manager/driver/check-phone/${phoneCode2}${phoneNumber}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+      
+      if (response.data.exists) {
+        setPhone2Exists(true);
+        setError2("This phone number is already registered in the system.");
+      } else {
+        setPhone2Exists(false);
+        setError2("");
+      }
+    } catch (error) {
+      console.error("Error checking phone number 2:", error);
+    } finally {
+      setIsValidating(false);
+    }
+  };
+  
+  // Update the handlePhoneNumber2Change function
   const handlePhoneNumber2Change = (input: string) => {
     setPhoneNumber2(input);
     if (!validatePhoneNumber(input)) {
       setError2(t("Error.setphoneError2"));
     } else {
       setError2("");
+      // Check if phone number 2 exists when it's valid
+      checkPhone2Exists(input);
     }
   };
 
@@ -902,7 +935,7 @@ const RegisterDriver: React.FC = () => {
     if(error1) {
       Alert.alert(t("Error.error"), t("Error.Please correct phone number 1"));
       return;
-    } else if(error2) {
+    } else if(phoneNumber2 && error2) {  // Only check phone2 error if a phone2 is provided
       Alert.alert(t("Error.error"), t("Error.Please correct phone number 2"));
       return;
     } else if(error3) {
@@ -912,6 +945,7 @@ const RegisterDriver: React.FC = () => {
       Alert.alert(t("Error.error"), t("Error.Please correct email"));
       return;
     }
+  
 
     // Final validation check with backend
     try {
