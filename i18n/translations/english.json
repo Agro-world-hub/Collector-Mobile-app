@@ -153,7 +153,8 @@
  "Invalid crop or variety selected.":"Invalid crop or variety selected.",
 "Please enter prices for all grades before submitting":"Please enter prices for all grades before submitting",
 "incorrectOTPCode":"The code you entered is invalid. Please try again.",
-"Ok":"Ok"
+"Ok":"Ok",
+"Please select crop first":"Please select crop first"
   },
   "EngProfile":{
     "LNG": "en",
@@ -730,7 +731,8 @@
     "Assigned":"Assigned",
     "Cancelled":"Cancelled",
     "On way":"On way",
-    "Scheduled":"Scheduled"
+    "Scheduled":"Scheduled",
+    "Canceled by":"Canceled by"
   },
   "NewReport":{
     "LNG": "en",

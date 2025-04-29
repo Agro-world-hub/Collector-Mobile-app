@@ -473,13 +473,24 @@ const AddDriverAddressDetails: React.FC = () => {
           }
           className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
         />
-        <TextInput
+        {/* <TextInput
           placeholder={t("AddOfficerAddressDetails.AccountNum")}
           keyboardType="numeric"
           value={formData.accountNumber}
           onChangeText={(text) => handleValidation("accountNumber", text)}
           className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
-        />
+        /> */}
+        <TextInput
+  placeholder={t("AddOfficerAddressDetails.AccountNum")}
+  keyboardType="numeric"
+  value={formData.accountNumber}
+  onChangeText={(text) => {
+    const onlyNumbers = text.replace(/[^0-9]/g, ""); // Remove anything that's not 0-9
+    handleValidation("accountNumber", onlyNumbers);
+  }}
+  className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+/>
+
         <TextInput
           placeholder={t("AddOfficerAddressDetails.Confirm AccountNum")}
           keyboardType="numeric"
