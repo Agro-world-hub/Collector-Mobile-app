@@ -226,7 +226,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
   <Text className="text-sm text-gray-700 mb-2">{t("ReportGenerator.Start Date")}</Text>
   <View className="flex-row items-center">
     <TouchableOpacity
-      onPress={() => setShowStartPicker(true)}
+      onPress={() => setShowStartPicker(prev => !prev)}
       className="border border-gray-300 rounded-lg px-4 py-3 flex-1 flex-row justify-between items-center"
     >
       <Text className="text-gray-500">{formatDate(startDate)}</Text>
@@ -237,7 +237,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
       />
     </TouchableOpacity>
   </View>
-  {showStartPicker && (
+  {/* {showStartPicker && (
     <DateTimePicker
       value={startDate || new Date()}
       mode="date"
@@ -245,7 +245,31 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
       maximumDate={getTodayInColombo()} // Disallow future dates
       onChange={(event, date) => handleDateChange(event, date, 'start')}
     />
-  )}
+  )} */}
+
+{showStartPicker  && Platform.OS === "android" && (
+          <DateTimePicker
+            value={startDate || new Date()}
+            mode="date"
+            display="default"
+            maximumDate={getTodayInColombo()} // Disallow future dates
+      onChange={(event, date) => handleDateChange(event, date, 'start')}
+          />
+        )}
+        {showStartPicker  && Platform.OS === "ios" && (
+          <>
+            <View className=" justify-center items-center z-50 absolute -ml-2 mt-[30%] bg-gray-100  rounded-lg">
+              <DateTimePicker
+                value={startDate || new Date()}
+                mode="date"
+                display="inline"
+                style={{ width: 320, height: 260 }}
+                maximumDate={getTodayInColombo()} // Disallow future dates
+      onChange={(event, date) => handleDateChange(event, date, 'start')}
+              />
+            </View>
+          </>
+        )}
 </View>
 
         {/* End Date */}
@@ -271,7 +295,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
         <View className="mb-6">
   <Text className="text-sm text-gray-700 mb-2">{t("ReportGenerator.End Date")}</Text>
   <TouchableOpacity
-    onPress={() => setShowEndPicker(true)}
+    onPress={() => setShowEndPicker(prev => !prev)}
     className="border border-gray-300 rounded-lg px-4 py-3 flex-row justify-between items-center"
   >
     <Text className="text-gray-500">{formatDate(endDate)}</Text>
@@ -281,7 +305,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
       resizeMode="contain" 
     />
   </TouchableOpacity>
-  {showEndPicker && (
+  {/* {showEndPicker && (
     <DateTimePicker
       value={endDate || new Date()}
       mode="date"
@@ -290,7 +314,33 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
       minimumDate={startDate} // End date must not be earlier than the start date
       onChange={(event, date) => handleDateChange(event, date, 'end')}
     />
-  )}
+  )} */}
+
+{showEndPicker  && Platform.OS === "android" && (
+          <DateTimePicker
+          value={endDate || new Date()}
+            mode="date"
+            display="default"
+            maximumDate={getTodayInColombo()} // Disallow future dates
+      minimumDate={startDate} // End date must not be earlier than the start date
+      onChange={(event, date) => handleDateChange(event, date, 'end')}
+          />
+        )}
+        {showEndPicker  && Platform.OS === "ios" && (
+          <>
+            <View className=" justify-center items-center z-50 absolute -ml-2 mt-[30%] bg-gray-100  rounded-lg">
+              <DateTimePicker
+                value={endDate || new Date()}
+                mode="date"
+                display="inline"
+                style={{ width: 320, height: 260 }}
+                maximumDate={getTodayInColombo()} // Disallow future dates
+      minimumDate={startDate} // End date must not be earlier than the start date
+      onChange={(event, date) => handleDateChange(event, date, 'end')}
+              />
+            </View>
+          </>
+        )}
 </View>
 
         {/* Buttons */}

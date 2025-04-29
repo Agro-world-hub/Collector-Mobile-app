@@ -586,7 +586,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
 
   return (
     <ScrollView
-      className="flex-1 bg-white "
+      className="flex-1 bg-white mb-10 "
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }

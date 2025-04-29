@@ -132,6 +132,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
   console.log("kkkkkkk", id);
   console.log("phoneNumber", phoneNumber);
   console.log("language", language);
+
   // useFocusEffect(
   //   React.useCallback(() => {
   //     const fetchCropNames = async () => {
@@ -192,6 +193,8 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
 
   useFocusEffect(
     React.useCallback(() => {
+      setShowPicker(false); // Hide the date picker when the screen is focused
+      setScheduleDate(""); // Reset the schedule date to YYYY-MM-DD format
       const fetchCropNames = async () => {
         try {
           const token = await AsyncStorage.getItem("token");
@@ -849,18 +852,20 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
 
           <Text className="text-gray-700 mb-2">{t("CollectionRequest.Schedule Date")}</Text>
           <View className="border border-gray-300 rounded-lg px-4 mb-4 flex-row items-center">
+          <TouchableOpacity
+              onPress={() => {
+                setShowPicker(prev => !prev);
+                Keyboard.dismiss();
+              }}
+              className="flex-row items-center"
+            >
             <TextInput
               className="flex-1 text-gray-700 p-2"
               value={scheduleDate}
               placeholder={t("CollectionRequest.Select Schedule Date")}
               editable={false} // Prevent manual input
             />
-            <TouchableOpacity
-              onPress={() => {
-                setShowPicker(true);
-                Keyboard.dismiss();
-              }}
-            >
+       
               <Image
                 source={require("../../assets/images/Rescheduling.webp")}
                 className="h-[24px] w-[24px] ml-2"
@@ -869,7 +874,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
             </TouchableOpacity>
           </View>
 
-          {showPicker && (
+          {/* {showPicker && (
   <DateTimePicker
     value={scheduleDate ? new Date(scheduleDate) : new Date()}
     mode="date"
@@ -877,13 +882,37 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
     minimumDate={new Date()} // Prevent selection of past dates
     onChange={handleDateChange}
   />
-)}
+)} */}
+
+{showPicker && Platform.OS === "android" && (
+          <DateTimePicker
+          value={scheduleDate ? new Date(scheduleDate) : new Date()}
+            mode="date"
+            display="default"
+            minimumDate={new Date()} 
+            onChange={handleDateChange}
+          />
+        )}
+        {showPicker && Platform.OS === "ios" && (
+          <>
+            <View className=" justify-center items-center z-50 absolute ml-6 mt-[5%] bg-gray-100  rounded-lg">
+              <DateTimePicker
+                value={scheduleDate ? new Date(scheduleDate) : new Date()}
+                mode="date"
+                display="inline"
+                minimumDate={new Date()} 
+                style={{ width: 320, height: 260 }}
+                onChange={handleDateChange}
+              />
+            </View>
+          </>
+        )}
 
           <View className="h-0.5 bg-[#D2D2D2] mb-4 mt-2" />
 
           {showAddmore && cropsList.length > 0 ? (
             <View>
-              <View className="mb-4">
+              <View className="mb-4 -z-10">
                 <Text className="text-gray-700 mb-2">{t("CollectionRequest.Added Requests")}</Text>
                 {cropsList.map((item, index) => (
                   <View

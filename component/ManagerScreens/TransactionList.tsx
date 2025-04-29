@@ -10,6 +10,8 @@ import { RootStackParamList } from '../types';
 import {environment }from '@/environment/environment';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useTranslation } from "react-i18next";
+import { useFocusEffect } from '@react-navigation/native';
+import { set } from 'lodash';
 
 type TransactionListNavigationProp = StackNavigationProp<RootStackParamList, 'TransactionList'>;
 type TranscationListRouteProp = RouteProp<RootStackParamList, 'OfficerSummary'>;
@@ -54,7 +56,16 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
     const day = today.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      setSelectedDate(new Date());
+      setShowDatePicker(false);
 
+      return () => {
+      };
+    }, []) 
+  );
   const fetchTransactions = async (date: string) => {
     try {
       const response = await fetch(
@@ -132,7 +143,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
           <Text className="text-white text-lg ml-[20%]">
           {t("ManagerTransactions.Selected Date")} {selectedDate ? selectedDate.toISOString().split('T')[0] : 'N/A'}
         </Text>
-            <TouchableOpacity onPress={() => setShowDatePicker(true)} className="mb-6">
+            <TouchableOpacity onPress={() => setShowDatePicker(prev => !prev)} className="mb-6">
               <Ionicons name="calendar-outline" size={24} color="white" />
             </TouchableOpacity>
           </View>
@@ -153,7 +164,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
           />
         </View>
 
-        {showDatePicker && (
+        {/* {showDatePicker && (
           <DateTimePicker
             value={selectedDate}
             mode="date"
@@ -163,6 +174,32 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
               if (date) setSelectedDate(date);
             }}
           />
+        )} */}
+
+{showDatePicker && Platform.OS === "android" && (
+     <DateTimePicker
+     value={selectedDate}
+     mode="date"
+     display="default"
+     onChange={(event, date) => {
+      setShowDatePicker(false);
+      if (date) setSelectedDate(date);
+    }}
+   />
+)}
+        {showDatePicker && Platform.OS === "ios" && (
+         <View className=' justify-center items-center z-50 absolute ml-6 mt-[52%] bg-gray-100  rounded-lg'>
+         <DateTimePicker
+           value={selectedDate}
+           mode="date"
+           display="inline"
+           style={{ width: 320, height: 260 }}
+           onChange={(event, date) => {
+            setShowDatePicker(false);
+            if (date) setSelectedDate(date);
+          }}
+         />
+         </View>
         )}
       </View>
 
@@ -231,3 +268,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
   );
 };
 export default TransactionList;
+
+function callback(arg0: () => void) {
+  throw new Error('Function not implemented.');
+}

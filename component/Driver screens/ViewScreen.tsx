@@ -447,12 +447,12 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
                     className="border border-gray-300 rounded px-3 py-2 text-base flex-1"
                     value={scheduleDate}
                     onChangeText={setScheduleDate}
-                    editable={isEditable}
+                    editable={!isEditable}
                   />
                   {isEditable && (
                     <TouchableOpacity
                       className="ml-2"
-                      onPress={() => setShowDatePicker(true)}
+                      onPress={() => setShowDatePicker(prev => !prev)}
                     >
                       <FontAwesome name="calendar" size={20} color="gray" />
                     </TouchableOpacity>
@@ -461,7 +461,7 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
        
                  </View>
               
-                 {showDatePicker && (
+                 {/* {showDatePicker && (
                      <View className="items-end  mt-4">
                   <DateTimePicker
                     value={new Date()}
@@ -471,7 +471,31 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
                     minimumDate={tomorrow} 
                   />
                     </View>
-                )}
+                )} */}
+
+{showDatePicker  && Platform.OS === "android" && (
+          <DateTimePicker
+            value={new Date()}
+             mode="date"
+            display="default"
+            onChange={handleDateChange}
+            minimumDate={tomorrow} 
+          />
+        )}
+        {showDatePicker && Platform.OS === "ios" && (
+          <>
+            <View className=" justify-center items-center z-50 absolute ml-2 -mt-[90%] bg-gray-100  rounded-lg">
+              <DateTimePicker
+                value={new Date()}
+                mode="date"
+                display="inline"
+                style={{ width: 320, height: 260 }}
+                onChange={handleDateChange}
+                minimumDate={tomorrow} 
+              />
+            </View>
+          </>
+        )}
 
                
       

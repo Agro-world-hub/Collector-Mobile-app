@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AntDesign } from '@expo/vector-icons';
 import { useTranslation } from "react-i18next";
 import LottieView from 'lottie-react-native';
+import { Platform } from 'react-native';
 
 type ManagerTransactionsNavigationProp = StackNavigationProp<RootStackParamList, 'ManagerTransactions'>;
 
@@ -465,7 +466,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route, naviga
               {t("ManagerTransactions.Selected Date")} {selectedDate ? selectedDate.toISOString().split('T')[0] : 'N/A'}
             </Text>
             <View className='mt-[-3%]'>
-              <TouchableOpacity onPress={() => setShowDatePicker(true)} className="mb-4">
+              <TouchableOpacity  onPress={() => setShowDatePicker(prev => !prev)} className="mb-4">
                 <Ionicons name="calendar-outline" size={26} color="white" />
               </TouchableOpacity>
             </View>
@@ -488,17 +489,35 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route, naviga
           />
         </View>
 
-        {showDatePicker && (
-          <DateTimePicker
-            value={selectedDate}
-            mode="date"
-            display="default"
-            onChange={(event, date) => {
-              setShowDatePicker(false);
-              if (date) setSelectedDate(date);
-            }}
-          />
+{showDatePicker && Platform.OS === "android" && (
+     <DateTimePicker
+     value={selectedDate}
+     mode="date"
+     display="default"
+     onChange={(event, date) => {
+       setShowDatePicker(false);
+       if (date) setSelectedDate(date);
+     }}
+   />
+)}
+        {showDatePicker && Platform.OS === "ios" && (
+         <View className=' justify-center items-center z-50 absolute ml-6 mt-[52%] bg-gray-100  rounded-lg'>
+         <DateTimePicker
+           value={selectedDate}
+           mode="date"
+           display="inline"
+           style={{ width: 320, height: 260 }}
+
+           onChange={(event, date) => {
+             setShowDatePicker(false);
+             if (date) setSelectedDate(date);
+           }}
+         />
+         </View>
         )}
+
+
+       
       </View>
 
       <View className="px-4 mt-4">
