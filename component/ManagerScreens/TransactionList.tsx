@@ -10,6 +10,8 @@ import { RootStackParamList } from '../types';
 import {environment }from '@/environment/environment';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useTranslation } from "react-i18next";
+import { useFocusEffect } from '@react-navigation/native';
+import { set } from 'lodash';
 
 type TransactionListNavigationProp = StackNavigationProp<RootStackParamList, 'TransactionList'>;
 type TranscationListRouteProp = RouteProp<RootStackParamList, 'OfficerSummary'>;
@@ -54,7 +56,16 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
     const day = today.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      setSelectedDate(new Date());
+      setShowDatePicker(false);
 
+      return () => {
+      };
+    }, []) 
+  );
   const fetchTransactions = async (date: string) => {
     try {
       const response = await fetch(
@@ -127,12 +138,12 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
         <TouchableOpacity onPress={() =>         navigation.navigate('OfficerSummary'as any,{collectionOfficerId, officerId,phoneNumber1,phoneNumber2,officerName})} className='absolute left-4 mt-[4%]'>
         <AntDesign name="left" size={22} color="white" />
               </TouchableOpacity>
-          <Text className="text-white text-lg font-bold ml-[28%] mt-[4%]">EMP ID: {officerId}</Text>
+          <Text className="text-white text-lg font-bold ml-[28%] mt-[4%]">EMP {t("ManagerTransactions.ID")}: {officerId}</Text>
           <View className="flex-row items-center justify-between mt-2">
           <Text className="text-white text-lg ml-[20%]">
           {t("ManagerTransactions.Selected Date")} {selectedDate ? selectedDate.toISOString().split('T')[0] : 'N/A'}
         </Text>
-            <TouchableOpacity onPress={() => setShowDatePicker(true)} className="mb-6">
+            <TouchableOpacity onPress={() => setShowDatePicker(prev => !prev)} className="mb-6">
               <Ionicons name="calendar-outline" size={24} color="white" />
             </TouchableOpacity>
           </View>
@@ -153,7 +164,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
           />
         </View>
 
-        {showDatePicker && (
+        {/* {showDatePicker && (
           <DateTimePicker
             value={selectedDate}
             mode="date"
@@ -163,6 +174,32 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
               if (date) setSelectedDate(date);
             }}
           />
+        )} */}
+
+{showDatePicker && Platform.OS === "android" && (
+     <DateTimePicker
+     value={selectedDate}
+     mode="date"
+     display="default"
+     onChange={(event, date) => {
+      setShowDatePicker(false);
+      if (date) setSelectedDate(date);
+    }}
+   />
+)}
+        {showDatePicker && Platform.OS === "ios" && (
+         <View className=' justify-center items-center z-50 absolute ml-6 mt-[52%] bg-gray-100  rounded-lg'>
+         <DateTimePicker
+           value={selectedDate}
+           mode="date"
+           display="inline"
+           style={{ width: 320, height: 260 }}
+           onChange={(event, date) => {
+            setShowDatePicker(false);
+            if (date) setSelectedDate(date);
+          }}
+         />
+         </View>
         )}
       </View>
 
@@ -171,13 +208,14 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
         {t("ManagerTransactions.Transaction List")} ( {t("ManagerTransactions.All")} {filteredTransactions.length})
         </Text>
       </View>
+      <View className='mb-8'>
       <FlatList
         data={filteredTransactions}
         keyExtractor={(item) => (item.id ? item.id.toString() : Math.random().toString())}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}
         renderItem={({ item }) => (
           <TouchableOpacity
-            className="flex-row items-center p-4 mb-3 rounded-[35px] bg-gray-100 shadow-sm"
+            className="flex-row items-center mb-8 p-4  rounded-[35px] bg-gray-100 shadow-sm"
             onPress={() => {
               navigation.navigate('TransactionReport'as any,  {
                 registeredFarmerId: item.registeredFarmerId,
@@ -197,6 +235,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
               });
             }}
           >
+            
             <View className="w-14 h-14 rounded-full overflow-hidden justify-center items-center mr-4 shadow-md">
               <Image
                 source={require('../../assets/images/ava.webp')}
@@ -210,7 +249,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
               </Text>
               <Text className="text-sm text-gray-500">{t("ManagerTransactions.NIC")} {item.NICnumber}</Text>
               <Text className="text-sm text-gray-500">
-                Total: Rs.{item.totalAmount ? item.totalAmount.toLocaleString() : 'N/A'}
+              {t("ManagerTransactions.TotalRs")}{item.totalAmount ? item.totalAmount.toLocaleString() : 'N/A'}
               </Text>
             </View>
             <Ionicons name="chevron-forward" size={scale(20)} color="#9CA3AF" />
@@ -222,9 +261,14 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
           </View>
         }
       />
+      </View>
 
     </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };
 export default TransactionList;
+
+function callback(arg0: () => void) {
+  throw new Error('Function not implemented.');
+}

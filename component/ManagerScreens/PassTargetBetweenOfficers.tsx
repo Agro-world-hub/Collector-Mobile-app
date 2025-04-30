@@ -88,6 +88,10 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
         return officer.fullNameEnglish;
     }
   };
+  const isSaveDisabled = () => {
+    // Disable button if no assignee is selected OR assignee is the default option ('0') OR submitting
+    return !assignee || assignee === '0' || submitting;
+  };
 
 
   // Fetch officers from API
@@ -109,12 +113,22 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
       console.log("Officers:", response.data.data);
 
       if (response.data.status === 'success') {
-        const formattedOfficers = response.data.data.map((officer: any) => ({
+        // const formattedOfficers = response.data.data.map((officer: any) => ({
+        //   key: officer.collectionOfficerId.toString(),
+        //   value: getOfficerName(officer),
+        // }));
+
+
+        const filteredOfficers = response.data.data.filter(
+          (officer: any) => officer.collectionOfficerId !== collectionOfficerId
+        );
+  
+        // Format the officers to be displayed
+        const formattedOfficers = filteredOfficers.map((officer: any) => ({
           key: officer.collectionOfficerId.toString(),
           value: getOfficerName(officer),
         }));
-
-        setOfficers([{ key: '0', value: t("PassTargetBetweenOfficers.Select an officer") }, ...formattedOfficers]);
+        setOfficers([ ...formattedOfficers]);
       } else {
         setErrorMessage(t("Error.Failed to fetch officers."));
       }
@@ -223,7 +237,7 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-semibold ml-[30%]">{getvarietyName()}</Text>
+        <Text className="text-white text-lg font-semibold text-center w-full">{getvarietyName()}</Text>
       </View>
 
       {/* ✅ Scrollable Content */}
@@ -242,19 +256,32 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
             ) : errorMessage ? (
               <Text className="text-red-500">{errorMessage}</Text>
             ) : (
-              <View className="border border-gray-300 rounded-lg mb-4">
+              <View className=" rounded-lg mb-4">
                 <SelectList
                   setSelected={(value: string) => setAssignee(value)}
                   data={officers}
                   save="key"
                   defaultOption={{ key: '0', value: t("PassTargetBetweenOfficers.Select an officer")}}
+                  boxStyles={{ 
+                    borderWidth: 1,
+                    borderColor: '#CFCFCF',
+                    backgroundColor: 'white'
+                  }}
+                  inputStyles={{
+                    color: '#000000'
+                  }}
+                  dropdownStyles={{  // Fixed: changed from dropDownStyles to dropdownStyles
+                    borderColor: '#CFCFCF',
+                    backgroundColor: 'white'
+                  }}
                 />
+                
               </View>
             )}
 
             <Text className="text-gray-700 mb-2">{t("PassTargetBetweenOfficers.Amount")}</Text>
             <TextInput
-              className="border border-gray-300 rounded-lg p-2 text-gray-800"
+              className="border border-gray-300 rounded-lg p-3 text-gray-800"
               keyboardType="numeric"
               value={amount}
               onChangeText={handleAmountChange}
@@ -263,7 +290,7 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
           </View>
         </View>
 
-        <View className="mt-6 items-center">
+        {/* <View className="mt-6 items-center">
           <TouchableOpacity
             className="bg-[#2AAD7A] rounded-full w-64 py-3"
             onPress={passTarget}
@@ -275,7 +302,21 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
               <Text className="text-white text-center font-medium">{t("PassTargetBetweenOfficers.Save")}</Text>
             )}
           </TouchableOpacity>
-        </View>
+        </View> */}
+
+         <View className="mt-6 items-center">
+         <TouchableOpacity
+  className={`rounded-full w-64 py-3 ${isSaveDisabled() ? 'bg-gray-400' : 'bg-[#2AAD7A]'}`}
+  onPress={passTarget}
+  disabled={isSaveDisabled()}
+>
+                    {submitting ? (
+                      <ActivityIndicator size="small" color="white" />
+                    ) : (
+                      <Text className="text-white text-center font-medium">{t("PassTargetBetweenOfficers.Save")}</Text>
+                    )}
+                  </TouchableOpacity>
+                </View>
       </ScrollView>
     </View>
   );

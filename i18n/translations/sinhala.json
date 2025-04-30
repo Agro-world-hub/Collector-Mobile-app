@@ -151,7 +151,12 @@
  "Failed to update user details":"පරිශීලක විස්තර යාවත්කාලීන කිරීමට අසමත් විය.",
  "Collection Requests Submitted!":"එකතු කිරීමේ ඉල්ලීම් ඉදිරිපත් කරන ලදී!",
  "Invalid crop or variety selected.":"වලංගු නොවන බෝගයක් හෝ ප්‍රභේදයක් තෝරාගෙන ඇත.",
-"Please enter prices for all grades before submitting":"ඉදිරිපත් කිරීමට පෙර සියලුම ශ්‍රේණි සඳහා මිල ගණන් ඇතුළත් කරන්න."
+"Please enter prices for all grades before submitting":"ඉදිරිපත් කිරීමට පෙර සියලුම ශ්‍රේණි සඳහා මිල ගණන් ඇතුළත් කරන්න.",
+"incorrectOTPCode":"ඔබ ඇතුළත් කළ කේතය අවලංගුයි. කරුණාකර නැවත උත්සාහ කරන්න.",
+"Ok":"හරි",
+"Please select crop first":"කරුණාකර පළමුව බෝගයක් තෝරන්න.",
+"Password is not allowed to be empty":"මුරපදය හිස්ව තැබීමට අවසර නැත.",
+"Employee ID is not allowed to be empty":"සේවක හැඳුනුම්පත හිස්ව තැබීමට අවසර නැත."
   },
 "EngProfile":{
     "LNG": "si",
@@ -161,7 +166,9 @@
     "Complaints":"පැමිණිලි",
     "Report Complaint":"පැමිණිල්ල වාර්තා කරන්න",
     "View Complaint History":"පැමිණිලි ඉතිහාසය බලන්න",
-    "Logout": "පිටවීම"
+    "Logout": "පිටවීම",
+    "Need Help":"උදව් අවශ්‍යයි?",
+    "Help Center":"Need PlantCare help? Tap Call for instant support from our Help Center."
   },
   "Profile":{
     "LNG": "si",
@@ -324,7 +331,8 @@
     "FarmerQR":"ගොවියාගේ QR කේතය",
     "OfficerQR":"නිලධාරියාගේ QR කේතය",
     "Download":"බාගන්න",
-    "Share":"බෙදාගන්න"
+    "Share":"බෙදාගන්න",
+    "Date":"දිනය"
   },
   "NoCollectionCenterScreen":{
     "LNG": "si",
@@ -344,7 +352,8 @@
     "Changepassword":" මුරපදය වෙනස් කර එය ආරක්ෂිතව තබා ගන්න",
     "CurrentPassword":"වත්මන් මුරපදය",
     "NewPassword":"නව මුරපදය",
-    "ConfirmNewPassword":"නව මුරපදය තහවුරු කරන්න"
+    "ConfirmNewPassword":"නව මුරපදය තහවුරු කරන්න",
+     "Next":"ඊළඟ"
   },
   "QRScanner":{
     "LNG": "si",
@@ -394,7 +403,7 @@
     "CenterTarget":"මධ්‍යස්ථාන ඉලක්කය",
     "MyCollection":"මගේ එකතුව",
       "Collection": "එකතුව ",
-    "Transport":"ප්රවාහනය"
+    "Transport":"ප්‍රවාහනය"
   },
   "AddOfficerBasicDetails":{
     "LNG": "si",
@@ -476,7 +485,8 @@
     "Officers List":"නිලධාරීන්ගේ ලැයිස්තුව",
     "Drivers List": "රියදුරු ලැයිස්තුව",
     "Officers / Drivers List": "නිලධාරීන් / රියදුරු ලැයිස්තුව ",
-    "Drivers": "රියදුරන්"
+    "Drivers": "රියදුරන්",
+    "Not Approved":"අනුමත කර නැත"
   },
   "EditTargetManager":{
     "LNG": "si",
@@ -484,7 +494,7 @@
     "My Target":"මගේ ඉලක්කය",
     "Pass":"සමත්",
     "Receive":"ලැබෙන්න",
-    "Amount":"කළ යුතු මුදල",
+    "Amount":"කළ යුතු අගය (kg)",
     "Assigned Target":"පවරන ලද ඉලක්කය" 
   },
   "ManagerTransactions":{
@@ -495,12 +505,14 @@
     "NIC":"ජා.හැ.අ:",
     "Notransactions":"තෝරාගත් දිනය සඳහා ගනුදෙනු හමු නොවීය.",
     "Search":"ජාතික හැඳුනුම්පත් අංකය, නම අනුව සොයන්න",
-    "All":"සියල්ල"
+    "All":"සියල්ල",
+    "TotalRs":"මුළු මුදල: රු.",
+    "ID":"අංකය"
   },
   "OfficerSummary":{
     "LNG": "si",
     "Disclaim":"හිමිකම් ඉවත් කරන්න",
-    "EMPID":"EMP ID : ",
+    "EMPID":"EMP අංකය : ",
     "Num1":"අංකය 1",
     "Num2":"අංකය 2",
     "Collection":"එකතුව",
@@ -514,7 +526,7 @@
     "maximum amount":"ඔබට සමත් විය හැකි උපරිම මුදල:",
     "kg":"kg",
     "Short Stock Assignee":"කෙටි තොග පැවරුම්කරු",
-    "Amount":"මුදල (kg)",
+    "Amount":"අගය (kg)",
     "Save":"සුරකින්න",
     "maximum amount receive":"ඔබට ලැබිය හැකි උපරිම මුදල:",
     "Select an officer":"--නිලධාරියෙකු තෝරන්න--"
@@ -728,7 +740,8 @@
       "Assigned":"පවරා ඇති",
       "Cancelled":"අවලංගු කළා",
       "On way":"යන ගමන්",
-      "Scheduled":"කාලසටහන්ගත කර ඇති"
+      "Scheduled":"කාලසටහන්ගත කර ඇති",
+       "Canceled by":"විසින් අවලංගු කරන ලදී"
     },
     "NewReport":{
     "LNG": "en",

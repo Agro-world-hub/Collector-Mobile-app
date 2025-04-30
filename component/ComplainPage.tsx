@@ -581,12 +581,12 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
                 {Category.length > 0 && (
                   <DropDownPicker
                     open={open}
-                    value={selectedCategory} // Assuming complain value is for category
+                    value={selectedCategory} 
                     setOpen={setOpen}
-                    setValue={setSelectedCategory} // Here it updates the complain value, which represents the selected category
+                    setValue={setSelectedCategory} 
                     items={Category.map((item) => ({
-                      label: t(item.label), // Apply translation here
-                      value: item.value, // Keep the value as it is from Category
+                      label: t(item.label), 
+                      value: item.value, 
                     }))}
                     placeholder={t("ReportComplaint.selectCategory")}
                     placeholderStyle={{ color: "#d1d5db" }}
@@ -614,7 +614,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
               </Text>
 
               <TextInput
-                className="w-full h-52 border border-gray-300 rounded-lg p-3 bg-white mb-8 text-gray-800 "
+                className="w-full h-52 border border-[#EFEFF0] rounded-lg p-3 bg-[#EFEFF0] mb-8 text-gray-800 "
                 placeholder={t("ReportComplaint.Kindlysubmit")}
                 multiline
                 value={complain}

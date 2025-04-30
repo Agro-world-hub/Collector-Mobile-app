@@ -527,6 +527,10 @@ useEffect(() => {
       // Remove the token and empId from AsyncStorage (or any storage you're using)
       await AsyncStorage.removeItem("token");
     await AsyncStorage.removeItem("jobRole");
+    await AsyncStorage.removeItem("companyNameEnglish");
+    await AsyncStorage.removeItem("companyNameSinhala");
+    await AsyncStorage.removeItem("companyNameTamil");
+      await AsyncStorage.removeItem("empid");
       // Optionally, you can also remove it from your app's state (if stored there)
       // setEmpId(null);  // Clear empId from the app's state (if using useState)
 
@@ -792,47 +796,6 @@ useEffect(() => {
           <Text className="flex-1 text-lg ml-2 text-red-500">{t("EngProfile.Logout")}</Text>
         </TouchableOpacity>
 
-          {/* Modal for Call */}
-          <Modal
-            transparent={true}
-            visible={isModalVisible}
-            animationType="fade"
-            onRequestClose={() => setModalVisible(false)}
-          >
-            <View className="flex-1 justify-center items-center bg-black opacity-50">
-              <View className="bg-white p-6 rounded-lg shadow-lg w-80">
-                <View className="flex-row justify-center mb-4">
-                  <View className="bg-gray-200 rounded-full p-4">
-                    <Image
-                      source={require("../assets/images/ringer.webp")} // Replace with your call ringing PNG path
-                      className="w-16 h-16"
-                    />
-                  </View>
-                </View>
-                <Text className="text-xl font-bold text-center mb-2">
-                  Need Help?
-                </Text>
-                <Text className="text-lg text-center mb-4">
-                  Need PlantCare help? Tap Call for instant support from our
-                  Help Center.
-                </Text>
-                <View className="flex-row justify-around">
-                  <TouchableOpacity
-                    onPress={() => setModalVisible(false)}
-                    className="bg-gray-200 p-3 rounded-full flex-1 mx-2"
-                  >
-                    <Text className="text-center">Cancel</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={handleCall}
-                    className="bg-green-500 p-3 rounded-full flex-1 mx-2"
-                  >
-                    <Text className="text-center text-white">Call</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          </Modal>
         </View>
       </ScrollView>
     </View>

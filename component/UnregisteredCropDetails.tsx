@@ -1691,16 +1691,20 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
               };
     
               let Message = "";
+              let companyName = '';
            if (language === "Sinhala") {
-                Message = `ඔබේ නිෂ්පාදන AgroWorld වෙත ලබා දීම ගැන ඔබට ස්තූතියි.
+            companyName = (await AsyncStorage.getItem("companyNameSinhala")) || "AgroWorld";
+                Message = `ඔබේ නිෂ්පාදන ${companyName} වෙත ලබා දීම ගැන ඔබට ස්තූතියි.
 පැය 48ක් ඇතුළත රු. ${formattedPrice} ඔබේ බැංකු ගිණුමට බැර කෙරේ.
 TID: ${invoiceNumber}`;
               } else if (language === "Tamil") {
-                Message = `உங்கள் விளைபொருட்களை Agroworld நிறுவனத்திற்கு வழங்கியதற்கு நன்றி.
+                companyName = (await AsyncStorage.getItem("companyNameTamil")) || "AgroWorld";
+                Message = `உங்கள் விளைபொருட்களை ${companyName} நிறுவனத்திற்கு வழங்கியதற்கு நன்றி.
 ரூ. ${formattedPrice} 48 மணி நேரத்திற்குள் உங்கள் வங்கிக் கணக்கில் வரவு வைக்கப்படும்.
 TID: ${invoiceNumber}
 `;  }  else {
-    Message = `Thank you for providing your produce to AgroWorld.
+                companyName = (await AsyncStorage.getItem("companyNameEnglish")) || "AgroWorld";
+    Message = `Thank you for providing your produce to ${companyName}.
 Rs. ${formattedPrice} will be credited to your bank account within 48 hours.
 TID: ${invoiceNumber}
 `;

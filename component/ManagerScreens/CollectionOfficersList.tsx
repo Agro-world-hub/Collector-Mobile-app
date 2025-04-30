@@ -432,7 +432,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
 
       {item.status === "Not Approved" && (
         <Text className="text-red-500 text-xs font-semibold mr-2 mt-[-12%]">
-          Not Approved
+           {t("CollectionOfficersList.Not Approved")}
         </Text>
       )}
 

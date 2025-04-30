@@ -183,17 +183,26 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
     <ScrollView className="flex-1 bg-white">
    
       {/* Header */}
-      <View className="bg-white rounded-b-[25px] px-4 pt-12 pb-6 items-center shadow-md">
-        <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-6 left-4">
-          <AntDesign name="left" size={24} color="#000" />
-        </TouchableOpacity>
-        <Text className="text-lg font-bold text-gray-800">{officerId}</Text>
+      {/* <View className="bg-white rounded-b-[25px] px-4 pt-12 pb-6 items-center shadow-md relative">
+  <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-6 left-4">
+    <AntDesign name="left" size={24} color="#000" />
+  </TouchableOpacity>
+  <Text className="text-lg font-bold text-gray-800">{officerId}</Text>
+</View> */}
+
+ <View className="flex-row items-center  p-6 rounded-b-lg">
+ <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-6 left-4">
+    <AntDesign name="left" size={24} color="#000" />
+  </TouchableOpacity>
+
+        <Text className="text-black text-lg font-semibold text-center w-full">{officerId}</Text>
       </View>
 
+
       {/* Form Section */}
-      <View className="px-6 mt-8">
+      <View className="px-8 mt-8">
         {/* Start Date */}
-        <View className="mb-6">
+        {/* <View className="mb-6">
           <Text className="text-sm text-gray-700 mb-2">{t("ReportGenerator.Start Date")}</Text>
           <TouchableOpacity
             onPress={() => setShowStartPicker(true)}
@@ -201,6 +210,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
           >
             <Text className="text-gray-500">{formatDate(startDate)}</Text>
           </TouchableOpacity>
+          
           {showStartPicker && (
            <DateTimePicker
            value={startDate || new Date()}
@@ -210,10 +220,60 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
            onChange={(event, date) => handleDateChange(event, date, 'start')}
          />
           )}
-        </View>
+          
+        </View> */}
+        <View className="mb-6">
+  <Text className="text-sm text-gray-700 mb-2">{t("ReportGenerator.Start Date")}</Text>
+  <View className="flex-row items-center">
+    <TouchableOpacity
+      onPress={() => setShowStartPicker(prev => !prev)}
+      className="border border-gray-300 rounded-lg px-4 py-3 flex-1 flex-row justify-between items-center"
+    >
+      <Text className="text-gray-500">{formatDate(startDate)}</Text>
+      <Image 
+        source={require("../../assets/images/Rescheduling.webp")} 
+        className="w-6 h-6" 
+        resizeMode="contain" 
+      />
+    </TouchableOpacity>
+  </View>
+  {/* {showStartPicker && (
+    <DateTimePicker
+      value={startDate || new Date()}
+      mode="date"
+      display="default"
+      maximumDate={getTodayInColombo()} // Disallow future dates
+      onChange={(event, date) => handleDateChange(event, date, 'start')}
+    />
+  )} */}
+
+{showStartPicker  && Platform.OS === "android" && (
+          <DateTimePicker
+            value={startDate || new Date()}
+            mode="date"
+            display="default"
+            maximumDate={getTodayInColombo()} // Disallow future dates
+      onChange={(event, date) => handleDateChange(event, date, 'start')}
+          />
+        )}
+        {showStartPicker  && Platform.OS === "ios" && (
+          <>
+            <View className=" justify-center items-center z-50 absolute -ml-2 mt-[30%] bg-gray-100  rounded-lg">
+              <DateTimePicker
+                value={startDate || new Date()}
+                mode="date"
+                display="inline"
+                style={{ width: 320, height: 260 }}
+                maximumDate={getTodayInColombo()} // Disallow future dates
+      onChange={(event, date) => handleDateChange(event, date, 'start')}
+              />
+            </View>
+          </>
+        )}
+</View>
 
         {/* End Date */}
-        <View className="mb-6">
+        {/* <View className="mb-6">
           <Text className="text-sm text-gray-700 mb-2">{t("ReportGenerator.End Date")}</Text>
           <TouchableOpacity
             onPress={() => setShowEndPicker(true)}
@@ -231,26 +291,81 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
             onChange={(event, date) => handleDateChange(event, date, 'end')}
           />
           )}
-        </View>
+        </View> */}
+        <View className="mb-6">
+  <Text className="text-sm text-gray-700 mb-2">{t("ReportGenerator.End Date")}</Text>
+  <TouchableOpacity
+    onPress={() => setShowEndPicker(prev => !prev)}
+    className="border border-gray-300 rounded-lg px-4 py-3 flex-row justify-between items-center"
+  >
+    <Text className="text-gray-500">{formatDate(endDate)}</Text>
+    <Image 
+      source={require("../../assets/images/Rescheduling.webp")} 
+      className="w-6 h-6" 
+      resizeMode="contain" 
+    />
+  </TouchableOpacity>
+  {/* {showEndPicker && (
+    <DateTimePicker
+      value={endDate || new Date()}
+      mode="date"
+      display="default"
+      maximumDate={getTodayInColombo()} // Disallow future dates
+      minimumDate={startDate} // End date must not be earlier than the start date
+      onChange={(event, date) => handleDateChange(event, date, 'end')}
+    />
+  )} */}
+
+{showEndPicker  && Platform.OS === "android" && (
+          <DateTimePicker
+          value={endDate || new Date()}
+            mode="date"
+            display="default"
+            maximumDate={getTodayInColombo()} // Disallow future dates
+      minimumDate={startDate} // End date must not be earlier than the start date
+      onChange={(event, date) => handleDateChange(event, date, 'end')}
+          />
+        )}
+        {showEndPicker  && Platform.OS === "ios" && (
+          <>
+            <View className=" justify-center items-center z-50 absolute -ml-2 mt-[30%] bg-gray-100  rounded-lg">
+              <DateTimePicker
+                value={endDate || new Date()}
+                mode="date"
+                display="inline"
+                style={{ width: 320, height: 260 }}
+                maximumDate={getTodayInColombo()} // Disallow future dates
+      minimumDate={startDate} // End date must not be earlier than the start date
+      onChange={(event, date) => handleDateChange(event, date, 'end')}
+              />
+            </View>
+          </>
+        )}
+</View>
 
         {/* Buttons */}
         <View className="flex-row justify-between items-center">
           <TouchableOpacity onPress={handleReset} className="border border-gray-300 px-6 py-3 rounded-lg">
             <Text className="text-gray-700">{t("ReportGenerator.Reset")}</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleGenerate} className="bg-green-600 px-6 py-3 rounded-lg">
+          <TouchableOpacity onPress={handleGenerate} className="bg-[#2AAD7A] px-6 py-3 rounded-lg">
             <Text className="text-white font-semibold">{t("ReportGenerator.Generate")}</Text>
           </TouchableOpacity>
         </View>
+          <View style={{ borderBottomWidth: 1, borderColor: "#ADADAD", marginVertical: 10 , marginTop:30 , marginBottom:40 }} />
       </View>
 
       {/* Conditional UI Section */}
       {reportGenerated ? (
         <View className="items-center justify-center flex-1">
-          <View className="w-24 h-24 bg-orange-100 rounded-full items-center justify-center mb-4">
-            <Ionicons name="document-text-outline" size={50} color="#F59E0B" />
-          </View>
-          <Text className="text-lg font-semibold text-gray-800">{t("ReportGenerator.IDNO")} {generatedReportId}</Text>
+          <View className="w-24 h-24 bg-[#FFE6CB66] rounded-full items-center justify-center mb-4">
+  <Image 
+    source={require('../../assets/images/document.webp')} 
+    className="w-14 h-14"
+  />
+</View>
+
+          <Text className="text-lg font-semibold text-[#494949]">{t("ReportGenerator.IDNO")} {generatedReportId}</Text>
           <Text className="text-sm text-gray-500 italic mb-6">{t("ReportGenerator.Report has been generated")}</Text>
 
           {/* Download and Share Buttons */}
@@ -258,7 +373,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
             <TouchableOpacity
               onPress={handleDownload}
               className="bg-[#A4A4A4] rounded-lg items-center justify-center"
-              style={{ width: 100, height: 80 }} // Explicit width and height
+              style={{ width: 100, height: 70 }} // Explicit width and height
             >
               <Ionicons name="download" size={24} color="white" />
               <Text className="text-sm text-white mt-1">{t("ReportGenerator.Download")}</Text>
@@ -267,7 +382,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
             <TouchableOpacity
               onPress={handleShare}
               className="bg-[#A4A4A4] rounded-lg items-center justify-center"
-              style={{ width: 100, height: 80 }} // Explicit width and height
+              style={{ width: 100, height: 70 }} // Explicit width and height
             >
               <Ionicons name="share-social" size={24} color="white" />
               <Text className="text-sm text-white mt-1">{t("ReportGenerator.Share")}</Text>

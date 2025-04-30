@@ -45,7 +45,11 @@ interface PersonalAndBankDetails {
 interface Crop {
   id: number;
   cropName: string;
+  cropNameSinhala: string;
+  cropNameTamil: string;
   variety: string;
+  varietyNameSinhala: string;
+  varietyNameTamil: string;
   grade: string;
   unitPrice: string;
   quantity: string;
@@ -87,6 +91,61 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
   const [qrValue, setQrValue] = useState<string>("");
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+   const [selectedLanguage, setSelectedLanguage] = useState("en");
+    console.log(";;;;;;;;",selectedLanguage)
+
+  const fetchSelectedLanguage = async () => {
+    try {
+      const lang = await AsyncStorage.getItem("@user_language");
+      if (lang === "en" || lang === "si" || lang === "ta") {
+        setSelectedLanguage(lang);
+      } else {
+        setSelectedLanguage("en"); // Default to English if not found or invalid
+      }
+    } catch (error) {
+      console.error("Error fetching language preference:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSelectedLanguage(); 
+  }, []);
+
+  const getTextStyle = (language: string) => {
+    if (language === "si") {
+      return {
+        fontSize: 14, // Smaller text size for Sinhala
+        lineHeight: 20, // Space between lines
+      };
+    }
+   
+  };
+
+  const getCropName = (crop: Crop) => {
+    if (!crop) return "Loading...";
+  
+    switch (selectedLanguage) {
+      case "si":
+        return `${crop.cropNameSinhala} `;
+      case "ta":
+        return `${crop.cropNameTamil} `;
+      default:
+        return `${crop.cropName} `;
+    }
+  };
+
+  const getVarietyName = (crop: Crop) => {
+    if (!crop) return "Loading...";
+  
+    switch (selectedLanguage) {
+      case "si":
+        return `${crop.varietyNameSinhala} `;
+      case "ta":
+        return `${crop.varietyNameTamil} `;
+      default:
+        return `${crop.variety} `;
+    }
+  };
   
   // Safe reduce with proper type handling
   const totalSum = (crops || []).reduce((sum: number, crop: Crop) => {
@@ -409,22 +468,22 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
         </style>
       </head>
       <body>
-        <h1>Goods Received Note</h1>
+        <h1>${t("NewReport.Goods Received Note")}</h1>
         <div class="header-line"></div>
         
         <div class="header-row">
           <div class="header-item">
-            <strong>GRN No :</strong> ${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}
+            <strong>${t("NewReport.GRN No")}</strong> ${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}
           </div>
           <div class="header-item">
-            <strong>Date :</strong> ${selectedDate}
+            <strong>${t("NewReport.Date")}</strong> ${selectedDate}
           </div>
         </div>
         
         <div class="supplier-section">
           <div>
-            <div class="section-title">Supplier Details :</div>
-            <div>Name : ${details.firstName} ${details.lastName}</div>
+            <div class="section-title">${t("NewReport.Supplier Details")}</div>
+            <div>${t("NewReport.Name")} ${details.firstName} ${details.lastName}</div>
           </div>
           <div>
             <div>&nbsp;</div>
@@ -434,32 +493,32 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
         
         <div class="received-by-section">
           <div>
-            <div class="section-title">Received By :</div>
-            <div>Company Name : ${details.companyNameEnglish || ''}</div>
+            <div class="section-title">${t("NewReport.Received By")}</div>
+            <div>${t("NewReport.Company Name")} ${details.companyNameEnglish || ''}</div>
           </div>
           <div>
             <div>&nbsp;</div>
-            <div>Centre : ${details.collectionCenterName || 'Collection Center'}</div>
+            <div>${t("NewReport.Centre")} ${details.collectionCenterName || 'Collection Center'}</div>
           </div>
         </div>
         
-        <div class="table-title">Received Items</div>
+        <div class="table-title">${t("NewReport.Received Items")}</div>
         <table>
           <thead>
             <tr>
-              <th>Crop Name</th>
-              <th>Variety</th>
-              <th>Grade</th>
-              <th>Unit Price(Rs.)</th>
-              <th>Quantity(kg)</th>
-              <th>Sub Total(Rs.)</th>
+             <th>${t("NewReport.Crop Name")}</th>
+              <th>${t("NewReport.Variety")}</th>
+              <th>${t("NewReport.Grade")}</th>
+              <th>${t("NewReport.Unit Price(Rs.)")}</th>
+              <th>${t("NewReport.Quantity(kg)")}</th>
+              <th>${t("NewReport.Sub Total(Rs.)")}</th>
             </tr>
           </thead>
           <tbody>
             ${crops.map(crop => `
               <tr>
-                <td>${crop.cropName || '-'}</td>
-                <td>${crop.variety || '-'}</td>
+               <td>${getCropName(crop)}</td>
+                <td>${getVarietyName(crop)}</td>
                 <td>${crop.grade || '-'}</td>
                 <td>${formatNumberWithCommas(parseFloat(crop.unitPrice))}</td>
                 <td>${formatNumberWithCommas(parseFloat(crop.quantity))}</td>
@@ -471,13 +530,13 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
         
         <div class="total-row">
           <div class="total-box">
-            <div class="total-label">Full Total (Rs.) :</div>
+            <div class="total-label">${t("NewReport.Full Total (Rs.) Rs.")}</div>
             <div class="total-value">Rs.${formatNumberWithCommas(totalSum)}</div>
           </div>
         </div>
         
         <div class="note">
-          <strong>Note:</strong> This Goods Receipt Note (GRN) serves as a provisional acknowledgment based on initial measurements taken by front-line staff. Final verification will be conducted at the Collection Centre. The measurement recorded at the Collection Centre shall be deemed conclusive and binding in all cases of discrepancy. The organization reserves the right to rectify any revenue impacts arising from measurement variances and shall not be liable for losses due to initial miscalculations.
+          <strong>${t("NewReport.Note")}</strong> ${t("NewReport.GRNnote")}
         </div>
       </body>
     </html>
@@ -574,30 +633,30 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
         <TouchableOpacity onPress={() => navigation.navigate("Main" as any)}>
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
-        <Text className="text-xl font-bold ml-[25%]">Goods Received Note</Text>
+        <Text className="text-xl font-bold text-center w-full">{t("NewReport.Goods Received Note")}</Text>
       </View>
 
       {/* GRN Header */}
       <View className="mb-4">
-        <Text className="text-sm font-bold">GRN No: {crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}</Text>
-        <Text className="text-sm">Date: {selectedDate}</Text>
+        <Text className="text-sm font-bold">{t("NewReport.GRN No")}: {crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}</Text>
+        <Text className="text-sm">{t("NewReport.Date")} {selectedDate}</Text>
       </View>
 
       {/* Supplier Details */}
       <View className="mb-4">
-        <Text className="font-bold text-sm mb-1">Supplier Details:</Text>
+        <Text className="font-bold text-sm mb-1">{t("NewReport.Supplier Details")}</Text>
         <View className="border border-gray-300 rounded-lg p-2">
-          <Text><Text className="font-bold">Name:</Text> {details?.firstName} {details?.lastName}</Text>
-          <Text><Text className="font-bold">Phone:</Text> {details?.phoneNumber}</Text>
+          <Text><Text className="font-bold">{t("NewReport.Name")}</Text> {details?.firstName} {details?.lastName}</Text>
+          <Text><Text className="font-bold">{t("NewReport.Phone")}</Text> {details?.phoneNumber}</Text>
         </View>
       </View>
 
       {/* Received By */}
       <View className="mb-4">
-        <Text className="font-bold text-sm mb-1">Received By:</Text>
+        <Text className="font-bold text-sm mb-1">{t("NewReport.Received By")}</Text>
         <View className="border border-gray-300 rounded-lg p-2">
-          <Text><Text className="font-bold">Company Name:</Text> {details?.companyNameEnglish || ''}</Text>
-          <Text><Text className="font-bold">Centre:</Text> {details?.collectionCenterName || 'Collection Center'}</Text>
+          <Text><Text className="font-bold">{t("NewReport.Company Name")}</Text> {details?.companyNameEnglish || ''}</Text>
+          <Text><Text className="font-bold">{t("NewReport.Centre")}</Text> {details?.collectionCenterName || 'Collection Center'}</Text>
         </View>
       </View>
 
@@ -606,24 +665,24 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
 
       {/* Received Items */}
       <View className="mb-4">
-        <Text className="font-bold text-sm mb-2">Received Items</Text>
+        <Text className="font-bold text-sm mb-2">{t("NewReport.Received Items")}</Text>
        <ScrollView horizontal className="border border-gray-300 rounded-lg">
   <View>
     {/* Table Header */}
     <View className="flex-row bg-gray-200">
-      <Text className="w-24 p-2 font-bold border-r border-gray-300">Crop Name</Text>
-      <Text className="w-24 p-2 font-bold border-r border-gray-300">Variety</Text>
-      <Text className="w-20 p-2 font-bold border-r border-gray-300">Grade</Text>
-      <Text className="w-24 p-2 font-bold border-r border-gray-300">Unit Price(Rs.)</Text>
-      <Text className="w-24 p-2 font-bold border-r border-gray-300">Quantity(kg)</Text>
-      <Text className="w-24 p-2 font-bold">Sub Total(Rs.)</Text>
+      <Text className="w-24 p-2 font-bold border-r border-gray-300">{t("NewReport.Crop Name")}</Text>
+      <Text className="w-24 p-2 font-bold border-r border-gray-300">{t("NewReport.Variety")}</Text>
+      <Text className="w-20 p-2 font-bold border-r border-gray-300">{t("NewReport.Grade")}</Text>
+      <Text className="w-24 p-2 font-bold border-r border-gray-300">{t("NewReport.Unit Price(Rs.)")}</Text>
+      <Text className="w-24 p-2 font-bold border-r border-gray-300">{t("NewReport.Quantity(kg)")}</Text>
+      <Text className="w-24 p-2 font-bold">{t("NewReport.Sub Total(Rs.)")}</Text>
     </View>
     
     {/* Table Rows */}
     {crops.map((crop, index) => (
       <View key={`${crop.id}-${index}`} className="flex-row">
-        <Text className="w-24 p-2 border-b border-gray-300">{crop.cropName || '-'}</Text>
-        <Text className="w-24 p-2 border-b border-gray-300">{crop.variety || '-'}</Text>
+       <Text className="w-24 p-2 border-b border-gray-300"> {getCropName(crop)}</Text>
+               <Text className="w-24 p-2 border-b border-gray-300">{getVarietyName(crop)}</Text>
         <Text className="w-20 p-2 border-b border-gray-300">{crop.grade || '-'}</Text>
         <Text className="w-24 p-2 border-b border-gray-300 text-right">
           {formatNumber(crop.unitPrice)}
@@ -645,7 +704,7 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
 
       {/* Total */}
       <View className="mb-4 items-end">
-        <Text className="font-bold">Full Total (Rs.): Rs.{totalSum.toFixed(2)}</Text>
+        <Text className="font-bold">{t("NewReport.Full Total (Rs.) Rs.")}{totalSum.toFixed(2)}</Text>
       </View>
 
       {/* Divider */}
@@ -654,26 +713,26 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
       {/* Note */}
       <View className="mb-4">
         <Text className="text-xs">
-          <Text className="font-bold">Note:</Text> This Goods Receipt Note (GRN) serves as a provisional acknowledgment based on initial measurements taken by front-line staff. Final verification will be conducted at the Collection Centre. The measurement recorded at the Collection Centre shall be deemed conclusive and binding in all cases of discrepancy. The organization reserves the right to rectify any revenue impacts arising from measurement variances and shall not be liable for losses due to initial miscalculations.
+          <Text className="font-bold">{t("NewReport.Note")}</Text> {t("NewReport.GRNnote")}
         </Text>
       </View>
 
       {/* Action Buttons */}
       <View className="flex-row justify-around w-full mb-7">
-        <TouchableOpacity className="bg-[#2AAD7A] p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={handleDownloadPDF}>
+        <TouchableOpacity className="bg-black p-4 h-[80px] w-[120px] rounded-lg justify-center items-center" onPress={handleDownloadPDF}>
           <Image
             source={require('../../assets/images/download.webp')}
             style={{ width: 24, height: 24 }}
           />
-          <Text className="text-sm text-cyan-50">Download</Text>
+          <Text className="text-sm text-cyan-50">{t("NewReport.Download")}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="bg-[#2AAD7A] p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={handleSharePDF}>
+        <TouchableOpacity className="bg-black p-4 h-[80px] w-[120px] rounded-lg justify-center items-center" onPress={handleSharePDF}>
           <Image
             source={require('../../assets/images/Share.webp')}
             style={{ width: 24, height: 24 }}
           />
-          <Text className="text-sm text-cyan-50">Share</Text>
+          <Text className="text-sm text-cyan-50">{t("NewReport.Share")}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

@@ -202,8 +202,8 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
         <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
         
-        <Text className="text-white text-lg font-semibold ml-[30%]">
-        {getvarietyName()}
+        <Text className="text-white text-lg font-semibold text-center w-full">
+  {getvarietyName()}
 </Text>
 
       </View>
@@ -224,12 +224,14 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({ navigation,route 
         <View>
           <Text className="text-gray-600 font-medium">{t("EditTargetManager.My Target")}</Text>
           <View className="flex-row items-center mt-2 border border-gray-300 rounded-md px-3 py-2">
-          <TextInput
+          {/* <TextInput
             className="flex-1 text-gray-800"
             value={target ? target.toString() : '0'}
             editable={isEditing}
             onChangeText={(text) => setMyTarget(text)}
-          />
+          /> */}
+          <Text  className="flex-1 text-gray-800" >  {target ? target.toString() : '0'} </Text>
+           
             <TouchableOpacity onPress={() => setIsEditing((prev) => !prev)}>
               <Ionicons
                 name={isEditing ? 'pencil' : 'pencil'}

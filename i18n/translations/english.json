@@ -41,8 +41,8 @@
     "Failed to share QR Code.":"Failed to share QR Code.",
     "errorOccurred":"error Occurred",
     "somethingWentWrong":"something Went Wrong. Please try again later.",
-    "otpResent":"otpResent",
-    "otpResendFailed":"otp Resend Failed",
+    "otpResent":"OTP Resent Successfully!",
+    "otpResendFailed":"OTP Resend Failed",
     "You must change the prices before submitting. Please update the values.":"You must change the prices before submitting. Please update the values.",
     "Failed to submit price update.":"Failed to submit price update.",
     "Failed to load profile data":"Failed to load profile data",
@@ -151,7 +151,12 @@
  "Failed to update user details":"Failed to update user details.",
  "Collection Requests Submitted!":"Collection Requests Submitted!",
  "Invalid crop or variety selected.":"Invalid crop or variety selected.",
-"Please enter prices for all grades before submitting":"Please enter prices for all grades before submitting"
+"Please enter prices for all grades before submitting":"Please enter prices for all grades before submitting",
+"incorrectOTPCode":"The code you entered is invalid. Please try again.",
+"Ok":"Ok",
+"Please select crop first":"Please select crop first",
+"Password is not allowed to be empty":"Password is not allowed to be empty",
+"Employee ID is not allowed to be empty":"Employee ID is not allowed to be empty"
   },
   "EngProfile":{
     "LNG": "en",
@@ -161,7 +166,9 @@
     "Complaints":"Complaints",
     "Report Complaint":"Report Complaint",
     "View Complaint History":"View Complaint History",
-    "Logout": "Logout"
+    "Logout": "Logout",
+    "Need Help":"Need Help?",
+    "Help Center":"Need PlantCare help? Tap Call for instant support from our Help Center."
   },
   "Profile":{
     "LNG": "en",
@@ -324,7 +331,8 @@
     "FarmerQR":"Farmer's QR Code",
     "OfficerQR":"Officer's QR Code",
     "Download":"Download",
-    "Share":"Share"
+    "Share":"Share",
+    "Date":"Date"
   },
   "NoCollectionCenterScreen":{
     "LNG": "en",
@@ -344,7 +352,8 @@
     "Changepassword":" Change the password and keep it secured",
     "CurrentPassword":"Current Password",
     "NewPassword":"New Password",
-    "ConfirmNewPassword":"Confirm New Password"
+    "ConfirmNewPassword":"Confirm New Password",
+    "Next":"Next"
   },
   "QRScanner":{
     "LNG": "en",
@@ -476,7 +485,8 @@
     "Officers List":"Officers List",
     "Drivers List": "Drivers List",
     "Officers / Drivers List": "Officers / Drivers List ",
-    "Drivers": "Drivers"
+    "Drivers": "Drivers",
+    "Not Approved":"Not Approved"
   },
   "EditTargetManager":{
     "LNG": "en",
@@ -495,7 +505,9 @@
     "NIC":"NIC:",
     "Notransactions":"No transactions found for the selected date.",
     "Search":"Search By NIC Number, Name",
-    "All":"All"
+    "All":"All",
+    "TotalRs":"Total: Rs.",
+    "ID":"ID"
   },
   "OfficerSummary":{
     "LNG": "en",
@@ -728,7 +740,8 @@
     "Assigned":"Assigned",
     "Cancelled":"Cancelled",
     "On way":"On way",
-    "Scheduled":"Scheduled"
+    "Scheduled":"Scheduled",
+    "Canceled by":"Canceled by"
   },
   "NewReport":{
     "LNG": "en",
