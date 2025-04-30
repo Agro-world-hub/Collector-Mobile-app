@@ -88,6 +88,10 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
         return officer.fullNameEnglish;
     }
   };
+  const isSaveDisabled = () => {
+    // Disable button if no assignee is selected OR assignee is the default option ('0') OR submitting
+    return !assignee || assignee === '0' || submitting;
+  };
 
 
   // Fetch officers from API
@@ -109,11 +113,21 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
       console.log("Officers:", response.data.data);
 
       if (response.data.status === 'success') {
-        const formattedOfficers = response.data.data.map((officer: any) => ({
+        // const formattedOfficers = response.data.data.map((officer: any) => ({
+        //   key: officer.collectionOfficerId.toString(),
+        //   value: getOfficerName(officer),
+        // }));
+
+
+        const filteredOfficers = response.data.data.filter(
+          (officer: any) => officer.collectionOfficerId !== collectionOfficerId
+        );
+  
+        // Format the officers to be displayed
+        const formattedOfficers = filteredOfficers.map((officer: any) => ({
           key: officer.collectionOfficerId.toString(),
           value: getOfficerName(officer),
         }));
-
         setOfficers([ ...formattedOfficers]);
       } else {
         setErrorMessage(t("Error.Failed to fetch officers."));
@@ -276,7 +290,7 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
           </View>
         </View>
 
-        <View className="mt-6 items-center">
+        {/* <View className="mt-6 items-center">
           <TouchableOpacity
             className="bg-[#2AAD7A] rounded-full w-64 py-3"
             onPress={passTarget}
@@ -288,7 +302,21 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
               <Text className="text-white text-center font-medium">{t("PassTargetBetweenOfficers.Save")}</Text>
             )}
           </TouchableOpacity>
-        </View>
+        </View> */}
+
+         <View className="mt-6 items-center">
+         <TouchableOpacity
+  className={`rounded-full w-64 py-3 ${isSaveDisabled() ? 'bg-gray-400' : 'bg-[#2AAD7A]'}`}
+  onPress={passTarget}
+  disabled={isSaveDisabled()}
+>
+                    {submitting ? (
+                      <ActivityIndicator size="small" color="white" />
+                    ) : (
+                      <Text className="text-white text-center font-medium">{t("PassTargetBetweenOfficers.Save")}</Text>
+                    )}
+                  </TouchableOpacity>
+                </View>
       </ScrollView>
     </View>
   );

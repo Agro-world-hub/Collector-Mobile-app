@@ -119,13 +119,22 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
       <TouchableOpacity onPress={() => navigation.goBack()} className="">
         <AntDesign name="left" size={24} color="#000502" />
       </TouchableOpacity>
+     
 
-      <View className="items-center pt-4">
-        <Image
-          source={require("@/assets/images/Collectorimage.webp")} // Update path to your image
-          resizeMode="contain"
-        />
-      </View>
+      <View className="flex-row items-center justify-center mt-[-5%] space-x-[-30%] ml-[5%]">
+  <Image
+    source={require("@/assets/images/Mobile.webp")}
+    resizeMode="contain"
+    className="w-20 h-20"
+  />
+  <Image
+    source={require("@/assets/images/Collectorimage.webp")}
+    resizeMode="contain"
+   // className="w-24 h-24"
+  />
+</View>
+
+
 
       <View className="items-center pt-[10%]">
         <Text className="font-bold text-xl">{t("ChangePassword.ChoosePassword")}</Text>
@@ -196,7 +205,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           onPress={handleChangePassword}
         >
           <Text className="text-center pt-1 text-xl font-light text-white">
-            Next
+                 {t("ChangePassword.Next")}
           </Text>
         </TouchableOpacity>
         {/* <TouchableOpacity

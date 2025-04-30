@@ -153,7 +153,10 @@
  "Invalid crop or variety selected.":"Invalid crop or variety selected.",
 "Please enter prices for all grades before submitting":"Please enter prices for all grades before submitting",
 "incorrectOTPCode":"The code you entered is invalid. Please try again.",
-"Ok":"Ok"
+"Ok":"Ok",
+"Please select crop first":"Please select crop first",
+"Password is not allowed to be empty":"Password is not allowed to be empty",
+"Employee ID is not allowed to be empty":"Employee ID is not allowed to be empty"
   },
   "EngProfile":{
     "LNG": "en",
@@ -163,7 +166,9 @@
     "Complaints":"Complaints",
     "Report Complaint":"Report Complaint",
     "View Complaint History":"View Complaint History",
-    "Logout": "Logout"
+    "Logout": "Logout",
+    "Need Help":"Need Help?",
+    "Help Center":"Need PlantCare help? Tap Call for instant support from our Help Center."
   },
   "Profile":{
     "LNG": "en",
@@ -326,7 +331,8 @@
     "FarmerQR":"Farmer's QR Code",
     "OfficerQR":"Officer's QR Code",
     "Download":"Download",
-    "Share":"Share"
+    "Share":"Share",
+    "Date":"Date"
   },
   "NoCollectionCenterScreen":{
     "LNG": "en",
@@ -346,7 +352,8 @@
     "Changepassword":" Change the password and keep it secured",
     "CurrentPassword":"Current Password",
     "NewPassword":"New Password",
-    "ConfirmNewPassword":"Confirm New Password"
+    "ConfirmNewPassword":"Confirm New Password",
+    "Next":"Next"
   },
   "QRScanner":{
     "LNG": "en",
@@ -478,7 +485,8 @@
     "Officers List":"Officers List",
     "Drivers List": "Drivers List",
     "Officers / Drivers List": "Officers / Drivers List ",
-    "Drivers": "Drivers"
+    "Drivers": "Drivers",
+    "Not Approved":"Not Approved"
   },
   "EditTargetManager":{
     "LNG": "en",
@@ -497,7 +505,9 @@
     "NIC":"NIC:",
     "Notransactions":"No transactions found for the selected date.",
     "Search":"Search By NIC Number, Name",
-    "All":"All"
+    "All":"All",
+    "TotalRs":"Total: Rs.",
+    "ID":"ID"
   },
   "OfficerSummary":{
     "LNG": "en",
@@ -730,7 +740,8 @@
     "Assigned":"Assigned",
     "Cancelled":"Cancelled",
     "On way":"On way",
-    "Scheduled":"Scheduled"
+    "Scheduled":"Scheduled",
+    "Canceled by":"Canceled by"
   },
   "NewReport":{
     "LNG": "en",

@@ -45,7 +45,7 @@
 // export default CollectionRequests;
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, Image, Alert , RefreshControl} from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Image, Alert , RefreshControl, Platform} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -203,6 +203,8 @@ const CollectionRequests: React.FC<CollectionRequestsProps> = ({ navigation }) =
   // );
 useFocusEffect(
   useCallback(() => {
+    setShowPicker(false); // Close the date picker when the screen is focused
+    setScheduleDate(new Date().toISOString().split('T')[0]); // Set the default date to today
     const fetchData = async () => {
       setLoading(true);
       await fetchCollectionRequests();
@@ -427,19 +429,41 @@ useEffect(() => {
           <Text className="flex-1 text-center text-xl font-bold text-black" style={{ fontSize: 18 }}>
             {t("CollectionRequest.Collection Requests")}
           </Text>
-          <TouchableOpacity onPress={() => setShowPicker(true)}>
+          <TouchableOpacity onPress={() => setShowPicker(prev => !prev)}>
               <AntDesign name="calendar" size={24} color="#CFCFCF" />
           </TouchableOpacity>
     
         </View>
-        {showPicker && (
+        {/* {showPicker && (
         <DateTimePicker
           value={scheduleDate ? new Date(scheduleDate) : new Date()}
           mode="date"
           display="default"
           onChange={handleDateChange}
         />
-      )}
+      )} */}
+
+{showPicker && Platform.OS === "android" && (
+          <DateTimePicker
+          value={scheduleDate ? new Date(scheduleDate) : new Date()}
+            mode="date"
+            display="default"
+            onChange={handleDateChange}
+          />
+        )}
+        {showPicker && Platform.OS === "ios" && (
+          <>
+            <View className=" justify-center items-center z-50 absolute ml-6 mt-[50%] bg-gray-100  rounded-lg">
+              <DateTimePicker
+                value={scheduleDate ? new Date(scheduleDate) : new Date()}
+                mode="date"
+                display="inline"
+                style={{ width: 320, height: 260 }}
+                onChange={handleDateChange}
+              />
+            </View>
+          </>
+        )}
       </View>
   
       {/* Tab Navigation */}

@@ -400,9 +400,11 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
         "Content-Type": "application/json",
       };
 
+
       console.log(phoneNumber)
       
       let otpMessage = "";
+      let companyName = '';
 
       // const body = {
       //   source: "ShoutDEMO",
@@ -416,32 +418,35 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
       //Dont cahange this massage body pretier when change it spaces of massage will be change
    if(PreferdLanguage === "Sinhala"){
-        otpMessage = `XYZ සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
+    companyName = (await AsyncStorage.getItem("companyNameSinhala")) || "AgroWorld";
+    otpMessage = `${companyName} සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
         
 ${accHolderName}
 ${accNumber}
 ${bankName}
 ${branchName}
         
-නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා XYZ නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
+නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා ${companyName} නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
       }else if(PreferdLanguage === "Tamil"){
-        otpMessage = `XYZ உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
+        companyName = (await AsyncStorage.getItem("companyNameTamil")) || "AgroWorld";
+        otpMessage = `${companyName} உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
         
 ${accHolderName}
 ${accNumber}
 ${bankName}
 ${branchName}
         
-சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் XYZ பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
+சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் ${companyName} பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
       }    else {
-        otpMessage = `Your OTP for bank detail verification with XYZ is: {{code}}
+        companyName = (await AsyncStorage.getItem("companyNameEnglish")) || "AgroWorld";
+        otpMessage = `Your OTP for bank detail verification with ${companyName} is: {{code}}
         
 ${accHolderName}
 ${accNumber}
 ${bankName}
 ${branchName}
         
-If correct, share OTP only with the XYZ representative who contacts you.`;
+If correct, share OTP only with the ${companyName} representative who contacts you.`;
 
       }
 //       const otpMessage = `Agro World වෙත ලබා දී ඇති බැංකු තොරතුරු තහවුරු කිරීම සඳහා ඔබගේ එක්-කාලීන මුරපදය (OTP) {{code}} වේ.

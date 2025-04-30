@@ -199,6 +199,10 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
       setError('');
     }
   };
+  const isSaveDisabled = () => {
+    // Disable button if no assignee is selected OR assignee is the default option ('0') OR submitting
+    return !assignee || assignee === '0' || fetchingTarget;
+  };
   
   
   const receiveTarget = async () => {
@@ -318,7 +322,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
           {fetchingTarget ? (
             <ActivityIndicator size="small" color="#2AAD7A" />
           ) : (
-            <Text className="text-xl font-bold text-center text-black mb-4">{maxAmount}{t("PassTargetBetweenOfficers.kg")}</Text>
+            <Text className="text-xl font-bold text-center text-black mb-4"> {maxAmount ? `${maxAmount} ${t("PassTargetBetweenOfficers.kg")}` : "--"}</Text>
           )}
         </View>
 
@@ -329,12 +333,13 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
             keyboardType="numeric"
             value={amount}
             onChangeText={handleAmountChange}
+             placeholder="--"
           />
           {error ? <Text className="text-red-500 mt-2">{error}</Text> : null}
         </View>
       </View>
 
-      <View className="mt-6 items-center">
+      {/* <View className="mt-6 items-center">
       <TouchableOpacity
         className="bg-[#2AAD7A] rounded-full w-64 py-3"
         onPress={receiveTarget}
@@ -346,7 +351,20 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
           <Text className="text-white text-center font-medium">{t("PassTargetBetweenOfficers.Save")}</Text>
         )}
       </TouchableOpacity>
-      </View>
+      </View> */}
+       <View className="mt-6 items-center">
+                <TouchableOpacity
+                  className={`rounded-full w-64 py-3 ${isSaveDisabled() ? 'bg-gray-400' : 'bg-[#2AAD7A]'}`}
+                  onPress={receiveTarget}
+        disabled={loading || fetchingTarget}
+                >
+                  {fetchingTarget ? (
+                    <ActivityIndicator size="small" color="white" />
+                  ) : (
+                    <Text className="text-white text-center font-medium">{t("PassTargetBetweenOfficers.Save")}</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
     </View>
   );
 };

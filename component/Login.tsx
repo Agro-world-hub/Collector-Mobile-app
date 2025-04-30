@@ -316,11 +316,29 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 
 const handleLogin = async () => {
   Keyboard.dismiss(); // Dismiss the keyboard
-  if (!empid || !password) {
+  if (!empid && !password) {
     Alert.alert(t("Error.error"), t("Error.Password & Employee ID are not allowed to be empty"));
-    return;
+    return false;
+  }
+  
+  // Second check: Only password is empty
+  if (empid && !password) {
+    Alert.alert(t("Error.error"), t("Error.Password is not allowed to be empty"));
+    return false;
+  }
+  
+  // Third check: Only employee ID is empty
+  if (!empid && password) {
+    Alert.alert(t("Error.error"), t("Error.Employee ID is not allowed to be empty"));
+    return false;
   }
   setLoading(true); // Show loader when login starts
+  await AsyncStorage.removeItem("token");
+  await AsyncStorage.removeItem("jobRole");
+  await AsyncStorage.removeItem("companyNameEnglish");
+  await AsyncStorage.removeItem("companyNameSinhala");
+  await AsyncStorage.removeItem("companyNameTamil");
+    await AsyncStorage.removeItem("empid");
   try {
     const response = await fetch(
       `${environment.API_BASE_URL}api/collection-officer/login`,
@@ -355,9 +373,12 @@ const handleLogin = async () => {
     }
 
     // Login successful
-    const { token,passwordUpdateRequired, jobRole, empId } = data;
+    const { token,passwordUpdateRequired, jobRole, empId, companyNameEnglish, companyNameSinhala, companyNameTamil } = data;
     await AsyncStorage.setItem("token", token);
     await AsyncStorage.setItem("jobRole", jobRole);
+    await AsyncStorage.setItem("companyNameEnglish", companyNameEnglish);
+    await AsyncStorage.setItem("companyNameSinhala", companyNameSinhala);
+    await AsyncStorage.setItem("companyNameTamil", companyNameTamil);
     await AsyncStorage.setItem("empid", empId.toString());
 
     if (token) {
