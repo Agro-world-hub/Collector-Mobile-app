@@ -527,6 +527,10 @@ useEffect(() => {
       // Remove the token and empId from AsyncStorage (or any storage you're using)
       await AsyncStorage.removeItem("token");
     await AsyncStorage.removeItem("jobRole");
+    await AsyncStorage.removeItem("companyNameEnglish");
+    await AsyncStorage.removeItem("companyNameSinhala");
+    await AsyncStorage.removeItem("companyNameTamil");
+      await AsyncStorage.removeItem("empid");
       // Optionally, you can also remove it from your app's state (if stored there)
       // setEmpId(null);  // Clear empId from the app's state (if using useState)
 

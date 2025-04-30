@@ -333,6 +333,12 @@ const handleLogin = async () => {
     return false;
   }
   setLoading(true); // Show loader when login starts
+  await AsyncStorage.removeItem("token");
+  await AsyncStorage.removeItem("jobRole");
+  await AsyncStorage.removeItem("companyNameEnglish");
+  await AsyncStorage.removeItem("companyNameSinhala");
+  await AsyncStorage.removeItem("companyNameTamil");
+    await AsyncStorage.removeItem("empid");
   try {
     const response = await fetch(
       `${environment.API_BASE_URL}api/collection-officer/login`,
@@ -367,9 +373,12 @@ const handleLogin = async () => {
     }
 
     // Login successful
-    const { token,passwordUpdateRequired, jobRole, empId } = data;
+    const { token,passwordUpdateRequired, jobRole, empId, companyNameEnglish, companyNameSinhala, companyNameTamil } = data;
     await AsyncStorage.setItem("token", token);
     await AsyncStorage.setItem("jobRole", jobRole);
+    await AsyncStorage.setItem("companyNameEnglish", companyNameEnglish);
+    await AsyncStorage.setItem("companyNameSinhala", companyNameSinhala);
+    await AsyncStorage.setItem("companyNameTamil", companyNameTamil);
     await AsyncStorage.setItem("empid", empId.toString());
 
     if (token) {
