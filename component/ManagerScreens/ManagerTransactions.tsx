@@ -580,7 +580,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({ route, naviga
                 </Text>
                 <Text className="text-sm text-gray-500">{t("ManagerTransactions.NIC")} {item.NICnumber}</Text>
                 <Text className="text-sm text-gray-500">
-                  Total: Rs.{item.totalAmount ? item.totalAmount.toLocaleString() : 'N/A'}
+                {t("ManagerTransactions.TotalRs")} {item.totalAmount ? item.totalAmount.toLocaleString() : 'N/A'}
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={scale(20)} color="#9CA3AF" />

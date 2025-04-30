@@ -411,7 +411,7 @@ disabled={!farmerQRCode}
 
       {/* Download and Share buttons */}
       <View className="flex-row justify-around w-full mt-6">
-        <TouchableOpacity className="bg-gray-600 p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={downloadQRCode}>
+        <TouchableOpacity className="bg-[#A4A4A4] p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={downloadQRCode}>
           <Image
             source={require('../assets/images/download.webp')} // Path to download icon
             style={{ width: 24, height: 24 }}
@@ -419,7 +419,7 @@ disabled={!farmerQRCode}
           <Text className="text-sm text-cyan-50">{t("FarmerQr.Download")}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="bg-gray-600 p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={shareQRCode}>
+        <TouchableOpacity className="bg-[#A4A4A4] p-4 h-[80px] w-[120px] rounded-lg items-center" onPress={shareQRCode}>
           <Image
             source={require('../assets/images/Share.webp')} // Path to share icon
             style={{ width: 24, height: 24 }}

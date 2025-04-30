@@ -420,7 +420,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
   {/* Selected Date and Invoice Number */}
   <View className="mb-2">
   <Text className="text-sm font-bold">{t("ReportPage.INV")}{crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}</Text>
-    <Text className="text-sm font-bold">Date: {selectedDate}</Text>
+    <Text className="text-sm font-bold">{t("ReportPage.Date")}: {selectedDate}</Text>
     
   </View>
 

@@ -316,9 +316,21 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 
 const handleLogin = async () => {
   Keyboard.dismiss(); // Dismiss the keyboard
-  if (!empid || !password) {
+  if (!empid && !password) {
     Alert.alert(t("Error.error"), t("Error.Password & Employee ID are not allowed to be empty"));
-    return;
+    return false;
+  }
+  
+  // Second check: Only password is empty
+  if (empid && !password) {
+    Alert.alert(t("Error.error"), t("Error.Password is not allowed to be empty"));
+    return false;
+  }
+  
+  // Third check: Only employee ID is empty
+  if (!empid && password) {
+    Alert.alert(t("Error.error"), t("Error.Employee ID is not allowed to be empty"));
+    return false;
   }
   setLoading(true); // Show loader when login starts
   try {
