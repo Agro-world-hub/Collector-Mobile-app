@@ -156,7 +156,10 @@
 "Ok":"Ok",
 "Please select crop first":"Please select crop first",
 "Password is not allowed to be empty":"Password is not allowed to be empty",
-"Employee ID is not allowed to be empty":"Employee ID is not allowed to be empty"
+"Employee ID is not allowed to be empty":"Employee ID is not allowed to be empty",
+"Phone Number 1 already exists":"Phone Number 1 already exists",
+"Phone Number 2 already exists":"Phone Number 2 already exists",
+"NIC Number already exists":"NIC Number already exists"
   },
   "EngProfile":{
     "LNG": "en",

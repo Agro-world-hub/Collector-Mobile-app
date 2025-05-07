@@ -552,41 +552,79 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
     }
   };
 
-  const handleDownloadPDF = async () => {
-    const uri = await generatePDF();
+  // const handleDownloadPDF = async () => {
+  //   const uri = await generatePDF();
   
-    if (uri) {
+  //   if (uri) {
+  //     const date = new Date().toISOString().slice(0, 10);
+  //     const fileName = `GRN_${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}_${date}.pdf`;
+  
+  //     try {
+  //       const { status } = await MediaLibrary.requestPermissionsAsync();
+  
+  //       if (status === 'granted') {
+  //         const tempUri = `${FileSystem.cacheDirectory}${fileName}`;
+  //         await FileSystem.copyAsync({
+  //           from: uri,
+  //           to: tempUri,
+  //         });
+  
+  //         const asset = await MediaLibrary.createAssetAsync(tempUri);
+  //         const album = await MediaLibrary.getAlbumAsync('Download');
+  //         if (!album) {
+  //           await MediaLibrary.createAlbumAsync('Download', asset, false);
+  //         } else {
+  //           await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+  //         }
+  
+  //         Alert.alert('Download Success', `${fileName} has been saved to your Downloads folder.`);
+  //       } else {
+  //         Alert.alert('Permission Denied', 'You need to grant permission to save the PDF.');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error saving PDF:', error);
+  //       Alert.alert(t("Error.error"), t("Error.Failed to save PDF to Downloads folder."));
+  //     }
+  //   } else {
+  //     Alert.alert(t("Error.error"), t("Error.PDF was not generated."));
+  //   }
+  // };
+
+  const handleDownloadPDF = async () => {
+    try {
+      const uri = await generatePDF();
+      
+      if (!uri) {
+        Alert.alert(t("Error.error"), t("Error.PDF was not generated."));
+        return;
+      }
+      
       const date = new Date().toISOString().slice(0, 10);
       const fileName = `GRN_${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}_${date}.pdf`;
-  
-      try {
-        const { status } = await MediaLibrary.requestPermissionsAsync();
-  
-        if (status === 'granted') {
-          const tempUri = `${FileSystem.cacheDirectory}${fileName}`;
-          await FileSystem.copyAsync({
-            from: uri,
-            to: tempUri,
-          });
-  
-          const asset = await MediaLibrary.createAssetAsync(tempUri);
-          const album = await MediaLibrary.getAlbumAsync('Download');
-          if (!album) {
-            await MediaLibrary.createAlbumAsync('Download', asset, false);
-          } else {
-            await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-          }
-  
-          Alert.alert('Download Success', `${fileName} has been saved to your Downloads folder.`);
-        } else {
-          Alert.alert('Permission Denied', 'You need to grant permission to save the PDF.');
-        }
-      } catch (error) {
-        console.error('Error saving PDF:', error);
-        Alert.alert(t("Error.error"), t("Error.Failed to save PDF to Downloads folder."));
+      
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Permission Denied", "Gallery access is required to save PDF.");
+        return;
       }
-    } else {
-      Alert.alert(t("Error.error"), t("Error.PDF was not generated."));
+      
+      // Use the cache directory for temporary storage
+      const fileUri = `${FileSystem.cacheDirectory}${fileName}`;
+      
+      // Copy the generated PDF to the cache directory
+      await FileSystem.copyAsync({
+        from: uri,
+        to: fileUri,
+      });
+      
+      // Save to media library
+      const asset = await MediaLibrary.createAssetAsync(fileUri);
+      await MediaLibrary.createAlbumAsync("Download", asset, false);
+      
+      Alert.alert(t("Error.Success"), t("Error.PDF saved to gallery."));
+    } catch (error) {
+      console.error("Download error:", error);
+      Alert.alert(t("Error.error"), t("Error.Failed to save PDF to Downloads folder."));
     }
   };
   

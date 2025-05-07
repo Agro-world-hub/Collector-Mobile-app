@@ -702,8 +702,10 @@ const RegisterDriver: React.FC = () => {
   const [error1, setError1] = useState("");
   const [error2, setError2] = useState("");
   const [error3, setError3] = useState("");
+  const [error4, setError4] = useState("");
   const [errorEmail, setErrorEmail] = useState("");
   const [nicExists, setNicExists] = useState(false);
+  const [email, setEmail] = useState(false);
   const [phoneExists, setPhoneExists] = useState(false);
   const [phone2Exists, setPhone2Exists] = useState(false);
 
@@ -756,6 +758,48 @@ const RegisterDriver: React.FC = () => {
     }
   };
 
+
+  const checkEmailExists = async (email: string) => {
+    if (!validateEmail(email)) {
+      setErrorEmail("Invalid email address. Please enter a valid email format (e.g. example@domain.com).");
+      setEmail(false);
+      return;
+    }
+    
+    try {
+      setIsValidating(true);
+      const token = await AsyncStorage.getItem('token');
+      
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/collection-manager/driver/check-email/${email}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+      
+      if (response.data.exists) {
+        setEmail(true);
+        setErrorEmail("This Email is already registered in the system.");
+      } else {
+        setEmail(false);
+        setErrorEmail("");
+      }
+    } catch (error: any) {
+      console.error("Error checking Email:", error);
+      
+      if (error.response) {
+        console.error("Status:", error.response.status);
+        console.error("Data:", error.response.data);
+      }
+      // Set a generic error message if the check fails
+      setErrorEmail("Failed to verify email. Please try again.");
+    } finally {
+      setIsValidating(false);
+    }
+  };
+
   // Check if phone number already exists in backend
   const checkPhoneExists = async (phoneNumber: string) => {
     if (!validatePhoneNumber(phoneNumber)) return;
@@ -800,12 +844,21 @@ const RegisterDriver: React.FC = () => {
   };
 
   const handleEmailChange = (input: string) => {
-    setFormData({ ...formData, email: input });
-    if (!validateEmail(input)) {
-      setErrorEmail(t("ErrorEmail"));
-    } else {
-      setErrorEmail("");
+    const trimmedInput = input.trim();
+    setFormData({ ...formData, email: trimmedInput });
+    
+    if (!trimmedInput) {
+      setErrorEmail("Email is required");
+      return;
     }
+    
+    if (!validateEmail(trimmedInput)) {
+      setErrorEmail("Invalid email address. Please enter a valid email format (e.g. example@domain.com).");
+      return;
+    }
+    
+    // Only check for duplicates if the email is valid
+    checkEmailExists(trimmedInput);
   };
 
   const handlePhoneNumber1Change = (input: string) => {
@@ -933,16 +986,19 @@ const RegisterDriver: React.FC = () => {
     }
     
     if(error1) {
-      Alert.alert(t("Error.error"), t("Error.Please correct phone number 1"));
+      Alert.alert(t("Error.error"), t("Error.Phone Number 1 already exists"));
       return;
-    } else if(phoneNumber2 && error2) {  // Only check phone2 error if a phone2 is provided
-      Alert.alert(t("Error.error"), t("Error.Please correct phone number 2"));
+    } else if(phoneNumber2 && error2) {
+      Alert.alert(t("Error.error"), t("Error.Phone Number 2 already exists"));
       return;
     } else if(error3) {
-      Alert.alert(t("Error.error"), t("Error.Please correct NIC number"));
+      Alert.alert(t("Error.error"), t("Error.NIC Number already exists"));
       return;
     } else if(errorEmail) {
-      Alert.alert(t("Error.error"), t("Error.Please correct email"));
+      Alert.alert(t("Error.error"), errorEmail); // Show the actual email error message
+      return;
+    } else if(email) { // Check if email exists flag is true
+      Alert.alert(t("Error.error"), t("Error.Email already exists"));
       return;
     }
   
