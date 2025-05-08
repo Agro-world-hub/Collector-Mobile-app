@@ -76,29 +76,82 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
   
 
   
-  const handleDownload = async () => {
-    if (!startDate || !endDate) {
-      Alert.alert(t("Error.error"), t("Error.Please select both start and end dates."));
-      return;
-    }
+  // const handleDownload = async () => {
+  //   if (!startDate || !endDate) {
+  //     Alert.alert(t("Error.error"), t("Error.Please select both start and end dates."));
+  //     return;
+  //   }
   
+  //   try {
+  //     // Request permissions
+  //     const { status } = await MediaLibrary.requestPermissionsAsync();
+  //     if (status !== 'granted') {
+  //       Alert.alert(t("Error.Permission Denied"));
+  //       return;
+  //     }
+  
+  //     // Generate the PDF
+  //     const fileUri = await handleGeneratePDF(
+  //       formatDate(startDate),
+  //       formatDate(endDate),
+  //       officerId,
+  //       collectionOfficerId
+  //     );
+  
+  //     if (!fileUri) {
+  //       Alert.alert(t("Error.error"), t("Error.Failed to generate PDF"));
+  //       return;
+  //     }
+  
+  //     // Define the new file name
+  //     const date = new Date().toISOString().slice(0, 10); // Get the current date (YYYY-MM-DD)
+  //     const fileName = `Report_${officerId}_${date}.pdf`; // Example file name
+  //     const tempUri = `${FileSystem.cacheDirectory}${fileName}`;
+  
+  //     // Copy the file to a new path with the desired name
+  //     await FileSystem.copyAsync({
+  //       from: fileUri, // Original URI
+  //       to: tempUri, // New URI with the desired file name
+  //     });
+  
+  //     if (Platform.OS === 'android') {
+  //       // Save to Media Library (Downloads folder)
+  //       const asset = await MediaLibrary.createAssetAsync(tempUri);
+  //       const album = await MediaLibrary.getAlbumAsync('Download');
+  
+  //       if (!album) {
+  //         await MediaLibrary.createAlbumAsync('Download', asset, false);
+  //       } else {
+  //         await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+  //       }
+  
+  //       Alert.alert(t("Error.Success"), `${t("Error.File saved as")} ${fileName} ${t("Error.in the Downloads folder")}`);
+        
+  //     } else {
+  //       // For iOS, inform the user about the app's document directory
+  //       Alert.alert(t("Error.Success"), `${t("Error.File saved to app's directory:")} ${tempUri}`);
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to save file:', error);
+  //     Alert.alert(t("Error.error"), t("Error.An error occurred while saving the file."));
+  //   }
+  // };
+  const handleDownload = async () => {
     try {
-      // Request permissions
-      const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert(t("Error.Permission Denied"));
+      if (!startDate || !endDate) {
+        Alert.alert(t("Error.error"), t("Error.Please select both start and end dates."));
         return;
       }
   
       // Generate the PDF
-      const fileUri = await handleGeneratePDF(
+      const uri = await handleGeneratePDF(
         formatDate(startDate),
         formatDate(endDate),
         officerId,
         collectionOfficerId
       );
   
-      if (!fileUri) {
+      if (!uri) {
         Alert.alert(t("Error.error"), t("Error.Failed to generate PDF"));
         return;
       }
@@ -106,37 +159,57 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
       // Define the new file name
       const date = new Date().toISOString().slice(0, 10); // Get the current date (YYYY-MM-DD)
       const fileName = `Report_${officerId}_${date}.pdf`; // Example file name
-      const tempUri = `${FileSystem.cacheDirectory}${fileName}`;
-  
-      // Copy the file to a new path with the desired name
-      await FileSystem.copyAsync({
-        from: fileUri, // Original URI
-        to: tempUri, // New URI with the desired file name
-      });
+      
+      // Define tempFilePath here, outside the if block so it's available throughout the function
+      let tempFilePath = uri; // Default to the original URI
   
       if (Platform.OS === 'android') {
-        // Save to Media Library (Downloads folder)
-        const asset = await MediaLibrary.createAssetAsync(tempUri);
-        const album = await MediaLibrary.getAlbumAsync('Download');
-  
-        if (!album) {
-          await MediaLibrary.createAlbumAsync('Download', asset, false);
-        } else {
-          await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-        }
-  
-        Alert.alert(t("Error.Success"), `${t("Error.File saved as")} ${fileName} ${t("Error.in the Downloads folder")}`);
+        // Create a temporary file in cache
+        tempFilePath = `${FileSystem.cacheDirectory}${fileName}`;
         
-      } else {
-        // For iOS, inform the user about the app's document directory
-        Alert.alert(t("Error.Success"), `${t("Error.File saved to app's directory:")} ${tempUri}`);
+        // Copy the PDF to the temp location
+        await FileSystem.copyAsync({
+          from: uri,
+          to: tempFilePath
+        });
+        
+        // Use the sharing API - this works in Expo Go
+        if (await Sharing.isAvailableAsync()) {
+          await Sharing.shareAsync(tempFilePath, {
+            dialogTitle: t("Error.Save PDF"),
+            mimeType: 'application/pdf',
+            UTI: 'com.adobe.pdf'
+          });
+          Alert.alert(
+            t("Error.PDF Ready"), 
+            t("Error.To save to Downloads, select 'Save to device' or similar option from the share menu"),
+            [{ text: "OK" }]
+          );
+        } else {
+          Alert.alert(t("Error.error"), t("Error.Sharing is not available on this device"));
+        }
+      } else if (Platform.OS === 'ios') {
+        // iOS approach: Use sharing dialog to let user save to Files app
+        if (await Sharing.isAvailableAsync()) {
+          await Sharing.shareAsync(tempFilePath, { // Using tempFilePath which is uri for iOS
+            dialogTitle: t("Error.Save PDF"),
+            mimeType: 'application/pdf',
+            UTI: 'com.adobe.pdf'
+          });
+          Alert.alert(t("Error.Info"), t("Error.Use the 'Save to Files' option to save to Downloads"));
+        } else {
+          Alert.alert(t("Error.error"), t("Error.Sharing is not available on this device"));
+        }
       }
+      
+      // Log success - tempFilePath is now accessible here
+      console.log(`PDF prepared for sharing: ${tempFilePath}`);
+      
     } catch (error) {
-      console.error('Failed to save file:', error);
-      Alert.alert(t("Error.error"), t("Error.An error occurred while saving the file."));
+      console.error('Download error:', error);
+      Alert.alert(t("Error.error"), t("Error.Failed to prepare PDF for download."));
     }
   };
-  
   
   const handleShare = async () => {
     if (!startDate || !endDate) {
