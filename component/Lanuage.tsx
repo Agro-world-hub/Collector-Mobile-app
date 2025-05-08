@@ -6,6 +6,7 @@ const lg = require('../assets/images/lang1.webp');
 import { RootStackParamList } from './types';
 import { LanguageContext } from '@/context/LanguageContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ScrollView } from 'react-native-gesture-handler';
 
 type LanuageScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Lanuage'>;
 
@@ -44,6 +45,7 @@ const Lanuage: React.FC<LanuageProps> = ({ navigation }) => {
   };
 
   return (
+    <ScrollView>
     <View className="flex-1 bg-white items-center">
       <Image className="mt-20 w-full h-30" source={lg} resizeMode="contain" />
       <Text className="text-3xl pt-5 font-semibold">Language</Text>
@@ -51,7 +53,7 @@ const Lanuage: React.FC<LanuageProps> = ({ navigation }) => {
       <Text className="text-lg pt-1 mb-0 font-extralight">කරුණාකර භාෂාව තෝරන්න</Text>
 
       {/* TouchableOpacity Buttons */}
-      <View className="flex-1 justify-center w-64 px-4 mt-0 pt-0">
+      <View className="flex-1 justify-center w-64 px-4 mt-4 pt-0">
         <TouchableOpacity className="bg-[#2AAD7A] p-4 rounded-3xl mb-6"  onPress={() => handleLanguageSelect("en")}>
           <Text className="text-white text-lg text-center">ENGLISH</Text>
         </TouchableOpacity>
@@ -63,6 +65,7 @@ const Lanuage: React.FC<LanuageProps> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
     </View>
+    </ScrollView>
   );
 };
 
