@@ -14,6 +14,12 @@ import * as MediaLibrary from 'expo-media-library';
 import QRCode from 'react-native-qrcode-svg';
 import { useTranslation } from "react-i18next";
 import { AntDesign } from '@expo/vector-icons';
+import { File, Paths, Directory } from 'expo-file-system/next';
+import { Platform } from 'react-native';
+import * as IntentLauncher from 'expo-intent-launcher';
+import { documentDirectory } from 'expo-file-system';
+
+
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -556,8 +562,8 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
   //   const uri = await generatePDF();
   
   //   if (uri) {
-  //     const date = new Date().toISOString().slice(0, 10);
-  //     const fileName = `GRN_${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}_${date}.pdf`;
+      // const date = new Date().toISOString().slice(0, 10);
+      // const fileName = `GRN_${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}_${date}.pdf`;
   
   //     try {
   //       const { status } = await MediaLibrary.requestPermissionsAsync();
@@ -590,43 +596,114 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
   //   }
   // };
 
-  const handleDownloadPDF = async () => {
-    try {
-      const uri = await generatePDF();
+
+// const handleDownloadPDF = async () => {
+//   try {
+//     const uri = await generatePDF();
+
+//     if (!uri) {
+//       Alert.alert("Error", "PDF was not generated.");
+//       return;
+//     }
+
+//     const date = new Date().toISOString().slice(0, 10);
+//     const fileName = `GRN_${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}_${date}.pdf`;
+
+//     // Create a directory path for PDFs in the app's cache
+//     const pdfDirectory = `${FileSystem.cacheDirectory}pdfs/`;
+    
+//     // Check if directory exists, if not create it
+//     const dirInfo = await FileSystem.getInfoAsync(pdfDirectory);
+//     if (!dirInfo.exists) {
+//       await FileSystem.makeDirectoryAsync(pdfDirectory, { intermediates: true });
+//     }
+    
+//     // Create the full file path
+//     const fileUri = `${pdfDirectory}${fileName}`;
+    
+//     // Copy the PDF to the new location
+//     await FileSystem.copyAsync({
+//       from: uri,
+//       to: fileUri
+//     });
+    
+//     Alert.alert("Success", `PDF saved to app cache: ${fileUri}`);
+//     console.log("Saved to:", fileUri);
+    
+//     // Optional: Share the file
+//     // if (await Sharing.isAvailableAsync()) {
+//     //   await Sharing.shareAsync(fileUri);
+//     // }
+    
+//   } catch (error) {
+//     console.error("Download error:", error);
+//     Alert.alert("Error", "Failed to save PDF.");
+//   }
+// };
+
+const handleDownloadPDF = async () => {
+  try {
+    const uri = await generatePDF();
+
+    if (!uri) {
+      Alert.alert("Error", "PDF was not generated.");
+      return;
+    }
+
+    const date = new Date().toISOString().slice(0, 10);
+    const fileName = `GRN_${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}_${date}.pdf`;
+    
+    // Define tempFilePath here, outside the if block so it's available throughout the function
+    let tempFilePath = uri; // Default to the original URI
+
+    if (Platform.OS === 'android') {
+      // Create a temporary file in cache
+      tempFilePath = `${FileSystem.cacheDirectory}${fileName}`;
       
-      if (!uri) {
-        Alert.alert(t("Error.error"), t("Error.PDF was not generated."));
-        return;
-      }
-      
-      const date = new Date().toISOString().slice(0, 10);
-      const fileName = `GRN_${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}_${date}.pdf`;
-      
-      const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status !== "granted") {
-        Alert.alert("Permission Denied", "Gallery access is required to save PDF.");
-        return;
-      }
-      
-      // Use the cache directory for temporary storage
-      const fileUri = `${FileSystem.cacheDirectory}${fileName}`;
-      
-      // Copy the generated PDF to the cache directory
+      // Copy the PDF to the temp location
       await FileSystem.copyAsync({
         from: uri,
-        to: fileUri,
+        to: tempFilePath
       });
       
-      // Save to media library
-      const asset = await MediaLibrary.createAssetAsync(fileUri);
-      await MediaLibrary.createAlbumAsync("Download", asset, false);
-      
-      Alert.alert(t("Error.Success"), t("Error.PDF saved to gallery."));
-    } catch (error) {
-      console.error("Download error:", error);
-      Alert.alert(t("Error.error"), t("Error.Failed to save PDF to Downloads folder."));
+      // Use the sharing API - this works in Expo Go
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(tempFilePath, {
+          dialogTitle: 'Save PDF',
+          mimeType: 'application/pdf',
+          UTI: 'com.adobe.pdf'
+        });
+        Alert.alert(
+          "PDF Ready", 
+          "To save to Downloads, select 'Save to device' or similar option from the share menu",
+          [{ text: "OK" }]
+        );
+      } else {
+        Alert.alert("Error", "Sharing is not available on this device");
+      }
+    } else if (Platform.OS === 'ios') {
+      // iOS approach: Use sharing dialog to let user save to Files app
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(tempFilePath, { // Using tempFilePath which is uri for iOS
+          dialogTitle: 'Save PDF',
+          mimeType: 'application/pdf',
+          UTI: 'com.adobe.pdf'
+        });
+        Alert.alert("Info", "Use the 'Save to Files' option to save to Downloads");
+      } else {
+        Alert.alert("Error", "Sharing is not available on this device");
+      }
     }
-  };
+    
+    // Log success - tempFilePath is now accessible here
+    console.log(`PDF prepared for sharing: ${tempFilePath}`);
+    
+  } catch (error) {
+    console.error("Download error:", error);
+    Alert.alert("Error", "Failed to prepare PDF for download.");
+  }
+};
+
   
   const handleSharePDF = async () => {
     const uri = await generatePDF();
