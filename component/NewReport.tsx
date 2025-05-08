@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Image, Alert, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -525,41 +525,104 @@ const formatNumber = (value: number | string): string => {
     }
   };
 
-  const handleDownloadPDF = async () => {
-    const uri = await generatePDF();
+  // const handleDownloadPDF = async () => {
+  //   const uri = await generatePDF();
   
-    if (uri) {
+  //   if (uri) {
+  //     const date = new Date().toISOString().slice(0, 10);
+  //     const fileName = `GRN_${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}_${date}.pdf`;
+  
+  //     try {
+  //       const { status } = await MediaLibrary.requestPermissionsAsync();
+  
+  //       if (status === 'granted') {
+  //         const tempUri = `${FileSystem.cacheDirectory}${fileName}`;
+  //         await FileSystem.copyAsync({
+  //           from: uri,
+  //           to: tempUri,
+  //         });
+  
+  //         const asset = await MediaLibrary.createAssetAsync(tempUri);
+  //         const album = await MediaLibrary.getAlbumAsync('Download');
+  //         if (!album) {
+  //           await MediaLibrary.createAlbumAsync('Download', asset, false);
+  //         } else {
+  //           await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+  //         }
+  
+  //         Alert.alert(t("NewReport.Success"), `${fileName} t("NewReport.GRN report has been saved to your Downloads folder.")`);
+  //       } else {
+  //         Alert.alert(t("NewReport.Permission Denied"), t("NewReport.You need to grant permission to save the PDF."));
+  //       }
+  //     } catch (error) {
+  //       console.error('Error saving PDF:', error);
+  //       Alert.alert(t("Error.error"), t("NewReport.Failed to save PDF to Downloads folder."));
+  //     }
+  //   } else {
+  //     Alert.alert(t("Error.error"), t("NewReport.Failed to save PDF to Downloads folder."));
+  //   }
+  // };
+
+  const handleDownloadPDF = async () => {
+    try {
+      const uri = await generatePDF();
+  
+      if (!uri) {
+        Alert.alert(t("Error.error"), t("NewReport.Failed to save PDF to Downloads folder."));
+        return;
+      }
+  
       const date = new Date().toISOString().slice(0, 10);
       const fileName = `GRN_${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}_${date}.pdf`;
+      
+      // Define tempFilePath here, outside the if block so it's available throughout the function
+      let tempFilePath = uri; // Default to the original URI
   
-      try {
-        const { status } = await MediaLibrary.requestPermissionsAsync();
-  
-        if (status === 'granted') {
-          const tempUri = `${FileSystem.cacheDirectory}${fileName}`;
-          await FileSystem.copyAsync({
-            from: uri,
-            to: tempUri,
+      if (Platform.OS === 'android') {
+        // Create a temporary file in cache
+        tempFilePath = `${FileSystem.cacheDirectory}${fileName}`;
+        
+        // Copy the PDF to the temp location
+        await FileSystem.copyAsync({
+          from: uri,
+          to: tempFilePath
+        });
+        
+        // Use the sharing API - this works in Expo Go
+        if (await Sharing.isAvailableAsync()) {
+          await Sharing.shareAsync(tempFilePath, {
+            dialogTitle: t("NewReport.Save GRN Report"),
+            mimeType: 'application/pdf',
+            UTI: 'com.adobe.pdf'
           });
-  
-          const asset = await MediaLibrary.createAssetAsync(tempUri);
-          const album = await MediaLibrary.getAlbumAsync('Download');
-          if (!album) {
-            await MediaLibrary.createAlbumAsync('Download', asset, false);
-          } else {
-            await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-          }
-  
-          Alert.alert(t("NewReport.Success"), `${fileName} t("NewReport.GRN report has been saved to your Downloads folder.")`);
+          Alert.alert(
+            t("NewReport.PDF Ready"), 
+            t("NewReport.To save to Downloads"),
+            [{ text: "OK" }]
+          );
         } else {
-          Alert.alert(t("NewReport.Permission Denied"), t("NewReport.You need to grant permission to save the PDF."));
+          Alert.alert(t("Error.error"), t("NewReport.Sharing is not available on this device"));
         }
-      } catch (error) {
-        console.error('Error saving PDF:', error);
-        Alert.alert(t("Error.error"), t("NewReport.Failed to save PDF to Downloads folder."));
+      } else if (Platform.OS === 'ios') {
+        // iOS approach: Use sharing dialog to let user save to Files app
+        if (await Sharing.isAvailableAsync()) {
+          await Sharing.shareAsync(tempFilePath, { // Using tempFilePath which is uri for iOS
+            dialogTitle: t("NewReport.Save GRN Report"),
+            mimeType: 'application/pdf',
+            UTI: 'com.adobe.pdf'
+          });
+          Alert.alert(t("NewReport.Info"), t("NewReport.Use the 'Save to Files' option to save to Downloads"));
+        } else {
+          Alert.alert(t("Error.error"), t("NewReport.Sharing is not available on this device"));
+        }
       }
-    } else {
-      Alert.alert(t("Error.error"), t("NewReport.Failed to save PDF to Downloads folder."));
+      
+      // Log success - tempFilePath is now accessible here
+      console.log(`GRN report prepared for sharing: ${tempFilePath}`);
+      
+    } catch (error) {
+      console.error("Download error:", error);
+      Alert.alert(t("Error.error"), t("NewReport.Failed to prepare PDF for download"));
     }
   };
   

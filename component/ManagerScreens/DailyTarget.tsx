@@ -676,7 +676,7 @@ setCompletedData(sortByVarietyAndGrade(completedItems));
             ))
           ) : (
             // Empty state with Lottie animation
-            <View className="flex-1 justify-center items-center mr-[40%]">
+            <View className="flex-1 justify-center items-center mr-[35%]">
               <LottieView
                 source={require('../../assets/lottie/NoComplaints.json')} 
                 autoPlay

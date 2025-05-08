@@ -156,7 +156,10 @@
 "Ok":"හරි",
 "Please select crop first":"කරුණාකර පළමුව බෝගයක් තෝරන්න.",
 "Password is not allowed to be empty":"මුරපදය හිස්ව තැබීමට අවසර නැත.",
-"Employee ID is not allowed to be empty":"සේවක හැඳුනුම්පත හිස්ව තැබීමට අවසර නැත."
+"Employee ID is not allowed to be empty":"සේවක හැඳුනුම්පත හිස්ව තැබීමට අවසර නැත.",
+"Phone Number 1 already exists":"දුරකථන අංකය 1 දැනටමත් පවතී.",
+"Phone Number 2 already exists":"දුරකථන අංකය 2 දැනටමත් පවතී.",
+"NIC Number already exists":"ජාතික හැඳුනුම්පත් අංකය දැනටමත් පවතී."
   },
 "EngProfile":{
     "LNG": "si",
@@ -777,7 +780,13 @@
     "Sharing is not available on this device":"මෙම උපාංගයේ බෙදාහැරීම ලබා ගත නොහැක",
     "Generated PDF file not found":"නිර්මාණය කළ PDF ගොනුව සොයාගත නොහැක",
     "Failed to share PDF file":"PDF ගොනුව බෙදාහැරීමට අසමත් විය",
-    "No transactions found for this date": "මෙම දිනය සඳහා ගනුදෙනු කිසිවක් සොයාගත නොමැත"
+    "No transactions found for this date": "මෙම දිනය සඳහා ගනුදෙනු කිසිවක් සොයාගත නොමැත",
+    "PDF Ready":"PDF සූදානම්",
+     "To save to Downloads":"බාගැනීම් වලට සුරැකීමට, බෙදාගැනීමේ මෙනුවෙන් 'උපාංගයට සුරකින්න' හෝ ඒ හා සමාන විකල්පයක් තෝරන්න.",
+     "Save GRN Report":"GRN වාර්තාව සුරකින්න",
+     "Info":"තොරතුරු",
+         "Use the 'Save to Files' option to save to Downloads":"බාගැනීම් වලට සුරැකීමට 'ගොනු වලට සුරකින්න' විකල්පය භාවිතා කරන්න.",
+         "Failed to prepare PDF for download":"බාගත කිරීම සඳහා PDF සකස් කිරීමට අසමත් විය."
   },
   "BankDetailsUpdate":{
     "Success":"සාර්ථකයි",
