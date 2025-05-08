@@ -189,7 +189,8 @@
     "City":"නගරය",
     "District":"දිස්ත්‍රික්කය",
     "Province": "පළාත",
-    "Update":"යාවත්කාලීන කරන්න"
+    "Update":"යාවත්කාලීන කරන්න",
+    "CenterName": "මධ්‍යස්ථාන නම"
   },
   "DailyTarget":{
     "LNG": "si",

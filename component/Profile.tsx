@@ -60,7 +60,8 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     lastNameTamil:"",
     companyNameSinhala:"",
     companyNameEnglish:"",
-    companyNameTamil:""
+    companyNameTamil:"",
+    collectionCenterName:""
   });
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [newPhoneNumber2, setNewPhoneNumber2] = useState("");
@@ -189,7 +190,8 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
         lastNameTamil:data.lastNameTamil,
         companyNameSinhala:data.companyNameSinhala,
         companyNameEnglish:data.companyNameEnglish,
-        companyNameTamil:data.companyNameTamil
+        companyNameTamil:data.companyNameTamil,
+        collectionCenterName:data.collectionCenterName
       });
       setProfileImage({ uri: data.image });
       setNewPhoneNumber(data.phoneNumber01);
@@ -1144,6 +1146,15 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={profileData.regcode}
+              editable={false}
+            />
+          </View>
+
+          <View>
+            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2">{t("Profile.CenterName")}</Text>
+            <TextInput
+              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              value={profileData.collectionCenterName}
               editable={false}
             />
           </View>
