@@ -159,7 +159,8 @@
 "Employee ID is not allowed to be empty":"සේවක හැඳුනුම්පත හිස්ව තැබීමට අවසර නැත.",
 "Phone Number 1 already exists":"දුරකථන අංකය 1 දැනටමත් පවතී.",
 "Phone Number 2 already exists":"දුරකථන අංකය 2 දැනටමත් පවතී.",
-"NIC Number already exists":"ජාතික හැඳුනුම්පත් අංකය දැනටමත් පවතී."
+"NIC Number already exists":"ජාතික හැඳුනුම්පත් අංකය දැනටමත් පවතී.",
+"Email already exists":"විද්‍යුත් තැපෑල දැනටමත් පවතී."
   },
 "EngProfile":{
     "LNG": "si",

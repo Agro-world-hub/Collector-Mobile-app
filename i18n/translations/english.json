@@ -159,7 +159,8 @@
 "Employee ID is not allowed to be empty":"Employee ID is not allowed to be empty",
 "Phone Number 1 already exists":"Phone Number 1 already exists",
 "Phone Number 2 already exists":"Phone Number 2 already exists",
-"NIC Number already exists":"NIC Number already exists"
+"NIC Number already exists":"NIC Number already exists",
+"Email already exists":"Email already exists"
   },
   "EngProfile":{
     "LNG": "en",
