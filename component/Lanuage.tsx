@@ -45,7 +45,7 @@ const Lanuage: React.FC<LanuageProps> = ({ navigation }) => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView className = "bg-white">
     <View className="flex-1 bg-white items-center">
       <Image className="mt-20 w-full h-30" source={lg} resizeMode="contain" />
       <Text className="text-3xl pt-5 font-semibold">Language</Text>

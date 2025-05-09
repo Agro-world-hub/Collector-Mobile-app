@@ -159,7 +159,8 @@
 "Employee ID is not allowed to be empty":"Employee ID is not allowed to be empty",
 "Phone Number 1 already exists":"Phone Number 1 already exists",
 "Phone Number 2 already exists":"Phone Number 2 already exists",
-"NIC Number already exists":"NIC Number already exists"
+"NIC Number already exists":"NIC Number already exists",
+"Email already exists":"Email already exists"
   },
   "EngProfile":{
     "LNG": "en",
@@ -795,5 +796,37 @@
     "SuccessMessage":"Bank Details Update Success!",
     "Failed":"Failed",
     "FailedMessage":"Bank Details Update Failed!"
+  },
+  "PrivacyPlicy": {
+    "LNG": "en",
+    "PrivacyPolicy": "Privacy Policy",
+     "Date": "28 April 2025",
+    "PrivacyPlicyCompany": "Privacy Policy for Collector Mobile Application",
+    "By": "Effective Date: ",
+    "explain": "This Privacy Policy (“Policy”) governs the manner in which Agro World (Pvt) Ltd (“we,“ “us,“ or “our“) collects, uses, maintains, and discloses information collected from users (“you“ or “your“) of the Collector mobile application (“App“). By accessing or using the App, you agree to the collection and use of information in accordance with this Policy. If you do not agree with this Policy, please refrain from using the App.",
+
+    "InformationWeCollect": "Information We Collect",
+    "RegistrationInformationTxt": "When you use the Collector App, we may collect personal information such as your full name, mobile number, National Identity Card (NIC) number, email address, profile photo, and work identification details. Additionally, we collect work-related information including QR code scans, farmer registration details, collection reports, complaint histories, daily targets, and transaction histories. Device-related information such as the type of device you use, operating system version, and the version of the App installed may also be gathered. Furthermore, we monitor usage data such as login timestamps, language preferences, and activity logs within the App to facilitate seamless operation, security, and user experience optimization.",
+
+    "HowWeUseYourInformation": "How We Use Your Information",
+    "ToProvideServicesTxt": "The information collected is used primarily to verify your identity and enable secure access to the App. It assists us in creating, maintaining, and managing your user profile and work reports to ensure operational accountability. We use this data to track your daily activities, monitor performance metrics, and assess target completions. Your information also supports the processing and recording of collection requests, management of farmer registrations, handling of complaints, and general supervision of field operations. Additionally, the data enables us to improve the functionality and reliability of the App, deliver better services, communicate important updates, issue service-related notifications, and comply with our legal and regulatory obligations.",
+
+    "InformationSharingandDisclosure": "Sharing of Information",
+    "ServiceProvidersTxt": "We do not sell, rent, or trade your personal data to third parties. Your information may be shared internally within Agro World (Pvt) Ltd to support operational monitoring, employee management, and service improvement efforts. Authorized supervisors or administrators may access your information to facilitate work tracking, employee evaluations, and organizational reporting. In certain cases, we may be required to disclose your information in response to legal obligations, regulatory requirements, or lawful requests from government or law enforcement agencies.",
+
+    "SecurityofYourInformation": "Data Storage and Security",
+    "SecurityofYourInformationTxt": "Your information is securely stored on protected servers managed by Agro World (Pvt) Ltd. We implement administrative, technical, and physical security measures designed to protect your personal and work-related information against unauthorized access, alteration, disclosure, or destruction. Access to your data is strictly limited to authorized personnel who require such access to perform their job duties. Although we employ industry-standard practices to safeguard your information, no method of transmission over the Internet or electronic storage system can be guaranteed as completely secure. As such, while we endeavor to protect your personal information, we cannot guarantee its absolute security.",
+
+    "YourPrivacyChoices": "Your Rights",
+    "YourPrivacyChoicesTxt": "You have certain rights regarding your personal data. These include the right to access, correct, or update your information as necessary. You may also request the deletion of your profile once your service period with Agro World (Pvt) Ltd ends, subject to compliance with internal company procedures and applicable legal requirements. Additionally, you have the right to inquire about how your data is processed and to seek further information regarding the handling of your personal information. To exercise any of these rights, you may contact us using the contact details provided at the end of this Policy.",
+
+    "ChildrensPrivacy": "Children’s Privacy",
+    "ChildrensPrivacyTxt": "The Collector App is intended solely for use by employees and authorized agents of Agro World (Pvt) Ltd and is not directed toward individuals under the age of 18. We do not knowingly collect or solicit personal information from minors. Should we become aware that we have inadvertently collected personal data from a person under the age of 18, we will promptly take steps to delete such information from our records.",
+
+    "UpdatestothisPrivacyPolicy": "Changes to This Privacy Policy",
+    "UpdatestothisPrivacyPolicyTxt": "We reserve the right to modify or update this Privacy Policy at any time to reflect changes in our operational practices, technological advancements, or legal requirements. Any updates will be effective as of the date indicated at the top of this Policy. In the event of material changes, we will provide appropriate notice within the App. We encourage you to periodically review this Policy to stay informed about how we are protecting your information and to understand your rights with respect to your personal data.",
+
+    "ContactUs":"Contact Us",
+    "ContactUsText": "If you have any questions, concerns, or requests regarding this Privacy Policy, or if you wish to exercise your rights related to your personal data, please contact us at info@agroworld.lk . Alternatively, you may reach us by mail at No. 46/42, Nawam Mawatha, Colombo 02. Sri Lanka."
   }
 }

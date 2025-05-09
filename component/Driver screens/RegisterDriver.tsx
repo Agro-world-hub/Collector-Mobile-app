@@ -7,6 +7,7 @@ import {
   ScrollView,
   Image,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
@@ -995,12 +996,9 @@ const RegisterDriver: React.FC = () => {
       Alert.alert(t("Error.error"), t("Error.NIC Number already exists"));
       return;
     } else if(errorEmail) {
-      Alert.alert(t("Error.error"), errorEmail); // Show the actual email error message
+   Alert.alert(t("Error.error"), t("Error.Email already exists"));
       return;
-    } else if(email) { // Check if email exists flag is true
-      Alert.alert(t("Error.error"), t("Error.Email already exists"));
-      return;
-    }
+    } 
   
 
     // Final validation check with backend
@@ -1373,7 +1371,7 @@ const RegisterDriver: React.FC = () => {
             className={`${isValidating ? "bg-gray-400" : "bg-[#2AAD7A]"} px-8 py-3 rounded-full`}
           >
             <Text className="text-white text-center">
-              {isValidating ? t("AddOfficerBasicDetails.Validating") : t("AddOfficerBasicDetails.Next")}
+              {isValidating ? <ActivityIndicator/> : t("AddOfficerBasicDetails.Next")}
             </Text>
           </TouchableOpacity>
         </View>
