@@ -351,6 +351,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import DropDownPicker from "react-native-dropdown-picker";
 import { use } from "i18next";
 import { useFocusEffect } from "@react-navigation/native";
+import LottieView from "lottie-react-native"; 
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -380,6 +381,15 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+    
+    return () => clearTimeout(timer); // Cleanup the timer
+  }, []);
   useEffect(() => {
     const fetchUserRole = async () => {
       try {
@@ -550,94 +560,102 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
       style={{ flex: 1 }}
     >
       <SafeAreaView className="flex-1 bg-[#FFFFFF]pb-20">
-        <View className=" absolute z-10 ">
-          <AntDesign
-            name="left"
-            size={24}
-            color="#000000"
-            onPress={() => navigation.goBack()}
-            style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}
-          />
-        </View>
-        <ScrollView className="flex-1 " keyboardShouldPersistTaps="handled">
-          <View className="items-center p-2 pb-20">
-            <Image
-              source={require("../assets/images/complain.webp")}
-              className="w-36 h-36 "
-              resizeMode="contain"
+
+      {loading ? (
+          // Lottie Loader displays for 2 seconds
+          <View className="flex-1 justify-center items-center">
+            <LottieView
+              source={require('../assets/lottie/collector.json')}
+              autoPlay
+              loop
+              style={{ width: 300, height: 300 }}
             />
-
-            <View className="w-[90%] items-center p-6 shadow-2xl bg-[#FFFFFF] rounded-xl">
-              <View className="flex-row ">
-                <Text className="text-2xl font-semibold text-center mb-4 color-[#424242]">
-                  {t("ReportComplaint.Tellus")}
-                </Text>
-                <Text className="text-2xl font-semibold text-center mb-4 pl-2 color-[#D72C62]">
-                  {t("ReportComplaint.Problem")}
-                </Text>
-              </View>
-
-              <View className="w-full rounded-lg mb-4">
-                {Category.length > 0 && (
-                  <DropDownPicker
-                    open={open}
-                    value={selectedCategory} 
-                    setOpen={setOpen}
-                    setValue={setSelectedCategory} 
-                    items={Category.map((item) => ({
-                      label: t(item.label), 
-                      value: item.value, 
-                    }))}
-                    placeholder={t("ReportComplaint.selectCategory")}
-                    placeholderStyle={{ color: "#d1d5db" }}
-                    listMode="SCROLLVIEW"
-                    zIndex={3000}
-                    zIndexInverse={1000}
-                    dropDownContainerStyle={{
-                      borderColor: "#ccc",
-                      borderWidth: 1,
-                    }}
-                    style={{
-                      borderWidth: 1,
-                      borderColor: "#ccc",
-                      paddingHorizontal: 8,
-                      paddingVertical: 10,
-                    }}
-                    textStyle={{ fontSize: 12 }}
-                    onOpen={dismissKeyboard}
-                  />
-                )}
-              </View>
-
-              <Text className="text-sm text-gray-600 text-center mb-4">
-                {t("ReportComplaint.WewilRespond")}
-              </Text>
-
-              <TextInput
-                className="w-full h-52 border border-[#EFEFF0] rounded-lg p-3 bg-[#EFEFF0] mb-8 text-gray-800 "
-                placeholder={t("ReportComplaint.Kindlysubmit")}
-                multiline
-                value={complain}
-                onChangeText={(text) => setComplain(text)}
-                onFocus={() => setOpen(false)}
-                style={{ textAlignVertical: "top" }}
-              />
-
-              <TouchableOpacity
-                className="w-full bg-[#2AAD7A] py-4 rounded-full items-center  "
-                onPress={handleSubmit}
-              >
-                {isLoading ? (
-                  <ActivityIndicator size="small" color="#fff" />
-                ) : (
-                  <Text className="text-white font-bold text-lg">
-                    {t("ReportComplaint.Submit")}
-                  </Text>
-                )}
-              </TouchableOpacity>
-            </View>
           </View>
-        </ScrollView>
+        ) : (
+          <><View className=" absolute z-10 ">
+              <AntDesign
+                name="left"
+                size={24}
+                color="#000000"
+                onPress={() => navigation.goBack()}
+                style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }} />
+            </View><ScrollView className="flex-1 " keyboardShouldPersistTaps="handled">
+                <View className="items-center p-2 pb-20">
+                  <Image
+                    source={require("../assets/images/complain.webp")}
+                    className="w-36 h-36 "
+                    resizeMode="contain" />
+
+                  <View className="w-[90%] items-center p-6 shadow-2xl bg-[#FFFFFF] rounded-xl">
+                    <View className="flex-row ">
+                      <Text className="text-2xl font-semibold text-center mb-4 color-[#424242]">
+                        {t("ReportComplaint.Tellus")}
+                      </Text>
+                      <Text className="text-2xl font-semibold text-center mb-4 pl-2 color-[#D72C62]">
+                        {t("ReportComplaint.Problem")}
+                      </Text>
+                    </View>
+
+                    <View className="w-full rounded-lg mb-4">
+                      {Category.length > 0 && (
+                        <DropDownPicker
+                          open={open}
+                          value={selectedCategory}
+                          setOpen={setOpen}
+                          setValue={setSelectedCategory}
+                          items={Category.map((item) => ({
+                            label: t(item.label),
+                            value: item.value,
+                          }))}
+                          placeholder={t("ReportComplaint.selectCategory")}
+                          placeholderStyle={{ color: "#d1d5db" }}
+                          listMode="SCROLLVIEW"
+                          zIndex={3000}
+                          zIndexInverse={1000}
+                          dropDownContainerStyle={{
+                            borderColor: "#ccc",
+                            borderWidth: 1,
+                          }}
+                          style={{
+                            borderWidth: 1,
+                            borderColor: "#ccc",
+                            paddingHorizontal: 8,
+                            paddingVertical: 10,
+                          }}
+                          textStyle={{ fontSize: 12 }}
+                          onOpen={dismissKeyboard} />
+                      )}
+                    </View>
+
+                    <Text className="text-sm text-gray-600 text-center mb-4">
+                      {t("ReportComplaint.WewilRespond")}
+                    </Text>
+
+                    <TextInput
+                      className="w-full h-52 border border-[#EFEFF0] rounded-lg p-3 bg-[#EFEFF0] mb-8 text-gray-800 "
+                      placeholder={t("ReportComplaint.Kindlysubmit")}
+                      multiline
+                      value={complain}
+                      onChangeText={(text) => setComplain(text)}
+                      onFocus={() => setOpen(false)}
+                      style={{ textAlignVertical: "top" }} />
+
+                    <TouchableOpacity
+                      className="w-full bg-[#2AAD7A] py-4 rounded-full items-center  "
+                      onPress={handleSubmit}
+                    >
+                      {isLoading ? (
+                        <ActivityIndicator size="small" color="#fff" />
+                      ) : (
+                        <Text className="text-white font-bold text-lg">
+                          {t("ReportComplaint.Submit")}
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </ScrollView></>
+              )}
       </SafeAreaView>
     </KeyboardAvoidingView>
   );
