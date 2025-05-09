@@ -189,7 +189,8 @@
     "City":"City",
     "District":"District",
     "Province": "Province",
-    "Update":"Update"
+    "Update":"Update",
+    "CenterName":"Centre Name"
   },
   "DailyTarget":{
     "LNG": "en",
