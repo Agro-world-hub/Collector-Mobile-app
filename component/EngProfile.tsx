@@ -343,7 +343,7 @@ import {
   Linking,
   Alert,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
 import axios from "axios";
@@ -725,6 +725,18 @@ useEffect(() => {
         >
           <Ionicons name="lock-closed-outline" size={20} color="black" />
           <Text className="flex-1 text-lg ml-2">{t("EngProfile.ChangePassword")}</Text>
+        </TouchableOpacity>
+
+          <View className="h-0.5 bg-[#D2D2D2] my-4" />
+
+                <TouchableOpacity
+          className="flex-row items-center py-3"
+          onPress={() =>
+            navigation.navigate("PrivacyPolicy")
+          }
+        >
+  <MaterialIcons name="privacy-tip" size={20} color="black" />
+            <Text className="flex-1 text-lg ml-2">{t("PrivacyPlicy.PrivacyPolicy")}</Text>
         </TouchableOpacity>
 
           {/* Horizontal Line */}
