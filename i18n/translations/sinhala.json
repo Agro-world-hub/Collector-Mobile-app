@@ -160,7 +160,14 @@
 "Phone Number 1 already exists":"දුරකථන අංකය 1 දැනටමත් පවතී.",
 "Phone Number 2 already exists":"දුරකථන අංකය 2 දැනටමත් පවතී.",
 "NIC Number already exists":"ජාතික හැඳුනුම්පත් අංකය දැනටමත් පවතී.",
-"Email already exists":"විද්‍යුත් තැපෑල දැනටමත් පවතී."
+"Email already exists":"විද්‍යුත් තැපෑල දැනටමත් පවතී.",
+"This NIC is already registered in the system.": "මෙම ජාතික හැඳුනුම්පත් අංකය දැනටමත් පද්ධතිය තුළ පවතී.",
+"This Email is already registered in the system.": "මෙම විද්‍යුත් තැපෑල දැනටමත් පද්ධතිය තුළ පවතී.",
+"Failed to verify email. Please try again.":"විද්‍යුත් තැපෑල සත්‍යාපනය කිරීමට අසමත් විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+"This phone number is already registered in the system.": "මෙම ජාතික දුරකථන අංකය දැනටමත් පද්ධතිය තුළ පවතී.",
+"NIC Number must be 9 digits followed by 'V' or 12 digits.": "ජාතික හැඳුනුම්පත් අංකය ඉලක්කම් 9 කින් පසුව 'V' හෝ ඉලක්කම් 12 කින් සමන්විත විය යුතුය.",
+"Email is required": "විද්‍යුත් තැපෑල අවශ්‍යයි",
+"Invalid email address. Please enter a valid email format (e.g. example@domain.com).": "අවලංගු විද්‍යුත් තැපැල් ලිපිනයකි. කරුණාකර වලංගු විද්‍යුත් තැපැල් ආකෘතියක් ඇතුළත් කරන්න (උදා: example@domain.com)."
   },
 "EngProfile":{
     "LNG": "si",
@@ -485,11 +492,11 @@
   },
   "CollectionOfficersList":{
     "LNG": "si",
-    "Collection Officers":" එකතු කිරීමේ නිලධාරියා",
+    "Collection Officers":"නිලධාරීන්",
     "Claim Officer":"හිමිකම් නිලධාරියා",
     "Officers List":"නිලධාරීන්ගේ ලැයිස්තුව",
     "Drivers List": "රියදුරු ලැයිස්තුව",
-    "Officers / Drivers List": "නිලධාරීන් / රියදුරු ලැයිස්තුව ",
+    "Officers / Drivers List": "නිලධාරීන්ගේ ලැයිස්තුව",
     "Drivers": "රියදුරන්",
     "Not Approved":"අනුමත කර නැත"
   },

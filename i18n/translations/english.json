@@ -160,7 +160,14 @@
 "Phone Number 1 already exists":"Phone Number 1 already exists",
 "Phone Number 2 already exists":"Phone Number 2 already exists",
 "NIC Number already exists":"NIC Number already exists",
-"Email already exists":"Email already exists"
+"Email already exists":"Email already exists",
+"This NIC is already registered in the system.": "This NIC is already registered in the system.",
+"This Email is already registered in the system.": "This Email is already registered in the system.",
+"Failed to verify email. Please try again.":"Failed to verify email. Please try again.",
+"This phone number is already registered in the system.": "This phone number is already registered in the system.",
+"NIC Number must be 9 digits followed by 'V' or 12 digits.": "NIC Number must be 9 digits followed by 'V' or 12 digits.",
+"Email is required": "Email is required",
+"Invalid email address. Please enter a valid email format (e.g. example@domain.com).": "Invalid email address. Please enter a valid email format (e.g. example@domain.com)."
   },
   "EngProfile":{
     "LNG": "en",
@@ -485,11 +492,11 @@
   },
   "CollectionOfficersList":{
     "LNG": "en",
-    "Collection Officers":"Collection Officers",
+    "Collection Officers":"Officers",
     "Claim Officer":"Claim Officer",
     "Officers List":"Officers List",
     "Drivers List": "Drivers List",
-    "Officers / Drivers List": "Officers / Drivers List ",
+    "Officers / Drivers List": "Officers List ",
     "Drivers": "Drivers",
     "Not Approved":"Not Approved"
   },

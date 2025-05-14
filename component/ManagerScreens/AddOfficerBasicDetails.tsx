@@ -394,6 +394,7 @@ import {
   ScrollView,
   Image,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
@@ -435,6 +436,7 @@ const AddOfficerBasicDetails: React.FC = () => {
     const { t } = useTranslation();
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isValidating, setIsValidating] = useState(false);
 
   const [formData, setFormData] = useState<OfficerBasicDetailsFormData>({
     userId: "",
@@ -483,14 +485,85 @@ const handleNicNumberChange = (input: string) => {
   setFormData({ ...formData, nicNumber: normalizedInput });
 
   if (!validateNicNumber(normalizedInput)) {
-    setError3("NIC Number must be 9 digits followed by 'V' or 12 digits.");
+    setError3(t("Error.NIC Number must be 9 digits followed by 'V' or 12 digits."));
   } else {
     setError3("");
+    checkNicExists(normalizedInput);
   }
 };
 
   
+const checkNicExists = async (nic: string) => {
+    if (!validateNicNumber(nic)) return;
+    
+    try {
+      setIsValidating(true);
+      const token = await AsyncStorage.getItem('token'); // Get your auth token
+      
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/collection-manager/driver/check-nic/${nic}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+      
+      if (response.data.exists) {
+        setError3(t("Error.This NIC is already registered in the system."));
+      } else {
+        setError3("");
+      }
+    } catch (error: any) { // Type the error as 'any' or create a more specific type
+      console.error("Error checking NIC:", error);
+      
+      // Now you can access properties without TypeScript errors
+      if (error.response) {
+        console.error("Status:", error.response.status);
+        console.error("Data:", error.response.data);
+      }
+    } finally {
+      setIsValidating(false);
+    }
+  };
 
+const checkEmailExists = async (email: string) => {
+    if (!validateEmail(email)) {
+      setErrorEmail(t("Error.Invalid email address. Please enter a valid email format (e.g. example@domain.com)."));
+      return;
+    }
+    
+    try {
+      setIsValidating(true);
+      const token = await AsyncStorage.getItem('token');
+      console.log("hittting2");
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/collection-manager/driver/check-email/${email}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+      
+      if (response.data.exists) {
+        setErrorEmail(t("Error.This Email is already registered in the system."));
+      } else {
+        setErrorEmail("");
+      }
+    } catch (error: any) {
+      console.error("Error checking Email:", error);
+      
+      if (error.response) {
+        console.error("Status:", error.response.status);
+        console.error("Data:", error.response.data);
+      }
+      // Set a generic error message if the check fails
+      setErrorEmail(t("Error.Failed to verify email. Please try again."));
+    } finally {
+      setIsValidating(false);
+    }
+  };
   const fetchEmpId = async (role: string) => {
     console.log("Fetching empId for role:", role);
     try {
@@ -594,16 +667,16 @@ const handleNicNumberChange = (input: string) => {
   const handleNext = () => {
     console.log("jobRole",preferredLanguages);
     if(error1 ) {
-      Alert.alert(t("Error.error"), t("Error.Phone number 1 is invalid."));
-      return;
+ Alert.alert(t("Error.error"), t("Error.Phone Number 1 already exists"));
+       return;
     }else if(error2) {
-      Alert.alert(t("Error.error"), t("Error.Phone number 2 is invalid."));
+     Alert.alert(t("Error.error"), t("Error.Phone Number 2 already exists"));
       return;
     }else if(errorEmail) {
-      Alert.alert(t("Error.error"), t("Error.Email is invalid."));
+      Alert.alert(t("Error.error"), t("Error.Email already exists"));
       return;
     }else if(error3) {
-      Alert.alert(t("Error.error"), t("Error.NIC number is invalid."));
+       Alert.alert(t("Error.error"), t("Error.NIC Number already exists"));
       return;
     }
     if (
@@ -620,7 +693,8 @@ const handleNicNumberChange = (input: string) => {
       Alert.alert(t("Error.error"), t("Error.Please fill in all required fields."));
       return;
     }
-
+   try {
+      setIsValidating(true);
     // Update formData with separate phone codes and numbers
     const updatedFormData = {
       ...formData,
@@ -653,6 +727,12 @@ const handleNicNumberChange = (input: string) => {
       preferredLanguages,
       jobRole,
     });
+     } catch (error) {
+          console.error("Error validating user data:", error);
+          Alert.alert(t("Error.error"), t("Error.Failed to validate user data."));
+        } finally {
+          setIsValidating(false);
+        }
   };
 
   const [error1, setError1] = useState("");
@@ -664,13 +744,28 @@ const handleNicNumberChange = (input: string) => {
     /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|\.com|\.gov|\.lk)$/i.test(email);
   
   // Handle email change
-  const handleEmailChange = (input: string) => {
-    setFormData({ ...formData, email: input });
-    if (!validateEmail(input)) {
-      setErrorEmail(t("Error.InvaidEmail"));
-    } else {
-      setErrorEmail("");
+  // const handleEmailChange = (input: string) => {
+  //   setFormData({ ...formData, email: input });
+  //   if (!validateEmail(input)) {
+  //     setErrorEmail(t("Error.InvaidEmail"));
+  //   } else {
+  //     setErrorEmail("");
+  //   }
+  // };
+
+    const handleEmailChange = (input: string) => {
+    const trimmedInput = input.trim();
+    setFormData({ ...formData, email: trimmedInput });
+    
+    if (!trimmedInput) {
+      setErrorEmail(t("Error.Email is required"));
+      return;
     }
+    if (!validateEmail(trimmedInput)) {
+      setErrorEmail(t("Error.Invalid email address. Please enter a valid email format (e.g. example@domain.com)."));
+      return;
+    }
+    checkEmailExists(trimmedInput);
   };
 
   // Validation function for phone numbers
@@ -683,6 +778,33 @@ const handleNicNumberChange = (input: string) => {
       setError1(t("Error.setphoneError1"));
     } else {
       setError1("");
+      checkPhoneExists(input);
+    }
+  };
+  const checkPhoneExists = async (phoneNumber: string) => {
+    if (!validatePhoneNumber(phoneNumber)) return;
+    
+    try {
+      setIsValidating(true);
+      const token = await AsyncStorage.getItem('token');
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/collection-manager/driver/check-phone/${phoneCode1}${phoneNumber}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+      
+      if (response.data.exists) {
+        setError1(t("Error.This phone number is already registered in the system."));
+      } else {
+        setError1("");
+      }
+    } catch (error) {
+      console.error("Error checking phone number:", error);
+    } finally {
+      setIsValidating(false);
     }
   };
 
@@ -693,6 +815,34 @@ const handleNicNumberChange = (input: string) => {
       setError2(t("Error.setphoneError2"));
     } else {
       setError2("");
+       checkPhone2Exists(input);
+    }
+  };
+
+  const checkPhone2Exists = async (phoneNumber: string) => {
+    if (!validatePhoneNumber(phoneNumber)) return;
+    
+    try {
+      setIsValidating(true);
+      const token = await AsyncStorage.getItem('token');
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/collection-manager/driver/check-phone/${phoneCode2}${phoneNumber}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+      
+      if (response.data.exists) {
+        setError2(t("Error.This phone number is already registered in the system."));
+      } else {
+        setError2("");
+      }
+    } catch (error) {
+      console.error("Error checking phone number 2:", error);
+    } finally {
+      setIsValidating(false);
     }
   };
 
@@ -1063,12 +1213,22 @@ const handleNicNumberChange = (input: string) => {
           >
             <Text className="text-gray-800 text-center">{t("AddOfficerBasicDetails.Cancel")}</Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={handleNext}
             className="bg-[#2AAD7A] px-8 py-3 rounded-full"
           >
             <Text className="text-white text-center">{t("AddOfficerBasicDetails.Next")}</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+
+                <TouchableOpacity
+                      onPress={handleNext}
+                      disabled={isValidating}
+                      className={`${isValidating ? "bg-gray-400" : "bg-[#2AAD7A]"} px-8 py-3 rounded-full`}
+                    >
+                      <Text className="text-white text-center">
+                        {isValidating ? <ActivityIndicator/> : t("AddOfficerBasicDetails.Next")}
+                      </Text>
+                    </TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

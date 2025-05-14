@@ -364,6 +364,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
 
   const onRefresh = async () => {
  setSelectedJobRole(null); 
+     setShowFilter(false)
     setRefreshing(true);
     await fetchOfficers();
     setRefreshing(false);
