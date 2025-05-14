@@ -756,7 +756,7 @@
   "NewReport":{
     "LNG": "en",
     "Goods Received Note":"Goods Received Note",
-    "GRN No":"GRN No",
+    "GRN No":"GRN No:",
     "Date":"Date:",
     "Supplier Details":"Supplier Details:",
     "Name":"Name:",
