@@ -83,21 +83,40 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
     }, [])
   );
 
+  // const formatDateTime = (isoDate: string) => {
+  //   const date = new Date(isoDate);
+  //   const options: Intl.DateTimeFormatOptions = {
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //     hour12: true,
+  //     day: "numeric",
+  //     month: "short",
+  //     year: "numeric",
+  //   };
+  //   const formattedDateTime = new Intl.DateTimeFormat("en-US", options).format(
+  //     date
+  //   );
+  //   console.log(formattedDateTime);
+  //   return formattedDateTime;
+  // };
+
   const formatDateTime = (isoDate: string) => {
-    const date = new Date(isoDate);
-    const options: Intl.DateTimeFormatOptions = {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    };
-    const formattedDateTime = new Intl.DateTimeFormat("en-US", options).format(
-      date
-    );
-    return formattedDateTime;
-  };
+  const date = new Date(isoDate);
+
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const hour12 = hours % 12 || 12; // Convert 0 to 12
+  const minuteStr = minutes.toString().padStart(2, "0");
+  const timeStr = `${hour12}.${minuteStr}${ampm}`;
+
+  const day = date.getDate();
+  const month = date.toLocaleString("en-US", { month: "short" });
+  const year = date.getFullYear();
+
+  return `${timeStr},${day} ${month} ${year}`;
+};
+
 
   const handleViewReply = (reply: string | undefined) => {
     if (reply) {

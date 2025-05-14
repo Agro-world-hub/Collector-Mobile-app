@@ -468,7 +468,7 @@ useFocusEffect(
     <SafeAreaView className="flex-1 bg-gray-100">
       {/* Header */}
       <View className="bg-[#2AAD7A] h-20 flex-row items-center" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.navigate("Main" as any, { screen: "SearchPriceScreen" })}>
           <AntDesign name="left" size={24} color="#fff" />
         </TouchableOpacity>
         <Text className="text-white text-lg font-bold text-center flex-1">{t("PriceChart.PriceChart")}</Text>
@@ -505,7 +505,7 @@ useFocusEffect(
               {priceData.map((priceItem, index) => (
                 <View key={index} className="flex-row items-center mb-3">
                   {/* <Text className="w-32 text-gray-600">{`Grade ${priceItem.grade}`}</Text> */}
-                  <Text className="w-32 text-gray-600">{`${t("PriceChart.Grade")} ${priceItem.grade}`}</Text>
+                  <Text className="w-32 text-gray-600">{`${t("PriceChart.Grade")} ${priceItem.grade}`}           Rs.</Text>
                   <TextInput
                     className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-gray-800"
                     value={editedPrices[index]?.price}
@@ -566,7 +566,7 @@ useFocusEffect(
               fetchPrices();
             } else {
               // If not in edit mode, this acts as "Go Back"
-              navigation.goBack();
+              navigation.navigate("Main" as any, { screen: "SearchPriceScreen" })
             }
           }}
         >

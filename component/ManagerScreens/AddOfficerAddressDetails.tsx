@@ -1977,6 +1977,7 @@ const AddOfficerAddressDetails: React.FC = () => {
     console.log("Combined data for passing to backend:", combinedData);
 
     try {
+      setLoading(true); 
       const token = await AsyncStorage.getItem("token");
       const response = await axios.post(
         `${environment.API_BASE_URL}api/collection-manager/collection-officer/add`,
@@ -1991,12 +1992,13 @@ const AddOfficerAddressDetails: React.FC = () => {
 
       if (response.status === 201) {
         Alert.alert(t("Error.Success"), t("Error.Officer created successfully"));
+        setLoading(false);
         await AsyncStorage.removeItem("officerFormData"); // Clear saved form data after successful submission
         navigation.navigate("Main", { screen: "CollectionOfficersList" });
       }
     } catch (error) {
       console.error("Error submitting officer data:", error);
-
+          setLoading(false);
       if (
         axios.isAxiosError(error) &&
         error.response &&
@@ -2017,6 +2019,8 @@ const AddOfficerAddressDetails: React.FC = () => {
       } else {
         Alert.alert(t("Error.error"), t("Error.An error occurred while creating the officer."));
       }
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -2448,7 +2452,9 @@ const AddOfficerAddressDetails: React.FC = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleSubmit}
-            className="bg-green-600 px-8 py-3 rounded-full"
+            // className="bg-green-600 px-8 py-3 rounded-full"
+            className={`bg-green-600 px-8 py-3 rounded-full ${loading ? "opacity-50" : ""}`}
+            disabled={loading} 
           >
             {loading ? (
               <ActivityIndicator color="white" size="small" />
