@@ -661,6 +661,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
   const [open, setOpen] = useState(false);
   const [vopen, setVopen] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const { t, i18n } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState("en");
@@ -704,6 +705,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({ navigation }) => 
   // Also use useFocusEffect to ensure reset happens when screen gains focus
   useFocusEffect(
     useCallback(() => {
+      setLoading(false)
       resetForm();
       return () => {}; // Cleanup function
     }, [resetForm])
@@ -866,6 +868,7 @@ if(vopen && !selectedCrop){
                   backgroundColor: 'white',
                   borderColor: '#CFCFCF',
                 }}
+                 placeholderStyle={{color: '#9CA3AF'}}
                 textStyle={{
                   color: '#000',
                 }}
@@ -897,6 +900,7 @@ if(vopen && !selectedCrop){
                 setValue={setSelectedVariety}
                 setItems={setVarietyOptions}
                 placeholder={t("SearchPrice.SelectVariety")}
+                 placeholderStyle={{color: '#9CA3AF'}}
                 style={{
                   backgroundColor: 'white',
                   borderColor: '#CFCFCF',
@@ -924,6 +928,7 @@ if(vopen && !selectedCrop){
             className="bg-[#2AAD7A] w-full py-3 mb-4 rounded-[35px] items-center"
             onPress={() => {
               if (selectedCrop && selectedVariety) {
+                setLoading(true)
                 const cropName = cropOptions.find(option => option.value === selectedCrop)?.label || '';
                 const varietyName = varietyOptions.find(option => option.value === selectedVariety)?.label || '';
                 
@@ -933,6 +938,7 @@ if(vopen && !selectedCrop){
                   varietyName: varietyName,
                 });
               } else {
+                setLoading(false)
                 Alert.alert(
                   t("SearchPrice.Selection Required"),
                   t("SearchPrice.Please select both Crop and Variety to continue"),
@@ -941,7 +947,13 @@ if(vopen && !selectedCrop){
               }
             }}
           >
+            {loading ? (
+             <ActivityIndicator color="white" size="small" />
+            ):(
             <Text className="text-white font-semibold text-lg">{t("SearchPrice.Search")}</Text>
+
+            )}
+
           </TouchableOpacity>
         </View>
       </ScrollView>

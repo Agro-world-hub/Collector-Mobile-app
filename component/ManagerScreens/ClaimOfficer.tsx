@@ -8,6 +8,7 @@ import {
   Alert,
   Keyboard,
   Modal,
+  ActivityIndicator,
   // Picker,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -58,6 +59,7 @@ const ClaimOfficer: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   // const empPrefix = jobRole === 'Collection Officer' ? 'COO' : 'CUO';
   const empPrefix =
@@ -69,6 +71,7 @@ const ClaimOfficer: React.FC = () => {
 
   const handleSearch = async () => {
     Keyboard.dismiss();
+    setSearchLoading(true);
     console.log(empID, jobRole);
     try {
       const userToken = await AsyncStorage.getItem("token");
@@ -116,12 +119,16 @@ const ClaimOfficer: React.FC = () => {
         });
         console.log("officer details", officerDetails);
         setOfficerFound(true);
+        setSearchLoading(false);
       } else {
         setOfficerFound(false);
+        setSearchLoading(false);
       }
     } catch (err) {
       console.error(err);
       Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+    } finally {
+      setSearchLoading(false);
     }
   };
 
@@ -163,6 +170,7 @@ const ClaimOfficer: React.FC = () => {
         setOfficerDetails(null);
         setEmpID("");
         setModalVisible(false);
+         navigation.navigate("Main", { screen: "CollectionOfficersList" });
       }
     } catch (err) {
       console.error(err);
@@ -220,7 +228,7 @@ const ClaimOfficer: React.FC = () => {
     <ScrollView className="flex-1 bg-white" keyboardShouldPersistTaps="handled">
       {/* Header */}
       <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
-        <TouchableOpacity className="pr-4" onPress={() => navigation.goBack()}>
+        <TouchableOpacity className="" onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
         {/* <Text className="text-lg font-bold ml-[25%]"> {t("ClaimOfficer.ClaimOfficers")}</Text> */}
@@ -291,24 +299,44 @@ const ClaimOfficer: React.FC = () => {
             placeholder="ex: 0122"
             value={empID}
             keyboardType="numeric"
-            onChangeText={setEmpID}
+            // onChangeText={setEmpID}
+              onChangeText={(text) => {
+    setEmpID(text);
+    setOfficerFound(false);
+  }}
             className="flex-1 px-4 py-2 text-gray-700"
           />
         </View>
 
         {/* Search Button */}
-        <TouchableOpacity
-          className={` py-4 rounded-full items-center mt-7 ${
-            empID ? "bg-[#2AAD7A]" : "bg-gray-300"
-          }`}
-          disabled={!empID}
+        {/* <TouchableOpacity
+           className={`py-4 rounded-full items-center mt-7 ${
+    !empID || officerFound ? "bg-gray-300" : "bg-[#2AAD7A]"
+  }`}
+          disabled={!empID || officerFound}
           onPress={handleSearch}
         >
           <Text className="text-white text-lg text-center font-semibold">
             {" "}
             {t("ClaimOfficer.Search")}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <TouchableOpacity
+  className={`py-4 rounded-full items-center mt-7 ${
+    !empID || officerFound || searchLoading ? "bg-gray-300" : "bg-[#2AAD7A]"
+  }`}
+  disabled={!empID || officerFound}
+  onPress={handleSearch}
+>
+  {searchLoading ? (
+    <ActivityIndicator size="small" color="#ffffff" />
+  ) : (
+    <Text className="text-white text-lg text-center font-semibold">
+      {t("ClaimOfficer.Search")}
+    </Text>
+  )}
+</TouchableOpacity>
+
       </View>
 
       {/* No Officer Found */}
@@ -354,7 +382,7 @@ const ClaimOfficer: React.FC = () => {
           {officerDetails?.firstNameSinhala} {officerDetails?.lastNameSinhala}
         </Text>
         <Text className="text-sm mb-1 text-gray-500">
-        {t(`ClaimOfficer.${officerDetails?.jobRole}`)} - {officerDetails?.empId}
+        {t(`ClaimOfficer.${officerDetails?.jobRole}`)} - <Text className="font-bold text-black">{officerDetails?.empId}</Text>
         </Text>
         <Text className="text-sm text-gray-500">
           {officerDetails?.companyNameSinhala}
@@ -366,7 +394,7 @@ const ClaimOfficer: React.FC = () => {
           {officerDetails?.firstNameTamil} {officerDetails?.lastNameTamil}
         </Text>
         <Text className="text-sm text-gray-500">
-        {t(`ClaimOfficer.${officerDetails?.jobRole}`)} - {officerDetails?.empId}
+        {t(`ClaimOfficer.${officerDetails?.jobRole}`)} - <Text className="font-bold text-black">{officerDetails?.empId}</Text>
         </Text>
         <Text className="text-sm text-gray-500">
           {officerDetails?.companyNameTamil}
@@ -378,7 +406,7 @@ const ClaimOfficer: React.FC = () => {
       {officerDetails?.firstNameEnglish} {officerDetails?.lastNameEnglish}
     </Text>
     <Text className="text-sm text-gray-500">
-    {t(`ClaimOfficer.${officerDetails?.jobRole}`)} - {officerDetails?.empId}
+    {t(`ClaimOfficer.${officerDetails?.jobRole}`)} - <Text className="font-bold text-black">{officerDetails?.empId}</Text>
     </Text>
     <Text className="text-sm text-gray-500">
       {officerDetails?.companyNameEnglish}

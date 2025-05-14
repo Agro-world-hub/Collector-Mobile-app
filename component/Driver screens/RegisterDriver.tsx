@@ -741,7 +741,7 @@ const RegisterDriver: React.FC = () => {
       
       if (response.data.exists) {
         setNicExists(true);
-        setError3("This NIC is already registered in the system.");
+        setError3(t("Error.This NIC is already registered in the system."));
       } else {
         setNicExists(false);
         setError3("");
@@ -762,7 +762,7 @@ const RegisterDriver: React.FC = () => {
 
   const checkEmailExists = async (email: string) => {
     if (!validateEmail(email)) {
-      setErrorEmail("Invalid email address. Please enter a valid email format (e.g. example@domain.com).");
+      setErrorEmail(t("Error.Invalid email address. Please enter a valid email format (e.g. example@domain.com)."));
       setEmail(false);
       return;
     }
@@ -770,7 +770,7 @@ const RegisterDriver: React.FC = () => {
     try {
       setIsValidating(true);
       const token = await AsyncStorage.getItem('token');
-      
+      console.log("hittting2");
       const response = await axios.get(
         `${environment.API_BASE_URL}api/collection-manager/driver/check-email/${email}`,
         {
@@ -782,7 +782,7 @@ const RegisterDriver: React.FC = () => {
       
       if (response.data.exists) {
         setEmail(true);
-        setErrorEmail("This Email is already registered in the system.");
+        setErrorEmail(t("Error.This Email is already registered in the system."));
       } else {
         setEmail(false);
         setErrorEmail("");
@@ -795,7 +795,7 @@ const RegisterDriver: React.FC = () => {
         console.error("Data:", error.response.data);
       }
       // Set a generic error message if the check fails
-      setErrorEmail("Failed to verify email. Please try again.");
+      setErrorEmail(t("Error.Failed to verify email. Please try again."));
     } finally {
       setIsValidating(false);
     }
@@ -819,7 +819,7 @@ const RegisterDriver: React.FC = () => {
       
       if (response.data.exists) {
         setPhoneExists(true);
-        setError1("This phone number is already registered in the system.");
+        setError1(t("Error.This phone number is already registered in the system."));
       } else {
         setPhoneExists(false);
         setError1("");
@@ -836,7 +836,7 @@ const RegisterDriver: React.FC = () => {
     setFormData({ ...formData, nicNumber: normalizedInput });
 
     if (!validateNicNumber(normalizedInput)) {
-      setError3("NIC Number must be 9 digits followed by 'V' or 12 digits.");
+      setError3(t("Error.NIC Number must be 9 digits followed by 'V' or 12 digits."));
     } else {
       setError3("");
       // Check if NIC exists when it's valid
@@ -849,12 +849,12 @@ const RegisterDriver: React.FC = () => {
     setFormData({ ...formData, email: trimmedInput });
     
     if (!trimmedInput) {
-      setErrorEmail("Email is required");
+      setErrorEmail(t("Error.Email is required"));
       return;
     }
     
     if (!validateEmail(trimmedInput)) {
-      setErrorEmail("Invalid email address. Please enter a valid email format (e.g. example@domain.com).");
+      setErrorEmail(t("Error.Invalid email address. Please enter a valid email format (e.g. example@domain.com)."));
       return;
     }
     
@@ -890,7 +890,7 @@ const RegisterDriver: React.FC = () => {
       
       if (response.data.exists) {
         setPhone2Exists(true);
-        setError2("This phone number is already registered in the system.");
+        setError2(t("Error.This phone number is already registered in the system."));
       } else {
         setPhone2Exists(false);
         setError2("");

@@ -784,7 +784,12 @@ If correct, share OTP only with the ${companyName} representative who contacts y
             placeholder={t("UnregisteredFarmerDetails.AccountName")}
             className="border border-gray-300  p-3 rounded-lg"
             value={accHolderName}
-            onChangeText={setAccHolderName}
+            // onChangeText={setAccHolderName}
+               onChangeText={(text) => {
+      // Regex to allow only letters, spaces, and basic punctuation (you can adjust this as needed)
+      const cleanText = text.replace(/[^a-zA-Z\s]/g, ''); // Removes anything that is not a letter or space
+      setAccHolderName(cleanText);
+    }}
           />
         </View>
 
