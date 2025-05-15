@@ -12,6 +12,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useTranslation } from "react-i18next";
 import { useFocusEffect } from '@react-navigation/native';
 import { set } from 'lodash';
+import LottieView from 'lottie-react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 type TransactionListNavigationProp = StackNavigationProp<RootStackParamList, 'TransactionList'>;
 type TranscationListRouteProp = RouteProp<RootStackParamList, 'OfficerSummary'>;
@@ -47,6 +49,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
   const getCurrentDate = () => {
@@ -67,6 +70,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
     }, []) 
   );
   const fetchTransactions = async (date: string) => {
+    setLoading(true);
     try {
       const response = await fetch(
         `${environment.API_BASE_URL}api/collection-manager/transaction-list?collectionOfficerId=${collectionOfficerId}&date=${date}`
@@ -94,25 +98,47 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
   
         setTransactions(formattedData);
         setFilteredTransactions(formattedData);
+        setLoading(false);
+
       } else {
         console.error('Error fetching transactions:', data.error);
       }
     } catch (error) {
       console.error('Error fetching transactions:', error);
+    }finally{
+      setLoading(false);
     }
   };
   
 
+  // const handleSearch = (query: string) => {
+  //   setSearchQuery(query);
+  //   const filtered = transactions.filter(
+  //     (transaction: any) =>
+  //       transaction.firstName?.toLowerCase().includes(query.toLowerCase()) ||
+  //       transaction.lastName?.toLowerCase().includes(query.toLowerCase()) ||
+  //       transaction.NICnumber?.includes(query)
+  //   );
+  //   setFilteredTransactions(filtered);
+  // };
   const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    const filtered = transactions.filter(
-      (transaction: any) =>
-        transaction.firstName?.toLowerCase().includes(query.toLowerCase()) ||
-        transaction.lastName?.toLowerCase().includes(query.toLowerCase()) ||
-        transaction.NICnumber?.includes(query)
-    );
-    setFilteredTransactions(filtered);
-  };
+  setSearchQuery(query);
+  const normalizedQuery = query.trim().toLowerCase();
+  const filtered = transactions.filter((transaction: any) => {
+    const firstNameMatch = transaction.firstName?.toLowerCase().includes(normalizedQuery);
+    const lastNameMatch = transaction.lastName?.toLowerCase().includes(normalizedQuery);
+
+    const nicMatch = transaction.NICnumber
+      ?.replace(/[^\w\s]/gi, '') 
+      .toLowerCase()
+      .includes(normalizedQuery);
+
+    return firstNameMatch || lastNameMatch || nicMatch;
+  });
+
+  setFilteredTransactions(filtered);
+};
+
 
   useEffect(() => {
     fetchTransactions(getCurrentDate());
@@ -135,17 +161,42 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
 
         {/* Header */}
         <View className="bg-[#2AAD7A] p-4  rounded-b-[35px] shadow-md">
-        <TouchableOpacity onPress={() =>         navigation.navigate('OfficerSummary'as any,{collectionOfficerId, officerId,phoneNumber1,phoneNumber2,officerName})} className='absolute left-4 mt-[4%]'>
+          {/* <View className='flex-row items-center justify-between'>
+                   <TouchableOpacity
+                    onPress={() => navigation.navigate('OfficerSummary'as any,{collectionOfficerId, officerId,phoneNumber1,phoneNumber2,officerName})} className='absolute mt-[4%]'>
         <AntDesign name="left" size={22} color="white" />
               </TouchableOpacity>
-          <Text className="text-white text-lg font-bold ml-[28%] mt-[4%]">EMP {t("ManagerTransactions.ID")}: {officerId}</Text>
-          <View className="flex-row items-center justify-between mt-2">
-          <Text className="text-white text-lg ml-[20%]">
-          {t("ManagerTransactions.Selected Date")} {selectedDate ? selectedDate.toISOString().split('T')[0] : 'N/A'}
-        </Text>
-            <TouchableOpacity onPress={() => setShowDatePicker(prev => !prev)} className="mb-6">
+                        <Text className="text-white text-lg font-bold ml-[30%]">EMP {t("ManagerTransactions.ID")}: {officerId}</Text>
+        <TouchableOpacity onPress={() => setShowDatePicker(prev => !prev)} className="">
               <Ionicons name="calendar-outline" size={24} color="white" />
             </TouchableOpacity>
+
+          </View> */}
+          <View className='flex-row items-center justify-between'>
+  <TouchableOpacity
+    onPress={() => navigation.navigate('OfficerSummary' as any, { collectionOfficerId, officerId, phoneNumber1, phoneNumber2, officerName })}
+    className='ml-2' 
+  >
+    <AntDesign name="left" size={22} color="white" />
+  </TouchableOpacity>
+
+  {/* Center Text */}
+  <Text className="text-white text-lg font-bold text-center flex-1">
+    EMP {t("ManagerTransactions.ID")} : {officerId}
+  </Text>
+
+  {/* Right Calendar Icon */}
+  <TouchableOpacity onPress={() => setShowDatePicker(prev => !prev)} className='mr-2'> 
+    <Ionicons name="calendar-outline" size={24} color="white" />
+  </TouchableOpacity>
+</View>
+
+ 
+          <View className="flex-row items-center justify-center mb-2">
+          <Text className="text-white text-lg ju" style={[{ fontSize: 16 }]}>
+          {t("ManagerTransactions.Selected Date")} {selectedDate ? selectedDate.toISOString().split('T')[0].replace(/-/g, '/') : 'N/A'}
+        </Text>
+    
           </View>
         </View>
 
@@ -205,17 +256,33 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
 
       <View className="px-4 mt-4">
         <Text className="text-lg font-semibold text-black mb-4">
-        {t("ManagerTransactions.Transaction List")} ( {t("ManagerTransactions.All")} {filteredTransactions.length})
+        {t("ManagerTransactions.Transaction List")} <Text className='font-normal'>({t("ManagerTransactions.All")} {filteredTransactions.length})</Text> 
         </Text>
       </View>
-      <View className='mb-8'>
+           {loading ? (
+                <View className="flex-1 justify-center items-center">
+                  <LottieView
+                    source={require("../../assets/lottie/collector.json")}
+                    autoPlay
+                    loop
+                    style={{ width: 150, height: 150 }}
+                  />
+                  <Text className="text-gray-500 mt-4">
+                    {t("ManagerTransactions.Loading")}
+                  </Text>
+                </View>
+              ) : (
+ 
+         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View className="flex-1 mb-14">
       <FlatList
+        keyboardShouldPersistTaps="handled"
         data={filteredTransactions}
         keyExtractor={(item) => (item.id ? item.id.toString() : Math.random().toString())}
-        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16, flexGrow: 1 }}
         renderItem={({ item }) => (
           <TouchableOpacity
-            className="flex-row items-center mb-8 p-4  rounded-[35px] bg-gray-100 shadow-sm"
+            className="flex-row items-center mb-4 p-4  rounded-[35px] bg-gray-100 shadow-sm"
             onPress={() => {
               navigation.navigate('TransactionReport'as any,  {
                 registeredFarmerId: item.registeredFarmerId,
@@ -235,6 +302,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
               });
             }}
           >
+            
             
             <View className="w-14 h-14 rounded-full overflow-hidden justify-center items-center mr-4 shadow-md">
               <Image
@@ -257,18 +325,28 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
         )}
         ListEmptyComponent={
           <View className="items-center mt-[50%]">
-            <Text className="text-gray-500 text-lg">{t("ManagerTransactions.Notransactions")}</Text>
+            {/* <Text className="text-gray-500 text-lg">{t("ManagerTransactions.Notransactions")}</Text> */}
+                          <LottieView
+                            source={require("../../assets/lottie/NoComplaints.json")}
+                            autoPlay
+                            loop
+                            style={{ width: 150, height: 150 }}
+                          />
+                          <Text
+                            style={[{ fontSize: 16 }]}
+                            className="text-gray-500 text-lg"
+                          >
+                            {t("ManagerTransactions.Notransactions")}
+                          </Text>
           </View>
         }
       />
       </View>
-
+       </ScrollView>  
+  
+ )}
     </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };
 export default TransactionList;
-
-function callback(arg0: () => void) {
-  throw new Error('Function not implemented.');
-}

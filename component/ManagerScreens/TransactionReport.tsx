@@ -18,6 +18,7 @@ import { File, Paths, Directory } from 'expo-file-system/next';
 import { Platform } from 'react-native';
 import * as IntentLauncher from 'expo-intent-launcher';
 import { documentDirectory } from 'expo-file-system';
+import { s } from 'react-native-size-matters';
 
 
 
@@ -745,7 +746,7 @@ const handleDownloadPDF = async () => {
   return (
     <ScrollView className="flex-1 bg-white p-4">
       <View className="flex-row items-center mb-4">
-        <TouchableOpacity onPress={() => navigation.navigate("Main" as any)}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
         <Text className="text-xl font-bold text-center w-full">{t("NewReport.Goods Received Note")}</Text>
@@ -761,8 +762,8 @@ const handleDownloadPDF = async () => {
       <View className="mb-4">
         <Text className="font-bold text-sm mb-1">{t("NewReport.Supplier Details")}</Text>
         <View className="border border-gray-300 rounded-lg p-2">
-          <Text><Text className="font-bold">{t("NewReport.Name")}</Text> {details?.firstName} {details?.lastName}</Text>
-          <Text><Text className="font-bold">{t("NewReport.Phone")}</Text> {details?.phoneNumber}</Text>
+          <Text><Text className="">{t("NewReport.Name")}</Text> {details?.firstName} {details?.lastName}</Text>
+          <Text><Text className="">{t("NewReport.Phone")}</Text> {details?.phoneNumber}</Text>
         </View>
       </View>
 
@@ -770,8 +771,8 @@ const handleDownloadPDF = async () => {
       <View className="mb-4">
         <Text className="font-bold text-sm mb-1">{t("NewReport.Received By")}</Text>
         <View className="border border-gray-300 rounded-lg p-2">
-          <Text><Text className="font-bold">{t("NewReport.Company Name")}</Text> {details?.companyNameEnglish || ''}</Text>
-          <Text><Text className="font-bold">{t("NewReport.Centre")}</Text> {details?.collectionCenterName || 'Collection Center'}</Text>
+          <Text><Text className="">{t("NewReport.Company Name")}</Text> {details?.companyNameEnglish || ''}</Text>
+          <Text><Text className="">{t("NewReport.Centre")}</Text> {details?.collectionCenterName || 'Collection Center'}</Text>
         </View>
       </View>
 
@@ -806,7 +807,7 @@ const handleDownloadPDF = async () => {
           {formatNumber(crop.quantity)}
         </Text>
         <Text className="w-24 p-2 border-b border-gray-300 text-right">
-          {formatNumberWithCommas(totalSum)}
+          {formatNumberWithCommas(crop.subTotal)}
         </Text>
       </View>
     ))}

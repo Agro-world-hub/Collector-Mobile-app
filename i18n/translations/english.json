@@ -519,7 +519,8 @@
     "Search":"Search By NIC Number, Name",
     "All":"All",
     "TotalRs":"Total: Rs.",
-    "ID":"ID"
+    "ID":"ID",
+    "Loading": "Loading..."
   },
   "OfficerSummary":{
     "LNG": "en",

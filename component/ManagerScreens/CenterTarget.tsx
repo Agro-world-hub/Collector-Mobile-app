@@ -29,6 +29,8 @@ interface TargetData {
 const CenterTarget: React.FC<CenterTargetProps> = ({ navigation }) => {
   const [todoData, setTodoData] = useState<TargetData[]>([]);
   const [completedData, setCompletedData] = useState<TargetData[]>([]);
+  const [centerCode, setcenterCode] = useState<string | null>("");
+  console.log("Center Code", centerCode);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedToggle, setSelectedToggle] = useState('ToDo');
@@ -127,7 +129,12 @@ const sortByVarietyAndGrade = (data: TargetData[]) => {
 };
 
   useEffect(() => {
-    fetchTargets();
+    const fetchData = async () => {
+      await fetchTargets();
+      const centerCode = await AsyncStorage.getItem('centerCode');
+      setcenterCode(centerCode);
+    };
+    fetchData();
   }, []);
 
   const onRefresh = async () => {
@@ -160,11 +167,14 @@ const sortByVarietyAndGrade = (data: TargetData[]) => {
         return (
           <View className="flex-1 bg-[#282828] ">
             {/* Header */}
-            <View className="bg-[#282828] px-4 py-3 flex-row justify-between items-center">
+            <View className="bg-[#282828] px-4 py-3 flex-row justify-center items-center">
               <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-6 left-4">
                 <AntDesign name="left" size={22} color="white" />
               </TouchableOpacity>
-              <Text className="text-white text-lg font-bold ml-[35%] mt-[3%]">{t("CenterTarget.CenterTarget")}</Text>
+              {/* <Text className="text-white text-lg font-bold ml-[35%] mt-[3%]">{t("CenterTarget.CenterTarget")}</Text> */}
+              <Text className="text-white text-lg font-bold mt-[3%]">
+                {centerCode}
+              </Text>
             </View>
       
             {/* Toggle Buttons */}

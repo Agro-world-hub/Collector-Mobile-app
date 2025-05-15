@@ -123,6 +123,8 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
       console.log("hell",allData);
       const todoItems = allData.filter((item: TargetData) => item.todo > 0);
       const completedItems = allData.filter((item: TargetData) => item.todo === 0 && item.complete !==0);
+      console.log("todoItems",todoItems);
+      console.log("completedItems",completedItems);
 
       // setTodoData(todoItems);
       // setCompletedData(completedItems);
@@ -385,6 +387,7 @@ setCompletedData(sortByVarietyAndGrade(completedItems));
                       qty = parseFloat(item.centerTarget.total_qtyC);
                     }
                   }
+                   if (selectedToggle === 'Completed') return;
   
                   navigation.navigate('EditTargetScreen' as any, {
                     varietyNameEnglish: item.varietyNameEnglish,
@@ -411,7 +414,8 @@ setCompletedData(sortByVarietyAndGrade(completedItems));
                   </Text>
                   <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.grade}</Text>
                   <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.officerTarget}</Text>
-                  <Text className="w-32 p-2 text-center">{item.todo}</Text>
+                  <Text className="w-32 p-2 text-center"> {selectedToggle === 'Completed' ? item.complete : item.todo}</Text>
+                  
                 </View>
               </TouchableOpacity>
             ))

@@ -417,14 +417,35 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
 </View>
 
         {/* Buttons */}
-        <View className="flex-row justify-between items-center">
-          <TouchableOpacity onPress={handleReset} className="border border-gray-300 px-6 py-3 rounded-lg">
+        {/* <View className="flex-row justify-center gap-4 items-center  ">
+          <TouchableOpacity onPress={handleReset} className="border border-gray-300  px-6 py-3 rounded-lg">
             <Text className="text-gray-700">{t("ReportGenerator.Reset")}</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleGenerate} className="bg-[#2AAD7A] px-6 py-3 rounded-lg">
+          <TouchableOpacity onPress={handleGenerate} className="bg-[#2AAD7A]  px-6 py-3 rounded-lg">
             <Text className="text-white font-semibold">{t("ReportGenerator.Generate")}</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
+
+        <View className="flex-row justify-center gap-2 items-center">
+  <TouchableOpacity 
+    onPress={handleReset} 
+    className="border border-gray-300 py-3 rounded-lg w-40 items-center"
+  >
+    <Text className="text-gray-700 text-center" numberOfLines={1} ellipsizeMode="tail">
+      {t("ReportGenerator.Reset")}
+    </Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity 
+    onPress={handleGenerate} 
+    className="bg-[#2AAD7A] py-3 rounded-lg w-40 items-center"
+  >
+    <Text className="text-white font-semibold text-center" numberOfLines={1} ellipsizeMode="tail">
+      {t("ReportGenerator.Generate")}
+    </Text>
+  </TouchableOpacity>
+</View>
+
           <View style={{ borderBottomWidth: 1, borderColor: "#ADADAD", marginVertical: 10 , marginTop:30 , marginBottom:40 }} />
       </View>
 

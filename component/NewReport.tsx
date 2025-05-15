@@ -696,8 +696,8 @@ const formatNumber = (value: number | string): string => {
       <View className="mb-4">
         <Text className="font-bold text-sm mb-1">{t("NewReport.Supplier Details")}</Text>
         <View className="border border-gray-300 rounded-lg p-2">
-          <Text><Text className="font-bold">{t("NewReport.Name")}</Text> {details?.firstName} {details?.lastName}</Text>
-          <Text><Text className="font-bold">{t("NewReport.Phone")}</Text> {details?.phoneNumber}</Text>
+          <Text><Text className="">{t("NewReport.Name")}</Text> {details?.firstName} {details?.lastName}</Text>
+          <Text><Text className="">{t("NewReport.Phone")}</Text> {details?.phoneNumber}</Text>
         </View>
       </View>
 
@@ -705,8 +705,8 @@ const formatNumber = (value: number | string): string => {
       <View className="mb-4">
         <Text className="font-bold text-sm mb-1">{t("NewReport.Received By")}</Text>
         <View className="border border-gray-300 rounded-lg p-2">
-          <Text><Text className="font-bold">{t("NewReport.Company Name")}</Text> {details?.companyNameEnglish || ''}</Text>
-          <Text><Text className="font-bold">{t("NewReport.Centre")}</Text> {details?.collectionCenterName || 'Collection Center'}</Text>
+          <Text><Text className="">{t("NewReport.Company Name")}</Text> {details?.companyNameEnglish || ''}</Text>
+          <Text><Text className="">{t("NewReport.Centre")}</Text> {details?.collectionCenterName || 'Collection Center'}</Text>
         </View>
       </View>
 
