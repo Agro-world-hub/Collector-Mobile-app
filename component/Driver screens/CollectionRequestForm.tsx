@@ -237,10 +237,14 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
             };
           });
 
-          setCropOptions(mappedCrops); // Set crop options once after mapping
-          console.log("crop names", mappedCrops)
+           const sortedCrops = mappedCrops.sort((a, b) => {
+          if (a.label < b.label) return -1;
+          if (a.label > b.label) return 1;
+          return 0;
+        });
 
-          console.log("Unique Crop Names:", uniqueCropNames);
+        setCropOptions(sortedCrops); // Set crop options once after sorting
+        console.log("Sorted Crop Names:", sortedCrops);
         } catch (error) {
           console.error("Error fetching crop names:", error);
         }
@@ -346,7 +350,12 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
           };
         });
 
-        setVarietyOptions(mappedVarieties); // Set variety options once after mapping
+         const sortedVarieties = mappedVarieties.sort((a, b) => {
+        return a.label.localeCompare(b.label); // Sort alphabetically
+      });
+
+      setVarietyOptions(sortedVarieties); // Set variety options once after sorting
+      console.log("Sorted Varieties:", sortedVarieties);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(
@@ -424,6 +433,10 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
       Alert.alert(t("Error.error"), t("Error.Please fill in all required fields."));
       return;
     }
+      if (parseFloat(loadIn) < 0) {
+    Alert.alert(t("Error.error"), t("Error.Cannot add negative values for loadIn."));
+    return;
+  }
 
     // Get the crop name based on the selected crop ID
     const selectedCropName = cropOptions.find(
@@ -910,9 +923,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
 
           <View className="h-0.5 bg-[#D2D2D2] mb-4 mt-2" />
 
-          {showAddmore && cropsList.length > 0 ? (
-            <View>
-              <View className="mb-4 -z-10">
+           <View className="mb-4 -z-10">
                 <Text className="text-gray-700 mb-2">{t("CollectionRequest.Added Requests")}</Text>
                 {cropsList.map((item, index) => (
                   <View
@@ -949,6 +960,10 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
                 ))}
                 <View className="h-0.5 bg-[#D2D2D2]  mt-4" />
               </View>
+
+          {showAddmore && cropsList.length > 0 ? (
+            <View>
+             
 
               <View>
                 <TouchableOpacity

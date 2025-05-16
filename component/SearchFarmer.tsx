@@ -494,9 +494,11 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
               placeholder={t("SearchFarmer.EnterNIC")}
               className="flex-1 text-center"
               maxLength={12}
-              style={{
-                color: "#000", // Text color (optional)
-              }}
+                 style={{
+      color: "#000",
+      textAlign: 'center', // Ensures the text is centered
+      paddingRight: NICnumber.length === 0 ? 0 : 20, // Add padding when text is empty to ensure centering
+    }}
             />
             <TouchableOpacity className="ml-2" onPress={handleSearch}>
               <FontAwesome name="search" size={24} color="green" />

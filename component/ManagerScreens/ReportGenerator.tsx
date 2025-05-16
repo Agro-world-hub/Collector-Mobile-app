@@ -12,6 +12,7 @@ import {  Platform } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTranslation } from "react-i18next";
+import LottieView from 'lottie-react-native';
 
 
 
@@ -31,6 +32,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [generatedReportId, setGeneratedReportId] = useState<string | null>(null);
+  const [generateAgain, setGenerateAgain] = useState(false);
   const { t } = useTranslation();
   
   const { officerId,collectionOfficerId } = route.params;
@@ -48,6 +50,8 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
 const reportCounters: { [key: string]: number } = {}; 
 
   const handleGenerate = async () => {
+    setReportGenerated(false);
+    setGenerateAgain(true)
     if (!startDate || !endDate) {
       Alert.alert(t("Error.error"), t("Error.Please select both start and end dates."));
       return;
@@ -83,9 +87,11 @@ const reportCounters: { [key: string]: number } = {};
   const reportIdno = generateReportId(officerId);
       setGeneratedReportId(reportIdno); // Store the report ID to display in the UI
       setReportGenerated(true);
-      Alert.alert(t("Error.Success"), t("Error.PDF Generated Successfully"));
+      setGenerateAgain(false)
+      // Alert.alert(t("Error.Success"), t("Error.PDF Generated Successfully"));
     } else {
       Alert.alert(t("Error.error"), t("Error.Failed to generate PDF"));
+      setGenerateAgain(false)
     }
   };
   
@@ -474,7 +480,7 @@ const reportCounters: { [key: string]: number } = {};
   />
 </View>
 
-          <Text className="text-lg font-semibold text-[#494949]">{t("ReportGenerator.IDNO")} {generatedReportId}</Text>
+          {/* <Text className="text-lg font-semibold text-[#494949]">{t("ReportGenerator.IDNO")} {generatedReportId}</Text> */}
           <Text className="text-sm text-gray-500 italic mb-6">{t("ReportGenerator.Report has been generated")}</Text>
 
           {/* Download and Share Buttons */}
@@ -499,10 +505,21 @@ const reportCounters: { [key: string]: number } = {};
           </View>
         </View>
       ) : (
-        <View className="items-center justify-center flex-1">
-          <Image source={require('../../assets/images/empty.webp')} className="w-20 h-20 mb-4" resizeMode="contain" />
-          <Text className="text-gray-500 italic">{t("ReportGenerator.Time Duration first")}</Text>
-        </View>
+        generateAgain ? (
+          <View className="items-center justify-center flex-1">
+                 <LottieView
+                            source={require('../../assets/lottie/collector.json')}
+                            autoPlay
+                            loop
+                            style={{ width: 250, height: 250 }}
+                          />
+          </View>
+        ) : (
+          <View className="items-center justify-center flex-1">
+            <Image source={require('../../assets/images/empty.webp')} className="w-20 h-20 mb-4" resizeMode="contain" />
+            <Text className="text-gray-500 italic">{t("ReportGenerator.Time Duration first")}</Text>
+          </View>
+        )
       )}
 
     </ScrollView>

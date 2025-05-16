@@ -167,7 +167,8 @@
 "This phone number is already registered in the system.": "This phone number is already registered in the system.",
 "NIC Number must be 9 digits followed by 'V' or 12 digits.": "NIC Number must be 9 digits followed by 'V' or 12 digits.",
 "Email is required": "Email is required",
-"Invalid email address. Please enter a valid email format (e.g. example@domain.com).": "Invalid email address. Please enter a valid email format (e.g. example@domain.com)."
+"Invalid email address. Please enter a valid email format (e.g. example@domain.com).": "Invalid email address. Please enter a valid email format (e.g. example@domain.com).",
+"Cannot add negative values for loadIn.": "Cannot add negative values for load (kg)."
   },
   "EngProfile":{
     "LNG": "en",
@@ -264,7 +265,7 @@
     "InvalidNIC":"NIC must be either 12 digits or 9 digits followed by V or v",
     "OnlyDigitsAllowed":"Only Digits Allowed",
     "MustStartWith7":"Must Start With 7",
-    "InvalidPhoneLength":"Invalid phone number length"
+    "InvalidPhoneLength":"Invalid phone number"
   },
   "PriceChart":{
     "LNG": "en",
@@ -671,10 +672,10 @@
   "Transport":{
     "LNG": "en",
     "Register Drivers":"Register Drivers",
-    "Add Farmer Requests":"Add Farmer Requests",
+    "Add Farmer Requests":"Farm Gate Collection",
     "View Farmer Requests":"View Farmer Requests",
     "Driver":"Driver",
-    "Add Collection Request":"Add Collection Request",
+    "Add Collection Request":"Add Farm Gate Collection",
     "Enter Valide NIC" :"Enter Valid NIC"
   },
   "VehicleDetails":{
