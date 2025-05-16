@@ -16,9 +16,6 @@ import { useTranslation } from "react-i18next";
 import { AntDesign } from '@expo/vector-icons';
 import { File, Paths, Directory } from 'expo-file-system/next';
 import { Platform } from 'react-native';
-import * as IntentLauncher from 'expo-intent-launcher';
-import { documentDirectory } from 'expo-file-system';
-import { s } from 'react-native-size-matters';
 
 
 
