@@ -45,6 +45,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
     return colomboTime;
   };
   
+const reportCounters: { [key: string]: number } = {}; 
 
   const handleGenerate = async () => {
     if (!startDate || !endDate) {
@@ -65,8 +66,22 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
     if (fileUri) {
       const reportIdMatch = fileUri.match(/report_(.+)\.pdf/);
       const reportId = reportIdMatch ? reportIdMatch[1] : null;
-  
-      setGeneratedReportId(reportId); // Store the report ID to display in the UI
+
+      const generateReportId = (officerId: string): string => {
+  // Initialize the counter for the officer if not already present
+  if (!reportCounters[officerId]) {
+    reportCounters[officerId] = 1;
+  } else {
+    reportCounters[officerId] += 1; // Increment the counter
+  }
+
+  // Format the report ID
+  const paddedCount = reportCounters[officerId].toString().padStart(3, '0'); // Pads the count to 3 digits
+  return `${officerId}M${paddedCount}`;
+};
+
+  const reportIdno = generateReportId(officerId);
+      setGeneratedReportId(reportIdno); // Store the report ID to display in the UI
       setReportGenerated(true);
       Alert.alert(t("Error.Success"), t("Error.PDF Generated Successfully"));
     } else {
@@ -176,29 +191,29 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
         // Use the sharing API - this works in Expo Go
         if (await Sharing.isAvailableAsync()) {
           await Sharing.shareAsync(tempFilePath, {
-            dialogTitle: t("Error.Save PDF"),
+            dialogTitle: t("Save PDF"),
             mimeType: 'application/pdf',
             UTI: 'com.adobe.pdf'
           });
-          Alert.alert(
-            t("Error.PDF Ready"), 
-            t("Error.To save to Downloads, select 'Save to device' or similar option from the share menu"),
-            [{ text: "OK" }]
-          );
+          // Alert.alert(
+          //   t("Error.PDF Ready"), 
+          //   t("Error.To save to Downloads, select 'Save to device' or similar option from the share menu"),
+          //   [{ text: "OK" }]
+          // );
         } else {
-          Alert.alert(t("Error.error"), t("Error.Sharing is not available on this device"));
+          Alert.alert(t("Error.error"), t("Error.Failed to save PDF to Downloads folder."));
         }
       } else if (Platform.OS === 'ios') {
         // iOS approach: Use sharing dialog to let user save to Files app
         if (await Sharing.isAvailableAsync()) {
           await Sharing.shareAsync(tempFilePath, { // Using tempFilePath which is uri for iOS
-            dialogTitle: t("Error.Save PDF"),
+            dialogTitle: t("Save PDF"),
             mimeType: 'application/pdf',
             UTI: 'com.adobe.pdf'
           });
-          Alert.alert(t("Error.Info"), t("Error.Use the 'Save to Files' option to save to Downloads"));
+          // Alert.alert(t("Error.Info"), t("Error.Use the 'Save to Files' option to save to Downloads"));
         } else {
-          Alert.alert(t("Error.error"), t("Error.Sharing is not available on this device"));
+          Alert.alert(t("Error.error"), t("Error.Failed to save PDF to Downloads folder."));
         }
       }
       

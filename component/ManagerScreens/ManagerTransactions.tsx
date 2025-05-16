@@ -616,6 +616,11 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({
                   bankName: item.bankName,
                   branchName: item.branchName,
                   selectedDate: selectedDate.toISOString().split("T")[0],
+                  selectedTime: selectedDate.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true 
+                  }).toUpperCase(),
                   empId: item.empId, // Pass empId to the FarmerReport screen
                 });
               }}

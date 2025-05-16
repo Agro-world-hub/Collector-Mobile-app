@@ -152,6 +152,7 @@ export type RootStackParamList = {
       bankName: string | null;
       branchName: string | null;
       selectedDate: string;
+      selectedTime: string;
       empId: string;};
     
     DailyTargetListForOfficers:{officerId:string,collectionOfficerId:number};

@@ -90,7 +90,8 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
     accountHolderName,
     bankName,
     branchName,
-    selectedDate
+    selectedDate,
+    selectedTime
   } = route.params;
   
   console.log('Farmer Report:', route.params);
@@ -100,7 +101,8 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
   const [isLoading, setIsLoading] = useState<boolean>(false);
    const [selectedLanguage, setSelectedLanguage] = useState("en");
     console.log(";;;;;;;;",selectedLanguage)
-
+const formattedDate = selectedDate.replace(/-/g, "/");
+console.log(formattedDate); 
   const fetchSelectedLanguage = async () => {
     try {
       const lang = await AsyncStorage.getItem("@user_language");
@@ -483,7 +485,7 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
             <strong>${t("NewReport.GRN No")}</strong> ${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}
           </div>
           <div class="header-item">
-            <strong>${t("NewReport.Date")}</strong> ${selectedDate}
+            <strong>${t("NewReport.Date")}</strong> ${formattedDate} ${selectedTime}
           </div>
         </div>
         
@@ -755,7 +757,7 @@ const handleDownloadPDF = async () => {
       {/* GRN Header */}
       <View className="mb-4">
         <Text className="text-sm font-bold">{t("NewReport.GRN No")}: {crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}</Text>
-        <Text className="text-sm">{t("NewReport.Date")} {selectedDate}</Text>
+        <Text className="text-sm">{t("NewReport.Date")} {formattedDate} {selectedTime}</Text>
       </View>
 
       {/* Supplier Details */}

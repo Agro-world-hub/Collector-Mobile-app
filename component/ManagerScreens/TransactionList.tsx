@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { scale } from 'react-native-size-matters';
+import { s, scale } from 'react-native-size-matters';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { RootStackParamList } from '../types';
 import {environment }from '@/environment/environment';
@@ -299,6 +299,11 @@ const TransactionList: React.FC<TransactionListProps> = ({ route ,navigation}) =
                 bankName: item.bankName,
                 branchName: item.branchName,
                 selectedDate: selectedDate.toISOString().split('T')[0],
+                selectedTime: selectedDate.toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: true,
+                }).toUpperCase(),
               });
             }}
           >

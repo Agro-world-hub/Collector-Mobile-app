@@ -449,7 +449,7 @@ const formatNumber = (value: number | string): string => {
             <strong>${t("NewReport.GRN No")}</strong> ${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}
           </div>
           <div class="header-item">
-            <strong>${t("NewReport.Date")}</strong> ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+            <strong>${t("NewReport.Date")}</strong> ${new Date().toLocaleDateString("en-GB").split("/").reverse().join("/")} ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true }).toUpperCase()}
           </div>
         </div>
         
@@ -689,7 +689,7 @@ const formatNumber = (value: number | string): string => {
       {/* GRN Header */}
       <View className="mb-4">
         <Text  className="text-sm font-bold">{t("NewReport.GRN No")} {crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}</Text>
-        <Text className="text-sm">{t("NewReport.Date")}  {new Date().toLocaleDateString()} {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Text>
+        <Text className="text-sm">{t("NewReport.Date")}  {new Date().toLocaleDateString("en-GB").split("/").reverse().join("/")} {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true }).toUpperCase()}</Text>
       </View>
 
       {/* Supplier Details */}

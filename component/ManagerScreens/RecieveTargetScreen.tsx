@@ -25,6 +25,7 @@ interface RecieveTargetScreenProps {
       todo: string;
       qty: string;
       varietyId: string;
+      dailyTarget: string;
     };
   };
 }
@@ -361,8 +362,8 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
   const [maxAmount, setMaxAmount] = useState<number>(0);
   const { t } = useTranslation();
 
-  const { varietyNameEnglish, grade, target, qty, varietyId, varietyNameSinhala, varietyNameTamil } = route.params;
-
+  const { varietyNameEnglish, grade, target, qty,dailyTarget, varietyId, varietyNameSinhala, varietyNameTamil } = route.params;
+console.log("Hittt the page 2");
   console.log("Initial Max Amount:", maxAmount);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
   
@@ -603,7 +604,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
                   name: 'Main',
                   params: {
                     screen: 'EditTargetManager',
-                    params: { varietyId, varietyNameEnglish, grade, target, todo: route.params.todo, qty, varietyNameSinhala, varietyNameTamil }
+                    params: { varietyId, varietyNameEnglish, grade, target, todo: route.params.todo, qty, varietyNameSinhala, varietyNameTamil, dailyTarget }
                   }
                 }
               ],
@@ -669,6 +670,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({ navigation, r
               value={amount}
               onChangeText={handleAmountChange}
               placeholder="--"
+              editable={assignee === '0' || errorMessage ? false : true}
             />
             {error ? <Text className="text-red-500 mt-2">{error}</Text> : null}
           </View>
