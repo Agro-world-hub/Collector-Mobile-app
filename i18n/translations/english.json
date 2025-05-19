@@ -168,7 +168,9 @@
 "NIC Number must be 9 digits followed by 'V' or 12 digits.": "NIC Number must be 9 digits followed by 'V' or 12 digits.",
 "Email is required": "Email is required",
 "Invalid email address. Please enter a valid email format (e.g. example@domain.com).": "Invalid email address. Please enter a valid email format (e.g. example@domain.com).",
-"Cannot add negative values for loadIn.": "Cannot add negative values for load (kg)."
+"Cannot add negative values for loadIn.": "Cannot add negative values for load (kg).",
+"Phone numbers cannot be the same.": "Phone numbers cannot be the same.",
+"InvalidPhoneNumber":"Invalid Phone Number"
   },
   "EngProfile":{
     "LNG": "en",

@@ -168,7 +168,9 @@
 "NIC Number must be 9 digits followed by 'V' or 12 digits.": "ජාතික හැඳුනුම්පත් අංකය ඉලක්කම් 9 කින් පසුව 'V' හෝ ඉලක්කම් 12 කින් සමන්විත විය යුතුය.",
 "Email is required": "විද්‍යුත් තැපෑල අවශ්‍යයි",
 "Invalid email address. Please enter a valid email format (e.g. example@domain.com).": "අවලංගු විද්‍යුත් තැපැල් ලිපිනයකි. කරුණාකර වලංගු විද්‍යුත් තැපැල් ආකෘතියක් ඇතුළත් කරන්න (උදා: example@domain.com).",
-"Cannot add negative values for load.": "භාරය සඳහා සෘණ අගයන් එකතු කළ නොහැක (kg)."
+"Cannot add negative values for load.": "භාරය සඳහා සෘණ අගයන් එකතු කළ නොහැක (kg).",
+"Phone numbers cannot be the same.": "දුරකථන අංක දෙකම එකම විය නොහැක.",
+"InvalidPhoneNumber":"දුරකථන අංකය වලංගු නොවේ"
   },
 "EngProfile":{
     "LNG": "si",
