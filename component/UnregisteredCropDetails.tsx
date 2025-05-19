@@ -1217,6 +1217,8 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     const [addbutton, setaddbutton] = useState(true);
     const [loading, setLoading] = useState(false);
     const { t } = useTranslation();
+    const [resetImage, setResetImage] = useState(false);
+    
     const [images, setImages] = useState<{ A: string | null, B: string | null, C: string | null }>({
         A: null,
         B: null,
@@ -1272,7 +1274,6 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
                         { headers }
                     );
                     
-                    console.log(response.data);
                     const uniqueCropNames = response.data.reduce((acc: { cropNameEnglish: any; }[], crop: { cropNameEnglish: any; }) => {
                         if (!acc.some((item: { cropNameEnglish: any; }) => item.cropNameEnglish === crop.cropNameEnglish)) {
                             acc.push(crop); // Push unique crop names
@@ -1299,7 +1300,6 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
               selectedLanguage === 'si' ? crop.cropNameSinhala : crop.cropNameTamil 
     });
     
-    console.log(`Selected crop in ${selectedLanguage}: ${selectedCrop?.name}`);
 
     setSelectedVariety(null);
     setUnitPrices({ A: null, B: null, C: null });
@@ -1317,7 +1317,6 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
             { headers }
         );
 
-        console.log('Varieties response:', varietiesResponse.data);
 
         if (varietiesResponse.data && Array.isArray(varietiesResponse.data)) {
             setVarieties(varietiesResponse.data.map((variety: { 
@@ -1360,7 +1359,6 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
                 return;  // Stop further execution
             }
     
-            console.log(pricesResponse.data);  // Log the response to verify the data
     
             // Check if there are no prices in the response body
             if (pricesResponse.data && pricesResponse.data.length === 0) {
@@ -1494,6 +1492,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
         setUnitPrices({ A: null, B: null, C: null });
         setQuantities({ A: 0, B: 0, C: 0 });
         setImages({ A: null, B: null, C: null }); 
+        setResetImage(true)
         setTotal(0);
         setImage(null);
         setCrops([]);
@@ -1507,7 +1506,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
       };
     
       const handleSubmit = async () => {
-        setLoading(true);
+       
         try {
             if (crops.length === 0) {
                 alert("Please add at least one crop to proceed.");
@@ -1526,7 +1525,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
     
             // Retrieve the token from AsyncStorage
             const token = await AsyncStorage.getItem('token');
-    
+     
             // Generate invoice number
             const invoiceNumber = await generateInvoiceNumber();
             if (!invoiceNumber) {
@@ -1544,6 +1543,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
             });
     
             console.log('Total Price:', totalPrice); 
+            setLoading(true);
             // Construct the payload including invoice number
             const payload = {
                 farmerId: userId, 
@@ -1583,19 +1583,23 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
             await sendSMS(farmerLanguage, farmerPhone, totalPrice, invoiceNumber);
             
             refreshCropForms();
+            setLoading(false);
     
             // Navigate to the ReportPage, passing registeredFarmerId and userId
             navigation.navigate('NewReport' as any, { userId, registeredFarmerId });
         } catch (error) {
             console.error('Error submitting crop data:', error);
             alert('Failed to submit crop details. Please try again.');
+            setLoading(false);
+        }finally{
+            setLoading(false);
         }
     };
     
     // ============================ HANDLE SUBMIT 2 ============================
     const handelsubmit2 = async () => {
         console.log('Submitting crops:', crops);
-        setLoading(true);
+        
 
         try {
             if (quantities.A > 0 && !images.A) {
@@ -1627,7 +1631,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
             totalPrice += (unitPrices.C || 0) * (quantities.C || 0);
     
             console.log('Total Price:', totalPrice); 
-    
+             setLoading(true);
             // Construct the payload including invoice number
             const payload = {
                 farmerId: userId,
@@ -1664,12 +1668,16 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
             await sendSMS(farmerLanguage, farmerPhone, totalPrice, invoiceNumber);
             
             refreshCropForms();
+            setLoading(false);
     
             // Navigate to the ReportPage, passing registeredFarmerId and userId
             navigation.navigate('NewReport' as any, { userId, registeredFarmerId });
         } catch (error) {
             console.error('Error submitting crop data:', error);
             alert(t("Error.Failed to submit crop details. Please try again."));
+            setLoading(false);
+        }finally{
+            setLoading(false);
         }
     };
 
@@ -1836,16 +1844,19 @@ return (
             <CameraComponent
               onImagePicked={(image) => handleImagePick(image, 'A')}
               grade={'A'}
+              resetImage={resetImage}
               disabled={isGradeACameraEnabled}
             />
             <CameraComponent
               onImagePicked={(image) => handleImagePick(image, 'B')}
               grade={'B'}
+               resetImage={resetImage}
               disabled={isGradeBCameraEnabled}
             />
             <CameraComponent
               onImagePicked={(image) => handleImagePick(image, 'C')}
               grade={'C'}
+               resetImage={resetImage}
               disabled={isGradeCCameraEnabled}
             />
           </View>

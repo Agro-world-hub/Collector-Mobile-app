@@ -359,7 +359,7 @@ setCompletedData(sortByVarietyAndGrade(completedItems));
             <Text className="w-40 p-2 text-center text-white">{t("DailyTarget.Variety")}</Text>
             <Text className="w-32 p-2 text-center text-white">{t("DailyTarget.Grade")}</Text>
             <Text className="w-32 p-2 text-center text-white">{t("DailyTarget.Target")}</Text>
-            <Text className="w-32 p-2 text-center text-white">{selectedToggle === "Completed" ? t("DailyTarget.Completed") : t("DailyTarget.Todo()")}</Text>
+            <Text className="w-32 p-2 text-center text-white">{selectedToggle === "Completed" ? t("DailyTarget.Completedkg") : t("DailyTarget.Todo()")}</Text>
           </View>
   
           {loading ? (

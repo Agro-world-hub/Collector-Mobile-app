@@ -214,6 +214,7 @@
     "Grade":"Grade",
     "Target":"Target (kg)",
     "Todo()":"Todo (kg)",
+     "Completedkg":"Completed (kg)",
      "noCompletedTargets":"No Completed Target founds",
      "NoTodoItems":"No Todo Target founds"
   },

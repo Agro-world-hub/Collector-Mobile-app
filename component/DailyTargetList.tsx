@@ -158,6 +158,7 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
       const allData = response.data.data;
       const todoItems = allData.filter((item: TargetData) => item.todo > 0);
       const completedItems = allData.filter((item: TargetData) => item.todo === 0 && item.complete !==0);
+      console.log("completedItems",completedItems);
       console.log(allData);
 
       // Sort data by variety name and grade
@@ -356,7 +357,7 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
             <Text className="w-40 p-2 text-center text-white">{t("DailyTarget.Variety")}</Text>
             <Text className="w-32 p-2 text-center text-white">{t("DailyTarget.Grade")}</Text>
             <Text className="w-32 p-2 text-center text-white">{t("DailyTarget.Target")}</Text>
-            <Text className="w-32 p-2 text-center text-white">{t("DailyTarget.Todo()")}</Text>
+            <Text className="w-32 p-2 text-center text-white">{selectedToggle === "Completed" ? t("DailyTarget.Completedkg") : t("DailyTarget.Todo()")}</Text>
           </View>
   
           {/* Table Data */}
@@ -408,7 +409,7 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
                 <Text className="w-32 p-2 border-r border-gray-300 text-center">
                   {item.officerTarget}
                 </Text>
-                <Text className="w-32 p-2 text-center">{item.todo}</Text>
+                 <Text className="w-32 p-2 text-center"> {selectedToggle === 'Completed' ? item.complete : item.todo}</Text>
               </View>
             ))
           )}

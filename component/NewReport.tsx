@@ -675,7 +675,7 @@ const formatNumber = (value: number | string): string => {
         <Text className="text-xl font-bold ml-[25%]">Goods Received Note</Text>
       </View> */}
       <View className="flex-row items-center mb-4">
-  <TouchableOpacity onPress={() => navigation.navigate("Main" as any)}>
+  <TouchableOpacity onPress={() => navigation.goBack()}>
     <AntDesign name="left" size={24} color="#000" />
   </TouchableOpacity>
 

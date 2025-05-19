@@ -186,7 +186,8 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
   onImagePicked, 
   grade, 
   resetImage = false,
-  disabled = true
+  disabled = true,
+  
 }) => {
   const [image, setImage] = useState<any>(null);
 
