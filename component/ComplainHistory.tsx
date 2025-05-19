@@ -160,7 +160,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
         ) : (
 
       <ScrollView
-        className="p-4 flex-1"
+        className="p-4 flex-1 mb-14"
         contentContainerStyle={{
           paddingBottom: hp(4),
           paddingHorizontal: wp(2),
