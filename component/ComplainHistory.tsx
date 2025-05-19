@@ -181,7 +181,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
                   {t("ReportHistory.RefNo")} : {complain.refNo}
                 </Text>
             <Text className="self-start mb-4 text-[#6E6E6E]">
-            {t("ReportHistory.Sent")} {" "}
+            {t("ReportHistory.Sent")} {""}
             {formatDateTime(complain.createdAt)}
             </Text>
 
