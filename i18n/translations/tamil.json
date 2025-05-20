@@ -167,7 +167,10 @@
 "This phone number is already registered in the system.": "This phone number is already registered in the system.",
 "NIC Number must be 9 digits followed by 'V' or 12 digits.": "NIC Number must be 9 digits followed by 'V' or 12 digits.",
 "Email is required": "Email is required",
-"Invalid email address. Please enter a valid email format (e.g. example@domain.com).": "Invalid email address. Please enter a valid email format (e.g. example@domain.com)."
+"Invalid email address. Please enter a valid email format (e.g. example@domain.com).": "Invalid email address. Please enter a valid email format (e.g. example@domain.com).",
+"Cannot add negative values for loadIn.": "Cannot add negative values for loadIn.",
+"Phone numbers cannot be the same.": "Phone numbers cannot be the same.",
+"InvalidPhoneNumber":"Invalid Phone Number"
   },
   "EngProfile":{
     "LNG": "en",
@@ -211,6 +214,7 @@
     "Grade":"Grade",
     "Target":"Target (kg)",
     "Todo()":"Todo (kg)",
+     "Completedkg":"Completed (kg)",
      "noCompletedTargets":"No Completed Target founds",
      "NoTodoItems":"No Todo Target founds"
   },
@@ -518,7 +522,8 @@
     "Search":"Search By NIC Number, Name",
     "All":"All",
     "TotalRs":"Total: Rs.",
-    "ID":"ID"
+    "ID":"ID",
+    "Loading": "Loading..."
   },
   "OfficerSummary":{
     "LNG": "en",
@@ -756,7 +761,7 @@
   "NewReport":{
     "LNG": "en",
     "Goods Received Note":"Goods Received Note",
-    "GRN No":"GRN No",
+    "GRN No":"GRN No:",
     "Date":"Date:",
     "Supplier Details":"Supplier Details:",
     "Name":"Name:",

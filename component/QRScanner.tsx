@@ -281,6 +281,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
         setIsUnsuccessfulModalVisible(false);
         setErrorMessage(null);
         navigation.navigate('SearchFarmer' as any); // Navigate to SearchFarmer
+        console.log("hit")
       }, 5000);
     }
   };
@@ -401,6 +402,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
               onPress={() => {
                 setIsUnsuccessfulModalVisible(false);
                 setErrorMessage(null); // Clear error message when closing
+                navigation.navigate('SearchFarmer' as any);
               }}
             >
               <Text className="text-white">{t("QRScanner.Close")}</Text>

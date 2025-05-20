@@ -223,7 +223,7 @@
 
 
 import React, { useRef, useState, useEffect } from "react";
-import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
+import { View, Text, Image, TouchableOpacity, Alert, Platform } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AntDesign from "react-native-vector-icons/AntDesign";
@@ -362,7 +362,7 @@ const downloadQRCode = async () => {
       return;
     }
 
-    const { status } = await MediaLibrary.requestPermissionsAsync();
+const { status } = await MediaLibrary.requestPermissionsAsync();
     if (status !== "granted") {
       Alert.alert("Permission Denied", "Gallery access is required to save QR Code.");
       return;
@@ -383,6 +383,54 @@ const downloadQRCode = async () => {
     Alert.alert(t("Error.error"), t("Error.failedSaveQRCode"));
   }
 };
+// const downloadQRCode = async () => {
+//   try {
+//     if (!QR) {
+//       Alert.alert(t("Error.error"), t("Error.noQRCodeAvailable"));
+//       return;
+//     }
+
+//     const date = new Date().toISOString().slice(0, 10);
+//     const fileName = `QRCode_${date}.png`; 
+//     let tempFilePath = `${FileSystem.documentDirectory}${fileName}`;
+//     const response = await FileSystem.downloadAsync(QR, tempFilePath);
+
+//     if (Platform.OS === 'android') {
+//       const tempFilePathAndroid = `${FileSystem.cacheDirectory}${fileName}`;
+//       await FileSystem.copyAsync({
+//         from: response.uri,
+//         to: tempFilePathAndroid,
+//       });
+
+//       // Use the sharing API - this works in Expo Go
+//       if (await Sharing.isAvailableAsync()) {
+//         await Sharing.shareAsync(tempFilePathAndroid, {
+//           dialogTitle: ("Download QR Code"),
+//           mimeType: 'image/png',
+//         });
+
+//       } else {
+//         Alert.alert(t("Error.error"), t("Error.failedSaveQRCode"));
+//       }
+//     } else if (Platform.OS === 'ios') {
+//       // iOS approach: Use sharing dialog to let user save to Files app
+//       if (await Sharing.isAvailableAsync()) {
+//         await Sharing.shareAsync(response.uri, {
+//           dialogTitle: ("Download QR Code"),
+//           mimeType: 'image/png',
+//         });
+//       } else {
+//         Alert.alert(t("Error.error"), t("Error.failedSaveQRCode"));
+//       }
+//     }
+
+//     // Log success - tempFilePath is now accessible here
+//     console.log(`QR Code prepared for sharing: ${tempFilePath}`);
+//   } catch (error) {
+//     console.error("Download error:", error);
+//     Alert.alert(t("Error.error"), t("Error.failedSaveQRCode"));
+//   }
+// };
 
   
 const shareQRCode = async () => {

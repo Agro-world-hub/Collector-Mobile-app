@@ -12,6 +12,7 @@ import {  Platform } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTranslation } from "react-i18next";
+import LottieView from 'lottie-react-native';
 
 
 
@@ -31,6 +32,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [generatedReportId, setGeneratedReportId] = useState<string | null>(null);
+  const [generateAgain, setGenerateAgain] = useState(false);
   const { t } = useTranslation();
   
   const { officerId,collectionOfficerId } = route.params;
@@ -45,8 +47,11 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
     return colomboTime;
   };
   
+const reportCounters: { [key: string]: number } = {}; 
 
   const handleGenerate = async () => {
+    setReportGenerated(false);
+    setGenerateAgain(true)
     if (!startDate || !endDate) {
       Alert.alert(t("Error.error"), t("Error.Please select both start and end dates."));
       return;
@@ -65,12 +70,28 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
     if (fileUri) {
       const reportIdMatch = fileUri.match(/report_(.+)\.pdf/);
       const reportId = reportIdMatch ? reportIdMatch[1] : null;
-  
-      setGeneratedReportId(reportId); // Store the report ID to display in the UI
+
+      const generateReportId = (officerId: string): string => {
+  // Initialize the counter for the officer if not already present
+  if (!reportCounters[officerId]) {
+    reportCounters[officerId] = 1;
+  } else {
+    reportCounters[officerId] += 1; // Increment the counter
+  }
+
+  // Format the report ID
+  const paddedCount = reportCounters[officerId].toString().padStart(3, '0'); // Pads the count to 3 digits
+  return `${officerId}M${paddedCount}`;
+};
+
+  const reportIdno = generateReportId(officerId);
+      setGeneratedReportId(reportIdno); // Store the report ID to display in the UI
       setReportGenerated(true);
-      Alert.alert(t("Error.Success"), t("Error.PDF Generated Successfully"));
+      setGenerateAgain(false)
+      // Alert.alert(t("Error.Success"), t("Error.PDF Generated Successfully"));
     } else {
       Alert.alert(t("Error.error"), t("Error.Failed to generate PDF"));
+      setGenerateAgain(false)
     }
   };
   
@@ -176,29 +197,29 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
         // Use the sharing API - this works in Expo Go
         if (await Sharing.isAvailableAsync()) {
           await Sharing.shareAsync(tempFilePath, {
-            dialogTitle: t("Error.Save PDF"),
+            dialogTitle: t("Save PDF"),
             mimeType: 'application/pdf',
             UTI: 'com.adobe.pdf'
           });
-          Alert.alert(
-            t("Error.PDF Ready"), 
-            t("Error.To save to Downloads, select 'Save to device' or similar option from the share menu"),
-            [{ text: "OK" }]
-          );
+          // Alert.alert(
+          //   t("Error.PDF Ready"), 
+          //   t("Error.To save to Downloads, select 'Save to device' or similar option from the share menu"),
+          //   [{ text: "OK" }]
+          // );
         } else {
-          Alert.alert(t("Error.error"), t("Error.Sharing is not available on this device"));
+          Alert.alert(t("Error.error"), t("Error.Failed to save PDF to Downloads folder."));
         }
       } else if (Platform.OS === 'ios') {
         // iOS approach: Use sharing dialog to let user save to Files app
         if (await Sharing.isAvailableAsync()) {
           await Sharing.shareAsync(tempFilePath, { // Using tempFilePath which is uri for iOS
-            dialogTitle: t("Error.Save PDF"),
+            dialogTitle: t("Save PDF"),
             mimeType: 'application/pdf',
             UTI: 'com.adobe.pdf'
           });
-          Alert.alert(t("Error.Info"), t("Error.Use the 'Save to Files' option to save to Downloads"));
+          // Alert.alert(t("Error.Info"), t("Error.Use the 'Save to Files' option to save to Downloads"));
         } else {
-          Alert.alert(t("Error.error"), t("Error.Sharing is not available on this device"));
+          Alert.alert(t("Error.error"), t("Error.Failed to save PDF to Downloads folder."));
         }
       }
       
@@ -417,14 +438,35 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
 </View>
 
         {/* Buttons */}
-        <View className="flex-row justify-between items-center">
-          <TouchableOpacity onPress={handleReset} className="border border-gray-300 px-6 py-3 rounded-lg">
+        {/* <View className="flex-row justify-center gap-4 items-center  ">
+          <TouchableOpacity onPress={handleReset} className="border border-gray-300  px-6 py-3 rounded-lg">
             <Text className="text-gray-700">{t("ReportGenerator.Reset")}</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleGenerate} className="bg-[#2AAD7A] px-6 py-3 rounded-lg">
+          <TouchableOpacity onPress={handleGenerate} className="bg-[#2AAD7A]  px-6 py-3 rounded-lg">
             <Text className="text-white font-semibold">{t("ReportGenerator.Generate")}</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
+
+        <View className="flex-row justify-center gap-2 items-center">
+  <TouchableOpacity 
+    onPress={handleReset} 
+    className="border border-gray-300 py-3 rounded-lg w-40 items-center"
+  >
+    <Text className="text-gray-700 text-center" numberOfLines={1} ellipsizeMode="tail">
+      {t("ReportGenerator.Reset")}
+    </Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity 
+    onPress={handleGenerate} 
+    className="bg-[#2AAD7A] py-3 rounded-lg w-40 items-center"
+  >
+    <Text className="text-white font-semibold text-center" numberOfLines={1} ellipsizeMode="tail">
+      {t("ReportGenerator.Generate")}
+    </Text>
+  </TouchableOpacity>
+</View>
+
           <View style={{ borderBottomWidth: 1, borderColor: "#ADADAD", marginVertical: 10 , marginTop:30 , marginBottom:40 }} />
       </View>
 
@@ -438,7 +480,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
   />
 </View>
 
-          <Text className="text-lg font-semibold text-[#494949]">{t("ReportGenerator.IDNO")} {generatedReportId}</Text>
+          {/* <Text className="text-lg font-semibold text-[#494949]">{t("ReportGenerator.IDNO")} {generatedReportId}</Text> */}
           <Text className="text-sm text-gray-500 italic mb-6">{t("ReportGenerator.Report has been generated")}</Text>
 
           {/* Download and Share Buttons */}
@@ -463,10 +505,21 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ navigation,route }) =
           </View>
         </View>
       ) : (
-        <View className="items-center justify-center flex-1">
-          <Image source={require('../../assets/images/empty.webp')} className="w-20 h-20 mb-4" resizeMode="contain" />
-          <Text className="text-gray-500 italic">{t("ReportGenerator.Time Duration first")}</Text>
-        </View>
+        generateAgain ? (
+          <View className="items-center justify-center flex-1">
+                 <LottieView
+                            source={require('../../assets/lottie/collector.json')}
+                            autoPlay
+                            loop
+                            style={{ width: 250, height: 250 }}
+                          />
+          </View>
+        ) : (
+          <View className="items-center justify-center flex-1">
+            <Image source={require('../../assets/images/empty.webp')} className="w-20 h-20 mb-4" resizeMode="contain" />
+            <Text className="text-gray-500 italic">{t("ReportGenerator.Time Duration first")}</Text>
+          </View>
+        )
       )}
 
     </ScrollView>

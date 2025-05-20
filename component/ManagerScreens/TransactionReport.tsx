@@ -16,8 +16,6 @@ import { useTranslation } from "react-i18next";
 import { AntDesign } from '@expo/vector-icons';
 import { File, Paths, Directory } from 'expo-file-system/next';
 import { Platform } from 'react-native';
-import * as IntentLauncher from 'expo-intent-launcher';
-import { documentDirectory } from 'expo-file-system';
 
 
 
@@ -89,7 +87,8 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
     accountHolderName,
     bankName,
     branchName,
-    selectedDate
+    selectedDate,
+    selectedTime
   } = route.params;
   
   console.log('Farmer Report:', route.params);
@@ -99,7 +98,8 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
   const [isLoading, setIsLoading] = useState<boolean>(false);
    const [selectedLanguage, setSelectedLanguage] = useState("en");
     console.log(";;;;;;;;",selectedLanguage)
-
+const formattedDate = selectedDate.replace(/-/g, "/");
+console.log(formattedDate); 
   const fetchSelectedLanguage = async () => {
     try {
       const lang = await AsyncStorage.getItem("@user_language");
@@ -482,7 +482,7 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
             <strong>${t("NewReport.GRN No")}</strong> ${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}
           </div>
           <div class="header-item">
-            <strong>${t("NewReport.Date")}</strong> ${selectedDate}
+            <strong>${t("NewReport.Date")}</strong> ${formattedDate} ${selectedTime}
           </div>
         </div>
         
@@ -745,7 +745,7 @@ const handleDownloadPDF = async () => {
   return (
     <ScrollView className="flex-1 bg-white p-4">
       <View className="flex-row items-center mb-4">
-        <TouchableOpacity onPress={() => navigation.navigate("Main" as any)}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
         <Text className="text-xl font-bold text-center w-full">{t("NewReport.Goods Received Note")}</Text>
@@ -754,15 +754,15 @@ const handleDownloadPDF = async () => {
       {/* GRN Header */}
       <View className="mb-4">
         <Text className="text-sm font-bold">{t("NewReport.GRN No")}: {crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}</Text>
-        <Text className="text-sm">{t("NewReport.Date")} {selectedDate}</Text>
+        <Text className="text-sm">{t("NewReport.Date")} {formattedDate} {selectedTime}</Text>
       </View>
 
       {/* Supplier Details */}
       <View className="mb-4">
         <Text className="font-bold text-sm mb-1">{t("NewReport.Supplier Details")}</Text>
         <View className="border border-gray-300 rounded-lg p-2">
-          <Text><Text className="font-bold">{t("NewReport.Name")}</Text> {details?.firstName} {details?.lastName}</Text>
-          <Text><Text className="font-bold">{t("NewReport.Phone")}</Text> {details?.phoneNumber}</Text>
+          <Text><Text className="">{t("NewReport.Name")}</Text> {details?.firstName} {details?.lastName}</Text>
+          <Text><Text className="">{t("NewReport.Phone")}</Text> {details?.phoneNumber}</Text>
         </View>
       </View>
 
@@ -770,8 +770,8 @@ const handleDownloadPDF = async () => {
       <View className="mb-4">
         <Text className="font-bold text-sm mb-1">{t("NewReport.Received By")}</Text>
         <View className="border border-gray-300 rounded-lg p-2">
-          <Text><Text className="font-bold">{t("NewReport.Company Name")}</Text> {details?.companyNameEnglish || ''}</Text>
-          <Text><Text className="font-bold">{t("NewReport.Centre")}</Text> {details?.collectionCenterName || 'Collection Center'}</Text>
+          <Text><Text className="">{t("NewReport.Company Name")}</Text> {details?.companyNameEnglish || ''}</Text>
+          <Text><Text className="">{t("NewReport.Centre")}</Text> {details?.collectionCenterName || 'Collection Center'}</Text>
         </View>
       </View>
 
@@ -806,7 +806,7 @@ const handleDownloadPDF = async () => {
           {formatNumber(crop.quantity)}
         </Text>
         <Text className="w-24 p-2 border-b border-gray-300 text-right">
-          {formatNumberWithCommas(totalSum)}
+          {formatNumberWithCommas(crop.subTotal)}
         </Text>
       </View>
     ))}

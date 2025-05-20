@@ -46,6 +46,8 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     regcode: "",
     jobRole: "",
     nicNumber: "",
+    phoneCode01: "",
+    phoneCode02: "",
     phoneNumber: "",
     phoneNumber2: "",
     houseNumber: "",
@@ -64,6 +66,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     collectionCenterName:""
   });
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
+
   const [newPhoneNumber2, setNewPhoneNumber2] = useState("");
 
   const [showUpdateButton, setShowUpdateButton] = useState(false);
@@ -100,9 +103,29 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
   useEffect(() => {
     fetchSelectedLanguage(); 
   }, []);
-
-
-
+const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
+  console.log("Checking phone number:", newPhoneNumber, phoneCode1);
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/collection-manager/driver/check-phone/${phoneCode1}${newPhoneNumber}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+      
+      if (response.data.exists) {
+        setErrorMessage(t("Error.This phone number is already registered in the system."));
+      } else {
+        setErrorMessage("");
+      }
+    } catch (error) {
+      console.error("Error checking phone number:", error);
+    } finally {
+    }
+  };
   const handlePhoneNumberChange = (text: string) => {
     setNewPhoneNumber(text);
 
@@ -112,6 +135,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
       setErrorMessage(t("Error.Phone number cannot exceed 9 digits."));
     } else {
       setErrorMessage("");
+      checkPhoneExists(text, profileData.phoneCode01);
     }
     toggleUpdateButton(text, newPhoneNumber);
   };
@@ -125,10 +149,34 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
       setErrorMessage2(t("Error.Phone number cannot exceed 9 digits."));
     } else {
       setErrorMessage2("");
+      checkPhone2Exists(text, profileData.phoneCode02);
     }
     toggleUpdateButton(newPhoneNumber2, text);
   };
-  
+
+  const checkPhone2Exists = async (newPhoneNumber2: string, phoneCode02: string) => {
+
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/collection-manager/driver/check-phone/${phoneCode02}${newPhoneNumber2}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+      
+      if (response.data.exists) {
+        setErrorMessage2(t("Error.This phone number is already registered in the system."));
+      } else {
+        setErrorMessage2("");
+      }
+    } catch (error) {
+      console.error("Error checking phone number 2:", error);
+    } finally {
+    }
+  };
   const toggleUpdateButton = (phone1: string, phone2: string) => {
     setShowUpdateButton(
       (phone1 !== "" && phone1 !== profileData.phoneNumber) ||
@@ -180,6 +228,8 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
         streetName: data.streetName,
         city: data.city,
         phoneNumber: data.phoneNumber01,
+        phoneCode01: data.phoneCode01,
+        phoneCode02: data.phoneCode02,
         phoneNumber2: data.phoneNumber02,
         province:data.province,
         district:data.district,
@@ -233,6 +283,12 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
         return;
       }else if (newPhoneNumber === newPhoneNumber2) {
         Alert.alert(t("Error.error"), t("Error.Phone numbers cannot be the same."));
+        return;
+      }else if (errorMessage) {
+        Alert.alert(t("Error.error"), t("Error.Phone Number 1 already exists"));
+        return;
+      }else if (errorMessage2) {
+        Alert.alert(t("Error.error"), t("Error.Phone Number 2 already exists"));
         return;
       }
       // Always send both phone numbers
@@ -1192,7 +1248,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               placeholder="7XXXXXXXX"
               keyboardType="numeric"
               onChangeText={handlePhoneNumberChange}
-              maxLength={9}
+              maxLength={12}
             />
             {errorMessage && (
               <Text className="text-red-500">{errorMessage}</Text>
@@ -1207,7 +1263,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               placeholder="7XXXXXXXX"
               keyboardType="numeric"
               onChangeText={handlePhoneNumber2Change}
-              maxLength={9}
+              maxLength={12}
             />
             {errorMessage2 && (
               <Text className="text-red-500">{errorMessage2}</Text>

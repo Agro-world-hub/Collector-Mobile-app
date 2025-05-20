@@ -628,7 +628,7 @@ setCompletedData(sortByVarietyAndGrade(completedItems));
             <Text className="w-32 p-2 text-center text-white">{t("DailyTarget.Target")}</Text>
             {/* Dynamic Column Name */}
             <Text className="w-32 p-2 text-center text-white">
-              {selectedToggle === 'ToDo' ? t("DailyTarget.Todo") : t("DailyTarget.Completed")}
+              {selectedToggle === 'ToDo' ? t("DailyTarget.Todo()") : t("DailyTarget.Completedkg")}
             </Text>
           </View>
   

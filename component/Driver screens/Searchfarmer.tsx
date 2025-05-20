@@ -218,8 +218,20 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
     };
   
     const handleNicChange = (text: string) => {
+      setFarmers(null)
       const normalizedText = text.replace(/[vV]/g, "V");
       setNICnumber(normalizedText);
+      if (normalizedText.trim().length === 0) {
+    setEre(""); // Clear error message when NIC is empty
+  } else {
+    // Validate NIC and set error if needed
+    const regex = /^(\d{12}|\d{9}V|\d{9}X|\d{9}v|\d{9}x)$/;
+    if (!regex.test(normalizedText)) {
+      setEre("");
+    } else {
+      setEre(""); // Clear error if NIC is valid
+    }
+  }
       // validateNic(normalizedText);
       // Reset found farmer when NIC changes
       setFoundFarmer(null);
@@ -228,7 +240,10 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
   
     const handleSearch = async () => {
   Keyboard.dismiss();
-  if (NICnumber.trim().length === 0) return;
+  if (NICnumber.trim().length === 0) {
+    setEre("");  // Clear error message
+    return;
+  }
   
   // Validate directly within the function
   const regex = /^(\d{12}|\d{9}V|\d{9}X|\d{9}v|\d{9}x)$/;
@@ -314,6 +329,8 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
           setNoResults(false);
           setEre("");
           setNewQr(false);
+          setFarmers(null)
+          setFoundFarmer(null);
         }, [])
       );
   
@@ -333,6 +350,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
+          className="flex-1 bg-white"
         >
           <View
             className="flex-1 bg-white"
@@ -369,7 +387,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
               
                */}
              {/* Only show this search bar with icon when searching (no results found yet) */}
-{(!foundFarmer && !newQr && !noResults) && (
+
   <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2 bg-white">
     <TextInput
       value={NICnumber}
@@ -377,16 +395,20 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
       placeholder={t("SearchFarmer.EnterNIC").length > 20 ? t("SearchFarmer.EnterNIC").slice(0, 28) + "..." : t("SearchFarmer.EnterNIC")}
       className="flex-1 text-center"
       maxLength={12}
-      style={{ color: "#000" }}
+       style={{
+      color: "#000",
+      textAlign: 'center', // Ensures the text is centered
+      paddingRight: NICnumber.length === 0 ? 0 : 20, // Add padding when text is empty to ensure centering
+    }}
     />
     <TouchableOpacity className="ml-2" onPress={handleSearch}>
       <FontAwesome name="search" size={24} color="green" />
     </TouchableOpacity>
   </View>
-)}
+
 
 {/* Show only the value without search icon when any results are found (either foundFarmer or newQr) */}
-{(foundFarmer || (newQr || farmers || noResults)) && (
+{/* {(foundFarmer || (newQr || farmers || noResults)) && (
   <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2 bg-white">
     <TextInput
       value={NICnumber}
@@ -395,7 +417,7 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
       style={{ color: "#000" }}
     />
   </View>
-)}
+)} */}
               {ere ? (
                 <Text className="text-red-500 mt-2 justify-center text-center">
                   {ere}
@@ -427,7 +449,6 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
                 <View className="mt-6 items-center">
                   
                     <Text className="text-center text-lg  mt-[20%]">
-                      {/* {t("SearchFarmer.ResultsFound")} */}
                      {t("SearchFarmer.Result Found")} 
                     </Text>
                     <View className="w-full bg-white border border-gray-200 rounded-lg p-4 mt-4">

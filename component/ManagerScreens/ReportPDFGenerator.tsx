@@ -141,6 +141,7 @@ export const handleGeneratePDF = async (
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
+            margin-top: 20px;
           }
           .header-item {
             width: 48%;
@@ -182,7 +183,6 @@ export const handleGeneratePDF = async (
       <body>
         <div class="container">
           <h1>Collection Officer Report</h1>
-          <p style="text-align: center; font-weight: bold;">ID NO : ${reportId}</p>
           
           <div class="header">
             <div class="header-item"><span>From</span><span>${fromDate}</span></div>

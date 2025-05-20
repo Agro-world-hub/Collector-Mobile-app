@@ -143,7 +143,13 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
 
       {loading ? (
           <View className="flex-1 items-center justify-center">
-            <ActivityIndicator size="large" color="#26D041" />
+            {/* <ActivityIndicator size="large" color="#26D041" /> */}
+             <LottieView
+                          source={require('../assets/lottie/collector.json')}
+                          autoPlay
+                          loop
+                          style={{ width: 300, height: 300 }}
+                        />
           </View>
         ) : complains.length === 0 ? (
           <View className="flex-1 items-center justify-center">
@@ -160,7 +166,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
         ) : (
 
       <ScrollView
-        className="p-4 flex-1"
+        className="p-4 flex-1 mb-14"
         contentContainerStyle={{
           paddingBottom: hp(4),
           paddingHorizontal: wp(2),
@@ -175,7 +181,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
                   {t("ReportHistory.RefNo")} : {complain.refNo}
                 </Text>
             <Text className="self-start mb-4 text-[#6E6E6E]">
-            {t("ReportHistory.Sent")} {" "}
+            {t("ReportHistory.Sent")} {""}
             {formatDateTime(complain.createdAt)}
             </Text>
 

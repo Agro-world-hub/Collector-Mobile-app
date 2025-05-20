@@ -167,7 +167,10 @@
 "This phone number is already registered in the system.": "මෙම ජාතික දුරකථන අංකය දැනටමත් පද්ධතිය තුළ පවතී.",
 "NIC Number must be 9 digits followed by 'V' or 12 digits.": "ජාතික හැඳුනුම්පත් අංකය ඉලක්කම් 9 කින් පසුව 'V' හෝ ඉලක්කම් 12 කින් සමන්විත විය යුතුය.",
 "Email is required": "විද්‍යුත් තැපෑල අවශ්‍යයි",
-"Invalid email address. Please enter a valid email format (e.g. example@domain.com).": "අවලංගු විද්‍යුත් තැපැල් ලිපිනයකි. කරුණාකර වලංගු විද්‍යුත් තැපැල් ආකෘතියක් ඇතුළත් කරන්න (උදා: example@domain.com)."
+"Invalid email address. Please enter a valid email format (e.g. example@domain.com).": "අවලංගු විද්‍යුත් තැපැල් ලිපිනයකි. කරුණාකර වලංගු විද්‍යුත් තැපැල් ආකෘතියක් ඇතුළත් කරන්න (උදා: example@domain.com).",
+"Cannot add negative values for load.": "භාරය සඳහා සෘණ අගයන් එකතු කළ නොහැක (kg).",
+"Phone numbers cannot be the same.": "දුරකථන අංක දෙකම එකම විය නොහැක.",
+"InvalidPhoneNumber":"දුරකථන අංකය වලංගු නොවේ"
   },
 "EngProfile":{
     "LNG": "si",
@@ -205,12 +208,13 @@
     "DailyTarget":"දෛනික ඉලක්කය",
     "MyTarget":"මගේ ඉලක්කය",
     "Todo":"කරන්න",
-    "Completed":"සම්පූර්ණයි",
+    "Completed":"සම්පූර්ණ",
     "No":"අංකය",
     "Variety":"විවිධ",
     "Grade":"ශ්‍රේණිය",
     "Target":"ඉලක්කය (kg)",
     "Todo()":"කරන්න (kg)",
+    "Completedkg":"සම්පූර්ණ (kg)",
       "noCompletedTargets":"සම්පූර්ණ කළ ඉලක්ක හමු නොවීය",
      "NoTodoItems":" ඉලක්ක හමු නොවීය"
   },
@@ -519,7 +523,8 @@
     "Search":"ජාතික හැඳුනුම්පත් අංකය, නම අනුව සොයන්න",
     "All":"සියල්ල",
     "TotalRs":"මුළු මුදල: රු.",
-    "ID":"අංකය"
+    "ID":"අංකය",
+    "Loading":"පූරණය වෙමින්..."
   },
   "OfficerSummary":{
     "LNG": "si",
