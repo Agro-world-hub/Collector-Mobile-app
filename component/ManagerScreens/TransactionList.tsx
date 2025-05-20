@@ -162,6 +162,16 @@ const TransactionList: React.FC<TransactionListProps> = ({
     }
   }, [selectedDate]);
 
+    useFocusEffect(
+      React.useCallback(() => {
+        const fetchData = async () => {
+          fetchTransactions(getCurrentDate());
+          setSearchQuery("");
+        };
+        fetchData();
+      }, [])
+    );
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}

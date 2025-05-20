@@ -20,6 +20,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import LottieView from "lottie-react-native";
 import { Platform } from "react-native";
+import { useFocusEffect } from "expo-router";
+import { set } from "lodash";
 
 type ManagerTransactionsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -193,6 +195,17 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({
   useEffect(() => {
     fetchTransactions(getCurrentDate());
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        await fetchSelectedLanguage();
+        fetchTransactions(getCurrentDate());
+        setSearchQuery("");
+      };
+      fetchData();
+    }, [])
+  );
 
   useEffect(() => {
     if (selectedDate) {
