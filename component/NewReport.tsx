@@ -449,7 +449,7 @@ const formatNumber = (value: number | string): string => {
             <strong>${t("NewReport.GRN No")}</strong> ${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}
           </div>
           <div class="header-item">
-            <strong>${t("NewReport.Date")}</strong> ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+            <strong>${t("NewReport.Date")}</strong> ${new Date().toLocaleDateString("en-GB").split("/").reverse().join("/")} ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true }).toUpperCase()}
           </div>
         </div>
         
@@ -675,7 +675,7 @@ const formatNumber = (value: number | string): string => {
         <Text className="text-xl font-bold ml-[25%]">Goods Received Note</Text>
       </View> */}
       <View className="flex-row items-center mb-4">
-  <TouchableOpacity onPress={() => navigation.navigate("Main" as any)}>
+  <TouchableOpacity onPress={() => navigation.goBack()}>
     <AntDesign name="left" size={24} color="#000" />
   </TouchableOpacity>
 
@@ -689,15 +689,15 @@ const formatNumber = (value: number | string): string => {
       {/* GRN Header */}
       <View className="mb-4">
         <Text  className="text-sm font-bold">{t("NewReport.GRN No")} {crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}</Text>
-        <Text className="text-sm">{t("NewReport.Date")}  {new Date().toLocaleDateString()} {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Text>
+        <Text className="text-sm">{t("NewReport.Date")}  {new Date().toLocaleDateString("en-GB").split("/").reverse().join("/")} {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true }).toUpperCase()}</Text>
       </View>
 
       {/* Supplier Details */}
       <View className="mb-4">
         <Text className="font-bold text-sm mb-1">{t("NewReport.Supplier Details")}</Text>
         <View className="border border-gray-300 rounded-lg p-2">
-          <Text><Text className="font-bold">{t("NewReport.Name")}</Text> {details?.firstName} {details?.lastName}</Text>
-          <Text><Text className="font-bold">{t("NewReport.Phone")}</Text> {details?.phoneNumber}</Text>
+          <Text><Text className="">{t("NewReport.Name")}</Text> {details?.firstName} {details?.lastName}</Text>
+          <Text><Text className="">{t("NewReport.Phone")}</Text> {details?.phoneNumber}</Text>
         </View>
       </View>
 
@@ -705,8 +705,8 @@ const formatNumber = (value: number | string): string => {
       <View className="mb-4">
         <Text className="font-bold text-sm mb-1">{t("NewReport.Received By")}</Text>
         <View className="border border-gray-300 rounded-lg p-2">
-          <Text><Text className="font-bold">{t("NewReport.Company Name")}</Text> {details?.companyNameEnglish || ''}</Text>
-          <Text><Text className="font-bold">{t("NewReport.Centre")}</Text> {details?.collectionCenterName || 'Collection Center'}</Text>
+          <Text><Text className="">{t("NewReport.Company Name")}</Text> {details?.companyNameEnglish || ''}</Text>
+          <Text><Text className="">{t("NewReport.Centre")}</Text> {details?.collectionCenterName || 'Collection Center'}</Text>
         </View>
       </View>
 

@@ -496,6 +496,12 @@ const RegisterFarmer: React.FC<UnregisteredFarmerDetailsProps> = ({
         Alert.alert(t("Error.error"), t("Error.This Phone Number and NIC already exist."));
         setLoading(false);
         return;
+      }else if (phoneError){
+        Alert.alert(t("Error.error"), t("UnregisteredFarmerDetails.InvalidPhoneLength"))
+        return;
+      }else if(NICError){
+        Alert.alert(t("Error.error"), t("Error.NIC number is invalid."))
+        return;
       }
 
       const apiUrl = "https://api.getshoutout.com/otpservice/send";
@@ -594,6 +600,8 @@ If correct, share OTP only with the ${companyName} representative who contacts y
     } catch (error) {
       Alert.alert(t("Error.error"), t("Error.otpSendFailed"));
       setLoading(false);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -698,39 +706,68 @@ If correct, share OTP only with the ${companyName} representative who contacts y
             placeholder={t("UnregisteredFarmerDetails.NIC")}
             className={`border ${NICError ? 'border-red-500' : 'border-gray-300'} p-3 rounded-lg`}
             value={NICnumber}
+            // onChangeText={(text) => {
+            //   setNICnumber(text);
+              
+            //   // Clear error if empty
+            //   if (!text) {
+            //     setNICError('');
+            //     return;
+            //   }
+              
+            //   // Allow digits and V/v at the end
+            //   const isValidCharacters = /^(\d+|[\d]+[vV]?)$/.test(text);
+            //   if (!isValidCharacters) {
+            //     setNICError(t("Error.NIC number is invalid."));
+            //     return;
+            //   }
+              
+            //   // Show error until 9 digits are entered
+            //   if (text.length < 9) {
+            //     setNICError(t("Error.NIC number is invalid."));
+            //     return;
+            //   }
+              
+            //   // Check valid formats: 12 digits OR 9 digits + V/v
+            //   const is12Digits = /^\d{12}$/.test(text);
+            //   const is9DigitsWithV = /^\d{9}[vV]$/.test(text);
+              
+            //   if (is12Digits || is9DigitsWithV) {
+            //     setNICError(''); // Valid format
+            //   } else {
+            //     setNICError(t("Error.NIC number is invalid."));
+            //   }
+            // }}
             onChangeText={(text) => {
-              setNICnumber(text);
-              
-              // Clear error if empty
-              if (!text) {
-                setNICError('');
-                return;
-              }
-              
-              // Allow digits and V/v at the end
-              const isValidCharacters = /^(\d+|[\d]+[vV]?)$/.test(text);
-              if (!isValidCharacters) {
-                setNICError(t("UnregisteredFarmerDetails.InvalidNIC"));
-                return;
-              }
-              
-              // Show error until 9 digits are entered
-              if (text.length < 9) {
-                setNICError(t("UnregisteredFarmerDetails.InvalidNIC"));
-                return;
-              }
-              
-              // Check valid formats: 12 digits OR 9 digits + V/v
-              const is12Digits = /^\d{12}$/.test(text);
-              const is9DigitsWithV = /^\d{9}[vV]$/.test(text);
-              
-              if (is12Digits || is9DigitsWithV) {
-                setNICError(''); // Valid format
-              } else {
-                setNICError(t("UnregisteredFarmerDetails.InvalidNIC"));
-              }
-            }}
-            maxLength={12} // This limits input to maximum 12 characters
+    let updatedText = text;
+    if (updatedText.endsWith('v') || updatedText.endsWith('V')) {
+      updatedText = updatedText.slice(0, -1) + 'V';
+    }
+    setNICnumber(updatedText);
+    
+    if (!updatedText) {
+      setNICError('');
+      return;
+    }
+    const isValidCharacters = /^(\d+|[\d]+[vV]?)$/.test(updatedText);
+    if (!isValidCharacters) {
+      setNICError(t("Error.NIC number is invalid."));
+      return;
+    }
+    if (updatedText.length < 9) {
+      setNICError(t("Error.NIC number is invalid."));
+      return;
+    }
+    const is12Digits = /^\d{12}$/.test(updatedText);
+    const is9DigitsWithV = /^\d{9}[vV]$/.test(updatedText);
+
+    if (is12Digits || is9DigitsWithV) {
+      setNICError(''); // Valid format
+    } else {
+      setNICError(t("Error.NIC number is invalid."));
+    }
+  }}
+            maxLength={12} 
           />
           {NICError ? (
             <Text className="text-red-500 text-sm mt-1">{NICError}</Text>

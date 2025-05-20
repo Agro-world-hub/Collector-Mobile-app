@@ -8,6 +8,8 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {environment }from '@/environment/environment';
 import { useTranslation } from "react-i18next";
+import { navigate } from 'expo-router/build/global-state/routing';
+import { ScrollView } from 'react-native-gesture-handler';
 
 // Define the navigation prop type
 type RecieveTargetBetweenOfficersScreenNavigationProps = StackNavigationProp<RootStackParamList, 'RecieveTargetBetweenOfficers'>;
@@ -40,6 +42,7 @@ interface Officer {
 
 const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenProps> = ({ navigation, route }) => {
   const [assignee, setAssignee] = useState('');
+  console.log('Assignee:', assignee);
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
   const [officers, setOfficers] = useState<{ key: string; value: string }[]>([]);
@@ -170,7 +173,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
           setMaxAmount(0);
           setAmount('');
           setAssignee('');
-        }, 3000);
+        }, 1000);
       }
     } catch (error: any) {
       setErrorMessage(t("Error.Failed to fetch daily target."));
@@ -188,6 +191,9 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
   };
   useEffect(() => {
     fetchOfficers();
+ if(assignee=="0"){
+      setAmount("")
+    }
   }, []);
 
   const handleAmountChange = (text: string) => {
@@ -247,7 +253,8 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
   
       if (response.status === 200) {
         Alert.alert(t("Error.Success"), t("Error.Target transferred successfully."));
-        navigation.navigate('DailyTargetListForOfficers'as any,{collectionOfficerId:collectionOfficerId}); 
+        // navigation.navigate('DailyTargetListForOfficers'as any,{collectionOfficerId:collectionOfficerId}); 
+        navigation.goBack()
       } else {
          Alert.alert(t("Error.error"), t("Error.Failed to transfer target."));
       }
@@ -273,7 +280,8 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
   
 
   return (
-    <View className="flex-1 bg-white">
+    <ScrollView className="flex-1 bg-white" keyboardShouldPersistTaps="handled">
+    <View className="flex-1 bg-white mb-4">
       {/* ✅ Fixed Header */}
       <View className="flex-row items-center bg-[#2AAD7A] p-6 rounded-b-lg">
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -334,6 +342,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
             value={amount}
             onChangeText={handleAmountChange}
              placeholder="--"
+             editable={assignee === '0' || errorMessage ? false : true}
           />
           {error ? <Text className="text-red-500 mt-2">{error}</Text> : null}
         </View>
@@ -366,6 +375,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
                 </TouchableOpacity>
               </View>
     </View>
+    </ScrollView>
   );
 };
 

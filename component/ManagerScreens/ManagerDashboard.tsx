@@ -67,6 +67,8 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
         );
         setProfile(response.data.data);
         setEmpId(response.data.data.empId);
+        AsyncStorage.setItem("centerCode", response.data.data.regCode);
+        console.log("User Profile:", response.data.data.regCode);
       }
     } catch (error) {
       console.error("Failed to fetch user profile:", error);

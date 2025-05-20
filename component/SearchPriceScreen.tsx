@@ -282,6 +282,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from "react-i18next";
 import DropDownPicker from "react-native-dropdown-picker";
+import LottieView from 'lottie-react-native';
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -819,6 +820,20 @@ if(vopen && !selectedCrop){
   useEffect(() => {
     fetchVarieties();
   }, [selectedCrop]);
+
+if (loadingCrops) {
+  return (
+    <View className="flex-1 bg-white items-center justify-center">
+      {/* <ActivityIndicator size="large" color="#26D041" /> */}
+      <LottieView
+        source={require('../assets/lottie/collector.json')}
+        autoPlay
+        loop
+        style={{ width: 300, height: 300 }}
+      />
+    </View>
+  );
+}
 
   return (
     <KeyboardAvoidingView

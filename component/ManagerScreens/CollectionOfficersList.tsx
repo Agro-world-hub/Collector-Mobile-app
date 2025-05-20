@@ -390,7 +390,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
 
   const renderOfficer = ({ item }: { item: Officer & { status?: string } }) => (
     <TouchableOpacity
-      className={`flex-row items-center p-4 mb-8 rounded-[35px] shadow-sm mx-4 ${
+      className={`flex-row items-center p-4 mb-4 rounded-[35px] shadow-sm mx-4 ${
         item.status === "Not Approved" ? "bg-gray-100" : "bg-gray-100"
       }`}
       onPress={() => {
@@ -555,7 +555,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
       <>
         <Text style={{ fontSize: 16 }} className="font-bold text-[#21202B] mb-2">
           {t("CollectionOfficersList.Officers / Drivers List")}
-          <Text className="text-[#21202B] font-semibold">
+          <Text className="text-[#21202B] font-normal">
             ({t("ManagerTransactions.All")} {officers.length})
           </Text>
         </Text>

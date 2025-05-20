@@ -206,7 +206,8 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
       
       if (response.status === 200) {
         Alert.alert(t("Error.Success"), t("Error.Target transferred successfully."));
-        navigation.navigate('DailyTargetListForOfficers'as any,{collectionOfficerId:collectionOfficerId}); 
+        // navigation.navigate('DailyTargetListForOfficers'as any,{collectionOfficerId:collectionOfficerId}); 
+        navigation.goBack()
       } else {
         Alert.alert(t("Error.error"), t("Error.Failed to transfer target."));
       }
