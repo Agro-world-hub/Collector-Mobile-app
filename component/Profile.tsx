@@ -115,7 +115,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
         }
       );
 
-      if (response.data.exists) {
+      if (response.data.exists && newPhoneNumber !== profileData.phoneNumber) {
         setErrorMessage(
           t("Error.This phone number is already registered in the system.")
         );
@@ -128,7 +128,11 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     }
   };
   const handlePhoneNumberChange = (text: string) => {
-    setNewPhoneNumber(text);
+    console.log("Phone number changed:", text);
+   if (text.startsWith("0")) {
+    text = text.replace(/^0+/, ""); // remove all leading zeros
+  }
+      setNewPhoneNumber(text);
 
     if (text.length < 9) {
       setErrorMessage(t("Error.Phone number 1 must be at least 9 digits.")); // Tamil error message
@@ -142,9 +146,11 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
   };
 
   const handlePhoneNumber2Change = (text: string) => {
+       if (text.startsWith("0")) {
+    text = text.replace(/^0+/, ""); // remove all leading zeros
+  }
     setNewPhoneNumber2(text);
-
-    if (text.length < 9) {
+    if (text.length < 9 && text.length > 0) {
       setErrorMessage2(t("Error.Phone number 2 must be at least 9 digits.")); // Tamil error message
     } else if (text.length > 9) {
       setErrorMessage2(t("Error.Phone number cannot exceed 9 digits."));
@@ -159,6 +165,8 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     newPhoneNumber2: string,
     phoneCode02: string
   ) => {
+    console.log("Checking phone number:", newPhoneNumber2, phoneCode02);
+    if(newPhoneNumber2.length !== 0) {
     try {
       const token = await AsyncStorage.getItem("token");
       const response = await axios.get(
@@ -170,7 +178,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
         }
       );
 
-      if (response.data.exists) {
+      if (response.data.exists && newPhoneNumber2 !== "0") {
         setErrorMessage2(
           t("Error.This phone number is already registered in the system.")
         );
@@ -181,6 +189,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
       console.error("Error checking phone number 2:", error);
     } finally {
     }
+  }
   };
   const toggleUpdateButton = (phone1: string, phone2: string) => {
     setShowUpdateButton(
@@ -254,6 +263,8 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
 
   const handleUpdatePhoneNumber = async () => {
     Keyboard.dismiss();
+    console.log("Updating phone number...");
+    console.log("rrror 2", errorMessage2)
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
@@ -267,32 +278,21 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
         );
         return;
       }
-      if (newPhoneNumber2.length === 0) {
-        Alert.alert(
-          t("Error.error"),
-          t("Error.Phone number 2 cannot be empty")
-        );
-        return;
-      }
       if (newPhoneNumber.length < 9) {
         Alert.alert(
           t("Error.error"),
           t("Error.Phone number 1 must be at least 9 digits.")
         );
         return;
-      } else if (newPhoneNumber2.length < 9) {
-        Alert.alert(
-          t("Error.error"),
-          t("Error.Phone number 2 must be at least 9 digits.")
-        );
-        return;
-      } else if (newPhoneNumber.length > 9) {
+      } 
+      else if (newPhoneNumber.length > 9) {
         Alert.alert(
           t("Error.error"),
           t("Error.Phone number 1 must be at most 9 digits.")
         );
         return;
-      } else if (newPhoneNumber2.length > 9) {
+      } 
+      else if (newPhoneNumber2.length > 9) {
         Alert.alert(
           t("Error.error"),
           t("Error.Phone number 2 must be at most 9 digits.")
@@ -305,10 +305,10 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
         );
         return;
       } else if (errorMessage) {
-        Alert.alert(t("Error.error"), t("Error.Phone Number 1 already exists"));
+        Alert.alert(t("Error.error"), errorMessage);
         return;
-      } else if (errorMessage2) {
-        Alert.alert(t("Error.error"), t("Error.Phone Number 2 already exists"));
+      } else if (errorMessage2 && newPhoneNumber2.length > 0) {
+        Alert.alert(t("Error.error"), errorMessage2);
         return;
       }
       // Always send both phone numbers
@@ -1238,7 +1238,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               placeholder="7XXXXXXXX"
               keyboardType="numeric"
               onChangeText={handlePhoneNumberChange}
-              maxLength={12}
+              maxLength={9}
             />
             {errorMessage && (
               <Text className="text-red-500">{errorMessage}</Text>
@@ -1258,7 +1258,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               placeholder="7XXXXXXXX"
               keyboardType="numeric"
               onChangeText={handlePhoneNumber2Change}
-              maxLength={12}
+              maxLength={9}
             />
             {errorMessage2 && (
               <Text className="text-red-500">{errorMessage2}</Text>
@@ -1346,7 +1346,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             />
           </View>
 
-          {showUpdateButton && (
+          {showUpdateButton  && (newPhoneNumber !== profileData.phoneNumber || newPhoneNumber2 !== profileData.phoneNumber2) && (
             <TouchableOpacity
               onPress={handleUpdatePhoneNumber}
               className="bg-[#2AAD7A] py-3 rounded-[30px] mb-4"

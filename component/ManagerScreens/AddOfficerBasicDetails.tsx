@@ -99,7 +99,7 @@ const AddOfficerBasicDetails: React.FC = () => {
 
   const checkNicExists = async (nic: string) => {
     if (!validateNicNumber(nic)) return;
-
+    if(nic.length ===0) return
     try {
       setIsValidating(true);
       const token = await AsyncStorage.getItem("token"); // Get your auth token
@@ -239,16 +239,16 @@ const AddOfficerBasicDetails: React.FC = () => {
   const handleNext = () => {
     console.log("jobRole", preferredLanguages);
     if (error1) {
-      Alert.alert(t("Error.error"), t("Error.Phone Number 1 already exists"));
+      Alert.alert(t("Error.error"), error1);
       return;
-    } else if (error2) {
-      Alert.alert(t("Error.error"), t("Error.Phone Number 2 already exists"));
+    } else if (error2 && phoneNumber2.length > 0) {
+      Alert.alert(t("Error.error"), error2);
       return;
     } else if (errorEmail) {
-      Alert.alert(t("Error.error"), t("Error.Email already exists"));
+      Alert.alert(t("Error.error"), errorEmail);
       return;
     } else if (error3) {
-      Alert.alert(t("Error.error"), t("Error.NIC Number already exists"));
+      Alert.alert(t("Error.error"), error3);
       return;
     }
     if (
@@ -342,6 +342,9 @@ const AddOfficerBasicDetails: React.FC = () => {
 
   // Handle phone number 1 change
   const handlePhoneNumber1Change = (input: string) => {
+    if (input.startsWith("0")) {
+      input = input.replace(/^0+/, ""); // remove all leading zeros
+    }
     setPhoneNumber1(input);
     if (!validatePhoneNumber(input)) {
       setError1(t("Error.setphoneError1"));
@@ -381,8 +384,11 @@ const AddOfficerBasicDetails: React.FC = () => {
 
   // Handle phone number 2 change
   const handlePhoneNumber2Change = (input: string) => {
+        if (input.startsWith("0")) {
+      input = input.replace(/^0+/, ""); // remove all leading zeros
+    }
     setPhoneNumber2(input);
-    if (!validatePhoneNumber(input)) {
+    if (!validatePhoneNumber(input) && input.length > 0) {
       setError2(t("Error.setphoneError2"));
     } else {
       setError2("");

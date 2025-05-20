@@ -222,11 +222,15 @@ const TransactionList: React.FC<TransactionListProps> = ({
               value={searchQuery}
               onChangeText={handleSearch}
             />
-            <Image
-              source={require("../../assets/images/searchhh.webp")}
-              className="w-8 h-8"
-              resizeMode="contain"
-            />
+            <TouchableOpacity
+              onPress={() => handleSearch(searchQuery)}
+            >
+              <Image
+                source={require("../../assets/images/searchhh.webp")}
+                className="w-8 h-8"
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
           </View>
 
           {showDatePicker && Platform.OS === "android" && (
