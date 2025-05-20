@@ -20,7 +20,6 @@ import { Platform } from "react-native";
 import bankNames from "../../assets/jsons/banks.json";
 import { useTranslation } from "react-i18next";
 
-//this is a temporary fix for the error "Type 'string' is not assignable to type 'never'"
 type AddDriverAddressDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
   "AddDriverAddressDetails"
@@ -348,7 +347,6 @@ const AddDriverAddressDetails: React.FC = () => {
         >
           <AntDesign name="left" size={24} color="#000502" />
         </TouchableOpacity>
-        {/* <Text className="text-lg font-bold ml-[25%]">{t("AddOfficerAddressDetails.AddOfficer")}</Text> */}
         <View className="flex-1 justify-center items-center">
 <Text className="text-lg font-bold">{t("AddOfficerAddressDetails.AddOfficer")}</Text>
 </View>
@@ -381,26 +379,12 @@ const AddDriverAddressDetails: React.FC = () => {
         />
         <TextInput
           placeholder={t("AddOfficerAddressDetails.Country")}
-          value={t("AddOfficerAddressDetails.Country")} // Always set to Sri Lanka
-          editable={false} // Make the input non-editable
+          value={t("AddOfficerAddressDetails.Country")} 
+          editable={false} 
           className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
         />
 
-        {/* <TextInput
-        placeholder="--Province--"
-        value={formData.province}
-        onChangeText={(text) => setFormData({ ...formData, province: text })}
-        className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
-      />
-      <TextInput
-        placeholder="--District--"
-        value={formData.district}
-        onChangeText={(text) => setFormData({ ...formData, district: text })}
-        className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
-      /> */}
-
         <View style={{ marginBottom: 10 }}>
-          {/* <Text style={{ fontSize: 18, marginBottom: 5 }}>Select Province</Text> */}
           <SelectList
             setSelected={(province: any) => handleProvinceChange(province)}
             data={jsonData.provinces.map((province) => ({
@@ -428,21 +412,15 @@ const AddDriverAddressDetails: React.FC = () => {
 
         </View>
 
-        {/* District Dropdown */}
         {formData.province && (
           <View style={{ marginBottom: 2 }}>
-            {/* <Text style={{ fontSize: 18, marginBottom: 5 }}>Select District</Text> */}
             <SelectList
              setSelected={handleDistrictChange} // Use the updated function to handle district change
              data={districts.map((district) => ({
                key: district.en,
                value: district[selectedLanguage as keyof typeof district], // Value displayed in the selected language
              }))}
-            //  defaultOption={{
-            //    key: formData.district,
-            //    value: formData.district,
-            //  }}
-             
+
               boxStyles={{
                 borderColor: "#cccccc",
                 borderWidth: 1,
@@ -473,13 +451,6 @@ const AddDriverAddressDetails: React.FC = () => {
           }
           className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
         />
-        {/* <TextInput
-          placeholder={t("AddOfficerAddressDetails.AccountNum")}
-          keyboardType="numeric"
-          value={formData.accountNumber}
-          onChangeText={(text) => handleValidation("accountNumber", text)}
-          className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
-        /> */}
         <TextInput
   placeholder={t("AddOfficerAddressDetails.AccountNum")}
   keyboardType="numeric"
@@ -502,19 +473,6 @@ const AddDriverAddressDetails: React.FC = () => {
         />
         {error && <Text className="text-red-500 text-sm mb-4">{error}</Text>}
 
-        {/* <TextInput
-          placeholder="--Bank Name--"
-          value={formData.bankName}
-          onChangeText={(text) => handleInputChange('bankName', text)}
-          className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
-        /> 
-
-        <TextInput
-          placeholder="--Branch Name--"
-          value={formData.branchName}
-          onChangeText={(text) => handleInputChange('branchName', text)}
-          className="border border-gray-300 rounded-lg px-3 py-2"
-        />  */}
         <View className="">
           <View className="mb-4">
             <SelectList

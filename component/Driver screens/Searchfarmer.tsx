@@ -371,22 +371,6 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
               <Text style={[{ fontSize: 16 } , getTextStyle(selectedLanguage)]}  className="text-center text-lg mt-5">
                 {t("SearchFarmer.EnterFarmer")}
               </Text>
-  
-              {/* <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2 bg-white">
-                <TextInput
-                  value={NICnumber}
-                  onChangeText={handleNicChange}
-                  placeholder={t("SearchFarmer.EnterNIC").length > 20 ? t("SearchFarmer.EnterNIC").slice(0, 28) + "..." : t("SearchFarmer.EnterNIC")}                  className="flex-1 text-center"
-                  maxLength={12}
-                  style={{ color: "#000" }}
-                />
-                <TouchableOpacity className="ml-2" onPress={handleSearch}>
-                  <FontAwesome name="search" size={24} color="green" />
-                </TouchableOpacity>
-              </View>
-              
-               */}
-             {/* Only show this search bar with icon when searching (no results found yet) */}
 
   <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2 bg-white">
     <TextInput
@@ -407,17 +391,6 @@ const SearchFarmerScreen: React.FC<SearchFarmerScreenProps> = ({ navigation }) =
   </View>
 
 
-{/* Show only the value without search icon when any results are found (either foundFarmer or newQr) */}
-{/* {(foundFarmer || (newQr || farmers || noResults)) && (
-  <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2 bg-white">
-    <TextInput
-      value={NICnumber}
-      editable={false}
-      className="flex-1 text-center"
-      style={{ color: "#000" }}
-    />
-  </View>
-)} */}
               {ere ? (
                 <Text className="text-red-500 mt-2 justify-center text-center">
                   {ere}

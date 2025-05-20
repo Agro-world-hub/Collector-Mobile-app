@@ -1,40 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../types';
+import React, { useEffect, useState } from "react";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../types";
 import { useTranslation } from "react-i18next";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-type EditTargetScreenNavigationProps = StackNavigationProp<RootStackParamList, 'EditTargetScreen'>;
+type EditTargetScreenNavigationProps = StackNavigationProp<
+  RootStackParamList,
+  "EditTargetScreen"
+>;
 
 interface EditTargetScreenProps {
   navigation: EditTargetScreenNavigationProps;
   route: {
     params: {
       varietyNameEnglish: string;
-      varietyNameSinhala: string;  // ✅ Added this
-      varietyNameTamil: string;    // ✅ Added this
+      varietyNameSinhala: string; // ✅ Added this
+      varietyNameTamil: string; // ✅ Added this
       grade: string;
       varietyId: string;
       target: string;
       todo: string;
       qty: string;
-      collectionOfficerId:number;
-      
+      collectionOfficerId: number;
     };
   };
 }
 
-const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route }) => {
-  const [myTarget, setMyTarget] = useState('100kg');
+const EditTargetScreen: React.FC<EditTargetScreenProps> = ({
+  navigation,
+  route,
+}) => {
+  const [myTarget, setMyTarget] = useState("100kg");
   const [isEditing, setIsEditing] = useState(false);
-  const [toDoAmount] = useState('50kg');
+  const [toDoAmount] = useState("50kg");
   const { t } = useTranslation();
 
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
-  
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,11 +52,21 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
     };
     fetchData();
   }, []);
-  
-  const { varietyNameEnglish, grade, target, todo, qty,varietyId ,collectionOfficerId ,varietyNameSinhala,varietyNameTamil } = route.params;
-  console.log('managers target edit details',route.params);
 
-  console.log('officers edit details',route.params);
+  const {
+    varietyNameEnglish,
+    grade,
+    target,
+    todo,
+    qty,
+    varietyId,
+    collectionOfficerId,
+    varietyNameSinhala,
+    varietyNameTamil,
+  } = route.params;
+  console.log("managers target edit details", route.params);
+
+  console.log("officers edit details", route.params);
   const getvarietyName = () => {
     switch (selectedLanguage) {
       case "si":
@@ -72,14 +85,18 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-semibold text-center w-full">{getvarietyName()}</Text>
+        <Text className="text-white text-lg font-semibold text-center w-full">
+          {getvarietyName()}
+        </Text>
       </View>
 
       {/* Content */}
       <View className="mt-6 space-y-6 p-8">
         {/* Total Target */}
         <View>
-          <Text className="text-gray-600 font-medium">{t("EditTargetManager.TotalTarget")}</Text>
+          <Text className="text-gray-600 font-medium">
+            {t("EditTargetManager.TotalTarget")}
+          </Text>
           <TextInput
             className="border border-gray-300 rounded-md px-3 py-2 mt-2 text-gray-800"
             value={qty.toString()}
@@ -89,47 +106,75 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({ navigation,route })
 
         {/* My Target */}
         <View>
-          <Text className="text-gray-600 font-medium">{t("EditTargetManager.Assigned Target")}</Text>
+          <Text className="text-gray-600 font-medium">
+            {t("EditTargetManager.Assigned Target")}
+          </Text>
           <View className="flex-row items-center mt-2 border border-gray-300 rounded-md px-3 py-2">
-            {/* <TextInput
-              className="flex-1 text-gray-800"
-              value={target.toString()}
-              editable={isEditing}
-              onChangeText={(text) => setMyTarget(text)}
-            /> */}
-             <Text  className="flex-1 text-gray-800" >  {target ? target.toString() : '0'} </Text>
+            <Text className="flex-1 text-gray-800">
+              {" "}
+              {target ? target.toString() : "0"}{" "}
+            </Text>
             <TouchableOpacity onPress={() => setIsEditing((prev) => !prev)}>
               <Ionicons
-                name={isEditing ? 'pencil' : 'pencil'}
+                name={isEditing ? "pencil" : "pencil"}
                 size={20}
-                color={isEditing ? 'green' : 'green'}
+                color={isEditing ? "green" : "green"}
               />
             </TouchableOpacity>
           </View>
 
           {/* Buttons in Edit Mode */}
           {isEditing && (
-           <View className="flex-row justify-center space-x-4 mt-4 p-5">
+            <View className="flex-row justify-center space-x-4 mt-4 p-5">
               <TouchableOpacity
                 className="flex-1 bg-[#D16D6A] px-6 py-2 rounded-md items-center"
-                onPress={() => navigation.navigate('PassTargetBetweenOfficers'as any,{varietyNameEnglish, grade, target, todo, qty ,varietyId,collectionOfficerId,varietyNameSinhala,varietyNameTamil})} // Save and exit edit mode
+                onPress={() =>
+                  navigation.navigate("PassTargetBetweenOfficers" as any, {
+                    varietyNameEnglish,
+                    grade,
+                    target,
+                    todo,
+                    qty,
+                    varietyId,
+                    collectionOfficerId,
+                    varietyNameSinhala,
+                    varietyNameTamil,
+                  })
+                } // Save and exit edit mode
               >
-                <Text className="text-white font-medium">{t("EditTargetManager.Pass")}</Text>
+                <Text className="text-white font-medium">
+                  {t("EditTargetManager.Pass")}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex-1 bg-[#2AAD7A] px-6 py-2 rounded-md items-center"
-                onPress={() => navigation.navigate('RecieveTargetBetweenOfficers' as any,{varietyNameEnglish, grade, target, todo, qty ,varietyId,collectionOfficerId ,varietyNameSinhala,varietyNameTamil})} // Save and exit edit mode
+                onPress={() =>
+                  navigation.navigate("RecieveTargetBetweenOfficers" as any, {
+                    varietyNameEnglish,
+                    grade,
+                    target,
+                    todo,
+                    qty,
+                    varietyId,
+                    collectionOfficerId,
+                    varietyNameSinhala,
+                    varietyNameTamil,
+                  })
+                } // Save and exit edit mode
               >
-                <Text className="text-white font-medium">{t("EditTargetManager.Receive")}</Text>
+                <Text className="text-white font-medium">
+                  {t("EditTargetManager.Receive")}
+                </Text>
               </TouchableOpacity>
             </View>
           )}
-
         </View>
 
         {/* To Do Amount */}
         <View>
-          <Text className="text-gray-600 font-medium">{t("EditTargetManager.Amount")}</Text>
+          <Text className="text-gray-600 font-medium">
+            {t("EditTargetManager.Amount")}
+          </Text>
           <TextInput
             className="border border-gray-300 rounded-md px-3 py-2 mt-2 text-gray-800"
             value={todo.toString()}

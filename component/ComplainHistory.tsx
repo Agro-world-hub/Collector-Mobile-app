@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {environment }from '@/environment/environment';
+import { environment } from "@/environment/environment";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -30,11 +30,9 @@ interface complainItem {
   language: string;
   complainCategory: string;
   status: "Opened" | "Closed";
-    reply?: string;
+  reply?: string;
   refNo: string;
-  }
-
-
+}
 
 type ComplainHistoryNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -83,40 +81,22 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
     }, [])
   );
 
-  // const formatDateTime = (isoDate: string) => {
-  //   const date = new Date(isoDate);
-  //   const options: Intl.DateTimeFormatOptions = {
-  //     hour: "2-digit",
-  //     minute: "2-digit",
-  //     hour12: true,
-  //     day: "numeric",
-  //     month: "short",
-  //     year: "numeric",
-  //   };
-  //   const formattedDateTime = new Intl.DateTimeFormat("en-US", options).format(
-  //     date
-  //   );
-  //   console.log(formattedDateTime);
-  //   return formattedDateTime;
-  // };
-
   const formatDateTime = (isoDate: string) => {
-  const date = new Date(isoDate);
+    const date = new Date(isoDate);
 
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const ampm = hours >= 12 ? "PM" : "AM";
-  const hour12 = hours % 12 || 12; // Convert 0 to 12
-  const minuteStr = minutes.toString().padStart(2, "0");
-  const timeStr = `${hour12}.${minuteStr}${ampm}`;
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    const hour12 = hours % 12 || 12; // Convert 0 to 12
+    const minuteStr = minutes.toString().padStart(2, "0");
+    const timeStr = `${hour12}.${minuteStr}${ampm}`;
 
-  const day = date.getDate();
-  const month = date.toLocaleString("en-US", { month: "short" });
-  const year = date.getFullYear();
+    const day = date.getDate();
+    const month = date.toLocaleString("en-US", { month: "short" });
+    const year = date.getFullYear();
 
-  return `${timeStr},${day} ${month} ${year}`;
-};
-
+    return `${timeStr},${day} ${month} ${year}`;
+  };
 
   const handleViewReply = (reply: string | undefined) => {
     if (reply) {
@@ -137,82 +117,84 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
           <AntDesign name="left" size={24} color="#000502" />
         </TouchableOpacity>
 
-        <Text className="font-bold text-lg">{t("ReportHistory.Complaints")}</Text>
+        <Text className="font-bold text-lg">
+          {t("ReportHistory.Complaints")}
+        </Text>
         <View style={{ width: 24 }} />
       </View>
 
       {loading ? (
-          <View className="flex-1 items-center justify-center">
-            {/* <ActivityIndicator size="large" color="#26D041" /> */}
-             <LottieView
-                          source={require('../assets/lottie/collector.json')}
-                          autoPlay
-                          loop
-                          style={{ width: 300, height: 300 }}
-                        />
-          </View>
-        ) : complains.length === 0 ? (
-          <View className="flex-1 items-center justify-center">
-            <LottieView
-              source={require("../assets/lottie/NoComplaints.json")}
-              style={{ width: wp(50), height: hp(50) }}
-              autoPlay
-              loop
-            />
-            <Text className="text-center text-gray-600 mt-4">
-              {t("ReportHistory.noData")}
-            </Text>
-          </View>
-        ) : (
+        <View className="flex-1 items-center justify-center">
+          <LottieView
+            source={require("../assets/lottie/collector.json")}
+            autoPlay
+            loop
+            style={{ width: 300, height: 300 }}
+          />
+        </View>
+      ) : complains.length === 0 ? (
+        <View className="flex-1 items-center justify-center">
+          <LottieView
+            source={require("../assets/lottie/NoComplaints.json")}
+            style={{ width: wp(50), height: hp(50) }}
+            autoPlay
+            loop
+          />
+          <Text className="text-center text-gray-600 mt-4">
+            {t("ReportHistory.noData")}
+          </Text>
+        </View>
+      ) : (
+        <ScrollView
+          className="p-4 flex-1 mb-14"
+          contentContainerStyle={{
+            paddingBottom: hp(4),
+            paddingHorizontal: wp(2),
+          }}
+        >
+          {complains.map((complain) => (
+            <View
+              key={complain.id}
+              className="bg-white p-6 my-2 rounded-xl shadow-md border border-[#dfdfdfcc]"
+            >
+              <Text className="self-start mb-4 font-semibold">
+                {t("ReportHistory.RefNo")} : {complain.refNo}
+              </Text>
+              <Text className="self-start mb-4 text-[#6E6E6E]">
+                {t("ReportHistory.Sent")} {""}
+                {formatDateTime(complain.createdAt)}
+              </Text>
 
-      <ScrollView
-        className="p-4 flex-1 mb-14"
-        contentContainerStyle={{
-          paddingBottom: hp(4),
-          paddingHorizontal: wp(2),
-        }}
-      >
-        {complains.map((complain) => (
-          <View
-            key={complain.id}
-            className="bg-white p-6 my-2 rounded-xl shadow-md border border-[#dfdfdfcc]"
-          >
-                   <Text className="self-start mb-4 font-semibold">
-                  {t("ReportHistory.RefNo")} : {complain.refNo}
-                </Text>
-            <Text className="self-start mb-4 text-[#6E6E6E]">
-            {t("ReportHistory.Sent")} {""}
-            {formatDateTime(complain.createdAt)}
-            </Text>
-
-            <Text className="self-start mb-4">{complain.complain}</Text>
-            <View className="flex-row justify-between items-center">
-              {complain.status === "Closed" && (
-                <TouchableOpacity
-                  className="bg-black px-3 py-2 rounded"
-                  onPress={() => handleViewReply(complain.reply)}
-                >
-                  <Text className="text-white text-xs">
-                    {t("ReportHistory.View")}
+              <Text className="self-start mb-4">{complain.complain}</Text>
+              <View className="flex-row justify-between items-center">
+                {complain.status === "Closed" && (
+                  <TouchableOpacity
+                    className="bg-black px-3 py-2 rounded"
+                    onPress={() => handleViewReply(complain.reply)}
+                  >
+                    <Text className="text-white text-xs">
+                      {t("ReportHistory.View")}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                <View style={{ flex: 1, alignItems: "flex-end" }}>
+                  <Text
+                    className={`text-s font-semibold px-4 py-2 rounded ${
+                      complain.status === "Opened"
+                        ? "bg-blue-100 text-[#0051FF]"
+                        : "bg-green-100 text-green-800"
+                    }`}
+                  >
+                    {complain.status === "Opened"
+                      ? t("ReportHistory.Opened")
+                      : t("ReportHistory.Closed")}
                   </Text>
-                </TouchableOpacity>
-              )}
-              <View style={{ flex: 1, alignItems: "flex-end" }}>
-                <Text
-                  className={`text-s font-semibold px-4 py-2 rounded ${
-                    complain.status === "Opened"
-                      ? "bg-blue-100 text-[#0051FF]"
-                      : "bg-green-100 text-green-800"
-                  }`}
-                >
-                  {complain.status === "Opened" ? t("ReportHistory.Opened") : t("ReportHistory.Closed")}
-                </Text>
+                </View>
               </View>
             </View>
-          </View>
-        ))}
-      </ScrollView>
- )}
+          ))}
+        </ScrollView>
+      )}
       <Modal
         visible={modalVisible}
         animationType="slide"
@@ -235,7 +217,9 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
               className="bg-black py-4 rounded-lg items-center"
               onPress={() => setModalVisible(false)}
             >
-              <Text className="text-white text-lg">{t("ReportHistory.Closed")}</Text>
+              <Text className="text-white text-lg">
+                {t("ReportHistory.Closed")}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

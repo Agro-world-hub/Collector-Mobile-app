@@ -253,7 +253,6 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
   
       if (response.status === 200) {
         Alert.alert(t("Error.Success"), t("Error.Target transferred successfully."));
-        // navigation.navigate('DailyTargetListForOfficers'as any,{collectionOfficerId:collectionOfficerId}); 
         navigation.goBack()
       } else {
          Alert.alert(t("Error.error"), t("Error.Failed to transfer target."));
@@ -348,19 +347,6 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
         </View>
       </View>
 
-      {/* <View className="mt-6 items-center">
-      <TouchableOpacity
-        className="bg-[#2AAD7A] rounded-full w-64 py-3"
-        onPress={receiveTarget}
-        disabled={loading || fetchingTarget}
-      >
-        {fetchingTarget ? (
-          <ActivityIndicator size="small" color="white" />
-        ) : (
-          <Text className="text-white text-center font-medium">{t("PassTargetBetweenOfficers.Save")}</Text>
-        )}
-      </TouchableOpacity>
-      </View> */}
        <View className="mt-6 items-center">
                 <TouchableOpacity
                   className={`rounded-full w-64 py-3 ${isSaveDisabled() ? 'bg-gray-400' : 'bg-[#2AAD7A]'}`}

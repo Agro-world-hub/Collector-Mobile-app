@@ -12,21 +12,25 @@ import {
 import AntDesign from "react-native-vector-icons/AntDesign";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as ImagePicker from 'expo-image-picker';
-import {environment }from '@/environment/environment';
+import * as ImagePicker from "expo-image-picker";
+import { environment } from "@/environment/environment";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
-import * as ImageManipulator from 'expo-image-manipulator';import { useTranslation } from "react-i18next";
+import * as ImageManipulator from "expo-image-manipulator";
+import { useTranslation } from "react-i18next";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
 
-type ProfileNavigationProps = StackNavigationProp<RootStackParamList, 'Profile'>;
+type ProfileNavigationProps = StackNavigationProp<
+  RootStackParamList,
+  "Profile"
+>;
 
 interface ProfileProps {
   navigation: ProfileNavigationProps;
@@ -42,7 +46,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
   const [profileData, setProfileData] = useState({
     firstNameEnglish: "",
     lastNameEnglish: "",
-  
+
     regcode: "",
     jobRole: "",
     nicNumber: "",
@@ -54,16 +58,16 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     streetName: "",
     city: "",
     province: "",
-    district:"",
+    district: "",
     profileImage: "",
-    firstNameSinhala:  "",
-    lastNameSinhala:"",
-    firstNameTamil:"",
-    lastNameTamil:"",
-    companyNameSinhala:"",
-    companyNameEnglish:"",
-    companyNameTamil:"",
-    collectionCenterName:""
+    firstNameSinhala: "",
+    lastNameSinhala: "",
+    firstNameTamil: "",
+    lastNameTamil: "",
+    companyNameSinhala: "",
+    companyNameEnglish: "",
+    companyNameTamil: "",
+    collectionCenterName: "",
   });
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
 
@@ -75,17 +79,9 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
   const { t } = useTranslation();
   const [profileImage, setProfileImage] = useState({ uri: "" });
   // const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
-  const [selectedLanguage, setSelectedLanguage] = useState<"en" | "si" | "ta">("en");
-
-
-  // const fetchSelectedLanguage = async () => {
-  //   try {
-  //     const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
-  //     setSelectedLanguage(lang || "en"); // Default to English if not set
-  //   } catch (error) {
-  //     console.error("Error fetching language preference:", error);
-  //   }
-  // };
+  const [selectedLanguage, setSelectedLanguage] = useState<"en" | "si" | "ta">(
+    "en"
+  );
 
   const fetchSelectedLanguage = async () => {
     try {
@@ -101,23 +97,28 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
   };
 
   useEffect(() => {
-    fetchSelectedLanguage(); 
+    fetchSelectedLanguage();
   }, []);
-const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
-  console.log("Checking phone number:", newPhoneNumber, phoneCode1);
+  const checkPhoneExists = async (
+    newPhoneNumber: string,
+    phoneCode1: string
+  ) => {
+    console.log("Checking phone number:", newPhoneNumber, phoneCode1);
     try {
-      const token = await AsyncStorage.getItem('token');
+      const token = await AsyncStorage.getItem("token");
       const response = await axios.get(
         `${environment.API_BASE_URL}api/collection-manager/driver/check-phone/${phoneCode1}${newPhoneNumber}`,
         {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-      
+
       if (response.data.exists) {
-        setErrorMessage(t("Error.This phone number is already registered in the system."));
+        setErrorMessage(
+          t("Error.This phone number is already registered in the system.")
+        );
       } else {
         setErrorMessage("");
       }
@@ -130,7 +131,7 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
     setNewPhoneNumber(text);
 
     if (text.length < 9) {
-      setErrorMessage(t("Error.Phone number 1 must be at least 9 digits."));  // Tamil error message
+      setErrorMessage(t("Error.Phone number 1 must be at least 9 digits.")); // Tamil error message
     } else if (text.length > 9) {
       setErrorMessage(t("Error.Phone number cannot exceed 9 digits."));
     } else {
@@ -144,7 +145,7 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
     setNewPhoneNumber2(text);
 
     if (text.length < 9) {
-      setErrorMessage2(t("Error.Phone number 2 must be at least 9 digits."));  // Tamil error message
+      setErrorMessage2(t("Error.Phone number 2 must be at least 9 digits.")); // Tamil error message
     } else if (text.length > 9) {
       setErrorMessage2(t("Error.Phone number cannot exceed 9 digits."));
     } else {
@@ -154,21 +155,25 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
     toggleUpdateButton(newPhoneNumber2, text);
   };
 
-  const checkPhone2Exists = async (newPhoneNumber2: string, phoneCode02: string) => {
-
+  const checkPhone2Exists = async (
+    newPhoneNumber2: string,
+    phoneCode02: string
+  ) => {
     try {
-      const token = await AsyncStorage.getItem('token');
+      const token = await AsyncStorage.getItem("token");
       const response = await axios.get(
         `${environment.API_BASE_URL}api/collection-manager/driver/check-phone/${phoneCode02}${newPhoneNumber2}`,
         {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-      
+
       if (response.data.exists) {
-        setErrorMessage2(t("Error.This phone number is already registered in the system."));
+        setErrorMessage2(
+          t("Error.This phone number is already registered in the system.")
+        );
       } else {
         setErrorMessage2("");
       }
@@ -180,7 +185,7 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
   const toggleUpdateButton = (phone1: string, phone2: string) => {
     setShowUpdateButton(
       (phone1 !== "" && phone1 !== profileData.phoneNumber) ||
-      (phone2 !== "" && phone2 !== profileData.phoneNumber2)
+        (phone2 !== "" && phone2 !== profileData.phoneNumber2)
     );
   };
 
@@ -194,19 +199,14 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
         fontSize: 13, // Smaller text size for Sinhala
         lineHeight: 20, // Space between lines
       };
-      
     }
- 
-   
   };
-
 
   const fetchProfileData = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert(t("Error.error"),
-            t("Error.No token found"));
+        Alert.alert(t("Error.error"), t("Error.No token found"));
         return;
       }
 
@@ -220,7 +220,7 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
       setProfileData({
         firstNameEnglish: data.firstNameEnglish,
         lastNameEnglish: data.lastNameEnglish,
-        
+
         regcode: data.regCode,
         jobRole: data.jobRole,
         nicNumber: data.nic,
@@ -231,17 +231,17 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
         phoneCode01: data.phoneCode01,
         phoneCode02: data.phoneCode02,
         phoneNumber2: data.phoneNumber02,
-        province:data.province,
-        district:data.district,
+        province: data.province,
+        district: data.district,
         profileImage: data.image,
         firstNameSinhala: data.firstNameSinhala,
-        lastNameSinhala:data.lastNameSinhala,
-        firstNameTamil:data.firstNameTamil,
-        lastNameTamil:data.lastNameTamil,
-        companyNameSinhala:data.companyNameSinhala,
-        companyNameEnglish:data.companyNameEnglish,
-        companyNameTamil:data.companyNameTamil,
-        collectionCenterName:data.collectionCenterName
+        lastNameSinhala: data.lastNameSinhala,
+        firstNameTamil: data.firstNameTamil,
+        lastNameTamil: data.lastNameTamil,
+        companyNameSinhala: data.companyNameSinhala,
+        companyNameEnglish: data.companyNameEnglish,
+        companyNameTamil: data.companyNameTamil,
+        collectionCenterName: data.collectionCenterName,
       });
       setProfileImage({ uri: data.image });
       setNewPhoneNumber(data.phoneNumber01);
@@ -257,37 +257,57 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert(t("Error.error"),
-            t("Error.No token found"));
+        Alert.alert(t("Error.error"), t("Error.No token found"));
         return;
       }
-      if(newPhoneNumber.length === 0){
-        Alert.alert(t("Error.error"), t("Error.Phone number 1 cannot be empty"));
+      if (newPhoneNumber.length === 0) {
+        Alert.alert(
+          t("Error.error"),
+          t("Error.Phone number 1 cannot be empty")
+        );
         return;
       }
-      if(newPhoneNumber2.length === 0){
-        Alert.alert(t("Error.error"), t("Error.Phone number 2 cannot be empty"));
+      if (newPhoneNumber2.length === 0) {
+        Alert.alert(
+          t("Error.error"),
+          t("Error.Phone number 2 cannot be empty")
+        );
         return;
       }
-      if (newPhoneNumber.length < 9 ) {
-        Alert.alert(t("Error.error"), t("Error.Phone number 1 must be at least 9 digits."));
+      if (newPhoneNumber.length < 9) {
+        Alert.alert(
+          t("Error.error"),
+          t("Error.Phone number 1 must be at least 9 digits.")
+        );
         return;
-      }else if (newPhoneNumber2.length < 9 ) {
-        Alert.alert(t("Error.error"), t("Error.Phone number 2 must be at least 9 digits."));
+      } else if (newPhoneNumber2.length < 9) {
+        Alert.alert(
+          t("Error.error"),
+          t("Error.Phone number 2 must be at least 9 digits.")
+        );
         return;
-      }else if (newPhoneNumber.length > 9 ) {
-        Alert.alert(t("Error.error"), t("Error.Phone number 1 must be at most 9 digits."));
+      } else if (newPhoneNumber.length > 9) {
+        Alert.alert(
+          t("Error.error"),
+          t("Error.Phone number 1 must be at most 9 digits.")
+        );
         return;
-      }else if (newPhoneNumber2.length > 9 ) {
-        Alert.alert(t("Error.error"), t("Error.Phone number 2 must be at most 9 digits."));
+      } else if (newPhoneNumber2.length > 9) {
+        Alert.alert(
+          t("Error.error"),
+          t("Error.Phone number 2 must be at most 9 digits.")
+        );
         return;
-      }else if (newPhoneNumber === newPhoneNumber2) {
-        Alert.alert(t("Error.error"), t("Error.Phone numbers cannot be the same."));
+      } else if (newPhoneNumber === newPhoneNumber2) {
+        Alert.alert(
+          t("Error.error"),
+          t("Error.Phone numbers cannot be the same.")
+        );
         return;
-      }else if (errorMessage) {
+      } else if (errorMessage) {
         Alert.alert(t("Error.error"), t("Error.Phone Number 1 already exists"));
         return;
-      }else if (errorMessage2) {
+      } else if (errorMessage2) {
         Alert.alert(t("Error.error"), t("Error.Phone Number 2 already exists"));
         return;
       }
@@ -298,14 +318,13 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
       };
 
       console.log(payload);
-  
+
       await api.put("api/collection-officer/update-phone", payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log(payload)
-      
-  
+      console.log(payload);
+
       // Update local state with the new values
       setProfileData((prevData) => ({
         ...prevData,
@@ -313,7 +332,10 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
         phoneNumber2: newPhoneNumber2,
       }));
       setShowUpdateButton(false);
-      Alert.alert(t("Error.Success"), t("Error.Phone numbers updated successfully"));
+      Alert.alert(
+        t("Error.Success"),
+        t("Error.Phone numbers updated successfully")
+      );
       setErrorMessage("");
       setErrorMessage2("");
     } catch (error) {
@@ -321,14 +343,11 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
       Alert.alert(t("Error.error"), t("Error.Failed to update phone numbers"));
     }
   };
-  
+
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.Permission required")
-      );
+      Alert.alert(t("Error.error"), t("Error.Permission required"));
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -343,12 +362,12 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
 
       const resizedImage = await ImageManipulator.manipulateAsync(
         imageUri,
-        [{ resize: { width: 500 } }], 
+        [{ resize: { width: 500 } }],
         { compress: 0.6, format: ImageManipulator.SaveFormat.JPEG }
       );
       console.log("Resized and compressed image:", resizedImage);
       setProfileImage({ uri: resizedImage.uri });
-      await uploadImage(resizedImage.uri);  
+      await uploadImage(resizedImage.uri);
     }
   };
 
@@ -357,8 +376,7 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert(t("Error.error"),
-        t("Error.somethingWentWrong"));
+        Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
         return;
       }
       const formData = new FormData();
@@ -398,7 +416,10 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
     }
   };
 
-  const getTranslatedDistrict = (district: string, language: "en" | "si" | "ta") => {
+  const getTranslatedDistrict = (
+    district: string,
+    language: "en" | "si" | "ta"
+  ) => {
     for (const province of jsonData.provinces) {
       const districtObj = province.districts.find((d) => d.en === district);
       if (districtObj) {
@@ -407,13 +428,20 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
     }
     return district; // Return original if not found
   };
-  
-  const getTranslatedProvince = (province: string, language: "en" | "si" | "ta") => {
+
+  const getTranslatedProvince = (
+    province: string,
+    language: "en" | "si" | "ta"
+  ) => {
     const provinceObj = jsonData.provinces.find((p) => p.name.en === province);
     return provinceObj ? provinceObj.name[language] : province; // Return translated province name
   };
 
-  const getTranslatedCity = (city: string, district: string, language: "en" | "si" | "ta") => {
+  const getTranslatedCity = (
+    city: string,
+    district: string,
+    language: "en" | "si" | "ta"
+  ) => {
     for (const province of jsonData.provinces) {
       const districtObj = province.districts.find((d) => d.en === district);
       if (districtObj) {
@@ -425,15 +453,16 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
     }
     return city; // Return original if not found
   };
-  const getTranslatedJobRole = (jobRole: string, language: "en" | "si" | "ta") => {
+  const getTranslatedJobRole = (
+    jobRole: string,
+    language: "en" | "si" | "ta"
+  ) => {
     const jobRoleObj = jsonData1.jobRoles.find((role) => role.en === jobRole);
     if (jobRoleObj) {
       return jobRoleObj[language]; // Return translated job role
     }
     return jobRole; // Return original if not found
   };
-  
-  
 
   const getcompanyName = () => {
     if (!profileData) return "Loading...";
@@ -469,662 +498,583 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
     }
   };
 
-  //  const jsonData = {
-  //     "provinces": [
-  //     {
-  //       "name": { "en": "Western", "si": "බටහිර", "ta": "மேற்கு" },
-  //       "districts": [
-  //         { "en": "Colombo", "si": "කොළඹ", "ta": "கொழும்பு" },
-  //         { "en": "Gampaha", "si": "ගම්පහ", "ta": "கம்பஹா" },
-  //         { "en": "Kalutara", "si": "කළුතර", "ta": "களுத்துறை" }
-  //       ]
-  //     },
-  //     {
-  //       "name": { "en": "Central", "si": "මධ්‍යම", "ta": "மத்திய" },
-  //       "districts": [
-  //         { "en": "Kandy", "si": "මහනුවර", "ta": "கண்டி" },
-  //         { "en": "Matale", "si": "මාතලේ", "ta": "மாதளை" },
-  //         { "en": "Nuwara Eliya", "si": "නුවරඑළිය", "ta": "நுவரேலியா" }
-  //       ]
-  //     },
-  //     {
-  //       "name": { "en": "Southern", "si": "දකුණ", "ta": "தெற்கு" },
-  //       "districts": [
-  //         { "en": "Galle", "si": "ගාල්ල", "ta": "காலி" },
-  //         { "en": "Matara", "si": "මාතර", "ta": "மாத்தறை" },
-  //         { "en": "Hambantota", "si": "හම්බන්තොට", "ta": "ஹம்பாந்தோட்டை" }
-  //       ]
-  //     },
-  //     {
-  //       "name": { "en": "Eastern", "si": "නැගෙනහිර", "ta": "கிழக்கு" },
-  //       "districts": [
-  //         { "en": "Ampara", "si": "අම්පාර", "ta": "அம்பாறை" },
-  //         { "en": "Batticaloa", "si": "මඩකලපුව", "ta": "பாட்டிக்கோடை" },
-  //         { "en": "Trincomalee", "si": "ත්‍රිකුණාමලය", "ta": "திருகோணமலை" }
-  //       ]
-  //     },
-  //     {
-  //       "name": { "en": "Northern", "si": " උතුරු", "ta": "வடக்கு" },
-  //       "districts": [
-  //         { "en": "Jaffna", "si": "යාපනය", "ta": "யாழ்ப்பாணம்" },
-  //         { "en": "Kilinochchi", "si": "කිලිනොච්චි", "ta": "கில்லினோச்சி" },
-  //         { "en": "Mullaitivu", "si": "මුල්ලිතිවු", "ta": "முல்லைத்தீவு" }
-  //       ]
-  //     },
-  //     {
-  //       "name": { "en": "North Western", "si": "උතුරු මැද", "ta": "வடமேல்" },
-  //       "districts": [
-  //         { "en": "Kurunegala", "si": "කුරුණෑගල", "ta": "குருநாகல்" },
-  //         { "en": "Puttalam", "si": "පුත්තලම", "ta": "புத்தளம்" }
-  //       ]
-  //     },
-  //     {
-  //       "name": { "en": "North Central", "si": "උතුරු මධ්‍යම", "ta": "வட மத்திய" },
-  //       "districts": [
-  //         { "en": "Anuradhapura", "si": "අනුරාධපුර", "ta": "அனுராதபுரம்" },
-  //         { "en": "Polonnaruwa", "si": "පොලොන්නරුව", "ta": "பொலன்னருவ" }
-  //       ]
-  //     },
-  //     {
-  //       "name": { "en": "Uva", "si": "උව", "ta": "உவா" },
-  //       "districts": [
-  //         { "en": "Badulla", "si": "බදුල්ල", "ta": "பதுளை" },
-  //         { "en": "Moneragala", "si": "මොනරාගල", "ta": "முனரகலை" }
-  //       ]
-  //     },
-  //     {
-  //       "name": { "en": "Sabaragamuwa", "si": "සබරගමුව", "ta": "சபரகமுவ" },
-  //       "districts": [
-  //         { "en": "Ratnapura", "si": "රත්නපුර", "ta": "ரத்நாபுர" },
-  //         { "en": "Kegalle", "si": "කැගල්ල", "ta": "கெகலே" }
-  //       ]
-  //     }
-  //   ]
-  //   };
-
   const jsonData = {
+    provinces: [
+      {
+        name: { en: "Western", si: "බටහිර", ta: "மேற்கு" },
+        districts: [
+          {
+            en: "Colombo",
+            si: "කොළඹ",
+            ta: "கொழும்பு",
+            cities: [
+              {
+                en: "Colombo",
+                si: "කොළඹ",
+                ta: "கொழும்பு",
+              },
+              {
+                en: "Dehiwala",
+                si: "දෙහිවල",
+                ta: "தேவிவளை",
+              },
+              {
+                en: "Moratuwa",
+                si: "මොරටුව",
+                ta: "மோரட்டுவ",
+              },
+            ],
+          },
+          {
+            en: "Gampaha",
+            si: "ගම්පහ",
+            ta: "கம்பஹா",
+            cities: [
+              {
+                en: "Gampaha",
+                si: "ගම්පහ",
+                ta: "கம்பஹா",
+              },
+              {
+                en: "Negombo",
+                si: "මීගමුව",
+                ta: "நெகொம்போ",
+              },
+              {
+                en: "Kelaniya",
+                si: "කැලණිය",
+                ta: "கெளலாணிய",
+              },
+            ],
+          },
+          {
+            en: "Kalutara",
+            si: "කළුතර",
+            ta: "களுத்துறை",
+            cities: [
+              {
+                en: "Kalutara",
+                si: "කළුතර",
+                ta: "களுத்துறை",
+              },
+              {
+                en: "Beruwala",
+                si: "බෙරුවල",
+                ta: "பெருவளை",
+              },
+              {
+                en: "Aluthgama",
+                si: "අලුත්ගම",
+                ta: "அலுத்த்கம",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        name: { en: "Central", si: "මධ්‍යම", ta: "மத்திய" },
+        districts: [
+          {
+            en: "Kandy",
+            si: "මහනුවර",
+            ta: "கண்டி",
+            cities: [
+              {
+                en: "Kandy",
+                si: "මහනුවර",
+                ta: "கண்டி",
+              },
+              {
+                en: "Peradeniya",
+                si: "පේරාදෙණිය",
+                ta: "பேரடினியா",
+              },
+              {
+                en: "Gampola",
+                si: "ගම්පොල",
+                ta: "கம்போலா",
+              },
+            ],
+          },
+          {
+            en: "Matale",
+            si: "මාතලේ",
+            ta: "மாதளை",
+            cities: [
+              {
+                en: "Matale",
+                si: "මාතලේ",
+                ta: "மாதளை",
+              },
+              {
+                en: "Dambulla",
+                si: "දඹුල්ල",
+                ta: "தம்புள்ள",
+              },
+              {
+                en: "Rattota",
+                si: "රත්තොට",
+                ta: "ரத்தொட்டா",
+              },
+            ],
+          },
+          {
+            en: "Nuwara Eliya",
+            si: "නුවරඑළිය",
+            ta: "நுவரேலியா",
+            cities: [
+              {
+                en: "Nuwara Eliya",
+                si: "නුවරඑළිය",
+                ta: "நுவரேலியா",
+              },
+              {
+                en: "Hatton",
+                si: "හැටන්",
+                ta: "ஹாட்டன்",
+              },
+              {
+                en: "Balangoda",
+                si: "බලංගොඩ",
+                ta: "பலங்கோடா",
+              },
+            ],
+          },
+        ],
+      },
 
-  
-    "provinces": [
       {
-        "name": { "en": "Western", "si": "බටහිර", "ta": "மேற்கு" },
-        "districts": [
+        name: { en: "Southern", si: "දකුණ", ta: "தெற்கு" },
+        districts: [
           {
-            "en": "Colombo", 
-            "si": "කොළඹ", 
-            "ta": "கொழும்பு", 
-            "cities": [
+            en: "Galle",
+            si: "ගාල්ල",
+            ta: "காலி",
+            cities: [
               {
-                "en": "Colombo",
-                "si": "කොළඹ",
-                "ta": "கொழும்பு"
+                en: "Galle",
+                si: "ගාල්ල",
+                ta: "காலி",
               },
               {
-                "en": "Dehiwala",
-                "si": "දෙහිවල",
-                "ta": "தேவிவளை"
+                en: "Unawatuna",
+                si: "උණවටුන",
+                ta: "உணவதுனா",
               },
               {
-                "en": "Moratuwa",
-                "si": "මොරටුව",
-                "ta": "மோரட்டுவ"
-              }
-            ]
+                en: "Hikkaduwa",
+                si: "හික්කඩුව",
+                ta: "ஹிக்கடுவா",
+              },
+            ],
           },
           {
-            "en": "Gampaha", 
-            "si": "ගම්පහ", 
-            "ta": "கம்பஹா", 
-            "cities": [
+            en: "Matara",
+            si: "මාතර",
+            ta: "மாத்தறை",
+            cities: [
               {
-                "en": "Gampaha",
-                "si": "ගම්පහ",
-                "ta": "கம்பஹா"
+                en: "Matara",
+                si: "මාතර",
+                ta: "மாத்தறை",
               },
               {
-                "en": "Negombo",
-                "si": "මීගමුව",
-                "ta": "நெகொம்போ"
+                en: "Tangalle",
+                si: "තංගල්ල",
+                ta: "தங்கல்ல",
               },
               {
-                "en": "Kelaniya",
-                "si": "කැලණිය",
-                "ta": "கெளலாணிய"
-              }
-            ]
+                en: "Dikwella",
+                si: "දික්වැල්ල",
+                ta: "டிக்வேல்ல",
+              },
+            ],
           },
           {
-            "en": "Kalutara", 
-            "si": "කළුතර", 
-            "ta": "களுத்துறை", 
-            "cities": [
+            en: "Hambantota",
+            si: "හම්බන්තොට",
+            ta: "ஹம்பாந்தோட்டை",
+            cities: [
               {
-                "en": "Kalutara",
-                "si": "කළුතර",
-                "ta": "களுத்துறை"
+                en: "Hambantota",
+                si: "හම්බන්තොට",
+                ta: "ஹம்பாந்தோட்டை",
               },
               {
-                "en": "Beruwala",
-                "si": "බෙරුවල",
-                "ta": "பெருவளை"
+                en: "Tissamaharama",
+                si: "තිස්සමහාරාම",
+                ta: "திச்ஸமஹாராமா",
               },
               {
-                "en": "Aluthgama",
-                "si": "අලුත්ගම",
-                "ta": "அலுத்த்கம"
-              }
-            ]
-          }          
-        ]
+                en: "Kataragama",
+                si: "කතරගම",
+                ta: "கடாரகாம",
+              },
+            ],
+          },
+        ],
       },
+
       {
-        "name": { "en": "Central", "si": "මධ්‍යම", "ta": "மத்திய" },
-        "districts": [
+        name: { en: "Eastern", si: "නැගෙනහිර", ta: "கிழக்கு" },
+        districts: [
           {
-            "en": "Kandy", 
-            "si": "මහනුවර", 
-            "ta": "கண்டி", 
-            "cities": [
+            en: "Ampara",
+            si: "අම්පාර",
+            ta: "அம்பாறை",
+            cities: [
               {
-                "en": "Kandy",
-                "si": "මහනුවර",
-                "ta": "கண்டி"
+                en: "Ampara",
+                si: "අම්පාර",
+                ta: "அம்பாறை",
               },
               {
-                "en": "Peradeniya",
-                "si": "පේරාදෙණිය",
-                "ta": "பேரடினியா"
+                en: "Kalmunai",
+                si: "කල්මුණේ",
+                ta: "கல்முனை",
               },
               {
-                "en": "Gampola",
-                "si": "ගම්පොල",
-                "ta": "கம்போலா"
-              }
-            ]
+                en: "Pottuvil",
+                si: "පොතුවිල්",
+                ta: "பொத்துவில்",
+              },
+            ],
           },
           {
-            "en": "Matale", 
-            "si": "මාතලේ", 
-            "ta": "மாதளை", 
-            "cities": [
+            en: "Batticaloa",
+            si: "මඩකලපුව",
+            ta: "பாட்டிக்கோடை",
+            cities: [
               {
-                "en": "Matale",
-                "si": "මාතලේ",
-                "ta": "மாதளை"
+                en: "Batticaloa",
+                si: "මඩකලපුව",
+                ta: "பாட்டிக்கோடை",
               },
               {
-                "en": "Dambulla",
-                "si": "දඹුල්ල",
-                "ta": "தம்புள்ள"
+                en: "Kallady",
+                si: "කල්ලඩි",
+                ta: "கல்லாடி",
               },
               {
-                "en": "Rattota",
-                "si": "රත්තොට",
-                "ta": "ரத்தொட்டா"
-              }
-            ]
+                en: "Eravur",
+                si: "එරාවුර්",
+                ta: "இராவூர்",
+              },
+            ],
           },
           {
-            "en": "Nuwara Eliya", 
-            "si": "නුවරඑළිය", 
-            "ta": "நுவரேலியா", 
-            "cities": [
+            en: "Trincomalee",
+            si: "ත්‍රිකුණාමලය",
+            ta: "திருகோணமலை",
+            cities: [
               {
-                "en": "Nuwara Eliya",
-                "si": "නුවරඑළිය",
-                "ta": "நுவரேலியா"
+                en: "Trincomalee",
+                si: "ත්‍රිකුණාමලය",
+                ta: "திருகோணமலை",
               },
               {
-                "en": "Hatton",
-                "si": "හැටන්",
-                "ta": "ஹாட்டன்"
+                en: "Nilaveli",
+                si: "නිලාවේලි",
+                ta: "நிலவேலி",
               },
               {
-                "en": "Balangoda",
-                "si": "බලංගොඩ",
-                "ta": "பலங்கோடா"
-              }
-            ]
-          }
-        ]
+                en: "Kuchchaveli",
+                si: "කුච්චවේලි",
+                ta: "குச்சவெலி",
+              },
+            ],
+          },
+        ],
       },
-      
+
       {
-        "name": { "en": "Southern", "si": "දකුණ", "ta": "தெற்கு" },
-        "districts": [
+        name: { en: "Northern", si: " උතුරු", ta: "வடக்கு" },
+        districts: [
           {
-            "en": "Galle", 
-            "si": "ගාල්ල", 
-            "ta": "காலி", 
-            "cities": [
+            en: "Jaffna",
+            si: "යාපනය",
+            ta: "யாழ்ப்பாணம்",
+            cities: [
               {
-                "en": "Galle",
-                "si": "ගාල්ල",
-                "ta": "காலி"
+                en: "Jaffna",
+                si: "යාපනය",
+                ta: "யாழ்ப்பாணம்",
               },
               {
-                "en": "Unawatuna",
-                "si": "උණවටුන",
-                "ta": "உணவதுனா"
+                en: "Chavakachcheri",
+                si: "චාවකච්චේරි",
+                ta: "சாவகச்சேரி",
               },
               {
-                "en": "Hikkaduwa",
-                "si": "හික්කඩුව",
-                "ta": "ஹிக்கடுவா"
-              }
-            ]
+                en: "Point Pedro",
+                si: "පේදුරුතුඩුව",
+                ta: "பாயிண்ட் பேட்ரோ",
+              },
+            ],
           },
           {
-            "en": "Matara", 
-            "si": "මාතර", 
-            "ta": "மாத்தறை", 
-            "cities": [
+            en: "Kilinochchi",
+            si: "කිලිනොච්චි",
+            ta: "கில்லினோச்சி",
+            cities: [
               {
-                "en": "Matara",
-                "si": "මාතර",
-                "ta": "மாத்தறை"
+                en: "Kilinochchi",
+                si: "කිලිනොච්චි",
+                ta: "கில்லினோச்சி",
               },
               {
-                "en": "Tangalle",
-                "si": "තංගල්ල",
-                "ta": "தங்கல்ல"
+                en: "Pooneryn",
+                si: "පුනරීන්",
+                ta: "பூனேரின்",
               },
               {
-                "en": "Dikwella",
-                "si": "දික්වැල්ල",
-                "ta": "டிக்வேல்ல"
-              }
-            ]
+                en: "Vavuniya",
+                si: "වවුනියාව",
+                ta: "வவுனியா",
+              },
+            ],
           },
           {
-            "en": "Hambantota", 
-            "si": "හම්බන්තොට", 
-            "ta": "ஹம்பாந்தோட்டை", 
-            "cities": [
+            en: "Mullaitivu",
+            si: "මුලතිව්",
+            ta: "முல்லைத்தீவு",
+            cities: [
               {
-                "en": "Hambantota",
-                "si": "හම්බන්තොට",
-                "ta": "ஹம்பாந்தோட்டை"
+                en: "Mullaitivu",
+                si: "මුලතිව්",
+                ta: "முல்லைத்தீவு",
               },
               {
-                "en": "Tissamaharama",
-                "si": "තිස්සමහාරාම",
-                "ta": "திச்ஸமஹாராமா"
+                en: "Puthukudiyiruppu",
+                si: "පුදුකුඩිඉරිප්පු",
+                ta: "புத்துக்குடியிருப்பு",
               },
               {
-                "en": "Kataragama",
-                "si": "කතරගම",
-                "ta": "கடாரகாம"
-              }
-            ]
-          }
-        ]
+                en: "Vallipunam",
+                si: "වල්ලිපුනම්",
+                ta: "வல்லிபுணம்",
+              },
+            ],
+          },
+        ],
       },
-      
+
       {
-        "name": { "en": "Eastern", "si": "නැගෙනහිර", "ta": "கிழக்கு" },
-        "districts": [
+        name: { en: "North Western", si: "උතුරු මැද", ta: "வடமேல்" },
+        districts: [
           {
-            "en": "Ampara", 
-            "si": "අම්පාර", 
-            "ta": "அம்பாறை", 
-            "cities": [
+            en: "Kurunegala",
+            si: "කුරුණෑගල",
+            ta: "குருநாகல்",
+            cities: [
               {
-                "en": "Ampara",
-                "si": "අම්පාර",
-                "ta": "அம்பாறை"
+                en: "Kurunegala",
+                si: "කුරුණෑගල",
+                ta: "குருநாகல்",
               },
               {
-                "en": "Kalmunai",
-                "si": "කල්මුණේ",
-                "ta": "கல்முனை"
+                en: "Maho",
+                si: "මහෝ",
+                ta: "மாஹோ",
               },
               {
-                "en": "Pottuvil",
-                "si": "පොතුවිල්",
-                "ta": "பொத்துவில்"
-              }
-            ]
+                en: "Dambulla",
+                si: "දඹුල්ල",
+                ta: "தம்புள்ளா",
+              },
+            ],
           },
           {
-            "en": "Batticaloa", 
-            "si": "මඩකලපුව", 
-            "ta": "பாட்டிக்கோடை", 
-            "cities": [
+            en: "Puttalam",
+            si: "පුත්තලම",
+            ta: "புத்தளம்",
+            cities: [
               {
-                "en": "Batticaloa",
-                "si": "මඩකලපුව",
-                "ta": "பாட்டிக்கோடை"
+                en: "Puttalam",
+                si: "පුත්තලම",
+                ta: "புத்தளம்",
               },
               {
-                "en": "Kallady",
-                "si": "කල්ලඩි",
-                "ta": "கல்லாடி"
+                en: "Chilaw",
+                si: "හලාවත",
+                ta: "சிலவ்",
               },
               {
-                "en": "Eravur",
-                "si": "එරාවුර්",
-                "ta": "இராவூர்"
-              }
-            ]
+                en: "Mannar",
+                si: "මන්නාරම",
+                ta: "மன்னார்",
+              },
+            ],
           },
-          {
-            "en": "Trincomalee", 
-            "si": "ත්‍රිකුණාමලය", 
-            "ta": "திருகோணமலை", 
-            "cities": [
-              {
-                "en": "Trincomalee",
-                "si": "ත්‍රිකුණාමලය",
-                "ta": "திருகோணமலை"
-              },
-              {
-                "en": "Nilaveli",
-                "si": "නිලාවේලි",
-                "ta": "நிலவேலி"
-              },
-              {
-                "en": "Kuchchaveli",
-                "si": "කුච්චවේලි",
-                "ta": "குச்சவெலி"
-              }
-            ]
-          }
-        ]
+        ],
       },
-      
+
       {
-        "name": { "en": "Northern", "si": " උතුරු", "ta": "வடக்கு" },
-        "districts": [
+        name: { en: "North Central", si: "උතුරු මධ්‍යම", ta: "வட மத்திய" },
+        districts: [
           {
-            "en": "Jaffna", 
-            "si": "යාපනය", 
-            "ta": "யாழ்ப்பாணம்", 
-            "cities": [
+            en: "Anuradhapura",
+            si: "අනුරාධපුර",
+            ta: "அனுராதபுரம்",
+            cities: [
               {
-                "en": "Jaffna",
-                "si": "යාපනය",
-                "ta": "யாழ்ப்பாணம்"
+                en: "Anuradhapura",
+                si: "අනුරාධපුර",
+                ta: "அனுராதபுரம்",
               },
               {
-                "en": "Chavakachcheri",
-                "si": "චාවකච්චේරි",
-                "ta": "சாவகச்சேரி"
+                en: "Rambawewa",
+                si: "රඹවැව",
+                ta: "ரம்பாவேவ",
               },
               {
-                "en": "Point Pedro",
-                "si": "පේදුරුතුඩුව",
-                "ta": "பாயிண்ட் பேட்ரோ"
-              }
-            ]
+                en: "Tissa",
+                si: "තිස්ස",
+                ta: "திசா",
+              },
+            ],
           },
           {
-            "en": "Kilinochchi", 
-            "si": "කිලිනොච්චි", 
-            "ta": "கில்லினோச்சி", 
-            "cities": [
+            en: "Polonnaruwa",
+            si: "පොලොන්නරුව",
+            ta: "பொலன்னருவ",
+            cities: [
               {
-                "en": "Kilinochchi",
-                "si": "කිලිනොච්චි",
-                "ta": "கில்லினோச்சி"
+                en: "Polonnaruwa",
+                si: "පොලොන්නරුව",
+                ta: "பொலன்னருவ",
               },
               {
-                "en": "Pooneryn",
-                "si": "පුනරීන්",
-                "ta": "பூனேரின்"
+                en: "Dimbulagala",
+                si: "දිඹුලාගල",
+                ta: "டிம்புலகல",
               },
               {
-                "en": "Vavuniya",
-                "si": "වවුනියාව",
-                "ta": "வவுனியா"
-              }
-            ]
+                en: "Giritale",
+                si: "ගිරිතලේ",
+                ta: "கிரிதலே",
+              },
+            ],
           },
-          {
-            "en": "Mullaitivu", 
-            "si": "මුලතිව්", 
-            "ta": "முல்லைத்தீவு", 
-            "cities": [
-              {
-                "en": "Mullaitivu",
-                "si": "මුලතිව්",
-                "ta": "முல்லைத்தீவு"
-              },
-              {
-                "en": "Puthukudiyiruppu",
-                "si": "පුදුකුඩිඉරිප්පු",
-                "ta": "புத்துக்குடியிருப்பு"
-              },
-              {
-                "en": "Vallipunam",
-                "si": "වල්ලිපුනම්",
-                "ta": "வல்லிபுணம்"
-              }
-            ]
-          }
-        ]
+        ],
       },
-      
+
       {
-        "name": { "en": "North Western", "si": "උතුරු මැද", "ta": "வடமேல்" },
-        "districts": [
+        name: { en: "Uva", si: "උව", ta: "உவா" },
+        districts: [
           {
-            "en": "Kurunegala", 
-            "si": "කුරුණෑගල", 
-            "ta": "குருநாகல்", 
-            "cities": [
+            en: "Badulla",
+            si: "බදුල්ල",
+            ta: "பதுளை",
+            cities: [
               {
-                "en": "Kurunegala",
-                "si": "කුරුණෑගල",
-                "ta": "குருநாகல்"
+                en: "Badulla",
+                si: "බදුල්ල",
+                ta: "பதுளை",
               },
               {
-                "en": "Maho",
-                "si": "මහෝ",
-                "ta": "மாஹோ"
+                en: "Ella",
+                si: "ඇල්ල",
+                ta: "எல்லா",
               },
               {
-                "en": "Dambulla",
-                "si": "දඹුල්ල",
-                "ta": "தம்புள்ளா"
-              }
-            ]
+                en: "Haputale",
+                si: "හපුතලේ",
+                ta: "ஹபுதலை",
+              },
+            ],
           },
           {
-            "en": "Puttalam", 
-            "si": "පුත්තලම", 
-            "ta": "புத்தளம்", 
-            "cities": [
+            en: "Moneragala",
+            si: "මොනරාගල",
+            ta: "முனரகலை",
+            cities: [
               {
-                "en": "Puttalam",
-                "si": "පුත්තලම",
-                "ta": "புத்தளம்"
+                en: "Moneragala",
+                si: "මොණරාගල",
+                ta: "முனரகலை",
               },
               {
-                "en": "Chilaw",
-                "si": "හලාවත",
-                "ta": "சிலவ்"
+                en: "Bibile",
+                si: "බිබිල",
+                ta: "பிபிலே",
               },
               {
-                "en": "Mannar",
-                "si": "මන්නාරම",
-                "ta": "மன்னார்"
-              }
-            ]
-          }
-        ]
+                en: "Medagama",
+                si: "මැදගම",
+                ta: "மேதகம",
+              },
+            ],
+          },
+        ],
       },
-      
+
       {
-        "name": { "en": "North Central", "si": "උතුරු මධ්‍යම", "ta": "வட மத்திய" },
-        "districts": [
+        name: { en: "Sabaragamuwa", si: "සබරගමුව", ta: "சபரகமுவ" },
+        districts: [
           {
-            "en": "Anuradhapura", 
-            "si": "අනුරාධපුර", 
-            "ta": "அனுராதபுரம்", 
-            "cities": [
+            en: "Rathnapura",
+            si: "රත්නපුර",
+            ta: "ரத்நாபுர",
+            cities: [
               {
-                "en": "Anuradhapura",
-                "si": "අනුරාධපුර",
-                "ta": "அனுராதபுரம்"
+                en: "Rathnapura",
+                si: "රත්නපුර",
+                ta: "ரத்நாபுர",
               },
               {
-                "en": "Rambawewa",
-                "si": "රඹවැව",
-                "ta": "ரம்பாவேவ"
+                en: "Elapatha",
+                si: "ඇලපාත",
+                ta: "எலபத",
               },
               {
-                "en": "Tissa",
-                "si": "තිස්ස",
-                "ta": "திசா"
-              }
-            ]
+                en: "Opanayaka",
+                si: "ඕපනායක",
+                ta: "ஒபனயக",
+              },
+            ],
           },
           {
-            "en": "Polonnaruwa", 
-            "si": "පොලොන්නරුව", 
-            "ta": "பொலன்னருவ", 
-            "cities": [
+            en: "Kegalle",
+            si: "කැගල්ල",
+            ta: "கெகலே",
+            cities: [
               {
-                "en": "Polonnaruwa",
-                "si": "පොලොන්නරුව",
-                "ta": "பொலன்னருவ"
+                en: "Kegalle",
+                si: "කැගල්ල",
+                ta: "கெகலே",
               },
               {
-                "en": "Dimbulagala",
-                "si": "දිඹුලාගල",
-                "ta": "டிம்புலகல"
+                en: "Rambukkana",
+                si: "රඹුක්කන",
+                ta: "ரம்புக்கன",
               },
               {
-                "en": "Giritale",
-                "si": "ගිරිතලේ",
-                "ta": "கிரிதலே"
-              }
-            ]
-          }
-        ]
-      },
-      
-      {
-        "name": { "en": "Uva", "si": "උව", "ta": "உவா" },
-        "districts": [
-          {
-            "en": "Badulla", 
-            "si": "බදුල්ල", 
-            "ta": "பதுளை", 
-            "cities": [
-              {
-                "en": "Badulla",
-                "si": "බදුල්ල",
-                "ta": "பதுளை"
+                en: "Mawanella",
+                si: "මාවනැල්ල",
+                ta: "மாவனெல்ல",
               },
-              {
-                "en": "Ella",
-                "si": "ඇල්ල",
-                "ta": "எல்லா"
-              },
-              {
-                "en": "Haputale",
-                "si": "හපුතලේ",
-                "ta": "ஹபுதலை"
-              }
-            ]
+            ],
           },
-          {
-            "en": "Moneragala", 
-            "si": "මොනරාගල", 
-            "ta": "முனரகலை", 
-            "cities": [
-              {
-                "en": "Moneragala",
-                "si": "මොණරාගල",
-                "ta": "முனரகலை"
-              },
-              {
-                "en": "Bibile",
-                "si": "බිබිල",
-                "ta": "பிபிலே"
-              },
-              {
-                "en": "Medagama",
-                "si": "මැදගම",
-                "ta": "மேதகம"
-              }
-            ]
-          }
-        ]
+        ],
       },
-      
-      {
-        "name": { "en": "Sabaragamuwa", "si": "සබරගමුව", "ta": "சபரகமுவ" },
-        "districts": [
-          {
-            "en": "Rathnapura", 
-            "si": "රත්නපුර", 
-            "ta": "ரத்நாபுர", 
-            "cities": [
-              {
-                "en": "Rathnapura",
-                "si": "රත්නපුර",
-                "ta": "ரத்நாபுர"
-              },
-              {
-                "en": "Elapatha",
-                "si": "ඇලපාත",
-                "ta": "எலபத"
-              },
-              {
-                "en": "Opanayaka",
-                "si": "ඕපනායක",
-                "ta": "ஒபனயக"
-              }
-            ]
-          },
-          {
-            "en": "Kegalle", 
-            "si": "කැගල්ල", 
-            "ta": "கெகலே", 
-            "cities": [
-              {
-                "en": "Kegalle",
-                "si": "කැගල්ල",
-                "ta": "கெகலே"
-              },
-              {
-                "en": "Rambukkana",
-                "si": "රඹුක්කන",
-                "ta": "ரம்புக்கன"
-              },
-              {
-                "en": "Mawanella",
-                "si": "මාවනැල්ල",
-                "ta": "மாவனெல்ல"
-              }
-            ]
-          }
-        ]
-      }
-      
-    ]
-  }
-  
-  const jsonData1 = {
-    "jobRoles": [
-      {
-        "en": "Collection Center Manager",
-        "si": "එකතු කිරීමේ මධ්‍යස්ථාන කළමනාකරු",
-        "ta": "சேகரிப்பு மைய மேலாளர்"
-      },
-      {
-        "en": "Collection Officer",
-        "si": "එකතු කිරීමේ නිලධාරී",
-        "ta": "வசூல் அதிகாரி"
-      }
-    ]
+    ],
   };
-  
-   
 
+  const jsonData1 = {
+    jobRoles: [
+      {
+        en: "Collection Center Manager",
+        si: "එකතු කිරීමේ මධ්‍යස්ථාන කළමනාකරු",
+        ta: "சேகரிப்பு மைய மேலாளர்",
+      },
+      {
+        en: "Collection Officer",
+        si: "එකතු කිරීමේ නිලධාරී",
+        ta: "வசூல் அதிகாரி",
+      },
+    ],
+  };
 
   return (
     <View
@@ -1145,33 +1095,41 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
           source={require("../assets/images/mprofile.webp")}
           className="w-28 h-28 rounded-full"
         />  */}
-      
-                      <View className="items-center mb-6 relative">
-                <Image
-                  source={
-                    profileImage
-                      ? profileImage
-                      : require("../assets/images/pcprofile 1.webp")
-                  }
-                  style={{ width: 100, height: 100, borderRadius: 50 }}
-                />
-                <TouchableOpacity
-                  className="absolute right-0 bottom-0 p-1 bg-white  rounded-full"
-                  onPress={pickImage}
-                >
-                  <Image
-                    source={require("../assets/images/Pencil.webp")}
-                    style={{ width: 17, height: 17, tintColor: "green" }}
-                  />
-                </TouchableOpacity>
-              </View>
-          
+
+        <View className="items-center mb-6 relative">
+          <Image
+            source={
+              profileImage
+                ? profileImage
+                : require("../assets/images/pcprofile 1.webp")
+            }
+            style={{ width: 100, height: 100, borderRadius: 50 }}
+          />
+          <TouchableOpacity
+            className="absolute right-0 bottom-0 p-1 bg-white  rounded-full"
+            onPress={pickImage}
+          >
+            <Image
+              source={require("../assets/images/Pencil.webp")}
+              style={{ width: 17, height: 17, tintColor: "green" }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 16 }} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        contentContainerStyle={{ paddingHorizontal: 16 }}
+        keyboardShouldPersistTaps="handled"
+      >
         <View className="space-y-4">
           <View>
-            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2">  {t("Profile.FirstName")}</Text>
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-500 mb-2"
+            >
+              {" "}
+              {t("Profile.FirstName")}
+            </Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={getfirstName()}
@@ -1180,7 +1138,13 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
             />
           </View>
           <View>
-            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2"> {t("Profile.LastName")}</Text>
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-500 mb-2"
+            >
+              {" "}
+              {t("Profile.LastName")}
+            </Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={getlastName()}
@@ -1189,7 +1153,12 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
             />
           </View>
           <View>
-            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2">{t("Profile.Company")}</Text>
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-500 mb-2"
+            >
+              {t("Profile.Company")}
+            </Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={getcompanyName()}
@@ -1198,7 +1167,12 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
             />
           </View>
           <View>
-            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2">{t("Profile.CenterCode")}</Text>
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-500 mb-2"
+            >
+              {t("Profile.CenterCode")}
+            </Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={profileData.regcode}
@@ -1207,33 +1181,44 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
           </View>
 
           <View>
-            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2">{t("Profile.CenterName")}</Text>
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-500 mb-2"
+            >
+              {t("Profile.CenterName")}
+            </Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={profileData.collectionCenterName}
               editable={false}
             />
           </View>
-          {/* <View>
-            <Text className="text-gray-500 mb-2">{t("Profile.Job")}</Text>
-            <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
-              value={profileData.jobRole}
-              editable={false}
-            />
-          </View> */}
-          <View>
-          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2">{t("Profile.Job")}</Text>
-  <TextInput
-    className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
-    value={getTranslatedJobRole(profileData.jobRole, selectedLanguage)}
-    editable={false}
-    style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-  />
-</View>
 
           <View>
-            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2">{t("Profile.NIC")}</Text>
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-500 mb-2"
+            >
+              {t("Profile.Job")}
+            </Text>
+            <TextInput
+              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              value={getTranslatedJobRole(
+                profileData.jobRole,
+                selectedLanguage
+              )}
+              editable={false}
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+            />
+          </View>
+
+          <View>
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-500 mb-2"
+            >
+              {t("Profile.NIC")}
+            </Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={profileData.nicNumber}
@@ -1241,7 +1226,12 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
             />
           </View>
           <View>
-            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2">{t("Profile.Phone1")}</Text>
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-500 mb-2"
+            >
+              {t("Profile.Phone1")}
+            </Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={newPhoneNumber}
@@ -1256,7 +1246,12 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
           </View>
 
           <View>
-            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2">{t("Profile.Phone2")}</Text>
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-500 mb-2"
+            >
+              {t("Profile.Phone2")}
+            </Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={newPhoneNumber2}
@@ -1270,7 +1265,12 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
             )}
           </View>
           <View>
-            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2">{t("Profile.House")}</Text>
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-500 mb-2"
+            >
+              {t("Profile.House")}
+            </Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={profileData.houseNumber}
@@ -1278,69 +1278,83 @@ const checkPhoneExists = async (newPhoneNumber: string, phoneCode1: string) => {
             />
           </View>
           <View>
-            <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2">{t("Profile.Street")}</Text>
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-500 mb-2"
+            >
+              {t("Profile.Street")}
+            </Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
               value={profileData.streetName}
               editable={false}
             />
           </View>
-          
-          <View>
-          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2">{t("Profile.City")}</Text>
-  <TextInput
-    className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
-    value={getTranslatedCity(profileData.city, profileData.district, selectedLanguage)}
-    editable={false}
-    style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-  />
-</View>
 
-          {/* <View>
-            <Text className="text-gray-500 mb-">{t("Profile.District")}</Text>
+          <View>
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-500 mb-2"
+            >
+              {t("Profile.City")}
+            </Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
-              value={profileData.district}
+              value={getTranslatedCity(
+                profileData.city,
+                profileData.district,
+                selectedLanguage
+              )}
               editable={false}
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
             />
           </View>
 
           <View>
-            <Text className="text-gray-500 mb-">{t("Profile.Province")}</Text>
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-500 mb-2"
+            >
+              {t("Profile.District")}
+            </Text>
             <TextInput
               className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
-              value={profileData.province}
+              value={getTranslatedDistrict(
+                profileData.district,
+                selectedLanguage
+              )}
               editable={false}
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
             />
-          </View> */}
+          </View>
 
-<View>
-<Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2">{t("Profile.District")}</Text>
-  <TextInput
-    className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
-    value={getTranslatedDistrict(profileData.district, selectedLanguage)}
-    editable={false}
-    style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-  />
-</View>
+          <View>
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-500 mb-2"
+            >
+              {t("Profile.Province")}
+            </Text>
+            <TextInput
+              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
+              value={getTranslatedProvince(
+                profileData.province,
+                selectedLanguage
+              )}
+              editable={false}
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+            />
+          </View>
 
-<View>
-<Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500 mb-2">{t("Profile.Province")}</Text>
-  <TextInput
-    className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
-    value={getTranslatedProvince(profileData.province, selectedLanguage)}
-    editable={false}
-    style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-  />
-</View>
-        
-          
           {showUpdateButton && (
             <TouchableOpacity
               onPress={handleUpdatePhoneNumber}
-              className="bg-[#2AAD7A] py-3 rounded-[30px] mb-4" 
+              className="bg-[#2AAD7A] py-3 rounded-[30px] mb-4"
             >
-              <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-white font-semibold">
+              <Text
+                style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+                className="text-center text-white font-semibold"
+              >
                 {t("Profile.Update")}
               </Text>
             </TouchableOpacity>

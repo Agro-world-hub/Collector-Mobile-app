@@ -264,52 +264,6 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
    
   };
   
-  // Fetch Crop Varieties
-  // useEffect(() => {
-  //   const fetchVarieties = async () => {
-  //     if (!crop) return;
-
-  //     try {
-  //       const token = await AsyncStorage.getItem("token");
-  //       if (!token) {
-  //         console.error("No authentication token found");
-  //         return;
-  //       }
-
-  //       const headers = { Authorization: `Bearer ${token}` };
-  //       const cropId = Number(crop);
-
-  //       console.log("Fetching varieties for crop ID:", cropId);
-  //       console.log("...", cropOptions);
-
-  //       // Important: Verify the correct API endpoint for varieties
-  //       const response = await axios.get<CropVariety[]>(
-  //         `${environment.API_BASE_URL}api/unregisteredfarmercrop/crops/varieties/collection/${cropId}`,
-  //         { headers }
-  //       );
-
-  //       console.log("Fetched Varieties:", response.data);
-
-  //       setVarietyOptions(
-  //         response.data.map((variety) => ({
-  //           label: variety.varietyEnglish,
-  //           value: variety.id.toString(),
-  //         }))
-  //       );
-  //     } catch (error) {
-  //       if (axios.isAxiosError(error)) {
-  //         console.error(
-  //           "Error fetching crop varieties:",
-  //           error.response?.data || error.message
-  //         );
-  //       } else {
-  //         console.error("Unexpected error fetching crop varieties:", error);
-  //       }
-  //     }
-  //   };
-
-  //   fetchVarieties();
-  // }, [crop]);
   useEffect(() => {
     const fetchVarieties = async () => {
       if (!crop) return;
@@ -466,164 +420,11 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
       return [...prevList, newCrop]; // Add the new crop to the list
     });
 
-    // Reset input fields after adding the crop
     setCrop(null); // Reset crop selection
     setVariety(null); // Reset variety selection
     setLoadIn(""); // Reset load input field
     setShowAddMore(true); // Show the 'Add More' button
   };
-
-  // const handleAddtoList  = () => {
-
-  //   if (!crop || !variety || !loadIn) {
-  //     Alert.alert("Error", "Please fill all fields before adding.");
-  //     return;
-  //   }
-
-  //   const newCrop = { crop, variety, loadIn };
-
-  //   // Use functional update to ensure correct state updates
-  //   setCropsList((prevList) => {
-  //     const updatedList = [...prevList, newCrop];
-  //     return updatedList;
-  //   });
-  //   console.log(",,", newCrop);
-
-  //   // Clear input fields after adding
-  //   setCrop("");
-  //   setVariety(null);
-  //   setLoadIn("");
-  //   setShowAddMore(true);
-  //   // navigation.navigate("ReviewCollectionRequests", {
-  //   //   cropsList: [...cropsList, newCrop], // Include the newly added crop
-  //   //   address: { buildingNo, streetName, city, routeNumber },
-  //   //   scheduleDate,
-  //   //   farmerId: id,
-  //   // });
-  // };
-  // const handleSubmit = async () => {
-  //   console.log("Submitting collection request...");
-  //   console.log("Crops List:", cropsList);
-  //   Keyboard.dismiss(); // Dismiss the keyboard if it's open
-  //   try {
-  //     const token = await AsyncStorage.getItem("token");
-  //     if (!token) {
-  //       console.error("No authentication token found");
-  //       Alert.alert(t("Error.error"), t("Error.Authentication required. Please log in."));
-  //       return;
-  //     }
-
-  //     if (
-  //       !routeNumber ||
-  //       !buildingNo ||
-  //       !streetName ||
-  //       !city ||
-  //       cropsList.length === 0 ||
-  //       !scheduleDate
-  //     ) {
-  //       Alert.alert(
-  //         t("Error.error"),
-  //        t( "Error.Please fill all fields, add crops, and select a schedule date.")
-  //       );
-  //       return;
-  //     }
-
-  //     const farmerId = id; // Ensure `id` is properly set
-
-  //     const headers = {
-  //       Authorization: `Bearer ${token}`,
-  //       "Content-Type": "application/json",
-  //     };
-
-  //     // 1. Update user address details
-  //     const updateUserResponse = await axios.put(
-  //       `${environment.API_BASE_URL}api/unregisteredfarmercrop/user/update/${farmerId}`,
-  //       { routeNumber, buildingNo, streetName, city },
-  //       { headers }
-  //     );
-
-  //     if (updateUserResponse.status !== 200) {
-  //       Alert.alert(t("Error.error"), t("Error.Failed to update user details"));
-  //       return;
-  //     }
-  //     // 2. Submit multiple collection requests with a single schedule date
-  //     const collectionRequestData = cropsList.map((crop) => ({
-  //       farmerId,
-  //       crop: crop.crop,
-  //       variety: crop.variety,
-  //       loadIn: crop.loadIn,
-  //       scheduleDate: scheduleDate, // Use the single schedule date for all crops
-  //       buildingNo,
-  //       streetName,
-  //       city,
-  //       routeNumber
-  //     }));
-
-  //     console.log("Submission Data:", collectionRequestData);
-
-  //     const collectionRequestResponse = await axios.post(
-  //       `${environment.API_BASE_URL}api/unregisteredfarmercrop/submit-collection-request`,
-  //       { requests: collectionRequestData }, // Send as an array
-  //       { headers }
-  //     );
-
-  //     if (collectionRequestResponse.status === 200) {
-  //       // Clear the form after successful submission
-  //       Alert.alert(t("Error.Success"), t("Error.Collection Requests Submitted!"));
-  //       try {
-  //         const apiUrl = "https://api.getshoutout.com/coreservice/messages";
-  //         const headers = {
-  //           Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
-  //           "Content-Type": "application/json",
-  //         };
-
-  //         let Message = "";
-  //         if (language === "English") {
-  //           Message = `Thank you for placing a produce collection order with us. The allocated driver will contact you one day prior to the collection date.`;
-  //         } else if (language === "Sinhala") {
-  //           Message = `අප වෙත නිෂ්පාදන එකතු කිරීමේ ඇණවුමක් ලබා දීම ගැන ඔබට ස්තූතියි. ඔබ වෙනුවෙන් වෙන් කරන ලද රියදුරුමහතෙකු එකතු කිරීමේ දිනයට දිනකට පෙර ඔබව සම්බන්ධ කර ගනු ඇත.`;
-  //         } else if (language === "Tamil") {
-  //           Message = `எங்களிடம் விளைபொருள் சேகரிப்பு உத்தரவை வழங்கியதற்கு நன்றி. ஒதுக்கப்பட்ட ஓட்டுநர் சேகரிப்பு திகதிக்கு ஒரு நாள் முன்னதாக உங்களைத் தொடர்புகொள்வார்.`;
-  //         }
-  //         const formattedPhone = phoneNumber;
-
-  //         const body = {
-  //           source: "AgroWorld",
-  //           destinations: [formattedPhone],
-  //           content: {
-  //             sms: Message,
-  //           },
-  //           transports: ["sms"],
-  //         };
-
-  //         const response = await axios.post(apiUrl, body, { headers });
-
-  //         if (response.data.referenceId) {
-  //           console.log("SMS notification sent successfully!")
-  //           // Alert.alert("Success", "SMS notification sent successfully!");
-  //         }
-  //       } catch (error) {
-  //         console.error("Error sending SMS:", error);
-  //         // Alert.alert(
-  //         //   "Error",
-  //         //   "Failed to send notification. Please try again."
-  //         // );
-  //       }
-  //       setCropsList([]); // Clear the crops list
-  //       setRouteNumber("");
-  //       setBuildingNo("");
-  //       setStreetName("");
-  //       setCity("");
-  //       setScheduleDate("");
-  //     } else {
-  //       Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
-  //     }
-  //   } catch (error) {
-  //     console.error("Error submitting request:", error);
-  //     Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
-
-  //   }
-  // };
 
   const handleSubmit = async () => {
     console.log("Submitting collection request...");
@@ -659,8 +460,6 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
       };
 
       try {
-        // 1. Update user address details
-        // Always include routeNumber in the request, even if it's empty
         const addressData = { 
           routeNumber: routeNumber || "", // Send empty string if null/undefined
           buildingNo, 
@@ -750,7 +549,6 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
 
             if (response.data.referenceId) {
               console.log("SMS notification sent successfully!")
-              // Alert.alert("Success", "SMS notification sent successfully!");
             }
           } catch (error: unknown) {
             if (error instanceof Error) {
@@ -758,10 +556,6 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
             } else {
               console.error("Error sending SMS:", error);
             }
-            // Alert.alert(
-            //   "Error",
-            //   "Failed to send notification. Please try again."
-            // );
           }
           setCropsList([]); // Clear the crops list
           setRouteNumber("");
@@ -886,16 +680,6 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
               />
             </TouchableOpacity>
           </View>
-
-          {/* {showPicker && (
-  <DateTimePicker
-    value={scheduleDate ? new Date(scheduleDate) : new Date()}
-    mode="date"
-    display="default"
-    minimumDate={new Date()} // Prevent selection of past dates
-    onChange={handleDateChange}
-  />
-)} */}
 
 {showPicker && Platform.OS === "android" && (
           <DateTimePicker

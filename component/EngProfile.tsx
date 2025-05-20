@@ -348,7 +348,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {environment }from '@/environment/environment';
+import { environment } from "@/environment/environment";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -358,7 +358,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 import { LanguageContext } from "@/context/LanguageContext";
-
 
 type EngProfileNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -379,12 +378,12 @@ interface UserProfile {
   companyName: string;
   image: string;
   firstNameSinhala: string;
-  lastNameSinhala:string;
-  firstNameTamil:string;
-  lastNameTamil:string;
-  companyNameSinhala:string;
-  companyNameEnglish:string;
-  companyNameTamil:string;
+  lastNameSinhala: string;
+  firstNameTamil: string;
+  lastNameTamil: string;
+  companyNameSinhala: string;
+  companyNameEnglish: string;
+  companyNameTamil: string;
   empId: string;
 }
 
@@ -404,7 +403,6 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const { changeLanguage } = useContext(LanguageContext);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
 
-
   const fetchSelectedLanguage = async () => {
     try {
       const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
@@ -413,16 +411,12 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       console.error("Error fetching language preference:", error);
     }
   };
-useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
-      await fetchSelectedLanguage(); 
-    
+      await fetchSelectedLanguage();
     };
     fetchData();
   }, []);
- 
-
-
 
   const route = useRoute();
   const currentScreen = route.name;
@@ -436,7 +430,10 @@ useEffect(() => {
       navigation.goBack();
     }
   };
-  const complaintOptions = [t("EngProfile.Report Complaint"), t("EngProfile.View Complaint History")];
+  const complaintOptions = [
+    t("EngProfile.Report Complaint"),
+    t("EngProfile.View Complaint History"),
+  ];
 
   const handleComplaintSelect = (complaint: string) => {
     setComplaintDropdownOpen(false);
@@ -484,9 +481,8 @@ useEffect(() => {
     setSelectedLanguage(language);
     setLanguageDropdownOpen(false);
     try {
-
       if (language === "English") {
-        console
+        console;
         LanguageSelect("en");
         HanldeAsynStorage("en");
       } else if (language === "தமிழ்") {
@@ -498,7 +494,6 @@ useEffect(() => {
       }
     } catch (error) {}
   };
-
 
   const handleCall = () => {
     const phoneNumber = "+1234567890"; // Replace with the actual number
@@ -526,10 +521,10 @@ useEffect(() => {
 
       // Remove the token and empId from AsyncStorage (or any storage you're using)
       await AsyncStorage.removeItem("token");
-    await AsyncStorage.removeItem("jobRole");
-    await AsyncStorage.removeItem("companyNameEnglish");
-    await AsyncStorage.removeItem("companyNameSinhala");
-    await AsyncStorage.removeItem("companyNameTamil");
+      await AsyncStorage.removeItem("jobRole");
+      await AsyncStorage.removeItem("companyNameEnglish");
+      await AsyncStorage.removeItem("companyNameSinhala");
+      await AsyncStorage.removeItem("companyNameTamil");
       await AsyncStorage.removeItem("empid");
       // Optionally, you can also remove it from your app's state (if stored there)
       // setEmpId(null);  // Clear empId from the app's state (if using useState)
@@ -547,19 +542,19 @@ useEffect(() => {
   };
   const status = async (empId: string, status: boolean) => {
     try {
-      const token = await AsyncStorage.getItem("token"); 
+      const token = await AsyncStorage.getItem("token");
       if (!token) {
         console.error("Token not found");
         return;
       }
-  
+
       const response = await fetch(
         `${environment.API_BASE_URL}api/collection-officer/online-status`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,  // Add token in Authorization header
+            Authorization: `Bearer ${token}`, // Add token in Authorization header
           },
           body: JSON.stringify({
             empId: empId, // Use the passed empId
@@ -567,7 +562,7 @@ useEffect(() => {
           }),
         }
       );
-  
+
       if (response) {
         console.log("User is marked as ofline");
       } else {
@@ -578,20 +573,17 @@ useEffect(() => {
     }
   };
 
-
   const getTextStyle = (language: string) => {
     if (language === "si") {
       return {
         fontSize: 14, // Smaller text size for Sinhala
         lineHeight: 20, // Space between lines
       };
-      
     }
     return {
       fontSize: 16, // Default font size
       lineHeight: 25, // Default line height
     };
-   
   };
 
   const getFullName = () => {
@@ -628,10 +620,6 @@ useEffect(() => {
       <ScrollView>
         {/* Profile Card */}
         <View className="flex-row items-center p-2 mt-4  mb-4">
-          {/* <Image
-          source={require("../assets/images/mprofile.webp")}
-          className="w-16 h-16 rounded-full mr-3"
-        /> */}
           <Image
             source={
               profile?.image
@@ -642,14 +630,14 @@ useEffect(() => {
           />
 
           <View className="flex-1">
-            {/* <Text className="text-lg mb-1">
-              {profile?.firstNameEnglish} {profile?.lastNameEnglish}
-            </Text> */}
-             <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-lg font-bold">{getFullName()}</Text>
-            {/* <Text className="text-sm text-gray-500">
-              {profile?.companyName}
-            </Text> */}
-             <Text className="text-gray-500">{profile?.empId}</Text>
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-lg font-bold"
+            >
+              {getFullName()}
+            </Text>
+
+            <Text className="text-gray-500">{profile?.empId}</Text>
           </View>
           <TouchableOpacity onPress={handleEditClick}>
             <Ionicons name="create-outline" size={30} color="#2fcd46" />
@@ -660,19 +648,21 @@ useEffect(() => {
           {/* Horizontal Line */}
           <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
-        {/* Language Settings */}
-        <TouchableOpacity
-          onPress={() => setLanguageDropdownOpen(!isLanguageDropdownOpen)}
-          className="flex-row items-center py-3"
-        >
-          <Ionicons name="globe-outline" size={20} color="black" />
-          <Text className="flex-1 text-lg ml-2">{t("EngProfile.Language")}</Text>
-          <Ionicons
-            name={isLanguageDropdownOpen ? "chevron-up" : "chevron-down"}
-            size={20}
-            color="black"
-          />
-        </TouchableOpacity>
+          {/* Language Settings */}
+          <TouchableOpacity
+            onPress={() => setLanguageDropdownOpen(!isLanguageDropdownOpen)}
+            className="flex-row items-center py-3"
+          >
+            <Ionicons name="globe-outline" size={20} color="black" />
+            <Text className="flex-1 text-lg ml-2">
+              {t("EngProfile.Language")}
+            </Text>
+            <Ionicons
+              name={isLanguageDropdownOpen ? "chevron-up" : "chevron-down"}
+              size={20}
+              color="black"
+            />
+          </TouchableOpacity>
 
           {isLanguageDropdownOpen && (
             <View className="pl-8">
@@ -680,10 +670,18 @@ useEffect(() => {
                 <TouchableOpacity
                   key={language}
                   onPress={() => handleLanguageSelect(language)}
-                  className={`flex-row items-center py-2 px-4 rounded-lg my-1 ${selectedLanguage === language ? "bg-green-100" : "bg-transparent"}`}
+                  className={`flex-row items-center py-2 px-4 rounded-lg my-1 ${
+                    selectedLanguage === language
+                      ? "bg-green-100"
+                      : "bg-transparent"
+                  }`}
                 >
                   <Text
-                    className={`text-base ${selectedLanguage === language ? "text-black" : "text-gray-500"}`}
+                    className={`text-base ${
+                      selectedLanguage === language
+                        ? "text-black"
+                        : "text-gray-500"
+                    }`}
                   >
                     {language}
                   </Text>
@@ -700,73 +698,63 @@ useEffect(() => {
           {/* Horizontal Line */}
           <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
-        {/* View My QR Code */}
-        <TouchableOpacity
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingVertical: 12,
-          }}
-          onPress={() => navigation.navigate("OfficerQr")}
-        >
-          <Ionicons name="qr-code" size={20} color="black" />
-          <Text className="flex-1 text-lg ml-2">{t("EngProfile.View")}</Text>
-        </TouchableOpacity>
+          {/* View My QR Code */}
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingVertical: 12,
+            }}
+            onPress={() => navigation.navigate("OfficerQr")}
+          >
+            <Ionicons name="qr-code" size={20} color="black" />
+            <Text className="flex-1 text-lg ml-2">{t("EngProfile.View")}</Text>
+          </TouchableOpacity>
 
           {/* Horizontal Line */}
           <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
-        {/* Change Password */}
-        <TouchableOpacity
-          className="flex-row items-center py-3"
-          onPress={() =>
-            navigation.navigate("ChangePassword", { empid } as any)
-          }
-        >
-          <Ionicons name="lock-closed-outline" size={20} color="black" />
-          <Text className="flex-1 text-lg ml-2">{t("EngProfile.ChangePassword")}</Text>
-        </TouchableOpacity>
+          {/* Change Password */}
+          <TouchableOpacity
+            className="flex-row items-center py-3"
+            onPress={() =>
+              navigation.navigate("ChangePassword", { empid } as any)
+            }
+          >
+            <Ionicons name="lock-closed-outline" size={20} color="black" />
+            <Text className="flex-1 text-lg ml-2">
+              {t("EngProfile.ChangePassword")}
+            </Text>
+          </TouchableOpacity>
 
           <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
-                <TouchableOpacity
-          className="flex-row items-center py-3"
-          onPress={() =>
-            navigation.navigate("PrivacyPolicy")
-          }
-        >
-  <MaterialIcons name="privacy-tip" size={20} color="black" />
-            <Text className="flex-1 text-lg ml-2">{t("PrivacyPlicy.PrivacyPolicy")}</Text>
-        </TouchableOpacity>
-
-          {/* Horizontal Line */}
-
-          {/* <View className="h-0.5 bg-[#D2D2D2] my-4" />
-
-<TouchableOpacity
-  className="flex-row items-center py-3"
-  onPress={() => setModalVisible(true)}
->
-  <Ionicons name="person" size={20} color="black" />
-  <Text className="flex-1 text-lg ml-2">
-    {t("Profile.PlantCareHelp")}
-  </Text>
-</TouchableOpacity> */}
+          <TouchableOpacity
+            className="flex-row items-center py-3"
+            onPress={() => navigation.navigate("PrivacyPolicy")}
+          >
+            <MaterialIcons name="privacy-tip" size={20} color="black" />
+            <Text className="flex-1 text-lg ml-2">
+              {t("PrivacyPlicy.PrivacyPolicy")}
+            </Text>
+          </TouchableOpacity>
 
           <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
-        <TouchableOpacity
-          onPress={() => setComplaintDropdownOpen(!isComplaintDropdownOpen)}
-          className="flex-row items-center py-3"
-        >
-          <AntDesign name="warning" size={20} color="black" />
-          <Text className="flex-1 text-lg ml-2">{t("EngProfile.Complaints")}</Text>
-          <Ionicons
-            name={isComplaintDropdownOpen ? "chevron-up" : "chevron-down"}
-            size={20}
-            color="black"
-          />
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setComplaintDropdownOpen(!isComplaintDropdownOpen)}
+            className="flex-row items-center py-3"
+          >
+            <AntDesign name="warning" size={20} color="black" />
+            <Text className="flex-1 text-lg ml-2">
+              {t("EngProfile.Complaints")}
+            </Text>
+            <Ionicons
+              name={isComplaintDropdownOpen ? "chevron-up" : "chevron-down"}
+              size={20}
+              color="black"
+            />
+          </TouchableOpacity>
 
           {isComplaintDropdownOpen && (
             <View className="pl-8">
@@ -799,15 +787,16 @@ useEffect(() => {
 
           <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
-        {/* Logout */}
-        <TouchableOpacity
-          className="flex-row items-center py-3"
-          onPress={handleLogout}
-        >
-          <Ionicons name="log-out-outline" size={20} color="red" />
-          <Text className="flex-1 text-lg ml-2 text-red-500">{t("EngProfile.Logout")}</Text>
-        </TouchableOpacity>
-
+          {/* Logout */}
+          <TouchableOpacity
+            className="flex-row items-center py-3"
+            onPress={handleLogout}
+          >
+            <Ionicons name="log-out-outline" size={20} color="red" />
+            <Text className="flex-1 text-lg ml-2 text-red-500">
+              {t("EngProfile.Logout")}
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>

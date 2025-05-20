@@ -1,26 +1,33 @@
-import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, BackHandler, Alert, ScrollView, RefreshControl } from 'react-native';
-import { CircularProgress } from 'react-native-circular-progress';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-import {environment }from '@/environment/environment';
-import { useFocusEffect } from 'expo-router';
-import { RootStackParamList } from '../types';
+import { StackNavigationProp } from "@react-navigation/stack";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  BackHandler,
+  Alert,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
+import { CircularProgress } from "react-native-circular-progress";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { environment } from "@/environment/environment";
+import { useFocusEffect } from "expo-router";
+import { RootStackParamList } from "../types";
 import { useTranslation } from "react-i18next";
-import TransportComponent, { GenericNavigationProp } from '../Driver screens/TransportComponent';
-
-
+import TransportComponent, {
+  GenericNavigationProp,
+} from "../Driver screens/TransportComponent";
 
 type ManagerDashboardNavigationProps = StackNavigationProp<
   RootStackParamList,
   "ManagerDashboard"
 >;
 
-
 interface ManagerDashboardProps {
   navigation: ManagerDashboardNavigationProps;
-
 }
 
 interface ProfileData {
@@ -29,31 +36,33 @@ interface ProfileData {
   companyName: string;
   image: string;
   firstNameSinhala: string;
-  lastNameSinhala:string;
-  firstNameTamil:string;
-  lastNameTamil:string;
-  companyNameSinhala:string;
-  companyNameEnglish:string;
-  companyNameTamil:string
+  lastNameSinhala: string;
+  firstNameTamil: string;
+  lastNameTamil: string;
+  companyNameSinhala: string;
+  companyNameEnglish: string;
+  companyNameTamil: string;
 }
 
 const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [empId, setEmpId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'Collection' | 'Transport'>('Collection');
+  const [activeTab, setActiveTab] = useState<"Collection" | "Transport">(
+    "Collection"
+  );
   const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
   const [refreshing, setRefreshing] = useState(false);
-      const { t } = useTranslation();
-      const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+  const { t } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
 
-      const fetchSelectedLanguage = async () => {
-        try {
-          const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
-          setSelectedLanguage(lang || "en"); // Default to English if not set
-        } catch (error) {
-          console.error("Error fetching language preference:", error);
-        }
-      };
+  const fetchSelectedLanguage = async () => {
+    try {
+      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
+      setSelectedLanguage(lang || "en"); // Default to English if not set
+    } catch (error) {
+      console.error("Error fetching language preference:", error);
+    }
+  };
 
   const fetchUserProfile = async () => {
     try {
@@ -75,13 +84,6 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
     }
   };
 
-  // const getTextStyle = (language: string) => {
-  //   if (language === "si") {
-  //     return { fontSize: 14 }; // Smaller text size for Sinhala
-  //   }
-   
-  // };
-
   const getTextStyle = (language: string) => {
     if (language === "si") {
       return {
@@ -89,10 +91,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
         lineHeight: 20, // Space between lines
       };
     }
-   
   };
-  
-  
 
   const fetchTargetPercentage = async () => {
     try {
@@ -128,21 +127,21 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
   //   fetchTargetPercentage();
   // }, []);
   useEffect(() => {
-      const fetchData = async () => {
-        await fetchSelectedLanguage(); 
-        await fetchUserProfile();
-        await fetchTargetPercentage();
-      };
-      fetchData();
-    }, []);
-  
-    const onRefresh = async () => {
-      setRefreshing(true);
+    const fetchData = async () => {
+      await fetchSelectedLanguage();
       await fetchUserProfile();
       await fetchTargetPercentage();
-      await checkTokenExpiration();
-      setRefreshing(false);
     };
+    fetchData();
+  }, []);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchUserProfile();
+    await fetchTargetPercentage();
+    await checkTokenExpiration();
+    setRefreshing(false);
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -177,9 +176,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
 
   const checkTokenExpiration = async () => {
     try {
-      const expirationTime = await AsyncStorage.getItem(
-        "tokenExpirationTime"
-      );
+      const expirationTime = await AsyncStorage.getItem("tokenExpirationTime");
       const userToken = await AsyncStorage.getItem("token");
 
       if (expirationTime && userToken) {
@@ -211,11 +208,10 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
       }
     >
       {/* Profile Section */}
-      <TouchableOpacity className="flex-row items-center mb-4 p-4" onPress={() => navigation.navigate("EngProfile")}>
-        {/* <Image
-          source={require("../../assets/images/mprofile.webp")}
-          className="w-16 h-16 rounded-full mr-4"
-        />  */}
+      <TouchableOpacity
+        className="flex-row items-center mb-4 p-4"
+        onPress={() => navigation.navigate("EngProfile")}
+      >
         <Image
           source={
             profile?.image
@@ -226,42 +222,58 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
         />
 
         <View>
-          {/* <Text className="text-lg font-bold">
-            {profile?.firstNameEnglish || "Loading..."}{" "}
-            {profile?.lastNameEnglish || "Loading..."}
-          </Text> */}
-           <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-lg font-bold">{getFullName()}</Text>
-          {/* <Text className="text-gray-500">
-            {profile?.companyName || "Loading..."}
-          </Text> */}
-           <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-500">{getcompanyName()}</Text>
+          <Text
+            style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+            className="text-lg font-bold"
+          >
+            {getFullName()}
+          </Text>
+
+          <Text
+            style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+            className="text-gray-500"
+          >
+            {getcompanyName()}
+          </Text>
         </View>
       </TouchableOpacity>
-      
+
       <View className="bg-white shadow-sm mb-6">
         <View className="flex-row p-2">
           <TouchableOpacity
             className="flex-1 p-2 items-center flex-row justify-center"
-            onPress={() => setActiveTab('Collection')}
+            onPress={() => setActiveTab("Collection")}
           >
             <Image
               source={require("../../assets/images/shop.png")}
-              className={`w-6 h-6 mr-2 ${activeTab === 'Collection' ? 'opacity-100' : 'opacity-50'}`}
+              className={`w-6 h-6 mr-2 ${
+                activeTab === "Collection" ? "opacity-100" : "opacity-50"
+              }`}
             />
-            <Text className={`text-base font-bold ${activeTab === 'Collection' ? 'text-black' : 'text-gray-500'}`}>
-             { t("ManagerDashboard.Collection")}
+            <Text
+              className={`text-base font-bold ${
+                activeTab === "Collection" ? "text-black" : "text-gray-500"
+              }`}
+            >
+              {t("ManagerDashboard.Collection")}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             className="flex-1 p-2 items-center flex-row justify-center"
-            onPress={() => setActiveTab('Transport')}
+            onPress={() => setActiveTab("Transport")}
           >
             <Image
               source={require("../../assets/images/truck.png")}
-              className={`w-6 h-6 mr-2 ${activeTab === 'Transport' ? 'opacity-100' : 'opacity-50'}`}
+              className={`w-6 h-6 mr-2 ${
+                activeTab === "Transport" ? "opacity-100" : "opacity-50"
+              }`}
             />
-            <Text className={`text-base font-bold ${activeTab === 'Transport' ? 'text-black' : 'text-gray-500'}`}>
+            <Text
+              className={`text-base font-bold ${
+                activeTab === "Transport" ? "text-black" : "text-gray-500"
+              }`}
+            >
               {t("ManagerDashboard.Transport")}
             </Text>
           </TouchableOpacity>
@@ -269,106 +281,137 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
 
         {/* Horizontal line with active tab indicator */}
         <View className="h-[3px] bg-gray-300 flex-row">
-          <View className={`flex-1 ${activeTab === 'Collection' ? 'bg-black' : ''}`} />
-          <View className={`flex-1 ${activeTab === 'Transport' ? 'bg-black' : ''}`} />
+          <View
+            className={`flex-1 ${activeTab === "Collection" ? "bg-black" : ""}`}
+          />
+          <View
+            className={`flex-1 ${activeTab === "Transport" ? "bg-black" : ""}`}
+          />
         </View>
       </View>
 
-      
-      {activeTab === 'Collection' ? (
+      {activeTab === "Collection" ? (
         <>
-
-       {/* Conditional Rendering for Daily Target */}
+          {/* Conditional Rendering for Daily Target */}
           {targetPercentage !== null && targetPercentage < 100 ? (
-              <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#DF9301]">
-                <Text className="text-center text-yellow-600 font-bold">🚀 {t("ManagerDashboard.Keep")}</Text>
-                <Text className="text-center text-gray-500">{t("ManagerDashboard.Youhavenotachieved")}</Text>
+            <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#DF9301]">
+              <Text className="text-center text-yellow-600 font-bold">
+                🚀 {t("ManagerDashboard.Keep")}
+              </Text>
+              <Text className="text-center text-gray-500">
+                {t("ManagerDashboard.Youhavenotachieved")}
+              </Text>
+            </View>
+          ) : (
+            <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#2AAD7A]">
+              <View className="flex-row justify-center items-center mb-2">
+                <Image
+                  source={require("../../assets/images/hand.webp")}
+                  className="w-8 h-8 mr-2"
+                />
+                <Text className="text-center text-[#2AAD7A] font-bold">
+                  {t("ManagerDashboard.Completed")}
+                </Text>
               </View>
-            ) : (
-              <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#2AAD7A]">
-                <View className="flex-row justify-center items-center mb-2">
-                  <Image 
-                    source={require("../../assets/images/hand.webp")} 
-                    className="w-8 h-8 mr-2"
-                  />
-                  <Text className="text-center text-[#2AAD7A] font-bold">{t("ManagerDashboard.Completed")}</Text>
-                </View>
-                <Text className="text-center text-gray-500">{t("ManagerDashboard.Youhaveachieved")}</Text>
-              </View>
-      
-            )}
+              <Text className="text-center text-gray-500">
+                {t("ManagerDashboard.Youhaveachieved")}
+              </Text>
+            </View>
+          )}
 
-      {/* Target Progress */}
-      <View className="flex-row items-center justify-between mb-[-5%] p-7 mt-[4%] ">
-        <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 font-bold text-lg">{t("ManagerDashboard.Yourtarget")}</Text>
-        <View className="relative">
-          <CircularProgress
-            size={100}
-            width={8}
-            fill={targetPercentage !== null ? targetPercentage : 0} // Dynamically set progress
-            tintColor="#34D399"
-            backgroundColor="#E5E7EB"
-          />
-          <View className="absolute items-center justify-center h-24 w-24">
-            <Text className="text-2xl font-bold">
-              {targetPercentage !== null ? `${targetPercentage}%` : "0%"}
+          {/* Target Progress */}
+          <View className="flex-row items-center justify-between mb-[-5%] p-7 mt-[4%] ">
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-700 font-bold text-lg"
+            >
+              {t("ManagerDashboard.Yourtarget")}
             </Text>
+            <View className="relative">
+              <CircularProgress
+                size={100}
+                width={8}
+                fill={targetPercentage !== null ? targetPercentage : 0} // Dynamically set progress
+                tintColor="#34D399"
+                backgroundColor="#E5E7EB"
+              />
+              <View className="absolute items-center justify-center h-24 w-24">
+                <Text className="text-2xl font-bold">
+                  {targetPercentage !== null ? `${targetPercentage}%` : "0%"}
+                </Text>
+              </View>
+            </View>
           </View>
-        </View>
-      </View>
 
-      {/* Action Buttons */}
-      <View className="flex-row flex-wrap justify-between p-5 mt-[5%] mb-[18%]">
-        <TouchableOpacity
-          className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
-          onPress={() => navigation.navigate("CenterTarget" as any)}
-        >
-          <Image
-            source={require("../../assets/images/ct.webp")}
-            className="w-8 h-8 absolute top-2 right-2"
-          />
-          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.CenterTarget")}</Text>
-        </TouchableOpacity>
+          {/* Action Buttons */}
+          <View className="flex-row flex-wrap justify-between p-5 mt-[5%] mb-[18%]">
+            <TouchableOpacity
+              className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
+              onPress={() => navigation.navigate("CenterTarget" as any)}
+            >
+              <Image
+                source={require("../../assets/images/ct.webp")}
+                className="w-8 h-8 absolute top-2 right-2"
+              />
+              <Text
+                style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+                className="text-gray-700 text-lg absolute bottom-2 left-2"
+              >
+                {t("ManagerDashboard.CenterTarget")}
+              </Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity
-          className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
-          onPress={() =>
-            navigation.navigate("ManagerTransactions" as any, { empId })
-          }
-        >
-          <Image
-            source={require("../../assets/images/mycollect.webp")}
-            className="w-8 h-8 absolute top-2 right-2"
-          />
-          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.MyCollection")}</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
+              onPress={() =>
+                navigation.navigate("ManagerTransactions" as any, { empId })
+              }
+            >
+              <Image
+                source={require("../../assets/images/mycollect.webp")}
+                className="w-8 h-8 absolute top-2 right-2"
+              />
+              <Text
+                style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+                className="text-gray-700 text-lg absolute bottom-2 left-2"
+              >
+                {t("ManagerDashboard.MyCollection")}
+              </Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity
-          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative"
-          onPress={() => navigation.navigate("QRScanner" as any)}
-        >
-          <Image
-            source={require("../../assets/images/qrrr.webp")}
-            className="w-8 h-8 absolute top-2 right-2"
-          />
-          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.Scan")}</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative"
+              onPress={() => navigation.navigate("QRScanner" as any)}
+            >
+              <Image
+                source={require("../../assets/images/qrrr.webp")}
+                className="w-8 h-8 absolute top-2 right-2"
+              />
+              <Text
+                style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+                className="text-gray-700 text-lg absolute bottom-2 left-2"
+              >
+                {t("ManagerDashboard.Scan")}
+              </Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity
-          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative mb-5"
-          onPress={() => navigation.navigate("SearchFarmer" as any)}
-        >
-          <Image
-            source={require("../../assets/images/nic.webp")}
-            className="w-8 h-8 absolute top-2 right-2"
-          />
-          <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-gray-700 text-lg absolute bottom-2 left-2">{t("ManagerDashboard.Search")}</Text>
-        </TouchableOpacity>
-
-
-      
-      </View>
-      </>
+            <TouchableOpacity
+              className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative mb-5"
+              onPress={() => navigation.navigate("SearchFarmer" as any)}
+            >
+              <Image
+                source={require("../../assets/images/nic.webp")}
+                className="w-8 h-8 absolute top-2 right-2"
+              />
+              <Text
+                style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+                className="text-gray-700 text-lg absolute bottom-2 left-2"
+              >
+                {t("ManagerDashboard.Search")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </>
       ) : (
         <TransportComponent navigation={navigation} />
       )}

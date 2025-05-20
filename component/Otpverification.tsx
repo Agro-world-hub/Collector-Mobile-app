@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
@@ -21,7 +17,7 @@ import {
 } from "react-native-responsive-screen";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {environment }from '@/environment/environment';
+import { environment } from "@/environment/environment";
 import { useTranslation } from "react-i18next";
 import { Dimensions } from "react-native";
 import { Modal } from "react-native";
@@ -45,14 +41,17 @@ interface userItem {
   accNumber: string;
   accHolderName: string;
   bankName: string;
-  branchName: string
+  branchName: string;
   PreferdLanguage: string;
 }
 interface SuccessModalProps {
   visible: boolean;
   onClose: () => void;
 }
-const ShowSuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => {
+const ShowSuccessModal: React.FC<SuccessModalProps> = ({
+  visible,
+  onClose,
+}) => {
   const progress = useRef(new Animated.Value(0)).current; // Start from 0
   const { t } = useTranslation();
 
@@ -75,14 +74,27 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => 
     <Modal visible={visible} transparent animationType="fade">
       <View className="flex-1 justify-center items-center bg-black/50">
         <View className="bg-white p-6 rounded-2xl items-center w-72 h-80 shadow-lg relative">
-          <Text className="text-xl font-bold mt-4 text-center"> {t("Otpverification.Success")}</Text>
+          <Text className="text-xl font-bold mt-4 text-center">
+            {" "}
+            {t("Otpverification.Success")}
+          </Text>
 
-          <Image source={require("../assets/images/success.webp")} style={{ width: 100, height: 100 }} />
+          <Image
+            source={require("../assets/images/success.webp")}
+            style={{ width: 100, height: 100 }}
+          />
 
-          <Text className="text-gray-500 mb-4">{t("Otpverification.Registration")}</Text>
+          <Text className="text-gray-500 mb-4">
+            {t("Otpverification.Registration")}
+          </Text>
 
-          <TouchableOpacity className="bg-[#2AAD7A] px-6 py-2 rounded-full mt-6" onPress={onClose}>
-            <Text className="text-white font-semibold">{t("Otpverification.OK")}</Text>
+          <TouchableOpacity
+            className="bg-[#2AAD7A] px-6 py-2 rounded-full mt-6"
+            onPress={onClose}
+          >
+            <Text className="text-white font-semibold">
+              {t("Otpverification.OK")}
+            </Text>
           </TouchableOpacity>
 
           {/* Progress Bar - Fixed to Bottom */}
@@ -104,9 +116,8 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => 
   );
 };
 
-
 const Otpverification: React.FC = ({ navigation, route }: any) => {
-  const {         
+  const {
     firstName,
     lastName,
     NICnumber,
@@ -116,7 +127,8 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
     accHolderName,
     bankName,
     branchName,
-    PreferdLanguage } = route.params;
+    PreferdLanguage,
+  } = route.params;
   const [otpCode, setOtpCode] = useState<string>("");
   const [maskedCode, setMaskedCode] = useState<string>("XXXXX");
   const [referenceId, setReferenceId] = useState<string | null>(null);
@@ -128,12 +140,8 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
   const [isOtpValid, setIsOtpValid] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-
   const inputRefs = useRef<TextInput[]>([]);
-  
 
-
-  
   useEffect(() => {
     const selectedLanguage = t("Otpverification.LNG");
     setLanguage(selectedLanguage);
@@ -165,17 +173,9 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
     }
   }, [timer, isVerified]);
 
-  // const handleInputChange = (text: string) => {
-  //   const sanitizedText = text.slice(0, 5);
-  //   setOtpCode(sanitizedText);
-
-  //   const masked = sanitizedText.padEnd(5, "X");
-  //   setMaskedCode(masked);
-  //   setIsOtpValid(sanitizedText.length === 5);
-  // };
   const handleOtpChange = (text: string, index: number) => {
     // Update the OTP code based on input change
-    const updatedOtpCode = otpCode.split(""); 
+    const updatedOtpCode = otpCode.split("");
     updatedOtpCode[index] = text; // Modify the specific index
     setOtpCode(updatedOtpCode.join(""));
 
@@ -186,19 +186,16 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
     if (text && inputRefs.current[index + 1]) {
       inputRefs.current[index + 1].focus();
     }
-    if(updatedOtpCode.length === 5){
-          Keyboard.dismiss();
-        }
+    if (updatedOtpCode.length === 5) {
+      Keyboard.dismiss();
+    }
   };
 
   const handleVerify = async () => {
     const code = otpCode;
-    Keyboard.dismiss()
+    Keyboard.dismiss();
     if (code.length !== 5) {
-      Alert.alert(
-        t("Error.Sorry"),
-        t("Otpverification.completeOTP")
-      );
+      Alert.alert(t("Error.Sorry"), t("Otpverification.completeOTP"));
       return;
     }
 
@@ -215,7 +212,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         accHolderName: accHolderName,
         bankName: bankName,
         branchName: branchName,
-        PreferdLanguage:  PreferdLanguage ,
+        PreferdLanguage: PreferdLanguage,
       };
       // Shoutout verify endpoint
       const url = "https://api.getshoutout.com/otpservice/verify";
@@ -242,111 +239,26 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         );
         await AsyncStorage.removeItem("referenceId");
         //Alert.alert("Success","Farmer Registration successful");
-        <ShowSuccessModal visible={modalVisible} onClose={() => setModalVisible(false)} />
+        <ShowSuccessModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+        />;
         navigation.navigate("FarmerQr" as any, {
           NICnumber: response1.data.NICnumber,
           userId: response1.data.userId,
-        });      } else if (statusCode === "1001") {
-        Alert.alert(
-          t("Error.Sorry"),
-          t("Otpverification.invalidOTP")
-        );
+        });
+      } else if (statusCode === "1001") {
+        Alert.alert(t("Error.Sorry"), t("Otpverification.invalidOTP"));
       } else {
-        Alert.alert(
-          t("Error.Sorry"),
-          t("Error.somethingWentWrong")
-        );
+        Alert.alert(t("Error.Sorry"), t("Error.somethingWentWrong"));
       }
     } catch (error) {
-      Alert.alert(
-        t("Error.Sorry"),
-        t("Error.somethingWentWrong")
-      );
+      Alert.alert(t("Error.Sorry"), t("Error.somethingWentWrong"));
     }
   };
 
-
-//   const handleResendOTP = async () => {
-//     await AsyncStorage.removeItem("referenceId");
-//     try {
-//       const apiUrl = "https://api.getshoutout.com/otpservice/send";
-//       const headers = {
-//         Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
-//         "Content-Type": "application/json",
-//       };
-
-//       // const body = {
-//       //   source: "ShoutDEMO",
-//       //   transport: "sms",
-//       //   content: { sms: "Your code is {{code}}" },
-//       //   destination: phoneNumber,
-//       // };
-//       let otpMessage = "";
-//       if(PreferdLanguage === "English"){
-//         otpMessage = `Your OTP for bank detail verification with XYZ is: {{code}}
-        
-// ${accHolderName}
-// ${accNumber}
-// ${bankName}
-// ${branchName}
-        
-// If correct, share OTP only with the XYZ representative who contacts you.`;
-
-//       }else if(PreferdLanguage === "Sinhala"){
-//         otpMessage = `XYZ සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
-        
-// ${accHolderName}
-// ${accNumber}
-// ${bankName}
-// ${branchName}
-        
-// නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා XYZ නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
-//       }else if(PreferdLanguage === "Tamil"){
-//         otpMessage = `XYZ உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
-        
-// ${accHolderName}
-// ${accNumber}
-// ${bankName}
-// ${branchName}
-        
-// சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் XYZ பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
-//       }
-//       const body = {
-//         source: "AgroWorld",
-//         transport: "sms",
-//         content: {
-//           sms: otpMessage,
-//         },
-//         destination: `${phoneNumber}`,
-//       };
-
-//       const response = await axios.post(apiUrl, body, { headers });
-
-//       if (response.data.referenceId) {
-//         await AsyncStorage.setItem("referenceId", response.data.referenceId);
-//         setReferenceId(response.data.referenceId);
-//         Alert.alert(
-//           t("Otpverification.Success"),
-//           t("Error.otpResent")
-//         );
-//         setTimer(240);
-//         setDisabledResend(true);
-//       } else {
-//         Alert.alert(
-//           t("Error.Sorry"),
-//           t("Error.otpResendFailed")
-//         );
-//       }
-//     } catch (error) {
-//       Alert.alert(
-//         t("Error.Sorry"),
-//         t("Error.otpResendFailed")
-//       );
-//     }
-//   };
-
-const handleResendOTP = async () => {
-  await AsyncStorage.removeItem("referenceId");
+  const handleResendOTP = async () => {
+    await AsyncStorage.removeItem("referenceId");
     console.log("Phone Number:", phoneNumber); // Log phone number for debugging
     try {
       const apiUrl = "https://api.getshoutout.com/otpservice/send";
@@ -354,12 +266,13 @@ const handleResendOTP = async () => {
         Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
         "Content-Type": "application/json",
       };
-  
+
       let otpMessage = "";
       let companyName = "";
-  
+
       if (PreferdLanguage === "Sinhala") {
-        companyName = (await AsyncStorage.getItem("companyNameSinhala")) || "AgroWorld";
+        companyName =
+          (await AsyncStorage.getItem("companyNameSinhala")) || "AgroWorld";
         otpMessage = `${companyName} සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
           
   ${accHolderName}
@@ -369,7 +282,8 @@ const handleResendOTP = async () => {
           
   නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා ${companyName} නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
       } else if (PreferdLanguage === "Tamil") {
-        companyName = (await AsyncStorage.getItem("companyNameTamil")) || "AgroWorld";
+        companyName =
+          (await AsyncStorage.getItem("companyNameTamil")) || "AgroWorld";
         otpMessage = `${companyName} உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
           
   ${accHolderName}
@@ -379,7 +293,8 @@ const handleResendOTP = async () => {
           
   சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் ${companyName} பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
       } else {
-        companyName = (await AsyncStorage.getItem("companyNameEnglish")) || "AgroWorld";
+        companyName =
+          (await AsyncStorage.getItem("companyNameEnglish")) || "AgroWorld";
         otpMessage = `Your OTP for bank detail verification with ${companyName} is: {{code}}
           
   ${accHolderName}
@@ -389,7 +304,7 @@ const handleResendOTP = async () => {
           
   If correct, share OTP only with the ${companyName} representative who contacts you.`;
       }
-  
+
       // Prepare the body of the request
       const body = {
         source: "AgroWorld",
@@ -399,35 +314,26 @@ const handleResendOTP = async () => {
         },
         destination: `${phoneNumber}`,
       };
-  
+
       console.log("Sending OTP Request Body:", body);
-  
-      const response = await axios.post(apiUrl, body, { headers });  
+
+      const response = await axios.post(apiUrl, body, { headers });
       // Check if the response contains a referenceId
       if (response.data.referenceId) {
         await AsyncStorage.setItem("referenceId", response.data.referenceId);
         setReferenceId(response.data.referenceId);
-  
-        Alert.alert(
-          t("Otpverification.Success"),
-          t("Error.otpResent")
-        );
-        setTimer(240);  
-        setDisabledResend(true);  
+
+        Alert.alert(t("Otpverification.Success"), t("Error.otpResent"));
+        setTimer(240);
+        setDisabledResend(true);
       } else {
-        Alert.alert(
-          t("Error.Sorry"),
-          t("Error.otpResendFailed")
-        );
+        Alert.alert(t("Error.Sorry"), t("Error.otpResendFailed"));
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
-  
-      Alert.alert(
-        t("Error.Sorry"),
-        t("Error.otpResendFailed")
-      );
-    } 
+
+      Alert.alert(t("Error.Sorry"), t("Error.otpResendFailed"));
+    }
   };
 
   // Format the timer for display
@@ -445,14 +351,13 @@ const handleResendOTP = async () => {
   };
 
   return (
-
     <ScrollView
       className="flex-1 "
       style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}
     >
       <View>
-        <TouchableOpacity onPress={() => navigation.goBack()}  >
-           <AntDesign name="left" size={22} color="#000" />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <AntDesign name="left" size={22} color="#000" />
         </TouchableOpacity>
       </View>
       <View className="flex justify-center items-center mt-0">
@@ -473,9 +378,9 @@ const handleResendOTP = async () => {
           }}
         />
 
-<View className="">
+        <View className="">
           <Text className="mt-3 text-lg text-black text-center">
-          {t("Otpverification.EnterCode")}
+            {t("Otpverification.EnterCode")}
           </Text>
         </View>
         {language === "en" ? (
@@ -499,33 +404,15 @@ const handleResendOTP = async () => {
           </View>
         )}
 
-        {/* <View className="pt-6">
-          <TextInput
-            style={{
-              width: wp(60),
-              height: hp(7),
-              textAlign: "center",
-              fontSize: wp(6),
-              letterSpacing: wp(6),
-              borderBottomWidth: 1,
-              borderBottomColor: "gray",
-              color: "black",
-            }}
-            keyboardType="numeric"
-            maxLength={5}
-            value={otpCode}
-            onChangeText={handleInputChange}
-            placeholder={maskedCode}
-            placeholderTextColor="lightgray"
-          />
-        </View> */}
         <View className="flex-row justify-center gap-3 mt-4 px-4">
           {Array.from({ length: 5 }).map((_, index) => (
             <TextInput
               key={index}
               ref={(el) => (inputRefs.current[index] = el as TextInput)}
               className={`w-12 h-12 text-lg text-center rounded-lg ${
-                otpCode[index] ? "bg-[#FFFFFF] text-black pb-2" : "bg-[#FFFFFF] text-black"
+                otpCode[index]
+                  ? "bg-[#FFFFFF] text-black pb-2"
+                  : "bg-[#FFFFFF] text-black"
               }`}
               keyboardType="numeric"
               maxLength={1}
@@ -541,17 +428,12 @@ const handleResendOTP = async () => {
           ))}
         </View>
 
-        {/* <View className="mt-10">
-          <Text className="mt-3 text-lg text-black text-center">
-            {t("OtpVerification.didntreceived")}
-          </Text>
-        </View> */}
         <View className="mt-5">
-        <Text className="text-md text-[#707070] pt-1">
-              {/* {t("OtpVerification.OTPCode")} */}
-              {t("Otpverification.Didreceive")}
-            </Text>
-            </View>
+          <Text className="text-md text-[#707070] pt-1">
+            {/* {t("OtpVerification.OTPCode")} */}
+            {t("Otpverification.Didreceive")}
+          </Text>
+        </View>
 
         <View className="mt-1 mb-9">
           <Text
@@ -565,7 +447,10 @@ const handleResendOTP = async () => {
           </Text>
         </View>
 
-        <ShowSuccessModal visible={modalVisible} onClose={() => setModalVisible(false)} />
+        <ShowSuccessModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+        />
 
         <View style={{ marginTop: dynamicStyles.margingTopForBtn }}>
           <TouchableOpacity
