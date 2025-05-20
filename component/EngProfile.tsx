@@ -666,7 +666,9 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
           {isLanguageDropdownOpen && (
             <View className="pl-8">
-              {["English", "සිංහල", "தமிழ்"].map((language) => (
+                            {/* {["English", "සිංහල", "தமிழ்"].map((language) => ( */}
+
+              {["English", "සිංහල"].map((language) => (
                 <TouchableOpacity
                   key={language}
                   onPress={() => handleLanguageSelect(language)}

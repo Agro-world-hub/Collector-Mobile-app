@@ -238,7 +238,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
         </View>
       </TouchableOpacity>
 
-      <View className="bg-white shadow-sm mb-6">
+      {/* <View className="bg-white shadow-sm mb-6">
         <View className="flex-row p-2">
           <TouchableOpacity
             className="flex-1 p-2 items-center flex-row justify-center"
@@ -279,7 +279,6 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {/* Horizontal line with active tab indicator */}
         <View className="h-[3px] bg-gray-300 flex-row">
           <View
             className={`flex-1 ${activeTab === "Collection" ? "bg-black" : ""}`}
@@ -288,7 +287,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             className={`flex-1 ${activeTab === "Transport" ? "bg-black" : ""}`}
           />
         </View>
-      </View>
+      </View> */}
 
       {activeTab === "Collection" ? (
         <>
