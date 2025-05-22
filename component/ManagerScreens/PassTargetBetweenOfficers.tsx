@@ -1,17 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, Alert } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../types';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+  ScrollView,
+  Alert,
+} from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../types";
+import { Ionicons } from "@expo/vector-icons";
 import { SelectList } from "react-native-dropdown-select-list";
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
-import {environment }from '@/environment/environment';
-import LottieView from 'lottie-react-native';
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
+import { environment } from "@/environment/environment";
+import LottieView from "lottie-react-native";
 import { useTranslation } from "react-i18next";
 
-type PassTargetBetweenOfficersScreenNavigationProps = StackNavigationProp<RootStackParamList, 'PassTargetBetweenOfficers'>;
+type PassTargetBetweenOfficersScreenNavigationProps = StackNavigationProp<
+  RootStackParamList,
+  "PassTargetBetweenOfficers"
+>;
 
 interface PassTargetBetweenOfficersScreenProps {
   navigation: PassTargetBetweenOfficersScreenNavigationProps;
@@ -19,8 +30,8 @@ interface PassTargetBetweenOfficersScreenProps {
     params: {
       varietyId: number;
       varietyNameEnglish: string;
-      varietyNameSinhala: string;  // ✅ Added this
-      varietyNameTamil: string;    // ✅ Added this
+      varietyNameSinhala: string; // ✅ Added this
+      varietyNameTamil: string; // ✅ Added this
       grade: string;
       target: string;
       todo: string;
@@ -37,25 +48,37 @@ interface Officer {
   fullNameEnglish: string;
   fullNameSinhala: string;
   fullNameTamil: string;
- 
 }
 
-const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> = ({ navigation, route }) => {
-  const [assignee, setAssignee] = useState('');
-  const [amount, setAmount] = useState('');
-  const [error, setError] = useState('');
-  const [officers, setOfficers] = useState<{ key: string; value: string }[]>([]);
+const PassTargetBetweenOfficers: React.FC<
+  PassTargetBetweenOfficersScreenProps
+> = ({ navigation, route }) => {
+  const [assignee, setAssignee] = useState("");
+  const [amount, setAmount] = useState("");
+  const [error, setError] = useState("");
+  const [officers, setOfficers] = useState<{ key: string; value: string }[]>(
+    []
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { t } = useTranslation();
-  
-  const { varietyNameEnglish, grade, target, todo, qty, varietyId,collectionOfficerId, varietyNameSinhala, varietyNameTamil,dailyTarget } = route.params;
-  console.log(collectionOfficerId)
+
+  const {
+    varietyNameEnglish,
+    grade,
+    target,
+    todo,
+    qty,
+    varietyId,
+    collectionOfficerId,
+    varietyNameSinhala,
+    varietyNameTamil,
+    dailyTarget,
+  } = route.params;
+  console.log(collectionOfficerId);
   const maxAmount = parseFloat(todo);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
-  
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,9 +113,8 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
   };
   const isSaveDisabled = () => {
     // Disable button if no assignee is selected OR assignee is the default option ('0') OR submitting
-    return !assignee || assignee === '0' || submitting;
+    return !assignee || assignee === "0" || submitting;
   };
-
 
   // Fetch officers from API
   const fetchOfficers = async () => {
@@ -100,7 +122,7 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
       setLoading(true);
       setErrorMessage(null);
 
-      const token = await AsyncStorage.getItem('token');
+      const token = await AsyncStorage.getItem("token");
       const response = await axios.get(
         `${environment.API_BASE_URL}api/collection-manager/collection-officers`,
         {
@@ -112,23 +134,17 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
 
       console.log("Officers:", response.data.data);
 
-      if (response.data.status === 'success') {
-        // const formattedOfficers = response.data.data.map((officer: any) => ({
-        //   key: officer.collectionOfficerId.toString(),
-        //   value: getOfficerName(officer),
-        // }));
-
-
+      if (response.data.status === "success") {
         const filteredOfficers = response.data.data.filter(
           (officer: any) => officer.collectionOfficerId !== collectionOfficerId
         );
-  
+
         // Format the officers to be displayed
         const formattedOfficers = filteredOfficers.map((officer: any) => ({
           key: officer.collectionOfficerId.toString(),
           value: getOfficerName(officer),
         }));
-        setOfficers([ ...formattedOfficers]);
+        setOfficers([...formattedOfficers]);
       } else {
         setErrorMessage(t("Error.Failed to fetch officers."));
       }
@@ -143,7 +159,6 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
     }
   };
 
-  
   // Reload the officers list every time the screen is focused
   useFocusEffect(
     React.useCallback(() => {
@@ -157,13 +172,13 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
     if (numericValue > maxAmount) {
       setError(t("Error.You have exceeded the maximum amount."));
     } else {
-      setError('');
+      setError("");
     }
   };
 
   // ✅ Function to Pass Target
   const passTarget = async () => {
-    if (!assignee || assignee === '0') {
+    if (!assignee || assignee === "0") {
       Alert.alert(t("Error.error"), t("Error.Please select an officer."));
       return;
     }
@@ -179,20 +194,20 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
         t("Error.error"),
         `${t("Error.You cannot transfer more than")} ${maxAmount}kg.`
       );
-      
+
       return;
     }
 
     try {
       setSubmitting(true);
 
-      const token = await AsyncStorage.getItem('token');
+      const token = await AsyncStorage.getItem("token");
       const response = await axios.put(
         `${environment.API_BASE_URL}api/target/pass-target`,
         {
           fromOfficerId: collectionOfficerId,
-          toOfficerId: assignee, 
-          varietyId: varietyId, 
+          toOfficerId: assignee,
+          varietyId: varietyId,
           grade,
           amount: numericAmount,
         },
@@ -202,23 +217,27 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
           },
         }
       );
-      
-      
+
       if (response.status === 200) {
-        Alert.alert(t("Error.Success"), t("Error.Target transferred successfully."));
-        // navigation.navigate('DailyTargetListForOfficers'as any,{collectionOfficerId:collectionOfficerId}); 
-        navigation.goBack()
+        Alert.alert(
+          t("Error.Success"),
+          t("Error.Target transferred successfully.")
+        );
+        // navigation.navigate('DailyTargetListForOfficers'as any,{collectionOfficerId:collectionOfficerId});
+        navigation.goBack();
       } else {
         Alert.alert(t("Error.error"), t("Error.Failed to transfer target."));
       }
     } catch (error: any) {
       console.error("Transfer Target Error:", error);
-      Alert.alert(t("Error.error"), t("Error.An error occurred while transferring the target."));
+      Alert.alert(
+        t("Error.error"),
+        t("Error.An error occurred while transferring the target.")
+      );
     } finally {
       setSubmitting(false);
     }
   };
-  
 
   const getvarietyName = () => {
     switch (selectedLanguage) {
@@ -238,19 +257,32 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-semibold text-center w-full">{getvarietyName()}</Text>
+        <Text className="text-white text-lg font-semibold text-center w-full">
+          {getvarietyName()}
+        </Text>
       </View>
 
       {/* ✅ Scrollable Content */}
-      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 20 }} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 20 }}
+        keyboardShouldPersistTaps="handled"
+      >
         <View className="bg-white rounded-lg p-4">
-          <Text className="text-gray text-sm mb-2 text-center mt-5">{t("PassTargetBetweenOfficers.maximum amount")}</Text>
-          <Text className="text-xl font-bold text-center text-black mb-4">{maxAmount}{t("PassTargetBetweenOfficers.kg")}</Text>
+          <Text className="text-gray text-sm mb-2 text-center mt-5">
+            {t("PassTargetBetweenOfficers.maximum amount")}
+          </Text>
+          <Text className="text-xl font-bold text-center text-black mb-4">
+            {maxAmount}
+            {t("PassTargetBetweenOfficers.kg")}
+          </Text>
 
           <View className="border-b border-gray-300 my-4" />
 
           <View className="p-5">
-            <Text className="text-gray-700 mb-2 mt-[20%]">{t("PassTargetBetweenOfficers.Short Stock Assignee")}</Text>
+            <Text className="text-gray-700 mb-2 mt-[20%]">
+              {t("PassTargetBetweenOfficers.Short Stock Assignee")}
+            </Text>
 
             {loading ? (
               <ActivityIndicator size="large" color="#2AAD7A" />
@@ -262,25 +294,30 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
                   setSelected={(value: string) => setAssignee(value)}
                   data={officers}
                   save="key"
-                  defaultOption={{ key: '0', value: t("PassTargetBetweenOfficers.Select an officer")}}
-                  boxStyles={{ 
+                  defaultOption={{
+                    key: "0",
+                    value: t("PassTargetBetweenOfficers.Select an officer"),
+                  }}
+                  boxStyles={{
                     borderWidth: 1,
-                    borderColor: '#CFCFCF',
-                    backgroundColor: 'white'
+                    borderColor: "#CFCFCF",
+                    backgroundColor: "white",
                   }}
                   inputStyles={{
-                    color: '#000000'
+                    color: "#000000",
                   }}
-                  dropdownStyles={{  // Fixed: changed from dropDownStyles to dropdownStyles
-                    borderColor: '#CFCFCF',
-                    backgroundColor: 'white'
+                  dropdownStyles={{
+                    // Fixed: changed from dropDownStyles to dropdownStyles
+                    borderColor: "#CFCFCF",
+                    backgroundColor: "white",
                   }}
                 />
-                
               </View>
             )}
 
-            <Text className="text-gray-700 mb-2">{t("PassTargetBetweenOfficers.Amount")}</Text>
+            <Text className="text-gray-700 mb-2">
+              {t("PassTargetBetweenOfficers.Amount")}
+            </Text>
             <TextInput
               className="border border-gray-300 rounded-lg p-3 text-gray-800"
               keyboardType="numeric"
@@ -291,33 +328,23 @@ const PassTargetBetweenOfficers: React.FC<PassTargetBetweenOfficersScreenProps> 
           </View>
         </View>
 
-        {/* <View className="mt-6 items-center">
+        <View className="mt-6 items-center">
           <TouchableOpacity
-            className="bg-[#2AAD7A] rounded-full w-64 py-3"
+            className={`rounded-full w-64 py-3 ${
+              isSaveDisabled() ? "bg-gray-400" : "bg-[#2AAD7A]"
+            }`}
             onPress={passTarget}
-            disabled={submitting}
+            disabled={isSaveDisabled()}
           >
             {submitting ? (
-             <ActivityIndicator size="small" color="white" />
+              <ActivityIndicator size="small" color="white" />
             ) : (
-              <Text className="text-white text-center font-medium">{t("PassTargetBetweenOfficers.Save")}</Text>
+              <Text className="text-white text-center font-medium">
+                {t("PassTargetBetweenOfficers.Save")}
+              </Text>
             )}
           </TouchableOpacity>
-        </View> */}
-
-         <View className="mt-6 items-center">
-         <TouchableOpacity
-  className={`rounded-full w-64 py-3 ${isSaveDisabled() ? 'bg-gray-400' : 'bg-[#2AAD7A]'}`}
-  onPress={passTarget}
-  disabled={isSaveDisabled()}
->
-                    {submitting ? (
-                      <ActivityIndicator size="small" color="white" />
-                    ) : (
-                      <Text className="text-white text-center font-medium">{t("PassTargetBetweenOfficers.Save")}</Text>
-                    )}
-                  </TouchableOpacity>
-                </View>
+        </View>
       </ScrollView>
     </View>
   );

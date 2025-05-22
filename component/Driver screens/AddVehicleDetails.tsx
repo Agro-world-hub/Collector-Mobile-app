@@ -507,25 +507,6 @@ const AddVehicleDetails: React.FC = () => {
         <Text className="text-[16px] font-bold mb-2">
           {t("VehicleDetails.Vehicle Details")}
         </Text>
-        {/* <SelectList
-          setSelected={(val: string) => setVehicleType(val)}
-          data={vehicleTypes}
-          save="value"
-          placeholder="--Vehicle Type--"
-          searchPlaceholder="search"
-          boxStyles={{
-            borderWidth: 1,
-            borderColor: "#cccccc",
-            borderRadius: 8,
-            marginBottom: 8,
-            width: '100%',
-          }}
-          dropdownStyles={{
-            borderWidth: 1,
-            borderColor: 'gray',
-            borderRadius: 8,
-          }}
-        /> */}
         <DropDownPicker
           open={open}
           setOpen={setOpen}

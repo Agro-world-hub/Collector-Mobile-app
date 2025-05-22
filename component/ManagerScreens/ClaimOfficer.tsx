@@ -138,7 +138,8 @@ const ClaimOfficer: React.FC = () => {
 
       if (!userToken) {
         Alert.alert(
-          t("Error.error"),t("Error.User token not found. Please log in again.")
+          t("Error.error"),
+          t("Error.User token not found. Please log in again.")
         );
         return;
       }
@@ -170,12 +171,12 @@ const ClaimOfficer: React.FC = () => {
         setOfficerDetails(null);
         setEmpID("");
         setModalVisible(false);
-         navigation.navigate("Main", { screen: "CollectionOfficersList" });
+        navigation.navigate("Main", { screen: "CollectionOfficersList" });
       }
     } catch (err) {
       console.error(err);
       Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -184,7 +185,12 @@ const ClaimOfficer: React.FC = () => {
     setModalVisible(false); // Close the modal without taking action
   };
 
-  const ConfirmationModal = ({ visible, onConfirm, onCancel, onLoading }: any) => {
+  const ConfirmationModal = ({
+    visible,
+    onConfirm,
+    onCancel,
+    onLoading,
+  }: any) => {
     return (
       <Modal
         transparent={true}
@@ -206,16 +212,22 @@ const ClaimOfficer: React.FC = () => {
                 onPress={onCancel}
                 className="p-2 py-2 bg-gray-300 rounded-lg"
               >
-                <Text className="text-sm text-gray-700">{t("ClaimOfficer.Cancel")}</Text>
+                <Text className="text-sm text-gray-700">
+                  {t("ClaimOfficer.Cancel")}
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={onConfirm}
                 // className="p-2 py-2 bg-[#2AAD7A] rounded-lg"
                 disabled={onLoading} // Disable the button when loading is true
-                className={`p-2 py-2 rounded-lg ${onLoading ? 'bg-gray-400' : 'bg-[#2AAD7A]'}`}
+                className={`p-2 py-2 rounded-lg ${
+                  onLoading ? "bg-gray-400" : "bg-[#2AAD7A]"
+                }`}
               >
-                <Text className="text-sm text-white">{t("ClaimOfficer.Claim")}</Text>
+                <Text className="text-sm text-white">
+                  {t("ClaimOfficer.Claim")}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -245,46 +257,41 @@ const ClaimOfficer: React.FC = () => {
           {t("ClaimOfficer.JobRole")}
         </Text>
         <View className=" rounded-lg pb-3">
-          {/* <SelectList
-            setSelected={(value: React.SetStateAction<string>) =>
-              setJobRole(value)
-            }
-            data={[
-              { key: "Collection Officer", value: "Collection Officer", label:t("ClaimOfficer.Collection Officer")},
-              { key: "Customer Officer", value: "Customer Officer" },
+          <DropDownPicker
+            open={open}
+            setOpen={setOpen}
+            value={jobRole} // The value selected in the dropdown
+            setValue={setJobRole} // Function to update the selected value
+            items={[
+              // Array of items with value and label for dropdown
+              {
+                value: "Collection Officer",
+                label: t("ClaimOfficer.Collection Officer"),
+              },
+              {
+                value: "Customer Officer",
+                label: t("ClaimOfficer.Customer Officer"),
+              },
             ]}
-            save="key"
-            placeholder={t("ClaimOfficer.Select Job Role")}
-            // defaultOption={{ key: 'Collection Officer', value: 'Collection Officer' }}
-          /> */}
-
-<DropDownPicker
-    open={open}
-    setOpen={setOpen}
-    value={jobRole}  // The value selected in the dropdown
-    setValue={setJobRole}  // Function to update the selected value
-    items={[  // Array of items with value and label for dropdown
-      { value: "Collection Officer", label: t("ClaimOfficer.Collection Officer") },
-      { value: "Customer Officer", label: t("ClaimOfficer.Customer Officer") },
-    ]}    placeholder={t("AddOfficerBasicDetails.SelectJobRole")}  // Placeholder text
-    containerStyle={{
-      borderWidth: 1,
-      borderColor: "#CFCFCF",
-      borderRadius: 5,
-    }}
-    style={{
-      borderColor:"#CFCFCF",
-      borderWidth:0
-    }}
-    dropDownDirection="BOTTOM"
-    dropDownContainerStyle={{
-      borderColor:"#CFCFCF"
-    }}
-    placeholderStyle={{
-      fontSize: 14,
-      color: '#888',
-    }}
-  />
+            placeholder={t("AddOfficerBasicDetails.SelectJobRole")} // Placeholder text
+            containerStyle={{
+              borderWidth: 1,
+              borderColor: "#CFCFCF",
+              borderRadius: 5,
+            }}
+            style={{
+              borderColor: "#CFCFCF",
+              borderWidth: 0,
+            }}
+            dropDownDirection="BOTTOM"
+            dropDownContainerStyle={{
+              borderColor: "#CFCFCF",
+            }}
+            placeholderStyle={{
+              fontSize: 14,
+              color: "#888",
+            }}
+          />
         </View>
 
         {/* EMP ID Input */}
@@ -300,43 +307,31 @@ const ClaimOfficer: React.FC = () => {
             value={empID}
             keyboardType="numeric"
             // onChangeText={setEmpID}
-              onChangeText={(text) => {
-    setEmpID(text);
-    setOfficerFound(false);
-  }}
+            onChangeText={(text) => {
+              setEmpID(text);
+              setOfficerFound(false);
+            }}
             className="flex-1 px-4 py-2 text-gray-700"
           />
         </View>
 
-        {/* Search Button */}
-        {/* <TouchableOpacity
-           className={`py-4 rounded-full items-center mt-7 ${
-    !empID || officerFound ? "bg-gray-300" : "bg-[#2AAD7A]"
-  }`}
+        <TouchableOpacity
+          className={`py-4 rounded-full items-center mt-7 ${
+            !empID || officerFound || searchLoading
+              ? "bg-gray-300"
+              : "bg-[#2AAD7A]"
+          }`}
           disabled={!empID || officerFound}
           onPress={handleSearch}
         >
-          <Text className="text-white text-lg text-center font-semibold">
-            {" "}
-            {t("ClaimOfficer.Search")}
-          </Text>
-        </TouchableOpacity> */}
-        <TouchableOpacity
-  className={`py-4 rounded-full items-center mt-7 ${
-    !empID || officerFound || searchLoading ? "bg-gray-300" : "bg-[#2AAD7A]"
-  }`}
-  disabled={!empID || officerFound}
-  onPress={handleSearch}
->
-  {searchLoading ? (
-    <ActivityIndicator size="small" color="#ffffff" />
-  ) : (
-    <Text className="text-white text-lg text-center font-semibold">
-      {t("ClaimOfficer.Search")}
-    </Text>
-  )}
-</TouchableOpacity>
-
+          {searchLoading ? (
+            <ActivityIndicator size="small" color="#ffffff" />
+          ) : (
+            <Text className="text-white text-lg text-center font-semibold">
+              {t("ClaimOfficer.Search")}
+            </Text>
+          )}
+        </TouchableOpacity>
       </View>
 
       {/* No Officer Found */}
@@ -366,65 +361,70 @@ const ClaimOfficer: React.FC = () => {
             }
             className="w-20 h-20 rounded-full mb-4"
           />
-          {/* Officer Details */}
-          {/* <Text className="text-lg font-bold text-gray-800">
-            {officerDetails?.name}
-          </Text>
-          <Text className="text-sm text-gray-500">
-            {officerDetails?.jobRole} - {officerDetails?.empId}
-          </Text>
-          <Text className="text-sm text-gray-500">
-            {officerDetails?.companyNameEnglish}
-          </Text> */}
-           { i18n.language === "si" ? (
-      <>
-        <Text className="text-lg font-bold mb-1 text-gray-800">
-          {officerDetails?.firstNameSinhala} {officerDetails?.lastNameSinhala}
-        </Text>
-        <Text className="text-sm mb-1 text-gray-500">
-        {t(`ClaimOfficer.${officerDetails?.jobRole}`)} - <Text className="font-bold text-black">{officerDetails?.empId}</Text>
-        </Text>
-        <Text className="text-sm text-gray-500">
-          {officerDetails?.companyNameSinhala}
-        </Text>
-      </>
-    ) : i18n.language === "ta" ? (
-      <>
-        <Text className="text-lg font-bold text-gray-800">
-          {officerDetails?.firstNameTamil} {officerDetails?.lastNameTamil}
-        </Text>
-        <Text className="text-sm text-gray-500">
-        {t(`ClaimOfficer.${officerDetails?.jobRole}`)} - <Text className="font-bold text-black">{officerDetails?.empId}</Text>
-        </Text>
-        <Text className="text-sm text-gray-500">
-          {officerDetails?.companyNameTamil}
-        </Text>
-      </>
-    ) : 
-    <>
-    <Text className="text-lg font-bold text-gray-800">
-      {officerDetails?.firstNameEnglish} {officerDetails?.lastNameEnglish}
-    </Text>
-    <Text className="text-sm text-gray-500">
-    {t(`ClaimOfficer.${officerDetails?.jobRole}`)} - <Text className="font-bold text-black">{officerDetails?.empId}</Text>
-    </Text>
-    <Text className="text-sm text-gray-500">
-      {officerDetails?.companyNameEnglish}
-    </Text>
-  </>
-  }
+
+          {i18n.language === "si" ? (
+            <>
+              <Text className="text-lg font-bold mb-1 text-gray-800">
+                {officerDetails?.firstNameSinhala}{" "}
+                {officerDetails?.lastNameSinhala}
+              </Text>
+              <Text className="text-sm mb-1 text-gray-500">
+                {t(`ClaimOfficer.${officerDetails?.jobRole}`)} -{" "}
+                <Text className="font-bold text-black">
+                  {officerDetails?.empId}
+                </Text>
+              </Text>
+              <Text className="text-sm text-gray-500">
+                {officerDetails?.companyNameSinhala}
+              </Text>
+            </>
+          ) : i18n.language === "ta" ? (
+            <>
+              <Text className="text-lg font-bold text-gray-800">
+                {officerDetails?.firstNameTamil} {officerDetails?.lastNameTamil}
+              </Text>
+              <Text className="text-sm text-gray-500">
+                {t(`ClaimOfficer.${officerDetails?.jobRole}`)} -{" "}
+                <Text className="font-bold text-black">
+                  {officerDetails?.empId}
+                </Text>
+              </Text>
+              <Text className="text-sm text-gray-500">
+                {officerDetails?.companyNameTamil}
+              </Text>
+            </>
+          ) : (
+            <>
+              <Text className="text-lg font-bold text-gray-800">
+                {officerDetails?.firstNameEnglish}{" "}
+                {officerDetails?.lastNameEnglish}
+              </Text>
+              <Text className="text-sm text-gray-500">
+                {t(`ClaimOfficer.${officerDetails?.jobRole}`)} -{" "}
+                <Text className="font-bold text-black">
+                  {officerDetails?.empId}
+                </Text>
+              </Text>
+              <Text className="text-sm text-gray-500">
+                {officerDetails?.companyNameEnglish}
+              </Text>
+            </>
+          )}
 
           {/* Claim Officer Button */}
           <TouchableOpacity
             className="mt-6 mb-10 bg-[#2AAD7A]    py-4 rounded-full"
             onPress={() => setModalVisible(true)}
           >
-            <Text className={`text-white text-lg ${i18n.language === 'en' ? "px-28" : "px-24"} font-semibold text-center`} style={[{fontSize:16}]}>
+            <Text
+              className={`text-white text-lg ${
+                i18n.language === "en" ? "px-28" : "px-24"
+              } font-semibold text-center`}
+              style={[{ fontSize: 16 }]}
+            >
               {t("ClaimOfficer.Claim Officer")}
             </Text>
           </TouchableOpacity>
-
-          
         </View>
       )}
       <ConfirmationModal

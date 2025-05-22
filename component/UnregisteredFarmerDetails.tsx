@@ -14,9 +14,12 @@ import {
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
-import CountryPicker, { Country, CountryCode } from "react-native-country-picker-modal";
+import CountryPicker, {
+  Country,
+  CountryCode,
+} from "react-native-country-picker-modal";
 import axios from "axios";
-import {environment }from '@/environment/environment';
+import { environment } from "@/environment/environment";
 import { Picker } from "@react-native-picker/picker";
 import {
   widthPercentageToDP as wp,
@@ -34,7 +37,6 @@ import { SelectList } from "react-native-dropdown-select-list";
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
-
 
 type UnregisteredFarmerDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -66,100 +68,28 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   const [accNumber, setAccNumber] = useState("");
   const [accHolderName, setAccHolderName] = useState("");
   const [bankName, setBankName] = useState("");
-  console.log(bankName)
+  console.log(bankName);
   const [branchName, setBranchName] = useState("");
-  console.log(branchName)
+  console.log(branchName);
   const [isModalVisible, setIsModalVisible] = useState(false); // Success modal visibility state
-  const [isUnsuccessfulModalVisible, setIsUnsuccessfulModalVisible] = useState(false); // Unsuccessful modal visibility state
+  const [isUnsuccessfulModalVisible, setIsUnsuccessfulModalVisible] =
+    useState(false); // Unsuccessful modal visibility state
   const [loading, setLoading] = useState(false); // Loading state for the progress bar
   const [progress] = useState(new Animated.Value(0)); // Animated value for progress
   const [unsuccessfulProgress] = useState(new Animated.Value(0)); // Animated value for unsuccessful loading bar
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for error messages
   const { t } = useTranslation();
   const [filteredBranches, setFilteredBranches] = useState<allBranches[]>([]);
-  const [callingCode, setCallingCode] = useState("+94"); 
+  const [callingCode, setCallingCode] = useState("+94");
   // const [loading, setLoading] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
   const [PreferdLanguage, setPreferdLanguage] = useState<string>("");
-  const [NICError, setNICError] = useState('');
-  const [phoneError, setPhoneError] = useState('');
+  const [NICError, setNICError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
 
+  console.log(countryCode);
 
-  console.log(countryCode)
-
-  const [accNumberError, setAccNumberError] = useState('');
-
-  // const handleNext = async () => {
-  //   setLoading(true); // Start loading
-
-  //   // Start loading animation
-  //   Animated.timing(progress, {
-  //     toValue: 100, // Animate to 100%
-  //     duration: 4000, // Duration of the loading bar animation (4 seconds)
-  //     useNativeDriver: false, // Set to false for width animation
-  //   }).start();
-
-  //   try {
-  //     const response = await api.post(`api/farmer/register-farmer`, {
-  // firstName,
-  // lastName,
-  // NICnumber,
-  // phoneNumber,
-  // address,
-  // accNumber,
-  // accHolderName,
-  // bankName,
-  // branchName,
-  //     });
-
-  //     if (response.status === 201) {
-  //       const userId = response.data.userId; // Capture userId
-  //       const cropCount = response.data.cropCount || 0; // Ensure you have a cropCount value
-
-  //       // Show success modal
-  //       setIsModalVisible(true);
-
-  //       // Modal is visible for 6 seconds before navigating
-  //       setTimeout(() => {
-  //         setIsModalVisible(false); // Close the success modal
-  //         navigation.navigate('FarmerQr' as any, { userId, cropCount }); // Navigate to FarmerQr
-  //       }, 6000); // Wait for 6 seconds before redirecting
-  //     }
-  //   } catch (error: any) {
-  //     console.error(error); // Log for debugging
-  //     setLoading(false); // End loading
-  //     setIsUnsuccessfulModalVisible(true); // Show the unsuccessful modal
-
-  //     // Start unsuccessful loading animation
-  //     unsuccessfulProgress.setValue(100); // Reset the animated value
-  //     Animated.timing(unsuccessfulProgress, {
-  //       toValue: 0, // Animate to 0%
-  //       duration: 4000, // Duration of the loading bar animation (4 seconds)
-  //       useNativeDriver: false, // Set to false for width animation
-  //     }).start();
-
-  //     // Set error message based on the error
-  //     if (error.response) {
-  //       const statusCode = error.response.status;
-  //       const serverError = error.response.data?.error || "An unexpected error occurred.";
-
-  //       // Handle 409 Conflict
-  //       if (statusCode === 409) {
-  //           setErrorMessage(serverError || "User already exists with the provided details.");
-  //       } else {
-  //           setErrorMessage(serverError);
-  //       }
-
-  //       console.error("Server error:", error.response.data);
-  //     } else if (error.request) {
-  //       setErrorMessage("Failed to connect to the server");
-  //     } else {
-  //       setErrorMessage(error.message);
-  //     }
-  //   } finally {
-  //     setLoading(false); // End loading
-  //   }
-  // };
+  const [accNumberError, setAccNumberError] = useState("");
 
   useEffect(() => {
     if (bankName) {
@@ -243,108 +173,23 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
     }
   }, [NIC]);
 
-  const validateAccountNumber = (value : any) => {
+  const validateAccountNumber = (value: any) => {
     // Check if the value contains only numbers
     const numericRegex = /^[0-9]*$/;
     if (!numericRegex.test(value)) {
       setAccNumberError(t("UnregisteredFarmerDetails.AccountNumberError"));
       return false;
     }
-    setAccNumberError('');
+    setAccNumberError("");
     return true;
   };
-  
-  const handleAccountNumberChange = (value : any) => {
+
+  const handleAccountNumberChange = (value: any) => {
     if (validateAccountNumber(value)) {
       setAccNumber(value);
     }
   };
 
-  // const handleNext = async () => {
-  //   if (
-  //     !firstName ||
-  //     !lastName ||
-  //     !NICnumber ||
-  //     !phoneNumber ||
-  //     !district ||
-  //     !accNumber ||
-  //     !accHolderName ||
-  //     !bankName ||
-  //     !branchName // Removed trailing comma
-  //   ) {
-  //     Alert.alert("Sorry", "Please fill all fields");
-  //     setLoading(false);
-  //     return;
-  //   }
-  //   await AsyncStorage.removeItem("referenceId");
-
-  //   try {
-  //     const checkApiUrl = `api/farmer/farmer-register-checker`;
-  //     const checkBody = {
-  //       phoneNumber: `${callingCode}${phoneNumber}`,
-  //       NICnumber: NICnumber,
-  //     };
-
-  //     console.log(checkBody);
-  //     console.log("Full API URL:", `${api.defaults.baseURL}${checkApiUrl}`);
-  //     const checkResponse = await api.post(checkApiUrl, checkBody);
-  //     console.log("API Response:", checkResponse.data);
-
-
-  //     if (checkResponse.data.message === "This Phone Number already exists.") {
-  //       Alert.alert("Sorry", "This Phone Number already exists.");
-  //       return;
-  //     } else if (checkResponse.data.message === "This NIC already exists.") {
-  //       Alert.alert("Sorry", "This NIC already exists.");
-  //       return;
-  //     } else if (
-  //       checkResponse.data.message ===
-  //       "This Phone Number and NIC already exist."
-  //     ) {
-  //       Alert.alert("Sorry", "This Phone Number and NIC already exist.");
-  //       return;
-  //     }
-
-  //     const apiUrl = "https://api.getshoutout.com/otpservice/send";
-  //     const headers = {
-  //       Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
-  //       "Content-Type": "application/json",
-  //     };
-
-  //     console.log(phoneNumber)
-      
-
-  //     const body = {
-  //       source: "ShoutDEMO",
-  //       transport: "sms",
-  //       content: {
-  //         sms: "Your code is {{code}}",
-  //       },
-  //       destination: `${callingCode}${phoneNumber}`,
-  //     };
-
-
-
-  //     const response = await axios.post(apiUrl, body, { headers });
-  //     console.log("OTP Response:", response.data);
-  //     await AsyncStorage.setItem("referenceId", response.data.referenceId);
-
-
-      // navigation.navigate("OTPE", {
-      //   firstName: firstName,
-      //   lastName: lastName,
-      //   NICnumber: NICnumber,
-      //   phoneNumber: `${callingCode}${phoneNumber}`,
-      //   district: district,
-      //   accNumber: accNumber,
-      //   accHolderName: accHolderName,
-      //   bankName: bankName,
-      //   branchName: branchName,
-      // });
-  //   } catch (error) {
-  //     Alert.alert(t("Error.error"), t("Error.SignupForum.otpSendFailed"));
-  //   }
-  // };
   const handleNext = async () => {
     Keyboard.dismiss();
     if (
@@ -376,9 +221,11 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       const checkResponse = await api.post(checkApiUrl, checkBody);
       console.log("API Response:", checkResponse.data);
 
-
       if (checkResponse.data.message === "This Phone Number already exists.") {
-        Alert.alert(t("Error.error"), t("Error.This Phone Number already exists."));
+        Alert.alert(
+          t("Error.error"),
+          t("Error.This Phone Number already exists.")
+        );
         setLoading(false);
         return;
       } else if (checkResponse.data.message === "This NIC already exists.") {
@@ -389,14 +236,17 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
         checkResponse.data.message ===
         "This Phone Number and NIC already exist."
       ) {
-        Alert.alert(t("Error.error"), t("Error.This Phone Number and NIC already exist."));
+        Alert.alert(
+          t("Error.error"),
+          t("Error.This Phone Number and NIC already exist.")
+        );
         setLoading(false);
         return;
-      }else if (phoneError) {
+      } else if (phoneError) {
         Alert.alert(t("Error.error"), t("Error.InvalidPhoneNumber"));
         setLoading(false);
         return;
-      }else if( NICError) {
+      } else if (NICError) {
         Alert.alert(t("Error.error"), t("Error.NIC number is invalid."));
         setLoading(false);
         return;
@@ -408,11 +258,10 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
         "Content-Type": "application/json",
       };
 
+      console.log(phoneNumber);
 
-      console.log(phoneNumber)
-      
       let otpMessage = "";
-      let companyName = '';
+      let companyName = "";
 
       // const body = {
       //   source: "ShoutDEMO",
@@ -423,11 +272,11 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       //   destination: `${callingCode}${phoneNumber}`,
       // };
 
-
       //Dont cahange this massage body pretier when change it spaces of massage will be change
-   if(PreferdLanguage === "Sinhala"){
-    companyName = (await AsyncStorage.getItem("companyNameSinhala")) || "AgroWorld";
-    otpMessage = `${companyName} සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
+      if (PreferdLanguage === "Sinhala") {
+        companyName =
+          (await AsyncStorage.getItem("companyNameSinhala")) || "AgroWorld";
+        otpMessage = `${companyName} සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
         
 ${accHolderName}
 ${accNumber}
@@ -435,8 +284,9 @@ ${bankName}
 ${branchName}
         
 නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා ${companyName} නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
-      }else if(PreferdLanguage === "Tamil"){
-        companyName = (await AsyncStorage.getItem("companyNameTamil")) || "AgroWorld";
+      } else if (PreferdLanguage === "Tamil") {
+        companyName =
+          (await AsyncStorage.getItem("companyNameTamil")) || "AgroWorld";
         otpMessage = `${companyName} உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
         
 ${accHolderName}
@@ -445,8 +295,9 @@ ${bankName}
 ${branchName}
         
 சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் ${companyName} பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
-      }    else {
-        companyName = (await AsyncStorage.getItem("companyNameEnglish")) || "AgroWorld";
+      } else {
+        companyName =
+          (await AsyncStorage.getItem("companyNameEnglish")) || "AgroWorld";
         otpMessage = `Your OTP for bank detail verification with ${companyName} is: {{code}}
         
 ${accHolderName}
@@ -455,20 +306,8 @@ ${bankName}
 ${branchName}
         
 If correct, share OTP only with the ${companyName} representative who contacts you.`;
-
       }
-//       const otpMessage = `Agro World වෙත ලබා දී ඇති බැංකු තොරතුරු තහවුරු කිරීම සඳහා ඔබගේ එක්-කාලීන මුරපදය (OTP) {{code}} වේ.
-         
-//       බැංකු විස්තර
-      
-//       ගිණුමේ නම: ${accHolderName}
-//       ගිණුම් අංකය: ${accNumber}
-//       බැංකුව: ${bankName}
-//       ශාඛාව: ${branchName}
-      
-// ඉහත විස්තර නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා පාරිභෝගික සේවා නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.
-      
-// Agro World සමඟ එක්වූ ඔබට ස්තූතියි!`;
+
       const body = {
         source: "AgroWorld",
         transport: "sms",
@@ -481,7 +320,6 @@ If correct, share OTP only with the ${companyName} representative who contacts y
       const response = await axios.post(apiUrl, body, { headers });
       console.log("OTP Response:", response.data);
       await AsyncStorage.setItem("referenceId", response.data.referenceId);
-
 
       navigation.navigate("OTPE", {
         firstName: firstName,
@@ -525,456 +363,404 @@ If correct, share OTP only with the ${companyName} representative who contacts y
         lineHeight: 20, // Space between lines
       };
     }
-   
   };
-  
 
   return (
-      <KeyboardAvoidingView 
-            behavior={Platform.OS ==="ios" ? "padding" : "height"}
-            enabled
-            className="flex-1"
-            >
-    <View className="flex-1 p-5 bg-white">
-      {/* Header with Back Icon */}
-      <View className="flex-row items-center mb-4">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-           <AntDesign name="left" size={22} color="#000" />
-        </TouchableOpacity>
-        <View className="w-full items-center">
-  <Text className="text-xl font-bold text-center">{t("UnregisteredFarmerDetails.FillDetails")}</Text>
-</View>
-
-
-      </View>
-
-      {/* Scrollable Form */}
-      <ScrollView className="flex-1 p-3">
-        {/* First Name */}
-        <View className="mb-4">
-          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.FirstName")}</Text>
-          <TextInput
-            placeholder={t("UnregisteredFarmerDetails.FirstName")}
-            className="border border-gray-300  p-3 rounded-lg"
-            value={firstName}
-            onChangeText={setFirstName}
-          />
-        </View>
-
-        {/* Last Name */}
-        <View className="mb-4">
-          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.LastName")}</Text>
-          <TextInput
-            placeholder={t("UnregisteredFarmerDetails.LastName")}
-            className="border border-gray-300  p-3 rounded-lg"
-            value={lastName}
-            onChangeText={setLastName}
-          />
-        </View>
-
-              <View className="mb-4">
-                <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.Preferd Language")}</Text>
-                <SelectList
-                  setSelected={setPreferdLanguage}
-                  data={[
-                    { key: "Engilsh", value: "English" },
-                    { key: "Sinhala", value: "සිංහල" },
-                    { key: "Tamil", value: "தமிழ்" },
-                  ]}
-                  placeholder="Select Language"
-                  boxStyles={{ borderColor: "#ccc", borderRadius: 8 }}
-                  dropdownStyles={{ borderColor: "#ccc" }}
-                  search={false} // Optional: hide search inside dropdown
-                  />
-                </View>
-
-        {/* NIC Number */}
-        {/* <View className="mb-4">
-          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.NIC")}</Text>
-          <TextInput
-            placeholder="NIC Number"
-            className="border border-gray-300  p-3 rounded-lg"
-            value={NICnumber}
-            onChangeText={setNICnumber}
-          />
-        </View> */}
-    <View className="mb-4">
-  <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.NIC")}</Text>
- <TextInput
-  placeholder={t("UnregisteredFarmerDetails.NIC")}
-  className={`border ${NICError ? 'border-red-500' : 'border-gray-300'} p-3 rounded-lg`}
-  value={NICnumber}
-  onChangeText={(text) => {
-    // Ensure the 'v' is capitalized
-    const updatedText = text.replace(/v$/, 'V');
-    setNICnumber(updatedText);
-    
-    // Clear error if empty
-    if (!updatedText) {
-      setNICError('');
-      return;
-    }
-    
-    // Allow digits and V/v at the end
-    const isValidCharacters = /^(\d+|[\d]+[vV]?)$/.test(updatedText);
-    if (!isValidCharacters) {
-      setNICError(t("UnregisteredFarmerDetails.InvalidNIC"));
-      return;
-    }
-    
-    // Show error until 9 digits are entered
-    if (updatedText.length < 9) {
-      setNICError(t("UnregisteredFarmerDetails.InvalidNIC"));
-      return;
-    }
-    
-    // Check valid formats: 12 digits OR 9 digits + V/v
-    const is12Digits = /^\d{12}$/.test(updatedText);
-    const is9DigitsWithV = /^\d{9}[vV]$/.test(updatedText);
-    
-    if (is12Digits || is9DigitsWithV) {
-      setNICError(''); // Valid format
-    } else {
-      setNICError(t("UnregisteredFarmerDetails.InvalidNIC"));
-    }
-  }}
-  maxLength={12} // This limits input to maximum 12 characters
-/>
-
-  {NICError ? (
-    <Text className="text-red-500 text-sm mt-1">{NICError}</Text>
-  ) : null}
-</View>
-        {/* Phone Number */}
-        {/* <View className="mb-4">
-          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.Phone")}</Text>
-          <View className="flex-row items-center border border-gray-300  p-3 rounded-lg">
-            <CountryPicker
-              countryCode={countryCode}
-              withFilter
-              withFlag
-              withCallingCode 
-              onSelect={handleCountrySelect}
-
-            />
-            <TextInput
-              placeholder="7XXXXXXXX"
-              keyboardType="phone-pad"
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
-              className="flex-1"
-              maxLength={9}
-            />
-          </View>
-        </View> */}
-
-<View className="mb-4">
-  <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.Phone")}</Text>
-  <View className={`flex-row items-center border ${phoneError ? 'border-red-500' : 'border-gray-300'} p-3 rounded-lg`}>
-    <CountryPicker
-      countryCode={countryCode}
-      withFilter
-      withFlag
-      withCallingCode
-      onSelect={handleCountrySelect}
-    />
-    <TextInput
-      placeholder="7XXXXXXXX"
-      keyboardType="phone-pad"
-      value={phoneNumber}
-      onChangeText={(text) => {
-        // Only allow digits
-        if (!/^\d*$/.test(text)) {
-          setPhoneError(t("UnregisteredFarmerDetails.OnlyDigitsAllowed"));
-          return;
-        }
-        
-        setPhoneNumber(text);
-        
-        // Clear error if empty
-        if (!text) {
-          setPhoneError('');
-          return;
-        }
-        
-        // Validate first digit is 7
-        if (text.length > 0 && text[0] !== '7') {
-          setPhoneError(t("UnregisteredFarmerDetails.MustStartWith7"));
-          return;
-        }
-        
-        // Display error until 9 digits are entered
-        if (text.length === 9) {
-          setPhoneError('');
-        } else {
-          setPhoneError(t("UnregisteredFarmerDetails.InvalidPhoneLength"));
-        }
-      }}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      enabled
       className="flex-1"
-      maxLength={9}
-    />
-  </View>
-  {phoneError ? (
-    <Text className="text-red-500 text-sm mt-1">{phoneError}</Text>
-  ) : null}
-</View>
-
-        {/* Address */}
-        <View className="mb-4">
-          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.District")}</Text>
-          <View className="  rounded-lg">
-            {/* <Picker
-              selectedValue={district}
-              onValueChange={(itemValue: any) => setDistrict(itemValue)}
-              style={{
-                fontSize: 14,
-                width: wp(85),
-              }}
-            >
-              {districtOptions.map((item) => (
-                <Picker.Item
-                  label={item.translationKey}
-                  value={item.value}
-                  key={item.key}
-                  style={{
-                    fontSize: 14,
-                  }}
-                />
-              ))}
-            </Picker> */}
-                     <SelectList
-              setSelected={setDistrict}
-              data={districtOptions.map(district => ({
-                key: district.value,
-                value: district.translationKey,
-              }))}
-              placeholder="Select District"
-              boxStyles={{ borderColor: '#ccc', borderRadius: 8 }}
-              dropdownStyles={{ borderColor: '#ccc' }}
-              search={false}  // Optional: hide search inside dropdown
-            />
+    >
+      <View className="flex-1 p-5 bg-white">
+        {/* Header with Back Icon */}
+        <View className="flex-row items-center mb-4">
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <AntDesign name="left" size={22} color="#000" />
+          </TouchableOpacity>
+          <View className="w-full items-center">
+            <Text className="text-xl font-bold text-center">
+              {t("UnregisteredFarmerDetails.FillDetails")}
+            </Text>
           </View>
         </View>
 
-        {/* Account Number */}
-        {/* <View className="mb-4">
-          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.AccountNum")}</Text>
-          <TextInput
-            placeholder={t("UnregisteredFarmerDetails.AccountNum")}
-            className="border border-gray-300  p-3 rounded-lg"
-            keyboardType="numeric"
-            value={accNumber}
-            onChangeText={setAccNumber}
-          />
-        </View> */}
-        <View className="mb-4">
-    <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.AccountNum")}</Text>
-    <TextInput
-      placeholder={t("UnregisteredFarmerDetails.AccountNum")}
-      className={`border ${accNumberError ? 'border-red-500' : 'border-gray-300'} p-3 rounded-lg`}
-      keyboardType="numeric"
-      value={accNumber}
-      onChangeText={(text) => {
-        if (/^\d*$/.test(text)) {
-          setAccNumber(text);
-          setAccNumberError('');
-        } else {
-          setAccNumberError(t("UnregisteredFarmerDetails.AccountNumberError"));
-        }
-      }}
-    />
-    {accNumberError ? (
-      <Text className="text-red-500 text-sm mt-1">{accNumberError}</Text>
-    ) : null}
-  </View>
+        {/* Scrollable Form */}
+        <ScrollView className="flex-1 p-3">
+          {/* First Name */}
+          <View className="mb-4">
+            <Text className="text-[#434343] mb-2">
+              {t("UnregisteredFarmerDetails.FirstName")}
+            </Text>
+            <TextInput
+              placeholder={t("UnregisteredFarmerDetails.FirstName")}
+              className="border border-gray-300  p-3 rounded-lg"
+              value={firstName}
+              onChangeText={setFirstName}
+            />
+          </View>
 
-        {/* Account Holder's Name */}
-        <View className="mb-4">
-          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.AccountName")}</Text>
-          <TextInput
-            placeholder={t("UnregisteredFarmerDetails.AccountName")}
-            className="border border-gray-300  p-3 rounded-lg"
-            value={accHolderName}
-            // onChangeText={setAccHolderName}
-               onChangeText={(text) => {
-      // Regex to allow only letters, spaces, and basic punctuation (you can adjust this as needed)
-      const cleanText = text.replace(/[^a-zA-Z\s]/g, ''); // Removes anything that is not a letter or space
-      setAccHolderName(cleanText);
-    }}
-          />
-        </View>
+          {/* Last Name */}
+          <View className="mb-4">
+            <Text className="text-[#434343] mb-2">
+              {t("UnregisteredFarmerDetails.LastName")}
+            </Text>
+            <TextInput
+              placeholder={t("UnregisteredFarmerDetails.LastName")}
+              className="border border-gray-300  p-3 rounded-lg"
+              value={lastName}
+              onChangeText={setLastName}
+            />
+          </View>
 
-        {/* Bank Name */}
-        <View className="mb-4">
-          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.Bank")}</Text>
-          <View className="  rounded-lg">
-            {/* <Picker
-              selectedValue={bankName}
-              onValueChange={(value) => setBankName(value)}
-              style={{
-                fontSize: 14,
-                width: wp(85),
-              }}
-            >
-              <Picker.Item label={t("BankDetails.BankName")} value="" />
-              {bankNames
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .map((bank) => (
-                  <Picker.Item
-                    key={bank.ID}
-                    label={bank.name}
-                    value={bank.name}
-                  />
-                ))}
-            </Picker> */}
+          <View className="mb-4">
+            <Text className="text-[#434343] mb-2">
+              {t("UnregisteredFarmerDetails.Preferd Language")}
+            </Text>
             <SelectList
-              setSelected={setBankName}
-              data={bankNames.map(bank => ({
-                key: bank.name,
-                value: bank.name,
-              }))}
-              placeholder="Select Bank"
-              boxStyles={{ borderColor: '#ccc', borderRadius: 8 }}
-              dropdownStyles={{ borderColor: '#ccc' }}
-              search={true}  
+              setSelected={setPreferdLanguage}
+              data={[
+                { key: "Engilsh", value: "English" },
+                { key: "Sinhala", value: "සිංහල" },
+                { key: "Tamil", value: "தமிழ்" },
+              ]}
+              placeholder="Select Language"
+              boxStyles={{ borderColor: "#ccc", borderRadius: 8 }}
+              dropdownStyles={{ borderColor: "#ccc" }}
+              search={false} // Optional: hide search inside dropdown
             />
           </View>
-        </View>
 
-        {/* Branch Name */}
-        <View className="mb-8">
-          <Text className="text-[#434343] mb-2">{t("UnregisteredFarmerDetails.Branch")}</Text>
-          <View className=" rounded-lg">
-            {/* <Picker
-              selectedValue={branchName}
-              onValueChange={(value) => setBranchName(value)}
-              style={{
-                fontSize: 14,
-                width: wp(85),
+          <View className="mb-4">
+            <Text className="text-[#434343] mb-2">
+              {t("UnregisteredFarmerDetails.NIC")}
+            </Text>
+            <TextInput
+              placeholder={t("UnregisteredFarmerDetails.NIC")}
+              className={`border ${
+                NICError ? "border-red-500" : "border-gray-300"
+              } p-3 rounded-lg`}
+              value={NICnumber}
+              onChangeText={(text) => {
+                // Ensure the 'v' is capitalized
+                const updatedText = text.replace(/v$/, "V");
+                setNICnumber(updatedText);
+
+                // Clear error if empty
+                if (!updatedText) {
+                  setNICError("");
+                  return;
+                }
+
+                // Allow digits and V/v at the end
+                const isValidCharacters = /^(\d+|[\d]+[vV]?)$/.test(
+                  updatedText
+                );
+                if (!isValidCharacters) {
+                  setNICError(t("UnregisteredFarmerDetails.InvalidNIC"));
+                  return;
+                }
+
+                // Show error until 9 digits are entered
+                if (updatedText.length < 9) {
+                  setNICError(t("UnregisteredFarmerDetails.InvalidNIC"));
+                  return;
+                }
+
+                // Check valid formats: 12 digits OR 9 digits + V/v
+                const is12Digits = /^\d{12}$/.test(updatedText);
+                const is9DigitsWithV = /^\d{9}[vV]$/.test(updatedText);
+
+                if (is12Digits || is9DigitsWithV) {
+                  setNICError(""); // Valid format
+                } else {
+                  setNICError(t("UnregisteredFarmerDetails.InvalidNIC"));
+                }
               }}
-            >
-              <Picker.Item label={t("BankDetails.BranchName")} value="" />
-              {filteredBranches.map((branch) => (
-                <Picker.Item
-                  key={branch.ID}
-                  label={branch.name}
-                  value={branch.name}
-                />
-              ))}
-            </Picker> */}
-            <SelectList
-              setSelected={setBranchName}
-              data={filteredBranches.map(branch => ({
-                key: branch.name,
-                value: branch.name,
-              }))}
-              placeholder="Select Branch"
-              boxStyles={{ borderColor: '#ccc', borderRadius: 8 }}
-              dropdownStyles={{ borderColor: '#ccc' }}
-              search={true}  
+              maxLength={12} // This limits input to maximum 12 characters
             />
+
+            {NICError ? (
+              <Text className="text-red-500 text-sm mt-1">{NICError}</Text>
+            ) : null}
           </View>
-        </View>
-      </ScrollView>
 
-      {/* Next Button */}
-      {/* <TouchableOpacity
-        className="bg-[#2AAD7A] p-3 rounded-full items-center mt-5"
-        onPress={handleNext}
-      >
-        <Text className="text-white text-lg">Submit</Text>
-      </TouchableOpacity> */}
+          <View className="mb-4">
+            <Text className="text-[#434343] mb-2">
+              {t("UnregisteredFarmerDetails.Phone")}
+            </Text>
+            <View
+              className={`flex-row items-center border ${
+                phoneError ? "border-red-500" : "border-gray-300"
+              } p-3 rounded-lg`}
+            >
+              <CountryPicker
+                countryCode={countryCode}
+                withFilter
+                withFlag
+                withCallingCode
+                onSelect={handleCountrySelect}
+              />
+              <TextInput
+                placeholder="7XXXXXXXX"
+                keyboardType="phone-pad"
+                value={phoneNumber}
+                onChangeText={(text) => {
+                  // Only allow digits
+                  if (!/^\d*$/.test(text)) {
+                    setPhoneError(
+                      t("UnregisteredFarmerDetails.OnlyDigitsAllowed")
+                    );
+                    return;
+                  }
 
-<TouchableOpacity
-  className={`p-3 rounded-full items-center mt-5 ${
-    loading ? "bg-gray-400 opacity-50" : "bg-[#2AAD7A]"
-  }`}
-  onPress={() => {
-    if (!loading) {
-      setLoading(true); // Disable the button on click
-      handleNext(); // Your action function
-    }
-  }}
-  disabled={loading} // Disable button during the operation
->
-  {loading ? (
-    <ActivityIndicator color="white" size="small" />
-  ) : (
-    <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-xl font-light text-white">
-      {t("UnregisteredFarmerDetails.Submit")}
-    </Text>
-  )}
-</TouchableOpacity>
+                  setPhoneNumber(text);
 
+                  // Clear error if empty
+                  if (!text) {
+                    setPhoneError("");
+                    return;
+                  }
 
+                  // Validate first digit is 7
+                  if (text.length > 0 && text[0] !== "7") {
+                    setPhoneError(
+                      t("UnregisteredFarmerDetails.MustStartWith7")
+                    );
+                    return;
+                  }
 
-      {/* Success Modal */}
-      <Modal transparent={true} visible={isModalVisible} animationType="slide">
-        <View className="flex-1 justify-center items-center bg-black/50 bg-opacity-50">
-          <View className="bg-white rounded-lg w-72 p-6 items-center">
-            <Text className="text-xl font-bold mb-4"> {t("UnregisteredFarmerDetails.Success")}</Text>
-            <View className="mb-4">
-              <Image
-                source={require("../assets/images/tick.webp")} // Replace with your own checkmark image
-                className="w-24 h-24"
+                  // Display error until 9 digits are entered
+                  if (text.length === 9) {
+                    setPhoneError("");
+                  } else {
+                    setPhoneError(
+                      t("UnregisteredFarmerDetails.InvalidPhoneLength")
+                    );
+                  }
+                }}
+                className="flex-1"
+                maxLength={9}
               />
             </View>
-            <Text className="text-gray-700">{t("UnregisteredFarmerDetails.Successful")}</Text>
-            <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
-              <Animated.View
-                className="h-full bg-green-500"
-                style={{ width: loadingBarWidth }}
+            {phoneError ? (
+              <Text className="text-red-500 text-sm mt-1">{phoneError}</Text>
+            ) : null}
+          </View>
+
+          {/* Address */}
+          <View className="mb-4">
+            <Text className="text-[#434343] mb-2">
+              {t("UnregisteredFarmerDetails.District")}
+            </Text>
+            <View className="  rounded-lg">
+              <SelectList
+                setSelected={setDistrict}
+                data={districtOptions.map((district) => ({
+                  key: district.value,
+                  value: district.translationKey,
+                }))}
+                placeholder="Select District"
+                boxStyles={{ borderColor: "#ccc", borderRadius: 8 }}
+                dropdownStyles={{ borderColor: "#ccc" }}
+                search={false} // Optional: hide search inside dropdown
               />
             </View>
           </View>
-        </View>
-      </Modal>
 
-      <Modal
-        transparent={true}
-        visible={isUnsuccessfulModalVisible}
-        animationType="slide"
-      >
-        <View className="flex-1 justify-center items-center bg-gray-900 bg-opacity-50">
-          <View className="bg-white rounded-lg w-72 p-6 items-center">
-            <Text className="text-xl font-bold mb-4">{t("UnregisteredFarmerDetails.Oops")}</Text>
-            <View className="mb-4">
-              <Image
-                source={require("../assets/images/error.webp")} // Replace with your own error image
-                className="w-24 h-24"
-              />
-            </View>
-            <Text className="text-gray-700">{t("UnregisteredFarmerDetails.Unsuccessful")}</Text>
-
-            {/* Display error message */}
-            {errorMessage && (
-              <Text className="text-red-600 text-center mt-2">
-                {errorMessage}
+          <View className="mb-4">
+            <Text className="text-[#434343] mb-2">
+              {t("UnregisteredFarmerDetails.AccountNum")}
+            </Text>
+            <TextInput
+              placeholder={t("UnregisteredFarmerDetails.AccountNum")}
+              className={`border ${
+                accNumberError ? "border-red-500" : "border-gray-300"
+              } p-3 rounded-lg`}
+              keyboardType="numeric"
+              value={accNumber}
+              onChangeText={(text) => {
+                if (/^\d*$/.test(text)) {
+                  setAccNumber(text);
+                  setAccNumberError("");
+                } else {
+                  setAccNumberError(
+                    t("UnregisteredFarmerDetails.AccountNumberError")
+                  );
+                }
+              }}
+            />
+            {accNumberError ? (
+              <Text className="text-red-500 text-sm mt-1">
+                {accNumberError}
               </Text>
-            )}
+            ) : null}
+          </View>
 
-            {/* Red Loading Bar */}
-            <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
-              <Animated.View
-                className="h-full bg-red-500"
-                style={{ width: unsuccessfulLoadingBarWidth }}
+          {/* Account Holder's Name */}
+          <View className="mb-4">
+            <Text className="text-[#434343] mb-2">
+              {t("UnregisteredFarmerDetails.AccountName")}
+            </Text>
+            <TextInput
+              placeholder={t("UnregisteredFarmerDetails.AccountName")}
+              className="border border-gray-300  p-3 rounded-lg"
+              value={accHolderName}
+              // onChangeText={setAccHolderName}
+              onChangeText={(text) => {
+                // Regex to allow only letters, spaces, and basic punctuation (you can adjust this as needed)
+                const cleanText = text.replace(/[^a-zA-Z\s]/g, ""); // Removes anything that is not a letter or space
+                setAccHolderName(cleanText);
+              }}
+            />
+          </View>
+
+          {/* Bank Name */}
+          <View className="mb-4">
+            <Text className="text-[#434343] mb-2">
+              {t("UnregisteredFarmerDetails.Bank")}
+            </Text>
+            <View className="  rounded-lg">
+              <SelectList
+                setSelected={setBankName}
+                data={bankNames.map((bank) => ({
+                  key: bank.name,
+                  value: bank.name,
+                }))}
+                placeholder="Select Bank"
+                boxStyles={{ borderColor: "#ccc", borderRadius: 8 }}
+                dropdownStyles={{ borderColor: "#ccc" }}
+                search={true}
               />
             </View>
-
-            <TouchableOpacity
-              className="bg-red-500 p-2 rounded-full mt-4"
-              onPress={() => {
-                setIsUnsuccessfulModalVisible(false);
-                setErrorMessage(null); // Clear error message when closing
-                unsuccessfulProgress.setValue(0); // Reset animation value when closing
-              }}
-            >
-              <Text className="text-white">{t("UnregisteredFarmerDetails.Close")}</Text>
-            </TouchableOpacity>
           </View>
-        </View>
-      </Modal>
-    </View>
+
+          {/* Branch Name */}
+          <View className="mb-8">
+            <Text className="text-[#434343] mb-2">
+              {t("UnregisteredFarmerDetails.Branch")}
+            </Text>
+            <View className=" rounded-lg">
+              <SelectList
+                setSelected={setBranchName}
+                data={filteredBranches.map((branch) => ({
+                  key: branch.name,
+                  value: branch.name,
+                }))}
+                placeholder="Select Branch"
+                boxStyles={{ borderColor: "#ccc", borderRadius: 8 }}
+                dropdownStyles={{ borderColor: "#ccc" }}
+                search={true}
+              />
+            </View>
+          </View>
+        </ScrollView>
+
+        <TouchableOpacity
+          className={`p-3 rounded-full items-center mt-5 ${
+            loading ? "bg-gray-400 opacity-50" : "bg-[#2AAD7A]"
+          }`}
+          onPress={() => {
+            if (!loading) {
+              setLoading(true); // Disable the button on click
+              handleNext(); // Your action function
+            }
+          }}
+          disabled={loading} // Disable button during the operation
+        >
+          {loading ? (
+            <ActivityIndicator color="white" size="small" />
+          ) : (
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-center text-xl font-light text-white"
+            >
+              {t("UnregisteredFarmerDetails.Submit")}
+            </Text>
+          )}
+        </TouchableOpacity>
+
+        {/* Success Modal */}
+        <Modal
+          transparent={true}
+          visible={isModalVisible}
+          animationType="slide"
+        >
+          <View className="flex-1 justify-center items-center bg-black/50 bg-opacity-50">
+            <View className="bg-white rounded-lg w-72 p-6 items-center">
+              <Text className="text-xl font-bold mb-4">
+                {" "}
+                {t("UnregisteredFarmerDetails.Success")}
+              </Text>
+              <View className="mb-4">
+                <Image
+                  source={require("../assets/images/tick.webp")} // Replace with your own checkmark image
+                  className="w-24 h-24"
+                />
+              </View>
+              <Text className="text-gray-700">
+                {t("UnregisteredFarmerDetails.Successful")}
+              </Text>
+              <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
+                <Animated.View
+                  className="h-full bg-green-500"
+                  style={{ width: loadingBarWidth }}
+                />
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        <Modal
+          transparent={true}
+          visible={isUnsuccessfulModalVisible}
+          animationType="slide"
+        >
+          <View className="flex-1 justify-center items-center bg-gray-900 bg-opacity-50">
+            <View className="bg-white rounded-lg w-72 p-6 items-center">
+              <Text className="text-xl font-bold mb-4">
+                {t("UnregisteredFarmerDetails.Oops")}
+              </Text>
+              <View className="mb-4">
+                <Image
+                  source={require("../assets/images/error.webp")} // Replace with your own error image
+                  className="w-24 h-24"
+                />
+              </View>
+              <Text className="text-gray-700">
+                {t("UnregisteredFarmerDetails.Unsuccessful")}
+              </Text>
+
+              {/* Display error message */}
+              {errorMessage && (
+                <Text className="text-red-600 text-center mt-2">
+                  {errorMessage}
+                </Text>
+              )}
+
+              {/* Red Loading Bar */}
+              <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
+                <Animated.View
+                  className="h-full bg-red-500"
+                  style={{ width: unsuccessfulLoadingBarWidth }}
+                />
+              </View>
+
+              <TouchableOpacity
+                className="bg-red-500 p-2 rounded-full mt-4"
+                onPress={() => {
+                  setIsUnsuccessfulModalVisible(false);
+                  setErrorMessage(null); // Clear error message when closing
+                  unsuccessfulProgress.setValue(0); // Reset animation value when closing
+                }}
+              >
+                <Text className="text-white">
+                  {t("UnregisteredFarmerDetails.Close")}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </View>
     </KeyboardAvoidingView>
   );
 };

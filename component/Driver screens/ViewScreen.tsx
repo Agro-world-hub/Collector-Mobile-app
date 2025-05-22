@@ -157,28 +157,6 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
             const jsonData = JSON.parse(textResponse);
             console.log("Parsed JSON:", jsonData);
     
-            // if (jsonData.success) {
-            //   const responseData = jsonData.data;
-              
-            //   // Set state with the fetched data
-            //   setRequestId(responseData.id.toString());
-              
-            //   // Handle multiple items if they exist
-            //   if (responseData.items && responseData.items.length > 0) {
-            //     setItems(responseData.items);
-                
-            //     // Create mapping of crop IDs to crop Name
-            //     const cropMapping: Record<number, string> = {};
-            //     const varietyMapping: Record<number, string> = {};
-                
-            //     responseData.items.forEach((item: any) => {
-            //       cropMapping[item.cropId] = item.cropName || `Crop ${item.cropId}`;
-            //       varietyMapping[item.varietyId] = item.varietyName || `Variety ${item.varietyId}`;
-            //     });
-                
-            //     setCrops(cropMapping);
-            //     setVarieties(varietyMapping);
-            //   }
             if (jsonData.success) {
               const responseData = jsonData.data;
               
@@ -461,17 +439,6 @@ const [isUpdateEnabled, setIsUpdateEnabled] = useState(false);
        
                  </View>
               
-                 {/* {showDatePicker && (
-                     <View className="items-end  mt-4">
-                  <DateTimePicker
-                    value={new Date()}
-                    mode="date"
-                    display="default"
-                    onChange={handleDateChange}
-                    minimumDate={tomorrow} 
-                  />
-                    </View>
-                )} */}
 
 {showDatePicker  && Platform.OS === "android" && (
           <DateTimePicker

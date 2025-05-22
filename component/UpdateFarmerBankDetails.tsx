@@ -14,7 +14,7 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
 import axios from "axios";
-import {environment }from '@/environment/environment';
+import { environment } from "@/environment/environment";
 import { useTranslation } from "react-i18next";
 import bankNames from "../assets/jsons/banks.json";
 import { ActivityIndicator } from "react-native";
@@ -27,7 +27,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
-
 
 type UnregisteredFarmerDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -49,18 +48,20 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   navigation,
   route,
 }) => {
-  const { id, NICnumber, phoneNumber, PreferdLanguage, officerRole} = route.params;
+  const { id, NICnumber, phoneNumber, PreferdLanguage, officerRole } =
+    route.params;
   console.log(id);
   console.log(NICnumber);
   const [accNumber, setAccNumber] = useState("");
-  console.log(accNumber)
+  console.log(accNumber);
   const [accHolderName, setAccHolderName] = useState("");
   const [bankName, setBankName] = useState("");
-  console.log(bankName)
+  console.log(bankName);
   const [branchName, setBranchName] = useState("");
-  console.log(branchName)
+  console.log(branchName);
   const [isModalVisible, setIsModalVisible] = useState(false); // Success modal visibility state
-  const [isUnsuccessfulModalVisible, setIsUnsuccessfulModalVisible] = useState(false); // Unsuccessful modal visibility state
+  const [isUnsuccessfulModalVisible, setIsUnsuccessfulModalVisible] =
+    useState(false); // Unsuccessful modal visibility state
   const [loading, setLoading] = useState(false); // Loading state for the progress bar
   const [progress] = useState(new Animated.Value(0)); // Animated value for progress
   const [unsuccessfulProgress] = useState(new Animated.Value(0)); // Animated value for unsuccessful loading bar
@@ -69,25 +70,24 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
   const [filteredBranches, setFilteredBranches] = useState<allBranches[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
 
-  const [accNumberError, setAccNumberError] = useState('');
+  const [accNumberError, setAccNumberError] = useState("");
 
-const validateAccountNumber = (value : any) => {
-  // Check if the value contains only numbers
-  const numericRegex = /^[0-9]*$/;
-  if (!numericRegex.test(value)) {
-    setAccNumberError(t("UnregisteredFarmerDetails.AccountNumberError"));
-    return false;
-  }
-  setAccNumberError('');
-  return true;
-};
+  const validateAccountNumber = (value: any) => {
+    // Check if the value contains only numbers
+    const numericRegex = /^[0-9]*$/;
+    if (!numericRegex.test(value)) {
+      setAccNumberError(t("UnregisteredFarmerDetails.AccountNumberError"));
+      return false;
+    }
+    setAccNumberError("");
+    return true;
+  };
 
-const handleAccountNumberChange = (value : any) => {
-  if (validateAccountNumber(value)) {
-    setAccNumber(value);
-  }
-};
-
+  const handleAccountNumberChange = (value: any) => {
+    if (validateAccountNumber(value)) {
+      setAccNumber(value);
+    }
+  };
 
   useEffect(() => {
     if (bankName) {
@@ -119,75 +119,35 @@ const handleAccountNumberChange = (value : any) => {
 
   const handleNext = async () => {
     if (
-
       !accNumber ||
       !accHolderName ||
       !bankName ||
       !branchName // Removed trailing comma
     ) {
-      Alert.alert(t("Error.error"), t("Error.Please fill in all required fields."));
+      Alert.alert(
+        t("Error.error"),
+        t("Error.Please fill in all required fields.")
+      );
       setLoading(false);
       return;
     }
 
-  //  try {
-  //     const response = await api.post("api/farmer/FarmerBankDetails", {
-  //       accNumber: accNumber,
-  //       accHolderName: accHolderName,
-  //       bankName: bankName,
-  //       branchName: branchName,
-  //       userId: id,
-  //       NICnumber: NICnumber,
-  //     });
+    try {
+      const apiUrl = "https://api.getshoutout.com/otpservice/send";
+      const headers = {
+        Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
+        "Content-Type": "application/json",
+      };
 
-  //     if (response.status === 200) {
-  //       setLoading(false);
-  //       setIsModalVisible(true); // Show success modal
-  //       Animated.timing(progress, {
-  //         toValue: 100,
-  //         duration: 2000,
-  //         useNativeDriver: false,
-  //       }).start(() => {
-  //           // Close modal after animation completes
-  //           setIsModalVisible(false);
-            
-  //           // Navigate to FarmerQr after closing the modal
-            // navigation.navigate("FarmerQr" as any, {
-            //   NICnumber,
-            //   userId: id,
-            // });
-            // navigation.navigate("otpBankDetailsupdate", {
-            //   phoneNumber: phoneNumber,
-            //   accNumber: accNumber,
-            //   accHolderName: accHolderName,
-            //   bankName: bankName,
-            //   branchName: branchName,
-            //   PreferdLanguage: PreferdLanguage,
-            // });
-  //         });
-  //     } else {
-  //       setLoading(false);
-  //       Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
-  //     }
-  //   } catch (error) {
-  //       console.error("Error submitting form", error);
-  //       setLoading(false);
-  //   }
-  try {
-    const apiUrl = "https://api.getshoutout.com/otpservice/send";
-    const headers = {
-      Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
-      "Content-Type": "application/json",
-    };
+      console.log(phoneNumber);
 
-    console.log(phoneNumber)
-    
-    let otpMessage = "";
-    let companyName = '';
+      let otpMessage = "";
+      let companyName = "";
 
-if(PreferdLanguage === "Sinhala"){
-  companyName = (await AsyncStorage.getItem("companyNameSinhala")) || "AgroWorld";
-      otpMessage = `${companyName} සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
+      if (PreferdLanguage === "Sinhala") {
+        companyName =
+          (await AsyncStorage.getItem("companyNameSinhala")) || "AgroWorld";
+        otpMessage = `${companyName} සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
       
 ${accHolderName}
 ${accNumber}
@@ -195,9 +155,10 @@ ${bankName}
 ${branchName}
       
 නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා ${companyName} නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
-    }else if(PreferdLanguage === "Tamil"){
-      companyName = (await AsyncStorage.getItem("companyNameTamil")) || "AgroWorld";
-      otpMessage = `${companyName} உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
+      } else if (PreferdLanguage === "Tamil") {
+        companyName =
+          (await AsyncStorage.getItem("companyNameTamil")) || "AgroWorld";
+        otpMessage = `${companyName} உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
       
 ${accHolderName}
 ${accNumber}
@@ -205,9 +166,10 @@ ${bankName}
 ${branchName}
       
 சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் ${companyName} பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
-    } else {
-      companyName = (await AsyncStorage.getItem("companyNameEnglish")) || "AgroWorld";
-      otpMessage = `Your OTP for bank detail verification with ${companyName} is: {{code}}
+      } else {
+        companyName =
+          (await AsyncStorage.getItem("companyNameEnglish")) || "AgroWorld";
+        otpMessage = `Your OTP for bank detail verification with ${companyName} is: {{code}}
       
 ${accHolderName}
 ${accNumber}
@@ -215,38 +177,36 @@ ${bankName}
 ${branchName}
       
 If correct, share OTP only with the ${companyName} representative who contacts you.`;
+      }
 
+      const body = {
+        source: "AgroWorld",
+        transport: "sms",
+        content: {
+          sms: otpMessage,
+        },
+        destination: `${phoneNumber}`,
+      };
+
+      const response = await axios.post(apiUrl, body, { headers });
+      console.log("OTP Response:", response.data);
+      await AsyncStorage.setItem("referenceId", response.data.referenceId);
+
+      navigation.navigate("otpBankDetailsupdate", {
+        phoneNumber: phoneNumber,
+        accNumber: accNumber,
+        accHolderName: accHolderName,
+        bankName: bankName,
+        branchName: branchName,
+        PreferdLanguage: PreferdLanguage,
+        farmerId: id,
+        officerRole: officerRole,
+      });
+      setLoading(false);
+    } catch (error) {
+      Alert.alert(t("Error.error"), t("Error.otpSendFailed"));
+      setLoading(false);
     }
-
-    const body = {
-      source: "AgroWorld",
-      transport: "sms",
-      content: {
-        sms: otpMessage,
-      },
-      destination: `${phoneNumber}`,
-    };
-
-    const response = await axios.post(apiUrl, body, { headers });
-    console.log("OTP Response:", response.data);
-    await AsyncStorage.setItem("referenceId", response.data.referenceId);
-
-
-    navigation.navigate("otpBankDetailsupdate", {
-      phoneNumber: phoneNumber,
-      accNumber: accNumber,
-      accHolderName: accHolderName,
-      bankName: bankName,
-      branchName: branchName,
-      PreferdLanguage: PreferdLanguage,
-      farmerId: id,
-      officerRole:officerRole
-    });
-    setLoading(false);
-  } catch (error) {
-    Alert.alert(t("Error.error"), t("Error.otpSendFailed"));
-    setLoading(false);
-  }
   };
 
   // Interpolating the animated value for width
@@ -260,7 +220,6 @@ If correct, share OTP only with the ${companyName} representative who contacts y
     outputRange: ["0%", "100%"],
   });
 
-
   const getTextStyle = (language: string) => {
     if (language === "si") {
       return {
@@ -268,240 +227,224 @@ If correct, share OTP only with the ${companyName} representative who contacts y
         lineHeight: 20, // Space between lines
       };
     }
-   
   };
 
   return (
-      <KeyboardAvoidingView 
-            behavior={Platform.OS ==="ios" ? "padding" : "height"}
-            enabled
-            className="flex-1"
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      enabled
+      className="flex-1"
+    >
+      <View className="flex-1 p-5 bg-white">
+        {/* Header with Back Icon */}
+        <View className="flex-row items-center mb-4">
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <AntDesign name="left" size={22} color="#000" />
+          </TouchableOpacity>
+          <View className="w-full items-center">
+            <Text
+              className="text-xl font-bold text-center"
+              style={{ fontSize: 18 }}
             >
-    <View className="flex-1 p-5 bg-white">
-      {/* Header with Back Icon */}
-      <View className="flex-row items-center mb-4">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-           <AntDesign name="left" size={22} color="#000" />
-        </TouchableOpacity>
-        <View className="w-full items-center">
-  <Text className="text-xl font-bold text-center" style={{fontSize:18}}>{t("UnregisteredFarmerDetails.FillDetails")}</Text>
-</View>
+              {t("UnregisteredFarmerDetails.FillDetails")}
+            </Text>
+          </View>
+        </View>
 
-
-      </View>
-
-      {/* Scrollable Form */}
-      <ScrollView className="flex-1 p-3 mt-4">
-        {/* Account Number */}
-        {/* <View className="mb-4">
-          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.AccountNum")}</Text>
-          <TextInput
-            placeholder={t("UnregisteredFarmerDetails.AccountNum")}
-            className="border border-gray-300  p-3 rounded-lg"
-            value={accNumber}
-            onChangeText={setAccNumber}
-          />
-        </View> */}
-        <View className="mb-4">
-    <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.AccountNum")}</Text>
-    <TextInput
-      placeholder={t("UnregisteredFarmerDetails.AccountNum")}
-      className={`border ${accNumberError ? 'border-red-500' : 'border-gray-300'} p-3 rounded-lg`}
-      keyboardType="numeric"
-      value={accNumber}
-      onChangeText={(text) => {
-        if (/^\d*$/.test(text)) {
-          setAccNumber(text);
-          setAccNumberError('');
-        } else {
-          setAccNumberError(t("UnregisteredFarmerDetails.AccountNumberError"));
-        }
-      }}
-    />
-    {accNumberError ? (
-      <Text className="text-red-500 text-sm mt-1">{accNumberError}</Text>
-    ) : null}
-  </View>
-
-        {/* Account Holder's Name */}
-        <View className="mb-4">
-  <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.AccountName")}</Text>
-  <TextInput
-    placeholder={t("UnregisteredFarmerDetails.AccountName")}
-    className="border border-gray-300 p-3 rounded-lg"
-    value={accHolderName}
-    onChangeText={(text) => {
-      // Only allow letters, spaces, and dots (for initials)
-      const sanitizedText = text.replace(/[^a-zA-Z.\s]/g, '');
-      setAccHolderName(sanitizedText);
-    }}
-  />
-</View>
-
-        {/* Bank Name */}
-        <View className="mb-4">
-          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.Bank")}</Text>
-          <View className="  rounded-lg">
-            {/* <Picker
-              selectedValue={bankName}
-              onValueChange={(value) => setBankName(value)}
-              style={{
-                fontSize: 14,
-                width: wp(85),
+        {/* Scrollable Form */}
+        <ScrollView className="flex-1 p-3 mt-4">
+          <View className="mb-4">
+            <Text className="text-gray-600 mb-2">
+              {t("UnregisteredFarmerDetails.AccountNum")}
+            </Text>
+            <TextInput
+              placeholder={t("UnregisteredFarmerDetails.AccountNum")}
+              className={`border ${
+                accNumberError ? "border-red-500" : "border-gray-300"
+              } p-3 rounded-lg`}
+              keyboardType="numeric"
+              value={accNumber}
+              onChangeText={(text) => {
+                if (/^\d*$/.test(text)) {
+                  setAccNumber(text);
+                  setAccNumberError("");
+                } else {
+                  setAccNumberError(
+                    t("UnregisteredFarmerDetails.AccountNumberError")
+                  );
+                }
               }}
-            >
-              <Picker.Item label={t("BankDetails.BankName")} value="" />
-              {bankNames
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .map((bank) => (
-                  <Picker.Item
-                    key={bank.ID}
-                    label={bank.name}
-                    value={bank.name}
-                  />
-                ))}
-            </Picker> */}
-            <SelectList
-              setSelected={setBankName}
-              data={bankNames.map(bank => ({
-                key: bank.name,
-                value: bank.name,
-              }))}
-              placeholder="Select Bank"
-              boxStyles={{ borderColor: '#ccc', borderRadius: 8 }}
-              dropdownStyles={{ borderColor: '#ccc' }}
-              search={true}  
+            />
+            {accNumberError ? (
+              <Text className="text-red-500 text-sm mt-1">
+                {accNumberError}
+              </Text>
+            ) : null}
+          </View>
+
+          {/* Account Holder's Name */}
+          <View className="mb-4">
+            <Text className="text-gray-600 mb-2">
+              {t("UnregisteredFarmerDetails.AccountName")}
+            </Text>
+            <TextInput
+              placeholder={t("UnregisteredFarmerDetails.AccountName")}
+              className="border border-gray-300 p-3 rounded-lg"
+              value={accHolderName}
+              onChangeText={(text) => {
+                // Only allow letters, spaces, and dots (for initials)
+                const sanitizedText = text.replace(/[^a-zA-Z.\s]/g, "");
+                setAccHolderName(sanitizedText);
+              }}
             />
           </View>
-        </View>
 
-        {/* Branch Name */}
-        <View className="mb-4">
-          <Text className="text-gray-600 mb-2">{t("UnregisteredFarmerDetails.Branch")}</Text>
-          <View className=" rounded-lg">
-            {/* <Picker
-              selectedValue={branchName}
-              onValueChange={(value) => setBranchName(value)}
-              style={{
-                fontSize: 14,
-                width: wp(85),
-              }}
-            >
-              <Picker.Item label={t("BankDetails.BranchName")} value="" />
-              {filteredBranches.map((branch) => (
-                <Picker.Item
-                  key={branch.ID}
-                  label={branch.name}
-                  value={branch.name}
-                />
-              ))}
-            </Picker> */}
-            <SelectList
-              setSelected={setBranchName}
-              data={filteredBranches.map(branch => ({
-                key: branch.name,
-                value: branch.name,
-              }))}
-              placeholder="Select Branch"
-              boxStyles={{ borderColor: '#ccc', borderRadius: 8 }}
-              dropdownStyles={{ borderColor: '#ccc' }}
-              search={true}  
-            />
-          </View>
-        </View>
-        <TouchableOpacity
-  className={`p-3 rounded-full items-center mt-5 ${
-    loading ? "bg-gray-400 opacity-50" : "bg-[#2AAD7A]"
-  }`}
-  onPress={() => {
-    if (!loading) {
-      setLoading(true); // Disable the button on click
-      handleNext(); // Your action function
-    }
-  }}
-  disabled={loading} // Disable button during the operation
->
-  {loading ? (
-    <ActivityIndicator color="white" size="small" />
-  ) : (
-    <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-xl font-light text-white">
-      {t("UnregisteredFarmerDetails.Submit")}
-    </Text>
-  )}
-</TouchableOpacity>
-      </ScrollView>
-
-
-
-
-
-      {/* Success Modal */}
-      <Modal transparent={true} visible={isModalVisible} animationType="slide">
-        <View className="flex-1 justify-center items-center bg-black/50 bg-opacity-50">
-          <View className="bg-white rounded-lg w-72 p-6 items-center">
-            <Text className="text-xl font-bold mb-4"> {t("UnregisteredFarmerDetails.Success")}</Text>
-            <View className="mb-4">
-              <Image
-                source={require("../assets/images/tick.webp")} // Replace with your own checkmark image
-                className="w-24 h-24"
-              />
-            </View>
-            <Text className="text-gray-700">{t("UnregisteredFarmerDetails.Successful")}</Text>
-            <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
-              <Animated.View
-                className="h-full bg-green-500"
-                style={{ width: loadingBarWidth }}
+          {/* Bank Name */}
+          <View className="mb-4">
+            <Text className="text-gray-600 mb-2">
+              {t("UnregisteredFarmerDetails.Bank")}
+            </Text>
+            <View className="  rounded-lg">
+              <SelectList
+                setSelected={setBankName}
+                data={bankNames.map((bank) => ({
+                  key: bank.name,
+                  value: bank.name,
+                }))}
+                placeholder="Select Bank"
+                boxStyles={{ borderColor: "#ccc", borderRadius: 8 }}
+                dropdownStyles={{ borderColor: "#ccc" }}
+                search={true}
               />
             </View>
           </View>
-        </View>
-      </Modal>
 
-      <Modal
-        transparent={true}
-        visible={isUnsuccessfulModalVisible}
-        animationType="slide"
-      >
-        <View className="flex-1 justify-center items-center bg-black/50 bg-opacity-50">
-          <View className="bg-white rounded-lg w-72 p-6 items-center">
-            <Text className="text-xl font-bold mb-4">{t("UnregisteredFarmerDetails.Oops")}</Text>
-            <View className="mb-4">
-              <Image
-                source={require("../assets/images/error.webp")} // Replace with your own error image
-                className="w-24 h-24"
+          {/* Branch Name */}
+          <View className="mb-4">
+            <Text className="text-gray-600 mb-2">
+              {t("UnregisteredFarmerDetails.Branch")}
+            </Text>
+            <View className=" rounded-lg">
+              <SelectList
+                setSelected={setBranchName}
+                data={filteredBranches.map((branch) => ({
+                  key: branch.name,
+                  value: branch.name,
+                }))}
+                placeholder="Select Branch"
+                boxStyles={{ borderColor: "#ccc", borderRadius: 8 }}
+                dropdownStyles={{ borderColor: "#ccc" }}
+                search={true}
               />
             </View>
-            <Text className="text-gray-700">{t("UnregisteredFarmerDetails.Unsuccessful")}</Text>
-
-            {/* Display error message */}
-            {errorMessage && (
-              <Text className="text-red-600 text-center mt-2">
-                {errorMessage}
+          </View>
+          <TouchableOpacity
+            className={`p-3 rounded-full items-center mt-5 ${
+              loading ? "bg-gray-400 opacity-50" : "bg-[#2AAD7A]"
+            }`}
+            onPress={() => {
+              if (!loading) {
+                setLoading(true); // Disable the button on click
+                handleNext(); // Your action function
+              }
+            }}
+            disabled={loading} // Disable button during the operation
+          >
+            {loading ? (
+              <ActivityIndicator color="white" size="small" />
+            ) : (
+              <Text
+                style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+                className="text-center text-xl font-light text-white"
+              >
+                {t("UnregisteredFarmerDetails.Submit")}
               </Text>
             )}
+          </TouchableOpacity>
+        </ScrollView>
 
-            {/* Red Loading Bar */}
-            <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
-              <Animated.View
-                className="h-full bg-red-500"
-                style={{ width: unsuccessfulLoadingBarWidth }}
-              />
+        {/* Success Modal */}
+        <Modal
+          transparent={true}
+          visible={isModalVisible}
+          animationType="slide"
+        >
+          <View className="flex-1 justify-center items-center bg-black/50 bg-opacity-50">
+            <View className="bg-white rounded-lg w-72 p-6 items-center">
+              <Text className="text-xl font-bold mb-4">
+                {" "}
+                {t("UnregisteredFarmerDetails.Success")}
+              </Text>
+              <View className="mb-4">
+                <Image
+                  source={require("../assets/images/tick.webp")} // Replace with your own checkmark image
+                  className="w-24 h-24"
+                />
+              </View>
+              <Text className="text-gray-700">
+                {t("UnregisteredFarmerDetails.Successful")}
+              </Text>
+              <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
+                <Animated.View
+                  className="h-full bg-green-500"
+                  style={{ width: loadingBarWidth }}
+                />
+              </View>
             </View>
-
-            <TouchableOpacity
-              className="bg-red-500 p-2 rounded-full mt-4"
-              onPress={() => {
-                setIsUnsuccessfulModalVisible(false);
-                setErrorMessage(null); // Clear error message when closing
-                unsuccessfulProgress.setValue(0); // Reset animation value when closing
-              }}
-            >
-              <Text className="text-white">{t("UnregisteredFarmerDetails.Close")}</Text>
-            </TouchableOpacity>
           </View>
-        </View>
-      </Modal>
-    </View>
+        </Modal>
+
+        <Modal
+          transparent={true}
+          visible={isUnsuccessfulModalVisible}
+          animationType="slide"
+        >
+          <View className="flex-1 justify-center items-center bg-black/50 bg-opacity-50">
+            <View className="bg-white rounded-lg w-72 p-6 items-center">
+              <Text className="text-xl font-bold mb-4">
+                {t("UnregisteredFarmerDetails.Oops")}
+              </Text>
+              <View className="mb-4">
+                <Image
+                  source={require("../assets/images/error.webp")} // Replace with your own error image
+                  className="w-24 h-24"
+                />
+              </View>
+              <Text className="text-gray-700">
+                {t("UnregisteredFarmerDetails.Unsuccessful")}
+              </Text>
+
+              {/* Display error message */}
+              {errorMessage && (
+                <Text className="text-red-600 text-center mt-2">
+                  {errorMessage}
+                </Text>
+              )}
+
+              {/* Red Loading Bar */}
+              <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
+                <Animated.View
+                  className="h-full bg-red-500"
+                  style={{ width: unsuccessfulLoadingBarWidth }}
+                />
+              </View>
+
+              <TouchableOpacity
+                className="bg-red-500 p-2 rounded-full mt-4"
+                onPress={() => {
+                  setIsUnsuccessfulModalVisible(false);
+                  setErrorMessage(null); // Clear error message when closing
+                  unsuccessfulProgress.setValue(0); // Reset animation value when closing
+                }}
+              >
+                <Text className="text-white">
+                  {t("UnregisteredFarmerDetails.Close")}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </View>
     </KeyboardAvoidingView>
   );
 };
