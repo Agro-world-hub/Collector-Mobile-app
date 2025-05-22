@@ -257,7 +257,7 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
               />
             </View>
           ) : selectedToggle === "ToDo" && todoData.length === 0 ? (
-            <View className="flex-1 justify-center items-center py-10">
+            <View className="flex-1 justify-center items-center mr-[35%]">
               <LottieView
                 source={require("../assets/lottie/NoComplaints.json")}
                 autoPlay
@@ -269,7 +269,7 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
               </Text>
             </View>
           ) : selectedToggle === "Completed" && completedData.length === 0 ? (
-            <View className="flex-1 justify-center items-center py-10">
+            <View className="flex-1 justify-center items-center mr-[35%]">
               <LottieView
                 source={require("../assets/lottie/NoComplaints.json")}
                 autoPlay
