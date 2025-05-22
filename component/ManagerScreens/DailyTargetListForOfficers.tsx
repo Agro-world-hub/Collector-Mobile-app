@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -6,25 +6,28 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
-} from 'react-native';
-import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
-import LottieView from 'lottie-react-native';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp, useFocusEffect } from '@react-navigation/native';
-import { RootStackParamList } from '../types';
-import {environment }from '@/environment/environment';
+} from "react-native";
+import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import LottieView from "lottie-react-native";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp, useFocusEffect } from "@react-navigation/native";
+import { RootStackParamList } from "../types";
+import { environment } from "@/environment/environment";
 import { useTranslation } from "react-i18next";
 
-type DailyTargetListForOfficerstNavigationProps = StackNavigationProp<RootStackParamList, 'DailyTargetListForOfficers'>;
+type DailyTargetListForOfficerstNavigationProps = StackNavigationProp<
+  RootStackParamList,
+  "DailyTargetListForOfficers"
+>;
 
 interface DailyTargetListForOfficersProps {
   navigation: DailyTargetListForOfficerstNavigationProps;
   route: {
     params: {
       collectionOfficerId: number;
-      officerId:string
+      officerId: string;
     };
   };
 }
@@ -34,27 +37,28 @@ interface TargetData {
   varietyId: any;
   centerTarget: any;
   varietyNameEnglish: string;
-      varietyNameSinhala: string;  // ✅ Added this
-      varietyNameTamil: string;    // ✅ Added this
+  varietyNameSinhala: string; // ✅ Added this
+  varietyNameTamil: string; // ✅ Added this
   grade: string;
   officerTarget: number;
   todo: number;
   complete: number;
 }
 
-const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({ navigation, route }) => {
+const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
+  navigation,
+  route,
+}) => {
   const [todoData, setTodoData] = useState<TargetData[]>([]);
   const [completedData, setCompletedData] = useState<TargetData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedToggle, setSelectedToggle] = useState('ToDo'); 
+  const [selectedToggle, setSelectedToggle] = useState("ToDo");
   const [refreshing, setRefreshing] = useState(false);
   const { collectionOfficerId, officerId } = route.params;
   const { t } = useTranslation();
 
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
-  
-
 
   const fetchSelectedLanguage = async () => {
     try {
@@ -67,10 +71,14 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
 
   const getGradePriority = (grade: string): number => {
     switch (grade) {
-      case 'A': return 1;
-      case 'B': return 2;
-      case 'C': return 3;
-      default: return 4; // Any other grades come after A, B, C
+      case "A":
+        return 1;
+      case "B":
+        return 2;
+      case "C":
+        return 3;
+      default:
+        return 4; // Any other grades come after A, B, C
     }
   };
 
@@ -80,14 +88,14 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
       // First sort by variety name
       const nameA = getVarietyNameForSort(a);
       const nameB = getVarietyNameForSort(b);
-      
+
       const nameComparison = nameA.localeCompare(nameB);
-      
+
       // If variety names are the same, sort by grade (A, B, C)
       if (nameComparison === 0) {
         return getGradePriority(a.grade) - getGradePriority(b.grade);
       }
-      
+
       return nameComparison;
     });
   };
@@ -96,20 +104,20 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
   const getVarietyNameForSort = (item: TargetData) => {
     switch (selectedLanguage) {
       case "si":
-        return item.varietyNameSinhala || '';
+        return item.varietyNameSinhala || "";
       case "ta":
-        return item.varietyNameTamil || '';
+        return item.varietyNameTamil || "";
       default:
-        return item.varietyNameEnglish || '';
+        return item.varietyNameEnglish || "";
     }
   };
 
   // ✅ Fetch Targets API (Runs every time the page is visited or refreshed)
   const fetchTargets = async () => {
     setLoading(true);
-    const startTime = Date.now(); 
+    const startTime = Date.now();
     try {
-      const authToken = await AsyncStorage.getItem('token');
+      const authToken = await AsyncStorage.getItem("token");
       const response = await axios.get(
         `${environment.API_BASE_URL}api/target/officer/${collectionOfficerId}`,
         {
@@ -120,23 +128,28 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
       );
 
       const allData = response.data.data;
-      console.log("hell",allData);
+      console.log("hell", allData);
       const todoItems = allData.filter((item: TargetData) => item.todo > 0);
-      const completedItems = allData.filter((item: TargetData) => item.todo === 0 && item.complete !==0);
-      console.log("todoItems",todoItems);
-      console.log("completedItems",completedItems);
+      const completedItems = allData.filter(
+        (item: TargetData) => item.todo === 0 && item.complete !== 0
+      );
+      console.log("todoItems", todoItems);
+      console.log("completedItems", completedItems);
 
       // setTodoData(todoItems);
       // setCompletedData(completedItems);
       setTodoData(sortByVarietyAndGrade(todoItems));
-setCompletedData(sortByVarietyAndGrade(completedItems));
+      setCompletedData(sortByVarietyAndGrade(completedItems));
       setError(null);
     } catch (err) {
       setError(t("Error.Failed to fetch data."));
     } finally {
       const elapsedTime = Date.now() - startTime;
-      const remainingTime = 3000 - elapsedTime; 
-      setTimeout(() => setLoading(false), remainingTime > 0 ? remainingTime : 0);
+      const remainingTime = 3000 - elapsedTime;
+      setTimeout(
+        () => setLoading(false),
+        remainingTime > 0 ? remainingTime : 0
+      );
     }
   };
 
@@ -150,222 +163,124 @@ setCompletedData(sortByVarietyAndGrade(completedItems));
   // ✅ Refreshing function for Pull-to-Refresh
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    fetchTargets();  // Re-fetch task data on refresh
+    fetchTargets(); // Re-fetch task data on refresh
     setRefreshing(false); // Set refreshing to false once data is loaded
   }, [collectionOfficerId]);
 
-  const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
+  const displayedData = selectedToggle === "ToDo" ? todoData : completedData;
 
   useEffect(() => {
-              const fetchData = async () => {
-                await fetchSelectedLanguage(); 
-         
-              };
-              fetchData();
-            }, []);
-      
-            const getvarietyName = (TargetData: TargetData) => {
-              switch (selectedLanguage) {
-                case "si":
-                  return TargetData.varietyNameSinhala;
-                case "ta":
-                  return TargetData.varietyNameTamil;
-                default:
-                  return TargetData.varietyNameEnglish;
-              }
-            };
+    const fetchData = async () => {
+      await fetchSelectedLanguage();
+    };
+    fetchData();
+  }, []);
 
-  // return (
-  //   <View className="flex-1 bg-[#282828] ">
-  //     {/* Header */}
-  //     <View className="bg-[#282828] px-4 py-3 flex-row  justify-center  items-center">
-  //        <TouchableOpacity onPress={() => navigation.goBack()} className='absolute left-4'>
-  //       <AntDesign name="left" size={22} color="white" />
-  //             </TouchableOpacity>
-  //             <Text className="text-white text-lg font-bold">{officerId}</Text>
+  const getvarietyName = (TargetData: TargetData) => {
+    switch (selectedLanguage) {
+      case "si":
+        return TargetData.varietyNameSinhala;
+      case "ta":
+        return TargetData.varietyNameTamil;
+      default:
+        return TargetData.varietyNameEnglish;
+    }
+  };
 
-  //     </View>
-
-  //     {/* Toggle Buttons */}
-  //     <View className="flex-row justify-center items-center py-4 bg-[#282828]">
-  //       {/* To Do Button */}
-  //       <TouchableOpacity
-  //         className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
-  //           selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
-  //         }`}
-  //         style={{ height: 40 }}
-  //         onPress={() => setSelectedToggle('ToDo')}
-  //       >
-  //         <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
-  //         {t("DailyTarget.Todo")}
-  //         </Text>
-  //         <View className="bg-white rounded-full px-2">
-  //           <Text className="text-green-500 font-bold text-xs">{todoData.length}</Text>
-  //         </View>
-  //       </TouchableOpacity>
-
-  //       {/* Completed Button */}
-  //       <TouchableOpacity
-  //         className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
-  //           selectedToggle === 'Completed' ? 'bg-[#2AAD7A]' : 'bg-white'
-  //         }`}
-  //         style={{ height: 40 }}
-  //         onPress={() => setSelectedToggle('Completed')}
-  //       >
-  //         <Text
-  //           className={`font-bold ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
-  //         >
-  //           {t("DailyTarget.Completed")}
-  //         </Text>
-  //         <View className="bg-white rounded-full px-2 ml-2">
-  //           <Text className="text-green-500 font-bold text-xs">{completedData.length}</Text>
-  //         </View>
-  //       </TouchableOpacity>
-  //     </View>
-
-  //     {/* Scrollable Table */}
-  //     <ScrollView
-  //       horizontal
-  //       className=" bg-white"
-  //       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-  //     >
-  //       <View>
-  //         {/* Table Header */}
-  //         <View className="flex-row bg-[#2AAD7A] h-[7%]">
-  //                 <Text className="w-16 p-2  text-center text-white">{t("DailyTarget.No")}</Text>
-  //                 <Text className="w-40 p-2  text-center text-white">{t("DailyTarget.Variety")}</Text>
-  //                 <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Grade")}</Text>
-  //                 <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Target")}</Text>
-  //                 <Text className="w-32 p-2  text-center text-white">{t("DailyTarget.Todo()")}</Text>
-  //               </View>
-
-  //         {loading ? (
-  //            <View className="flex-1 justify-center items-center mr-[40%] -mt-[10%]">
-  //                 <LottieView
-  //                   source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
-  //                   autoPlay
-  //                   loop
-  //                   style={{ width: 350, height: 350 }}
-  //                 />
-  //               </View>
-  //         ) : (
-  //           displayedData.map((item, index) => (
-  //             <TouchableOpacity
-  //               key={index}
-  //               className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
-  //               onPress={() => {
-  //                 let qty = 0;
-  //                 if (item.centerTarget) {
-  //                   if (item.grade === 'A' && item.centerTarget.total_qtyA !== undefined) {
-  //                     qty = parseFloat(item.centerTarget.total_qtyA);
-  //                   } else if (item.grade === 'B' && item.centerTarget.total_qtyB !== undefined) {
-  //                     qty = parseFloat(item.centerTarget.total_qtyB);
-  //                   } else if (item.grade === 'C' && item.centerTarget.total_qtyC !== undefined) {
-  //                     qty = parseFloat(item.centerTarget.total_qtyC);
-  //                   }
-  //                 }
-
-  //                 navigation.navigate('EditTargetScreen' as any, {
-  //                   varietyNameEnglish: item.varietyNameEnglish,
-  //                   varietyId: item.varietyId,
-  //                   grade: item.grade,
-  //                   target: item.officerTarget,
-  //                   todo: item.todo,
-  //                   qty: item.dailyTarget,
-  //                   collectionOfficerId, 
-  //                   varietyNameSinhala: item.varietyNameSinhala,
-  //                   varietyNameTamil: item.varietyNameTamil,
-  //                 });
-  //               }}
-  //             >
-  //               <View
-  //                 key={index}
-  //                 className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
-  //               >
-  //                 <Text className="w-16 p-2 border-r border-gray-300 text-center">
-  //                   {selectedToggle === 'ToDo' ? index + 1 : <Ionicons name="flag" size={20} color="green" />}
-  //                 </Text>
-  //                 <Text className="w-40 p-2 border-r border-gray-300 text-center flex-wrap">
-  //                 {getvarietyName(item)}
-  //                 </Text>
-  //                 <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.grade}</Text>
-  //                 <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.officerTarget}</Text>
-  //                 <Text className="w-32 p-2 text-center">{item.todo}</Text>
-  //               </View>
-  //             </TouchableOpacity>
-  //           ))
-  //         )}
-  //       </View>
-  //     </ScrollView>
-  //   </View>
-  // );
   return (
     <View className="flex-1 bg-[#282828] ">
       {/* Header */}
       <View className="bg-[#282828] px-4 py-3 flex-row justify-center items-center">
-        <TouchableOpacity onPress={() => navigation.goBack()} className='absolute left-4'>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          className="absolute left-4"
+        >
           <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
         <Text className="text-white text-lg font-bold">{officerId}</Text>
       </View>
-  
+
       {/* Toggle Buttons */}
       <View className="flex-row justify-center items-center py-4 bg-[#282828]">
         {/* To Do Button */}
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
-            selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
+            selectedToggle === "ToDo" ? "bg-[#2AAD7A]" : "bg-white"
           }`}
           style={{ height: 40 }}
-          onPress={() => setSelectedToggle('ToDo')}
+          onPress={() => setSelectedToggle("ToDo")}
         >
-          <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
+          <Text
+            className={`font-bold mr-2 ${
+              selectedToggle === "ToDo" ? "text-white" : "text-black"
+            }`}
+          >
             {t("DailyTarget.Todo")}
           </Text>
           <View className="bg-white rounded-full px-2">
-            <Text className="text-green-500 font-bold text-xs">{todoData.length}</Text>
+            <Text className="text-green-500 font-bold text-xs">
+              {todoData.length}
+            </Text>
           </View>
         </TouchableOpacity>
-  
+
         {/* Completed Button */}
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
-            selectedToggle === 'Completed' ? 'bg-[#2AAD7A]' : 'bg-white'
+            selectedToggle === "Completed" ? "bg-[#2AAD7A]" : "bg-white"
           }`}
           style={{ height: 40 }}
-          onPress={() => setSelectedToggle('Completed')}
+          onPress={() => setSelectedToggle("Completed")}
         >
           <Text
-            className={`font-bold ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
+            className={`font-bold ${
+              selectedToggle === "Completed" ? "text-white" : "text-black"
+            }`}
           >
             {t("DailyTarget.Completed")}
           </Text>
           <View className="bg-white rounded-full px-2 ml-2">
-            <Text className="text-green-500 font-bold text-xs">{completedData.length}</Text>
+            <Text className="text-green-500 font-bold text-xs">
+              {completedData.length}
+            </Text>
           </View>
         </TouchableOpacity>
       </View>
-  
+
       {/* Scrollable Table */}
       <ScrollView
         horizontal
         className="bg-white"
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         <View>
           {/* Table Header */}
           <View className="flex-row bg-[#2AAD7A] h-[7%]">
-            <Text className="w-16 p-2 text-center text-white">{t("DailyTarget.No")}</Text>
-            <Text className="w-40 p-2 text-center text-white">{t("DailyTarget.Variety")}</Text>
-            <Text className="w-32 p-2 text-center text-white">{t("DailyTarget.Grade")}</Text>
-            <Text className="w-32 p-2 text-center text-white">{t("DailyTarget.Target")}</Text>
-            <Text className="w-32 p-2 text-center text-white">{selectedToggle === "Completed" ? t("DailyTarget.Completedkg") : t("DailyTarget.Todo()")}</Text>
+            <Text className="w-16 p-2 text-center text-white">
+              {t("DailyTarget.No")}
+            </Text>
+            <Text className="w-40 p-2 text-center text-white">
+              {t("DailyTarget.Variety")}
+            </Text>
+            <Text className="w-32 p-2 text-center text-white">
+              {t("DailyTarget.Grade")}
+            </Text>
+            <Text className="w-32 p-2 text-center text-white">
+              {t("DailyTarget.Target")}
+            </Text>
+            <Text className="w-32 p-2 text-center text-white">
+              {selectedToggle === "Completed"
+                ? t("DailyTarget.Completedkg")
+                : t("DailyTarget.Todo()")}
+            </Text>
           </View>
-  
+
           {loading ? (
             <View className="flex-1 justify-center items-center mr-[40%] -mt-[10%]">
               <LottieView
-                source={require('../../assets/lottie/collector.json')} // Ensure you have a valid JSON file
+                source={require("../../assets/lottie/collector.json")} // Ensure you have a valid JSON file
                 autoPlay
                 loop
                 style={{ width: 350, height: 350 }}
@@ -375,28 +290,39 @@ setCompletedData(sortByVarietyAndGrade(completedItems));
             displayedData.map((item, index) => (
               <TouchableOpacity
                 key={index}
-                className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
+                className={`flex-row ${
+                  index % 2 === 0 ? "bg-gray-100" : "bg-white"
+                }`}
                 onPress={() => {
                   let qty = 0;
                   if (item.centerTarget) {
-                    if (item.grade === 'A' && item.centerTarget.total_qtyA !== undefined) {
+                    if (
+                      item.grade === "A" &&
+                      item.centerTarget.total_qtyA !== undefined
+                    ) {
                       qty = parseFloat(item.centerTarget.total_qtyA);
-                    } else if (item.grade === 'B' && item.centerTarget.total_qtyB !== undefined) {
+                    } else if (
+                      item.grade === "B" &&
+                      item.centerTarget.total_qtyB !== undefined
+                    ) {
                       qty = parseFloat(item.centerTarget.total_qtyB);
-                    } else if (item.grade === 'C' && item.centerTarget.total_qtyC !== undefined) {
+                    } else if (
+                      item.grade === "C" &&
+                      item.centerTarget.total_qtyC !== undefined
+                    ) {
                       qty = parseFloat(item.centerTarget.total_qtyC);
                     }
                   }
-                   if (selectedToggle === 'Completed') return;
-  
-                  navigation.navigate('EditTargetScreen' as any, {
+                  if (selectedToggle === "Completed") return;
+
+                  navigation.navigate("EditTargetScreen" as any, {
                     varietyNameEnglish: item.varietyNameEnglish,
                     varietyId: item.varietyId,
                     grade: item.grade,
                     target: item.officerTarget,
                     todo: item.todo,
                     qty: item.dailyTarget,
-                    collectionOfficerId, 
+                    collectionOfficerId,
                     varietyNameSinhala: item.varietyNameSinhala,
                     varietyNameTamil: item.varietyNameTamil,
                   });
@@ -404,35 +330,46 @@ setCompletedData(sortByVarietyAndGrade(completedItems));
               >
                 <View
                   key={index}
-                  className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
+                  className={`flex-row ${
+                    index % 2 === 0 ? "bg-gray-100" : "bg-white"
+                  }`}
                 >
                   <Text className="w-16 p-2 border-r border-gray-300 text-center">
-                    {selectedToggle === 'ToDo' ? index + 1 : <Ionicons name="flag" size={20} color="green" />}
+                    {selectedToggle === "ToDo" ? (
+                      index + 1
+                    ) : (
+                      <Ionicons name="flag" size={20} color="green" />
+                    )}
                   </Text>
                   <Text className="w-40 p-2 border-r border-gray-300 text-center flex-wrap">
                     {getvarietyName(item)}
                   </Text>
-                  <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.grade}</Text>
-                  <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.officerTarget}</Text>
-                  <Text className="w-32 p-2 text-center"> {selectedToggle === 'Completed' ? item.complete : item.todo}</Text>
-                  
+                  <Text className="w-32 p-2 border-r border-gray-300 text-center">
+                    {item.grade}
+                  </Text>
+                  <Text className="w-32 p-2 border-r border-gray-300 text-center">
+                    {item.officerTarget}
+                  </Text>
+                  <Text className="w-32 p-2 text-center">
+                    {" "}
+                    {selectedToggle === "Completed" ? item.complete : item.todo}
+                  </Text>
                 </View>
               </TouchableOpacity>
             ))
           ) : (
             <View className="flex-1 justify-center items-center py-16 w-screen">
               <LottieView
-                source={require('../../assets/lottie/NoComplaints.json')} 
+                source={require("../../assets/lottie/NoComplaints.json")}
                 autoPlay
                 loop
                 style={{ width: 150, height: 150 }}
               />
-             <Text className="text-gray-500  mt-4">
-                             {selectedToggle === 'ToDo' 
-                               ? t("DailyTarget.NoTodoItems") || "No items to do"
-                               : t("DailyTarget.noCompletedTargets") || "No completed items"
-                             }
-                           </Text>
+              <Text className="text-gray-500  mt-4">
+                {selectedToggle === "ToDo"
+                  ? t("DailyTarget.NoTodoItems") || "No items to do"
+                  : t("DailyTarget.noCompletedTargets") || "No completed items"}
+              </Text>
             </View>
           )}
         </View>
