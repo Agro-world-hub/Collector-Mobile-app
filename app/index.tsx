@@ -224,8 +224,10 @@ const Index = () => {
             gestureEnabled: false, // Disable swipe gestures globally
           }}
         >
-          <Stack.Screen name="Splash" component={Splash} />
-          <Stack.Screen name="Login" component={Login} />
+           <Stack.Screen name="Splash" component={Splash} />
+            <Stack.Screen name="Login" component={Login} />
+         
+        
           <Stack.Screen
             name="ChangePassword"
             component={ChangePassword as any}
