@@ -364,7 +364,7 @@
   },
   "ChangePassword":{
     "LNG": "en",
-    "ChoosePassword":"Choose a New Password",
+    "ChoosePassword":"Change Password",
     "Changepassword":" Change the password and keep it secured",
     "CurrentPassword":"Current Password",
     "NewPassword":"New Password",
