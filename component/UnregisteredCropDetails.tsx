@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView,Image, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp,useFocusEffect,useRoute } from '@react-navigation/native';
@@ -83,6 +83,14 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     console.log(userId, farmerPhone)
 
     const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+
+
+     useFocusEffect(
+  useCallback(() => {
+    // Clear search query every time screen comes into focus
+   setResetImage(false)
+  }, [])
+);
 
   const fetchSelectedLanguage = async () => {
     try {
