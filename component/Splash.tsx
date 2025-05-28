@@ -112,7 +112,7 @@
 
 // export default Splash;
 
-import { View, Image } from 'react-native';
+import { View, Image, Text } from 'react-native';
 import React, { useEffect , useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -221,6 +221,9 @@ const Splash: React.FC<SplashProps> = ({ navigation }) => {
         className="w-full h-32 justify-center items-center"
         resizeMode="contain"
       />
+      <Text className="text-center text-[10px] mt-2">
+        POWERED BY POLYGON
+      </Text>
       <View style={{ width: '80%', marginTop: 20, marginLeft: '10%' }} >
         <Progress.Bar
           progress={progress}

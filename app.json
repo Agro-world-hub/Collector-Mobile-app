@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Collector",
-    "slug": "Collector",
+    "name": "Codi-Net",
+    "slug": "Codi-Net",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/favicon.png",
@@ -96,7 +96,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "8bb4d04a-ae5a-4f46-a28f-416b084d6c28"
+        "projectId": "08d08587-d9ff-4ccf-bbb2-82831836602f"
       }
     },
     "plugins": [
@@ -119,6 +119,6 @@
       "recordAudioAndroid": true
     },
     "newArchEnabled": true,
-    "owner": "kaluhennadigeravin"
+    "owner": ""
   }
 }
