@@ -128,20 +128,20 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
         </TouchableOpacity>
 
         <View className="flex-row items-center justify-center mt-[-5%] space-x-[-30%] ml-[5%]">
-          <Image
+         <Image
             source={require("@/assets/images/Mobile.webp")}
             resizeMode="contain"
             className="w-20 h-20"
-          />
-          <Image
-            source={require("@/assets/images/Collectorimage.webp")}
+          /> 
+          {/* <Image
+            source={require("@/assets/images/Codinetflat.webp")}
             resizeMode="contain"
-            // className="w-24 h-24"
-          />
+            className="w-40 h-24 mt-10"
+          /> */}
         </View>
 
-        <View className="items-center pt-[10%]">
-          <Text className="font-bold text-xl">
+        <View className="items-center pt-[5%]">
+          <Text className="font-bold text-2xl">
             {t("ChangePassword.ChoosePassword")}
           </Text>
           <Text className="w-[53%] text-center font-light pt-3">
@@ -165,7 +165,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
               <Icon
                 name={secureCurrent ? "eye-off-outline" : "eye-outline"}
                 size={24}
-                color="green"
+                color="#2AAD7A"
               />
             </TouchableOpacity>
           </View>
@@ -185,7 +185,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
               <Icon
                 name={secureNew ? "eye-off-outline" : "eye-outline"}
                 size={24}
-                color="green"
+                color="#2AAD7A"
               />
             </TouchableOpacity>
           </View>
@@ -205,7 +205,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
               <Icon
                 name={secureConfirm ? "eye-off-outline" : "eye-outline"}
                 size={24}
-                color="green"
+                color="#2AAD7A"
               />
             </TouchableOpacity>
           </View>

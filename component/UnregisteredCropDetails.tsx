@@ -85,14 +85,12 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
 
 
- useFocusEffect(
+     useFocusEffect(
   useCallback(() => {
     // Clear search query every time screen comes into focus
    setResetImage(false)
   }, [])
 );
-
-
 
   const fetchSelectedLanguage = async () => {
     try {
