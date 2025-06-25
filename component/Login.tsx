@@ -136,18 +136,31 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
         ]);
       }
 
+      console.log("llllllll========================",passwordUpdateRequired)
       await status(empId, true);
       setTimeout(() => {
         setLoading(false);
-        if (passwordUpdateRequired) {
-          navigation.navigate("ChangePassword", { empid } as any);
-        } else {
-          if (jobRole === "Collection Officer") {
-            navigation.navigate("Main", { screen: "Dashboard" });
-          } else {
-            navigation.navigate("Main", { screen: "ManagerDashboard" });
-          }
-        }
+        // if (passwordUpdateRequired) {
+        //   navigation.navigate("ChangePassword", { empid } as any);
+        // } else {
+        //   if (jobRole === "Collection Officer") {
+        //     navigation.navigate("Main", { screen: "Dashboard" });
+        //   } else {
+        //     navigation.navigate("Main", { screen: "ManagerDashboard" });
+        //   }
+        // }
+          if (passwordUpdateRequired) {
+  navigation.navigate("ChangePassword", { empid } as any);
+} else {
+  if (jobRole === "Distribution Officer") {
+    navigation.navigate("Main", { screen: "DistridutionaDashboard" });
+  } else if (jobRole === "Collection Officer") {
+    navigation.navigate("Main", { screen: "Dashboard" });
+  } else {
+    navigation.navigate("Main", { screen: "ManagerDashboard" });
+  }
+}
+
       }, 4000);
     } catch (error) {
       setLoading(false);

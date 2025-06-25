@@ -839,5 +839,49 @@
 
     "ContactUs":"Contact Us",
     "ContactUsText": "If you have any questions, concerns, or requests regarding this Privacy Policy, or if you wish to exercise your rights related to your personal data, please contact us at info@polygon.lk . Alternatively, you may reach us by mail at No. 46/42, Nawam Mawatha, Colombo 02. Sri Lanka."
+  },
+  "DistridutionaDashboard":{
+     "LNG": "en",
+    "Keep": "Keep Going!",
+     "Youhavenotachieved":"You haven't achieved your daily target today",
+     "Completed":"Completed!",
+     "Youhaveachieved":"You have achieved your daily target today",
+    "Yourtarget": "Your Target",
+    "Progress": "Progress",
+    "TargetOrders":"Target Orders",
+    "Search": "Search By NIC"
+  },
+  "TargetOrderScreen" :{
+     "LNG": "en",
+    "CenterTarget":"Centre Target",
+    "Todo":"To do",
+    "Completed":"Completed",
+    "No":"No",
+    "Variety":"Variety",
+    "Grade":"Grade",
+    "Target":"Target (kg)",
+    "Todo()":"Todo (kg)",
+    "My Daily Target":"My Daily Target",
+    "Invoice No":"Invoice No",
+    "Status":"Status"
+  },
+  "OpenedOrderScreen":{
+    "INV No":"INV No :",
+    "Pending":"Pending",
+    "Additional Items":"Additional Items",
+    "Submit":"Submit",
+    "Leave without Submitting": "Leave without Submitting",
+    "Stay on page":"Stay on page",
+    "You have unsubmitted changes!":" You have unsubmitted changes!",
+    "If you leave this page now, your changes will be lost.":"If you leave this page now, your changes will be lost.",
+    "Do you want to continue without saving?":"Do you want to continue without saving?",
+    "Opened":"Opened",
+    "Completed":"Completed"
   }
+
+
+
+
 }
+
+

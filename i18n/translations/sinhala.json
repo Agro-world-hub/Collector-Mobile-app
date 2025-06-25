@@ -839,5 +839,45 @@
 
     "ContactUs":"අප අමතන්න",
     "ContactUsText": "ඔබට කිසියම් මෙම රහස්‍යතා ප්‍රතිපත්තිය පිළිබඳ ප්‍රශ්න, ගැටළු හෝ ඉල්ලීම් හෝ ඔබේ පුද්ගලික දත්තවලට අදාළ ඔබේ අයිතිවාසිකම්  දැන ගැනීමට කිරීමට ඔබ කැමති නම්, කරුණාකර info@polygon.lk හා සම්බන්ධ වන්න. විකල්පයක් ලෙස, ඔබට අංක 46/42, නවම් මාවත, කොළඹ 02. ශ්‍රී ලංකාව යන ලිපිනයෙන් තැපෑලෙන් අප හා සම්බන්ධ විය හැකිය."
+
+  },
+   "DistridutionaDashboard":{
+     "LNG": "si",
+    "Keep": "ඉදිරියට යන්න!",
+     "Youhavenotachieved":"අද ඔබේ දෛනික ඉලක්කය ඔබ සාක්ෂාත් කර ගෙන නැත",
+     "Completed":"සම්පූර්ණ කරන ලදී!",
+     "Youhaveachieved":"ඔබ අද ඔබේ දෛනික ඉලක්කය සාක්ෂාත් කර ගෙන ඇත",
+    "Yourtarget": "ඔබේ ඉලක්කය",
+    "Progress": "ප්‍රගතිය",
+    "Scan":"QR ස්කෑන් කරන්න",
+    "Search": "ජාතික හැඳුනුම්පත අනුව සොයන්න"
+  },
+  "TargetOrderScreen" :{
+       "LNG": "si",
+    "CenterTarget":"මධ්‍යස්ථාන ඉලක්කය",
+    "Todo":"කරන්න",
+    "Completed":"සම්පූර්ණයි",
+    "No":"අංකය",
+    "Variety":"විවිධ",
+    "Grade":"ශ්‍රේණිය",
+    "Target":"ඉලක්කය (kg)",
+    "Todo()":"කරන්න (kg)",
+    "My Daily Target":"මගේ දෛනික ඉලක්කය",
+    "Invoice No":"ඉන්වොයිස් අංකය",
+    "Status":"තත්ත්වය"
+  },
+  "OpenedOrderScreen":{
+    "INV No ":"ඉන්වොයිස් අංකය:",
+    "Pending":"අපේක්ෂා කෙරේ",
+    "Additional Items":"අමතර අයිතම",
+    "Submit":"ඉදිරිපත් කරන්න",
+    "Leave without Submitting": "ඉදිරිපත් නොකර පිටව යන්න",
+    "Stay on page":"පිටුවේ රැඳී සිටින්න",
+    " You have unsubmitted changes!":"ඔබට ඉදිරිපත් නොකළ වෙනස්කම් තිබේ!",
+    "If you leave this page now, your changes will be lost.":"ඔබ දැන් මෙම පිටුවෙන් ඉවත් වුවහොත්, ඔබගේ වෙනස්කම් නැති වී යනු ඇත.",
+    "Do you want to continue without saving?":"ඔබට සුරැකීමකින් තොරව ඉදිරියට යාමට අවශ්‍යද?",
+    "Opened":"විවෘත කරන ලදී",
+    "Completed":"සම්පූර්ණ කරන ලදී"
   }
+
 }
