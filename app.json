@@ -39,9 +39,6 @@
         "CONTACTS",
         "MOTION",
         "BLUETOOTH",
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_BACKGROUND_LOCATION",
         "ACCESS_WIFI_STATE",
         "CHANGE_WIFI_STATE",
         "ACCESS_NETWORK_STATE",
@@ -63,15 +60,12 @@
         "RECORD_AUDIO",
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION",
         "VIBRATE",
         "WAKE_LOCK",
         "FOREGROUND_SERVICE",
         "RECEIVE_BOOT_COMPLETED",
         "USE_FINGERPRINT",
         "LOCATION",
-        "ACCESS_BACKGROUND_LOCATION",
         "BLUETOOTH",
         "BLUETOOTH_ADMIN",
         "ACCESS_WIFI_STATE",
@@ -96,7 +90,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "0d1b5eda-c808-4754-acb5-9fc26309558a"
+        "projectId": "d825047c-1ae1-4d5c-8296-833fdcf0a36a"
       }
     },
     "plugins": [
