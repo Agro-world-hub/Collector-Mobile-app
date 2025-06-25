@@ -92,7 +92,8 @@ import TargetOrderScreen from "@/component/DistributionofficerScreens/TargetOrde
 import OpenedOrderScreen from "@/component/DistributionofficerScreens/OpenedOrderScreen"
 import PendingOrderScreen from "@/component/DistributionofficerScreens/PendingOrderScreen"
 import CompletedOrderScreen from "@/component/DistributionofficerScreens/CompletedOrderScreen"
-
+import Timer from "@/component/DistributionofficerScreens/TimerContainer "
+import TimerContainer from "@/component/DistributionofficerScreens/TimerContainer "
 
 
 
@@ -359,6 +360,8 @@ const Index = () => {
 <Stack.Screen name="OpenedOrderScreen" component={OpenedOrderScreen as any} /> 
 <Stack.Screen name="PendingOrderScreen" component={PendingOrderScreen as any} /> 
    <Stack.Screen name="CompletedOrderScreen" component={CompletedOrderScreen as any} />    
+   <Stack.Screen name="Timer" component={Timer as any} />    
+   <Stack.Screen name="TimerContainer" component={TimerContainer as any} />  
       
         </Stack.Navigator> 
         
