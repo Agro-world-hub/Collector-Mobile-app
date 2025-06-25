@@ -135,7 +135,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
           target: 200,
           complete: 75,
           todo: 125,
-          status: 'Completed',
+          status: 'Pending',
           createdAt: '2025-05-26T07:00:00Z',
           updatedAt: '2025-05-26T10:30:00Z',
           completedTime: null
@@ -150,7 +150,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
           target: 120,
           complete: 120,
           todo: 0,
-          status: 'Completed',
+          status: 'Opened',
           createdAt: '2025-05-26T06:00:00Z',
           updatedAt: '2025-05-26T11:00:00Z',
           completedTime: '2025/05/26 11:00AM'
@@ -166,7 +166,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
           target: 80,
           complete: 0,
           todo: 80,
-          status: 'Pending',
+          status: 'Completed',
           createdAt: '2025-05-26T12:00:00Z',
           updatedAt: '2025-05-26T12:00:00Z',
           completedTime: null
@@ -182,7 +182,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
       }));
 
       const todoItems = allData.filter((item: TargetData) => 
-        ['Pending', 'Completed', 'Opened'].includes(item.status || '')
+        ['Pending',  'Opened'].includes(item.status || '')
       );
       const completedItems = allData.filter((item: TargetData) => 
         item.status === 'Completed'
@@ -203,31 +203,32 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
 
   // Navigation function for row clicks
   const handleRowPress = (item: TargetData) => {
-    const navigationParams = {
-      item: item,
-      centerCode: centerCode,
-      allData: selectedToggle === 'ToDo' ? todoData : completedData
-    };
+   const navigationParams = {
+    item: item,
+    centerCode: centerCode || '', // Ensure centerCode is not null
+    status: item.status,
+    allData: selectedToggle === 'ToDo' ? todoData : completedData
+  };
 
     // Navigate to different screens based on status
-    switch (item.status) {
-      case 'Pending':
-        navigation.navigate('PendingOrderScreen' as any , navigationParams);
-        break;
-      case 'Opened':
-        navigation.navigate('OpenedOrderScreen' as any, navigationParams);
-        break;
-      case 'In Progress':
-        navigation.navigate('InProgressOrderScreen' as any, navigationParams);
-        break;
-      case 'Completed':
-        navigation.navigate('CompletedOrderScreen' as any, navigationParams);
-        break;
-      default:
-        // Fallback navigation
-        navigation.navigate('OrderDetailScreen' as any, navigationParams);
-        break;
-    }
+   switch (item.status) {
+    case 'Pending':
+      navigation.navigate('PendingOrderScreen', navigationParams);
+      break;
+    case 'Opened':
+      navigation.navigate('PendingOrderScreen', navigationParams);
+      break;
+    case 'In Progress':
+      navigation.navigate('PendingOrderScreen', navigationParams);
+      break;
+    case 'Completed':
+      navigation.navigate('PendingOrderScreen', navigationParams);
+      break;
+    default:
+      // Fallback navigation
+      navigation.navigate('PendingOrderScreen', navigationParams);
+      break;
+  }
   };
 
   const formatCompletionTime = (dateString: string | null): string | null => {
@@ -276,8 +277,8 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
         return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
       case 'In Progress': 
         return 'bg-blue-100 border border-blue-300 text-blue-700';
-      case 'Completed': 
-        return 'bg-[#BBFFC6] border border-[#BBFFC6] text-[#308233]';
+      // case 'Completed': 
+      //   return 'bg-[#BBFFC6] border border-[#BBFFC6] text-[#308233]';
       default: 
         return 'bg-gray-100 border border-gray-300 text-gray-700';
     }

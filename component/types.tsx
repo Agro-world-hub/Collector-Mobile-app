@@ -210,8 +210,13 @@ export type RootStackParamList = {
 
   DistridutionaDashboard:undefined;
   TargetOrderScreen:undefined;
-OpenedOrderScreen:{item: string ,centerCode:string};
-PendingOrderScreen:{item: string ,centerCode:string};
+//OpenedOrderScreen:{item: string ,centerCode:string};
+ PendingOrderScreen: {
+  item: any; // or define proper OrderItem interface
+  centerCode: string;
+  status?: 'Pending' | 'Opened' | 'Completed' | 'In Progress';
+};
+
 CompletedOrderScreen:{item: string ,centerCode:string};
 };
 
