@@ -337,7 +337,7 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
     ];
   }
 
-  if (userRole === "Distribution Officer") {
+  if (userRole === "Distribution Officer" || userRole === "Distribution Manager") {
     tabs = [
       { name: "DistridutionaDashboard", icon: homeIcon, focusedIcon: homeIcon },
     

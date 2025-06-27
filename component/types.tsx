@@ -215,6 +215,7 @@ export type RootStackParamList = {
   item: any; // or define proper OrderItem interface
   centerCode: string;
   status?: 'Pending' | 'Opened' | 'Completed' | 'In Progress';
+  orderId:string
 };
 
 CompletedOrderScreen:{item: string ,centerCode:string};
