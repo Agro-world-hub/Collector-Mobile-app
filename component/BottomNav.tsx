@@ -223,6 +223,8 @@ import axios from "axios";
 import { environment } from "@/environment/environment";
 import { AppState, AppStateStatus } from "react-native";
 import useUserStore from "@/store/userStore";  // Import the global store
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../services/reducxStore";
 
 const homeIcon = require("../assets/images/homee.webp");
 const searchIcon = require("../assets/images/searchh.webp");
@@ -230,10 +232,17 @@ const qrIcon = require("../assets/images/target.webp");
 const adminIcon = require("../assets/images/People.webp");
 
 const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
-  const { userRole, setUserRole, setToken, setEmpId } = useUserStore(); // Get data from the global store
-  console.log("User role from store:", userRole);
+  // const { userRole, setUserRole, setToken, setEmpId } = useUserStore();
+  const [token, setToken] = useState('')
   const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false);
+const [showBottomNav, setShowBottomNav] = useState(true);
+ const dispatch = useDispatch();
+const [tabs, setTabs] = useState<any[]>([]);
 
+   const userRole = useSelector(
+    (state: RootState) => state.auth.jobRole
+  );
+console.log('user rolllllllll', userRole)
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -255,19 +264,19 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
   }, []);
 
   // Fetch the user role once and store it globally
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      try {
-        const role = await AsyncStorage.getItem("jobRole");
-        setUserRole(role ?? "");  // Set the role in the store, fallback to empty string if null
-        console.log("User role:", role);
-      } catch (error) {
-        console.error("Error fetching user role:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchUserRole = async () => {
+  //     try {
+  //       const role = await AsyncStorage.getItem("jobRole");
+  //       setUserRole(role ?? "");  // Set the role in the store, fallback to empty string if null
+  //       console.log("User role:", role);
+  //     } catch (error) {
+  //       console.error("Error fetching user role:", error);
+  //     }
+  //   };
 
-    fetchUserRole();
-  }, [setUserRole]);
+  //   fetchUserRole();
+  // }, [setUserRole]);
 
   // Check claim status only once and navigate accordingly
   useEffect(() => {
@@ -302,6 +311,31 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
   }, [userRole, setToken, navigation]);
 
   // Determine the current tab
+
+useEffect(() => {
+
+  // Define tabs based on userRole
+  let tabs = [
+    { name: "DailyTargetList", icon: qrIcon, focusedIcon: qrIcon },
+    { name: "Dashboard", icon: homeIcon, focusedIcon: homeIcon },
+    { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
+  ];
+
+  if (userRole === "Collection Center Manager") {
+    tabs = [
+      { name: "ManagerDashboard", icon: homeIcon, focusedIcon: homeIcon },
+      { name: "DailyTarget", icon: qrIcon, focusedIcon: qrIcon },
+      { name: "CollectionOfficersList", icon: adminIcon, focusedIcon: adminIcon },
+      { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
+    ];
+  }else if (userRole === "Distribution Manager") {
+     tabs = [
+        { name: "DistridutionaDashboard", icon: homeIcon, focusedIcon: homeIcon },
+      ];
+    setTabs(tabs); 
+  }
+  }, [userRole]); // Re-run this effect when userRole changes
+
   let currentTabName = state.routes[state.index]?.name || "Dashboard";
   console.log("Current tab:", currentTabName);
   
@@ -318,30 +352,8 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
     currentTabName === "OfficerSummary"
   ) {
     currentTabName = "CollectionOfficersList";
-  }
-
-
-  // Define tabs based on userRole
-  let tabs = [
-    { name: "DailyTargetList", icon: qrIcon, focusedIcon: qrIcon },
-    { name: "Dashboard", icon: homeIcon, focusedIcon: homeIcon },
-    { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
-  ];
-
-  if (userRole === "Collection Center Manager") {
-    tabs = [
-      { name: "ManagerDashboard", icon: homeIcon, focusedIcon: homeIcon },
-      { name: "DailyTarget", icon: qrIcon, focusedIcon: qrIcon },
-      { name: "CollectionOfficersList", icon: adminIcon, focusedIcon: adminIcon },
-      { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
-    ];
-  }
-
-  if (userRole === "Distribution Officer" || userRole === "Distribution Manager") {
-    tabs = [
-      { name: "DistridutionaDashboard", icon: homeIcon, focusedIcon: homeIcon },
-    
-    ];
+  } else if (userRole === "Distribution Manager" && currentTabName === "Dashboard") {
+    currentTabName = "DistridutionaDashboard"; 
   }
 
   useEffect(() => {
@@ -360,7 +372,7 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
     const onlineStatus = async () => {
       AppState.addEventListener("change", async (nextAppState) => {
         const storedEmpId = await AsyncStorage.getItem("empid");
-        setEmpId(storedEmpId ?? "");  // Store empId globally, fallback to empty string if null
+        // setEmpId(storedEmpId ?? "");  // Store empId globally, fallback to empty string if null
 
         if (nextAppState === "background") {
           setTimeout(async () => {
@@ -379,9 +391,13 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
     };
 
     onlineStatus();
-  }, [setEmpId, navigation]);
+  }, [ navigation]);
 
-  if (isKeyboardVisible) return null;
+
+
+  if (isKeyboardVisible || userRole==="Distribution Officer") return null;
+
+  // if (isKeyboardVisible) return null;
 
   return (
     <View className={` ${currentTabName === "QRScanner" ? "bg-black" : "bg-white"}`}>
