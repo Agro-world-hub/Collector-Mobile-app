@@ -79,33 +79,41 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
   };
 
   const fetchTargetPercentage = async () => {
-    try {
-      const token = await AsyncStorage.getItem("token");
-      if (!token) {
-        Alert.alert(t("Error.error"), t("Error.User not authenticated."));
-        return;
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) {
+      Alert.alert(t("Error.error"), t("Error.User not authenticated."));
+      return;
+    }
+    const response = await axios.get(
+      `${environment.API_BASE_URL}api/distribution/get-distribution-target`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
       }
-      const response = await axios.get(
-        `${environment.API_BASE_URL}api/target/officer-task-summary`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+    );
+    console.log("response for percentage target", response.data);
+    
+    if (response.data.success && response.data.data && response.data.data.length > 0) {
+      const targets = response.data.data;
+      
+      // Option 1: Use first target only
+      const firstTarget = targets[0];
+      const percentage = parseInt(
+        firstTarget.completionPercentage.replace("%", ""),
+        10
       );
-      console.log("response for percentage target", response.data);
-      if (response.data.success) {
-        const percentage = parseInt(
-          response.data.completionPercentage.replace("%", ""),
-          10
-        );
-        setTargetPercentage(percentage);
-      } else {
-        setTargetPercentage(0);
-      }
-    } catch (error) {
-      console.error("Failed to fetch target percentage:", error);
+      setTargetPercentage(percentage);
+      
+    
+      
+    } else {
       setTargetPercentage(0);
     }
-  };
+  } catch (error) {
+    console.error("Failed to fetch target percentage:", error);
+    setTargetPercentage(0);
+  }
+};
 
   useEffect(() => {
     fetchUserProfile();
@@ -157,6 +165,10 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
       navigation.navigate("Login");
     }
   };
+
+
+
+  
 
   const getFullName = () => {
     if (!profile) return "Loading...";
@@ -269,7 +281,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
             backgroundColor="#E5E7EB"
           />
           <View className="absolute items-center justify-center h-24 w-24">
-            <Text className="text-2xl font-bold">
+            <Text className="text-2xl font-bold ml-3  mt-1">
               {targetPercentage !== null ? `${targetPercentage}%` : "0%"}
             </Text>
           </View>

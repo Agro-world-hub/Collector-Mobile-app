@@ -149,10 +149,11 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
         //     navigation.navigate("Main", { screen: "ManagerDashboard" });
         //   }
         // }
-          if (passwordUpdateRequired) {
+if (passwordUpdateRequired) {
   navigation.navigate("ChangePassword", { empid } as any);
 } else {
-  if (jobRole === "Distribution Officer") {
+  // Fixed: Check for both Distribution roles individually
+  if (jobRole === "Distribution Officer" || jobRole === "Distribution Manager") {
     navigation.navigate("Main", { screen: "DistridutionaDashboard" });
   } else if (jobRole === "Collection Officer") {
     navigation.navigate("Main", { screen: "Dashboard" });
