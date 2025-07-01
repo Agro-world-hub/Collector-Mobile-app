@@ -184,7 +184,8 @@ function MainTabNavigator() {
       {/* <Stack.Screen name="AddDriverAddressDetails" component={AddDriverAddressDetails as any} /> */}
       {/* <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} /> */}
 
-      
+                   <Tab.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} /> 
+
       
       
     </Tab.Navigator>
@@ -376,7 +377,7 @@ const Index = () => {
             <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} /> 
 
              {/* <Stack.Screen name="DistridutionaDashboard" component={DistridutionaDashboard as any} />  */}
-             <Stack.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} /> 
+             {/* <Stack.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} />  */}
 <Stack.Screen name="OpenedOrderScreen" component={OpenedOrderScreen as any} /> 
 <Stack.Screen name="PendingOrderScreen" component={PendingOrderScreen as any} /> 
    <Stack.Screen name="CompletedOrderScreen" component={CompletedOrderScreen as any} />    

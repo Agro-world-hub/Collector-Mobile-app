@@ -230,6 +230,7 @@ const homeIcon = require("../assets/images/homee.webp");
 const searchIcon = require("../assets/images/searchh.webp");
 const qrIcon = require("../assets/images/target.webp");
 const adminIcon = require("../assets/images/People.webp");
+const dataTransfer = require("../assets/images/Data Transfer.webp")
 
 const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
   // const { userRole, setUserRole, setToken, setEmpId } = useUserStore();
@@ -331,6 +332,10 @@ useEffect(() => {
   }else if (userRole === "Distribution Manager") {
      tabs = [
         { name: "DistridutionaDashboard", icon: homeIcon, focusedIcon: homeIcon },
+           { name: "TargetOrderScreen", icon: qrIcon, focusedIcon: qrIcon },
+      { name: "CollectionOfficersList", icon: adminIcon, focusedIcon: adminIcon },
+            { name: "CollectionOfficersList", icon: dataTransfer, focusedIcon: dataTransfer },
+
       ];
     setTabs(tabs); 
   }
