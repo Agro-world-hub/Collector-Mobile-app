@@ -3,6 +3,8 @@ import React, { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types'; // Adjust the import path as needed
+import { useDispatch } from "react-redux";
+import { setUser } from '../store/authSlice';
 
 type SplashNavigationProp = StackNavigationProp<RootStackParamList, 'Splash'>;
 
@@ -14,8 +16,8 @@ const phone = require('../assets/images/phone.webp');
 const Center = require('../assets/images/CODINET expanded logo colored.png');
 const Bottom = require('../assets/images/Group 35 (1).png');
 const Top = require('../assets/images/Group 34 (3).png');
-
 const Splash: React.FC<SplashProps> = ({ navigation }) => {
+  const dispatch = useDispatch();
   useEffect(() => {
     const checkTokenAndNavigate = async () => {
       try {
@@ -38,7 +40,9 @@ const Splash: React.FC<SplashProps> = ({ navigation }) => {
     try {
       const expirationTime = await AsyncStorage.getItem("tokenExpirationTime");
       const userToken = await AsyncStorage.getItem("token");
-
+      const role = await  AsyncStorage.getItem("jobRole");
+      const emp = await AsyncStorage.getItem("empid");
+dispatch(setUser({ token: userToken ?? '', jobRole: role ?? '', empId: emp ?? '' }));
       if (expirationTime && userToken) {
         const currentTime = new Date();
         const tokenExpiry = new Date(expirationTime);
@@ -46,17 +50,22 @@ const Splash: React.FC<SplashProps> = ({ navigation }) => {
         if (currentTime < tokenExpiry) {
           console.log("Token is valid, navigating to Main.");
           const jobRole = await AsyncStorage.getItem('jobRole');
-          
           if (jobRole === "Collection Officer") {
             navigation.reset({
               index: 0,
               routes: [{ name: 'Main', params: { screen: 'Dashboard' } }]
             });
-          } else {
+          } else if (jobRole === "Collection Manager") {
             navigation.reset({
               index: 0,
               routes: [{ name: 'Main', params: { screen: 'ManagerDashboard' } }]
-            });
+            })
+          }else if (jobRole==="Distribution Officer" || "Distribution Manager"){
+            console.log("hit dis manager")
+             navigation.reset({
+              index: 0,
+              routes: [{ name: 'Main', params: { screen: 'DistridutionaDashboard' } }]
+            })
           }
                 } else {
           console.log("Token expired, clearing storage.");

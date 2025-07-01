@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { Text, TextInput, Platform, Dimensions, StyleSheet } from "react-native";
 import Splash from "../component/Splash";
 import Lanuage from "../component/Lanuage";
@@ -95,9 +95,11 @@ import CompletedOrderScreen from "@/component/DistributionofficerScreens/Complet
 import Timer from "@/component/DistributionofficerScreens/TimerContainer "
 import TimerContainer from "@/component/DistributionofficerScreens/TimerContainer "
 
+import { Provider } from 'react-redux';
+import  store from "@/services/reducxStore";
 
-
-
+import { useSelector } from 'react-redux';
+import { RootState } from '../services/reducxStore';
 
 LogBox.ignoreAllLogs(true);
 NativeWindStyleSheet.setOutput({
@@ -120,15 +122,32 @@ const windowDimensions = Dimensions.get("window");
 
 
 function MainTabNavigator() {
+
+    const [initialTab, setInitialTab] = useState('Dashboard');
+  const jobRole = useSelector((state: RootState) => state.auth.jobRole);
+
+  useEffect(() => {
+    // Set the first tab based on user role
+    if (jobRole === 'Distribution Officer' || jobRole === 'Distribution Manager') {
+      setInitialTab('DistridutionaDashboard'); // Set the first tab for Distribution Manager/Officer
+    } else if (jobRole === 'Collection Officer') {
+      setInitialTab('Dashboard'); // Set the first tab for Collection Officer
+    } else {
+      setInitialTab('ManagerDashboard'); // Set the first tab for other roles like Manager
+    }
+  }, [jobRole]);
   return (
     <Tab.Navigator
+    initialRouteName={initialTab}
       screenOptions={({ route }) => ({
         tabBarStyle: { display: 'none' }, 
         headerShown: false,
       })}
       tabBar={(props) => <NavigationBar {...props} />}
     >
- <Tab.Screen name="Dashboard" component={Dashboard} />
+      <Tab.Screen name="Dashboard" component={Dashboard} />
+      <Tab.Screen name="DistridutionaDashboard" component={DistridutionaDashboard as any} />
+      <Tab.Screen name="ManagerDashboard" component={ManagerDashboard as any} />
       <Tab.Screen name="SearchPriceScreen" component={SearchPriceScreen} />
       <Tab.Screen name="QRScanner" component={QRScanner} />
       <Tab.Screen name="PriceChart" component={PriceChart as any} />
@@ -137,35 +156,36 @@ function MainTabNavigator() {
         component={UnregisteredCropDetails as any}
       />
       <Tab.Screen name="SearchFarmer" component={SearchFarmer} />
-      <Tab.Screen name="ManagerDashboard" component={ManagerDashboard as any} />
-      <Stack.Screen name="DailyTargetList" component={DailyTargetList} />
-      <Stack.Screen
+
+      {/* changed here stack to tab */}
+      <Tab.Screen name="DailyTargetList" component={DailyTargetList} />
+      <Tab.Screen
         name="CollectionOfficersList"
         component={CollectionOfficersList}
       />
-      <Stack.Screen name="DailyTarget" component={DailyTarget as any} />
-      <Stack.Screen
+      <Tab.Screen name="DailyTarget" component={DailyTarget as any} />
+      <Tab.Screen
         name="PassTargetScreen"
         component={PassTargetScreen as any}
       />
-      <Stack.Screen
+      <Tab.Screen
         name="RecieveTargetScreen"
         component={RecieveTargetScreen as any}
       />
-      <Stack.Screen name="ComplainHistory" component={ComplainHistory} />
-      <Stack.Screen
+      <Tab.Screen name="ComplainHistory" component={ComplainHistory} />
+      <Tab.Screen
         name="EditTargetManager"
         component={EditTargetManager as any}
       />
        
-      <Stack.Screen name="TransactionList" component={TransactionList as any} />
-      <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} />
+      <Tab.Screen name="TransactionList" component={TransactionList as any} />
+      <Tab.Screen name="OfficerSummary" component={OfficerSummary as any} />
      {/* <Stack.Screen name="RegisterDriver" component={RegisterDriver as any} /> */}
       {/* <Stack.Screen name="AddDriverAddressDetails" component={AddDriverAddressDetails as any} /> */}
       {/* <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} /> */}
 
-   
-      
+                   <Tab.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} /> 
+
       
       
     </Tab.Navigator>
@@ -223,6 +243,7 @@ const Index = () => {
   };
 
   return (
+    <Provider store={store}>
     <LanguageProvider>
         <Stack.Navigator
           screenOptions={{
@@ -355,8 +376,8 @@ const Index = () => {
       <Stack.Screen name="otpBankDetailsupdate" component={otpBankDetailsupdate as any} /> 
             <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} /> 
 
-             <Stack.Screen name="DistridutionaDashboard" component={DistridutionaDashboard as any} /> 
-             <Stack.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} /> 
+             {/* <Stack.Screen name="DistridutionaDashboard" component={DistridutionaDashboard as any} />  */}
+             {/* <Stack.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} />  */}
 <Stack.Screen name="OpenedOrderScreen" component={OpenedOrderScreen as any} /> 
 <Stack.Screen name="PendingOrderScreen" component={PendingOrderScreen as any} /> 
    <Stack.Screen name="CompletedOrderScreen" component={CompletedOrderScreen as any} />    
@@ -366,6 +387,7 @@ const Index = () => {
         </Stack.Navigator> 
         
     </LanguageProvider>
+    </Provider>
   );
 };
 
