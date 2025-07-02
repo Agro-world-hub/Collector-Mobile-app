@@ -333,8 +333,8 @@ useEffect(() => {
      tabs = [
         { name: "DistridutionaDashboard", icon: homeIcon, focusedIcon: homeIcon },
            { name: "TargetOrderScreen", icon: qrIcon, focusedIcon: qrIcon },
-      { name: "CollectionOfficersList", icon: adminIcon, focusedIcon: adminIcon },
-            { name: "CollectionOfficersList", icon: dataTransfer, focusedIcon: dataTransfer },
+      { name: "DistributionOfficersList", icon: adminIcon, focusedIcon: adminIcon },
+            // { name: "CollectionOfficersList", icon: dataTransfer, focusedIcon: dataTransfer },
 
       ];
     setTabs(tabs); 
@@ -354,11 +354,14 @@ useEffect(() => {
     currentTabName = "DailyTarget";
   } else if (
     currentTabName === "TransactionList" ||
-    currentTabName === "OfficerSummary"
+    currentTabName === "OfficerSummary" 
   ) {
     currentTabName = "CollectionOfficersList";
-  } else if (userRole === "Distribution Manager" && currentTabName === "Dashboard") {
+  } else if (userRole === "Distribution Manager"  && currentTabName === "Dashboard"  ) {
     currentTabName = "DistridutionaDashboard"; 
+    navigation.navigate("DistridutionaDashboard");
+  } else if(currentTabName === "ClaimDistribution"){
+   currentTabName ="DistributionOfficersList"
   }
 
   useEffect(() => {
@@ -369,6 +372,9 @@ useEffect(() => {
 
   useEffect(() => {
     if (userRole === "Distribution Officer" && currentTabName == "Dashboard") {
+      navigation.navigate("DistridutionaDashboard");
+    }else if (userRole === "Distribution Manager" && currentTabName === "Dashboard"){
+      console.log("hittt")
       navigation.navigate("DistridutionaDashboard");
     }
   }, [userRole, currentTabName, navigation]);

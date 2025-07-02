@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useCallback} from "react";
 import { Text, TextInput, Platform, Dimensions, StyleSheet } from "react-native";
 import Splash from "../component/Splash";
 import Lanuage from "../component/Lanuage";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Login from "@/component/Login";
-
+import { useFocusEffect } from '@react-navigation/native';
 
 
 import { NativeWindStyleSheet } from "nativewind";
@@ -95,6 +95,9 @@ import CompletedOrderScreen from "@/component/DistributionofficerScreens/Complet
 import Timer from "@/component/DistributionofficerScreens/TimerContainer "
 import TimerContainer from "@/component/DistributionofficerScreens/TimerContainer "
 
+import DistributionOfficersList from "@/component/DisributionManger/DistributionOfficersList";
+import ClaimDistribution from "@/component/DisributionManger/ClaimDistribution";
+
 import { Provider } from 'react-redux';
 import  store from "@/services/reducxStore";
 
@@ -136,6 +139,16 @@ function MainTabNavigator() {
       setInitialTab('ManagerDashboard'); // Set the first tab for other roles like Manager
     }
   }, [jobRole]);
+    useFocusEffect(
+    useCallback(() => {
+      console.log("Job roll hgi");
+
+      return () => {
+        // optional: when leaving the screen
+      };
+    }, [])
+  );
+
   return (
     <Tab.Navigator
     initialRouteName={initialTab}
@@ -186,11 +199,16 @@ function MainTabNavigator() {
 
                    <Tab.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} /> 
 
-      
-      
+         <Tab.Screen
+        name="DistributionOfficersList"
+        component={DistributionOfficersList}
+      />
+                         <Tab.Screen name="ClaimDistribution" component={ClaimDistribution as any} /> 
+
     </Tab.Navigator>
   );
 }
+
 const Index = () => {
   useEffect(() => {
     onlineStatus();
@@ -295,7 +313,7 @@ const Index = () => {
           {/* <Stack.Screen name="DailyTargetList" component={DailyTargetList} /> */}
           <Stack.Screen
             name="AddOfficerBasicDetails"
-            component={AddOfficerBasicDetails}
+            component={AddOfficerBasicDetails as any}
           />
           <Stack.Screen
             name="AddOfficerAddressDetails"
@@ -383,7 +401,7 @@ const Index = () => {
    <Stack.Screen name="CompletedOrderScreen" component={CompletedOrderScreen as any} />    
    <Stack.Screen name="Timer" component={Timer as any} />    
    <Stack.Screen name="TimerContainer" component={TimerContainer as any} />  
-      
+
         </Stack.Navigator> 
         
     </LanguageProvider>
