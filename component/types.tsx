@@ -86,7 +86,7 @@ export type RootStackParamList = {
     ReportGenerator:{officerId:string,collectionOfficerId:number};
     DailyTargetList:undefined;
     ComplainHistory:undefined;
-    AddOfficerBasicDetails:undefined;
+    AddOfficerBasicDetails:{jobRolle:String};
     AddOfficerAddressDetails: {
       formData: OfficerBasicDetailsFormData;
       type: 'Permanent' | 'Temporary';
@@ -98,6 +98,7 @@ export type RootStackParamList = {
       jobRole: string;
     };
     ClaimOfficer:undefined;
+    ClaimDistribution: undefined
     TransactionList:undefined;
     FarmerReport:{
       registeredFarmerId: number;
@@ -219,6 +220,7 @@ export type RootStackParamList = {
 };
 
 CompletedOrderScreen:{item: string ,centerCode:string};
+DistributionOfficersList:undefined
 };
 
 export interface OrderItem {
