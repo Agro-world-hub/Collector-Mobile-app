@@ -334,7 +334,7 @@ useEffect(() => {
         { name: "DistridutionaDashboard", icon: homeIcon, focusedIcon: homeIcon },
            { name: "TargetOrderScreen", icon: qrIcon, focusedIcon: qrIcon },
       { name: "DistributionOfficersList", icon: adminIcon, focusedIcon: adminIcon },
-            // { name: "CollectionOfficersList", icon: dataTransfer, focusedIcon: dataTransfer },
+        { name: "ReplaceRequestsScreen", icon: dataTransfer, focusedIcon: dataTransfer },
 
       ];
     setTabs(tabs); 

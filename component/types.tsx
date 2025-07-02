@@ -83,6 +83,15 @@ export type RootStackParamList = {
       collectionOfficerId:number;
       image:string;
     };
+    
+    DistributionOfficerSummary: {
+      officerId: string;
+      officerName: string;
+      phoneNumber1: string;
+      phoneNumber2: string;
+      collectionOfficerId:number;
+      image:string;
+    };
     ReportGenerator:{officerId:string,collectionOfficerId:number};
     DailyTargetList:undefined;
     ComplainHistory:undefined;
@@ -220,7 +229,8 @@ export type RootStackParamList = {
 };
 
 CompletedOrderScreen:{item: string ,centerCode:string};
-DistributionOfficersList:undefined
+DistributionOfficersList:undefined,
+ReplaceRequestsScreen: undefined
 };
 
 export interface OrderItem {
