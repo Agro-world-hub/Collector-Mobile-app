@@ -211,6 +211,7 @@ export type RootStackParamList = {
 
   DistridutionaDashboard:undefined;
   TargetOrderScreen:undefined;
+  CenterTargetScreen:{ centerId: number };
 //OpenedOrderScreen:{item: string ,centerCode:string};
  PendingOrderScreen: {
   item: any; // or define proper OrderItem interface
