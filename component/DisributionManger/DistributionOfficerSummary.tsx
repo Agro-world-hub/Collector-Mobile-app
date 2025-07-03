@@ -24,17 +24,17 @@ import { useTranslation } from "react-i18next";
 
 type OfficerSummaryNavigationProp = StackNavigationProp<
   RootStackParamList,
-  "OfficerSummary"
+  "DistributionOfficerSummary"
 >;
 
-type OfficerSummaryRouteProp = RouteProp<RootStackParamList, "OfficerSummary">;
+type OfficerSummaryRouteProp = RouteProp<RootStackParamList, "DistributionOfficerSummary">;
 
 interface OfficerSummaryProps {
   navigation: OfficerSummaryNavigationProp;
   route: OfficerSummaryRouteProp;
 }
 
-const OfficerSummary: React.FC<OfficerSummaryProps> = ({
+const DistributionOfficerSummary: React.FC<OfficerSummaryProps> = ({
   route,
   navigation,
 }) => {
@@ -55,20 +55,22 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
   const [modalVisible, setModalVisible] = useState(false);  
 
 
-    useFocusEffect(
-      React.useCallback(() => {
-        const onBackPress = () => {
-             navigation.navigate("Main", { screen: "CollectionOfficersList" })
-          return true; // Prevent the default behavior
-        };
-  
-        BackHandler.addEventListener("hardwareBackPress", onBackPress);
-  
-        return () => {
-          BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-        };
-      }, [navigation])
-    );
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        navigation.navigate("Main", { screen: "DistributionOfficersList" })
+        return true; // Prevent the default behavior
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () => {
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      };
+    }, [navigation])
+  );
+
+
   const ConfirmationModal = ({ visible, onConfirm, onCancel }: any) => {
     return (
       <Modal
@@ -250,7 +252,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
           {/* Back Icon */}
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("Main", { screen: "CollectionOfficersList" })
+              navigation.navigate("Main", { screen: "DistributionOfficersList" })
             }
             className="absolute top-4 left-4"
           >
@@ -427,4 +429,4 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
   );
 };
 
-export default OfficerSummary;
+export default DistributionOfficerSummary;

@@ -98,7 +98,8 @@ import CenterTargetScreen from "@/component/DisributionManger/CenterTargetScreen
 
 import DistributionOfficersList from "@/component/DisributionManger/DistributionOfficersList";
 import ClaimDistribution from "@/component/DisributionManger/ClaimDistribution";
-
+import DistributionOfficerSummary from "@/component/DisributionManger/DistributionOfficerSummary"
+import ReplaceRequestsScreen from '@/component/DisributionManger/ReplaceRequestsScreen'
 import { Provider } from 'react-redux';
 import  store from "@/services/reducxStore";
 
@@ -205,6 +206,8 @@ function MainTabNavigator() {
         component={DistributionOfficersList}
       />
                          <Tab.Screen name="ClaimDistribution" component={ClaimDistribution as any} /> 
+                         <Tab.Screen name="DistributionOfficerSummary" component={DistributionOfficerSummary as any} />
+                         <Tab.Screen name="ReplaceRequestsScreen" component={ReplaceRequestsScreen as any} />
 
     </Tab.Navigator>
   );

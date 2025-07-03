@@ -190,7 +190,7 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
       onPress={() => {
         // Prevent navigation if officer status is "Not Approved"
         if (item.status !== "Not Approved") {
-          navigation.navigate("OfficerSummary" as any, {
+          navigation.navigate("DistributionOfficerSummary" as any, {
             officerId: item.empId,
             officerName: getOfficerName(item),
             phoneNumber1: item.phoneNumber1,

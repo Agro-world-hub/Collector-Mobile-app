@@ -34,7 +34,7 @@ export type RootStackParamList = {
     FarmerQr:{ cropCount: number,userId:any,NICnumber: string; };
     ComplainPage:{farmerName:any, farmerPhone:any, userId:number, farmerLanguage:string};
     OfficerQr:undefined;
-    Profile:undefined;
+    Profile:{jobRole:string};
     ReportPage:{userId:string,registeredFarmerId:Number};
     SearchPriceScreen:undefined;
     PrivacyPolicy:undefined;
@@ -76,6 +76,15 @@ export type RootStackParamList = {
 
 
     OfficerSummary: {
+      officerId: string;
+      officerName: string;
+      phoneNumber1: string;
+      phoneNumber2: string;
+      collectionOfficerId:number;
+      image:string;
+    };
+    
+    DistributionOfficerSummary: {
       officerId: string;
       officerName: string;
       phoneNumber1: string;
@@ -221,7 +230,8 @@ export type RootStackParamList = {
 };
 
 CompletedOrderScreen:{item: string ,centerCode:string};
-DistributionOfficersList:undefined
+DistributionOfficersList:undefined,
+ReplaceRequestsScreen: undefined
 };
 
 export interface OrderItem {
