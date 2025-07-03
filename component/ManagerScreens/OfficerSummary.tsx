@@ -168,7 +168,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ collectionOfficerId }),
+          body: JSON.stringify({ collectionOfficerId, jobRole:"Collection Officer" }),
         }
       );
 

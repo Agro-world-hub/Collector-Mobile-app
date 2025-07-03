@@ -170,7 +170,7 @@ const DistributionOfficerSummary: React.FC<OfficerSummaryProps> = ({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ collectionOfficerId }),
+          body: JSON.stringify({ collectionOfficerId, jobRole:"Distribution Officer" }),
         }
       );
 
@@ -189,7 +189,7 @@ const DistributionOfficerSummary: React.FC<OfficerSummaryProps> = ({
       if (data.status === "success") {
         setModalVisible(false); // Close the modal
         Alert.alert(t("Error.Success"), t("DisclaimOfficer.Officer disclaimed successfully."));
-        navigation.navigate("Main", { screen: "CollectionOfficersList" });
+        navigation.navigate("Main", { screen: "DistributionOfficersList" });
       } else {
         Alert.alert("QRScanner.Failed", t("DisclaimOfficer.Failed to disclaim officer."));
       }

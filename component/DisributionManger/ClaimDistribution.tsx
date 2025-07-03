@@ -241,7 +241,7 @@ const ClaimOfficer: React.FC = () => {
         {/* <Text className="text-lg font-bold ml-[25%]"> {t("ClaimOfficer.ClaimOfficers")}</Text> */}
         <View className="flex-1 ">
           <Text className="text-lg font-bold text-center">
-            {t("ClaimOfficer.ClaimOfficers")} Dis
+            {t("ClaimOfficer.ClaimOfficers")}
           </Text>
         </View>
       </View>
