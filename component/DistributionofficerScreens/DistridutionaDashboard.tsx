@@ -40,11 +40,15 @@ interface ProfileData {
   companyNameSinhala: string;
   companyNameEnglish: string;
   companyNameTamil: string;
+  jobRole:string;
+  centerId: number;
 }
 
 const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigation }) => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [empId, setEmpId] = useState<string | null>(null);
+  const [jobRole, setJobeRole] = useState<string | null>(null);
+    const [centerId, setCenterId] = useState<string | null>(null);
   const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
@@ -71,12 +75,18 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
         );
         setProfile(response.data.data);
         setEmpId(response.data.data.empId);
+        setJobeRole(response.data.data.jobRole)
+  
+        setCenterId(response.data.data.centerId); 
         console.log("data:", response.data.data);
       }
     } catch (error) {
       console.error("Failed to fetch user profile:", error);
     }
   };
+
+  console.log("jobeJole-----------------",jobRole)
+   console.log("centerId--------",centerId)
 
   const fetchTargetPercentage = async () => {
   try {
@@ -302,7 +312,27 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
 
       {/* Action Buttons */}
       <View className="flex-row flex-wrap justify-between p-6 mt-[-5%]">
-        <TouchableOpacity
+
+        { jobRole === "Distribution Manager" ? (
+           <TouchableOpacity           
+  className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative"           
+  onPress={() => navigation.navigate("CenterTargetScreen", { centerId: centerId } as any)}         
+>
+          <Image
+            source={require("../../assets/images/goal.webp")}
+            className="w-8 h-8 absolute top-2 right-2"
+          />
+          <Text
+            style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+            className="text-gray-700 text-lg absolute bottom-2 left-2"
+          >
+            {t("CenterTarget.CenterTarget")}
+          </Text>
+        </TouchableOpacity>
+
+        ):(
+
+ <TouchableOpacity
           className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative"
           onPress={() => navigation.navigate("TargetOrderScreen" as any)}
         >
@@ -317,6 +347,12 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
             {t("DistridutionaDashboard.TargetOrders")}
           </Text>
         </TouchableOpacity>
+        
+        
+
+
+        )}
+       
 
        
       </View>

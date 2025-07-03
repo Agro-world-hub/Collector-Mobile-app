@@ -94,6 +94,7 @@ import PendingOrderScreen from "@/component/DistributionofficerScreens/PendingOr
 import CompletedOrderScreen from "@/component/DistributionofficerScreens/CompletedOrderScreen"
 import Timer from "@/component/DistributionofficerScreens/TimerContainer "
 import TimerContainer from "@/component/DistributionofficerScreens/TimerContainer "
+import CenterTargetScreen from "@/component/DisributionManger/CenterTargetScreen"
 
 import DistributionOfficersList from "@/component/DisributionManger/DistributionOfficersList";
 import ClaimDistribution from "@/component/DisributionManger/ClaimDistribution";
@@ -404,7 +405,7 @@ const Index = () => {
    <Stack.Screen name="CompletedOrderScreen" component={CompletedOrderScreen as any} />    
    <Stack.Screen name="Timer" component={Timer as any} />    
    <Stack.Screen name="TimerContainer" component={TimerContainer as any} />  
-
+<Stack.Screen name="CenterTargetScreen" component={CenterTargetScreen as any} /> 
         </Stack.Navigator> 
         
     </LanguageProvider>
