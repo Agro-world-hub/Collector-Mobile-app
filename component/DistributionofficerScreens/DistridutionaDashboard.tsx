@@ -64,7 +64,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
       const token = await AsyncStorage.getItem("token");
       if (token) {
         const response = await axios.get(
-          `${environment.API_BASE_URL}api/collection-officer/user-profile`,
+          `${environment.API_BASE_URL}api/distribution-manager/user-profile`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -201,7 +201,6 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
       };
     }
   };
-
   
 
   return (

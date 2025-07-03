@@ -34,7 +34,7 @@ export type RootStackParamList = {
     FarmerQr:{ cropCount: number,userId:any,NICnumber: string; };
     ComplainPage:{farmerName:any, farmerPhone:any, userId:number, farmerLanguage:string};
     OfficerQr:undefined;
-    Profile:undefined;
+    Profile:{jobRole:string};
     ReportPage:{userId:string,registeredFarmerId:Number};
     SearchPriceScreen:undefined;
     PrivacyPolicy:undefined;
