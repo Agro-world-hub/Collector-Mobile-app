@@ -203,11 +203,11 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
         throw new Error("Authentication token not found. Please login again.");
       }
 
-      console.log("Making request to:", `${environment.API_BASE_URL}api/distribution/officer-target`);
+      console.log("Making request to:", `${environment.API_BASE_URL}api/distribution-manager/get-dcenter-target`);
       console.log("Auth token exists:", !!authToken);
 
       const response = await axios.get(
-        `${environment.API_BASE_URL}api/distribution/officer-target`,
+        `${environment.API_BASE_URL}api/distribution-manager/get-dcenter-target`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -375,7 +375,7 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
     }
   };
 
-  return (
+   return (
     <View className="flex-1 bg-[#282828]">
       {/* Header */}
       <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
@@ -458,13 +458,11 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
           </View>
         ) : displayedData.length > 0 ? (
           displayedData.map((item, index) => (
-            <TouchableOpacity
+            <View
               key={item.id || index}
               className={`flex-row py-4 border-b border-gray-200 ${
                 index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-              } ${item.packageIsLock === 1 ? '' : ''}`}
-              onPress={() => handleRowPress(item)}
-           //   activeOpacity={item.packageIsLock === 1 ? 1 : 0.7}
+              }`}
             >
               {/* Row Number */}
               <View className="flex-1 items-center justify-center relative">
@@ -473,23 +471,13 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
                 ) : (
                   <Ionicons name="flag" size={20} color="#2AAD7A" />
                 )}
-              
               </View>
 
               {/* Invoice Number */}
               <View className="flex-[2] items-center justify-center px-2">
-                <Text className={`text-center font-medium ${item.packageIsLock === 1 ? 'text-gray-800' : 'text-gray-800'}`}>
+                <Text className="text-center font-medium text-gray-800">
                   {item.invoiceNo || `INV${item.id || (index + 1).toString().padStart(6, '0')}`}
                 </Text>
-              
-                {/* <Text className="text-xs text-gray-500">
-                  {item.isPackage === 1 ? 'Package Order' : 'Additional Items Only'}
-                  {item.packageIsLock === 1 && ' (Locked)'}
-                </Text>
-             
-                <Text className="text-xs text-gray-400">
-                  {getDetailedStatusDisplay(item)}
-                </Text> */}
               </View>
 
               {/* Status or Completed Time */}
@@ -499,10 +487,9 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
                     <Text className="text-xs font-medium text-center">
                       {getStatusText(item.selectedStatus)}
                     </Text>
-                      {/* Red dot indicator for locked packages */}
-                {item.packageIsLock === 1 && (
-                  <View className="absolute right-[-20] mt-2 w-4 h-4 bg-red-500 rounded-full border border-white"></View>
-                )}
+                    {item.packageIsLock === 1 && (
+                      <View className="absolute right-[-20] mt-2 w-4 h-4 bg-red-500 rounded-full border border-white"></View>
+                    )}
                   </View>
                 ) : (
                   <Text className="text-center text-gray-600 text-sm">
@@ -510,7 +497,7 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
                   </Text>
                 )}
               </View>
-            </TouchableOpacity>
+            </View>
           ))
         ) : (
           <View className="flex-1 justify-center items-center py-20">
@@ -532,5 +519,6 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
     </View>
   );
 };
+
 
 export default CenterTargetScreen;
