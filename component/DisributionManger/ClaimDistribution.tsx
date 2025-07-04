@@ -166,7 +166,7 @@ const ClaimOfficer: React.FC = () => {
         setOfficerDetails(null);
         setEmpID("");
         setModalVisible(false);
-        navigation.navigate("Main", { screen: "CollectionOfficersList" });
+        navigation.navigate("Main", { screen: "DistributionOfficersList" });
       }
     } catch (err) {
       console.error(err);
