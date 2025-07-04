@@ -39,6 +39,13 @@ interface ReplaceRequestItem {
   price: string;
   qty: string;
   productTypeName: string;
+  invNo: string;
+  productType: string;
+  productId: string;
+  userId: string;
+  packageId?: string;
+  productNormalPrice?: string;
+  productDiscountedPrice?: string;
 }
 
 const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
@@ -68,11 +75,13 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
         }
       );
 
+      console.log("bhdjaovm", response.data);
+
       if (response.data.success) {
         // Map the API response data to our frontend format
         const mappedData = response.data.data.map((item: any) => ({
           id: item.id.toString(),
-          orderId: item.orderId.toString(),
+          orderId: item.orderId ? item.orderId.toString() : '',
           orderPackageId: item.orderPackageId.toString(),
           productDisplayName: item.productDisplayName,
           createdAt: new Date(item.createdAt).toLocaleString(),
@@ -80,6 +89,13 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
           price: item.price,
           qty: item.qty,
           productTypeName: item.productTypeName,
+          invNo: item.invNo,
+          productType: item.productType,
+          productId: item.productId,
+          userId: item.userId,
+          packageId: item.packageId,
+          productNormalPrice: item.productNormalPrice,
+          productDiscountedPrice: item.productDiscountedPrice,
         }));
         
         setReplaceRequests(mappedData);
@@ -101,31 +117,58 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
     fetchReplaceRequests();
   }, [fetchReplaceRequests]);
 
+  const handleNavigateToApprove = (item: ReplaceRequestItem) => {
+    navigation.navigate("ReplaceRequestsApprove" as any, {
+      replaceRequestData: {
+        id: item.id,
+        orderId: item.orderId || item.invNo, // Use invNo if orderId is not available
+        orderPackageId: item.orderPackageId,
+        productDisplayName: item.productDisplayName,
+        productTypeName: item.productTypeName,
+        price: item.price,
+        originalQty: item.qty,
+        status: item.status,
+        createdAt: item.createdAt,
+        invNo: item.invNo,
+        productType: item.productType,
+        productId: item.productId,
+        userId: item.userId,
+        packageId: item.packageId,
+        productNormalPrice: item.productNormalPrice,
+        productDiscountedPrice: item.productDiscountedPrice,
+        qty: item.qty
+      }
+    });
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return 'text-orange-500';
+      case 'approved':
+        return 'text-green-500';
+      case 'rejected':
+        return 'text-red-500';
+      default:
+        return 'text-gray-500';
+    }
+  };
+
   const renderRequestItem = ({ item }: { item: ReplaceRequestItem }) => (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={() => handleNavigateToApprove(item)}>
       <View className="flex-row items-center bg-[#ADADAD1A] p-3 px-4 mb-4 rounded-xl">
         <View className="flex-1">
           <Text className="font-bold text-base text-gray-900">
-            {t("Order ID")} : {item.orderId}
+            Order ID: {item.invNo}
           </Text>
           <Text className="text-gray-700 text-sm">
-            {t("Item")} : {item.productDisplayName}
+            Replacing Item: {item.productDisplayName}
           </Text>
+         
           <Text className="text-gray-500 text-sm">
-            {t("Quantity")} : {item.qty}
+            {t("Requested Time")}: {item.createdAt}
           </Text>
-          <Text className="text-gray-500 text-sm">
-            {t("Price")} : {item.price}
-          </Text>
-          <Text className="text-gray-500 text-sm">
-            {t("Category")} : {item.productTypeName}
-          </Text>
-          <Text className="text-gray-500 text-sm">
-            {t("Requested Time")} : {item.createdAt}
-          </Text>
-          <Text className="text-gray-500 text-sm">
-            {t("Status")} : {item.status}
-          </Text>
+        
         </View>
         <View className="p-2 rounded-full">
           <AntDesign name="right" size={20} color="#000" />
