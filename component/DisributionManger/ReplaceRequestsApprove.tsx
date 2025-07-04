@@ -59,7 +59,10 @@ interface ReplaceRequestData {
   productNormalPrice?: string;
   productDiscountedPrice?: string;
     qty:string;
-    price:string
+    price:string;
+    replaceProductDisplayName:string;
+     replaceQty?:string;
+  replacePrice?:string;
 }
 
 interface ReplaceData {
@@ -71,7 +74,9 @@ interface ReplaceData {
   price: string;
   invNo:string;
   qty:string;
-  
+  replaceProductDisplayName:string;
+   replaceQty?:string;
+  replacePrice?:string;
 }
 
 const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
@@ -84,6 +89,7 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
   const [retailItems, setRetailItems] = useState<RetailItem[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [ordreId , setOrdreId] = useState('')
+  const [id , setId] = useState('')
   
   // Get passed data from navigation
   const replaceRequestData = route.params?.replaceRequestData as ReplaceRequestData;
@@ -96,7 +102,10 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
     quantity: "",
     price: replaceRequestData?.price || "N/A",
     invNo:replaceRequestData?.invNo || "N/A",
-    qty:replaceRequestData?.qty || "N/A"
+    qty:replaceRequestData?.qty || "N/A",
+    replaceProductDisplayName:replaceRequestData?.replaceProductDisplayName ,
+     replaceQty:replaceRequestData?.replaceQty ,
+  replacePrice:replaceRequestData?.replacePrice 
   });
 
 
@@ -109,10 +118,10 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
 
    useEffect(() => {
    setOrdreId(replaceRequestData.orderId);
-    
+    setId(replaceRequestData.id)
   }, []);
 
-  console.log("////////////////////////////",ordreId)
+  console.log("////////////////////////////",ordreId , id)
  // In your React Native component
 const loadRetailItems = async () => {
   try {
@@ -126,6 +135,7 @@ const loadRetailItems = async () => {
         }
       }
     );
+     console.log("nkjxsacnb",response.data)
     
     if (response.data.success) {
       setRetailItems(response.data.data);
@@ -173,18 +183,15 @@ const loadRetailItems = async () => {
       
       const response = await axios.post(
         `${environment.API_BASE_URL}/api/replace-requests/approve`,
-        {
-          orderId: replaceData.orderId,
-          newProduct: replaceData.newProduct,
-          quantity: parseFloat(replaceData.quantity),
-          price: parseFloat(replaceData.price.replace('Rs.', '')),
-        },
+      
         {
           headers: {
             Authorization: `Bearer ${token}`
           }
         }
       );
+
+      console.log("nkjxsacnb",response.data.data)
 
       if (response.data.success) {
         Alert.alert('Success', 'Replace request approved successfully', [
@@ -224,7 +231,7 @@ const loadRetailItems = async () => {
         <View className="border border-dashed border-[#FA0000] rounded-lg p-4 mb-6">
           <Text className="text-center text-gray-600 mb-3">Defined product</Text>
           <Text className="text-center font-medium  mb-2">
-            {replaceData.selectedProduct} - {replaceData.qty} - {replaceData.price}
+            {replaceData.replaceProductDisplayName} - {replaceData.replaceQty} - {replaceData.replacePrice}
           </Text>
           <Text className="text-center text-gray-600 text-sm mb-1">
             Relevant Product Type :
@@ -286,22 +293,22 @@ const loadRetailItems = async () => {
         {/* Quantity Input */}
         <View className="mb-4">
           <TextInput
-            className="border border-gray-300 rounded-full p-4 bg-white text-center"
+            className="border border-gray-300 rounded-full p-4 bg-white "
             placeholder="Enter Quantity"
-            value={replaceData.quantity}
+            value={replaceData.quantity }
             onChangeText={handleQuantityChange}
             keyboardType="numeric"
           />
         </View>
 
         {/* Price Display */}
-        <View className="mb-8">
-          <View className="border border-gray-300 rounded-full p-4 bg-gray-50">
-            <Text className="text-black text-center">
-              {replaceData.price}
-            </Text>
-          </View>
-        </View>
+     <View className="mb-8">
+  <View className="border border-gray-300 rounded-full p-4 bg-gray-50">
+    <Text className="text-black">
+      {replaceData.newProduct && replaceData.quantity ? replaceData.price : "Rs.0.00"}
+    </Text>
+  </View>
+</View>
 
         {/* Approve Button */}
         <TouchableOpacity
