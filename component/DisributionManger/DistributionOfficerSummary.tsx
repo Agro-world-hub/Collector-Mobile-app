@@ -338,30 +338,6 @@ const DistributionOfficerSummary: React.FC<OfficerSummaryProps> = ({
             </TouchableOpacity>
           )}
 
-          <TouchableOpacity
-            className="items-center mt-5"
-            onPress={() =>
-              navigation.navigate("Main", {
-                screen: "TransactionList",
-                params: {
-                  officerId,
-                  collectionOfficerId,
-                  phoneNumber1,
-                  phoneNumber2,
-                  officerName,
-                },
-              })
-            }
-          >
-            <View className="w-12 h-12 bg-[#FFFFFF66] rounded-full items-center justify-center shadow-md">
-              <Image
-                source={require("../../assets/images/lf.webp")} // Replace with your image path
-                style={{ width: 28, height: 28, resizeMode: "contain" }} // Adjust dimensions as needed
-              />
-            </View>
-            <Text className="text-white mt-2 text-xs">{t("OfficerSummary.Collection")}</Text>
-          </TouchableOpacity>
-
           {/* Report Button */}
           <TouchableOpacity
             className="items-center mt-5"
