@@ -68,7 +68,7 @@ interface AdditionalItem {
 interface ReplaceProductData {
   selectedProduct: string;
   selectedProductPrice: string;
-  productType: string;
+  productType: number;
   newProduct: string;
   quantity: string;
   price: string;
@@ -604,7 +604,7 @@ const handleCompleteOrder = async () => {
   const [replaceData, setReplaceData] = useState<ReplaceProductData>({
     selectedProduct: '',
     selectedProductPrice: '',
-    productType: '',
+    productType: 0,
     newProduct: '',
     quantity: '',
     price: '',
@@ -655,39 +655,150 @@ const handleCompleteOrder = async () => {
     setHasUnsavedChanges(true);
   };
 
-  const handleReplaceProduct = (item: FamilyPackItem) => {
-  setSelectedItemForReplace(item);
-  
-  console.log("items===================", item);
-  
-  // Extract weight value from weight string (e.g., "1.000 Kg" -> 1.000)
-  const weightValue = parseFloat(item.weight.split(' ')[0]) || 1;
-  const unitPrice = parseFloat(item.price) || 0;
-  const totalPrice = (unitPrice * weightValue).toFixed(2);
-  
-  setReplaceData({
-    selectedProduct: `${item.name} - ${item.weight} - Rs.${totalPrice}`,
-    selectedProductPrice: totalPrice, // Price * Weight
-    productType: item.productType.toString(), // Use the productType from the selected item
-    newProduct: '',
-    quantity: '',
-    price: '',
-    productTypeName: item.productTypeName || '',
-  });
-  
-  console.log("replace data set:", {
-    selectedProduct: `${item.name} - ${item.weight} - Rs.${totalPrice}`,
-    selectedProductPrice: totalPrice,
-    productType: item.productType,
-    calculation: `${unitPrice} * ${weightValue} = ${totalPrice}`
-  });
-  
-  setShowReplaceModal(true);
-  setShowDropdown(false);
+
+// const handleReplaceProduct = (item: FamilyPackItem) => {
+//   if (!item) {
+//     console.log("No item provided to handleReplaceProduct");
+//     return;
+//   }
+
+//   // Add a small delay to ensure data is fully loaded
+//   setTimeout(() => {
+//     console.log("Original item data:", {
+//       name: item.name,
+//       price: item.price,
+//       weight: item.weight,
+//       productType: item.productType,
+//       id: item.id
+//     });
+
+//     // Validate required data before proceeding
+//     if (!item.price || item.price === undefined) {
+//       console.log("Price is undefined, attempting to fetch latest data");
+//       Alert.alert(
+//         t("Error"), 
+//         "Product price information is not available. Please try again.",
+//         [{ text: t("OK") }]
+//       );
+//       return;
+//     }
+
+//     if (!item.productType || item.productType === undefined) {
+//       console.log("ProductType is undefined, using default");
+//       // You might want to set a default or fetch the latest data
+//     }
+
+//     const weightKg = parseFloat(item.weight.split(' ')[0]) || 0;
+//     const unitPrice = parseFloat(item.price) || 0;
+//     const totalPrice = (unitPrice * weightKg).toFixed(2);
+
+//     console.log("Price calculation:", {
+//       unitPrice,
+//       weightKg,
+//       totalPrice,
+//       originalPrice: item.price,
+//       productType: item.productType
+//     });
+
+//     // Only proceed if we have valid data
+//     if (unitPrice > 0 && weightKg > 0) {
+//       setReplaceData({
+//         selectedProduct: `${item.name} - ${item.weight} - Rs.${totalPrice}`,
+//         selectedProductPrice: totalPrice,
+//         productType: item.productType || 0, // Use 0 as default if undefined
+//         newProduct: '',
+//         quantity: '',
+//         price: `Rs.${totalPrice}`,
+//         productTypeName: item.productTypeName || ''
+//       });
+
+//       setSelectedItemForReplace(item);
+//       setShowReplaceModal(true);
+//     } else {
+//       Alert.alert(
+//         t("Error"), 
+//         "Invalid product data. Please refresh and try again.",
+//         [{ text: t("OK") }]
+//       );
+//     }
+//   }, 100); // Small delay to ensure state is updated
+// };
+
+
+const handleReplaceProduct = (item: FamilyPackItem) => {
+  if (!item) {
+    console.log("No item provided to handleReplaceProduct");
+    return;
+  }
+
+  // Add a small delay to ensure data is fully loaded
+  setTimeout(() => {
+    console.log("Original item data:", {
+      name: item.name,
+      price: item.price,
+      weight: item.weight,
+      productType: item.productType,
+      id: item.id
+    });
+
+    // Validate required data before proceeding
+    if (!item.price || item.price === undefined) {
+      console.log("Price is undefined, attempting to fetch latest data");
+      Alert.alert(
+        t("Error"),
+        "Product price information is not available. Please try again.",
+        [{ text: t("OK") }]
+      );
+      return;
+    }
+
+    if (!item.productType || item.productType === undefined) {
+      console.log("ProductType is undefined, using default");
+      // You might want to set a default or fetch the latest data
+    }
+
+    const weightKg = parseFloat(item.weight.split(' ')[0]) || 0;
+    const itemPrice = parseFloat(item.price) || 0;
+    
+    // Fix: Use the item.price directly as totalPrice instead of calculating
+    // item.price appears to already be the total price for the given weight
+    const totalPrice = itemPrice.toFixed(2);
+    
+    // If you need unit price per kg, calculate it from total price
+    const unitPricePerKg = weightKg > 0 ? (itemPrice / weightKg).toFixed(2) : '0.00';
+
+    console.log("Price calculation:", {
+      itemPrice,
+      weightKg,
+      totalPrice,
+      unitPricePerKg,
+      originalPrice: item.price,
+      productType: item.productType
+    });
+
+    // Only proceed if we have valid data
+    if (itemPrice > 0 && weightKg > 0) {
+      setReplaceData({
+        selectedProduct: `${item.name} - ${item.weight} - Rs.${totalPrice}`,
+        selectedProductPrice: totalPrice,
+        productType: item.productType || 0, // Use 0 as default if undefined
+        newProduct: '',
+        quantity: '',
+        price: `Rs.${totalPrice}`, // Use the actual item price
+        productTypeName: item.productTypeName || ''
+      });
+
+      setSelectedItemForReplace(item);
+      setShowReplaceModal(true);
+    } else {
+      Alert.alert(
+        t("Error"),
+        "Invalid product data. Please refresh and try again.",
+        [{ text: t("OK") }]
+      );
+    }
+  }, 100); // Small delay to ensure state is updated
 };
-
-
-
 
 const handleReplaceSubmit = async () => {
   if (!replaceData.newProduct || !replaceData.quantity || !replaceData.price) {
@@ -720,20 +831,26 @@ const handleReplaceSubmit = async () => {
 
     // Prepare the replacement request data
     const replacementRequest = {
-      orderPackageId: packageId, // Use the package ID from packageData
-      replaceId: parseInt(selectedItemForReplace.id), // ID of the item being replaced (e.g., 165, 166)
-      originalItemId: parseInt(selectedItemForReplace.id), // ID of the original item being replaced (keeping for backward compatibility)
-      productType: parseInt(selectedItemForReplace.productType.toString()), // Use productType from original item
-      productId: selectedRetailItem.id, // ID of the new product from retail items
+      orderPackageId: packageId,
+      replaceId: parseInt(selectedItemForReplace.id),
+      originalItemId: parseInt(selectedItemForReplace.id),
+      productType: selectedItemForReplace.productType,
+      productId: selectedRetailItem.id,
       qty: replaceData.quantity,
-      price: priceValue*1000,
+      price: priceValue *1000, // Remove the *1000 multiplication temporarily
       status: "Pending"
     };
 
     console.log('Replacement request data:', replacementRequest);
 
-    // Make API call to create replacement request
+    // Get token and add validation
     const token = await AsyncStorage.getItem('token');
+    if (!token) {
+      Alert.alert(t("Error"), "Authentication token not found. Please login again.");
+      return;
+    }
+
+    // Make API call to create replacement request
     const response = await axios.post(
       `${environment.API_BASE_URL}api/distribution/replace-order-package`,
       replacementRequest,
@@ -755,13 +872,13 @@ const handleReplaceSubmit = async () => {
             // Close modal and reset state
             setShowReplaceModal(false);
             setShowDropdown(false);
-            setSelectedItemForReplace(null); // Clear selected item
+            setSelectedItemForReplace(null);
             
             // Reset replace data
             setReplaceData({
               selectedProduct: '',
               selectedProductPrice: '',
-              productType: '',
+              productType: 0,
               newProduct: '',
               quantity: '',
               price: '',
@@ -778,10 +895,45 @@ const handleReplaceSubmit = async () => {
     }
   } catch (error) {
     console.error('Error submitting replacement request:', error);
-    Alert.alert(
-      t("Error"), 
-      t("Failed to submit replacement request. Please try again.")
-    );
+    
+    // Enhanced error handling for different HTTP status codes
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 403) {
+        console.log('403 Error Details:', error.response?.data);
+        const errorMessage = error.response?.data?.message || "You don't have permission to create replacement requests.";
+        Alert.alert(
+          t("Permission Denied"),
+          errorMessage + " Please contact your administrator."
+        );
+      } else if (error.response?.status === 401) {
+        Alert.alert(
+          t("Authentication Error"),
+          t("Your session has expired. Please login again.")
+        );
+      } else if (error.response?.status === 400) {
+        // Log the response for debugging
+        console.log('400 Error Response:', error.response?.data);
+        Alert.alert(
+          t("Invalid Request"),
+          t("Please check your input data and try again.")
+        );
+      } else if (error.response?.status === 500) {
+        Alert.alert(
+          t("Server Error"),
+          t("Internal server error. Please try again later.")
+        );
+      } else {
+        Alert.alert(
+          t("Error"),
+          t("Failed to submit replacement request. Please try again.")
+        );
+      }
+    } else {
+      Alert.alert(
+        t("Error"), 
+        t("An unexpected error occurred. Please try again.")
+      );
+    }
   }
 };
 
@@ -1161,35 +1313,53 @@ const fetchOrderData = async (orderId: string) => {
 useEffect(() => {
   const loadOrderData = async () => {
     setLoading(true);
-    const orderData = await fetchOrderData(item.orderId);
-    
-    if (orderData) {
-      // Map backend data to frontend state
-      const mappedFamilyPackItems: FamilyPackItem[] = orderData.packageData?.items.map((item: PackageItem) => ({
-        id: item.id,
-        name: item.productName,
-        weight: `${item.qty} Kg`, // Adjust based on your data
-        selected: item.isPacked === 1,
-      })) || [];
+    try {
+      const orderData = await fetchOrderData(item.orderId);
+      
+      if (orderData && orderData.packageData) {
+        console.log("Raw order data:", orderData);
+        
+        // Map backend data to frontend state with proper validation
+        const mappedFamilyPackItems: FamilyPackItem[] = orderData.packageData.items.map((backendItem: any) => {
+          console.log("Mapping backend item:", backendItem);
+          
+          return {
+            id: backendItem.id?.toString() || '',
+            name: backendItem.productName || backendItem.name || 'Unknown Product',
+            weight: backendItem.qty ? `${backendItem.qty} Kg` : `${backendItem.weight || '0'} Kg`,
+            selected: backendItem.isPacked === 1,
+            // Ensure price and productType are properly mapped
+            price: backendItem.price || backendItem.unitPrice || backendItem.pricePerKg || '0',
+            productType: backendItem.productType || backendItem.product_type || 0,
+            productTypeName: backendItem.productTypeName || backendItem.product_type_name 
+          };
+        }) || [];
 
-      // const mappedAdditionalItems: FamilyPackItem[] = orderData.additionalItems.map((item: AdditionalItem) => ({
-      //   id: item.id.toString(),
-      //   name: item.productName,
-      //   weight: `${item.qty} ${item.unit}`,
-      //   selected: item.isPacked === 1,
-      // }));
-
-      setFamilyPackItems(mappedFamilyPackItems);
-    //  setAdditionalItems(mappedAdditionalItems);
-      setError(null);
-    } else {
+        console.log("Mapped family pack items:", mappedFamilyPackItems);
+        
+        setFamilyPackItems(mappedFamilyPackItems);
+        
+        // Set package ID for replacement requests
+        if (orderData.packageData.id) {
+          setPackageId(orderData.packageData.id);
+        }
+        
+        setError(null);
+      } else {
+        console.log("No package data found in order data");
+        setError(t('No package data found'));
+      }
+    } catch (error) {
+      console.error("Error in loadOrderData:", error);
       setError(t('Failed to load order data'));
+    } finally {
+      setLoading(false);
     }
-    
-    setLoading(false);
   };
 
-  loadOrderData();
+  if (item.orderId) {
+    loadOrderData();
+  }
 }, [item.orderId, t]); // Dependencies: rerun if orderId or translation function changes
 
 

@@ -172,6 +172,26 @@ export type RootStackParamList = {
     ManagerDashboard:undefined;
     CenterTarget:undefined;
     ManagerTransactions:undefined;
+    ReplaceRequestsApprove: {
+    replaceRequestData: {
+      id: string;
+      orderId: string;
+      orderPackageId: string;
+      productDisplayName: string;
+      productTypeName: string;
+      originalPrice: string;
+      originalQty: string;
+      status: string;
+      createdAt: string;
+      invNo: string;
+      productType: string;
+      productId: string;
+      userId: string;
+      packageId?: string;
+      productNormalPrice?: string;
+      productDiscountedPrice?: string;
+    };
+  }
 
     SearchFarmerScreen:undefined;
     //RegisterFarmer:undefined;
