@@ -100,6 +100,8 @@ import DistributionOfficersList from "@/component/DisributionManger/Distribution
 import ClaimDistribution from "@/component/DisributionManger/ClaimDistribution";
 import DistributionOfficerSummary from "@/component/DisributionManger/DistributionOfficerSummary"
 import ReplaceRequestsScreen from '@/component/DisributionManger/ReplaceRequestsScreen';
+import DailyTargetListOfficerDistribution from '@/component/DisributionManger/DailyTargetListOfficerDistribution';
+import PassTarget from '@/component/DisributionManger/PassTarget'
 
 import { Provider } from 'react-redux';
 import  store from "@/services/reducxStore";
@@ -409,7 +411,9 @@ const Index = () => {
    <Stack.Screen name="Timer" component={Timer as any} />    
    <Stack.Screen name="TimerContainer" component={TimerContainer as any} />  
 <Stack.Screen name="CenterTargetScreen" component={CenterTargetScreen as any} /> 
-<Stack.Screen name="ReplaceRequestsApprove" component={ReplaceRequestsApprove as any} />
+<Stack.Screen name="ReplaceRequestsApprove" component={ReplaceRequestsApprove as any} />    
+<Stack.Screen name="DailyTargetListOfficerDistribution" component={DailyTargetListOfficerDistribution as any} />
+<Stack.Screen name="PassTarget" component={PassTarget as any} />
         </Stack.Navigator> 
         
     </LanguageProvider>
