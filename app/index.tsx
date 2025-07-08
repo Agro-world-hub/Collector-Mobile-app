@@ -110,6 +110,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../services/reducxStore';
 
 import ReplaceRequestsApprove from '@/component/DisributionManger/ReplaceRequestsApprove';
+import DistributionOfficerReport from '@/component/DisributionManger/DistributionOfficerReport'
 
 LogBox.ignoreAllLogs(true);
 NativeWindStyleSheet.setOutput({
@@ -414,6 +415,7 @@ const Index = () => {
 <Stack.Screen name="ReplaceRequestsApprove" component={ReplaceRequestsApprove as any} />    
 <Stack.Screen name="DailyTargetListOfficerDistribution" component={DailyTargetListOfficerDistribution as any} />
 <Stack.Screen name="PassTarget" component={PassTarget as any} />
+<Stack.Screen name="DistributionOfficerReport" component={DistributionOfficerReport as any} />
         </Stack.Navigator> 
         
     </LanguageProvider>

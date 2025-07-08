@@ -469,9 +469,9 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
           
           {selectedToggle === 'ToDo' ? (
             <>
-              <Text className="flex-[2] text-center text-white font-bold">Date & Time</Text>
+              <Text className="flex-[2] text-center text-white font-bold ">Date & Time</Text>
           
-              <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Status")}</Text>
+              <Text className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Status")}</Text>
             </>
           ) : (
             <Text className="flex-[2] text-center text-white font-bold">Completed Time</Text>
@@ -533,7 +533,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
                 <>
                   {/* Date */}
                   <View className="flex-[2] items-center justify-center px-2">
-                    <Text className={`text-center font-medium ${
+                    <Text className={`text-center font-medium text-xs ${
                       isScheduleDateToday(item.sheduleDate) ? 'text-red-600' : 'text-gray-800'
                     }`}>
                       {formatScheduleDate(item.sheduleDate)}  {formatScheduleTime(item.sheduleTime) || 'N/A'}
