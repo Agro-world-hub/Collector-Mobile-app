@@ -42,7 +42,7 @@
         "foregroundImage": "./assets/images/favicon.png",
         "backgroundColor": "#21202b"
       },
-      "versionCode": 1,
+      "versionCode": 11,
       "package": "com.collector.Collector",
       "permissions": [
         "INTERNET",
