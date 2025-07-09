@@ -329,6 +329,14 @@ useEffect(() => {
       { name: "CollectionOfficersList", icon: adminIcon, focusedIcon: adminIcon },
       { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
     ];
+    setTabs(tabs); 
+  } else if (userRole === "Collection Officer") {
+    tabs = [
+         { name: "DailyTargetList", icon: qrIcon, focusedIcon: qrIcon },
+    { name: "Dashboard", icon: homeIcon, focusedIcon: homeIcon },
+    { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
+    ];
+    setTabs(tabs); 
   }else if (userRole === "Distribution Manager") {
      tabs = [
         { name: "DistridutionaDashboard", icon: homeIcon, focusedIcon: homeIcon },

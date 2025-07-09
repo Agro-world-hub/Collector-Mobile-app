@@ -422,13 +422,14 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const route = useRoute();
   const currentScreen = route.name;
   const handleBackPress = () => {
-    if (currentScreen === "EngProfile" && profile?.jobRole) {
+    if (currentScreen === "EngProfile" && profile?.jobRole === "Distribution Officer") {
       navigation.navigate("Main", { screen: "DistridutionaDashboard" })
-    } else if(currentScreen === "EngProfile"){
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "Main" }],
-      });
+    } else if(currentScreen === "EngProfile" && profile?.jobRole === "Collection Officer" || profile?.jobRole === "Collection Center Manger" ){
+      // navigation.reset({
+      //   index: 0,
+      //   routes: [{ name: "Main" }],
+      // });
+      navigation.navigate("Main", { screen: "Dashboard" })
     }else {
       navigation.goBack();
     }
