@@ -1427,7 +1427,7 @@ const fetchRetailItems = async () => {
     }
 
     const response = await axios.get(
-      `${environment.API_BASE_URL}api/distribution/all-retail-items`,
+      `${environment.API_BASE_URL}api/distribution/all-retail-items/${item.orderId}`,
       {
         headers: {
           'Authorization': `Bearer ${token}`,

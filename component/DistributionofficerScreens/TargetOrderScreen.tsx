@@ -42,6 +42,8 @@ interface TargetData {
   pendingPackageItems: number | null;
   isPackage: number;
   orderId: string;
+  sheduleDate: string;
+  sheduleTime: string;
 }
 
 // Backend API response interface - Updated to match actual API response
@@ -66,7 +68,7 @@ interface ApiTargetData {
   status: string;
   orderCreatedAt: string;
   reportStatus: string;
-  selectedStatus: 'Pending' | 'Opened' | 'Completed'; // This is what the API actually returns
+  selectedStatus: 'Pending' | 'Opened' | 'Completed';
   additionalItemStatus: 'Pending' | 'Opened' | 'Completed' | null;
   packageItemStatus: 'Pending' | 'Opened' | 'Completed' | null;
   totalAdditionalItems: number;
@@ -77,8 +79,9 @@ interface ApiTargetData {
   pendingPackageItems: number | null;
   isPackage: number;
   packageIsLock: number;
+  sheduleDate: string;
+  sheduleTime: string;
 }
-
 const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => {
   const [todoData, setTodoData] = useState<TargetData[]>([]);
   const [completedData, setCompletedData] = useState<TargetData[]>([]);
@@ -133,6 +136,46 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
     });
   };
 
+  // Function to format schedule time (remove "Within" text)
+  const formatScheduleTime = (timeString: string): string => {
+    if (!timeString) return '';
+    
+    // Remove "Within" text and trim whitespace
+    return timeString.replace(/^Within\s*/i, '').trim();
+  };
+
+  // Function to format schedule date (month and date only)
+  const formatScheduleDate = (dateString: string): string => {
+    if (!dateString) return '';
+    
+    try {
+      const date = new Date(dateString);
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      return `${month}/${day}`;
+    } catch (error) {
+      console.error('Error formatting schedule date:', error);
+      return '';
+    }
+  };
+
+  // Function to check if schedule date is today
+  const isScheduleDateToday = (dateString: string): boolean => {
+    if (!dateString) return false;
+    
+    try {
+      const scheduleDate = new Date(dateString);
+      const today = new Date();
+      
+      return scheduleDate.getFullYear() === today.getFullYear() &&
+             scheduleDate.getMonth() === today.getMonth() &&
+             scheduleDate.getDate() === today.getDate();
+    } catch (error) {
+      console.error('Error checking if date is today:', error);
+      return false;
+    }
+  };
+
   // Updated function to map API data to frontend format using selectedStatus
   const mapApiDataToTargetData = (apiData: ApiTargetData[]): TargetData[] => {
     return apiData.map((item, index) => ({
@@ -150,7 +193,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
       createdAt: item.targetCreatedAt,
       updatedAt: item.itemCreatedAt,
       completedTime: item.completeTime,
-      selectedStatus: item.selectedStatus, // Use selectedStatus from API
+      selectedStatus: item.selectedStatus,
       additionalItemStatus: item.additionalItemStatus,
       packageItemStatus: item.packageItemStatus,
       totalAdditionalItems: item.totalAdditionalItems || 0,
@@ -161,7 +204,9 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
       packedPackageItems: item.packedPackageItems,
       pendingPackageItems: item.pendingPackageItems,
       isPackage: item.isPackage,
-      orderId: item.orderId
+      orderId: item.orderId,
+      sheduleDate: item.sheduleDate,
+      sheduleTime: item.sheduleTime
     }));
   };
 
@@ -421,9 +466,16 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
         <View className="flex-row bg-[#2AAD7A] py-3">
           <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
           <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
-          <Text className="flex-[2] text-center text-white font-bold">
-            {selectedToggle === 'ToDo' ? t("TargetOrderScreen.Status") : "Completed Time"}
-          </Text>
+          
+          {selectedToggle === 'ToDo' ? (
+            <>
+              <Text className="flex-[2] text-center text-white font-bold ">Date & Time</Text>
+          
+              <Text className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Status")}</Text>
+            </>
+          ) : (
+            <Text className="flex-[2] text-center text-white font-bold">Completed Time</Text>
+          )}
         </View>
 
         {/* Error Message */}
@@ -454,9 +506,8 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
               key={item.id || index}
               className={`flex-row py-4 border-b border-gray-200 ${
                 index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-              } ${item.packageIsLock === 1 ? '' : ''}`}
+              }`}
               onPress={() => handleRowPress(item)}
-           //   activeOpacity={item.packageIsLock === 1 ? 1 : 0.7}
             >
               {/* Row Number */}
               <View className="flex-1 items-center justify-center relative">
@@ -465,43 +516,50 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
                 ) : (
                   <Ionicons name="flag" size={20} color="#2AAD7A" />
                 )}
-              
               </View>
 
               {/* Invoice Number */}
               <View className="flex-[2] items-center justify-center px-2">
-                <Text className={`text-center font-medium ${item.packageIsLock === 1 ? 'text-gray-800' : 'text-gray-800'}`}>
+                <Text className="text-center font-medium text-gray-800">
                   {item.invoiceNo || `INV${item.id || (index + 1).toString().padStart(6, '0')}`}
                 </Text>
-              
-                {/* <Text className="text-xs text-gray-500">
-                  {item.isPackage === 1 ? 'Package Order' : 'Additional Items Only'}
-                  {item.packageIsLock === 1 && ' (Locked)'}
-                </Text>
-             
-                <Text className="text-xs text-gray-400">
-                  {getDetailedStatusDisplay(item)}
-                </Text> */}
+                {/* Red dot indicator for locked packages */}
+                {item.packageIsLock === 1 && (
+                  <View className="absolute right-1 top-1 w-3 h-3 bg-red-500 rounded-full"></View>
+                )}
               </View>
 
-              {/* Status or Completed Time */}
-              <View className="flex-[2] items-center justify-center px-2">
-                {selectedToggle === 'ToDo' ? (
-                  <View className={`px-3 py-2 rounded-lg ${getStatusColor(item.selectedStatus)}`}>
-                    <Text className="text-xs font-medium text-center">
-                      {getStatusText(item.selectedStatus)}
+              {selectedToggle === 'ToDo' ? (
+                <>
+                  {/* Date */}
+                  <View className="flex-[2] items-center justify-center px-2">
+                    <Text className={`text-center font-medium text-xs ${
+                      isScheduleDateToday(item.sheduleDate) ? 'text-red-600' : 'text-gray-800'
+                    }`}>
+                      {formatScheduleDate(item.sheduleDate)}  {formatScheduleTime(item.sheduleTime) || 'N/A'}
                     </Text>
-                      {/* Red dot indicator for locked packages */}
-                {item.packageIsLock === 1 && (
-                  <View className="absolute right-[-20] mt-2 w-4 h-4 bg-red-500 rounded-full border border-white"></View>
-                )}
                   </View>
-                ) : (
+
+                  {/* Time */}
+                  
+
+                  {/* Status */}
+                  <View className="flex-[2] items-center justify-center px-2">
+                    <View className={`px-3 py-2 rounded-lg ${getStatusColor(item.selectedStatus)}`}>
+                      <Text className="text-xs font-medium text-center">
+                        {getStatusText(item.selectedStatus)}
+                      </Text>
+                    </View>
+                  </View>
+                </>
+              ) : (
+                /* Completed Time */
+                <View className="flex-[2] items-center justify-center px-2">
                   <Text className="text-center text-gray-600 text-sm">
                     {item.completedTime ? formatCompletionTime(item.completedTime) : 'N/A'}
                   </Text>
-                )}
-              </View>
+                </View>
+              )}
             </TouchableOpacity>
           ))
         ) : (

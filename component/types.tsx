@@ -251,7 +251,10 @@ export type RootStackParamList = {
 
 CompletedOrderScreen:{item: string ,centerCode:string};
 DistributionOfficersList:undefined,
-ReplaceRequestsScreen: undefined
+ReplaceRequestsScreen: undefined,
+DailyTargetListOfficerDistribution:{officerId:string,collectionOfficerId:number};
+PassTarget:undefined
+DistributionOfficerReport:{officerId:string,collectionOfficerId:number};
 };
 
 export interface OrderItem {

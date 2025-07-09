@@ -46,6 +46,9 @@ interface ReplaceRequestItem {
   packageId?: string;
   productNormalPrice?: string;
   productDiscountedPrice?: string;
+  replaceProductDisplayName?:string;
+  replaceQty?:string;
+  replacePrice?:string;
 }
 
 const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
@@ -96,6 +99,9 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
           packageId: item.packageId,
           productNormalPrice: item.productNormalPrice,
           productDiscountedPrice: item.productDiscountedPrice,
+          replaceProductDisplayName:item.replaceProductDisplayName,
+          replaceQty:item.replaceQty,
+          replacePrice:item.replacePrice
         }));
         
         setReplaceRequests(mappedData);
@@ -136,7 +142,10 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
         packageId: item.packageId,
         productNormalPrice: item.productNormalPrice,
         productDiscountedPrice: item.productDiscountedPrice,
-        qty: item.qty
+        qty: item.qty,
+        replaceProductDisplayName:item.replaceProductDisplayName,
+        replaceQty:item.replaceQty,
+          replacePrice:item.replacePrice
       }
     });
   };
@@ -162,7 +171,7 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
             Order ID: {item.invNo}
           </Text>
           <Text className="text-gray-700 text-sm">
-            Replacing Item: {item.productDisplayName}
+            Replacing Item: {item.replaceProductDisplayName}
           </Text>
          
           <Text className="text-gray-500 text-sm">
