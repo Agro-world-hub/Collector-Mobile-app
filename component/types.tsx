@@ -206,9 +206,32 @@ export type RootStackParamList = {
     PreferdLanguage: string;
     farmerId:number;
     officerRole:string
-  }
+  };
 
+  DistridutionaDashboard:undefined;
+  TargetOrderScreen:undefined;
+//OpenedOrderScreen:{item: string ,centerCode:string};
+ PendingOrderScreen: {
+  item: any; // or define proper OrderItem interface
+  centerCode: string;
+  status?: 'Pending' | 'Opened' | 'Completed' | 'In Progress';
 };
+
+CompletedOrderScreen:{item: string ,centerCode:string};
+};
+
+export interface OrderItem {
+  invoiceNo: string;
+  varietyNameEnglish: string;
+  grade: string;
+  target: number;
+  complete: number;
+  todo: number;
+  status: string;
+  completedTime?: string | null;
+  // Add any other properties that your order item has
+}
+
 
 export type OfficerBasicDetailsFormData = {
   userId: string;

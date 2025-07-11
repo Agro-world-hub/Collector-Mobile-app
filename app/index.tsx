@@ -87,7 +87,13 @@ import UpdateFarmerBankDetails from "@/component/UpdateFarmerBankDetails";
 import otpBankDetailsupdate from "@/component/otpBankDetailsupdate"
 import PrivacyPolicy from "@/component/PrivacyPolicy";
 
-
+import DistridutionaDashboard from "@/component/DistributionofficerScreens/DistridutionaDashboard"
+import TargetOrderScreen from "@/component/DistributionofficerScreens/TargetOrderScreen"
+import OpenedOrderScreen from "@/component/DistributionofficerScreens/OpenedOrderScreen"
+import PendingOrderScreen from "@/component/DistributionofficerScreens/PendingOrderScreen"
+import CompletedOrderScreen from "@/component/DistributionofficerScreens/CompletedOrderScreen"
+import Timer from "@/component/DistributionofficerScreens/TimerContainer "
+import TimerContainer from "@/component/DistributionofficerScreens/TimerContainer "
 
 
 
@@ -349,6 +355,13 @@ const Index = () => {
       <Stack.Screen name="otpBankDetailsupdate" component={otpBankDetailsupdate as any} /> 
             <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} /> 
 
+             <Stack.Screen name="DistridutionaDashboard" component={DistridutionaDashboard as any} /> 
+             <Stack.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} /> 
+<Stack.Screen name="OpenedOrderScreen" component={OpenedOrderScreen as any} /> 
+<Stack.Screen name="PendingOrderScreen" component={PendingOrderScreen as any} /> 
+   <Stack.Screen name="CompletedOrderScreen" component={CompletedOrderScreen as any} />    
+   <Stack.Screen name="Timer" component={Timer as any} />    
+   <Stack.Screen name="TimerContainer" component={TimerContainer as any} />  
       
         </Stack.Navigator> 
         

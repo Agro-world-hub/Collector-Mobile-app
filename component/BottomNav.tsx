@@ -296,6 +296,9 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
     if (userRole === "Collection Center Manager") {
       checkClaimStatus(); // Call only if the user role is Collection Center Manager
     }
+     if (userRole === "Distribution Officer") {
+      checkClaimStatus(); // Call only if the user role is Distribution Officer
+    }
   }, [userRole, setToken, navigation]);
 
   // Determine the current tab
@@ -334,9 +337,22 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
     ];
   }
 
+  if (userRole === "Distribution Officer") {
+    tabs = [
+      { name: "DistridutionaDashboard", icon: homeIcon, focusedIcon: homeIcon },
+    
+    ];
+  }
+
   useEffect(() => {
     if (userRole === "Collection Center Manager" && currentTabName == "Dashboard") {
       navigation.navigate("ManagerDashboard");
+    }
+  }, [userRole, currentTabName, navigation]);
+
+  useEffect(() => {
+    if (userRole === "Distribution Officer" && currentTabName == "Dashboard") {
+      navigation.navigate("DistridutionaDashboard");
     }
   }, [userRole, currentTabName, navigation]);
 
