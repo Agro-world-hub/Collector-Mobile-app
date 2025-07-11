@@ -42,6 +42,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   route,
 }) => {
   const { empid } = route.params;
+  console.log(empid)
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
