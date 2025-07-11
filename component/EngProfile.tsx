@@ -720,7 +720,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           <TouchableOpacity
             className="flex-row items-center py-3"
             onPress={() =>
-              navigation.navigate("ChangePassword", { empid } as any)
+              navigation.navigate("ChangePassword", { empid:profile?.empId } as any)
             }
           >
             <Ionicons name="lock-closed-outline" size={20} color="black" />
