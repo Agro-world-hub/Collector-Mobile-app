@@ -7,8 +7,9 @@ import {
   Image,
   Platform,
   KeyboardAvoidingView,
+  BackHandler,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"; // Import the icon library
@@ -21,6 +22,7 @@ import {
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useTranslation } from "react-i18next";
+import { useFocusEffect } from "expo-router";
 type ChangePasswordNavigationProp = StackNavigationProp<
   RootStackParamList,
   "ChangePassword"
@@ -111,6 +113,15 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
       }
     }
   };
+
+      useFocusEffect(
+      useCallback(() => {
+        const onBackPress = () => true;
+        BackHandler.addEventListener("hardwareBackPress", onBackPress);
+        return () =>
+          BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      }, [])
+    );
 
   return (
     <KeyboardAvoidingView
