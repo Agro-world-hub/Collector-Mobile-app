@@ -9,8 +9,9 @@ import {
   KeyboardAvoidingView,
   Platform,
   Keyboard,
+  BackHandler,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -20,6 +21,7 @@ import { environment } from "@/environment/environment";
 import { useTranslation } from "react-i18next";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import LottieView from "lottie-react-native"; // Import LottieView
+import { useFocusEffect } from "expo-router";
 import { setUser } from '../store/authSlice';
 import { useDispatch } from "react-redux";
 // import socket from "@/services/socket";
@@ -142,15 +144,16 @@ dispatch(setUser({ token, jobRole, empId: empId.toString() }));
       await status(empId, true);
       setTimeout(() => {
         setLoading(false);
-        // if (passwordUpdateRequired) {
-        //   navigation.navigate("ChangePassword", { empid } as any);
-        // } else {
-        //   if (jobRole === "Collection Officer") {
-        //     navigation.navigate("Main", { screen: "Dashboard" });
-        //   } else {
-        //     navigation.navigate("Main", { screen: "ManagerDashboard" });
-        //   }
-        // }
+//         if (passwordUpdateRequired) {
+//           navigation.navigate("ChangePassword", { empid } as any);
+//         } else {
+//           if (jobRole === "Collection Officer") {
+//             navigation.navigate("Main", { screen: "Dashboard" });
+//           } else {
+//             navigation.navigate("Main", { screen: "ManagerDashboard" });
+//           }
+//         }
+
 if (passwordUpdateRequired) {
   navigation.navigate("ChangePassword", { empid } as any);
 } else {
@@ -209,6 +212,15 @@ if (passwordUpdateRequired) {
     navigation.navigate("Lanuage");
     await AsyncStorage.removeItem("@user_language");
   };
+
+    useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => true;
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
 
   return (
     <KeyboardAvoidingView

@@ -1,6 +1,6 @@
-import React,{useEffect, useState, useContext} from 'react';
-import { View, Text, Image, TouchableOpacity,  } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React,{useEffect, useState, useContext, useCallback} from 'react';
+import { View, Text, Image, TouchableOpacity, BackHandler,  } from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 const lg = require('../assets/images/lang1.webp');
 import { RootStackParamList } from './types';
@@ -44,6 +44,15 @@ const Lanuage: React.FC<LanuageProps> = ({ navigation }) => {
     }
   };
 
+        useFocusEffect(
+        useCallback(() => {
+          const onBackPress = () => true;
+          BackHandler.addEventListener("hardwareBackPress", onBackPress);
+          return () =>
+            BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+        }, [])
+      );
+
   return (
     <ScrollView className = "bg-white">
     <View className="flex-1 bg-white items-center">
@@ -70,5 +79,3 @@ const Lanuage: React.FC<LanuageProps> = ({ navigation }) => {
 };
 
 export default Lanuage;
-
-
