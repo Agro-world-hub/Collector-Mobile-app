@@ -47,7 +47,6 @@
       "permissions": [
         "INTERNET",
         "CAMERA",
-        "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
         "VIBRATE",
         "WAKE_LOCK",
@@ -75,9 +74,8 @@
         "origin": false
       },
       "eas": {
-        "projectId": "2f2ddad8-1303-4ff8-ade1-aa905d764015"
+        "projectId": "f7da9bb9-f1e1-453c-9413-48d73bd0540f"
       }
-    
     },
     "plugins": [
       "expo-router",
