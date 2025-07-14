@@ -139,11 +139,11 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           <AntDesign name="left" size={24} color="#000502" />
         </TouchableOpacity>
 
-        <View className="flex-row items-center justify-center mt-[-5%] space-x-[-30%] ml-[5%]">
+        <View className="flex-row items-center justify-center mt-[2%] space-x-[-30%] ml-[5%]">
          <Image
-            source={require("@/assets/images/Mobile.webp")}
+            source={require("@/assets/images/cangepassword.png")}
             resizeMode="contain"
-            className="w-20 h-20"
+            className="w-30 h-20"
           /> 
           {/* <Image
             source={require("@/assets/images/Codinetflat.webp")}
@@ -177,7 +177,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
               <Icon
                 name={secureCurrent ? "eye-off-outline" : "eye-outline"}
                 size={24}
-                color="#2AAD7A"
+                color="#0000000"
               />
             </TouchableOpacity>
           </View>
@@ -197,7 +197,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
               <Icon
                 name={secureNew ? "eye-off-outline" : "eye-outline"}
                 size={24}
-                color="#2AAD7A"
+                color="#000000"
               />
             </TouchableOpacity>
           </View>
@@ -217,7 +217,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
               <Icon
                 name={secureConfirm ? "eye-off-outline" : "eye-outline"}
                 size={24}
-                color="#2AAD7A"
+                color="#000000"
               />
             </TouchableOpacity>
           </View>
@@ -225,7 +225,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
 
         <View className="items-center pt-7 gap-y-5">
           <TouchableOpacity
-            className="bg-[#2AAD7A] w-[95%] p-3 rounded-3xl"
+            className="bg-[#000000] w-[95%] p-3 rounded-full"
             onPress={handleChangePassword}
           >
             <Text className="text-center pt-1 text-xl font-light text-white">
