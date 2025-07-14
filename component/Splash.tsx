@@ -45,21 +45,21 @@ const Splash: React.FC<SplashProps> = ({ navigation }) => {
     };
   }, [navigation]);
 
-  useEffect(() => {
-    const checkTokenAndNavigate = async () => {
-      try {
-        await handleTokenCheck();
-      } catch (error) {
-        console.error('Error checking token, job role, or password:', error);
-        // Fallback to language screen if there's an error
-        setTimeout(() => {
-          navigation.navigate('Lanuage');
-        }, 10000);
-      }
-    };
+  // useEffect(() => {
+  //   const checkTokenAndNavigate = async () => {
+  //     try {
+  //       await handleTokenCheck();
+  //     } catch (error) {
+  //       console.error('Error checking token, job role, or password:', error);
+  //       // Fallback to language screen if there's an error
+  //       setTimeout(() => {
+  //         navigation.navigate('Lanuage');
+  //       }, 10000);
+  //     }
+  //   };
 
-    checkTokenAndNavigate();
-  }, [navigation]);
+  //   checkTokenAndNavigate();
+  // }, [navigation]);
 
   const checkPasswordStatus = async (token: string) => {
     try {
@@ -265,14 +265,14 @@ export default Splash;
 //   };
 
 //   // // Display the splash screen for 20 seconds
-//   // useEffect(() => {
-//   //   const timeout = setTimeout(() => {
-//   //     // After 20 seconds, check the token and navigate accordingly
-//   //     handleTokenCheck();
-//   //   }, 5000); // 20 seconds delay
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     // After 20 seconds, check the token and navigate accordingly
+  //     handleTokenCheck();
+  //   }, 5000); // 20 seconds delay
 
-//   //   return () => clearTimeout(timeout); // Clean up the timeout on unmount
-//   // }, [navigation]);
+  //   return () => clearTimeout(timeout); // Clean up the timeout on unmount
+  // }, [navigation]);
 
 //   return (
 //     <View className="flex-1 bg-white relative justify-center">
