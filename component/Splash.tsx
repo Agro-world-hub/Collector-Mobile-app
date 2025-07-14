@@ -79,10 +79,6 @@ dispatch(setUser({ token: userToken ?? '', jobRole: role ?? '', empId: emp ?? ''
             navigation.navigate('ChangePassword'); // Replace with your password update screen name
             return;
           }
-
-          console.log("Password is up to date, checking job role...");
-          const jobRole = await AsyncStorage.getItem('jobRole');
-
           console.log("Token is valid, navigating to Main.");
           const jobRole = await AsyncStorage.getItem('jobRole');
           if (jobRole === "Collection Officer") {
