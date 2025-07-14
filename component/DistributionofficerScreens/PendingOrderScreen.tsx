@@ -10,7 +10,8 @@ import {
   Alert,
   Modal,
   Dimensions ,
-  Image
+  Image,
+  ActivityIndicator
 } from 'react-native';
 import { RootStackParamList } from '../types';
 import axios from 'axios';
@@ -20,7 +21,7 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useTranslation } from "react-i18next";
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import CircularProgress from 'react-native-circular-progress-indicator';
 import TimerContainer from '@/component/DistributionofficerScreens/TimerContainer '
 import Timer from '@/component/DistributionofficerScreens/TimerContainer '
@@ -51,6 +52,9 @@ interface FamilyPackItem {
   name: string;
   weight: string;
   selected: boolean;
+  price: string;
+  productType: number;
+  productTypeName?: string; // Add this field
 }
 
 interface AdditionalItem {
@@ -58,15 +62,91 @@ interface AdditionalItem {
   name: string;
   weight: string;
   selected: boolean;
+  price:string
 }
 
 interface ReplaceProductData {
   selectedProduct: string;
   selectedProductPrice: string;
-  productType: string;
+  productType: number;
   newProduct: string;
   quantity: string;
   price: string;
+  productTypeName:string
+}
+
+interface PackageItem {
+  id: number;
+  productType: string;
+  productId: number;
+  qty: number;
+  price: number;
+  isPacked: number;
+  productName: string;
+  category: string;
+  normalPrice: number;
+  productTypeName:string;
+}
+
+
+
+interface BackendAdditionalItem {
+  id: number;
+  productId: number;
+  qty: string;
+  unit: string;
+  price: string;
+  discount: string;
+  isPacked: number; // 0 = not packed, 1 = packed
+  productName: string;
+  category: string;
+  normalPrice: string;
+}
+
+interface PackageData {
+  id: number;
+  packageId: number;
+  packingStatus: string;
+  createdAt: string;
+  items: PackageItem[];
+}
+
+interface OrderInfo {
+  orderId: number;
+  isPackage: number;
+  orderUserId: number;
+  orderApp: string;
+  buildingType: string;
+  sheduleType: string;
+  sheduleDate: string;
+  sheduleTime: string;
+  orderCreatedAt: string;
+}
+
+
+interface RetailItem {
+  id: number;
+  varietyId: string;
+  displayName: string;
+  category: string;
+  normalPrice: number;
+  discountedPrice: number;
+  discount: number;
+  promo: number;
+  unitType: string;
+  startValue: number;
+  changeby: string;
+  displayType: string;
+  tags: string;
+  createdAt: string;
+  maxQuantity: number;
+}
+
+
+interface BackendOrderData {
+  orderInfo: OrderInfo;
+  additionalItems: BackendAdditionalItem[];
+  packageData: PackageData;
 }
 
 type PendingOrderScreenNavigationProps = StackNavigationProp<RootStackParamList, 'PendingOrderScreen'>;
@@ -108,61 +188,153 @@ const [orderStatus, setOrderStatus] = useState<'Pending' | 'Opened' | 'Completed
 const [showSuccessModal, setShowSuccessModal] = useState(false);
 const [selectpackage, setSelectpackage] = useState(false);
 const [selectopen, setSelectopen,] = useState(false);
-  
+const [packageName, setPackageName] = useState<string>('Family Pack');
+const [packageId, setPackageId] = useState<number | null>(null);  
+
+const [typeName, setTypeeName] = useState<string>('');
   //const [completedTime, setCompletedTime] = useState<string | null>(item.completedTime || null);
 
   // Sample data for family pack items
   const [familyPackItems, setFamilyPackItems] = useState<FamilyPackItem[]>([
-    { id: '1', name: 'Apples', weight: '0.5 kg', selected: false },
-    { id: '2', name: 'Beans', weight: '0.3 kg', selected: false },
-    { id: '3', name: 'Cabbage', weight: '0.5 kg', selected: false },
-    { id: '4', name: 'Eggplant', weight: '0.5 kg', selected: false },
-    { id: '5', name: 'Beans', weight: '0.3 kg', selected: false },
-    { id: '6', name: 'Cabbage', weight: '0.5 kg', selected: false },
-    { id: '7', name: 'Eggplant', weight: '0.5 kg', selected: false },
-    { id: '8', name: 'Ash Plantain Blossom', weight: '0.5 kg', selected: false },
+  
   ]);
-
+const [retailItems, setRetailItems] = useState<RetailItem[]>([]);
+const [loadingRetailItems, setLoadingRetailItems] = useState(false);
   // Sample data for additional items
   const [additionalItems, setAdditionalItems] = useState<AdditionalItem[]>([
-    { id: '1', name: 'Apples', weight: '500g', selected: false },
-    { id: '2', name: 'Beans', weight: '300g', selected: false },
-    { id: '3', name: 'Carrot', weight: '1kg', selected: false },
-    { id: '4', name: 'Eggplant', weight: '500g', selected: false },
-    { id: '5', name: 'Leeks', weight: '500g', selected: false },
+  
   ]);
 
   console.log("dcbkisai",status)
 
+  console.log("ordreid",item.orderId)
+const [loading, setLoading] = useState<boolean>(true);
+const [error, setError] = useState<string | null>(null);
+
+
 
 
 useEffect(() => {
-  const familySelectedCount = familyPackItems.filter(item => item.selected).length;
-  const additionalSelectedCount = additionalItems.filter(item => item.selected).length;
-  const familyTotalCount = familyPackItems.length;
-  const additionalTotalCount = additionalItems.length;
+  const loadOrderData = async () => {
+    setLoading(true);
+    const orderData = await fetchOrderData(item.orderId);
 
-  const allFamilySelected = familySelectedCount === familyTotalCount;
-  const allAdditionalSelected = additionalSelectedCount === additionalTotalCount;
+    if (orderData.packageData?.id) {
+        setPackageId(orderData.packageData.id);
+      }
+    
+    if (orderData) {
+      // Map Family Pack Items from packageData if it exists
+      const mappedFamilyPackItems: FamilyPackItem[] = orderData.packageData?.items?.map((item: any) => ({
+        id: item.id,
+        name: item.productName,
+        weight: `${item.qty} Kg`,
+        selected: item.isPacked === 1,
+        price: item.price || item.normalPrice || "0",
+        productType: item.productType ,// Make sure this is included and properly mapped
+        productTypeName: item.productTypeName
+      })) || [];
 
-  // Update showWarning based on selection state
-  setShowWarning(familySelectedCount > 0 || additionalSelectedCount > 0);
+      // Map Additional Items from additionalItems if it exists
+      const mappedAdditionalItems: AdditionalItem[] = orderData.additionalItems?.map((item: any) => ({
+        id: item.id.toString(),
+        name: item.productName,
+        weight: `${item.qty}${item.unit}`,
+        selected: item.isPacked === 1,
+        price: item.price || item.normalPrice || "0"
+      })) || [];
 
-  // Only update if status wasn't passed via route.params
-  if (!status) {
-    if (allFamilySelected && allAdditionalSelected) {
-      setOrderStatus('Completed');
-      setCompletedTime(new Date().toLocaleString());
-    } else if (familySelectedCount > 0 || additionalSelectedCount > 0) {
-      setOrderStatus('Opened');
+      console.log('Mapped Family Pack Items:', mappedFamilyPackItems);
+      console.log('Mapped Additional Items:', mappedAdditionalItems);
+
+      // Set package name from backend data
+      if (orderData.packageData?.packageName) {
+        setPackageName(orderData.packageData.packageName);
+      }
+
+      if (orderData.packageData?.items && orderData.packageData.items.length > 0) {
+        const productTypeNames = orderData.packageData.items
+          .map((item: any) => item.productTypeName)
+          .filter((name: string) => name) // Remove null/undefined values
+          .filter((name: string, index: number, array: string[]) => array.indexOf(name) === index); // Remove duplicates
+        
+        // Set the first product type name or join multiple names
+        if (productTypeNames.length > 0) {
+          setTypeeName(productTypeNames.join(', ')); // Join multiple types with comma
+        }
+      }
+
+      setFamilyPackItems(mappedFamilyPackItems);
+      setAdditionalItems(mappedAdditionalItems);
+      
+      // Set initial order status based on packed items
+      const allFamilyPacked = mappedFamilyPackItems.length === 0 || mappedFamilyPackItems.every(item => item.selected);
+      const allAdditionalPacked = mappedAdditionalItems.length === 0 || mappedAdditionalItems.every(item => item.selected);
+      const someFamilyPacked = mappedFamilyPackItems.some(item => item.selected);
+      const someAdditionalPacked = mappedAdditionalItems.some(item => item.selected);
+
+      // Update status logic to handle empty arrays
+      if (mappedFamilyPackItems.length === 0 && mappedAdditionalItems.length === 0) {
+        setOrderStatus('Pending');
+      } else if (allFamilyPacked && allAdditionalPacked) {
+        setOrderStatus('Completed');
+        setCompletedTime(new Date().toLocaleString());
+      } else if (someFamilyPacked || someAdditionalPacked) {
+        setOrderStatus('Opened');
+      } else {
+        setOrderStatus('Pending');
+      }
+
+      setError(null);
     } else {
-      setOrderStatus('Pending');
+      setError(t('Failed to load order data'));
     }
+    
+    setLoading(false);
+  };
+
+  loadOrderData();
+}, [item.orderId, t]);
+
+// Update helper functions to handle empty arrays
+const hasFamilyPackSelections = () => {
+  return familyPackItems.length > 0 && familyPackItems.some(item => item.selected);
+};
+
+const hasAdditionalItemSelections = () => {
+  return additionalItems.length > 0 && additionalItems.some(item => item.selected);
+};
+
+const areAllFamilyPackItemsSelected = () => {
+  return familyPackItems.length === 0 || familyPackItems.every(item => item.selected);
+};
+
+const areAllAdditionalItemsSelected = () => {
+  return additionalItems.length === 0 || additionalItems.every(item => item.selected);
+};
+
+// Update the timer effect to handle empty arrays
+useEffect(() => {
+  const hasFamily = familyPackItems.length > 0;
+  const hasAdditional = additionalItems.length > 0;
+  
+  let allSelected = false;
+  
+  if (hasFamily && hasAdditional) {
+    allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+  } else if (hasFamily && !hasAdditional) {
+    allSelected = areAllFamilyPackItemsSelected();
+  } else if (!hasFamily && hasAdditional) {
+    allSelected = areAllAdditionalItemsSelected();
   }
-}, [familyPackItems, additionalItems, status]);
-
-
-
+  
+  if (allSelected && !showCompletionPrompt) {
+    startCountdown();
+  } else if (!allSelected && showCompletionPrompt) {
+    setShowCompletionPrompt(false);
+    resetCountdown();
+  }
+}, [familyPackItems, additionalItems]);
 
 
 useEffect(() => {
@@ -181,17 +353,17 @@ useEffect(() => {
 
 
   // Timer effect when all items are selected
-useEffect(() => {
-  const allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+// useEffect(() => {
+//   const allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
   
-  if (allSelected && !showCompletionPrompt) {
-  //  setShowCompletionPrompt(true);
-    startCountdown();
-  } else if (!allSelected && showCompletionPrompt) {
-    setShowCompletionPrompt(false);
-    resetCountdown();
-  }
-}, [familyPackItems, additionalItems]);
+//   if (allSelected && !showCompletionPrompt) {
+//   //  setShowCompletionPrompt(true);
+//     startCountdown();
+//   } else if (!allSelected && showCompletionPrompt) {
+//     setShowCompletionPrompt(false);
+//     resetCountdown();
+//   }
+// }, [familyPackItems, additionalItems]);
 
 // Clean up interval on unmount
 useEffect(() => {
@@ -226,21 +398,204 @@ const startCountdown = () => {
     setCountdown(30);
   };
 
-  // const handleCompleteOrder = () => {
-  //   setOrderStatus('Completed');
-  //   setCompletedTime(new Date().toLocaleString());
-  //   setShowCompletionPrompt(false);
-  //   resetCountdown();
-  // };
 
-  const handleCompleteOrder = () => {
-  setOrderStatus('Completed');
-  setCompletedTime(new Date().toLocaleString());
-  setShowCompletionPrompt(false);
-  setShowSuccessModal(true); // Show success modal
-  resetCountdown();
+
+// const handleCompleteOrder = async () => {
+//   try {
+//     // First update the local state
+//     setOrderStatus('Completed');
+//     setCompletedTime(new Date().toLocaleString());
+//     setShowCompletionPrompt(false);
+//     resetCountdown();
+
+//     // Prepare the data for backend update
+//     const selectedFamilyItems = familyPackItems.map(item => ({
+//       id: parseInt(item.id),
+//       isPacked: 1 // Mark all as packed when completing
+//     }));
+
+//     const selectedAdditionalItems = additionalItems.map(item => ({
+//       id: parseInt(item.id),
+//       isPacked: 1 // Mark all as packed when completing
+//     }));
+
+//     const updateData = {
+//       orderId: item.orderId,
+//       packageItems: selectedFamilyItems,
+//       additionalItems: selectedAdditionalItems,
+//       status: 'Completed'
+//     };
+
+//     console.log('Completing order with data:', updateData);
+    
+//     // Make API call to update the order in backend
+//     const token = await AsyncStorage.getItem('token');
+//     const response = await axios.put(
+//       `${environment.API_BASE_URL}api/distribution/update-order/${item.orderId}`,
+//       updateData,
+//       {
+//         headers: {
+//           'Authorization': `Bearer ${token}`,
+//           'Content-Type': 'application/json',
+//         },
+//       }
+//     );
+
+//     if (response.data.success) {
+//       // Update all items to selected state in UI
+//       setFamilyPackItems(prev => 
+//         prev.map(item => ({ ...item, selected: true }))
+//       );
+//       setAdditionalItems(prev => 
+//         prev.map(item => ({ ...item, selected: true }))
+//       );
+      
+//       // Clear unsaved changes flag
+//       setHasUnsavedChanges(false);
+      
+//       // Show success modal
+//       setShowSuccessModal(true);
+      
+//       console.log('Order completed successfully');
+//     } else {
+//       throw new Error(response.data.message || 'Failed to complete order');
+//     }
+    
+//   } catch (error) {
+//     console.error('Error completing order:', error);
+    
+//     // Revert local state if API call failed
+//     setOrderStatus('Opened'); // Revert to previous state
+//     setCompletedTime(null);
+    
+//     Alert.alert(
+//       t("Error"), 
+//       t("Failed to complete order. Please try again."),
+//       [
+//         {
+//           text: t("OK"),
+//           onPress: () => {
+//             // Restart the timer if user wants to try again
+//             setShowCompletionPrompt(true);
+//             startCountdown();
+//           }
+//         }
+//       ]
+//     );
+//   }
+// };
+
+
+
+const handleCompleteOrder = async () => {
+  try {
+    // First update the local state
+    setOrderStatus('Completed');
+    setCompletedTime(new Date().toLocaleString());
+    setShowCompletionPrompt(false);
+    resetCountdown();
+
+    // Prepare the data for backend update
+    const selectedFamilyItems = familyPackItems.map(item => ({
+      id: parseInt(item.id),
+      isPacked: 1 // Mark all as packed when completing
+    }));
+
+    const selectedAdditionalItems = additionalItems.map(item => ({
+      id: parseInt(item.id),
+      isPacked: 1 // Mark all as packed when completing
+    }));
+
+    const updateData = {
+      orderId: item.orderId,
+      packageItems: selectedFamilyItems,
+      additionalItems: selectedAdditionalItems,
+      status: 'Completed'
+    };
+
+    console.log('Completing order with data:', updateData);
+    
+    // Make API call to update the order in backend
+    const token = await AsyncStorage.getItem('token');
+    const response = await axios.put(
+      `${environment.API_BASE_URL}api/distribution/update-order/${item.orderId}`,
+      updateData,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (response.data.success) {
+      // Update all items to selected state in UI
+      setFamilyPackItems(prev => 
+        prev.map(item => ({ ...item, selected: true }))
+      );
+      setAdditionalItems(prev => 
+        prev.map(item => ({ ...item, selected: true }))
+      );
+      
+      // Clear unsaved changes flag
+      setHasUnsavedChanges(false);
+      
+      // **NEW: Call the distributed target API for completed order**
+      try {
+        console.log('Calling distributed target API for completed order...');
+        
+        const distributedTargetResponse = await axios.put(
+          `${environment.API_BASE_URL}api/distribution/update-distributed-target/${item.orderId}`,
+          {}, // Empty body as the API likely uses the orderId from the URL
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        if (distributedTargetResponse.data.success) {
+          console.log('Distributed target updated successfully');
+        } else {
+          console.warn('Distributed target update failed:', distributedTargetResponse.data.message);
+        }
+      } catch (distributedTargetError) {
+        console.error('Error updating distributed target:', distributedTargetError);
+        // Don't block the success flow, but log the error
+      }
+      
+      // Show success modal
+      setShowSuccessModal(true);
+      
+      console.log('Order completed successfully');
+    } else {
+      throw new Error(response.data.message || 'Failed to complete order');
+    }
+    
+  } catch (error) {
+    console.error('Error completing order:', error);
+    
+    // Revert local state if API call failed
+    setOrderStatus('Opened'); // Revert to previous state
+    setCompletedTime(null);
+    
+    Alert.alert(
+      t("Error"), 
+      t("Failed to complete order. Please try again."),
+      [
+        {
+          text: t("OK"),
+          onPress: () => {
+            // Restart the timer if user wants to try again
+            setShowCompletionPrompt(true);
+            startCountdown();
+          }
+        }
+      ]
+    );
+  }
 };
-
   const handleBackToEdit = () => {
     setShowCompletionPrompt(false);
     resetCountdown();
@@ -249,10 +604,11 @@ const startCountdown = () => {
   const [replaceData, setReplaceData] = useState<ReplaceProductData>({
     selectedProduct: '',
     selectedProductPrice: '',
-    productType: '',
+    productType: 0,
     newProduct: '',
     quantity: '',
-    price: ''
+    price: '',
+    productTypeName: '',
   });
 
   const isFormComplete = replaceData.newProduct && 
@@ -279,23 +635,7 @@ const startCountdown = () => {
     return [...selectedFamily, ...selectedAdditional];
   };
 
-  // Helper functions to check selection status
-  const hasFamilyPackSelections = () => {
-    return familyPackItems.some(item => item.selected);
-  };
-
-  const hasAdditionalItemSelections = () => {
-    return additionalItems.some(item => item.selected);
-  };
-
-  // Check if all items in a section are selected
-  const areAllFamilyPackItemsSelected = () => {
-    return familyPackItems.every(item => item.selected);
-  };
-
-  const areAllAdditionalItemsSelected = () => {
-    return additionalItems.every(item => item.selected);
-  };
+  
 
   const toggleFamilyPackItem = (id: string) => {
     setFamilyPackItems(prev => 
@@ -315,46 +655,287 @@ const startCountdown = () => {
     setHasUnsavedChanges(true);
   };
 
-  const handleReplaceProduct = (item: FamilyPackItem) => {
-    setSelectedItemForReplace(item);
-    setReplaceData({
-      selectedProduct: `${item.name} - ${item.weight} - Rs.400.00`,
-      selectedProductPrice: 'Rs.400.00',
-      productType: 'Up Country Vegetable',
-      newProduct: '',
-      quantity: '',
-      price: ''
-    });
-    setShowReplaceModal(true);
-    setShowDropdown(false);
-  };
 
-  const handleReplaceSubmit = () => {
-    if (!replaceData.newProduct || !replaceData.quantity || !replaceData.price) {
-      Alert.alert(t("Error"), "Please fill all required fields");
+// const handleReplaceProduct = (item: FamilyPackItem) => {
+//   if (!item) {
+//     console.log("No item provided to handleReplaceProduct");
+//     return;
+//   }
+
+//   // Add a small delay to ensure data is fully loaded
+//   setTimeout(() => {
+//     console.log("Original item data:", {
+//       name: item.name,
+//       price: item.price,
+//       weight: item.weight,
+//       productType: item.productType,
+//       id: item.id
+//     });
+
+//     // Validate required data before proceeding
+//     if (!item.price || item.price === undefined) {
+//       console.log("Price is undefined, attempting to fetch latest data");
+//       Alert.alert(
+//         t("Error"), 
+//         "Product price information is not available. Please try again.",
+//         [{ text: t("OK") }]
+//       );
+//       return;
+//     }
+
+//     if (!item.productType || item.productType === undefined) {
+//       console.log("ProductType is undefined, using default");
+//       // You might want to set a default or fetch the latest data
+//     }
+
+//     const weightKg = parseFloat(item.weight.split(' ')[0]) || 0;
+//     const unitPrice = parseFloat(item.price) || 0;
+//     const totalPrice = (unitPrice * weightKg).toFixed(2);
+
+//     console.log("Price calculation:", {
+//       unitPrice,
+//       weightKg,
+//       totalPrice,
+//       originalPrice: item.price,
+//       productType: item.productType
+//     });
+
+//     // Only proceed if we have valid data
+//     if (unitPrice > 0 && weightKg > 0) {
+//       setReplaceData({
+//         selectedProduct: `${item.name} - ${item.weight} - Rs.${totalPrice}`,
+//         selectedProductPrice: totalPrice,
+//         productType: item.productType || 0, // Use 0 as default if undefined
+//         newProduct: '',
+//         quantity: '',
+//         price: `Rs.${totalPrice}`,
+//         productTypeName: item.productTypeName || ''
+//       });
+
+//       setSelectedItemForReplace(item);
+//       setShowReplaceModal(true);
+//     } else {
+//       Alert.alert(
+//         t("Error"), 
+//         "Invalid product data. Please refresh and try again.",
+//         [{ text: t("OK") }]
+//       );
+//     }
+//   }, 100); // Small delay to ensure state is updated
+// };
+
+
+const handleReplaceProduct = (item: FamilyPackItem) => {
+  if (!item) {
+    console.log("No item provided to handleReplaceProduct");
+    return;
+  }
+
+  // Add a small delay to ensure data is fully loaded
+  setTimeout(() => {
+    console.log("Original item data:", {
+      name: item.name,
+      price: item.price,
+      weight: item.weight,
+      productType: item.productType,
+      id: item.id
+    });
+
+    // Validate required data before proceeding
+    if (!item.price || item.price === undefined) {
+      console.log("Price is undefined, attempting to fetch latest data");
+      Alert.alert(
+        t("Error"),
+        "Product price information is not available. Please try again.",
+        [{ text: t("OK") }]
+      );
       return;
     }
 
-    console.log('Replace request:', replaceData);
+    if (!item.productType || item.productType === undefined) {
+      console.log("ProductType is undefined, using default");
+      // You might want to set a default or fetch the latest data
+    }
+
+    const weightKg = parseFloat(item.weight.split(' ')[0]) || 0;
+    const itemPrice = parseFloat(item.price) || 0;
     
-    setShowReplaceModal(false);
-    setShowDropdown(false);
+    // Fix: Use the item.price directly as totalPrice instead of calculating
+    // item.price appears to already be the total price for the given weight
+    const totalPrice = itemPrice.toFixed(2);
     
-    navigation.navigate('TargetOrderScreen' as any, { 
-      item: orderData, 
-      centerCode,
-      replaceRequestData: replaceData 
+    // If you need unit price per kg, calculate it from total price
+    const unitPricePerKg = weightKg > 0 ? (itemPrice / weightKg).toFixed(2) : '0.00';
+
+    console.log("Price calculation:", {
+      itemPrice,
+      weightKg,
+      totalPrice,
+      unitPricePerKg,
+      originalPrice: item.price,
+      productType: item.productType
     });
+
+    // Only proceed if we have valid data
+    if (itemPrice > 0 && weightKg > 0) {
+      setReplaceData({
+        selectedProduct: `${item.name} - ${item.weight} - Rs.${totalPrice}`,
+        selectedProductPrice: totalPrice,
+        productType: item.productType || 0, // Use 0 as default if undefined
+        newProduct: '',
+        quantity: '',
+        price: `Rs.${totalPrice}`, // Use the actual item price
+        productTypeName: item.productTypeName || ''
+      });
+
+      setSelectedItemForReplace(item);
+      setShowReplaceModal(true);
+    } else {
+      Alert.alert(
+        t("Error"),
+        "Invalid product data. Please refresh and try again.",
+        [{ text: t("OK") }]
+      );
+    }
+  }, 100); // Small delay to ensure state is updated
+};
+
+const handleReplaceSubmit = async () => {
+  if (!replaceData.newProduct || !replaceData.quantity || !replaceData.price) {
+    Alert.alert(t("Error"), "Please fill all required fields");
+    return;
+  }
+
+  if (!packageId) {
+    Alert.alert(t("Error"), "Package ID not found");
+    return;
+  }
+
+  if (!selectedItemForReplace) {
+    Alert.alert(t("Error"), "No item selected for replacement");
+    return;
+  }
+
+  try {
+    // Find the selected retail item to get its ID
+    const selectedRetailItem = retailItems.find(item => 
+      item.displayName === replaceData.newProduct
+    );
+
+    if (!selectedRetailItem) {
+      throw new Error("Selected product not found");
+    }
+
+    // Extract numeric price (remove "Rs." if present)
+    const priceValue = parseFloat(replaceData.price.replace(/[^\d.]/g, '')) || 0;
+
+    // Prepare the replacement request data
+    const replacementRequest = {
+      orderPackageId: packageId,
+      replaceId: parseInt(selectedItemForReplace.id),
+      originalItemId: parseInt(selectedItemForReplace.id),
+      productType: selectedItemForReplace.productType,
+      productId: selectedRetailItem.id,
+      qty: replaceData.quantity,
+      price: priceValue *1000, // Remove the *1000 multiplication temporarily
+      status: "Pending"
+    };
+
+    console.log('Replacement request data:', replacementRequest);
+
+    // Get token and add validation
+    const token = await AsyncStorage.getItem('token');
+    if (!token) {
+      Alert.alert(t("Error"), "Authentication token not found. Please login again.");
+      return;
+    }
+
+    // Make API call to create replacement request
+    const response = await axios.post(
+      `${environment.API_BASE_URL}api/distribution/replace-order-package`,
+      replacementRequest,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (response.data.success) {
+      Alert.alert(
+        t("Success"),
+        t("Replacement request submitted successfully!"),
+        [{ 
+          text: t("OK"), 
+          onPress: () => {
+            // Close modal and reset state
+            setShowReplaceModal(false);
+            setShowDropdown(false);
+            setSelectedItemForReplace(null);
+            
+            // Reset replace data
+            setReplaceData({
+              selectedProduct: '',
+              selectedProductPrice: '',
+              productType: 0,
+              newProduct: '',
+              quantity: '',
+              price: '',
+              productTypeName: '',
+            });
+            
+            // Navigate to TargetOrderScreen
+            navigation.navigate('TargetOrderScreen');
+          }
+        }]
+      );
+    } else {
+      throw new Error(response.data.message || 'Failed to submit replacement request');
+    }
+  } catch (error) {
+    console.error('Error submitting replacement request:', error);
     
-    setReplaceData({
-      selectedProduct: '',
-      selectedProductPrice: '',
-      productType: '',
-      newProduct: '',
-      quantity: '',
-      price: ''
-    });
-  };
+    // Enhanced error handling for different HTTP status codes
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 403) {
+        console.log('403 Error Details:', error.response?.data);
+        const errorMessage = error.response?.data?.message || "You don't have permission to create replacement requests.";
+        Alert.alert(
+          t("Permission Denied"),
+          errorMessage + " Please contact your administrator."
+        );
+      } else if (error.response?.status === 401) {
+        Alert.alert(
+          t("Authentication Error"),
+          t("Your session has expired. Please login again.")
+        );
+      } else if (error.response?.status === 400) {
+        // Log the response for debugging
+        console.log('400 Error Response:', error.response?.data);
+        Alert.alert(
+          t("Invalid Request"),
+          t("Please check your input data and try again.")
+        );
+      } else if (error.response?.status === 500) {
+        Alert.alert(
+          t("Server Error"),
+          t("Internal server error. Please try again later.")
+        );
+      } else {
+        Alert.alert(
+          t("Error"),
+          t("Failed to submit replacement request. Please try again.")
+        );
+      }
+    } else {
+      Alert.alert(
+        t("Error"), 
+        t("An unexpected error occurred. Please try again.")
+      );
+    }
+  }
+};
 
   const handleModalClose = () => {
     setShowReplaceModal(false);
@@ -401,40 +982,250 @@ const startCountdown = () => {
     }
   };
 
-  const handleSubmitPress = () => {
-  const allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
-  
-  if (allSelected && !showCompletionPrompt) {
-   setShowCompletionPrompt(true);
-    startCountdown();
-  } else if (!allSelected && showCompletionPrompt) {
-    setShowCompletionPrompt(false);
-    resetCountdown();
-  }
-}
 
-  const handleSubmit = async () => {
-    try {
-      const selectedFamilyItems = familyPackItems.filter(item => item.selected);
-      const selectedAdditionalItems = additionalItems.filter(item => item.selected);
+// const handleSubmit = async () => {
+//   try {
+//     // Prepare package items update data
+//     const selectedFamilyItems = familyPackItems
+//       .filter(item => item.selected)
+//       .map(item => ({
+//         id: parseInt(item.id),
+//         isPacked: 1 // Mark as packed
+//       }));
+
+//     // Prepare additional items update data
+//     const selectedAdditionalItems = additionalItems
+//       .filter(item => item.selected)
+//       .map(item => ({
+//         id: parseInt(item.id),
+//         isPacked: 1 // Mark as packed
+//       }));
+
+//     // Determine the new status
+//     const allFamilyPacked = familyPackItems.length === 0 || 
+//       familyPackItems.every(item => item.selected);
+//     const allAdditionalPacked = additionalItems.length === 0 || 
+//       additionalItems.every(item => item.selected);
+//     const newStatus = allFamilyPacked && allAdditionalPacked ? 'Completed' : 'Opened';
+
+//     const updateData = {
+//       orderId: item.orderId,
+//       packageItems: selectedFamilyItems,
+//       additionalItems: selectedAdditionalItems,
+//       status: newStatus
+//     };
+
+//     console.log('Submitting order update:', updateData);
+    
+//     // Make API call to update the order
+//     const token = await AsyncStorage.getItem('token');
+//     const response = await axios.put(
+//       `${environment.API_BASE_URL}api/distribution/update-order/${item.orderId}`,
+//       updateData,
+//       {
+//         headers: {
+//           'Authorization': `Bearer ${token}`,
+//           'Content-Type': 'application/json',
+//         },
+//       }
+//     );
+
+//     if (response.data.success) {
+//       // Update local state
+//       setOrderStatus(newStatus);
+//       if (newStatus === 'Completed') {
+//         setCompletedTime(new Date().toLocaleString());
+//       }
       
-      console.log('Selected Family Pack Items:', selectedFamilyItems);
-      console.log('Selected Additional Items:', selectedAdditionalItems);
+//       Alert.alert(
+//         t("Success"),
+//         t("Order updated successfully!"),
+//         [{ text: t("OK"), onPress: () => navigation.goBack() }]
+//       );
+//     } else {
+//       throw new Error(response.data.message || 'Failed to update order');
+//     }
+    
+//     setHasUnsavedChanges(false);
+//     setShowSubmitModal(false);
+    
+//   } catch (error) {
+//     console.error('Error updating order:', error);
+//     Alert.alert(t("Error"), t("Failed to update order"));
+//     setShowSubmitModal(false);
+//   }
+// };
+
+const handleSubmit = async () => {
+  try {
+    // Prepare package items update data
+    const selectedFamilyItems = familyPackItems
+      .filter(item => item.selected)
+      .map(item => ({
+        id: parseInt(item.id),
+        isPacked: 1 // Mark as packed
+      }));
+
+    // Prepare additional items update data
+    const selectedAdditionalItems = additionalItems
+      .filter(item => item.selected)
+      .map(item => ({
+        id: parseInt(item.id),
+        isPacked: 1 // Mark as packed
+      }));
+
+    // Determine the new status
+    const allFamilyPacked = familyPackItems.length === 0 || 
+      familyPackItems.every(item => item.selected);
+    const allAdditionalPacked = additionalItems.length === 0 || 
+      additionalItems.every(item => item.selected);
+    const newStatus = allFamilyPacked && allAdditionalPacked ? 'Completed' : 'Opened';
+
+    const updateData = {
+      orderId: item.orderId,
+      packageItems: selectedFamilyItems,
+      additionalItems: selectedAdditionalItems,
+      status: newStatus
+    };
+
+    console.log('Submitting order update:', updateData);
+    
+    // Get auth token
+    const token = await AsyncStorage.getItem('token');
+    
+    // Make API call to update the order
+    const response = await axios.put(
+      `${environment.API_BASE_URL}api/distribution/update-order/${item.orderId}`,
+      updateData,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (response.data.success) {
+      // Update local state
+      setOrderStatus(newStatus);
+      if (newStatus === 'Completed') {
+        setCompletedTime(new Date().toLocaleString());
+      }
+      
+      // **NEW: Call the distributed target API when all items are selected**
+      if (newStatus === 'Completed') {
+        try {
+          console.log('Calling distributed target API for completed order...');
+          
+          const distributedTargetResponse = await axios.put(
+            `${environment.API_BASE_URL}api/distribution/update-distributed-target/${item.orderId}`,
+            {}, // Empty body as the API likely uses the orderId from the URL
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+
+          if (distributedTargetResponse.data.success) {
+            console.log('Distributed target updated successfully');
+          } else {
+            console.warn('Distributed target update failed:', distributedTargetResponse.data.message);
+            // Don't throw error here as the main order update was successful
+          }
+        } catch (distributedTargetError) {
+          console.error('Error updating distributed target:', distributedTargetError);
+          // Don't throw error here as the main order update was successful
+          // You might want to show a warning to the user but not block the success flow
+        }
+      }
       
       Alert.alert(
         t("Success"),
-        t("Order submitted successfully!"),
+        t("Order updated successfully!"),
         [{ text: t("OK"), onPress: () => navigation.goBack() }]
       );
-      
-      setHasUnsavedChanges(false);
-      setShowSubmitModal(false);
-      
-    } catch (error) {
-      Alert.alert(t("Error"), t("Failed to submit order"));
-      setShowSubmitModal(false);
+    } else {
+      throw new Error(response.data.message || 'Failed to update order');
     }
-  };
+    
+    setHasUnsavedChanges(false);
+    setShowSubmitModal(false);
+    
+  } catch (error) {
+    console.error('Error updating order:', error);
+    Alert.alert(t("Error"), t("Failed to update order"));
+    setShowSubmitModal(false);
+  }
+};
+
+//   const handleSubmitPress = () => {
+//   const hasFamily = familyPackItems.length > 0;
+//   const hasAdditional = additionalItems.length > 0;
+  
+//   let allSelected = false;
+  
+//   if (hasFamily && hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+//   } else if (hasFamily && !hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected();
+//   } else if (!hasFamily && hasAdditional) {
+//     allSelected = areAllAdditionalItemsSelected();
+//   }
+  
+//   if (allSelected && !showCompletionPrompt) {
+//     setShowCompletionPrompt(true);
+//     startCountdown();
+//   } else if (!allSelected && showCompletionPrompt) {
+//     setShowCompletionPrompt(false);
+//     resetCountdown();
+//   }
+// }
+
+const handleSubmitPress = () => {
+  const hasFamily = familyPackItems.length > 0;
+  const hasAdditional = additionalItems.length > 0;
+  
+  let allSelected = false;
+  
+  if (hasFamily && hasAdditional) {
+    allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+  } else if (hasFamily && !hasAdditional) {
+    allSelected = areAllFamilyPackItemsSelected();
+  } else if (!hasFamily && hasAdditional) {
+    allSelected = areAllAdditionalItemsSelected();
+  }
+  
+  if (allSelected) {
+    // If all items are selected, show completion prompt
+    if (!showCompletionPrompt) {
+      setShowCompletionPrompt(true);
+      startCountdown();
+    }
+  } else {
+    // If not all items are selected, submit immediately
+    handleSubmit();
+  }
+}
+
+useEffect(() => {
+  const hasFamily = familyPackItems.length > 0;
+  const hasAdditional = additionalItems.length > 0;
+  
+  let hasSelections = false;
+  
+  if (hasFamily && hasAdditional) {
+    hasSelections = hasFamilyPackSelections() || hasAdditionalItemSelections();
+  } else if (hasFamily && !hasAdditional) {
+    hasSelections = hasFamilyPackSelections();
+  } else if (!hasFamily && hasAdditional) {
+    hasSelections = hasAdditionalItemSelections();
+  }
+  
+  setShowWarning(hasSelections);
+}, [familyPackItems, additionalItems]);
+ 
 
   const renderCheckbox = (selected: boolean) => (
     <View className={`w-6 h-6 border-2 rounded ${selected ? 'bg-black border-black' : 'border-gray-300 bg-white'} items-center justify-center`}>
@@ -473,6 +1264,103 @@ const startCountdown = () => {
     }
   };
 
+const fetchOrderData = async (orderId: string) => {
+  try {
+    // Get auth token from AsyncStorage
+    const token = await AsyncStorage.getItem('token');
+    
+    if (!token) {
+      Alert.alert(t("Error"), "Authentication token not found");
+      return null;
+    }
+
+    const response = await axios.get(
+      `${environment.API_BASE_URL}api/distribution/order-data/${orderId}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    console.log("datakbj===================",response.data)
+
+    if (response.data && response.data.success) {
+      return response.data.data; // Assuming the API returns { success: true, data: orderData }
+    } else {
+      throw new Error(response.data.message || 'Failed to fetch order data');
+    }
+  } catch (error) {
+    console.error('Error fetching order data:', error);
+    
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        Alert.alert(t("Error"), "Session expired. Please login again.");
+        // Navigate to login screen or handle logout
+        return null;
+      } else if (error.response?.status === 404) {
+        Alert.alert(t("Error"), "Order not found");
+        return null;
+      }
+    }
+    
+    Alert.alert(t("Error"), "Failed to fetch order data");
+    return null;
+  }
+};
+
+useEffect(() => {
+  const loadOrderData = async () => {
+    setLoading(true);
+    try {
+      const orderData = await fetchOrderData(item.orderId);
+      
+      if (orderData && orderData.packageData) {
+        console.log("Raw order data:", orderData);
+        
+        // Map backend data to frontend state with proper validation
+        const mappedFamilyPackItems: FamilyPackItem[] = orderData.packageData.items.map((backendItem: any) => {
+          console.log("Mapping backend item:", backendItem);
+          
+          return {
+            id: backendItem.id?.toString() || '',
+            name: backendItem.productName || backendItem.name || 'Unknown Product',
+            weight: backendItem.qty ? `${backendItem.qty} Kg` : `${backendItem.weight || '0'} Kg`,
+            selected: backendItem.isPacked === 1,
+            // Ensure price and productType are properly mapped
+            price: backendItem.price || backendItem.unitPrice || backendItem.pricePerKg || '0',
+            productType: backendItem.productType || backendItem.product_type || 0,
+            productTypeName: backendItem.productTypeName || backendItem.product_type_name 
+          };
+        }) || [];
+
+        console.log("Mapped family pack items:", mappedFamilyPackItems);
+        
+        setFamilyPackItems(mappedFamilyPackItems);
+        
+        // Set package ID for replacement requests
+        if (orderData.packageData.id) {
+          setPackageId(orderData.packageData.id);
+        }
+        
+        setError(null);
+      } else {
+        console.log("No package data found in order data");
+        setError(t('No package data found'));
+      }
+    } catch (error) {
+      console.error("Error in loadOrderData:", error);
+      setError(t('Failed to load order data'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (item.orderId) {
+    loadOrderData();
+  }
+}, [item.orderId, t]); // Dependencies: rerun if orderId or translation function changes
 
 
   const statusText = () => {
@@ -486,133 +1374,256 @@ const startCountdown = () => {
 
 const statusStyles = getStatusStyling();
 
-  const renderReplaceModal = () => {
-    const isFormComplete = replaceData.newProduct && replaceData.quantity && replaceData.price;
+//   useFocusEffect(
+//   React.useCallback(() => {
+//     const fetchRetailItems = async () => {
+//       try {
+//         setLoadingRetailItems(true);
+//         const token = await AsyncStorage.getItem('token');
+        
+//         if (!token) {
+//           Alert.alert(t("Error"), "Authentication token not found");
+//           return;
+//         }
 
-    const handleProductSelect = (product: string) => {
-      const defaultPrice = '400.00'; // Adjust as needed
+//         const response = await axios.get(
+//           `${environment.API_BASE_URL}api/distribution/all-retail-items`,
+//           {
+//             headers: {
+//               'Authorization': `Bearer ${token}`,
+//               'Content-Type': 'application/json',
+//             },
+//           }
+//         );
+
+//         if (response.data && Array.isArray(response.data)) {
+//           setRetailItems(response.data);
+//         } else {
+//           console.error('Invalid retail items response:', response.data);
+//           setRetailItems([]);
+//         }
+//       } catch (error) {
+//         console.error('Error fetching retail items:', error);
+//         Alert.alert(t("Error"), "Failed to fetch retail items");
+//         setRetailItems([]);
+//       } finally {
+//         setLoadingRetailItems(false);
+//       }
+//     };
+
+//     fetchRetailItems();
+//   }, [])
+// );
+
+// Update the fetchRetailItems function
+const fetchRetailItems = async () => {
+  try {
+    setLoadingRetailItems(true);
+    const token = await AsyncStorage.getItem('token');
+    
+    if (!token) {
+      Alert.alert(t("Error"), "Authentication token not found");
+      return;
+    }
+
+    const response = await axios.get(
+      `${environment.API_BASE_URL}api/distribution/all-retail-items/${item.orderId}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (response.data && Array.isArray(response.data)) {
+      // Convert string prices to numbers and filter if needed
+      const processedItems = response.data.map(item => ({
+        ...item,
+        normalPrice: parseFloat(item.normalPrice) || 0,
+        discountedPrice: parseFloat(item.discountedPrice) || 0
+      }));
+      setRetailItems(processedItems);
+    } else {
+      console.error('Invalid retail items response:', response.data);
+      setRetailItems([]);
+    }
+  } catch (error) {
+    console.error('Error fetching retail items:', error);
+    Alert.alert(t("Error"), "Failed to fetch retail items");
+    setRetailItems([]);
+  } finally {
+    setLoadingRetailItems(false);
+  }
+};
+
+// Call this when the replace modal opens
+useEffect(() => {
+  if (showReplaceModal) {
+    fetchRetailItems();
+  }
+}, [showReplaceModal]);
+
+// Update the renderReplaceModal function
+const renderReplaceModal = () => {
+  const isFormComplete = replaceData.newProduct && 
+                         replaceData.quantity && 
+                         replaceData.price;
+
+  const handleProductSelect = (product: RetailItem) => {
+    setReplaceData(prev => ({
+      ...prev,
+      newProduct: product.displayName,
+      price: `Rs.${(product.discountedPrice || product.normalPrice || 0).toFixed(2)}`
+    }));
+    setShowDropdown(false);
+  };
+
+  const handleQuantityChange = (text: string) => {
+    if (/^\d*\.?\d*$/.test(text)) {
+      const selectedProduct = retailItems.find(item => 
+        item.displayName === replaceData.newProduct
+      );
+      const price = selectedProduct ? (selectedProduct.discountedPrice || selectedProduct.normalPrice || 0) : 0;
       setReplaceData(prev => ({
         ...prev,
-        newProduct: product,
-        price: `Rs.${defaultPrice}`
+        quantity: text,
+        price: text ? `Rs.${(parseFloat(text) * price).toFixed(2)}` : `Rs.${price.toFixed(2)}`
       }));
-      setShowDropdown(false);
-    };
+    }
+  };
 
-    const handleQuantityChange = (text: string) => {
-      if (/^\d*\.?\d*$/.test(text)) {
-        setReplaceData(prev => ({
-          ...prev,
-          quantity: text,
-          price: text ? `Rs.${(parseFloat(text) * 400).toFixed(2)}` : `Rs.400.00`
-        }));
-      }
+  // Get product type name for display
+  const getProductTypeName = (productType: string) => {
+    // You can create a mapping object for better display names
+    const productTypeMap: { [key: string]: string } = {
+      '1': 'Up Country Vegetable',
+      '2': 'Low Country Vegetable',
+      '3': 'Fruits',
+      '4': 'Rice & Grains',
+      '5': 'Spices',
+      '6': 'Dairy Products',
+      '7': 'Retail Items',
+      // Add more mappings as needed
     };
+    
+    return productTypeMap[productType] || `Product Type ${productType}`;
+  };
 
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={showReplaceModal}
-        onRequestClose={handleModalClose}
-      >
-        <View className="flex-1 justify-center items-center bg-black/50">
-          <View className="bg-white rounded-lg mx-6 p-6 w-80">
-            <View className="justify-between items-center mb-4">
-              <Text className="text-lg font-semibold">Replace Product</Text>
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={showReplaceModal}
+      onRequestClose={handleModalClose}
+    >
+      <View className="flex-1 justify-center items-center bg-black/50">
+        <View className="bg-white rounded-lg mx-6 p-6 w-80">
+          <View className="justify-between items-center mb-4">
+            <Text className="text-lg font-semibold">Replace Product</Text>
+          </View>
+
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View className="border border-red-300 rounded-lg p-3 mb-4 justify-center items-center">
+              <Text className="text-sm text-[#7B7B7B] mb-1">Selected product:</Text>
+              <Text className="font-medium mb-2">
+                {replaceData.selectedProduct}
+              </Text>
+              <Text className="text-sm text-[#7B7B7B] mb-1">Product Type:</Text>
+              <Text className="font-medium">
+              {replaceData.productTypeName }
+            </Text>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <View className="border border-red-300 rounded-lg p-3 mb-4 justify-center items-center">
-                <Text className="text-sm text-[#7B7B7B] mb-1">Selected product:</Text>
-                <Text className="font-medium  mb-2">
-                  {replaceData.selectedProduct}
+            <Text className="text-center text-black mb-4">--New Product Details--</Text>
+
+            {/* Product Selection */}
+            <View className="mb-4">
+              <TouchableOpacity
+                className="border border-black rounded-full p-3 flex-row justify-between items-center bg-white"
+                onPress={() => setShowDropdown(!showDropdown)}
+              >
+                <Text className={replaceData.newProduct ? "text-black" : "text-gray-400"}>
+                  {replaceData.newProduct || "--Select New Product--"}
                 </Text>
-                <Text className="text-sm text-[#7B7B7B] mb-1">Product Type:</Text>
-                <Text className="font-medium ">
-                  {replaceData.productType}
-                </Text>
-              </View>
+                <AntDesign name={showDropdown ? "up" : "down"} size={16} color="#666" />
+              </TouchableOpacity>
 
-              <Text className="text-center text-black mb-4">--New Product Details--</Text>
-
-              {/* Product Selection */}
-              <View className="mb-4">
-               
-                <TouchableOpacity
-                  className="border border-black rounded-full p-3 flex-row justify-between items-center bg-white"
-                  onPress={() => setShowDropdown(!showDropdown)}
-                >
-                  <Text className={replaceData.newProduct ? "text-black" : "text-gray-400"}>
-                    {replaceData.newProduct || "--Select New Product--"}
-                  </Text>
-                  <AntDesign name={showDropdown ? "up" : "down"} size={16} color="#666" />
-                </TouchableOpacity>
-
-                {showDropdown && (
-                  <View className="border border-t-0 border-gray-300 rounded-b-lg bg-white max-h-32">
-                    <ScrollView>
-                      {productOptions.map((product, index) => (
+              {showDropdown && (
+                <View className="border border-t-0 border-gray-300 rounded-b-lg bg-white max-h-32">
+                  <ScrollView>
+                    {loadingRetailItems ? (
+                      <View className="p-3 items-center">
+                        <ActivityIndicator size="small" color="#000" />
+                      </View>
+                    ) : retailItems.length > 0 ? (
+                      retailItems.map((product) => (
                         <TouchableOpacity
-                          key={index}
+                          key={product.id}
                           className="p-3 border-b border-gray-100"
                           onPress={() => handleProductSelect(product)}
                         >
-                          <Text>{product}</Text>
+                          <Text className="font-medium">{product.displayName}</Text>
+                          <Text className="text-xs text-gray-500">
+                            Rs.{(product.discountedPrice || product.normalPrice || 0).toFixed(2)} ({product.unitType})
+                          </Text>
                         </TouchableOpacity>
-                      ))}
-                    </ScrollView>
-                  </View>
-                )}
-              </View>
-
-              {/* Quantity Input */}
-              <View className="mb-4">
-                
-                <TextInput
-                  className="border border-black rounded-full p-3 bg-white"
-                  placeholder="Enter Quantity in kg"
-                  value={replaceData.quantity}
-                  onChangeText={handleQuantityChange}
-                  keyboardType="numeric"
-                />
-              </View>
-
-              {/* Price Display (read-only) */}
-              <View className="mb-6">
-               
-                <View className="border border-black rounded-full p-3 bg-gray-100">
-                  <Text className="text-black">
-                    {replaceData.price}
-                  </Text>
+                      ))
+                    ) : (
+                      <View className="p-3 items-center">
+                        <Text className="text-gray-500">No products available</Text>
+                      </View>
+                    )}
+                  </ScrollView>
                 </View>
-              </View>
+              )}
+            </View>
 
-              {/* Action Buttons */}
-              <View className="space-y-3">
-                <TouchableOpacity
-                  className={`py-3 rounded-full px-3 ${isFormComplete ? 'bg-[#FA0000]' : 'bg-[#FA0000]/50'}`}
-                  onPress={isFormComplete ? handleReplaceSubmit : undefined}
-                  disabled={!isFormComplete}
-                >
-                  <Text className="text-white text-center font-medium">
-                    Send Replace Request
-                  </Text>
-                </TouchableOpacity>
+            {/* Quantity Input */}
+            <View className="mb-4">
+              <TextInput
+                className="border border-black rounded-full p-3 bg-white"
+                placeholder="Enter Quantity"
+                value={replaceData.quantity}
+                onChangeText={handleQuantityChange}
+                keyboardType="numeric"
+              />
+            </View>
 
-                <TouchableOpacity
-                  className="bg-[#D9D9D9] py-3 rounded-full px-3"
-                  onPress={handleModalClose}
-                >
-                  <Text className="text-[#686868] text-center font-medium">Go Back</Text>
-                </TouchableOpacity>
+            {/* Price Display (read-only) */}
+            <View className="mb-6">
+              <View className="border border-black rounded-full p-3 bg-gray-100">
+                <Text className="text-black">
+                  {replaceData.price}
+                </Text>
               </View>
-            </ScrollView>
-          </View>
+            </View>
+
+            {/* Action Buttons */}
+            <View className="space-y-3">
+              <TouchableOpacity
+                className={`py-3 rounded-full px-3 ${isFormComplete ? 'bg-[#FA0000]' : 'bg-[#FA0000]/50'}`}
+                onPress={isFormComplete ? handleReplaceSubmit : undefined}
+                disabled={!isFormComplete}
+              >
+                <Text className="text-white text-center font-medium">
+                  Send Replace Request
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                className="bg-[#D9D9D9] py-3 rounded-full px-3"
+                onPress={handleModalClose}
+              >
+                <Text className="text-[#686868] text-center font-medium">Go Back</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </View>
-      </Modal>
-    );
-  };
+      </View>
+    </Modal>
+  );
+};
 
   const SuccessModal = () => (
   <Modal
@@ -794,144 +1805,205 @@ const statusStyles = getStatusStyling();
         </View>
       </View>
 
-     // Replace your ScrollView section with this fixed version:
+
 
 <ScrollView 
   className="flex-1" 
   showsVerticalScrollIndicator={false}
-  contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }} // Add padding bottom for fixed button
+  contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}
 >
   
-  {/* Dynamic Status Badge with Timer */}
+  {/* Dynamic Status Badge */}
   <View className="mx-4 mt-4 mb-3 justify-center items-center">
     <View className={`px-3 py-2 rounded-lg ${
-      areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected()
-        ? 'bg-[#D4F7D4] border border-[#4CAF50]' // Completed - Green
-        : hasFamilyPackSelections() && hasAdditionalItemSelections()
-          ? 'bg-[#FFF9C4] border border-[#F9CC33]' // Opened - Yellow
-          : 'bg-[#FFB9B7] border border-[#FFB9B7]' // Pending - Red
+      (() => {
+        const hasFamily = familyPackItems.length > 0;
+        const hasAdditional = additionalItems.length > 0;
+        
+        let allSelected = false;
+        let someSelected = false;
+        
+        if (hasFamily && hasAdditional) {
+          allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+          someSelected = hasFamilyPackSelections() || hasAdditionalItemSelections();
+        } else if (hasFamily && !hasAdditional) {
+          allSelected = areAllFamilyPackItemsSelected();
+          someSelected = hasFamilyPackSelections();
+        } else if (!hasFamily && hasAdditional) {
+          allSelected = areAllAdditionalItemsSelected();
+          someSelected = hasAdditionalItemSelections();
+        }
+        
+        return allSelected
+          ? 'bg-[#D4F7D4] border border-[#4CAF50]' // Completed - Green
+          : someSelected
+            ? 'bg-[#FFF9C4] border border-[#F9CC33]' // Opened - Yellow
+            : 'bg-[#FFB9B7] border border-[#FFB9B7]'; // Pending - Red
+      })()
     }`}>
       <Text className={`font-medium text-sm ${
-        areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected()
-          ? 'text-[#2E7D32]' // Completed - Dark green text
-          : hasFamilyPackSelections() && hasAdditionalItemSelections()
-            ? 'text-[#B8860B]' // Opened - Gold text
-            : 'text-[#D16D6A]' // Pending - Red text
+        (() => {
+          const hasFamily = familyPackItems.length > 0;
+          const hasAdditional = additionalItems.length > 0;
+          
+          let allSelected = false;
+          let someSelected = false;
+          
+          if (hasFamily && hasAdditional) {
+            allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+            someSelected = hasFamilyPackSelections() || hasAdditionalItemSelections();
+          } else if (hasFamily && !hasAdditional) {
+            allSelected = areAllFamilyPackItemsSelected();
+            someSelected = hasFamilyPackSelections();
+          } else if (!hasFamily && hasAdditional) {
+            allSelected = areAllAdditionalItemsSelected();
+            someSelected = hasAdditionalItemSelections();
+          }
+          
+          return allSelected
+            ? 'text-[#2E7D32]' // Completed - Dark green text
+            : someSelected
+              ? 'text-[#B8860B]' // Opened - Gold text
+              : 'text-[#D16D6A]'; // Pending - Red text
+        })()
       }`}>
-        {areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected() 
-          ? 'Completed' 
-          : hasFamilyPackSelections() && hasAdditionalItemSelections()
-            ? 'Opened'
-            : status}
+        {(() => {
+          const hasFamily = familyPackItems.length > 0;
+          const hasAdditional = additionalItems.length > 0;
+          
+          let allSelected = false;
+          let someSelected = false;
+          
+          if (hasFamily && hasAdditional) {
+            allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+            someSelected = hasFamilyPackSelections() || hasAdditionalItemSelections();
+          } else if (hasFamily && !hasAdditional) {
+            allSelected = areAllFamilyPackItemsSelected();
+            someSelected = hasFamilyPackSelections();
+          } else if (!hasFamily && hasAdditional) {
+            allSelected = areAllAdditionalItemsSelected();
+            someSelected = hasAdditionalItemSelections();
+          }
+          
+          return allSelected 
+            ? 'Completed' 
+            : someSelected
+              ? 'Opened'
+              : status;
+        })()}
       </Text>
     </View>
   </View>
 
-  {/* Family Pack Section */}
-  <View className="mx-4 mb-3">
-    <TouchableOpacity 
-      className={`px-4 py-3 rounded-lg flex-row justify-between items-center ${
-        areAllFamilyPackItemsSelected() 
-          ? 'bg-[#D4F7D4] border border-[#4CAF50]'
-          : hasFamilyPackSelections() 
-            ? 'bg-[#FFF9C4] border border-[#F9CC33]'
-            : 'bg-[#FFF8F8] border border-[#D16D6A]'
-      }`}
-      onPress={() => setFamilyPackExpanded(!familyPackExpanded)}
-    >
-      <Text className="text-[#000000] font-medium">
-        Family Pack for 2 {areAllFamilyPackItemsSelected() && orderStatus === 'Completed' }
-      </Text>
-      <AntDesign 
-        name={familyPackExpanded ? "up" : "down"} 
-        size={16} 
-        color="#000000" 
-      />
-    </TouchableOpacity>
-    
-    {familyPackExpanded && (
-      <View className={`bg-white border border-t-0 rounded-b-lg px-4 py-4 ${
-        areAllFamilyPackItemsSelected() 
-          ? statusStyles.section.replace('bg-[#D4F7D4]', '').replace('bg-[#FFF9C4]', '').replace('bg-[#FFF8F8]', '') + ' border-[#4CAF50]'
-          : hasFamilyPackSelections() 
-            ? 'border-[#F9CC33]'
-            : 'border-[#D16D6A]'
-      }`}>
-        {familyPackItems.map((item) => (
-          <TouchableOpacity
-            key={item.id}
-            className="flex-row justify-between items-center py-3 border-b border-gray-100 last:border-b-0"
-            onPress={() => toggleFamilyPackItem(item.id)}
-          >
-            <View className="flex-row">
-              <TouchableOpacity 
-                className="w-8 h-8 items-center justify-center mr-3"
-                onPress={() => handleReplaceProduct(item)}
-              >
-                <Image source={loginImage} style={{ width: 20, height: 20 }}/>
-              </TouchableOpacity>
-              <View>
+  {/* Family Pack Section - Only show if familyPackItems has data */}
+  {familyPackItems.length > 0 && (
+    <View className="mx-4 mb-3">
+      <TouchableOpacity 
+        className={`px-4 py-3 rounded-lg flex-row justify-between items-center ${
+          areAllFamilyPackItemsSelected() 
+            ? 'bg-[#D4F7D4] border border-[#4CAF50]'
+            : hasFamilyPackSelections() 
+              ? 'bg-[#FFF9C4] border border-[#F9CC33]'
+              : 'bg-[#FFF8F8] border border-[#D16D6A]'
+        }`}
+        onPress={() => setFamilyPackExpanded(!familyPackExpanded)}
+      >
+        <Text className="text-[#000000] font-medium">
+          {packageName} {areAllFamilyPackItemsSelected() && orderStatus === 'Completed' ? '✓' : ''}
+        </Text>
+        <AntDesign 
+          name={familyPackExpanded ? "up" : "down"} 
+          size={16} 
+          color="#000000" 
+        />
+      </TouchableOpacity>
+      
+      {familyPackExpanded && (
+        <View className={`bg-white border border-t-0 rounded-b-lg px-4 py-4 ${
+          areAllFamilyPackItemsSelected() 
+            ? 'border-[#4CAF50]'
+            : hasFamilyPackSelections() 
+              ? 'border-[#F9CC33]'
+              : 'border-[#D16D6A]'
+        }`}>
+          {familyPackItems.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              className="flex-row justify-between items-center py-3 border-b border-gray-100 last:border-b-0"
+              onPress={() => toggleFamilyPackItem(item.id)}
+            >
+              <View className="flex-row">
+                <TouchableOpacity 
+                  className="w-8 h-8 items-center justify-center mr-3"
+                  onPress={() => handleReplaceProduct(item)}
+                >
+                  <Image source={loginImage} style={{ width: 20, height: 20 }}/>
+                </TouchableOpacity>
+                <View>
+                  <Text className={`font-medium ${item.selected && orderStatus === 'Completed' ? 'text-black' : 'text-black'}`}>
+                    {item.name}
+                  </Text>
+                  <Text className="text-gray-500 text-sm">{item.weight} </Text>
+                </View>
+              </View>
+              {renderCheckbox(item.selected)}
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
+    </View>
+  )}
+
+  {/* Additional Items Section - Only show if additionalItems has data */}
+  {additionalItems.length > 0 && (
+    <View className="mx-4 mb-6">
+      <TouchableOpacity 
+        className={`px-4 py-3 rounded-lg flex-row justify-between items-center ${
+          areAllAdditionalItemsSelected() 
+            ? 'bg-[#D4F7D4] border border-[#4CAF50]'
+            : hasAdditionalItemSelections() 
+              ? 'bg-[#FFF9C4] border border-[#F9CC33]'
+              : 'bg-[#FFF8F8] border border-[#D16D6A]'
+        }`}
+        onPress={() => setAdditionalItemsExpanded(!additionalItemsExpanded)}
+      >
+        <Text className="text-[#000000] font-medium">
+          Custom Selected Items {areAllAdditionalItemsSelected() && orderStatus === 'Completed' ? '✓' : ''}
+        </Text>
+        <AntDesign 
+          name={additionalItemsExpanded ? "up" : "down"} 
+          size={16} 
+          color="#000000" 
+        />
+      </TouchableOpacity>
+      
+      {additionalItemsExpanded && (
+        <View className={`bg-white border border-t-0 rounded-b-lg px-4 py-4 ${
+          areAllAdditionalItemsSelected() 
+            ? 'border-[#4CAF50]'
+            : hasAdditionalItemSelections() 
+              ? 'border-[#F9CC33]'
+              : 'border-[#D16D6A]'
+        }`}>
+          {additionalItems.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              className="flex-row justify-between items-center py-3 border-b border-gray-100 last:border-b-0"
+              onPress={() => toggleAdditionalItem(item.id)}
+            >
+              <View className="flex-1">
                 <Text className={`font-medium ${item.selected && orderStatus === 'Completed' ? 'text-black' : 'text-black'}`}>
                   {item.name}
                 </Text>
                 <Text className="text-gray-500 text-sm">{item.weight}</Text>
               </View>
-            </View>
-            {renderCheckbox(item.selected)}
-          </TouchableOpacity>
-        ))}
-      </View>
-    )}
-  </View>
-
-  {/* Additional Items Section */}
-  <View className="mx-4 mb-6">
-    <TouchableOpacity 
-      className={`px-4 py-3 rounded-lg flex-row justify-between items-center ${
-        areAllAdditionalItemsSelected() 
-          ? 'bg-[#D4F7D4] border border-[#4CAF50]'
-          : hasAdditionalItemSelections() 
-            ? 'bg-[#FFF9C4] border border-[#F9CC33]'
-            : 'bg-[#FFF8F8] border border-[#D16D6A]'
-      }`}
-      onPress={() => setAdditionalItemsExpanded(!additionalItemsExpanded)}
-    >
-      <Text className="text-[#000000] font-medium">
-        Custom Selected Items {areAllAdditionalItemsSelected() && orderStatus === 'Completed' }
-      </Text>
-      <AntDesign 
-        name={additionalItemsExpanded ? "up" : "down"} 
-        size={16} 
-        color="#000000" 
-      />
-    </TouchableOpacity>
-    
-    {additionalItemsExpanded && (
-      <View className={`bg-white border border-t-0 rounded-b-lg px-4 py-4 ${
-        areAllAdditionalItemsSelected() 
-          ? statusStyles.section.replace('bg-[#D4F7D4]', '').replace('bg-[#FFF9C4]', '').replace('bg-[#FFF8F8]', '') + ' border-[#4CAF50]'
-          : hasAdditionalItemSelections() 
-            ? 'border-[#F9CC33]'
-            : 'border-[#D16D6A]'
-      }`}>
-        {additionalItems.map((item) => (
-          <TouchableOpacity
-            key={item.id}
-            className="flex-row justify-between items-center py-3 border-b border-gray-100 last:border-b-0"
-            onPress={() => toggleAdditionalItem(item.id)}
-          >
-            <View className="flex-1">
-              <Text className={`font-medium ${item.selected && orderStatus === 'Completed' ? 'text-black' : 'text-black'}`}>
-                {item.name}
-              </Text>
-              <Text className="text-gray-500 text-sm">{item.weight}</Text>
-            </View>
-            {renderCheckbox(item.selected)}
-          </TouchableOpacity>
-        ))}
-      </View>
-    )}
-  </View>
+              {renderCheckbox(item.selected)}
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
+    </View>
+  )}
 
   {/* Warning Message - moved inside ScrollView */}
   {showWarning && orderStatus !== 'Completed' && (
@@ -939,18 +2011,48 @@ const statusStyles = getStatusStyling();
       <Text 
         className="text-sm text-center italic"
         style={{
-          color: orderStatus === 'Opened'
-            ? '#FA0000' // Red for "Select all remaining items"
-            : areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected()
-              ? '#308233' // Green for "All checked. Order will move to 'Completed'"
-              : '#FA0000' // Red for "Unchecked items remain"
+          color: (() => {
+            const hasFamily = familyPackItems.length > 0;
+            const hasAdditional = additionalItems.length > 0;
+            
+            let allSelected = false;
+            
+            if (hasFamily && hasAdditional) {
+              allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+            } else if (hasFamily && !hasAdditional) {
+              allSelected = areAllFamilyPackItemsSelected();
+            } else if (!hasFamily && hasAdditional) {
+              allSelected = areAllAdditionalItemsSelected();
+            }
+            
+            return orderStatus === 'Opened'
+              ? '#FA0000' // Red for "Select all remaining items"
+              : allSelected
+                ? '#308233' // Green for "All checked. Order will move to 'Completed'"
+                : '#FA0000'; // Red for "Unchecked items remain"
+          })()
         }}
       >
         {orderStatus === 'Opened'
           ? "Select all remaining items to complete the order."
-          : areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected()
-            ? <>All checked. Order will move to <Text style={{ fontWeight: 'bold' }}>'Completed'</Text> on save.</>
-            : <>Unchecked items remain. Saving now keeps the order in <Text style={{ fontWeight: 'bold' }}>'Opened'</Text> Status.</>
+          : (() => {
+              const hasFamily = familyPackItems.length > 0;
+              const hasAdditional = additionalItems.length > 0;
+              
+              let allSelected = false;
+              
+              if (hasFamily && hasAdditional) {
+                allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+              } else if (hasFamily && !hasAdditional) {
+                allSelected = areAllFamilyPackItemsSelected();
+              } else if (!hasFamily && hasAdditional) {
+                allSelected = areAllAdditionalItemsSelected();
+              }
+              
+              return allSelected
+                ? <>All checked. Order will move to <Text style={{ fontWeight: 'bold' }}>'Completed'</Text> on save.</>
+                : <>Unchecked items remain. Saving now keeps the order in <Text style={{ fontWeight: 'bold' }}>'Opened'</Text> Status.</>;
+            })()
         }
       </Text>
     </View>
@@ -959,19 +2061,20 @@ const statusStyles = getStatusStyling();
    
 
       {/* Fixed Submit Button */}
-      <View className="absolute bottom-0 left-2 right-2 bg-white px-4 py-4">
-        <TouchableOpacity 
-          className={'py-3 rounded-full px-3 bg-black'}
-          disabled={!showWarning}
-          onPress={handleSubmitPress}
-        >
-          <View className='justify-center items-center'>
-            <Text className="text-white font-medium text-base justify-center items-center">
-              Save
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+      {/* Fixed Submit Button */}
+<View className="absolute bottom-0 left-2 right-2 bg-white px-4 py-4">
+  <TouchableOpacity 
+    className={`py-3 rounded-full px-3 ${showWarning ? 'bg-black' : 'bg-gray-400'}`}
+    onPress={handleSubmitPress}
+    disabled={!showWarning}
+  >
+    <View className='justify-center items-center'>
+      <Text className="text-white font-medium text-base">
+        Save
+      </Text>
+    </View>
+  </TouchableOpacity>
+</View>
 
       {/* Modals */}
       <UnsavedChangesModal />

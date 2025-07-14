@@ -223,8 +223,13 @@ const AddOfficerAddressDetails: React.FC = () => {
           t("Error.Officer created successfully")
         );
         setLoading(false);
-        await AsyncStorage.removeItem("officerFormData"); // Clear saved form data after successful submission
+         // Clear saved form data after successful submission
+        await AsyncStorage.removeItem("officerFormData");
+        if(jobRole==="Collection Officer"){
         navigation.navigate("Main", { screen: "CollectionOfficersList" });
+        }else if(jobRole==="Distribution Officer"){
+                navigation.navigate("Main", { screen: "DistributionOfficersList" });
+      }
       }
     } catch (error) {
       console.error("Error submitting officer data:", error);

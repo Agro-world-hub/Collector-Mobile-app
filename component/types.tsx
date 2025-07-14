@@ -34,7 +34,7 @@ export type RootStackParamList = {
     FarmerQr:{ cropCount: number,userId:any,NICnumber: string; };
     ComplainPage:{farmerName:any, farmerPhone:any, userId:number, farmerLanguage:string};
     OfficerQr:undefined;
-    Profile:undefined;
+    Profile:{jobRole:string};
     ReportPage:{userId:string,registeredFarmerId:Number};
     SearchPriceScreen:undefined;
     PrivacyPolicy:undefined;
@@ -83,10 +83,19 @@ export type RootStackParamList = {
       collectionOfficerId:number;
       image:string;
     };
+    
+    DistributionOfficerSummary: {
+      officerId: string;
+      officerName: string;
+      phoneNumber1: string;
+      phoneNumber2: string;
+      collectionOfficerId:number;
+      image:string;
+    };
     ReportGenerator:{officerId:string,collectionOfficerId:number};
     DailyTargetList:undefined;
     ComplainHistory:undefined;
-    AddOfficerBasicDetails:undefined;
+    AddOfficerBasicDetails:{jobRolle:String};
     AddOfficerAddressDetails: {
       formData: OfficerBasicDetailsFormData;
       type: 'Permanent' | 'Temporary';
@@ -98,6 +107,7 @@ export type RootStackParamList = {
       jobRole: string;
     };
     ClaimOfficer:undefined;
+    ClaimDistribution: undefined
     TransactionList:undefined;
     FarmerReport:{
       registeredFarmerId: number;
@@ -162,6 +172,26 @@ export type RootStackParamList = {
     ManagerDashboard:undefined;
     CenterTarget:undefined;
     ManagerTransactions:undefined;
+    ReplaceRequestsApprove: {
+    replaceRequestData: {
+      id: string;
+      orderId: string;
+      orderPackageId: string;
+      productDisplayName: string;
+      productTypeName: string;
+      originalPrice: string;
+      originalQty: string;
+      status: string;
+      createdAt: string;
+      invNo: string;
+      productType: string;
+      productId: string;
+      userId: string;
+      packageId?: string;
+      productNormalPrice?: string;
+      productDiscountedPrice?: string;
+    };
+  }
 
     SearchFarmerScreen:undefined;
     //RegisterFarmer:undefined;
@@ -210,14 +240,21 @@ export type RootStackParamList = {
 
   DistridutionaDashboard:undefined;
   TargetOrderScreen:undefined;
+  CenterTargetScreen:{ centerId: number };
 //OpenedOrderScreen:{item: string ,centerCode:string};
  PendingOrderScreen: {
   item: any; // or define proper OrderItem interface
   centerCode: string;
   status?: 'Pending' | 'Opened' | 'Completed' | 'In Progress';
+  orderId:string
 };
 
 CompletedOrderScreen:{item: string ,centerCode:string};
+DistributionOfficersList:undefined,
+ReplaceRequestsScreen: undefined,
+DailyTargetListOfficerDistribution:{officerId:string,collectionOfficerId:number};
+PassTarget:undefined
+DistributionOfficerReport:{officerId:string,collectionOfficerId:number};
 };
 
 export interface OrderItem {

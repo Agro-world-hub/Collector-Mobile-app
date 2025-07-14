@@ -40,11 +40,15 @@ interface ProfileData {
   companyNameSinhala: string;
   companyNameEnglish: string;
   companyNameTamil: string;
+  jobRole:string;
+  centerId: number;
 }
 
 const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigation }) => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [empId, setEmpId] = useState<string | null>(null);
+  const [jobRole, setJobeRole] = useState<string | null>(null);
+    const [centerId, setCenterId] = useState<string | null>(null);
   const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
@@ -64,13 +68,16 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
       const token = await AsyncStorage.getItem("token");
       if (token) {
         const response = await axios.get(
-          `${environment.API_BASE_URL}api/collection-officer/user-profile`,
+          `${environment.API_BASE_URL}api/distribution-manager/user-profile`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
         setProfile(response.data.data);
         setEmpId(response.data.data.empId);
+        setJobeRole(response.data.data.jobRole)
+  
+        setCenterId(response.data.data.centerId); 
         console.log("data:", response.data.data);
       }
     } catch (error) {
@@ -78,34 +85,45 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
     }
   };
 
+  console.log("jobeJole-----------------",jobRole)
+   console.log("centerId--------",centerId)
+
   const fetchTargetPercentage = async () => {
-    try {
-      const token = await AsyncStorage.getItem("token");
-      if (!token) {
-        Alert.alert(t("Error.error"), t("Error.User not authenticated."));
-        return;
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) {
+      Alert.alert(t("Error.error"), t("Error.User not authenticated."));
+      return;
+    }
+    const response = await axios.get(
+      `${environment.API_BASE_URL}api/distribution/get-distribution-target`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
       }
-      const response = await axios.get(
-        `${environment.API_BASE_URL}api/target/officer-task-summary`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+    );
+    console.log("response for percentage target", response.data);
+    
+    if (response.data.success && response.data.data && response.data.data.length > 0) {
+      const targets = response.data.data;
+      
+      // Option 1: Use first target only
+      const firstTarget = targets[0];
+      const percentage = parseInt(
+        firstTarget.completionPercentage.replace("%", ""),
+        10
       );
-      console.log("response for percentage target", response.data);
-      if (response.data.success) {
-        const percentage = parseInt(
-          response.data.completionPercentage.replace("%", ""),
-          10
-        );
-        setTargetPercentage(percentage);
-      } else {
-        setTargetPercentage(0);
-      }
-    } catch (error) {
-      console.error("Failed to fetch target percentage:", error);
+      setTargetPercentage(percentage);
+      
+    
+      
+    } else {
       setTargetPercentage(0);
     }
-  };
+  } catch (error) {
+    console.error("Failed to fetch target percentage:", error);
+    setTargetPercentage(0);
+  }
+};
 
   useEffect(() => {
     fetchUserProfile();
@@ -158,6 +176,10 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
     }
   };
 
+
+
+  
+
   const getFullName = () => {
     if (!profile) return "Loading...";
     switch (selectedLanguage) {
@@ -189,7 +211,6 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
       };
     }
   };
-
   
 
   return (
@@ -269,7 +290,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
             backgroundColor="#E5E7EB"
           />
           <View className="absolute items-center justify-center h-24 w-24">
-            <Text className="text-2xl font-bold">
+            <Text className="text-2xl font-bold ml-3  mt-1">
               {targetPercentage !== null ? `${targetPercentage}%` : "0%"}
             </Text>
           </View>
@@ -291,7 +312,27 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
 
       {/* Action Buttons */}
       <View className="flex-row flex-wrap justify-between p-6 mt-[-5%]">
-        <TouchableOpacity
+
+        { jobRole === "Distribution Manager" ? (
+           <TouchableOpacity           
+  className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative"           
+  onPress={() => navigation.navigate("CenterTargetScreen", { centerId: centerId } as any)}         
+>
+          <Image
+            source={require("../../assets/images/goal.webp")}
+            className="w-8 h-8 absolute top-2 right-2"
+          />
+          <Text
+            style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+            className="text-gray-700 text-lg absolute bottom-2 left-2"
+          >
+            {t("CenterTarget.CenterTarget")}
+          </Text>
+        </TouchableOpacity>
+
+        ):(
+
+ <TouchableOpacity
           className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative"
           onPress={() => navigation.navigate("TargetOrderScreen" as any)}
         >
@@ -306,6 +347,12 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
             {t("DistridutionaDashboard.TargetOrders")}
           </Text>
         </TouchableOpacity>
+        
+        
+
+
+        )}
+       
 
        
       </View>

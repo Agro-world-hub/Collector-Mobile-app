@@ -1,0 +1,454 @@
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  TextInput,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "../types";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { environment } from '@/environment/environment';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
+type ReplaceRequestsNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "ReplaceRequestsApprove"
+>;
+
+interface ReplaceRequestsProps {
+  navigation: ReplaceRequestsNavigationProp;
+  route: ReplaceRequestsRouteProp;
+}
+
+type ReplaceRequestsRouteProp = RouteProp<RootStackParamList, "ReplaceRequestsApprove">;
+
+interface RetailItem {
+  id: string;
+  displayName: string;
+  normalPrice: number;
+  discountedPrice?: number;
+  unitType: string;
+}
+
+interface ReplaceRequestData {
+  id: string;
+  orderId: string;
+  orderPackageId: string;
+  productDisplayName: string;
+  productTypeName: string;
+  originalPrice: string;
+  originalQty: string;
+  status: string;
+  createdAt: string;
+  invNo: string;
+  productType: string;
+  productId: string;
+  userId: string;
+  packageId?: string;
+  productNormalPrice?: string;
+  productDiscountedPrice?: string;
+  qty: string;
+  price: string;
+  replaceProductDisplayName: string;
+  replaceQty?: string;
+  replacePrice?: string;
+}
+
+interface ReplaceData {
+  orderId: string;
+  selectedProduct: string;
+  productTypeName: string;
+  newProduct: string;
+  newProductId: string; // Added product ID
+  quantity: string;
+  price: string;
+  invNo: string;
+  qty: string;
+  replaceProductDisplayName: string;
+  replaceQty?: string;
+  replacePrice?: string;
+}
+
+interface CurrentReplaceRequest {
+  replceId: string;
+  id: string;
+  orderPackageId: string;
+  productType: string;
+  productId: string;
+  qty: number;
+  price: number;
+  status: string;
+  userId: string;
+  createdAt: string;
+  displayName: string;
+}
+
+const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
+  route,
+  navigation,
+}) => {
+  const { t } = useTranslation();
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [loadingRetailItems, setLoadingRetailItems] = useState(false);
+  const [loadingCurrentReplace, setLoadingCurrentReplace] = useState(false);
+  const [retailItems, setRetailItems] = useState<RetailItem[]>([]);
+  const [currentReplaceRequests, setCurrentReplaceRequests] = useState<CurrentReplaceRequest[]>([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [ordreId, setOrdreId] = useState('');
+  const [id, setId] = useState('');
+  
+  // Get passed data from navigation
+  const replaceRequestData = route.params?.replaceRequestData as ReplaceRequestData;
+  
+  const [replaceData, setReplaceData] = useState<ReplaceData>({
+    orderId: replaceRequestData?.orderId || replaceRequestData?.invNo || "N/A",
+    selectedProduct: replaceRequestData?.productDisplayName || "N/A",
+    productTypeName: replaceRequestData?.productTypeName || "N/A",
+    newProduct: "",
+    newProductId: "", // Initialize product ID
+    quantity: "",
+    price: replaceRequestData?.price || "N/A",
+    invNo: replaceRequestData?.invNo || "N/A",
+    qty: replaceRequestData?.qty || "N/A",
+    replaceProductDisplayName: replaceRequestData?.replaceProductDisplayName,
+    replaceQty: replaceRequestData?.replaceQty,
+    replacePrice: replaceRequestData?.replacePrice
+  });
+
+  // Load current replace request data and retail items when component mounts
+  useEffect(() => {
+    loadCurrentReplaceRequest();
+    loadRetailItems();
+  }, []);
+
+  useEffect(() => {
+    setOrdreId(replaceRequestData.orderId);
+    setId(replaceRequestData.id);
+  }, []);
+
+  console.log("////////////////////////////", ordreId, id);
+
+  // Load current replace request data
+  const loadCurrentReplaceRequest = async () => {
+    try {
+      setLoadingCurrentReplace(true);
+      const token = await AsyncStorage.getItem('token');
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/distribution-manager/ordre-replace/${replaceRequestData.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      
+      console.log("Current replace request data:", response.data);
+      
+      if (response.data.success && response.data.data.length > 0) {
+        setCurrentReplaceRequests(response.data.data);
+        
+        // Pre-populate form with current replace request data
+        const currentRequest = response.data.data[0]; // Assuming you want the first one
+        
+        setReplaceData(prev => ({
+          ...prev,
+          newProduct: currentRequest.displayName || '',
+          newProductId: currentRequest.productId || '', // Set the product ID
+          quantity: currentRequest.qty.toString(),
+          price: `Rs.${currentRequest.price.toFixed(2)}`
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading current replace request:', error);
+    } finally {
+      setLoadingCurrentReplace(false);
+    }
+  };
+
+  // Load retail items for dropdown
+  const loadRetailItems = async () => {
+    try {
+      setLoadingRetailItems(true);
+      const token = await AsyncStorage.getItem('token');
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/distribution-manager/retail-items/${replaceRequestData.orderId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      
+      console.log("Retail items data:", response.data);
+      
+      if (response.data.success) {
+        setRetailItems(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error loading retail items:', error);
+    } finally {
+      setLoadingRetailItems(false);
+    }
+  };
+
+  const handleProductSelect = (product: RetailItem) => {
+    const currentQty = parseFloat(replaceData.quantity) || 0;
+    const productPrice = product.discountedPrice || product.normalPrice || 0;
+    
+    setReplaceData(prev => ({
+      ...prev,
+      newProduct: product.displayName,
+      newProductId: product.id, // Set the product ID
+      price: `Rs.${(currentQty * productPrice).toFixed(2)}`
+    }));
+    setShowDropdown(false);
+  };
+
+  const handleQuantityChange = (text: string) => {
+    if (/^\d*\.?\d*$/.test(text)) {
+      // Find the selected product using either retail items or current replace request
+      let selectedProduct = retailItems.find(item => 
+        item.displayName === replaceData.newProduct || item.id === replaceData.newProductId
+      );
+      
+      // If not found in retail items, check if it's the current replace request product
+      if (!selectedProduct && currentReplaceRequests.length > 0) {
+        const currentRequest = currentReplaceRequests[0];
+        if (currentRequest.displayName === replaceData.newProduct) {
+          // Use the price from current replace request
+          const unitPrice = currentRequest.price / currentRequest.qty;
+          setReplaceData(prev => ({
+            ...prev,
+            quantity: text,
+            price: text ? `Rs.${(parseFloat(text) * unitPrice).toFixed(2)}` : `Rs.${unitPrice.toFixed(2)}`
+          }));
+          return;
+        }
+      }
+      
+      const price = selectedProduct ? (selectedProduct.discountedPrice || selectedProduct.normalPrice || 0) : 0;
+      setReplaceData(prev => ({
+        ...prev,
+        quantity: text,
+        price: text ? `Rs.${(parseFloat(text) * price).toFixed(2)}` : `Rs.${price.toFixed(2)}`
+      }));
+    }
+  };
+
+  const handleApprove = async () => {
+    if (!replaceData.newProduct || !replaceData.quantity) {
+      Alert.alert('Error', 'Please select a product and enter quantity');
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      const token = await AsyncStorage.getItem('token');
+      
+      // Prepare the data to send
+      const approvalData = {
+        orderId: replaceData.orderId,
+        replaceRequestId: replaceRequestData.id, // Include the replace request ID
+        newProduct: replaceData.newProduct,
+        newProductId: replaceData.newProductId, // Include product ID
+        quantity: parseFloat(replaceData.quantity), // Send as number
+        price: parseFloat(replaceData.price.replace('Rs.', '')), // Remove Rs. and convert to number
+        // Include original request data for reference
+        originalProductId: replaceRequestData.productId,
+        originalProductName: replaceRequestData.productDisplayName,
+        originalQuantity: replaceRequestData.qty,
+        originalPrice: replaceRequestData.price
+      };
+
+      console.log("Approval data being sent:", approvalData);
+      
+      const response = await axios.post(
+        `${environment.API_BASE_URL}api/distribution-manager/approve`,
+        approvalData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      console.log("Approval response:", response.data);
+
+      if (response.data.success) {
+        Alert.alert('Success', 'Replace request approved successfully', [
+          { text: 'OK', onPress: () => navigation.goBack() }
+        ]);
+      } else {
+        Alert.alert('Error', response.data.message || 'Failed to approve replace request');
+      }
+    } catch (error) {
+      console.error('Error approving replace request:', error);
+      Alert.alert('Error', 'Failed to approve replace request');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const isFormComplete = replaceData.newProduct && replaceData.quantity;
+
+  if (loadingCurrentReplace) {
+    return (
+      <View className="flex-1 bg-white justify-center items-center">
+        <ActivityIndicator size="large" color="#000" />
+        <Text className="mt-2 text-gray-600">Loading replace request...</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View className="flex-1 bg-white">
+      {/* Header */}
+      <View className="bg-white px-4 py-4 flex-row items-center border-b border-gray-100">
+        <TouchableOpacity className="mr-4" onPress={() => navigation.goBack()}>
+          <AntDesign name="left" size={24} color="#333" />
+        </TouchableOpacity>
+        <View className="flex-1 justify-center items-center">
+          <Text className="text-gray-800 text-lg font-medium">Order ID: {replaceData.invNo}</Text>
+        </View>
+      </View>
+
+      <ScrollView className="flex-1 bg-white"
+        style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
+        keyboardShouldPersistTaps="handled">
+        
+        {/* Defined Product Section */}
+        <View className="px-5">
+          <View className="border border-dashed border-[#FA0000] rounded-lg p-4 mb-6">
+            <Text className="text-center text-gray-600 mb-3">Defined product</Text>
+            <Text className="text-center font-medium mb-2">
+              {replaceData.replaceProductDisplayName} - {replaceData.replaceQty} - {replaceData.replacePrice}
+            </Text>
+            <Text className="text-center text-gray-600 text-sm mb-1">
+              Relevant Product Type:
+            </Text>
+            <Text className="text-center font-medium">
+              {replaceData.productTypeName}
+            </Text>
+          </View>
+        </View>
+
+        {/* Current Selection Display
+        {replaceData.newProduct && (
+          <View className="px-5 mb-4">
+            <View className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <Text className="text-center text-blue-800 font-medium mb-2">
+                Current Selection
+              </Text>
+              <Text className="text-center text-blue-600">
+                {replaceData.newProduct} - {replaceData.quantity} - {replaceData.price}
+              </Text>
+              <Text className="text-center text-blue-500 text-sm mt-1">
+                Product ID: {replaceData.newProductId}
+              </Text>
+            </View>
+          </View>
+        )} */}
+
+        {/* Replacing Product Details */}
+        <View className="px-2 mt-2">
+          <Text className="text-center text-black mb-4 font-medium">
+            --Replacing Product Details--
+          </Text>
+
+          {/* Product Selection Dropdown */}
+          <View className="mb-4">
+            <TouchableOpacity
+              className="border border-gray-300 rounded-full p-4 flex-row justify-between items-center bg-white"
+              onPress={() => setShowDropdown(!showDropdown)}
+            >
+              <Text className={replaceData.newProduct ? "text-black" : "text-gray-400"}>
+                {replaceData.newProduct || "Select Product"}
+              </Text>
+              <AntDesign name={showDropdown ? "up" : "down"} size={16} color="#666" />
+            </TouchableOpacity>
+
+            {showDropdown && (
+              <View className="border border-t-0 border-gray-300 rounded-b-lg bg-white max-h-40 mt-1">
+                <ScrollView>
+                  {loadingRetailItems ? (
+                    <View className="p-4 items-center">
+                      <ActivityIndicator size="small" color="#000" />
+                    </View>
+                  ) : retailItems.length > 0 ? (
+                    retailItems.map((product) => (
+                      <TouchableOpacity
+                        key={product.id}
+                        className={`p-4 border-b border-gray-100 ${
+                          replaceData.newProductId === product.id ? 'bg-blue-50' : ''
+                        }`}
+                        onPress={() => handleProductSelect(product)}
+                      >
+                        <Text className="font-medium">{product.displayName}</Text>
+                        <Text className="text-xs text-gray-500">
+                          ID: {product.id} | Rs.{(product.discountedPrice || product.normalPrice || 0).toFixed(2)} ({product.unitType})
+                        </Text>
+                      </TouchableOpacity>
+                    ))
+                  ) : (
+                    <View className="p-4 items-center">
+                      <Text className="text-gray-500">No products available</Text>
+                    </View>
+                  )}
+                </ScrollView>
+              </View>
+            )}
+          </View>
+
+          {/* Quantity Input */}
+          <View className="mb-4">
+            <TextInput
+              className="border border-gray-300 rounded-full p-4 bg-white"
+              placeholder="Enter Quantity"
+              value={replaceData.quantity}
+              onChangeText={handleQuantityChange}
+              keyboardType="numeric"
+            />
+          </View>
+
+          {/* Price Display */}
+          <View className="mb-8">
+            <View className="border border-gray-300 rounded-full p-4 bg-gray-50">
+              <Text className="text-black">
+                {replaceData.newProduct && replaceData.quantity ? replaceData.price : "Rs.0.00"}
+              </Text>
+            </View>
+          </View>
+
+          {/* Approve Button */}
+          <TouchableOpacity
+            className={`py-3 ml-3 mr-3 rounded-full ${isFormComplete ? 'bg-black' : 'bg-gray-300'}`}
+            onPress={isFormComplete ? handleApprove : undefined}
+            disabled={!isFormComplete || submitting}
+          >
+            {submitting ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text className="text-white text-center font-medium text-base">
+                Approve
+              </Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </View>
+  );
+};
+
+export default ReplaceRequestsApprove;
