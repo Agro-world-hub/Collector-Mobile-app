@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types'; // Adjust the import path as needed
+import { environment } from "@/environment/environment";
 import { useDispatch } from "react-redux";
 import { setUser } from '../store/authSlice';
 
@@ -21,11 +22,9 @@ const Splash: React.FC<SplashProps> = ({ navigation }) => {
   useEffect(() => {
     const checkTokenAndNavigate = async () => {
       try {
-        
         await handleTokenCheck();
-        // Check for token in AsyncStorage
       } catch (error) {
-        console.error('Error checking token or job role:', error);
+        console.error('Error checking token, job role, or password:', error);
         // Fallback to language screen if there's an error
         setTimeout(() => {
           navigation.navigate('Lanuage');
@@ -35,6 +34,28 @@ const Splash: React.FC<SplashProps> = ({ navigation }) => {
 
     checkTokenAndNavigate();
   }, [navigation]);
+
+  const checkPasswordStatus = async (token: string) => {
+    try {
+      const response = await fetch(`${environment.API_BASE_URL}/user/password-update`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return data.data.passwordUpdated;
+      } else {
+        throw new Error('Failed to fetch password status');
+      }
+    } catch (error) {
+      console.error('Error checking password status:', error);
+      throw error;
+    }
+  };
 
   const handleTokenCheck = async () => {
     try {
@@ -48,6 +69,20 @@ dispatch(setUser({ token: userToken ?? '', jobRole: role ?? '', empId: emp ?? ''
         const tokenExpiry = new Date(expirationTime);
 
         if (currentTime < tokenExpiry) {
+          console.log("Token is valid, checking password status...");
+          
+          // Check password status
+          const passwordUpdated = await checkPasswordStatus(userToken);
+          
+          if (passwordUpdated === 0) {
+            console.log("Password needs to be updated, navigating to password update screen.");
+            navigation.navigate('ChangePassword'); // Replace with your password update screen name
+            return;
+          }
+
+          console.log("Password is up to date, checking job role...");
+          const jobRole = await AsyncStorage.getItem('jobRole');
+
           console.log("Token is valid, navigating to Main.");
           const jobRole = await AsyncStorage.getItem('jobRole');
           if (jobRole === "Collection Officer") {
@@ -67,7 +102,7 @@ dispatch(setUser({ token: userToken ?? '', jobRole: role ?? '', empId: emp ?? ''
               routes: [{ name: 'Main', params: { screen: 'DistridutionaDashboard' } }]
             })
           }
-                } else {
+        } else {
           console.log("Token expired, clearing storage.");
           await AsyncStorage.multiRemove([
             "token",
@@ -80,25 +115,22 @@ dispatch(setUser({ token: userToken ?? '', jobRole: role ?? '', empId: emp ?? ''
         navigation.navigate("Lanuage");
       }
     } catch (error) {
-      console.error("Error checking token expiration:", error);
+      console.error("Error checking token expiration or password status:", error);
       navigation.navigate("Lanuage");
     }
   };
 
-
   return (
     <View className='bg-[#2AAD7A] w-full flex-1'>
-     <View className='flex-1'>
-      <Image source={phone} className='mt-[50%]' />
+      <View className='flex-1'>
+        <Image source={phone} className='mt-[50%]' />
       </View>
       <View className='items-center pb-[10%]'>
-      <Text className='text-white text-2xl'>POWERED BY POLYGON</Text>
+        <Text className='text-white text-2xl'>POWERED BY POLYGON</Text>
       </View>
     </View>
-
-
   );
-}
+};
 
 export default Splash;
 
