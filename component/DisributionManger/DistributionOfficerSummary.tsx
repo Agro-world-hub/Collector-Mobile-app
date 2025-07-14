@@ -21,20 +21,21 @@ import {environment }from '@/environment/environment';
 import axios from "axios";
 import { useFocusEffect } from "expo-router";
 import { useTranslation } from "react-i18next";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type OfficerSummaryNavigationProp = StackNavigationProp<
   RootStackParamList,
-  "OfficerSummary"
+  "DistributionOfficerSummary"
 >;
 
-type OfficerSummaryRouteProp = RouteProp<RootStackParamList, "OfficerSummary">;
+type OfficerSummaryRouteProp = RouteProp<RootStackParamList, "DistributionOfficerSummary">;
 
 interface OfficerSummaryProps {
   navigation: OfficerSummaryNavigationProp;
   route: OfficerSummaryRouteProp;
 }
 
-const OfficerSummary: React.FC<OfficerSummaryProps> = ({
+const DistributionOfficerSummary: React.FC<OfficerSummaryProps> = ({
   route,
   navigation,
 }) => {
@@ -53,22 +54,24 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
   const [isOnline, setIsOnline] = useState(false); // Track the online status
   const { t } = useTranslation();
   const [modalVisible, setModalVisible] = useState(false);  
+ const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        navigation.navigate("Main", { screen: "DistributionOfficersList" })
+        return true; // Prevent the default behavior
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () => {
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      };
+    }, [navigation])
+  );
 
 
-    useFocusEffect(
-      React.useCallback(() => {
-        const onBackPress = () => {
-             navigation.navigate("Main", { screen: "CollectionOfficersList" })
-          return true; // Prevent the default behavior
-        };
-  
-        BackHandler.addEventListener("hardwareBackPress", onBackPress);
-  
-        return () => {
-          BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-        };
-      }, [navigation])
-    );
   const ConfirmationModal = ({ visible, onConfirm, onCancel }: any) => {
     return (
       <Modal
@@ -115,30 +118,96 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
   };
 
   // Fetch task summary and completion percentage
-  const fetchTaskSummary = async () => {
-    try {
-      const res = await axios.get(
-        `${environment.API_BASE_URL}api/target/officer-task-summary/${collectionOfficerId}`
-      );
+  // const fetchTaskSummary = async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       `${environment.API_BASE_URL}api/distribution-manager/officer-task-summary/${collectionOfficerId}`
+  //     );
 
-      if (res.data.success) {
-        const { totalTasks, completedTasks } = res.data;
-        const percentage =
-          totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-        setTaskPercentage(percentage);
-      } else {
-        Alert.alert(t("Error.error"), t("Error.No task summary found for this officer."));
-      }
-    } catch (error) {
-      console.error("Error fetching task summary:", error);
-      Alert.alert(t("Error.error"), t("Error.Failed to fetch task summary."));
+  //     console.log("\\\\\\\\\\\\\\\\\\\\\\\\",res.data)
+
+  //     if (res.data.success) {
+  //       const { totalTasks, completedTasks } = res.data;
+  //       const percentage =
+  //         totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  //       setTaskPercentage(percentage);
+  //     } else {
+  //       Alert.alert(t("Error.error"), t("Error.No task summary found for this officer."));
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching task summary:", error);
+  //     Alert.alert(t("Error.error"), t("Error.Failed to fetch task summary."));
+  //   }
+  // };
+
+  // Replace your existing fetchTaskSummary function with this:
+const fetchTaskSummary = async () => {
+  try {
+    const res = await axios.get(
+      `${environment.API_BASE_URL}api/distribution-manager/officer-task-summary/${collectionOfficerId}`
+    );
+
+    console.log("\\\\\\\\\\\\\\\\\\\\\\\\", res.data);
+
+    if (res.data.success) {
+      // Use the overallProgressPercentage directly from the API response
+      const percentage = res.data.overallProgressPercentage || 0;
+      setTaskPercentage(percentage);
+    } else {
+      Alert.alert(t("Error.error"), t("Error.No task summary found for this officer."));
     }
-  };
+  } catch (error) {
+    console.error("Error fetching task summary:", error);
+    Alert.alert(t("Error.error"), t("Error.Failed to fetch task summary."));
+  }
+};
+//     const fetchTargetPercentage = async () => {
+//   try {
+//     const token = await AsyncStorage.getItem("token");
+//     if (!token) {
+//       Alert.alert(t("Error.error"), t("Error.User not authenticated."));
+//       return;
+//     }
+//     const response = await axios.get(
+//       `${environment.API_BASE_URL}api/distribution/get-distribution-target`,
+//       {
+//         headers: { Authorization: `Bearer ${token}` },
+//       }
+//     );
+//     console.log("response for percentage target", response.data);
+    
+//     if (response.data.success && response.data.data && response.data.data.length > 0) {
+//       const targets = response.data.data;
+      
+//       // Option 1: Use first target only
+//       const firstTarget = targets[0];
+//       const percentage = parseInt(
+//         firstTarget.completionPercentage.replace("%", ""),
+//         10
+//       );
+//       setTargetPercentage(percentage);
+      
+    
+      
+//     } else {
+//       setTargetPercentage(0);
+//     }
+//   } catch (error) {
+//     console.error("Failed to fetch target percentage:", error);
+//     setTargetPercentage(0);
+//   }
+// };
+
+
+ 
+
+
 
   // Refreshing function
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    fetchTaskSummary(); // Re-fetch task summary
+   fetchTaskSummary(); // Re-fetch task summary
+  //fetchTargetPercentage()
     setRefreshing(false);
     setShowMenu(false)
     getOnlineStatus();
@@ -168,7 +237,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ collectionOfficerId, jobRole:"Collection Officer" }),
+          body: JSON.stringify({ collectionOfficerId, jobRole:"Distribution Officer" }),
         }
       );
 
@@ -187,7 +256,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
       if (data.status === "success") {
         setModalVisible(false); // Close the modal
         Alert.alert(t("Error.Success"), t("DisclaimOfficer.Officer disclaimed successfully."));
-        navigation.navigate("Main", { screen: "CollectionOfficersList" });
+        navigation.navigate("Main", { screen: "DistributionOfficersList" });
       } else {
         Alert.alert("QRScanner.Failed", t("DisclaimOfficer.Failed to disclaim officer."));
       }
@@ -250,7 +319,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
           {/* Back Icon */}
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("Main", { screen: "CollectionOfficersList" })
+              navigation.navigate("Main", { screen: "DistributionOfficersList" })
             }
             className="absolute top-4 left-4"
           >
@@ -336,35 +405,11 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
             </TouchableOpacity>
           )}
 
-          <TouchableOpacity
-            className="items-center mt-5"
-            onPress={() =>
-              navigation.navigate("Main", {
-                screen: "TransactionList",
-                params: {
-                  officerId,
-                  collectionOfficerId,
-                  phoneNumber1,
-                  phoneNumber2,
-                  officerName,
-                },
-              })
-            }
-          >
-            <View className="w-12 h-12 bg-[#FFFFFF66] rounded-full items-center justify-center shadow-md">
-              <Image
-                source={require("../../assets/images/lf.webp")} // Replace with your image path
-                style={{ width: 28, height: 28, resizeMode: "contain" }} // Adjust dimensions as needed
-              />
-            </View>
-            <Text className="text-white mt-2 text-xs">{t("OfficerSummary.Collection")}</Text>
-          </TouchableOpacity>
-
           {/* Report Button */}
           <TouchableOpacity
             className="items-center mt-5"
             onPress={() =>
-              navigation.navigate("ReportGenerator" as any, {
+              navigation.navigate("DistributionOfficerReport" as any, {
                 officerId,
                 collectionOfficerId,
               })
@@ -382,7 +427,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
       <View className="mt-6 px-6">
 
         <View className="items-center mt-4">
-          {/* Total Weight */}
+ 
           <View className="items-center mb-8">
             <CircularProgress
               size={120}
@@ -401,11 +446,41 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
             <Text className="text-sm text-gray-500 mt-4">{t("OfficerSummary.Target Coverage")}</Text>
           </View>
 
+             {/* <View className="flex items-center justify-center my-6 mt-[13%]">
+                  <View className="relative">
+                    <CircularProgress
+                      size={100}
+                      width={8}
+                      fill={targetPercentage !== null ? targetPercentage : 0} // Dynamically set progress
+                      tintColor="#34D399"
+                      backgroundColor="#E5E7EB"
+                    />
+                    <View className="absolute items-center justify-center h-24 w-24">
+                      <Text className="text-2xl font-bold ml-3  mt-1">
+                        {targetPercentage !== null ? `${targetPercentage}%` : "0%"}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text
+                  //  style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+                    className="text-gray-700 font-bold text-lg mt-2"
+                  >
+                    {t("DistridutionaDashboard.Yourtarget")}{" "}
+                  </Text>
+                  <Text
+                  //  style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+                    className="text-gray-700 font-bold text-lg "
+                  >
+                    {" "}
+                    {t("DistridutionaDashboard.Progress")}
+                  </Text>
+                </View> */}
+
           <View className="mt-6 mb-10 items-center">
             <TouchableOpacity
               className="bg-[#2AAD7A] rounded-full w-64 py-3 h-12"
               onPress={() =>
-                navigation.navigate("DailyTargetListForOfficers", {
+                navigation.navigate("DailyTargetListOfficerDistribution", {
                   officerId,
                   collectionOfficerId,
                 })
@@ -427,4 +502,4 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
   );
 };
 
-export default OfficerSummary;
+export default DistributionOfficerSummary;

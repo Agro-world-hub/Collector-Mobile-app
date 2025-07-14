@@ -42,12 +42,11 @@
         "foregroundImage": "./assets/images/favicon.png",
         "backgroundColor": "#21202b"
       },
-      "versionCode": 11,
+      "versionCode": 12,
       "package": "com.collector.Collector",
       "permissions": [
         "INTERNET",
         "CAMERA",
-        "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
         "VIBRATE",
         "WAKE_LOCK",
@@ -59,7 +58,6 @@
         "ACCESS_NETWORK_STATE",
         "CHANGE_NETWORK_STATE",
         "SYSTEM_ALERT_WINDOW",
-        "FOREGROUND_SERVICE",
         "NOTIFICATIONS"
       ]
     },
@@ -74,7 +72,6 @@
       "router": {
         "origin": false
       }
-   
     
     },
     "plugins": [

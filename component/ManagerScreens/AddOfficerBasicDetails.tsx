@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { OfficerBasicDetailsFormData } from "../types";
 import { environment } from "@/environment/environment";
 import countryCodes from "./countryCodes.json";
@@ -26,22 +26,34 @@ import { Platform } from "react-native";
 import { AppState } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
+import { useFocusEffect } from "expo-router";
 
 type AddOfficerBasicDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
   "AddOfficerBasicDetails"
 >;
 
-const AddOfficerBasicDetails: React.FC = () => {
-  const navigation = useNavigation<AddOfficerBasicDetailsNavigationProp>();
+type AddOfficerRouteProp = RouteProp<RootStackParamList, "AddOfficerBasicDetails">;
 
+interface AddOfficerProp {
+  navigation: AddOfficerBasicDetailsNavigationProp;
+  route: AddOfficerRouteProp;
+}
+
+const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
+  route,
+  navigation,
+}) => {
+  const { jobRolle} = route.params;
   const [type, setType] = useState<"Permanent" | "Temporary">("Permanent");
   const [preferredLanguages, setPreferredLanguages] = useState({
     Sinhala: false,
     English: false,
     Tamil: false,
   });
-  const [jobRole, setJobRole] = useState<string>("");
+  const [jobRole, setJobRole] = useState<string>(String(jobRolle));
+    console.log(jobRole)
+
   const [phoneCode1, setPhoneCode1] = useState<string>("+94"); // Default Sri Lanka calling code
   const [phoneCode2, setPhoneCode2] = useState<string>("+94"); // Default Sri Lanka calling code
   const [phoneNumber1, setPhoneNumber1] = useState("");
@@ -201,6 +213,17 @@ const AddOfficerBasicDetails: React.FC = () => {
     }
   };
 
+  useFocusEffect(
+    // Callback should be wrapped in `React.useCallback` to avoid running the effect too often.
+    useCallback(() => {
+
+ setJobRole(String(jobRolle));
+      fetchEmpId(String(jobRolle)); 
+       return () => {
+        console.log('This route is now unfocused.');
+      };
+    }, [])
+  );
   const handleImagePick = async () => {
     // Request for camera roll permission if not granted
     const permissionResult =
@@ -293,7 +316,7 @@ const AddOfficerBasicDetails: React.FC = () => {
       const prefixedUserId =
         jobRole === "Collection Officer"
           ? `COO${formData.userId}`
-          : formData.userId;
+          : `DIO${formData.userId}`;
 
       // Navigate to the next screen with the updated data
       navigation.navigate("AddOfficerAddressDetails", {
@@ -575,7 +598,7 @@ const AddOfficerBasicDetails: React.FC = () => {
         {/* Input Fields */}
         <View className="px-8">
           {/* Job Role Dropdown */}
-          <View className="mt-[-2] ">
+          {/* <View className="mt-[-2] ">
             <Text className="font-semibold text-sm mb-2">
               {t("AddOfficerBasicDetails.JobRole")}
             </Text>
@@ -599,7 +622,7 @@ const AddOfficerBasicDetails: React.FC = () => {
                 dropdownStyles={{ backgroundColor: "white", borderRadius: 5 }}
               />
             </View>
-          </View>
+          </View> */}
 
           {/* User ID Field */}
           <View className="flex-row items-center border border-gray-300 rounded-lg mb-4 bg-gray-100">
@@ -612,7 +635,7 @@ const AddOfficerBasicDetails: React.FC = () => {
               }}
             >
               <Text className="text-gray-700 text-center">
-                {jobRole === "Collection Officer" ? "COO" : ""}
+                {jobRole === "Collection Officer" ? "COO" : "DIO"}
               </Text>
             </View>
 

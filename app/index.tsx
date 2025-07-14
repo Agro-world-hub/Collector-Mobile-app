@@ -1,11 +1,11 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState, useCallback} from "react";
 import { Text, TextInput, Platform, Dimensions, StyleSheet } from "react-native";
 import Splash from "../component/Splash";
 import Lanuage from "../component/Lanuage";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Login from "@/component/Login";
-
+import { useFocusEffect } from '@react-navigation/native';
 
 
 import { NativeWindStyleSheet } from "nativewind";
@@ -94,10 +94,23 @@ import PendingOrderScreen from "@/component/DistributionofficerScreens/PendingOr
 import CompletedOrderScreen from "@/component/DistributionofficerScreens/CompletedOrderScreen"
 import Timer from "@/component/DistributionofficerScreens/TimerContainer "
 import TimerContainer from "@/component/DistributionofficerScreens/TimerContainer "
+import CenterTargetScreen from "@/component/DisributionManger/CenterTargetScreen"
 
+import DistributionOfficersList from "@/component/DisributionManger/DistributionOfficersList";
+import ClaimDistribution from "@/component/DisributionManger/ClaimDistribution";
+import DistributionOfficerSummary from "@/component/DisributionManger/DistributionOfficerSummary"
+import ReplaceRequestsScreen from '@/component/DisributionManger/ReplaceRequestsScreen';
+import DailyTargetListOfficerDistribution from '@/component/DisributionManger/DailyTargetListOfficerDistribution';
+import PassTarget from '@/component/DisributionManger/PassTarget'
 
+import { Provider } from 'react-redux';
+import  store from "@/services/reducxStore";
 
+import { useSelector } from 'react-redux';
+import { RootState } from '../services/reducxStore';
 
+import ReplaceRequestsApprove from '@/component/DisributionManger/ReplaceRequestsApprove';
+import DistributionOfficerReport from '@/component/DisributionManger/DistributionOfficerReport'
 
 LogBox.ignoreAllLogs(true);
 NativeWindStyleSheet.setOutput({
@@ -120,15 +133,42 @@ const windowDimensions = Dimensions.get("window");
 
 
 function MainTabNavigator() {
+
+    const [initialTab, setInitialTab] = useState('Dashboard');
+  const jobRole = useSelector((state: RootState) => state.auth.jobRole);
+
+  useEffect(() => {
+    // Set the first tab based on user role
+    if (jobRole === 'Distribution Officer' || jobRole === 'Distribution Manager') {
+      setInitialTab('DistridutionaDashboard'); // Set the first tab for Distribution Manager/Officer
+    } else if (jobRole === 'Collection Officer') {
+      setInitialTab('Dashboard'); // Set the first tab for Collection Officer
+    } else {
+      setInitialTab('ManagerDashboard'); // Set the first tab for other roles like Manager
+    }
+  }, [jobRole]);
+    useFocusEffect(
+    useCallback(() => {
+      console.log("Job roll hgi");
+
+      return () => {
+        // optional: when leaving the screen
+      };
+    }, [])
+  );
+
   return (
     <Tab.Navigator
+    initialRouteName={initialTab}
       screenOptions={({ route }) => ({
         tabBarStyle: { display: 'none' }, 
         headerShown: false,
       })}
       tabBar={(props) => <NavigationBar {...props} />}
     >
- <Tab.Screen name="Dashboard" component={Dashboard} />
+      <Tab.Screen name="Dashboard" component={Dashboard} />
+      <Tab.Screen name="DistridutionaDashboard" component={DistridutionaDashboard as any} />
+      <Tab.Screen name="ManagerDashboard" component={ManagerDashboard as any} />
       <Tab.Screen name="SearchPriceScreen" component={SearchPriceScreen} />
       <Tab.Screen name="QRScanner" component={QRScanner} />
       <Tab.Screen name="PriceChart" component={PriceChart as any} />
@@ -137,40 +177,48 @@ function MainTabNavigator() {
         component={UnregisteredCropDetails as any}
       />
       <Tab.Screen name="SearchFarmer" component={SearchFarmer} />
-      <Tab.Screen name="ManagerDashboard" component={ManagerDashboard as any} />
-      <Stack.Screen name="DailyTargetList" component={DailyTargetList} />
-      <Stack.Screen
+
+      {/* changed here stack to tab */}
+      <Tab.Screen name="DailyTargetList" component={DailyTargetList} />
+      <Tab.Screen
         name="CollectionOfficersList"
         component={CollectionOfficersList}
       />
-      <Stack.Screen name="DailyTarget" component={DailyTarget as any} />
-      <Stack.Screen
+      <Tab.Screen name="DailyTarget" component={DailyTarget as any} />
+      <Tab.Screen
         name="PassTargetScreen"
         component={PassTargetScreen as any}
       />
-      <Stack.Screen
+      <Tab.Screen
         name="RecieveTargetScreen"
         component={RecieveTargetScreen as any}
       />
-      <Stack.Screen name="ComplainHistory" component={ComplainHistory} />
-      <Stack.Screen
+      <Tab.Screen name="ComplainHistory" component={ComplainHistory} />
+      <Tab.Screen
         name="EditTargetManager"
         component={EditTargetManager as any}
       />
        
-      <Stack.Screen name="TransactionList" component={TransactionList as any} />
-      <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} />
+      <Tab.Screen name="TransactionList" component={TransactionList as any} />
+      <Tab.Screen name="OfficerSummary" component={OfficerSummary as any} />
      {/* <Stack.Screen name="RegisterDriver" component={RegisterDriver as any} /> */}
       {/* <Stack.Screen name="AddDriverAddressDetails" component={AddDriverAddressDetails as any} /> */}
       {/* <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} /> */}
 
-   
-      
-      
-      
+                   <Tab.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} /> 
+
+         <Tab.Screen
+        name="DistributionOfficersList"
+        component={DistributionOfficersList}
+      />
+                         <Tab.Screen name="ClaimDistribution" component={ClaimDistribution as any} /> 
+                         <Tab.Screen name="DistributionOfficerSummary" component={DistributionOfficerSummary as any} />
+                         <Tab.Screen name="ReplaceRequestsScreen" component={ReplaceRequestsScreen as any} />
+
     </Tab.Navigator>
   );
 }
+
 const Index = () => {
   useEffect(() => {
     onlineStatus();
@@ -223,6 +271,7 @@ const Index = () => {
   };
 
   return (
+    <Provider store={store}>
     <LanguageProvider>
         <Stack.Navigator
           screenOptions={{
@@ -274,7 +323,7 @@ const Index = () => {
           {/* <Stack.Screen name="DailyTargetList" component={DailyTargetList} /> */}
           <Stack.Screen
             name="AddOfficerBasicDetails"
-            component={AddOfficerBasicDetails}
+            component={AddOfficerBasicDetails as any}
           />
           <Stack.Screen
             name="AddOfficerAddressDetails"
@@ -355,17 +404,22 @@ const Index = () => {
       <Stack.Screen name="otpBankDetailsupdate" component={otpBankDetailsupdate as any} /> 
             <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} /> 
 
-             <Stack.Screen name="DistridutionaDashboard" component={DistridutionaDashboard as any} /> 
-             <Stack.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} /> 
+             {/* <Stack.Screen name="DistridutionaDashboard" component={DistridutionaDashboard as any} />  */}
+             {/* <Stack.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} />  */}
 <Stack.Screen name="OpenedOrderScreen" component={OpenedOrderScreen as any} /> 
 <Stack.Screen name="PendingOrderScreen" component={PendingOrderScreen as any} /> 
    <Stack.Screen name="CompletedOrderScreen" component={CompletedOrderScreen as any} />    
    <Stack.Screen name="Timer" component={Timer as any} />    
    <Stack.Screen name="TimerContainer" component={TimerContainer as any} />  
-      
+<Stack.Screen name="CenterTargetScreen" component={CenterTargetScreen as any} /> 
+<Stack.Screen name="ReplaceRequestsApprove" component={ReplaceRequestsApprove as any} />    
+<Stack.Screen name="DailyTargetListOfficerDistribution" component={DailyTargetListOfficerDistribution as any} />
+<Stack.Screen name="PassTarget" component={PassTarget as any} />
+<Stack.Screen name="DistributionOfficerReport" component={DistributionOfficerReport as any} />
         </Stack.Navigator> 
         
     </LanguageProvider>
+    </Provider>
   );
 };
 
