@@ -2,7 +2,7 @@ import React,{useEffect, useState, useContext, useCallback} from 'react';
 import { View, Text, Image, TouchableOpacity, BackHandler,  } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-const lg = require('../assets/images/lang1.webp');
+const lg = require('../assets/images/lang.png');
 import { RootStackParamList } from './types';
 import { LanguageContext } from '@/context/LanguageContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -56,7 +56,7 @@ const Lanuage: React.FC<LanuageProps> = ({ navigation }) => {
   return (
     <ScrollView className = "bg-white">
     <View className="flex-1 bg-white items-center">
-      <Image className="mt-20 w-full h-30" source={lg} resizeMode="contain" />
+      <Image  className="mt-20 w-40 h-40 rounded-full mr-3" source={lg} resizeMode="contain" />
       <Text className="text-3xl pt-5 font-semibold">Language</Text>
       <Text className="text-lg pt-5 font-extralight">மொழியைத் தேர்ந்தெடுக்கவும்</Text>
       <Text className="text-lg pt-1 mb-0 font-extralight">කරුණාකර භාෂාව තෝරන්න</Text>

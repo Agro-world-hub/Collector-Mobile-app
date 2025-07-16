@@ -319,7 +319,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
   onPress={() => navigation.navigate("CenterTargetScreen", { centerId: centerId } as any)}         
 >
           <Image
-            source={require("../../assets/images/goal.webp")}
+            source={require("../../assets/images/centericon.png")}
             className="w-8 h-8 absolute top-2 right-2"
           />
           <Text
