@@ -267,7 +267,9 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
               <TextInput
                 className="flex-1 h-[40px] text-base pl-2"
                 placeholder={t("SignIn.Employee")}
-                onChangeText={setEmpid}
+                // onChangeText={setEmpid}
+                    onChangeText={(text) => setEmpid(text)}
+    autoCapitalize="characters"  // Automatically capitalizes all letters
                 value={empid}
               />
             </View>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -26,6 +26,7 @@ import { Platform } from "react-native";
 import { AppState } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
+import { useFocusEffect } from "expo-router";
 
 type AddOfficerBasicDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -41,7 +42,7 @@ const AddOfficerBasicDetails: React.FC = () => {
     English: false,
     Tamil: false,
   });
-  const [jobRole, setJobRole] = useState<string>("");
+  const [jobRole, setJobRole] = useState<string>("Collection Officer");
   const [phoneCode1, setPhoneCode1] = useState<string>("+94"); // Default Sri Lanka calling code
   const [phoneCode2, setPhoneCode2] = useState<string>("+94"); // Default Sri Lanka calling code
   const [phoneNumber1, setPhoneNumber1] = useState("");
@@ -194,12 +195,18 @@ const AddOfficerBasicDetails: React.FC = () => {
     }
   };
 
-  const handleJobRoleChange = (role: string) => {
-    setJobRole(role);
-    if (role !== "Select Job Role") {
-      fetchEmpId(role); // Fetch empId based on the selected role
-    }
-  };
+  // const handleJobRoleChange = (role: string) => {
+    // setJobRole(role);
+    // if (role !== "Select Job Role") {
+    //   fetchEmpId(role); // Fetch empId based on the selected role
+    // }
+  // };
+
+    useFocusEffect(
+    useCallback(() => {
+      fetchEmpId(jobRole); // Fetch empId based on the selected role
+    }, [jobRole])
+  );
 
   const handleImagePick = async () => {
     // Request for camera roll permission if not granted
@@ -575,7 +582,7 @@ const AddOfficerBasicDetails: React.FC = () => {
         {/* Input Fields */}
         <View className="px-8">
           {/* Job Role Dropdown */}
-          <View className="mt-[-2] ">
+          {/* <View className="mt-[-2] ">
             <Text className="font-semibold text-sm mb-2">
               {t("AddOfficerBasicDetails.JobRole")}
             </Text>
@@ -599,7 +606,7 @@ const AddOfficerBasicDetails: React.FC = () => {
                 dropdownStyles={{ backgroundColor: "white", borderRadius: 5 }}
               />
             </View>
-          </View>
+          </View> */}
 
           {/* User ID Field */}
           <View className="flex-row items-center border border-gray-300 rounded-lg mb-4 bg-gray-100">

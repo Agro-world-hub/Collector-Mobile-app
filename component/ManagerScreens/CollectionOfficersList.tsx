@@ -256,7 +256,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
   return (
     <View className="flex-1 bg-[#2AAD7A]">
       <View className="bg-[#2AAD7A] py-6 px-4  relative">
-        <TouchableOpacity
+        {/* <TouchableOpacity
           className="absolute top-6 left-4 z-50"
           onPress={() => {
             setShowFilter((prev) => !prev);
@@ -264,7 +264,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
           }}
         >
           <FontAwesome name="filter" size={24} color="#fff" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         {showFilter && (
           <View className="absolute z-50 flex-col top-14 left-6 bg-white shadow-lg rounded-lg">
             <TouchableOpacity

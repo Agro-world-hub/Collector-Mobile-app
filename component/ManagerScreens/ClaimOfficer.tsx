@@ -48,7 +48,7 @@ type ClaimOfficerNavigationProp = StackNavigationProp<
 
 const ClaimOfficer: React.FC = () => {
   const navigation = useNavigation<ClaimOfficerNavigationProp>();
-  const [jobRole, setJobRole] = useState("");
+  const [jobRole, setJobRole] = useState("Collection Officer");
   // const [jobRole, setJobRole] = useState('Collection Officer');
   const [empID, setEmpID] = useState("");
   const [officerFound, setOfficerFound] = useState(false);
@@ -251,11 +251,12 @@ const ClaimOfficer: React.FC = () => {
         </View>
       </View>
 
-      {/* Form */}
-      <View className="px-8 mt-7">
-        <Text className="font-semibold text-gray-800 mb-2 text-center">
+    
+      <View className="px-8 mt-2">
+        {/* <Text className="font-semibold text-gray-800 mb-2 text-center">
           {t("ClaimOfficer.JobRole")}
-        </Text>
+        </Text> */}
+          {/* 
         <View className=" rounded-lg pb-3">
           <DropDownPicker
             open={open}
@@ -293,6 +294,7 @@ const ClaimOfficer: React.FC = () => {
             }}
           />
         </View>
+         */}
 
         {/* EMP ID Input */}
         <Text className="font-semibold text-gray-800 mt-6 mb-2 text-center">
