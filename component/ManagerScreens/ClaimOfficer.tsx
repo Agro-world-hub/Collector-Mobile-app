@@ -251,6 +251,13 @@ const ClaimOfficer: React.FC = () => {
         </View>
       </View>
 
+    
+      <View className="px-8 mt-2">
+        {/* <Text className="font-semibold text-gray-800 mb-2 text-center">
+          {t("ClaimOfficer.JobRole")}
+        </Text> */}
+          {/* 
+        <View className=" rounded-lg pb-3">
       {/* Form */}
       <View className="px-8 mt-7">
         {/* <Text className="font-semibold text-gray-800 mb-2 text-center">
@@ -292,6 +299,8 @@ const ClaimOfficer: React.FC = () => {
               color: "#888",
             }}
           />
+        </View>
+         */}
         </View> */}
 
         {/* EMP ID Input */}

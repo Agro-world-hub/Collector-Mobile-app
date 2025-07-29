@@ -1260,6 +1260,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               keyboardType="numeric"
               onChangeText={handlePhoneNumberChange}
               maxLength={9}
+              editable={false}
             />
             {errorMessage && (
               <Text className="text-red-500">{errorMessage}</Text>

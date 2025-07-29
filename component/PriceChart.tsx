@@ -45,9 +45,22 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.get(`api/unregisteredfarmercrop/unitPrices/${varietyId}`);
+      // const response = await api.get(`api/unregisteredfarmercrop/unitPrices/${varietyId}`);
+         const token = await AsyncStorage.getItem("token");
+
+    if (token) {
+      const response = await api.get(`api/unregisteredfarmercrop/unitPrices/${varietyId}`, {
+        headers: {
+          Authorization: `Bearer ${token}` // Pass the token in the Authorization header
+        }
+      });
+      
       setPriceData(response.data);
       setEditedPrices(response.data);
+         } else {
+      setError(t("Error.Failed to fetch prices"));
+      console.log("Token not found")
+    }
     } catch (error) {
       setError(t("Error.Failed to fetch prices"));
     } finally {
