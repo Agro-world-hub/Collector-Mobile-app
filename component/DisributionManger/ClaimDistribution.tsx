@@ -48,7 +48,7 @@ type ClaimOfficerNavigationProp = StackNavigationProp<
 
 const ClaimOfficer: React.FC = () => {
   const navigation = useNavigation<ClaimOfficerNavigationProp>();
-  const [jobRole, setJobRole] = useState("Collection Officer");
+  const [jobRole, setJobRole] = useState("Distribution Officer");
   // const [jobRole, setJobRole] = useState('Collection Officer');
   const [empID, setEmpID] = useState("");
   const [officerFound, setOfficerFound] = useState(false);
@@ -62,12 +62,7 @@ const ClaimOfficer: React.FC = () => {
   const [searchLoading, setSearchLoading] = useState(false);
 
   // const empPrefix = jobRole === 'Collection Officer' ? 'COO' : 'CUO';
-  const empPrefix =
-    jobRole === "Collection Officer"
-      ? "COO"
-      : jobRole === "Customer Officer"
-      ? "CUO"
-      : "---";
+  const empPrefix = "DIO";
 
   const handleSearch = async () => {
     Keyboard.dismiss();
@@ -171,7 +166,7 @@ const ClaimOfficer: React.FC = () => {
         setOfficerDetails(null);
         setEmpID("");
         setModalVisible(false);
-        navigation.navigate("Main", { screen: "CollectionOfficersList" });
+        navigation.navigate("Main", { screen: "DistributionOfficersList" });
       }
     } catch (err) {
       console.error(err);
@@ -240,7 +235,7 @@ const ClaimOfficer: React.FC = () => {
     <ScrollView className="flex-1 bg-white" keyboardShouldPersistTaps="handled">
       {/* Header */}
       <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
-        <TouchableOpacity className="" onPress={() => navigation.goBack()}>
+        <TouchableOpacity className="" onPress={() => navigation.navigate("DistributionOfficersList")}>
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
         {/* <Text className="text-lg font-bold ml-[25%]"> {t("ClaimOfficer.ClaimOfficers")}</Text> */}
@@ -251,59 +246,9 @@ const ClaimOfficer: React.FC = () => {
         </View>
       </View>
 
-    
-      <View className="px-8 mt-2">
-        {/* <Text className="font-semibold text-gray-800 mb-2 text-center">
-          {t("ClaimOfficer.JobRole")}
-        </Text> */}
-          {/* 
-        <View className=" rounded-lg pb-3">
       {/* Form */}
       <View className="px-8 mt-7">
-        {/* <Text className="font-semibold text-gray-800 mb-2 text-center">
-          {t("ClaimOfficer.JobRole")}
-        </Text> */}
-        {/* <View className=" rounded-lg pb-3">
-          <DropDownPicker
-            open={open}
-            setOpen={setOpen}
-            value={jobRole} // The value selected in the dropdown
-            setValue={setJobRole} // Function to update the selected value
-            items={[
-              // Array of items with value and label for dropdown
-              {
-                value: "Collection Officer",
-                label: t("ClaimOfficer.Collection Officer"),
-              },
-              {
-                value: "Customer Officer",
-                label: t("ClaimOfficer.Customer Officer"),
-              },
-            ]}
-            placeholder={t("AddOfficerBasicDetails.SelectJobRole")} // Placeholder text
-            containerStyle={{
-              borderWidth: 1,
-              borderColor: "#CFCFCF",
-              borderRadius: 5,
-            }}
-            style={{
-              borderColor: "#CFCFCF",
-              borderWidth: 0,
-            }}
-            dropDownDirection="BOTTOM"
-            dropDownContainerStyle={{
-              borderColor: "#CFCFCF",
-            }}
-            placeholderStyle={{
-              fontSize: 14,
-              color: "#888",
-            }}
-          />
-        </View>
-         */}
-        </View> */}
-
-        {/* EMP ID Input */}
+       
         <Text className="font-semibold text-gray-800  mb-2 text-center">
           {t("ClaimOfficer.EMPID")}
         </Text>

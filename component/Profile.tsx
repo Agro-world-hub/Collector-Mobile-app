@@ -22,6 +22,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
 import * as ImageManipulator from "expo-image-manipulator";
 import { useTranslation } from "react-i18next";
+import { RouteProp, useRoute } from "@react-navigation/native";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -43,6 +44,10 @@ type District = {
 };
 
 const Profile: React.FC<ProfileProps> = ({ navigation }) => {
+    const route =
+      useRoute<RouteProp<RootStackParamList, "Profile">>();
+  const {jobRole} = route.params
+  console.log("josfefd", jobRole)
   const [profileData, setProfileData] = useState({
     firstNameEnglish: "",
     lastNameEnglish: "",
@@ -170,6 +175,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       const response = await axios.get(
+
         `${environment.API_BASE_URL}api/collection-manager/driver/check-phone/${phoneCode02}${newPhoneNumber2}`,
         {
           headers: {
@@ -219,12 +225,27 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
         return;
       }
 
-      const response = await api.get("api/collection-officer/user-profile", {
+      
+      // const response = await api.get("api/collection-officer/user-profile", {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // });
+
+      // const data = response.data.data;
+      // console.log(data);
+          let response;
+    // Check jobRole before making the API call
+    if (jobRole === "Distribution Manager" || jobRole === "Distribution Officer") {
+      response = await api.get("api/distribution-manager/user-profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
+    } else {
+      response = await api.get("api/collection-officer/user-profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    }
 
-      const data = response.data.data;
-      console.log(data);
+    const data = response.data.data;
+    console.log(data);
 
       setProfileData({
         firstNameEnglish: data.firstNameEnglish,

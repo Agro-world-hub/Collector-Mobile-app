@@ -24,7 +24,7 @@ const scale = (size: number) => (width / 375) * size;
 
 type CollectionOfficersListNavigationProps = StackNavigationProp<
   RootStackParamList,
-  "CollectionOfficersList"
+  "DistributionOfficersList"
 >;
 
 interface CollectionOfficersListProps {
@@ -44,7 +44,7 @@ interface Officer {
   jobRole: string;
 }
 
-const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
+const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
   navigation,
 }) => {
   const [officers, setOfficers] = useState<Officer[]>([]);
@@ -190,7 +190,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
       onPress={() => {
         // Prevent navigation if officer status is "Not Approved"
         if (item.status !== "Not Approved") {
-          navigation.navigate("OfficerSummary" as any, {
+          navigation.navigate("DistributionOfficerSummary" as any, {
             officerId: item.empId,
             officerName: getOfficerName(item),
             phoneNumber1: item.phoneNumber1,
@@ -239,19 +239,19 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
   );
 
   // Handling the button for adding new officers
-  <TouchableOpacity
-    onPress={async () => {
-      try {
-        await AsyncStorage.removeItem("officerFormData"); // Clear stored data
-        navigation.navigate("AddOfficerBasicDetails" as any);
-      } catch (error) {
-        console.error("Error clearing form data:", error);
-      }
-    }}
-    className="absolute bottom-5 right-5 bg-black w-14 h-14 rounded-full justify-center items-center shadow-lg"
-  >
-    <Ionicons name="add" size={scale(24)} color="#fff" />
-  </TouchableOpacity>;
+  // <TouchableOpacity
+  //   onPress={async () => {
+  //     try {
+  //       await AsyncStorage.removeItem("officerFormData"); // Clear stored data
+  //       navigation.navigate("AddOfficerBasicDetails" as any);
+  //     } catch (error) {
+  //       console.error("Error clearing form data:", error);
+  //     }
+  //   }}
+  //   className="absolute bottom-5 right-5 bg-black w-14 h-14 rounded-full justify-center items-center shadow-lg"
+  // >
+  //   <Ionicons name="add" size={scale(24)} color="#fff" />
+  // </TouchableOpacity>;
 
   return (
     <View className="flex-1 bg-[#2AAD7A]">
@@ -265,7 +265,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
         >
           <FontAwesome name="filter" size={24} color="#fff" />
         </TouchableOpacity> */}
-        {showFilter && (
+        {/* {showFilter && (
           <View className="absolute z-50 flex-col top-14 left-6 bg-white shadow-lg rounded-lg">
             <TouchableOpacity
               className={`px-4 py-2 bg-white rounded-lg  ${
@@ -294,7 +294,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
               </Text>
             </TouchableOpacity>
           </View>
-        )}
+        )} */}
 
         <Text
           style={{ fontSize: 18 }}
@@ -317,7 +317,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
           <View className="absolute top-14 right-4 bg-white shadow-lg rounded-lg">
             <TouchableOpacity
               className="px-4 py-2 bg-white rounded-lg shadow-lg"
-              onPress={() => navigation.navigate("ClaimOfficer")}
+              onPress={() => navigation.navigate("ClaimDistribution")}
             >
               <Text className="text-gray-700 font-semibold">
                 {t("CollectionOfficersList.Claim Officer")}
@@ -411,7 +411,9 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
             try {
               await AsyncStorage.removeItem("officerFormData"); // Clear stored data
               // navigation.navigate("AddOfficerBasicDetails" as any);
-              navigation.navigate("AddOfficerBasicDetails", {jobRolle:"Collection Officer"});
+                            navigation.navigate("AddOfficerBasicDetails", {jobRolle:"Distribution Officer"});
+
+console.log("hirt")
             } catch (error) {
               console.error("Error clearing form data:", error);
             }
@@ -425,4 +427,4 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
   );
 };
 
-export default CollectionOfficersList;
+export default DistributionOfficersList;

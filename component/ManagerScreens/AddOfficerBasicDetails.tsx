@@ -14,7 +14,7 @@ import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { OfficerBasicDetailsFormData } from "../types";
 import { environment } from "@/environment/environment";
 import countryCodes from "./countryCodes.json";
@@ -33,9 +33,18 @@ type AddOfficerBasicDetailsNavigationProp = StackNavigationProp<
   "AddOfficerBasicDetails"
 >;
 
-const AddOfficerBasicDetails: React.FC = () => {
-  const navigation = useNavigation<AddOfficerBasicDetailsNavigationProp>();
+type AddOfficerRouteProp = RouteProp<RootStackParamList, "AddOfficerBasicDetails">;
 
+interface AddOfficerProp {
+  navigation: AddOfficerBasicDetailsNavigationProp;
+  route: AddOfficerRouteProp;
+}
+
+const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
+  route,
+  navigation,
+}) => {
+  const { jobRolle} = route.params;
   const [type, setType] = useState<"Permanent" | "Temporary">("Permanent");
   const [preferredLanguages, setPreferredLanguages] = useState({
     Sinhala: false,
@@ -43,6 +52,9 @@ const AddOfficerBasicDetails: React.FC = () => {
     Tamil: false,
   });
   const [jobRole, setJobRole] = useState<string>("Collection Officer");
+//   const [jobRole, setJobRole] = useState<string>(String(jobRolle));
+    console.log(jobRole)
+
   const [phoneCode1, setPhoneCode1] = useState<string>("+94"); // Default Sri Lanka calling code
   const [phoneCode2, setPhoneCode2] = useState<string>("+94"); // Default Sri Lanka calling code
   const [phoneNumber1, setPhoneNumber1] = useState("");
@@ -208,6 +220,17 @@ const AddOfficerBasicDetails: React.FC = () => {
     }, [jobRole])
   );
 
+  useFocusEffect(
+    // Callback should be wrapped in `React.useCallback` to avoid running the effect too often.
+    useCallback(() => {
+
+ setJobRole(String(jobRolle));
+      fetchEmpId(String(jobRolle)); 
+       return () => {
+        console.log('This route is now unfocused.');
+      };
+    }, [])
+  );
   const handleImagePick = async () => {
     // Request for camera roll permission if not granted
     const permissionResult =
@@ -300,7 +323,7 @@ const AddOfficerBasicDetails: React.FC = () => {
       const prefixedUserId =
         jobRole === "Collection Officer"
           ? `COO${formData.userId}`
-          : formData.userId;
+          : `DIO${formData.userId}`;
 
       // Navigate to the next screen with the updated data
       navigation.navigate("AddOfficerAddressDetails", {
@@ -619,7 +642,7 @@ const AddOfficerBasicDetails: React.FC = () => {
               }}
             >
               <Text className="text-gray-700 text-center">
-                {jobRole === "Collection Officer" ? "COO" : ""}
+                {jobRole === "Collection Officer" ? "COO" : "DIO"}
               </Text>
             </View>
 

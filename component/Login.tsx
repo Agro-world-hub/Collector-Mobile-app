@@ -22,6 +22,8 @@ import { useTranslation } from "react-i18next";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import LottieView from "lottie-react-native"; // Import LottieView
 import { useFocusEffect } from "expo-router";
+import { setUser } from '../store/authSlice';
+import { useDispatch } from "react-redux";
 // import socket from "@/services/socket";
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Login">;
@@ -38,7 +40,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [loading, setLoading] = useState(false); // State for showing loader
   const { t } = useTranslation();
-
+const dispatch = useDispatch();
   const handleLogin = async () => {
     Keyboard.dismiss(); // Dismiss the keyboard
     if (!empid && !password) {
@@ -125,7 +127,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       await AsyncStorage.setItem("companyNameSinhala", companyNameSinhala);
       await AsyncStorage.setItem("companyNameTamil", companyNameTamil);
       await AsyncStorage.setItem("empid", empId.toString());
-
+dispatch(setUser({ token, jobRole, empId: empId.toString() }));
       if (token) {
         const timestamp = new Date();
         const expirationTime = new Date(
@@ -142,26 +144,28 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       await status(empId, true);
       setTimeout(() => {
         setLoading(false);
-        if (passwordUpdateRequired) {
-          navigation.navigate("ChangePassword", { empid } as any);
-        } else {
-          if (jobRole === "Collection Officer") {
-            navigation.navigate("Main", { screen: "Dashboard" });
-          } else {
-            navigation.navigate("Main", { screen: "ManagerDashboard" });
-          }
-        }
-//           if (passwordUpdateRequired) {
-//   navigation.navigate("ChangePassword", { empid } as any);
-// } else {
-//   if (jobRole === "Distribution Officer") {
-//     navigation.navigate("Main", { screen: "DistridutionaDashboard" });
-//   } else if (jobRole === "Collection Officer") {
-//     navigation.navigate("Main", { screen: "Dashboard" });
-//   } else {
-//     navigation.navigate("Main", { screen: "ManagerDashboard" });
-//   }
-// }
+//         if (passwordUpdateRequired) {
+//           navigation.navigate("ChangePassword", { empid } as any);
+//         } else {
+//           if (jobRole === "Collection Officer") {
+//             navigation.navigate("Main", { screen: "Dashboard" });
+//           } else {
+//             navigation.navigate("Main", { screen: "ManagerDashboard" });
+//           }
+//         }
+
+if (passwordUpdateRequired) {
+  navigation.navigate("ChangePassword", { empid } as any);
+} else {
+  // Fixed: Check for both Distribution roles individually
+  if (jobRole === "Distribution Officer" || jobRole === "Distribution Manager") {
+    navigation.navigate("Main", { screen: "DistridutionaDashboard" });
+  } else if (jobRole === "Collection Officer") {
+    navigation.navigate("Main", { screen: "Dashboard" });
+  } else {
+    navigation.navigate("Main", { screen: "ManagerDashboard" });
+  }
+}
 
       }, 4000);
     } catch (error) {

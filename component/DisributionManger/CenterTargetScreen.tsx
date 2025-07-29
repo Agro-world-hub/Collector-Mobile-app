@@ -9,11 +9,14 @@ import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useTranslation } from "react-i18next";
+import { RouteProp } from '@react-navigation/native';
 
-type TargetOrderScreenNavigationProps = StackNavigationProp<RootStackParamList, 'TargetOrderScreen'>;
+type CenterTargetScreenNavigationProps = StackNavigationProp<RootStackParamList, 'CenterTargetScreen'>;
+type CenterTargetScreenRouteProp = RouteProp<RootStackParamList, 'CenterTargetScreen'>;
 
-interface TargetOrderScreenProps {
-  navigation: TargetOrderScreenNavigationProps;
+interface CenterTargetScreenProps {
+  navigation: CenterTargetScreenNavigationProps;
+  route: CenterTargetScreenRouteProp; 
 }
 
 interface TargetData {
@@ -42,8 +45,6 @@ interface TargetData {
   pendingPackageItems: number | null;
   isPackage: number;
   orderId: string;
-  sheduleDate: string;
-  sheduleTime: string;
 }
 
 // Backend API response interface - Updated to match actual API response
@@ -68,7 +69,7 @@ interface ApiTargetData {
   status: string;
   orderCreatedAt: string;
   reportStatus: string;
-  selectedStatus: 'Pending' | 'Opened' | 'Completed';
+  selectedStatus: 'Pending' | 'Opened' | 'Completed'; // This is what the API actually returns
   additionalItemStatus: 'Pending' | 'Opened' | 'Completed' | null;
   packageItemStatus: 'Pending' | 'Opened' | 'Completed' | null;
   totalAdditionalItems: number;
@@ -79,10 +80,10 @@ interface ApiTargetData {
   pendingPackageItems: number | null;
   isPackage: number;
   packageIsLock: number;
-  sheduleDate: string;
-  sheduleTime: string;
 }
-const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => {
+
+const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,route}) => {
+      const { centerId } = route.params;
   const [todoData, setTodoData] = useState<TargetData[]>([]);
   const [completedData, setCompletedData] = useState<TargetData[]>([]);
   const [centerCode, setcenterCode] = useState<string | null>("");
@@ -92,6 +93,10 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+
+
+
+  console.log("------centerId--------",centerId)
 
   const fetchSelectedLanguage = async () => {
     try {
@@ -136,46 +141,6 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
     });
   };
 
-  // Function to format schedule time (remove "Within" text)
-  const formatScheduleTime = (timeString: string): string => {
-    if (!timeString) return '';
-    
-    // Remove "Within" text and trim whitespace
-    return timeString.replace(/^Within\s*/i, '').trim();
-  };
-
-  // Function to format schedule date (month and date only)
-  const formatScheduleDate = (dateString: string): string => {
-    if (!dateString) return '';
-    
-    try {
-      const date = new Date(dateString);
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
-      return `${month}/${day}`;
-    } catch (error) {
-      console.error('Error formatting schedule date:', error);
-      return '';
-    }
-  };
-
-  // Function to check if schedule date is today
-  const isScheduleDateToday = (dateString: string): boolean => {
-    if (!dateString) return false;
-    
-    try {
-      const scheduleDate = new Date(dateString);
-      const today = new Date();
-      
-      return scheduleDate.getFullYear() === today.getFullYear() &&
-             scheduleDate.getMonth() === today.getMonth() &&
-             scheduleDate.getDate() === today.getDate();
-    } catch (error) {
-      console.error('Error checking if date is today:', error);
-      return false;
-    }
-  };
-
   // Updated function to map API data to frontend format using selectedStatus
   const mapApiDataToTargetData = (apiData: ApiTargetData[]): TargetData[] => {
     return apiData.map((item, index) => ({
@@ -193,7 +158,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
       createdAt: item.targetCreatedAt,
       updatedAt: item.itemCreatedAt,
       completedTime: item.completeTime,
-      selectedStatus: item.selectedStatus,
+      selectedStatus: item.selectedStatus, // Use selectedStatus from API
       additionalItemStatus: item.additionalItemStatus,
       packageItemStatus: item.packageItemStatus,
       totalAdditionalItems: item.totalAdditionalItems || 0,
@@ -204,9 +169,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
       packedPackageItems: item.packedPackageItems,
       pendingPackageItems: item.pendingPackageItems,
       isPackage: item.isPackage,
-      orderId: item.orderId,
-      sheduleDate: item.sheduleDate,
-      sheduleTime: item.sheduleTime
+      orderId: item.orderId
     }));
   };
 
@@ -240,11 +203,11 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
         throw new Error("Authentication token not found. Please login again.");
       }
 
-      console.log("Making request to:", `${environment.API_BASE_URL}api/distribution/officer-target`);
+      console.log("Making request to:", `${environment.API_BASE_URL}api/distribution-manager/get-dcenter-target`);
       console.log("Auth token exists:", !!authToken);
 
       const response = await axios.get(
-        `${environment.API_BASE_URL}api/distribution/officer-target`,
+        `${environment.API_BASE_URL}api/distribution-manager/get-dcenter-target`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -412,14 +375,14 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
     }
   };
 
-  return (
+   return (
     <View className="flex-1 bg-[#282828]">
       {/* Header */}
       <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
         <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4">
           <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-bold">{t("TargetOrderScreen.My Daily Target")}</Text>
+        <Text className="text-white text-lg font-bold">{t("CenterTarget.CenterTarget")}</Text>
       </View>
 
       {/* Toggle Buttons */}
@@ -466,16 +429,9 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
         <View className="flex-row bg-[#2AAD7A] py-3">
           <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
           <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
-          
-          {selectedToggle === 'ToDo' ? (
-            <>
-              <Text className="flex-[2] text-center text-white font-bold ">Date & Time</Text>
-          
-              <Text className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Status")}</Text>
-            </>
-          ) : (
-            <Text className="flex-[2] text-center text-white font-bold">Completed Time</Text>
-          )}
+          <Text className="flex-[2] text-center text-white font-bold">
+            {selectedToggle === 'ToDo' ? t("TargetOrderScreen.Status") : "Completed Time"}
+          </Text>
         </View>
 
         {/* Error Message */}
@@ -502,12 +458,11 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
           </View>
         ) : displayedData.length > 0 ? (
           displayedData.map((item, index) => (
-            <TouchableOpacity
+            <View
               key={item.id || index}
               className={`flex-row py-4 border-b border-gray-200 ${
                 index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
               }`}
-              onPress={() => handleRowPress(item)}
             >
               {/* Row Number */}
               <View className="flex-1 items-center justify-center relative">
@@ -523,44 +478,26 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
                 <Text className="text-center font-medium text-gray-800">
                   {item.invoiceNo || `INV${item.id || (index + 1).toString().padStart(6, '0')}`}
                 </Text>
-                {/* Red dot indicator for locked packages */}
-                {item.packageIsLock === 1 && (
-                  <View className="absolute right-1 top-1 w-3 h-3 bg-red-500 rounded-full"></View>
-                )}
               </View>
 
-              {selectedToggle === 'ToDo' ? (
-                <>
-                  {/* Date */}
-                  <View className="flex-[2] items-center justify-center px-2">
-                    <Text className={`text-center font-medium text-xs ${
-                      isScheduleDateToday(item.sheduleDate) ? 'text-red-600' : 'text-gray-800'
-                    }`}>
-                      {formatScheduleDate(item.sheduleDate)}  {formatScheduleTime(item.sheduleTime) || 'N/A'}
+              {/* Status or Completed Time */}
+              <View className="flex-[2] items-center justify-center px-2">
+                {selectedToggle === 'ToDo' ? (
+                  <View className={`px-3 py-2 rounded-lg ${getStatusColor(item.selectedStatus)}`}>
+                    <Text className="text-xs font-medium text-center">
+                      {getStatusText(item.selectedStatus)}
                     </Text>
+                    {item.packageIsLock === 1 && (
+                      <View className="absolute right-[-20] mt-2 w-4 h-4 bg-red-500 rounded-full border border-white"></View>
+                    )}
                   </View>
-
-                  {/* Time */}
-                  
-
-                  {/* Status */}
-                  <View className="flex-[2] items-center justify-center px-2">
-                    <View className={`px-3 py-2 rounded-lg ${getStatusColor(item.selectedStatus)}`}>
-                      <Text className="text-xs font-medium text-center">
-                        {getStatusText(item.selectedStatus)}
-                      </Text>
-                    </View>
-                  </View>
-                </>
-              ) : (
-                /* Completed Time */
-                <View className="flex-[2] items-center justify-center px-2">
+                ) : (
                   <Text className="text-center text-gray-600 text-sm">
                     {item.completedTime ? formatCompletionTime(item.completedTime) : 'N/A'}
                   </Text>
-                </View>
-              )}
-            </TouchableOpacity>
+                )}
+              </View>
+            </View>
           ))
         ) : (
           <View className="flex-1 justify-center items-center py-20">
@@ -583,4 +520,5 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
   );
 };
 
-export default TargetOrderScreen;
+
+export default CenterTargetScreen;
