@@ -200,8 +200,14 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
         }
     
         try {
+           const token = await AsyncStorage.getItem("token"); 
             // Send the selected varietyId to fetch unit prices
-            const pricesResponse = await api.get(`api/unregisteredfarmercrop/unitPrices/${varietyId}`);
+            // const pricesResponse = await api.get(`api/unregisteredfarmercrop/unitPrices/${varietyId}`);
+            const pricesResponse = await api.get(`api/unregisteredfarmercrop/unitPrices/${varietyId}`, {
+    headers: {
+      Authorization: `Bearer ${token}` // Pass the token in the Authorization header
+    }
+  })
     
             // Check if the response status is 404 (Not Found)
             if (pricesResponse.status === 404) {

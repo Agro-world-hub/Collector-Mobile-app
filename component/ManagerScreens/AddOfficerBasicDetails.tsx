@@ -51,7 +51,8 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
     English: false,
     Tamil: false,
   });
-  const [jobRole, setJobRole] = useState<string>(String(jobRolle));
+  const [jobRole, setJobRole] = useState<string>("Collection Officer");
+//   const [jobRole, setJobRole] = useState<string>(String(jobRolle));
     console.log(jobRole)
 
   const [phoneCode1, setPhoneCode1] = useState<string>("+94"); // Default Sri Lanka calling code
@@ -206,12 +207,18 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
     }
   };
 
-  const handleJobRoleChange = (role: string) => {
-    setJobRole(role);
-    if (role !== "Select Job Role") {
-      fetchEmpId(role); // Fetch empId based on the selected role
-    }
-  };
+  // const handleJobRoleChange = (role: string) => {
+    // setJobRole(role);
+    // if (role !== "Select Job Role") {
+    //   fetchEmpId(role); // Fetch empId based on the selected role
+    // }
+  // };
+
+    useFocusEffect(
+    useCallback(() => {
+      fetchEmpId(jobRole); // Fetch empId based on the selected role
+    }, [jobRole])
+  );
 
   useFocusEffect(
     // Callback should be wrapped in `React.useCallback` to avoid running the effect too often.
