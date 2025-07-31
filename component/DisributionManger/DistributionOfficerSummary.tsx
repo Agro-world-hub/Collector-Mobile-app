@@ -360,7 +360,7 @@ const fetchTaskSummary = async () => {
           <Text className="mt-4 text-lg font-bold text-black">
             {officerName}
           </Text>
-          <Text className="text-sm text-gray-500">{t("OfficerSummary.EMPID")} {officerId}</Text>
+          <Text className="text-sm text-gray-500">{t("DistributionOfficersList.EMPID")} {officerId}</Text>
         </View>
 
         {/* Action Buttons Section */}

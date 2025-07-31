@@ -849,7 +849,10 @@
     "Yourtarget": "Your Target",
     "Progress": "Progress",
     "TargetOrders":"Target Orders",
-    "Search": "Search By NIC"
+    "Search": "Search By NIC",
+    "Pending":"Pending",
+     "Opened": "Opened"
+   
   },
   "TargetOrderScreen" :{
      "LNG": "en",
@@ -863,7 +866,10 @@
     "Todo()":"Todo (kg)",
     "My Daily Target":"My Daily Target",
     "Invoice No":"Invoice No",
-    "Status":"Status"
+    "Status":"Status",
+    "Date":"Date & Time",
+    "Completed Time":"Completed Time",
+    "Retry":"Retry"
   },
   "OpenedOrderScreen":{
     "INV No":"INV No :",
@@ -872,11 +878,85 @@
     "Submit":"Submit",
     "Leave without Submitting": "Leave without Submitting",
     "Stay on page":"Stay on page",
-    "You have unsubmitted changes!":" You have unsubmitted changes!",
+    "You have unsubmitted changes":"You have unsubmitted changes!",
     "If you leave this page now, your changes will be lost.":"If you leave this page now, your changes will be lost.",
     "Do you want to continue without saving?":"Do you want to continue without saving?",
     "Opened":"Opened",
     "Completed":"Completed"
+  },
+  "PendingOrderScreen":{
+    "Custom Selected Items":"Custom Selected Items",
+    "Back to Edit":"Back to Edit",
+    "Mark as Completed":"Mark as Completed",
+    "TapGoback":"Tap 'Go Back' to edit.",
+    "MarkingAs":"Marking as completed soon.",
+    "FinishUp":"Finish up!",
+    "Save":"Save",
+    "All checked":"All checked. Order will move to",
+    "Completed":"Completed",
+    "onsave":"on save.",
+    "Unchecked items":"Unchecked items remain. Saving now keeps the order in",
+    "Opened":"Opened",
+    "Status":"Status.",
+    "Leave without Submitting":"Leave without Submitting",
+    "OK":"OK",
+    "TheOrder":"The order has been marked as completed.",
+    "Completed Successfully":"Completed Successfully!",
+    "Go Back":"Go Back",
+    "Send Replace Request":"Send Replace Request",
+    "No products available":"No products available",
+    "Rs":"Rs",
+    "New Product Details":"New Product Details",
+    "Product Type":"Product Type:",
+    "Selected product":"Selected product:",
+    "Replace Product":"Replace Product",
+    "Marking as completed in":"Marking as completed in",
+    "seconds":"seconds."
+
+  },
+  "Status": {
+    "Pending": "Pending",
+    "Opened": "Opened",
+    "Completed": "Completed",
+    "InProgress": "In Progress"
+  },
+  "TimerContainer":{
+    "Start":"Start",
+    "Pause":"Pause",
+    "Reset":"Reset"
+  },
+  "DailyTargetListOfficerDistribution":{
+    "Are you sure":"Are you sure you want to pass this target to some other officer?",
+    "Cancel":"Cancel",
+    "Pass":"Pass",
+    "Completed Time":"Completed Time",
+    "Retry":"Retry"
+  },
+  "DistributionOfficersList":{
+    "EMPID":"EMP ID :"
+  },
+  "PassTarget":{
+    "EMP ID":"EMP ID",
+    "Select Assignee":"Select Assignee",
+    "Loading officers":"Loading officers..",
+    "Selected Targets":"Selected Targets",
+    "Save":"Save",
+    "Dismiss":"Dismiss"
+  },
+  "ReplaceRequestsApprove":{
+    "Loading replace request":"Loading replace request...",
+    "Order ID":"Order ID:",
+    "Defined product":"Defined product",
+    "Relevant Product Type":"Relevant Product Type:",
+    "Replacing Product Details":"Replacing Product Details",
+    "ID":"ID:",
+    "No products available":"No products available",
+    "Approve":"Approve",
+    "Rs":"Rs."
+  },
+  "ReplaceRequestsScreen":{
+    "Order ID":"Order ID:",
+    "Replacing Item":"Replacing Item:"
   }
 
 

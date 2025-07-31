@@ -124,32 +124,101 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
   };
 
   // Helper function to get status color
+  // const getStatusColor = (status: string) => {
+  //   switch (status?.toLowerCase()) {
+  //     case 'completed':
+  //       return 'bg-[#BBFFC6] border-[#BBFFC6] text-[#6AD16D]';
+  //     case 'opened':
+  //       return 'bg-[#F8FFA6] border-[#F8FFA6] text-[#A8A100]';
+  //     case 'pending':
+  //       return 'bg-[#FFB9B7] border-[#FFB9B7] text-[#D16D6A]';
+  //     default:
+  //       return 'bg-gray-100 border-gray-200';
+  //   }
+  // };
+
   const getStatusColor = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case 'completed':
-        return 'bg-[#BBFFC6] border-[#BBFFC6] text-[#6AD16D]';
-      case 'opened':
-        return 'bg-[#F8FFA6] border-[#F8FFA6] text-[#A8A100]';
-      case 'pending':
-        return 'bg-[#FFB9B7] border-[#FFB9B7] text-[#D16D6A]';
-      default:
-        return 'bg-gray-100 border-gray-200';
-    }
-  };
+  // Convert to lowercase and handle different language variations
+  const normalizedStatus = status?.toLowerCase();
+  
+  // English
+  if (normalizedStatus === 'completed') {
+    return 'bg-[#BBFFC6] border-[#BBFFC6] text-[#6AD16D]';
+  }
+  if (normalizedStatus === 'opened') {
+    return 'bg-[#F8FFA6] border-[#F8FFA6] text-[#A8A100]';
+  }
+  if (normalizedStatus === 'pending') {
+    return 'bg-[#FFB9B7] border-[#FFB9B7] text-[#D16D6A]';
+  }
+  
+  // Sinhala translations
+  if (normalizedStatus === 'සම්පූර්ණ' || normalizedStatus === 'සම්පූර්ණයි') {
+    return 'bg-[#BBFFC6] border-[#BBFFC6] text-[#6AD16D]';
+  }
+  if (normalizedStatus === 'විවෘත' || normalizedStatus === 'විවෘතයි') {
+    return 'bg-[#F8FFA6] border-[#F8FFA6] text-[#A8A100]';
+  }
+  if (normalizedStatus === 'අපේක්ෂිත' || normalizedStatus === 'පොරොත්තුවේ') {
+    return 'bg-[#FFB9B7] border-[#FFB9B7] text-[#D16D6A]';
+  }
+  
+  // Tamil translations
+  if (normalizedStatus === 'முடிக்கப்பட்டது' || normalizedStatus === 'நிறைவு') {
+    return 'bg-[#BBFFC6] border-[#BBFFC6] text-[#6AD16D]';
+  }
+  if (normalizedStatus === 'திறக்கப்பட்டது' || normalizedStatus === 'திறந்த') {
+    return 'bg-[#F8FFA6] border-[#F8FFA6] text-[#A8A100]';
+  }
+  if (normalizedStatus === 'நிலுவையில்' || normalizedStatus === 'காத்திருக்கும்') {
+    return 'bg-[#FFB9B7] border-[#FFB9B7] text-[#D16D6A]';
+  }
+  
+  return 'bg-gray-100 border-gray-200';
+};
 
   // Helper function to get status text
+  // const getStatusText = (status: string) => {
+  //   switch (status?.toLowerCase()) {
+  //     case 'completed':
+  //       return 'Completed';
+  //     case 'opened':
+  //       return 'Opened';
+  //     case 'pending':
+  //       return 'Pending';
+  //     default:
+  //       return 'Unknown';
+  //   }
+  // };
+
   const getStatusText = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case 'completed':
-        return 'Completed';
-      case 'opened':
-        return 'Opened';
-      case 'pending':
-        return 'Pending';
-      default:
-        return 'Unknown';
-    }
-  };
+  const normalizedStatus = status?.toLowerCase();
+  
+  // Return translated status based on current language
+  switch (normalizedStatus) {
+    case 'completed':
+    case 'සම්පූර්ණ':
+    case 'සම්පූර්ණයි':
+    case 'முடிக்கப்பட்டது':
+    case 'நிறைவு':
+      return t("Status.Completed");
+    case 'opened':
+    case 'විවෘත':
+    case 'විවෘතයි':
+    case 'திறக்கப்பட்டது':
+    case 'திறந்த':
+      return t("Status.Opened");
+    case 'pending':
+    case 'අපේක්ෂිත':
+    case 'පොරොත්තුවේ':
+    case 'நிலுவையில்':
+    case 'காத்திருக்கும்':
+      return t("Status.Pending");
+    default:
+      return t("Status.Unknown");
+  }
+};
+
 
   // Helper function to format completion time
   const formatCompletionTime = (timeString: string) => {
@@ -447,7 +516,8 @@ const handleRowPress = (item: OrderData) => {
             
             {/* Message */}
             <Text className="text-center text-gray-800 text-base mb-6 leading-5">
-              Are you sure you want to pass this target to some other officer?
+              {t("DailyTargetListOfficerDistribution.Are you sure")}
+              
             </Text>
             
             {/* Buttons */}
@@ -456,14 +526,14 @@ const handleRowPress = (item: OrderData) => {
                 onPress={handleCancelPass}
                 className="flex-1 mr-2 py-3 px-6 bg-[#F6F7F9] border border-[#95A1AC] rounded-lg"
               >
-                <Text className="text-center text-gray-700 font-medium">Cancel</Text>
+                <Text className="text-center text-gray-700 font-medium"> {t("DailyTargetListOfficerDistribution.Cancel")}</Text>
               </TouchableOpacity>
               
               <TouchableOpacity
                 onPress={handleConfirmPass}
                 className="flex-1 ml-2 py-3 px-6 bg-[#2AAD7A] border border-[#319576] rounded-lg"
               >
-                <Text className="text-center text-white font-medium">Pass</Text>
+                <Text className="text-center text-white font-medium"> {t("DailyTargetListOfficerDistribution.Pass")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -535,7 +605,7 @@ const handleRowPress = (item: OrderData) => {
           {selectedToggle === 'ToDo' ? (
             <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Status")}</Text>
           ) : (
-            <Text className="flex-[2] text-center text-white font-bold">Completed Time</Text>
+            <Text className="flex-[2] text-center text-white font-bold">{t("DailyTargetListOfficerDistribution.Completed Time")}</Text>
           )}
         </View>
 
@@ -547,7 +617,7 @@ const handleRowPress = (item: OrderData) => {
               onPress={() => fetchTargets()} 
               className="mt-2 bg-red-500 px-4 py-2 rounded"
             >
-              <Text className="text-white text-center">Retry</Text>
+              <Text className="text-white text-center">{t("DailyTargetListOfficerDistribution.Retry")}</Text>
             </TouchableOpacity>
           </View>
         )}

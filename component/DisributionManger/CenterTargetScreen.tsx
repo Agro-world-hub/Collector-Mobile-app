@@ -83,7 +83,7 @@ interface ApiTargetData {
 }
 
 const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,route}) => {
-      const { centerId } = route.params;
+  const { centerId } = route.params;
   const [todoData, setTodoData] = useState<TargetData[]>([]);
   const [completedData, setCompletedData] = useState<TargetData[]>([]);
   const [centerCode, setcenterCode] = useState<string | null>("");
@@ -94,8 +94,6 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
   const { t } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
 
-
-
   console.log("------centerId--------",centerId)
 
   const fetchSelectedLanguage = async () => {
@@ -104,6 +102,76 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
       setSelectedLanguage(lang || "en");
     } catch (error) {
       console.error("Error fetching language preference:", error);
+    }
+  };
+
+  // Helper function to get status color (language independent)
+  const getStatusColor = (status: string) => {
+    // Convert to lowercase and handle different language variations
+    const normalizedStatus = status?.toLowerCase();
+    
+    // English
+    if (normalizedStatus === 'completed') {
+      return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
+    }
+    if (normalizedStatus === 'opened') {
+      return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
+    }
+    if (normalizedStatus === 'pending') {
+      return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
+    }
+    
+    // Sinhala translations
+    if (normalizedStatus === 'සම්පූර්ණ' || normalizedStatus === 'සම්පූර්ණයි') {
+      return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
+    }
+    if (normalizedStatus === 'විවෘත' || normalizedStatus === 'විවෘතයි') {
+      return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
+    }
+    if (normalizedStatus === 'අපේක්ෂිත' || normalizedStatus === 'පොරොත්තුවේ') {
+      return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
+    }
+    
+    // Tamil translations
+    if (normalizedStatus === 'முடிக்கப்பட்டது' || normalizedStatus === 'நிறைவு') {
+      return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
+    }
+    if (normalizedStatus === 'திறக்கப்பட்டது' || normalizedStatus === 'திறந்த') {
+      return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
+    }
+    if (normalizedStatus === 'நிலுவையில்' || normalizedStatus === 'காத்திருக்கும்') {
+      return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
+    }
+    
+    return 'bg-gray-100 border border-gray-300 text-gray-700';
+  };
+
+  // Helper function to get translated status text
+  const getStatusText = (status: string) => {
+    const normalizedStatus = status?.toLowerCase();
+    
+    // Return translated status based on current language
+    switch (normalizedStatus) {
+      case 'completed':
+      case 'සම්පූර්ණ':
+      case 'සම්පූර්ණයි':
+      case 'முடிக்கப்பட்டது':
+      case 'நிறைவு':
+        return t("Status.Completed");
+      case 'opened':
+      case 'විවෘත':
+      case 'විවෘතයි':
+      case 'திறக்கப்பட்டது':
+      case 'திறந்த':
+        return t("Status.Opened");
+      case 'pending':
+      case 'අපේක්ෂිත':
+      case 'පොරොත්තුවේ':
+      case 'நிலுவையில்':
+      case 'காத்திருக்கும்':
+        return t("Status.Pending");
+      default:
+        return t("Status.Unknown");
     }
   };
 
@@ -341,29 +409,6 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
 
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
 
-  // Updated to use selectedStatus for styling
-  const getStatusColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
-    switch (selectedStatus) {
-      case 'Pending': 
-        return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
-      case 'Opened': 
-        return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
-      case 'Completed': 
-        return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
-      default: 
-        return 'bg-gray-100 border border-gray-300 text-gray-700';
-    }
-  };
-
-  const getStatusText = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
-    const statusMap = {
-      'Pending': t("Pending") || 'Pending',
-      'Opened': t("Opened") || 'Opened', 
-      'Completed': t("Completed") || 'Completed'
-    };
-    return statusMap[selectedStatus] || selectedStatus;
-  };
-
   // Function to get detailed status display for debugging/info
   const getDetailedStatusDisplay = (item: TargetData) => {
     if (item.isPackage === 0) {
@@ -442,7 +487,7 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
               onPress={() => fetchTargets()} 
               className="mt-2 bg-red-500 px-4 py-2 rounded"
             >
-              <Text className="text-white text-center">Retry</Text>
+              <Text className="text-white text-center">{t("TargetOrderScreen.Retry")}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -458,11 +503,12 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
           </View>
         ) : displayedData.length > 0 ? (
           displayedData.map((item, index) => (
-            <View
+            <TouchableOpacity
               key={item.id || index}
               className={`flex-row py-4 border-b border-gray-200 ${
                 index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
               }`}
+              onPress={() => handleRowPress(item)}
             >
               {/* Row Number */}
               <View className="flex-1 items-center justify-center relative">
@@ -478,6 +524,10 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
                 <Text className="text-center font-medium text-gray-800">
                   {item.invoiceNo || `INV${item.id || (index + 1).toString().padStart(6, '0')}`}
                 </Text>
+                {/* Red dot indicator for locked packages */}
+                {item.packageIsLock === 1 && (
+                  <View className="absolute right-1 top-1 w-3 h-3 bg-red-500 rounded-full"></View>
+                )}
               </View>
 
               {/* Status or Completed Time */}
@@ -487,9 +537,6 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
                     <Text className="text-xs font-medium text-center">
                       {getStatusText(item.selectedStatus)}
                     </Text>
-                    {item.packageIsLock === 1 && (
-                      <View className="absolute right-[-20] mt-2 w-4 h-4 bg-red-500 rounded-full border border-white"></View>
-                    )}
                   </View>
                 ) : (
                   <Text className="text-center text-gray-600 text-sm">
@@ -497,7 +544,7 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
                   </Text>
                 )}
               </View>
-            </View>
+            </TouchableOpacity>
           ))
         ) : (
           <View className="flex-1 justify-center items-center py-20">
@@ -519,6 +566,5 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
     </View>
   );
 };
-
 
 export default CenterTargetScreen;

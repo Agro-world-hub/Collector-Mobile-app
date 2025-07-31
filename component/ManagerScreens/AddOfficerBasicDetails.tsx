@@ -282,7 +282,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
       return;
     }
     if (
-      !formData.userId ||
+    
       !formData.firstNameEnglish ||
       !formData.lastNameEnglish ||
       !phoneNumber1 || // Ensure phone number 1 is provided
@@ -327,7 +327,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
 
       // Navigate to the next screen with the updated data
       navigation.navigate("AddOfficerAddressDetails", {
-        formData: { ...updatedFormData, userId: prefixedUserId },
+        formData: { ...updatedFormData },
         type,
         preferredLanguages,
         jobRole,

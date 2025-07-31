@@ -64,6 +64,116 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
   console.log("Passed selectedItems:", passedSelectedItems);
   console.log("Passed invoiceNumbers:", invoiceNumbers);
 
+  // Helper function to get status color (language independent)
+  const getStatusColor = (status: string) => {
+    // Convert to lowercase and handle different language variations
+    const normalizedStatus = status?.toLowerCase();
+    
+    // English
+    if (normalizedStatus === 'completed') {
+      return 'bg-[#BBFFC6]';
+    }
+    if (normalizedStatus === 'opened') {
+      return 'bg-[#F8FFA6]';
+    }
+    if (normalizedStatus === 'pending') {
+      return 'bg-[#FFB9B7]';
+    }
+    
+    // Sinhala translations
+    if (normalizedStatus === 'සම්පූර්ණ' || normalizedStatus === 'සම්පූර්ණයි') {
+      return 'bg-[#BBFFC6]';
+    }
+    if (normalizedStatus === 'විවෘත' || normalizedStatus === 'විවෘතයි') {
+      return 'bg-[#F8FFA6]';
+    }
+    if (normalizedStatus === 'අපේක්ෂිත' || normalizedStatus === 'පොරොත්තුවේ') {
+      return 'bg-[#FFB9B7]';
+    }
+    
+    // Tamil translations
+    if (normalizedStatus === 'முடிக்கப்பட்டது' || normalizedStatus === 'நிறைவு') {
+      return 'bg-[#BBFFC6]';
+    }
+    if (normalizedStatus === 'திறக்கப்பட்டது' || normalizedStatus === 'திறந்த') {
+      return 'bg-[#F8FFA6]';
+    }
+    if (normalizedStatus === 'நிலுவையில்' || normalizedStatus === 'காத்திருக்கும்') {
+      return 'bg-[#FFB9B7]';
+    }
+    
+    return 'bg-gray-100';
+  };
+
+  // Helper function to get status text color
+  const getStatusTextColor = (status: string) => {
+    const normalizedStatus = status?.toLowerCase();
+    
+    // English
+    if (normalizedStatus === 'completed') {
+      return 'text-[#6AD16D]';
+    }
+    if (normalizedStatus === 'opened') {
+      return 'text-[#A8A100]';
+    }
+    if (normalizedStatus === 'pending') {
+      return 'text-[#D16D6A]';
+    }
+    
+    // Sinhala translations
+    if (normalizedStatus === 'සම්පූර්ණ' || normalizedStatus === 'සම්පූර්ණයි') {
+      return 'text-[#6AD16D]';
+    }
+    if (normalizedStatus === 'විවෘත' || normalizedStatus === 'විවෘතයි') {
+      return 'text-[#A8A100]';
+    }
+    if (normalizedStatus === 'අපේක්ෂිත' || normalizedStatus === 'පොරොත්තුවේ') {
+      return 'text-[#D16D6A]';
+    }
+    
+    // Tamil translations
+    if (normalizedStatus === 'முடிக்கப்பட்டது' || normalizedStatus === 'நிறைவு') {
+      return 'text-[#6AD16D]';
+    }
+    if (normalizedStatus === 'திறக்கப்பட்டது' || normalizedStatus === 'திறந்த') {
+      return 'text-[#A8A100]';
+    }
+    if (normalizedStatus === 'நிலுவையில்' || normalizedStatus === 'காத்திருக்கும்') {
+      return 'text-[#D16D6A]';
+    }
+    
+    return 'text-gray-600';
+  };
+
+  // Helper function to get translated status text
+  const getStatusText = (status: string) => {
+    const normalizedStatus = status?.toLowerCase();
+    
+    // Return translated status based on current language
+    switch (normalizedStatus) {
+      case 'completed':
+      case 'සම්පූර්ණ':
+      case 'සම්පූර්ණයි':
+      case 'முடிக்கப்பட்டது':
+      case 'நிறைவு':
+        return t("Status.Completed");
+      case 'opened':
+      case 'විවෘත':
+      case 'විවෘතයි':
+      case 'திறக்கப்பட்டது':
+      case 'திறந்த':
+        return t("Status.Opened");
+      case 'pending':
+      case 'අපේක්ෂිත':
+      case 'පොරොත්තුවේ':
+      case 'நிலுவையில்':
+      case 'காத்திருக்கும்':
+        return t("Status.Pending");
+      default:
+        return t("Status.Unknown");
+    }
+  };
+
   // Fetch officers from API
   const fetchOfficers = useCallback(async () => {
     setLoadingOfficers(true);
@@ -218,7 +328,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
         >
           <AntDesign name="left" size={24} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-bold">EMP ID : {officerId}</Text>
+        <Text className="text-white text-lg font-bold">{t("PassTarget.EMP ID")} : {officerId}</Text>
       </View>
 
       <ScrollView
@@ -228,12 +338,12 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
       >
         {/* Assignee Selection */}
         <View className="bg-white mx-4 my-2 p-4 rounded-lg shadow-sm">
-         <Text className="text-[#475A6A] font-semibold mb-2">Select Assignee</Text>
+         <Text className="text-[#475A6A] font-semibold mb-2">{t("PassTarget.Select Assignee")}</Text>
 
           {loadingOfficers ? (
             <View className="flex-row items-center justify-center py-4">
               <ActivityIndicator size="small" color="#2AAD7A" />
-              <Text className="ml-2 text-gray-600">Loading officers...</Text>
+              <Text className="ml-2 text-gray-600">{t("PassTarget.Loading officers")}</Text>
             </View>
           ) : (
             <SelectList
@@ -259,19 +369,16 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
           )}
         </View>
 
-
       {/* Selected Targets */}
 <View className="bg-white  my-2 rounded-lg  mb-20">
   <View className="items-center justify-center">
   <Text style={{ fontStyle: 'italic', color: '#2d3748', marginBottom: 12 }}>
-    --Selected Targets--
+    --{t("PassTarget.Selected Targets")}--
   </Text>
   </View>
   
   {/* Table */}
   <View className="border border-gray-300 rounded-md ">
-
-    
     
     {/* Table Rows */}
     {targetItems.map((item: TargetItem) => (
@@ -287,24 +394,12 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
         </View>
         <View className="w-36 items-center justify-center py-3">
           <View 
-            className={`px-5 py-1 rounded-md ${
-              item.status === "Opened" 
-                ? "bg-[#F8FFA6]" 
-                : item.status === "Completed"
-                ? "bg-[#BBFFC6]"
-                : "bg-[#FFB9B7]"
-            }`}
+            className={`px-5 py-1 rounded-md ${getStatusColor(item.status)}`}
           >
             <Text 
-              className={`text-xs font-medium ${
-                item.status === "Opened" 
-                  ? "text-[#A8A100]" 
-                  : item.status === "Completed"
-                  ? "text-[#6AD16D]"
-                  : "text-[#D16D6A]"
-              }`}
+              className={`text-xs font-medium ${getStatusTextColor(item.status)}`}
             >
-              {item.status}
+              {getStatusText(item.status)}
             </Text>
           </View>
         </View>
@@ -326,7 +421,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
           <ActivityIndicator color="white" />
         ) : (
           <Text className="text-white font-bold">
-            Save 
+             {t("PassTarget.Save")}
           </Text>
         )}
       </TouchableOpacity>
@@ -339,7 +434,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
             onPress={() => setError(null)}
             className="mt-2 self-center"
           >
-            <Text className="text-red-600 font-medium">Dismiss</Text>
+            <Text className="text-red-600 font-medium">{t("PassTarget.Dismiss")}</Text>
           </TouchableOpacity>
         </View>
       )}
