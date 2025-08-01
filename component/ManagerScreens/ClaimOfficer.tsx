@@ -301,7 +301,7 @@ const ClaimOfficer: React.FC = () => {
           />
         </View>
          */}
-        </View> */}
+        </View>
 
         {/* EMP ID Input */}
         <Text className="font-semibold text-gray-800  mb-2 text-center">
