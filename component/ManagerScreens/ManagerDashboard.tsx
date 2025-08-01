@@ -331,8 +331,8 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
                 size={100}
                 width={8}
                 fill={targetPercentage !== null ? targetPercentage : 0} // Dynamically set progress
-                tintColor="#34D399"
-                backgroundColor="#E5E7EB"
+                tintColor="#000000"
+                backgroundColor="#EEEEEE"
               />
               <View className="absolute items-center justify-center h-24 w-24">
                 <Text className="text-2xl font-bold">
@@ -345,11 +345,11 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
           {/* Action Buttons */}
           <View className="flex-row flex-wrap justify-between p-5 mt-[5%] mb-[18%]">
             <TouchableOpacity
-              className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
+              className="bg-white p-4 border border-[#980775] rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
               onPress={() => navigation.navigate("CenterTarget" as any)}
             >
               <Image
-                source={require("../../assets/images/ct.webp")}
+                source={require("../../assets/images/New/centertarget.png")}
                 className="w-8 h-8 absolute top-2 right-2"
               />
               <Text
@@ -361,13 +361,13 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="bg-white p-4 rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
+              className="bg-white p-4 border border-[#FF7338] rounded-lg w-[45%] h-28 shadow-lg shadow-gray-500 relative"
               onPress={() =>
                 navigation.navigate("ManagerTransactions" as any, { empId })
               }
             >
               <Image
-                source={require("../../assets/images/mycollect.webp")}
+                source={require("../../assets/images/New/collection.png")}
                 className="w-8 h-8 absolute top-2 right-2"
               />
               <Text
@@ -379,11 +379,11 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative"
+              className="bg-white p-4 rounded-lg border border-[#FFE300] w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative"
               onPress={() => navigation.navigate("QRScanner" as any)}
             >
               <Image
-                source={require("../../assets/images/qrrr.webp")}
+                source={require("../../assets/images/New/qr.png")}
                 className="w-8 h-8 absolute top-2 right-2"
               />
               <Text
@@ -395,11 +395,11 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative mb-5"
+              className="bg-white p-4 rounded-lg w-[45%] border border-[#FF0086] h-28 mt-4 shadow-lg shadow-gray-500 relative mb-5"
               onPress={() => navigation.navigate("SearchFarmer" as any)}
             >
               <Image
-                source={require("../../assets/images/nic.webp")}
+                source={require("../../assets/images/New/searchclient.png")}
                 className="w-8 h-8 absolute top-2 right-2"
               />
               <Text

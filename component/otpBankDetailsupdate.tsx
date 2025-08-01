@@ -456,7 +456,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
-      className="flex-1"
+      className="flex-1 bg-white"
     >
       <ScrollView
         className="flex-1 "
@@ -479,7 +479,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
           style={{ marginTop: dynamicStyles.margingTopForImage }}
         >
           <Image
-            source={require("../assets/images/otp.webp")}
+            source={require("../assets/images/New/opt.png")}
             style={{
               width: dynamicStyles.imageWidth,
               height: dynamicStyles.imageHeight,
@@ -487,12 +487,12 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
           />
 
           <View className="">
-            <Text className="mt-3 text-lg text-black text-center">
+            <Text className="mt-3 text-lg text-black text-center font-bold">
               {t("Otpverification.EnterCode")}
             </Text>
           </View>
           {language === "en" ? (
-            <View className="mt-5">
+            <View className="mt-4">
               <Text className="text-md text-gray-400">
                 {/* {t("OtpVerification.OTPCode")} */}
               </Text>
@@ -516,7 +516,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
               <TextInput
                 key={index}
                 ref={(el) => (inputRefs.current[index] = el as TextInput)}
-                className={`w-12 h-12 text-lg text-center rounded-lg ${
+                className={`w-12 h-12 text-lg text-center rounded-lg shadow-[#00000040] ${
                   otpCode[index]
                     ? "bg-[#FFFFFF] text-black pb-2"
                     : "bg-[#FFFFFF] text-black"
@@ -527,10 +527,20 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
                 onChangeText={(text) => handleOtpChange(text, index)}
                 placeholder={maskedCode[index] || "_"}
                 placeholderTextColor="lightgray"
-                style={{
-                  borderColor: "#0CB783",
-                  borderWidth: 2, // Adjust thickness if needed
-                }}
+               style={{
+        borderColor: "#FFC738",
+        borderWidth: 1,
+        // Shadow properties for drop shadow effect
+        shadowColor: "#000000",
+        shadowOffset: {
+          width: 0,
+          height: 4,
+        },
+     //   shadowOpacity: 0.25,
+        shadowRadius: 4,
+        // Android elevation for shadow
+        elevation: 4,
+      }}
               />
             ))}
           </View>
@@ -546,7 +556,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
             <Text
               className="mt-3 text-lg text-black text-center underline"
               onPress={disabledResend ? undefined : handleResendOTP}
-              style={{ color: disabledResend ? "gray" : "blue" }}
+              style={{ color: disabledResend ? "gray" : "black" }}
             >
               {timer > 0
                 ? `${t("Resend in ")} ${formatTime(timer)}`
@@ -563,7 +573,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
             <TouchableOpacity
               style={{ height: hp(7), width: wp(80) }}
               className={`flex items-center justify-center mx-auto rounded-full mb-8 ${
-                !isOtpValid || isVerified ? "bg-[#2AAD7A]" : "bg-[#2AAD7A]"
+                !isOtpValid || isVerified ? "bg-[#000000]" : "bg-[#000000]"
               }`}
               onPress={handleVerify}
               disabled={isVerified}

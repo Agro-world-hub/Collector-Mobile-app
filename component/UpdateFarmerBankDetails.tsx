@@ -254,14 +254,14 @@ If correct, share OTP only with the ${companyName} representative who contacts y
         {/* Scrollable Form */}
         <ScrollView className="flex-1 p-3 mt-4">
           <View className="mb-4">
-            <Text className="text-gray-600 mb-2">
+            <Text className="text-[#434343] mb-2">
               {t("UnregisteredFarmerDetails.AccountNum")}
             </Text>
             <TextInput
-              placeholder={t("UnregisteredFarmerDetails.AccountNum")}
+             // placeholder={t("UnregisteredFarmerDetails.AccountNum")}
               className={`border ${
-                accNumberError ? "border-red-500" : "border-gray-300"
-              } p-3 rounded-lg`}
+                accNumberError ? "border-red-500" : "border-[#F4F4F4] bg-[#F4F4F4]"
+              } p-3 rounded-full`}
               keyboardType="numeric"
               value={accNumber}
               onChangeText={(text) => {
@@ -284,12 +284,12 @@ If correct, share OTP only with the ${companyName} representative who contacts y
 
           {/* Account Holder's Name */}
           <View className="mb-4">
-            <Text className="text-gray-600 mb-2">
+            <Text className="text-[#434343] mb-2">
               {t("UnregisteredFarmerDetails.AccountName")}
             </Text>
             <TextInput
-              placeholder={t("UnregisteredFarmerDetails.AccountName")}
-              className="border border-gray-300 p-3 rounded-lg"
+             // placeholder={t("UnregisteredFarmerDetails.AccountName")}
+              className="border border-[#F4F4F4] bg-[#F4F4F4] p-3 rounded-full"
               value={accHolderName}
               onChangeText={(text) => {
                 // Only allow letters, spaces, and dots (for initials)
@@ -301,10 +301,10 @@ If correct, share OTP only with the ${companyName} representative who contacts y
 
           {/* Bank Name */}
           <View className="mb-4">
-            <Text className="text-gray-600 mb-2">
+            <Text className="text-[#434343] mb-2">
               {t("UnregisteredFarmerDetails.Bank")}
             </Text>
-            <View className="  rounded-lg">
+            <View className="  rounded-full">
               <SelectList
                 setSelected={setBankName}
                 data={bankNames.map((bank) => ({
@@ -312,7 +312,11 @@ If correct, share OTP only with the ${companyName} representative who contacts y
                   value: bank.name,
                 }))}
                 placeholder="Select Bank"
-                boxStyles={{ borderColor: "#ccc", borderRadius: 8 }}
+                boxStyles={{  borderRadius: 25 ,
+                    borderColor: "#F4F4F4", 
+                  backgroundColor: "#F4F4F4"
+               
+                }}
                 dropdownStyles={{ borderColor: "#ccc" }}
                 search={true}
               />
@@ -321,10 +325,10 @@ If correct, share OTP only with the ${companyName} representative who contacts y
 
           {/* Branch Name */}
           <View className="mb-4">
-            <Text className="text-gray-600 mb-2">
+            <Text className="text-[#434343] mb-2">
               {t("UnregisteredFarmerDetails.Branch")}
             </Text>
-            <View className=" rounded-lg">
+            <View className=" rounded-full">
               <SelectList
                 setSelected={setBranchName}
                 data={filteredBranches.map((branch) => ({
@@ -332,7 +336,11 @@ If correct, share OTP only with the ${companyName} representative who contacts y
                   value: branch.name,
                 }))}
                 placeholder="Select Branch"
-                boxStyles={{ borderColor: "#ccc", borderRadius: 8 }}
+                boxStyles={{  borderRadius: 25 ,
+                    borderColor: "#F4F4F4", 
+                  backgroundColor: "#F4F4F4"
+               
+                }}
                 dropdownStyles={{ borderColor: "#ccc" }}
                 search={true}
               />
@@ -340,7 +348,7 @@ If correct, share OTP only with the ${companyName} representative who contacts y
           </View>
           <TouchableOpacity
             className={`p-3 rounded-full items-center mt-5 ${
-              loading ? "bg-gray-400 opacity-50" : "bg-[#2AAD7A]"
+              loading ? "bg-gray-400 opacity-50" : "bg-[#000000]"
             }`}
             onPress={() => {
               if (!loading) {
