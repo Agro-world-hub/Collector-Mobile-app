@@ -42,7 +42,7 @@
         "foregroundImage": "./assets/images/favicon.png",
         "backgroundColor": "#21202b"
       },
-      "versionCode": 1,
+      "versionCode": 2,
       "package": "com.polygonagro.Collector",
       "permissions": [
         "INTERNET",
@@ -73,7 +73,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "1654facd-bf3d-4149-bfb3-f515399b9d19"
+        "projectId": "9c4e5134-10ef-4626-a25a-d419801aefe5"
       }
     },
     "plugins": [
@@ -85,7 +85,18 @@
           "color": "#21202b"
         }
       ],
-      "expo-font"
+      "expo-font",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "targetSdkVersion": 35
+          },
+          "ios": {
+            "deploymentTarget": "15.1"
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
