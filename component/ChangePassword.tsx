@@ -165,14 +165,14 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           <Text className="font-normal pb-2 ml-[-55%]">
             {t("ChangePassword.CurrentPassword")}
           </Text>
-          <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-[95%] h-[53px] mb-8 bg-white px-3">
-            <TextInput
-              className="flex-1 h-[40px] "
-              placeholder={t("ChangePassword.CurrentPassword")}
-              secureTextEntry={secureCurrent}
-              onChangeText={setCurrentPassword}
-              value={currentPassword}
-            />
+          <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">
+          <TextInput
+            className="flex-1 h-[40px] bg-[#F4F4F4]"
+          //  placeholder={t("ChangePassword.CurrentPassword")}
+            secureTextEntry={secureCurrent}
+            onChangeText={setCurrentPassword}
+            value={currentPassword}
+          />
             <TouchableOpacity onPress={() => setSecureCurrent(!secureCurrent)}>
               <Icon
                 name={secureCurrent ? "eye-off-outline" : "eye-outline"}
@@ -185,10 +185,10 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           <Text className="font-normal pb-2 ml-[-60%]">
             {t("ChangePassword.NewPassword")}
           </Text>
-          <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-[95%] h-[53px] mb-8 bg-white px-3">
+             <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">
             <TextInput
               className="flex-1 h-[40px] "
-              placeholder={t("ChangePassword.NewPassword")}
+           //   placeholder={t("ChangePassword.NewPassword")}
               secureTextEntry={secureNew}
               onChangeText={setNewPassword}
               value={newPassword}
@@ -205,10 +205,10 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           <Text className="font-normal pb-2 ml-[-45%]">
             {t("ChangePassword.ConfirmNewPassword")}
           </Text>
-          <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-[95%] h-[53px] mb-5 bg-white px-3">
+           <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">
             <TextInput
-              className="flex-1 h-[40px] "
-              placeholder={t("ChangePassword.ConfirmNewPassword")}
+              className="flex-1 h-[40px] bg-[#F4F4F4]"
+             // placeholder={t("ChangePassword.ConfirmNewPassword")}
               secureTextEntry={secureConfirm}
               onChangeText={setConfirmPassword}
               value={confirmPassword}

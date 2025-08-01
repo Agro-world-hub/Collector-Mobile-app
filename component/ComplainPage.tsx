@@ -240,55 +240,61 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
                       {t("ReportComplaint.Problem")}
                     </Text>
                   </View>
-
-                  <View className="w-full rounded-lg mb-4">
-                    {Category.length > 0 && (
-                      <DropDownPicker
-                        open={open}
-                        value={selectedCategory}
-                        setOpen={setOpen}
-                        setValue={setSelectedCategory}
-                        items={Category.map((item) => ({
-                          label: t(item.label),
-                          value: item.value,
-                        }))}
-                        placeholder={t("ReportComplaint.selectCategory")}
-                        placeholderStyle={{ color: "#d1d5db" }}
-                        listMode="SCROLLVIEW"
-                        zIndex={3000}
-                        zIndexInverse={1000}
-                        dropDownContainerStyle={{
-                          borderColor: "#ccc",
-                          borderWidth: 1,
-                        }}
-                        style={{
-                          borderWidth: 1,
-                          borderColor: "#ccc",
-                          paddingHorizontal: 8,
-                          paddingVertical: 10,
-                        }}
-                        textStyle={{ fontSize: 12 }}
-                        onOpen={dismissKeyboard}
-                      />
-                    )}
-                  </View>
+<View className="w-full rounded-full mb-4">
+  {Category.length > 0 && (
+    <DropDownPicker
+      open={open}
+      value={selectedCategory}
+      setOpen={setOpen}
+      setValue={setSelectedCategory}
+      items={Category.map((item) => ({
+        label: t(item.label),
+        value: item.value,
+      }))}
+      placeholder={t("ReportComplaint.selectCategory")}
+      placeholderStyle={{ color: "#434343" }}
+      listMode="SCROLLVIEW"
+      zIndex={3000}
+      zIndexInverse={1000}
+      dropDownContainerStyle={{
+        borderColor: "#ccc",
+        borderWidth: 1,
+        borderRadius: 25,
+      }}
+      style={{
+        borderWidth: 1,
+        borderColor: "#ccc",
+        paddingHorizontal: 8,
+        paddingVertical: 10,
+        borderRadius: 25,
+      }}
+      textStyle={{ fontSize: 12 }}
+      onOpen={dismissKeyboard}
+    />
+  )}
+</View>
 
                   <Text className="text-sm text-gray-600 text-center mb-4">
                     {t("ReportComplaint.WewilRespond")}
                   </Text>
 
-                  <TextInput
-                    className="w-full h-52 border border-[#EFEFF0] rounded-lg p-3 bg-[#EFEFF0] mb-8 text-gray-800 "
-                    placeholder={t("ReportComplaint.Kindlysubmit")}
-                    multiline
-                    value={complain}
-                    onChangeText={(text) => setComplain(text)}
-                    onFocus={() => setOpen(false)}
-                    style={{ textAlignVertical: "top" }}
-                  />
+                 <TextInput
+  className="w-full h-60 border border-[#F6F6F6] rounded-lg p-3 bg-[#F6F6F6] mb-8"
+  placeholder={t("ReportComplaint.Kindlysubmit")}
+  placeholderTextColor="#434343" // ✅ Correct prop
+  multiline
+  value={complain}
+  onChangeText={(text) => setComplain(text)}
+  onFocus={() => setOpen(false)}
+  style={{
+    textAlignVertical: "top",
+    color: "#424242", // ✅ Set actual input text color here
+  }}
+/>
+
 
                   <TouchableOpacity
-                    className="w-full bg-[#2AAD7A] py-4 rounded-full items-center  "
+                    className="w-full bg-[#000000] py-4 rounded-full items-center  "
                     onPress={handleSubmit}
                   >
                     {isLoading ? (

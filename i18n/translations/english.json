@@ -377,7 +377,7 @@
     "WeneedCamera":" We need camera access to scan QR codes. Please enable camera permissions in your device settings.",
     "Close":"Close",
     "TapScan":"Tap to Scan Again",
-    "Failed":"Failed",
+    "Failed":"Failed !",
     "SearchNIC":"Search by User’s NIC number",
     "Requesting for camera permission":"Requesting for camera permission"
   },
@@ -636,8 +636,8 @@
     "Agriculture": "Agriculture",
     "Call Center": "Call Centre",
     "Procuiment": "Procuiment",
-    "WewilRespond": "We will respond to you within two days of receiving your message.",
-    "Kindlysubmit": "Kindly submit your complaint here..",
+    "WewilRespond": "We will get back to the farmer within 2 days after hearing from you",
+    "Kindlysubmit": "Add the Complaint here..",
     "Submit": "Submit",
     "Other": "Other"
   }  ,

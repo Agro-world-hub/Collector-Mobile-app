@@ -376,7 +376,7 @@
     "WeneedCamera":" We need camera access to scan QR codes. Please enable camera permissions in your device settings.",
     "Close":"Close",
     "TapScan":"Tap to Scan Again",
-    "Failed":"Failed",
+    "Failed":"Failed !",
     "SearchNIC":"Search by User’s NIC number",
     "Requesting for camera permission":"Requesting for camera permission"
   },

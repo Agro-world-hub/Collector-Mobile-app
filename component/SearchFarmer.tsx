@@ -210,25 +210,27 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
               {t("SearchFarmer.EnterFarmer")}
             </Text>
 
-            <View className="flex-row justify-center items-center border border-[#A7A7A7] rounded-full mt-4 px-4 py-2  bg-white">
-              <TextInput
-                value={NICnumber}
-                onChangeText={handleNicChange}
-                placeholder={t("SearchFarmer.EnterNIC")}
-                className="flex-1 text-center"
-                maxLength={12}
-                style={{
-                  color: "#000",
-                  textAlign: "center", // Ensures the text is centered
-                  paddingRight: NICnumber.length === 0 ? 0 : 20, // Add padding when text is empty to ensure centering
-                }}
-              />
-              <TouchableOpacity className="ml-2" onPress={handleSearch}>
-                <FontAwesome name="search" size={24} color="green" />
-              </TouchableOpacity>
-            </View>
+           <View className="flex-row items-center border border-[#A7A7A7] rounded-full mt-4 px-1  bg-white">
+  <TextInput
+    value={NICnumber}
+    onChangeText={handleNicChange}
+    placeholder={t("SearchFarmer.EnterNIC")}
+    className="flex-1"
+    maxLength={12}
+    style={{
+      color: "#000",
+      fontSize: 16,
+    }}
+  />
+  <TouchableOpacity 
+    className="w-12 h-12 bg-[#F3F3F3] rounded-full items-center justify-center" 
+    onPress={handleSearch}
+  >
+    <FontAwesome name="search" size={16} color="black" />
+  </TouchableOpacity>
+</View>
             {ere ? (
-              <Text className="text-red-500 mt-2 justify-center text-center">
+              <Text className="text-red-500 mt-2 justify-center text-center ">
                 {ere}
               </Text>
             ) : null}
@@ -275,7 +277,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
                       NIC: NICnumber,
                     })
                   }
-                  className="mt-16 bg-[#2AAD7A]  rounded-full px-16 py-3  "
+                  className="mt-16 bg-[#000000]  rounded-full px-16 py-3  "
                 >
                   <Text
                     style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
@@ -292,7 +294,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
               <View className="mt-6 items-center">
                 <Text
                   style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-                  className="text-center text-lg mt-4 color-[#888888]"
+                  className="text-center text-lg mt-4 color-[#000000]"
                 >
                   {t("SearchFarmer.Result Found")}
                 </Text>
@@ -305,7 +307,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
                   </Text>
                   <Text
                     style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-                    className="text-center text-lg mt-2 color-[#888888]"
+                    className="text-center text-lg mt-2 color-[#727272]"
                   >
                     {farmers.NICnumber}
                   </Text>
@@ -327,7 +329,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
                       officerRole: "COO",
                     })
                   }
-                  className="mt-8 bg-[#2AAD7A]  rounded-full px-16 py-3  "
+                  className="mt-8 bg-[#000000]  rounded-full px-16 py-3  "
                 >
                   <Text
                     style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}

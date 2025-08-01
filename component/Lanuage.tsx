@@ -2,7 +2,7 @@ import React,{useEffect, useState, useContext, useCallback} from 'react';
 import { View, Text, Image, TouchableOpacity, BackHandler,  } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-const lg = require('../assets/images/lang.png');
+const lg = require('../assets/images/New/language.png');
 import { RootStackParamList } from './types';
 import { LanguageContext } from '@/context/LanguageContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -63,13 +63,13 @@ const Lanuage: React.FC<LanuageProps> = ({ navigation }) => {
 
       {/* TouchableOpacity Buttons */}
       <View className="flex-1 justify-center w-64 px-4 mt-4 pt-0">
-        <TouchableOpacity className="bg-[#2AAD7A] p-4 rounded-3xl mb-6"  onPress={() => handleLanguageSelect("en")}>
+        <TouchableOpacity className="bg-[#413A3F] p-4 rounded-3xl mb-6"  onPress={() => handleLanguageSelect("en")}>
           <Text className="text-white text-lg text-center">ENGLISH</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="bg-[#2AAD7A] p-4 rounded-3xl mb-6 " onPress={() => handleLanguageSelect("si")} >
+        <TouchableOpacity className="bg-[#413A3F] p-4 rounded-3xl mb-6 " onPress={() => handleLanguageSelect("si")} >
           <Text className="text-white text-2xl text-center">සිංහල</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity className="bg-[#2AAD7A] p-4 rounded-3xl mb-12"  onPress={() => handleLanguageSelect("ta")}>
+        {/* <TouchableOpacity className="bg-[#413A3F] p-4 rounded-3xl mb-12"  onPress={() => handleLanguageSelect("ta")}>
           <Text className="text-white text-2xl text-center ">தமிழ்</Text>
         </TouchableOpacity> */}
       </View>
