@@ -206,6 +206,7 @@ function MainTabNavigator() {
       {/* <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} /> */}
 
                    <Tab.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} /> 
+                     <Tab.Screen name="EngProfile" component={EngProfile} />
 
          <Tab.Screen
         name="DistributionOfficersList"
@@ -295,7 +296,7 @@ const Index = () => {
           {/* <Stack.Screen name="Dashboard" component={Dashboard} /> */}
           {/* <Stack.Screen name="QRScanner" component={QRScanner} /> */}
           <Stack.Screen name="FormScreen" component={FormScreen} />
-          <Stack.Screen name="EngProfile" component={EngProfile} />
+          {/* <Stack.Screen name="EngProfile" component={EngProfile} /> */}
           <Stack.Screen
             name="UnregisteredFarmerDetails"
             component={UnregisteredFarmerDetails}

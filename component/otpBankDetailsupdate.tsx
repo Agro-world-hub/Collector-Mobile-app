@@ -88,7 +88,7 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({
           </Text>
 
           <Image
-            source={require("../assets/images/success.webp")}
+            source={require("../assets/images/New/otpsuccess.png")}
             style={{ width: 100, height: 100 }}
           />
 
@@ -96,7 +96,7 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({
             {t("BankDetailsUpdate.SuccessMessage")}
           </Text>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             className="bg-[#2AAD7A] px-6 py-2 rounded-full mt-6"
             onPress={() => {
               onClose();
@@ -106,14 +106,14 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({
             <Text className="text-white font-semibold">
               {t("Otpverification.OK")}
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* Progress Bar - Fixed to Bottom */}
           <View className="absolute bottom-0 left-0 right-0 h-2 bg-gray-200 rounded-b-2xl overflow-hidden">
             <Animated.View
               style={{
                 height: "100%",
-                backgroundColor: "#2AAD7A",
+                backgroundColor: "#980775",
                 width: progress.interpolate({
                   inputRange: [0, 100],
                   outputRange: ["0%", "100%"],
@@ -160,7 +160,7 @@ const ShowFailModal: React.FC<FailModalProps> = ({
           </Text>
 
           <Image
-            source={require("../assets/images/success.webp")}
+            source={require("../assets/images/New/error.png")}
             style={{ width: 100, height: 100 }}
           />
 

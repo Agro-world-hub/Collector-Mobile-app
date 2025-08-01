@@ -108,7 +108,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F9F9FA] ">
+    <SafeAreaView className="flex-1 bg-[#FFFFFF] ">
       <View
         className="flex-row justify-between"
         style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
@@ -155,7 +155,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
           {complains.map((complain) => (
             <View
               key={complain.id}
-              className="bg-white p-6 my-2 rounded-xl shadow-md border border-[#dfdfdfcc]"
+              className="bg-white p-6 my-2 rounded-xl shadow-md border border-[#CFCFCF]"
             >
               <Text className="self-start mb-4 font-semibold">
                 {t("ReportHistory.RefNo")} : {complain.refNo}
@@ -182,7 +182,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
                     className={`text-s font-semibold px-4 py-2 rounded ${
                       complain.status === "Opened"
                         ? "bg-blue-100 text-[#0051FF]"
-                        : "bg-green-100 text-green-800"
+                        : "bg-[#FFDFF7] text-[#980775]"
                     }`}
                   >
                     {complain.status === "Opened"
