@@ -686,7 +686,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
                     className={`text-base ${
                       selectedLanguage === language
                         ? "text-black"
-                        : "text-gray-500"
+                        : "#434343"
                     }`}
                   >
                     {language}
@@ -776,7 +776,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
                     className={`text-base ${
                       selectedComplaint === complaint
                         ? "text-black"
-                        : "text-gray-700"
+                        : "#434343"
                     }`}
                   >
                     {complaint}

@@ -313,13 +313,13 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
       {/* Action Buttons */}
       <View className="flex-row flex-wrap justify-between p-6 mt-[-5%]">
 
-        { jobRole === "Distribution Manager" ? (
+        { jobRole === "Distribution Center Manager" ? (
            <TouchableOpacity           
   className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative"           
   onPress={() => navigation.navigate("CenterTargetScreen", { centerId: centerId } as any)}         
 >
           <Image
-            source={require("../../assets/images/goal.webp")}
+            source={require("../../assets/images/centericon.png")}
             className="w-8 h-8 absolute top-2 right-2"
           />
           <Text

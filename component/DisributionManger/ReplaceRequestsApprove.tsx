@@ -307,7 +307,7 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
     return (
       <View className="flex-1 bg-white justify-center items-center">
         <ActivityIndicator size="large" color="#000" />
-        <Text className="mt-2 text-gray-600">Loading replace request...</Text>
+        <Text className="mt-2 text-gray-600">{t("ReplaceRequestsApprove.Loading replace request")}</Text>
       </View>
     );
   }
@@ -320,7 +320,7 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
           <AntDesign name="left" size={24} color="#333" />
         </TouchableOpacity>
         <View className="flex-1 justify-center items-center">
-          <Text className="text-gray-800 text-lg font-medium">Order ID: {replaceData.invNo}</Text>
+          <Text className="text-gray-800 text-lg font-medium">{t("ReplaceRequestsApprove.Order ID")} {replaceData.invNo}</Text>
         </View>
       </View>
 
@@ -331,12 +331,12 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
         {/* Defined Product Section */}
         <View className="px-5">
           <View className="border border-dashed border-[#FA0000] rounded-lg p-4 mb-6">
-            <Text className="text-center text-gray-600 mb-3">Defined product</Text>
+            <Text className="text-center text-gray-600 mb-3">{t("ReplaceRequestsApprove.Defined product")}</Text>
             <Text className="text-center font-medium mb-2">
               {replaceData.replaceProductDisplayName} - {replaceData.replaceQty} - {replaceData.replacePrice}
             </Text>
             <Text className="text-center text-gray-600 text-sm mb-1">
-              Relevant Product Type:
+              {t("ReplaceRequestsApprove.Relevant Product Type")}
             </Text>
             <Text className="text-center font-medium">
               {replaceData.productTypeName}
@@ -364,7 +364,7 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
         {/* Replacing Product Details */}
         <View className="px-2 mt-2">
           <Text className="text-center text-black mb-4 font-medium">
-            --Replacing Product Details--
+            -- {t("ReplaceRequestsApprove.Replacing Product Details")}--
           </Text>
 
           {/* Product Selection Dropdown */}
@@ -397,13 +397,13 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
                       >
                         <Text className="font-medium">{product.displayName}</Text>
                         <Text className="text-xs text-gray-500">
-                          ID: {product.id} | Rs.{(product.discountedPrice || product.normalPrice || 0).toFixed(2)} ({product.unitType})
+                          {t("ReplaceRequestsApprove.ID")} {product.id} | {t("ReplaceRequestsApprove.Rs")}{(product.discountedPrice || product.normalPrice || 0).toFixed(2)} ({product.unitType})
                         </Text>
                       </TouchableOpacity>
                     ))
                   ) : (
                     <View className="p-4 items-center">
-                      <Text className="text-gray-500">No products available</Text>
+                      <Text className="text-gray-500">{t("ReplaceRequestsApprove.No products available")}</Text>
                     </View>
                   )}
                 </ScrollView>
@@ -441,7 +441,7 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
               <ActivityIndicator size="small" color="white" />
             ) : (
               <Text className="text-white text-center font-medium text-base">
-                Approve
+                {t("ReplaceRequestsApprove.Approve")}
               </Text>
             )}
           </TouchableOpacity>

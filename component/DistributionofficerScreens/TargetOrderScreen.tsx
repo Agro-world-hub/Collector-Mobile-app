@@ -392,14 +392,33 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
     }
   };
 
+  // const getStatusText = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
+  //   const statusMap = {
+  //     'Pending': t("Pending") || 'Pending',
+  //     'Opened': t("Opened") || 'Opened', 
+  //     'Completed': t("Completed") || 'Completed'
+  //   };
+  //   return statusMap[selectedStatus] || selectedStatus;
+  // };
+
   const getStatusText = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
-    const statusMap = {
-      'Pending': t("Pending") || 'Pending',
-      'Opened': t("Opened") || 'Opened', 
-      'Completed': t("Completed") || 'Completed'
-    };
-    return statusMap[selectedStatus] || selectedStatus;
-  };
+  switch (selectedStatus) {
+    case 'Pending':
+      return selectedLanguage === 'si' ? 'අපේක්ෂාවෙන්' : 
+             selectedLanguage === 'ta' ? 'நிலுவையில்' : 
+             t("Status.Pending") || 'Pending';
+    case 'Opened':
+      return selectedLanguage === 'si' ? 'විවෘත කර ඇත' : 
+             selectedLanguage === 'ta' ? 'திறக்கப்பட்டது' : 
+             t("Status.Opened") || 'Opened';
+    case 'Completed':
+      return selectedLanguage === 'si' ? 'සම්පූර්ණයි' : 
+             selectedLanguage === 'ta' ? 'நிறைவானது' : 
+             t("Status.Completed") || 'Completed';
+    default:
+      return selectedStatus;
+  }
+};
 
   // Function to get detailed status display for debugging/info
   const getDetailedStatusDisplay = (item: TargetData) => {
@@ -469,12 +488,12 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
           
           {selectedToggle === 'ToDo' ? (
             <>
-              <Text className="flex-[2] text-center text-white font-bold ">Date & Time</Text>
+              <Text className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Date")}</Text>
           
               <Text className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Status")}</Text>
             </>
           ) : (
-            <Text className="flex-[2] text-center text-white font-bold">Completed Time</Text>
+            <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Completed Time")}</Text>
           )}
         </View>
 
@@ -486,7 +505,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
               onPress={() => fetchTargets()} 
               className="mt-2 bg-red-500 px-4 py-2 rounded"
             >
-              <Text className="text-white text-center">Retry</Text>
+              <Text className="text-white text-center">{t("TargetOrderScreen.Retry")}</Text>
             </TouchableOpacity>
           </View>
         )}

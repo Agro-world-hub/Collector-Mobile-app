@@ -158,7 +158,7 @@ if (passwordUpdateRequired) {
   navigation.navigate("ChangePassword", { empid } as any);
 } else {
   // Fixed: Check for both Distribution roles individually
-  if (jobRole === "Distribution Officer" || jobRole === "Distribution Manager") {
+  if (jobRole === "Distribution Officer" || jobRole === "Distribution Center Manager") {
     navigation.navigate("Main", { screen: "DistridutionaDashboard" });
   } else if (jobRole === "Collection Officer") {
     navigation.navigate("Main", { screen: "Dashboard" });

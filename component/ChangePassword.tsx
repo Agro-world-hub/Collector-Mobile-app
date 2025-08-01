@@ -167,7 +167,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           </Text>
           <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-[95%] h-[53px] mb-8 bg-white px-3">
             <TextInput
-              className="flex-1 h-[40px] text-base"
+              className="flex-1 h-[40px] "
               placeholder={t("ChangePassword.CurrentPassword")}
               secureTextEntry={secureCurrent}
               onChangeText={setCurrentPassword}
@@ -187,7 +187,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           </Text>
           <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-[95%] h-[53px] mb-8 bg-white px-3">
             <TextInput
-              className="flex-1 h-[40px] text-base"
+              className="flex-1 h-[40px] "
               placeholder={t("ChangePassword.NewPassword")}
               secureTextEntry={secureNew}
               onChangeText={setNewPassword}
@@ -207,7 +207,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           </Text>
           <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-[95%] h-[53px] mb-5 bg-white px-3">
             <TextInput
-              className="flex-1 h-[40px] text-base"
+              className="flex-1 h-[40px] "
               placeholder={t("ChangePassword.ConfirmNewPassword")}
               secureTextEntry={secureConfirm}
               onChangeText={setConfirmPassword}
@@ -223,7 +223,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           </View>
         </View>
 
-        <View className="items-center pt-7 gap-y-5">
+        {/* <View className="items-center justify-center pt-7 gap-y-5">
           <TouchableOpacity
             className="bg-[#000000] w-[95%] p-3 rounded-full"
             onPress={handleChangePassword}
@@ -232,7 +232,19 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
               {t("ChangePassword.Next")}
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
+        <View className="items-center justify-center pt-7 gap-y-5">
+  <TouchableOpacity
+    className="bg-[#000000] w-[95%] p-3 rounded-full items-center justify-center"
+    onPress={handleChangePassword}
+  >
+    {/* 1️⃣ parent now centers its children */}
+    <Text className="text-xl font-light text-white">
+      {t("ChangePassword.Next")}
+    </Text>
+  </TouchableOpacity>
+</View>
+
       </ScrollView>
     </KeyboardAvoidingView>
   );

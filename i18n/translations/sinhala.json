@@ -850,6 +850,7 @@
     "Yourtarget": "ඔබේ ඉලක්කය",
     "Progress": "ප්‍රගතිය",
     "Scan":"QR ස්කෑන් කරන්න",
+     "TargetOrders":"ඉලක්ක ඇණවුම්",
     "Search": "ජාතික හැඳුනුම්පත අනුව සොයන්න"
   },
   "TargetOrderScreen" :{
@@ -864,7 +865,13 @@
     "Todo()":"කරන්න (kg)",
     "My Daily Target":"මගේ දෛනික ඉලක්කය",
     "Invoice No":"ඉන්වොයිස් අංකය",
-    "Status":"තත්ත්වය"
+    "Status":"තත්ත්වය",
+    "Date":"දිනය සහ වේලාව",
+    "Completed Time":"සම්පූර්ණ කළ කාලය",
+    "Retry":"නැවත උත්සාහ කරන්න",
+    "Pending":"අපේක්ෂා කෙරේ",
+     "Opened": "විවෘත කර ඇත"
+  
   },
   "OpenedOrderScreen":{
     "INV No ":"ඉන්වොයිස් අංකය:",
@@ -878,6 +885,81 @@
     "Do you want to continue without saving?":"ඔබට සුරැකීමකින් තොරව ඉදිරියට යාමට අවශ්‍යද?",
     "Opened":"විවෘත කරන ලදී",
     "Completed":"සම්පූර්ණ කරන ලදී"
+  },
+  "PendingOrderScreen":{
+    "Custom Selected Items":"අභිරුචි තෝරාගත් අයිතම",
+    "Back to Edit":"සංස්කරණයට ආපසු",
+    "Mark as Completed":"සම්පූර්ණ ලෙස සලකුණු කරන්න",
+    "TapGoback":"සංස්කරණය කිරීමට 'ආපසු යන්න' තට්ටු කරන්න.",
+    "MarkingAs":"ඉක්මනින් සම්පූර්ණ කළ ලෙස සලකුණු කිරීම.",
+    "FinishUp":"අවසන් කරන්න!",
+    "Save":"සුරකින්න",
+    "All checked":"සියල්ල පරීක්ෂා කර ඇත. ඇණවුම වෙත ගෙන යනු ඇත",
+    "Completed":"සම්පූර්ණ කරන ලදී",
+    "onsave":"සුරකින්න",
+    "Unchecked items":"සලකුණු නොකළ අයිතම ඉතිරිව ඇත. සුරැකීම දැන් ඇණවුම තබා ගනී",
+    "Opened":"විවෘත කරන ලදී",
+    "Status":"තත්වය.",
+    "Leave without Submitting":"ඉදිරිපත් නොකර පිටවීම",
+    "OK":"හරි",
+    "TheOrder":"ඇණවුම සම්පූර්ණ කළ ලෙස සලකුණු කර ඇත.",
+    "Completed Successfully":"සාර්ථකව සම්පූර්ණ කරන ලදී!",
+    "Go Back":"ආපසු යන්න",
+    "Send Replace Request":"ප්‍රතිස්ථාපන ඉල්ලීම යවන්න",
+    "No products available":"නිෂ්පාදන නොමැත",
+    "Rs":"රු",
+    "New Product Details":"නව නිෂ්පාදන විස්තර",
+    "Product Type":"නිෂ්පාදන වර්ගය::",
+    "Selected product":"තෝරාගත් නිෂ්පාදනය:",
+    "Replace Product":"නිෂ්පාදනය ප්‍රතිස්ථාපනය කරන්න",
+      "Marking as completed in":"සම්පූර්ණ ලෙස සලකුණු කිරීම",
+    "seconds":"තත්පර.",
+     "You have unsubmitted changes":"ඔබට ඉදිරිපත් නොකළ වෙනස්කම් තිබේ!"
+
+  },
+   "Status": {
+    "Pending": "අපේක්ෂා කෙරේ",
+    "Opened": "විවෘතයි",
+    "Completed": "සම්පූර්ණයි",
+    "InProgress": "ප්‍රගතියෙන්"
+  },
+    "TimerContainer":{
+    "Start":"ආරම්භ කරන්න",
+    "Pause":"විරාමය",
+    "Reset":"නැවත සකසන්න"
+  },
+    "DailyTargetListOfficerDistribution":{
+    "Are you sure":"ඔබට මෙම ඉලක්කය වෙනත් නිලධාරියෙකුට ලබා දීමට අවශ්‍ය බව ඔබට විශ්වාසද?",
+    "Cancel":"අවලංගු කරන්න",
+    "Pass":"සමත්",
+    "Completed Time":"සම්පූර්ණ කළ කාලය",
+    "Retry":"නැවත උත්සාහ කරන්න"
+  },
+   "DistributionOfficersList":{
+    "EMPID":"EMP හැඳුනුම්පත :"
+  },
+    "PassTarget":{
+    "EMP ID":"EMP හැඳුනුම්පත",
+    "Select Assignee":"පැවරුම්කරු තෝරන්න",
+    "Loading officers":"නිලධාරීන් පූරණය කිරීම..",
+    "Selected Targets":"තෝරාගත් ඉලක්ක",
+    "Save":"සුරකින්න",
+    "Dismiss":"ඉවත් කරන්න"
+  },
+    "ReplaceRequestsApprove":{
+    "Loading replace request":"ප්‍රතිස්ථාපන ඉල්ලීම පූරණය වෙමින් පවතී...",
+    "Order ID":"ඇණවුම් හැඳුනුම්පත:",
+    "Defined product":"නිර්වචනය කළ නිෂ්පාදනය",
+    "Relevant Product Type":"අදාළ නිෂ්පාදන වර්ගය:",
+    "Replacing Product Details":"නිෂ්පාදන විස්තර ප්‍රතිස්ථාපනය කිරීම",
+    "ID":"අංකය:",
+    "No products available":"නිෂ්පාදන නොමැත",
+    "Approve":"අනුමත කරන්න",
+     "Rs":"රු."
+  },
+    "ReplaceRequestsScreen":{
+    "Order ID":"ඇණවුම් හැඳුනුම්පත:",
+    "Replacing Item":"අයිතමය ප්‍රතිස්ථාපනය කිරීම:"
   }
 
 }

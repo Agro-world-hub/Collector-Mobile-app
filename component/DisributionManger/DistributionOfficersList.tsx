@@ -222,7 +222,7 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
         <Text className="text-[18px] font-semibold text-gray-900">
           {getOfficerName(item)}
         </Text>
-        <Text className="text-sm text-gray-500">EMP ID : {item.empId}</Text>
+        <Text className="text-sm text-gray-500"> {t("DistributionOfficersList.EMPID")}  {item.empId}</Text>
       </View>
 
       {item.status === "Not Approved" && (

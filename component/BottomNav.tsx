@@ -337,7 +337,7 @@ useEffect(() => {
     { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
     ];
     setTabs(tabs); 
-  }else if (userRole === "Distribution Manager") {
+  }else if (userRole === "Distribution Center Manager") {
      tabs = [
         { name: "DistridutionaDashboard", icon: homeIcon, focusedIcon: homeIcon },
            { name: "TargetOrderScreen", icon: qrIcon, focusedIcon: qrIcon },
@@ -365,7 +365,7 @@ useEffect(() => {
     currentTabName === "OfficerSummary" 
   ) {
     currentTabName = "CollectionOfficersList";
-  } else if (userRole === "Distribution Manager"  && currentTabName === "Dashboard"  ) {
+  } else if (userRole === "Distribution Center Manager"  && currentTabName === "Dashboard"  ) {
     currentTabName = "DistridutionaDashboard"; 
     navigation.navigate("DistridutionaDashboard");
   } else if(currentTabName === "ClaimDistribution"){
@@ -381,7 +381,7 @@ useEffect(() => {
   useEffect(() => {
     if (userRole === "Distribution Officer" && currentTabName == "Dashboard") {
       navigation.navigate("DistridutionaDashboard");
-    }else if (userRole === "Distribution Manager" && currentTabName === "Dashboard"){
+    }else if (userRole === "Distribution Center Manager" && currentTabName === "Dashboard"){
       console.log("hittt")
       navigation.navigate("DistridutionaDashboard");
     }
