@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState , useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView,Image, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp,useFocusEffect,useRoute } from '@react-navigation/native';
@@ -19,7 +19,7 @@ import CameraComponent from "@/utils/CameraComponent";
 import { SelectList } from 'react-native-dropdown-select-list';
 import { useTranslation } from "react-i18next";
 import LottieView from 'lottie-react-native';
-
+import { Ionicons } from '@expo/vector-icons'; 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
@@ -52,6 +52,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     const [image, setImage] = useState<string | null>(null); // Store base64 image here
     const [crops, setCrops] = useState<any[]>([]);
     const [selectedVarietyName, setSelectedVarietyName] = useState<string | null>(null);
+    console.log('se', selectedVarietyName)
     const [donebutton1visibale, setdonebutton1visibale] = useState(true);
     const [donebutton2visibale, setdonebutton2visibale] = useState(false);
     const [donebutton1disabale, setdonebutton1disabale] = useState(true);
@@ -61,7 +62,18 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({ navig
     const [loading, setLoading] = useState(false);
     const { t } = useTranslation();
     const [resetImage, setResetImage] = useState(false);
-    
+const scrollViewRef = useRef<ScrollView | null>(null);
+const scrollToNext = () => {
+  if (scrollViewRef.current) {
+    scrollViewRef.current.scrollTo({ x: wp(70) + 10, animated: true });
+  }
+};
+
+const scrollToPrevious = () => {
+  if (scrollViewRef.current) {
+    scrollViewRef.current.scrollTo({ x: -(wp(70) + 10), animated: true });
+  }
+};
     const [images, setImages] = useState<{ A: string | null, B: string | null, C: string | null }>({
         A: null,
         B: null,
@@ -243,6 +255,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
     
     const handleQuantityChange = (grade: string, value: string) => {
         const quantity = parseInt(value) || 0;
+        
         setQuantities(prev => ({ ...prev, [grade]: quantity }));
         calculateTotal(); 
      
@@ -260,8 +273,6 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
             }, 0);
             setTotal(totalPrice);
             if(totalPrice!=0){
-            setdonebutton2disabale(true);
-            setdonebutton1disabale(false);
             setaddbutton(false);
                 
         }    
@@ -295,6 +306,7 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
         const newCrop = {
             cropId: selectedCrop.id || '', 
             varietyId: selectedVariety || '', 
+             varietyName: selectedVarietyName,
             gradeAprice: unitPrices.A || 0,  
             gradeAquan: quantities.A || 0,   
             gradeBprice: unitPrices.B || 0,
@@ -452,91 +464,6 @@ const handleCropChange = async (crop: { id: string; cropNameEnglish: string; cro
             setLoading(false);
         }
     };
-    
-    // ============================ HANDLE SUBMIT 2 ============================
-    const handelsubmit2 = async () => {
-        console.log('Submitting crops:', crops);
-        
-
-        try {
-            if (quantities.A > 0 && !images.A) {
-                alert("Please upload an image for Grade A before submitting.");
-                return;  // Stop submission if the condition is met
-            }else if (quantities.B > 0 && !images.B) {
-                alert("Please upload an image for Grade B before submitting.");
-                return;  // Stop submission if the condition is met
-            }else if (quantities.C > 0 && !images.C) {
-                alert("Please upload an image for Grade C before submitting.");
-                return;  // Stop submission if the condition is met
-            }
-    
-            // Retrieve the token from AsyncStorage
-            const token = await AsyncStorage.getItem('token');
-    
-            // Generate invoice number
-            const invoiceNumber = await generateInvoiceNumber();
-            if (!invoiceNumber) {
-                alert("Failed to generate invoice number.");
-                return;
-            }
-
-            let totalPrice = 0;
-
-            // Safely handle possible null values for unitPrices
-            totalPrice += (unitPrices.A || 0) * (quantities.A || 0);
-            totalPrice += (unitPrices.B || 0) * (quantities.B || 0);
-            totalPrice += (unitPrices.C || 0) * (quantities.C || 0);
-    
-            console.log('Total Price:', totalPrice); 
-             setLoading(true);
-            // Construct the payload including invoice number
-            const payload = {
-                farmerId: userId,
-                invoiceNumber: invoiceNumber,  // Include generated invoice number
-                crops: {
-                    varietyId: selectedVariety || '',
-                    gradeAprice: unitPrices.A || 0,
-                    gradeAquan: quantities.A || 0,
-                    gradeBprice: unitPrices.B || 0,
-                    gradeBquan: quantities.B || 0,
-                    gradeCprice: unitPrices.C || 0,
-                    gradeCquan: quantities.C || 0,
-                    // image: image || null,
-                    imageA: images.A || null, // Image for grade A
-                    imageB: images.B || null ,// Image for grade B
-                    imageC: images.C || null  // Image for grade C
-                },
-            };
-        
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            };
-    
-            // Make the API call to submit crop data
-            const response = await axios.post(`${environment.API_BASE_URL}api/unregisteredfarmercrop/add-crops2`, payload, config);
-    
-            // Capture the registeredFarmerId from the response
-            const { registeredFarmerId } = response.data;
-            console.log('registeredFarmerId:', registeredFarmerId);
-    
-           Alert.alert(t("BankDetailsUpdate.Success"),t("Error.All crop details submitted successfully!"));
-            await sendSMS(farmerLanguage, farmerPhone, totalPrice, invoiceNumber);
-            
-            refreshCropForms();
-            setLoading(false);
-    
-            // Navigate to the ReportPage, passing registeredFarmerId and userId
-            navigation.navigate('NewReport' as any, { userId, registeredFarmerId });
-        } catch (error) {
-            console.error('Error submitting crop data:', error);
-            alert(t("Error.Failed to submit crop details. Please try again."));
-            setLoading(false);
-        }finally{
-            setLoading(false);
-        }
-    };
 
     const sendSMS = async (language: string | null, farmerPhone: number, totalPrice: number, invoiceNumber: string) => {
             // Clear the form after successful submission
@@ -604,6 +531,59 @@ TID: ${invoiceNumber}
     const isGradeCCameraEnabled = quantities.C == 0;
     console.log('isGradeACameraEnabled:', isGradeACameraEnabled);
   // Add this to your component's state declarations
+ 
+
+const deleteVariety = (index: number) => {
+  const newCrops = [...crops];
+  newCrops.splice(index, 1); // Remove the crop at the given index
+  setCrops(newCrops);
+  
+  // Adjust crop count and button visibility
+  if (newCrops.length === 0) {
+    setdonebutton1visibale(true);
+    setdonebutton2visibale(false);
+    setaddbutton(true);
+  }else{
+    
+  }
+  
+  setCropCount(prevCount => prevCount - 1);
+};
+
+const deleteGrade = (cropIndex: number, grade: 'A' | 'B' | 'C') => {
+  const newCrops = [...crops];
+  
+  // Reset the grade details to delete the grade
+  newCrops[cropIndex][`grade${grade}quan`] = 0;
+  newCrops[cropIndex][`grade${grade}price`] = 0;
+  newCrops[cropIndex][`image${grade}`] = null; // Remove the associated image
+
+  // Check if all grades for this crop are deleted
+  const allGradesDeleted = ['A', 'B', 'C'].every(
+    (grade) => newCrops[cropIndex][`grade${grade}quan`] === 0
+  );
+  console.log('safsffsdf  fsfs', allGradesDeleted)
+
+  // If all grades are deleted for this crop, remove the entire crop
+  if (allGradesDeleted) {
+    newCrops.splice(cropIndex, 1);
+      setCrops(newCrops);
+        setCropCount(prevCount => prevCount - 1);
+
+  } else {
+    // If there are still grades left, update the crop
+    setCrops(newCrops);
+  }
+
+  // Update crop count and handle button visibility if crops are deleted
+  if (newCrops.length === 0) {
+    setdonebutton1visibale(true);
+    setdonebutton2visibale(false);
+    setaddbutton(true);
+  }
+
+  // Update the crop count in the state
+};
 
 
 // Then in your JSX:
@@ -620,6 +600,92 @@ return (
         </TouchableOpacity>
         <Text className="flex-1 text-center text-xl font-bold text-black">{t("UnregisteredCropDetails.FillDetails")}</Text>
       </View>
+     
+<View className="justify-center items-center">
+  {/* Conditionally render the left arrow only if there are more than one item */}
+  {crops.length > 1 && (
+    <TouchableOpacity
+      onPress={scrollToPrevious}
+      style={{
+        position: 'absolute',
+        left: 2,
+        zIndex: 10,
+      }}
+    >
+      <Ionicons name="arrow-back-circle" size={30} color="#374151" />
+    </TouchableOpacity>
+  )}
+
+  {crops.length > 0 && (
+    <ScrollView
+      ref={scrollViewRef} // Attach the ref to the ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={{ marginBottom: 20 }}
+      contentContainerStyle={{ justifyContent: 'center' }}
+    >
+       {crops.map((crop, index) => (
+          <View
+          className=''
+            key={index}
+            style={{
+              width: wp(60),
+              marginRight: 10,
+              padding: 12,
+              borderRadius: 10,
+              backgroundColor: '#f9f9f9',
+              borderColor: '#ccc',
+              borderWidth: 1,
+            }}
+          >
+            <Text style={{ fontWeight: '600', color: '#374151' }}>
+              ({index + 1}) {crop.varietyName} 
+            </Text>
+
+            {['A', 'B', 'C'].map((grade) =>
+              crop[`grade${grade}quan`] > 0 ? (
+                <View key={grade} style={{ marginTop: 6 }}>
+                  <Text style={{ fontSize: 13, color: '#4B5563' }}>
+                    {grade} {crop[`grade${grade}quan`]}kg
+                  </Text>
+                  <TouchableOpacity
+onPress={() => deleteGrade(index, grade as 'A' | 'B' | 'C')} 
+                    style={{ padding: 4 }}
+                  >
+                    <Text style={{ color: '#EF4444', fontSize: 12 }}>Delete {grade}</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : null
+            )}
+
+            <TouchableOpacity
+              onPress={() => deleteVariety(index)}
+              style={{ marginTop: 10 }}
+            >
+              <Text style={{ color: '#DC2626', fontWeight: '600', fontSize: 13 }}>
+                {t("UnregisteredCropDetails.Delete Variety")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+    </ScrollView>
+  )}
+
+  {/* Conditionally render the right arrow only if there are more than one item */}
+  {crops.length > 1 && (
+    <TouchableOpacity
+      onPress={scrollToNext}
+      style={{
+        position: 'absolute',
+        right: 2,
+        zIndex: 10,
+      }}
+    >
+      <Ionicons name="arrow-forward-circle" size={30} color="#374151" />
+    </TouchableOpacity>
+  )}
+</View>
+      
 
       <Text className="text-center text-md font-medium mt-2">{t("UnregisteredCropDetails.Crop")} {cropCount}</Text>
       <View className="mb-6 border-b p-2 border-gray-200 pb-6">
@@ -637,13 +703,22 @@ return (
                 handleCropChange(selectedCropObj);
               }
             }}
-            boxStyles={{ height: 50, width: '100%', borderColor: '#ccc', paddingLeft: 14, paddingRight: 8 }}
+             boxStyles={{
+    height: 50,
+    width: '100%',
+    borderColor: '#FFFFFF',
+    paddingLeft: 14,
+    paddingRight: 8,
+    backgroundColor: '#F4F4F4', // ✳️ Light gray background
+    borderRadius: 50            // ✳️ Rounded corners
+  }}
             data={cropNames.map(crop => ({
               key: crop.id,
               value: selectedLanguage === 'en' ? crop.cropNameEnglish : 
                     selectedLanguage === 'si' ? crop.cropNameSinhala : crop.cropNameTamil
             }))}
             save="value"
+            
             placeholder={t("UnregisteredCropDetails.Select Crop")}
             searchPlaceholder={t('search')}
           />
@@ -666,8 +741,15 @@ return (
               value: varieties.find(v => v.id === selectedVariety)?.variety || 'Select Variety'
             } : undefined}
             placeholder={t("UnregisteredCropDetails.Select Variety")}
-            boxStyles={{ height: 50, width: '100%', borderColor: '#ccc', paddingLeft: 14, paddingRight: 8 }}
-          />
+            boxStyles={{
+    height: 50,
+    width: '100%',
+    borderColor: '#FFFFFF',
+    paddingLeft: 14,
+    paddingRight: 8,
+    backgroundColor: '#F4F4F4', // ✳️ Light gray background
+    borderRadius: 50            // ✳️ Rounded corners
+  }}          />
         </View>
 
         <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.UnitGrades")}</Text>
@@ -678,14 +760,14 @@ return (
               <TextInput
                 placeholder="Rs."
                 keyboardType="numeric"
-                className="flex-1 border border-gray-300 rounded-md p-2 mx-2 text-gray-600"
+                className="flex-1  rounded-full p-2 mx-2 text-gray-600 bg-[#F4F4F4]"
                 value={unitPrices[grade]?.toString() || ''}
                 editable={false}
               />
               <TextInput
                 placeholder="kg"
                 keyboardType="numeric"
-                className="flex-1 border border-gray-300 rounded-md p-2 text-gray-600"
+                className="flex-1 rounded-full p-2 mx-2 text-gray-600 bg-[#F4F4F4]"
                 value={quantities[grade].toString()}
                 onChangeText={value => {
                   const numericValue = value.replace(/[^0-9]/g, '');
@@ -720,7 +802,7 @@ return (
         )}
 
         <Text className="text-gray-600 mt-4">{t("UnregisteredCropDetails.Total")}</Text>
-        <View className="border border-gray-300 rounded-md mt-2 p-2">
+        <View className="bg-[#F4F4F4] rounded-full mt-2 p-2">
           <TextInput
             placeholder="--Auto Fill--"
             editable={false}
@@ -735,12 +817,12 @@ return (
         <TouchableOpacity 
           onPress={incrementCropCount} 
           disabled={addbutton || loading} 
-          className={`bg-[#2AAD7A] rounded-full p-4 mt-2 ${(addbutton || loading) ? 'opacity-50' : ''}`}
+          className={`bg-[#000000] rounded-full p-4 mt-2 ${(addbutton || loading) ? 'opacity-25' : ''}`}
         >
-          <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Add")}</Text>
+          <Text className="text-center text-white font-semibold text-base">{t("UnregisteredCropDetails.Add")}</Text>
         </TouchableOpacity>
         
-        {donebutton1visibale && 
+        {/* {donebutton1visibale && 
           <TouchableOpacity 
             onPress={handelsubmit2} 
             disabled={donebutton1disabale || loading} 
@@ -760,13 +842,13 @@ return (
               <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
             )}
           </TouchableOpacity>
-        }
+        } */}
         
         {donebutton2visibale &&
           <TouchableOpacity 
             onPress={handleSubmit} 
             disabled={donebutton2disabale || loading} 
-            className={`bg-black rounded-full p-4 mt-4 ${(donebutton2disabale || loading) ? 'opacity-50' : ''}`}
+            className={`bg-[#980775] rounded-full p-4 mt-4 ${(donebutton2disabale || loading) ? 'opacity-50' : ''}`}
           >
             {loading ? (
               <View className="flex-row justify-center items-center">
@@ -776,10 +858,10 @@ return (
                   loop
                   style={{ width: 30, height: 30 }}
                 />
-                <Text className="text-center text-white font-semibold ml-2">{t("UnregisteredCropDetails.Processing...")}</Text>
+                <Text className="text-center text-white font-semibold ml-2 text-base">{t("UnregisteredCropDetails.Processing...")}</Text>
               </View>
             ) : (
-              <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
+              <Text className="text-center text-white font-semibold text-base">{t("UnregisteredCropDetails.Done")} </Text>
             )}
           </TouchableOpacity>
         }
