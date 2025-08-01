@@ -42,7 +42,7 @@
         "foregroundImage": "./assets/images/favicon.png",
         "backgroundColor": "#21202b"
       },
-      "versionCode": 1,
+      "versionCode": 2,
       "package": "com.polygonagro.Collector",
       "permissions": [
         "INTERNET",
@@ -72,8 +72,6 @@
       "router": {
         "origin": false
       }
-    
-    
     },
     "plugins": [
       "expo-router",
@@ -84,7 +82,8 @@
           "color": "#21202b"
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-build-properties"
     ],
     "experiments": {
       "typedRoutes": true
