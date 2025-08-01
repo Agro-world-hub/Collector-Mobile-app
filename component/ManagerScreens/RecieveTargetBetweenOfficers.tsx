@@ -282,7 +282,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
     <ScrollView className="flex-1 bg-white" keyboardShouldPersistTaps="handled">
     <View className="flex-1 bg-white mb-4">
       {/* ✅ Fixed Header */}
-      <View className="flex-row items-center bg-[#2AAD7A] p-6 rounded-b-lg">
+      <View className="flex-row items-center bg-[#313131] p-6 rounded-b-lg">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
@@ -294,7 +294,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
           <Text className="text-gray-700 mb-2">{t("PassTargetBetweenOfficers.Short Stock Assignee")}</Text>
 
           {loading ? (
-            <ActivityIndicator size="large" color="#2AAD7A" />
+            <ActivityIndicator size="large" color="#313131" />
           ) : errorMessage ? (
             <Text className="text-red-500">{errorMessage}</Text>
           ) : (
@@ -327,7 +327,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
 
           <Text className="text-gray text-sm mb-2 text-center mt-4">{t("PassTargetBetweenOfficers.maximum amount receive")}</Text>
           {fetchingTarget ? (
-            <ActivityIndicator size="small" color="#2AAD7A" />
+            <ActivityIndicator size="small" color="#313131" />
           ) : (
             <Text className="text-xl font-bold text-center text-black mb-4"> {maxAmount ? `${maxAmount} ${t("PassTargetBetweenOfficers.kg")}` : "--"}</Text>
           )}
@@ -349,7 +349,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
 
        <View className="mt-6 items-center">
                 <TouchableOpacity
-                  className={`rounded-full w-64 py-3 ${isSaveDisabled() ? 'bg-gray-400' : 'bg-[#2AAD7A]'}`}
+                  className={`rounded-full w-64 py-3 ${isSaveDisabled() ? 'bg-gray-400' : 'bg-[#313131]'}`}
                   onPress={receiveTarget}
         disabled={loading || fetchingTarget}
                 >

@@ -180,7 +180,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
       <SafeAreaView className="flex-1 bg-white">
         <View>
           {/* Header */}
-          <View className="bg-[#2AAD7A] p-4  rounded-b-[35px] shadow-md">
+          <View className="bg-[#980775] p-4  rounded-b-[35px] shadow-md">
             <View className="flex-row items-center justify-between">
               <TouchableOpacity
                 onPress={() =>

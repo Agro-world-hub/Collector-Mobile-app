@@ -222,7 +222,7 @@ const ClaimOfficer: React.FC = () => {
                 // className="p-2 py-2 bg-[#2AAD7A] rounded-lg"
                 disabled={onLoading} // Disable the button when loading is true
                 className={`p-2 py-2 rounded-lg ${
-                  onLoading ? "bg-gray-400" : "bg-[#2AAD7A]"
+                  onLoading ? "bg-gray-400" : "bg-[#313131]"
                 }`}
               >
                 <Text className="text-sm text-white">
@@ -307,8 +307,8 @@ const ClaimOfficer: React.FC = () => {
         <Text className="font-semibold text-gray-800  mb-2 text-center">
           {t("ClaimOfficer.EMPID")}
         </Text>
-        <View className="flex-row items-center border border-gray-300 rounded-lg mb-4">
-          <View className="bg-gray-200 px-4 py-3 rounded-l-lg">
+        <View className="flex-row items-center border border-[#CFCFCF] rounded-full mb-4">
+          <View className="bg-[#D2DADD] px-4 py-3 rounded-full">
             <Text className="text-gray-600 font-bold">{empPrefix}</Text>
           </View>
           <TextInput
@@ -325,10 +325,10 @@ const ClaimOfficer: React.FC = () => {
         </View>
 
         <TouchableOpacity
-          className={`py-4 rounded-full items-center mt-7 ${
+          className={`py-2 rounded-full items-center mt-7 ${
             !empID || officerFound || searchLoading
               ? "bg-gray-300"
-              : "bg-[#2AAD7A]"
+              : "bg-[#313131]"
           }`}
           disabled={!empID || officerFound}
           onPress={handleSearch}
@@ -422,7 +422,7 @@ const ClaimOfficer: React.FC = () => {
 
           {/* Claim Officer Button */}
           <TouchableOpacity
-            className="mt-6 mb-10 bg-[#2AAD7A]    py-4 rounded-full"
+            className="mt-6 mb-10 bg-[#313131]    py-4 rounded-full"
             onPress={() => setModalVisible(true)}
           >
             <Text

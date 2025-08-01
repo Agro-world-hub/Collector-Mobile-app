@@ -511,7 +511,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
           {/* Edit Icon (Pen Icon) */}
           <TouchableOpacity
             onPress={handleImagePick} // Handle the image picking
-            className="absolute bottom-0 right-4 bg-[#3980C0] p-1 rounded-full mr-[35%] shadow-md"
+            className="absolute bottom-0 right-4 bg-[#980775] p-1 rounded-full mr-[35%] shadow-md"
             style={{
               elevation: 5, // For shadow effect
             }}
@@ -534,7 +534,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
                 type === "Permanent" ? "radio-button-on" : "radio-button-off"
               }
               size={20}
-              color="#0021F5"
+              color="#980775"
             />
             <Text className="ml-2 text-gray-700">
               {t("AddOfficerBasicDetails.Permanent")}
@@ -549,7 +549,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
                 type === "Temporary" ? "radio-button-on" : "radio-button-off"
               }
               size={20}
-              color="#0021F5"
+              color="#980775"
             />
             <Text className="ml-2 text-gray-700">
               {t("AddOfficerBasicDetails.Temporary")}
@@ -586,7 +586,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
                       : "square-outline"
                   }
                   size={20}
-                  color="#0021F5"
+                  color="#980775"
                 />
                 <Text className="ml-2 text-gray-700">{lang}</Text>
               </TouchableOpacity>
@@ -652,7 +652,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
                 placeholder="--User ID--"
                 value={formData.userId}
                 editable={false} // Make this field read-only
-                className="px-3 py-2 text-gray-700 bg-gray-100"
+                className="px-3 py-2 text-gray-700 bg-[#F4F4F4]"
                 style={{
                   height: 40, // Ensure the height matches the grey part
                 }}
@@ -666,7 +666,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
             onChangeText={(text) =>
               setFormData({ ...formData, firstNameEnglish: text })
             }
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
             placeholder={t("AddOfficerBasicDetails.LastNameEnglish")}
@@ -674,7 +674,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
             onChangeText={(text) =>
               setFormData({ ...formData, lastNameEnglish: text })
             }
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
             placeholder={t("AddOfficerBasicDetails.FirstNameinSinhala")}
@@ -682,7 +682,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
             onChangeText={(text) =>
               setFormData({ ...formData, firstNameSinhala: text })
             }
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
             placeholder={t("AddOfficerBasicDetails.LastNameSinhala")}
@@ -690,7 +690,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
             onChangeText={(text) =>
               setFormData({ ...formData, lastNameSinhala: text })
             }
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
             placeholder={t("AddOfficerBasicDetails.FirstNameTamil")}
@@ -698,7 +698,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
             onChangeText={(text) =>
               setFormData({ ...formData, firstNameTamil: text })
             }
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+             className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
             placeholder={t("AddOfficerBasicDetails.LastNameTamil")}
@@ -706,7 +706,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
             onChangeText={(text) =>
               setFormData({ ...formData, lastNameTamil: text })
             }
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+             className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
           />
 
           {/* Phone Number 1 */}
@@ -720,10 +720,13 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
                     value: `${country.code} (${country.dial_code})`,
                   }))}
                   boxStyles={{
-                    borderColor: "#ccc", // Remove the border
-                    borderRadius: 8,
+                    borderColor: "#F4F4F4", // Remove the border
+                    borderRadius: 25,
                     width: "100%",
                     height: 40,
+                    backgroundColor:"#F4F4F4",
+                    
+                    
                   }}
                   dropdownStyles={{ borderColor: "#ccc" }}
                   search={false} // Disable search in dropdown if not needed
@@ -732,14 +735,14 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
               </View>
               <View
                 style={{ flex: 7 }}
-                className="border border-gray-300 rounded-lg  text-gray-700 "
+                className="border border-[#F4F4F4] bg-[#F4F4F4]  rounded-full  text-gray-700 "
               >
                 <TextInput
                   placeholder="7X-XXX-XXXX"
                   keyboardType="phone-pad"
                   value={phoneNumber1}
                   onChangeText={handlePhoneNumber1Change}
-                  className="px-3 py-3 text-gray-700"
+                  className="px-3 py-3 text-gray-700 border-[#F4F4F4] bg-[#F4F4F4] rounded-full"
                   maxLength={9} // Limit the input to 9 characters
                 />
               </View>
@@ -761,11 +764,12 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
                     key: country.code,
                     value: `${country.code} (${country.dial_code})`,
                   }))}
-                  boxStyles={{
-                    borderColor: "#ccc", // Remove the border
-                    borderRadius: 8,
+                boxStyles={{
+                    borderColor: "#F4F4F4", // Remove the border
+                    borderRadius: 25,
                     width: "100%",
                     height: 40,
+                    backgroundColor:"#F4F4F4",
                   }}
                   dropdownStyles={{ borderColor: "#ccc" }}
                   search={false} // Disable search in dropdown if not needed
@@ -774,7 +778,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
               </View>
               <View
                 style={{ flex: 7 }}
-                className="border border-gray-300 rounded-lg  text-gray-700 "
+                className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  text-gray-700 "
               >
                 <TextInput
                   placeholder="7X-XXX-XXXX"
@@ -798,7 +802,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
             value={formData.nicNumber}
             onChangeText={handleNicNumberChange}
             maxLength={12}
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
           />
           {error3 ? (
             <Text className="mb-3" style={{ color: "red" }}>
@@ -809,7 +813,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
             placeholder={t("AddOfficerBasicDetails.Email")}
             value={formData.email}
             onChangeText={handleEmailChange}
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-2 text-gray-700"
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-2 text-gray-700"
           />
           {errorEmail ? (
             <Text className="" style={{ color: "red" }}>
@@ -833,7 +837,7 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
             onPress={handleNext}
             disabled={isValidating}
             className={`${
-              isValidating ? "bg-gray-400" : "bg-[#2AAD7A]"
+              isValidating ? "bg-gray-400" : "bg-[#000000]"
             } px-8 py-3 rounded-full`}
           >
             <Text className="text-white text-center">

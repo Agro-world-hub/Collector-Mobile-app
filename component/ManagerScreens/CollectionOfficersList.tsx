@@ -254,8 +254,8 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
   </TouchableOpacity>;
 
   return (
-    <View className="flex-1 bg-[#2AAD7A]">
-      <View className="bg-[#2AAD7A] py-6 px-4  relative">
+    <View className="flex-1 bg-[#313131]">
+      <View className="bg-[#313131] py-6 px-4  relative">
         {/* <TouchableOpacity
           className="absolute top-6 left-4 z-50"
           onPress={() => {

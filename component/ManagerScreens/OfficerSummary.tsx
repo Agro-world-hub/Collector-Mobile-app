@@ -97,7 +97,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
   
               <TouchableOpacity
                 onPress={onConfirm}
-                className="p-2 py-2 bg-[#D16D6A] rounded-lg"
+                className="p-2 py-2 bg-[#FF0700] rounded-lg"
               >
                 <Text className="text-sm text-white">{t("DisclaimOfficer.Disclaim")}</Text>
               </TouchableOpacity>
@@ -276,7 +276,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
           )}
 
           {/* Profile Image with Green Border */}
-          <View className={`w-28 h-28 border-[6px] rounded-full items-center justify-center ${isOnline ? 'border-[#2AAD7A]' : 'border-gray-400'}`}>
+          <View className={`w-28 h-28 border-[6px] rounded-full items-center justify-center ${isOnline ? 'border-[#980775]' : 'border-gray-400'}`}>
 
             <Image
               source={
@@ -295,7 +295,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
         </View>
 
         {/* Action Buttons Section */}
-        <View className="bg-[#2AAD7A] rounded-b-[45px] px-8 py-4 -mt-6 flex-row justify-around shadow-md z-0">
+        <View className="bg-[#980775] rounded-b-[45px] px-8 py-4 -mt-6 flex-row justify-around shadow-md z-0">
           {/* Phone Number 1 */}
           {phoneNumber1 ? (
             <TouchableOpacity
@@ -388,11 +388,11 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
               size={120}
               width={10}
               fill={taskPercentage ?? 0} // Dynamically set fill percentage
-              tintColor="#0CB783"
+              tintColor="#000000"
               backgroundColor="#E5E7EB"
             >
               {(fill) => (
-                <Text className="text-[#0CB783] font-bold text-xl">
+                <Text className="text-[#000000] font-bold text-xl">
                   {Math.round(fill)}%
                 </Text>
               )}
@@ -403,7 +403,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
 
           <View className="mt-6 mb-10 items-center">
             <TouchableOpacity
-              className="bg-[#2AAD7A] rounded-full w-64 py-3 h-12"
+              className="bg-[#000000] rounded-full w-64 py-3 h-12"
               onPress={() =>
                 navigation.navigate("DailyTargetListForOfficers", {
                   officerId,

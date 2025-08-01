@@ -252,7 +252,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
   return (
     <View className="flex-1 bg-white">
       {/* Fixed Header */}
-      <View className="flex-row items-center bg-[#2AAD7A] p-6 rounded-b-lg">
+      <View className="flex-row items-center bg-[#313131] p-6 rounded-b-lg">
         <TouchableOpacity
           onPress={() => {
             navigation.reset({
@@ -279,7 +279,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
             });
           }}
         >
-          <Ionicons name="arrow-back" size={22} color="white" />
+          <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
 
         <Text className="text-white text-lg font-semibold text-center w-full">
@@ -310,7 +310,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
             </Text>
 
             {loading ? (
-              <ActivityIndicator size="large" color="#2AAD7A" />
+              <ActivityIndicator size="large" color="#313131" />
             ) : errorMessage ? (
               <Text className="text-red-500">{errorMessage}</Text>
             ) : (
@@ -323,7 +323,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
                   setValue={setAssignee}
                   setItems={setOfficers}
                   placeholder={t("PassTargetBetweenOfficers.Select an officer")}
-                  style={{ borderColor: "#CFCFCF", borderWidth: 1 }}
+                  style={{ borderColor: "#F4F4F4",backgroundColor:"#F4F4F4",borderRadius:25, borderWidth: 1 }}
                   dropDownContainerStyle={{ borderColor: "#e5e7eb" }}
                   placeholderStyle={{ color: "#000000" }}
                   zIndex={3000}
@@ -337,7 +337,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
               {t("PassTargetBetweenOfficers.Amount")}
             </Text>
             <TextInput
-              className="border border-gray-300 rounded-lg p-3.5 text-gray-800"
+              className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full p-3.5 text-gray-800"
               keyboardType="numeric"
               value={amount}
               onChangeText={handleAmountChange}
@@ -349,7 +349,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
         <View className="mt-6 items-center">
           <TouchableOpacity
             className={`rounded-full w-64 py-3 ${
-              isSaveDisabled() ? "bg-gray-400" : "bg-[#2AAD7A]"
+              isSaveDisabled() ? "bg-[#ABABAB]" : "bg-[#000000]"
             }`}
             onPress={passTarget}
             disabled={isSaveDisabled()}
