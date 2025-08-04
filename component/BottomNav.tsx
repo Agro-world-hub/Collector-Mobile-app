@@ -420,22 +420,18 @@ useEffect(() => {
 
   return (
     <View className={` ${currentTabName === "QRScanner" ? "bg-black" : "bg-white"}`}>
-      <View className="absolute bottom-0 flex-row  justify-between items-center bg-[white] py-3 px-6 rounded-t-3xl w-full border-t border-r border-l border-[#00000040] shadow-md">
+      <View className="absolute bottom-0 flex-row  justify-between items-center bg-white py-3 px-6 rounded-t-3xl w-full border-t border-r border-l border-[#00000040] shadow-md">
         {tabs.map((tab, index) => {
           const isFocused = currentTabName === tab.name;
           return (
             <TouchableOpacity
               key={index}
               onPress={() => navigation.navigate(tab.name)}
-              className={`${isFocused ? "bg-[#FAE432] p-3 rounded-full -mt-2 border border-[#FAE432] shadow-md" : "items-center justify-center"}`}
+              className={`${isFocused ? "bg-[#FAE432] p-3 rounded-full border border-[#FAE432] shadow-md" : "items-center justify-center"}`}
               style={{
                 backgroundColor: isFocused ? "#FAE432" : "white",
                 padding: isFocused ? 8 : 6,
                 borderRadius: 50,
-              
-
-                
-                
               }}
             >
               <Image source={isFocused ? tab.focusedIcon : tab.icon} style={{ width: 24, height: 24, resizeMode: "contain" }} />
