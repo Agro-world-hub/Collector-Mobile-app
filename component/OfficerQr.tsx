@@ -197,7 +197,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
         {/* QR Code Display */}
         <View className="items-center mb-4 mt-5">
           {QR ? (
-            <View className="bg-white p-2 rounded-xl border-2 border-[#2AAD7A]">
+            <View className="bg-white p-2 rounded-xl border-2 border-[#FAE432]">
               <Image
                 source={{ uri: QR }}
                 style={{ width: 230, height: 230, resizeMode: "contain" }}
@@ -233,7 +233,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
         {/* Actions */}
         <View className="flex-row justify-evenly mt-[50px] mb-4">
           <TouchableOpacity
-            className="bg-[#2AAD7A] w-24 h-20 rounded-lg items-center justify-center flex-col mx-2"
+            className="bg-[#000000] w-24 h-20 rounded-lg items-center justify-center flex-col mx-2"
             onPress={downloadQRCode}
           >
             <MaterialIcons name="download" size={24} color="white" />
@@ -242,7 +242,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className="bg-[#2AAD7A] w-24 h-20 rounded-lg items-center justify-center flex-col mx-2"
+            className="bg-[#000000] w-24 h-20 rounded-lg items-center justify-center flex-col mx-2"
             onPress={shareQRCode}
           >
             <MaterialIcons name="share" size={24} color="white" />

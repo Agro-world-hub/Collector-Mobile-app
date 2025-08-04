@@ -253,7 +253,7 @@ const PassTargetBetweenOfficers: React.FC<
   return (
     <View className="flex-1 bg-white">
       {/* ✅ Fixed Header */}
-      <View className="flex-row items-center bg-[#2AAD7A] p-6 rounded-b-lg">
+      <View className="flex-row items-center bg-[#313131] p-6 rounded-b-lg">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
@@ -285,7 +285,7 @@ const PassTargetBetweenOfficers: React.FC<
             </Text>
 
             {loading ? (
-              <ActivityIndicator size="large" color="#2AAD7A" />
+              <ActivityIndicator size="large" color="#313131" />
             ) : errorMessage ? (
               <Text className="text-red-500">{errorMessage}</Text>
             ) : (
@@ -331,7 +331,7 @@ const PassTargetBetweenOfficers: React.FC<
         <View className="mt-6 items-center">
           <TouchableOpacity
             className={`rounded-full w-64 py-3 ${
-              isSaveDisabled() ? "bg-gray-400" : "bg-[#2AAD7A]"
+              isSaveDisabled() ? "bg-gray-400" : "bg-[#313131]"
             }`}
             onPress={passTarget}
             disabled={isSaveDisabled()}

@@ -447,7 +447,7 @@ const AddOfficerAddressDetails: React.FC = () => {
             onChangeText={(text) =>
               setFormData({ ...formData, houseNumber: text })
             }
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
             placeholder={t("AddOfficerAddressDetails.Street Name")}
@@ -455,19 +455,19 @@ const AddOfficerAddressDetails: React.FC = () => {
             onChangeText={(text) =>
               setFormData({ ...formData, streetName: text })
             }
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
             placeholder={t("AddOfficerAddressDetails.City")}
             value={formData.city}
             onChangeText={(text) => setFormData({ ...formData, city: text })}
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
             placeholder={t("AddOfficerAddressDetails.Country")}
             value={t("AddOfficerAddressDetails.Country")} // Always set to Sri Lanka
             editable={false} // Make the input non-editable
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
           />
 
           <View style={{ marginBottom: 10 }}>
@@ -482,13 +482,12 @@ const AddOfficerAddressDetails: React.FC = () => {
                   ] || province.name.en,
               }))}
               boxStyles={{
-                borderColor: "#cccccc",
-                borderWidth: 1,
-                borderRadius: 5,
-                padding: 10,
-                paddingLeft: 15,
-                paddingRight: 15,
-              }}
+                    borderColor: "#F4F4F4", // Remove the border
+                    borderRadius: 25,
+                    width: "100%",
+                    height: 50,
+                    backgroundColor:"#F4F4F4",
+                  }}
               dropdownStyles={{
                 borderRadius: 5,
                 borderWidth: 1,
@@ -510,13 +509,12 @@ const AddOfficerAddressDetails: React.FC = () => {
                   value: district[selectedLanguage as keyof typeof district], // Value displayed in the selected language
                 }))}
                 boxStyles={{
-                  borderColor: "#cccccc",
-                  borderWidth: 1,
-                  borderRadius: 5,
-                  padding: 10,
-                  paddingLeft: 15,
-                  paddingRight: 15,
-                }}
+                    borderColor: "#F4F4F4", // Remove the border
+                    borderRadius: 25,
+                    width: "100%",
+                    height: 40,
+                    backgroundColor:"#F4F4F4",
+                  }}
                 dropdownStyles={{
                   borderRadius: 5,
                   borderWidth: 1,
@@ -537,14 +535,14 @@ const AddOfficerAddressDetails: React.FC = () => {
             onChangeText={(text) =>
               handleInputChange("accountHolderName", text)
             }
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
             placeholder={t("AddOfficerAddressDetails.AccountNum")}
             keyboardType="numeric"
             value={formData.accountNumber}
             onChangeText={(text) => handleValidation("accountNumber", text)}
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
             placeholder={t("AddOfficerAddressDetails.Confirm AccountNum")}
@@ -554,8 +552,8 @@ const AddOfficerAddressDetails: React.FC = () => {
               handleValidation("confirmAccountNumber", text)
             }
             className={`border ${
-              error ? "border-red-500" : "border-gray-300"
-            } rounded-lg px-3 py-2 mb-4 text-gray-700`}
+              error ? "border-red-500" : "border-[#F4F4F4] bg-[#F4F4F4]  "
+            } rounded-full px-3 py-2 mb-4 text-gray-700`}
           />
           {error && <Text className="text-red-500 text-sm mb-4">{error}</Text>}
 
@@ -573,13 +571,12 @@ const AddOfficerAddressDetails: React.FC = () => {
                 }}
                 placeholder={t("AddOfficerAddressDetails.BankName")}
                 boxStyles={{
-                  borderColor: "#cccccc",
-                  borderWidth: 1,
-                  borderRadius: 5,
-                  padding: 10,
-                  paddingLeft: 15,
-                  paddingRight: 15,
-                }}
+                    borderColor: "#F4F4F4", // Remove the border
+                    borderRadius: 25,
+                    width: "100%",
+                    height: 50,
+                    backgroundColor:"#F4F4F4",
+                  }}
                 dropdownStyles={{
                   borderRadius: 5,
                   borderWidth: 1,
@@ -602,12 +599,11 @@ const AddOfficerAddressDetails: React.FC = () => {
                   }}
                   placeholder={t("AddOfficerAddressDetails.BranchName")}
                   boxStyles={{
-                    borderColor: "#cccccc",
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    padding: 10,
-                    paddingLeft: 15,
-                    paddingRight: 15,
+                    borderColor: "#F4F4F4", // Remove the border
+                    borderRadius: 25,
+                    width: "100%",
+                    height: 50,
+                    backgroundColor:"#F4F4F4",
                   }}
                   dropdownStyles={{
                     borderRadius: 5,
@@ -634,7 +630,7 @@ const AddOfficerAddressDetails: React.FC = () => {
           <TouchableOpacity
             onPress={handleSubmit}
             // className="bg-green-600 px-8 py-3 rounded-full"
-            className={`bg-green-600 px-8 py-3 rounded-full ${
+            className={`bg-[#000000] px-8 py-3 rounded-full ${
               loading ? "opacity-50" : ""
             }`}
             disabled={loading}

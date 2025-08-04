@@ -1152,7 +1152,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.FirstName")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={getfirstName()}
               editable={false}
               style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
@@ -1167,7 +1167,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.LastName")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={getlastName()}
               editable={false}
               style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
@@ -1181,7 +1181,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.Company")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={getcompanyName()}
               editable={false}
               style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
@@ -1195,7 +1195,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.CenterCode")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={profileData.regcode}
               editable={false}
             />
@@ -1209,7 +1209,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.CenterName")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={profileData.collectionCenterName}
               editable={false}
             />
@@ -1223,7 +1223,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.Job")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={getTranslatedJobRole(
                 profileData.jobRole,
                 selectedLanguage
@@ -1241,7 +1241,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.NIC")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={profileData.nicNumber}
               editable={false}
             />
@@ -1254,7 +1254,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.Phone1")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={newPhoneNumber}
               placeholder="7XXXXXXXX"
               keyboardType="numeric"
@@ -1275,7 +1275,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.Phone2")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={newPhoneNumber2}
               placeholder="7XXXXXXXX"
               keyboardType="numeric"
@@ -1294,7 +1294,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.House")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={profileData.houseNumber}
               editable={false}
             />
@@ -1307,7 +1307,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.Street")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={profileData.streetName}
               editable={false}
             />
@@ -1321,7 +1321,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.City")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4] mb-2"
               value={getTranslatedCity(
                 profileData.city,
                 profileData.district,
@@ -1340,7 +1340,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.District")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4] mb-2"
               value={getTranslatedDistrict(
                 profileData.district,
                 selectedLanguage
@@ -1358,7 +1358,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.Province")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4] mb-2"
               value={getTranslatedProvince(
                 profileData.province,
                 selectedLanguage
@@ -1371,7 +1371,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
           {showUpdateButton  && (newPhoneNumber !== profileData.phoneNumber || newPhoneNumber2 !== profileData.phoneNumber2) && (
             <TouchableOpacity
               onPress={handleUpdatePhoneNumber}
-              className="bg-[#2AAD7A] py-3 rounded-[30px] mb-4"
+              className="bg-[#000000] py-3 rounded-[30px] mb-4"
             >
               <Text
                 style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}

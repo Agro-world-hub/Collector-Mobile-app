@@ -312,7 +312,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
     <ScrollView className="flex-1 bg-white">
       <View className="flex-1 bg-white">
         {/* ✅ Fixed Header */}
-        <View className="flex-row items-center bg-[#2AAD7A] p-6 rounded-b-lg">
+        <View className="flex-row items-center bg-[#313131] p-6 rounded-b-lg">
           <TouchableOpacity
             onPress={() => {
               navigation.reset({
@@ -339,7 +339,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
               });
             }}
           >
-            <Ionicons name="arrow-back" size={22} color="white" />
+           <AntDesign name="left" size={22} color="white" />
           </TouchableOpacity>
           <Text className="text-white text-lg font-semibold text-center w-full">
             {getvarietyName()}
@@ -353,7 +353,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
             </Text>
 
             {loading ? (
-              <ActivityIndicator size="large" color="#2AAD7A" />
+              <ActivityIndicator size="large" color="#313131" />
             ) : errorMessage ? (
               <Text className="text-red-500">{errorMessage}</Text>
             ) : (
@@ -371,16 +371,18 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
                   }}
                   boxStyles={{
                     borderWidth: 1,
-                    borderColor: "#CFCFCF",
-                    backgroundColor: "white",
+                    borderColor: "#F4F4F4",
+                    backgroundColor: "#F4F4F4",
+                    borderRadius:25
                   }}
                   inputStyles={{
                     color: "#000000",
                   }}
                   dropdownStyles={{
                     // Fixed: changed from dropDownStyles to dropdownStyles
-                    borderColor: "#CFCFCF",
-                    backgroundColor: "white",
+                    borderColor: "#F4F4F4",
+                    backgroundColor: "#F4F4F4"
+                
                   }}
                 />
               </View>
@@ -392,7 +394,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
               {t("PassTargetBetweenOfficers.maximum amount receive")}
             </Text>
             {fetchingTarget ? (
-              <ActivityIndicator size="small" color="#2AAD7A" />
+              <ActivityIndicator size="small" color="#313131" />
             ) : (
               <Text className="text-xl font-bold text-center text-black mb-4">
                 {maxAmount
@@ -407,7 +409,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
               {t("PassTargetBetweenOfficers.Amount")}
             </Text>
             <TextInput
-              className="border border-gray-300 rounded-lg p-2 text-gray-800"
+              className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full p-2 text-gray-800"
               keyboardType="numeric"
               value={amount}
               onChangeText={handleAmountChange}
@@ -421,7 +423,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
         <View className="mt-6 items-center">
           <TouchableOpacity
             className={`rounded-full w-64 py-3 ${
-              isSaveButtonDisabled() ? "bg-gray-400" : "bg-[#2AAD7A]"
+              isSaveButtonDisabled() ? "bg-gray-400" : "bg-[#000000]"
             }`}
             onPress={receiveTarget}
             disabled={isSaveButtonDisabled()}

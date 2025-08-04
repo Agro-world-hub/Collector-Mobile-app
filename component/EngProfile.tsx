@@ -388,6 +388,10 @@ interface UserProfile {
   jobRole: string
 }
 
+
+const icon = require("@/assets/images/New/engprofileicon.png")
+
+
 const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const [isLanguageDropdownOpen, setLanguageDropdownOpen] =
     useState<boolean>(false);
@@ -644,7 +648,12 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
             <Text className="text-gray-500">{profile?.empId}</Text>
           </View>
           <TouchableOpacity onPress={handleEditClick}>
-            <Ionicons name="create-outline" size={30} color="#2fcd46" />
+            {/* <Ionicons name="create-outline" size={30} color="#2fcd46" /> */}
+             <Image 
+              source={icon} 
+               style={{ width: 30, height: 30 }}
+          resizeMode="contain"
+              />
           </TouchableOpacity>
         </View>
 
@@ -678,7 +687,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
                   onPress={() => handleLanguageSelect(language)}
                   className={`flex-row items-center py-2 px-4 rounded-lg my-1 ${
                     selectedLanguage === language
-                      ? "bg-green-100"
+                      ? "bg-[#FFDFF7]"
                       : "bg-transparent"
                   }`}
                 >
@@ -795,7 +804,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
           {/* Logout */}
           <TouchableOpacity
-            className="flex-row items-center py-3"
+            className="flex-row items-center py-3 mb-20"
             onPress={handleLogout}
           >
             <Ionicons name="log-out-outline" size={20} color="red" />

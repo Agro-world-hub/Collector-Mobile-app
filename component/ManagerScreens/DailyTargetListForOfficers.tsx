@@ -205,7 +205,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
         {/* To Do Button */}
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
-            selectedToggle === "ToDo" ? "bg-[#2AAD7A]" : "bg-white"
+            selectedToggle === "ToDo" ? "bg-[#980775]" : "bg-white"
           }`}
           style={{ height: 40 }}
           onPress={() => setSelectedToggle("ToDo")}
@@ -218,7 +218,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
             {t("DailyTarget.Todo")}
           </Text>
           <View className="bg-white rounded-full px-2">
-            <Text className="text-green-500 font-bold text-xs">
+            <Text className="text-black font-bold text-xs">
               {todoData.length}
             </Text>
           </View>
@@ -227,7 +227,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
         {/* Completed Button */}
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
-            selectedToggle === "Completed" ? "bg-[#2AAD7A]" : "bg-white"
+            selectedToggle === "Completed" ? "bg-[#980775]" : "bg-white"
           }`}
           style={{ height: 40 }}
           onPress={() => setSelectedToggle("Completed")}
@@ -240,7 +240,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
             {t("DailyTarget.Completed")}
           </Text>
           <View className="bg-white rounded-full px-2 ml-2">
-            <Text className="text-green-500 font-bold text-xs">
+            <Text className="text-black font-bold text-xs">
               {completedData.length}
             </Text>
           </View>
@@ -257,7 +257,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
       >
         <View>
           {/* Table Header */}
-          <View className="flex-row bg-[#2AAD7A] h-[7%]">
+          <View className="flex-row bg-[#980775] h-[7%]">
             <Text className="w-16 p-2 text-center text-white">
               {t("DailyTarget.No")}
             </Text>
@@ -338,7 +338,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
                     {selectedToggle === "ToDo" ? (
                       index + 1
                     ) : (
-                      <Ionicons name="flag" size={20} color="green" />
+                      <Ionicons name="flag" size={20} color="purple" />
                     )}
                   </Text>
                   <Text className="w-40 p-2 border-r border-gray-300 text-center flex-wrap">
