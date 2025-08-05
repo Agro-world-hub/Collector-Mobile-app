@@ -353,11 +353,11 @@ useEffect(() => {
   navigation.setOptions({
     headerStyle: {
       backgroundColor: orderStatus === 'Completed' ? '#D4F7D4' :
-                        orderStatus === 'Opened' ? '#FFF9C4' :
-                        '#FFB9B7', // Default for Pending
+                        orderStatus === 'Opened' ? '#FDFF99' :
+                        '#FFCDCD', // Default for Pending
     },
     headerTintColor: orderStatus === 'Completed' ? '#2E7D32' :
-                      orderStatus === 'Opened' ? '#B8860B' :
+                      orderStatus === 'Opened' ? '#A8A100' :
                       '#D16D6A', // Default for Pending
   });
 }, [orderStatus, navigation]);
@@ -422,7 +422,8 @@ const handleCompleteOrder = async () => {
       orderId: item.orderId,
       packageItems: selectedFamilyItems,
       additionalItems: selectedAdditionalItems,
-      status: 'Completed'
+      status: 'Completed',
+      isComplete: 1
     };
 
     console.log('Completing order with data:', updateData);
@@ -859,7 +860,8 @@ const handleSubmit = async () => {
       orderId: item.orderId,
       packageItems: selectedFamilyItems,
       additionalItems: selectedAdditionalItems,
-      status: newStatus
+      status: newStatus,
+      isComplete: 0
     };
 
     console.log('Submitting order update:', updateData);
@@ -1472,7 +1474,7 @@ const DynamicStatusBadge = () => {
   
   return (
     <View className="mx-4 mt-4 mb-3 justify-center items-center">
-      <View className={`px-3 py-2 rounded-lg ${styling.badge}`}>
+      <View className={`px-3 py-2 rounded-full ${styling.badge}`}>
         <Text className={`font-medium text-sm ${styling.text}`}>
           {statusText}
         </Text>

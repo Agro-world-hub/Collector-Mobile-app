@@ -225,7 +225,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
       <View className="flex-1 bg-white items-center justify-center">
         {/* <ActivityIndicator size="large" color="#26D041" /> */}
         <LottieView
-          source={require("../assets/lottie/collector.json")}
+          source={require("../assets/lottie/newLottie.json")}
           autoPlay
           loop
           style={{ width: 300, height: 300 }}

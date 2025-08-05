@@ -323,7 +323,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({
       {loading ? (
         <View className="flex-1 justify-center items-center">
           <LottieView
-            source={require("../../assets/lottie/collector.json")}
+            source={require("../../assets/lottie/newLottie.json")}
             autoPlay
             loop
             style={{ width: 150, height: 150 }}

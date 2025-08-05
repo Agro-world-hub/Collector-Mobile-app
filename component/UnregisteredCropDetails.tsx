@@ -1058,7 +1058,7 @@ TID: ${invoiceNumber}
               {loading ? (
                 <View className="flex-row justify-center items-center">
                   <LottieView
-                    source={require("../assets/lottie/collector.json")}
+                    source={require("../assets/lottie/newLottie.json")}
                     autoPlay
                     loop
                     style={{ width: 30, height: 30 }}

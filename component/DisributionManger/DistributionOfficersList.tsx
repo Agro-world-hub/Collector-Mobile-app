@@ -375,7 +375,7 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
           // Lottie Loader for 4 seconds
           <View className="flex-1 justify-center items-center -mt-[25%]">
             <LottieView
-              source={require("../../assets/lottie/collector.json")} // Ensure JSON file is correct
+              source={require("../../assets/lottie/newLottie.json")} // Ensure JSON file is correct
               autoPlay
               loop
               style={{ width: 350, height: 350 }}

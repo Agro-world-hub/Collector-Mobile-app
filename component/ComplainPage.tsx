@@ -206,7 +206,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
           // Lottie Loader displays for 2 seconds
           <View className="flex-1 justify-center items-center">
             <LottieView
-              source={require("../assets/lottie/collector.json")}
+              source={require("../assets/lottie/newLottie.json")}
               autoPlay
               loop
               style={{ width: 300, height: 300 }}

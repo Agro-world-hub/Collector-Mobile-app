@@ -230,7 +230,7 @@ const homeIcon = require("../assets/images/New/navhome.png");
 const searchIcon = require("../assets/images/New/navsearch.png");
 const qrIcon = require("../assets/images/New/navtarget.png");
 const adminIcon = require("../assets/images/New/navusers.png");
-const dataTransfer = require("../assets/images/Data Transfer.webp")
+const dataTransfer = require("../assets/images/New/transfer.png")
 
 const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
   // const { userRole, setUserRole, setToken, setEmpId } = useUserStore();
