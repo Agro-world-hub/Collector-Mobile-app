@@ -67,28 +67,32 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
     }
   };
 
-  const handleNicChange = (text: string) => {
-    const normalizedText = text.replace(/[vV]/g, "V");
-    setNICnumber(normalizedText);
+ const handleNicChange = (text: string) => {
+  // Only allow numbers (0-9) and the letter V/v - block ALL other letters including X
+  const filteredText = text.replace(/[^0-9Vv]/g, '');
+  
+  // Then normalize v to uppercase V (for NIC format)
+  const normalizedText = filteredText.replace(/[vV]/g, "V");
+  
+  setNICnumber(normalizedText);
 
-    // Clear error message when input changes
-    if (ere) {
-      setEre("");
-    }
+  // Clear error message when input changes
+  if (ere) {
+    setEre("");
+  }
 
-    // Reset search button clicked state when user starts typing again
-    if (searchButtonClicked && text.length === 0) {
-      setSearchButtonClicked(false);
-    }
+  // Reset search button clicked state when user starts typing again
+  if (searchButtonClicked && normalizedText.length === 0) {
+    setSearchButtonClicked(false);
+  }
 
-    // Reset search states when user modifies the input
-    if (noResults || newQr) {
-      setNoResults(false);
-      setNewQr(false);
-      setFarmers(null);
-    }
-  };
-
+  // Reset search states when user modifies the input
+  if (noResults || newQr) {
+    setNoResults(false);
+    setNewQr(false);
+    setFarmers(null);
+  }
+};
   const handleSearch = async () => {
     // Set search button clicked to true
     setSearchButtonClicked(true);
@@ -171,6 +175,8 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
     return {};
   };
 
+
+
   // Calculate what to display based on current state
   const shouldShowSearchImage = !searchButtonClicked;
   const shouldShowNoResults =
@@ -210,13 +216,17 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
               {t("SearchFarmer.EnterFarmer")}
             </Text>
 
-           <View className="flex-row items-center border border-[#A7A7A7] rounded-full mt-4 px-1  bg-white">
+          <View className="flex-row items-center border border-[#A7A7A7] rounded-full mt-4 px-1 bg-white">
   <TextInput
     value={NICnumber}
     onChangeText={handleNicChange}
     placeholder={t("SearchFarmer.EnterNIC")}
     className="flex-1"
     maxLength={12}
+    keyboardType="default" // Allows alphanumeric input
+    autoCapitalize="characters" // Auto-capitalizes V/X
+    autoCorrect={false} // Prevents auto-correction
+    spellCheck={false} // Disables spell check
     style={{
       color: "#000",
       fontSize: 16,

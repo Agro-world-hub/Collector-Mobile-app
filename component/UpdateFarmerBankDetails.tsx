@@ -283,21 +283,42 @@ If correct, share OTP only with the ${companyName} representative who contacts y
           </View>
 
           {/* Account Holder's Name */}
-          <View className="mb-4">
-            <Text className="text-[#434343] mb-2">
-              {t("UnregisteredFarmerDetails.AccountName")}
-            </Text>
-            <TextInput
-             // placeholder={t("UnregisteredFarmerDetails.AccountName")}
-              className="border border-[#F4F4F4] bg-[#F4F4F4] p-3 rounded-full"
-              value={accHolderName}
-              onChangeText={(text) => {
-                // Only allow letters, spaces, and dots (for initials)
-                const sanitizedText = text.replace(/[^a-zA-Z.\s]/g, "");
-                setAccHolderName(sanitizedText);
-              }}
-            />
-          </View>
+         <View className="mb-4">
+  <Text className="text-[#434343] mb-2">
+    {t("UnregisteredFarmerDetails.AccountName")}
+  </Text>
+  <TextInput
+    className="border border-[#F4F4F4] bg-[#F4F4F4] p-3 rounded-full"
+    value={accHolderName}
+    onChangeText={(text) => {
+      // Only allow letters and spaces - block numbers, dots, and all special characters
+      let filteredText = text.replace(/[^a-zA-Z\s]/g, "");
+      
+      // Prevent space at the beginning
+      if (filteredText.startsWith(' ')) {
+        filteredText = filteredText.trimStart();
+      }
+      
+      // Capitalize first letter and make rest lowercase, handle multiple words
+      const capitalizedText = filteredText
+        .toLowerCase()
+        .split(' ')
+        .map(word => {
+          if (word.length > 0) {
+            return word.charAt(0).toUpperCase() + word.slice(1);
+          }
+          return word;
+        })
+        .join(' ');
+      
+      setAccHolderName(capitalizedText);
+    }}
+    keyboardType="default"
+    autoCapitalize="words"
+    autoCorrect={false}
+    maxLength={100}
+  />
+</View>
 
           {/* Bank Name */}
           <View className="mb-4">

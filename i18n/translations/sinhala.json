@@ -267,7 +267,7 @@
      "AccountNumberError":"කරුණාකර වලංගු ගිණුම් අංකයක් ඇතුළත් කරන්න.",
       "InvalidNIC":"NIC එක ඉලක්කම් 12 කින් හෝ ඉලක්කම් 9 කින් පසුව V හෝ v විය යුතුය",
       "OnlyDigitsAllowed":"ඉලක්කම් සඳහා පමණක් අවසර ඇත",
-      "MustStartWith7":"7 න් පටන් ගත යුතුයි",
+      "MustStartWith7":"අවලංගු දුරකථන අංකයකි. ආකෘතිය 7 න් ආරම්භ විය යුතුය (උදා: 7XXXXXXXXX)",
       "InvalidPhoneLength":"වලංගු නොවන දුරකථන අංක දිග"
   },
   "PriceChart":{
