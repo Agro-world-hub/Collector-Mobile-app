@@ -365,6 +365,64 @@ If correct, share OTP only with the ${companyName} representative who contacts y
     }
   };
 
+  const handleNameChange = (text: string, setName: (name: string) => void) => {
+  // Remove numbers and special characters - keep only letters and spaces
+  let filteredText = text.replace(/[^a-zA-Z\s]/g, '');
+  
+  // Prevent space at the beginning
+  if (filteredText.startsWith(' ')) {
+    filteredText = filteredText.trimStart();
+  }
+  
+  // Capitalize first letter and make rest lowercase, handle multiple words
+  const capitalizedText = filteredText
+    .toLowerCase()
+    .split(' ')
+    .map(word => {
+      if (word.length > 0) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+      return word;
+    })
+    .join(' ');
+  
+  setName(capitalizedText);
+};
+
+// Specific handlers for first and last name
+const handleFirstNameChange = (text: string) => {
+  handleNameChange(text, setFirstName);
+};
+
+const handleLastNameChange = (text: string) => {
+  handleNameChange(text, setLastName);
+};
+
+const handleAccountNameChange = (text: string) => {
+  // Remove numbers and special characters - keep only letters and spaces
+  let filteredText = text.replace(/[^a-zA-Z\s]/g, '');
+  
+  // Prevent space at the beginning
+  if (filteredText.startsWith(' ')) {
+    filteredText = filteredText.trimStart();
+  }
+  
+  // Capitalize first letter and make rest lowercase, handle multiple words
+  const capitalizedText = filteredText
+    .toLowerCase()
+    .split(' ')
+    .map(word => {
+      if (word.length > 0) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+      return word;
+    })
+    .join(' ');
+  
+  setAccHolderName(capitalizedText);
+};
+
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -387,30 +445,36 @@ If correct, share OTP only with the ${companyName} representative who contacts y
         {/* Scrollable Form */}
         <ScrollView className="flex-1 p-3">
           {/* First Name */}
-          <View className="mb-4">
-            <Text className="text-[#434343] mb-2">
-              {t("UnregisteredFarmerDetails.FirstName")}
-            </Text>
-            <TextInput
-             // placeholder={t("UnregisteredFarmerDetails.FirstName")}
-              className="border border-[#F4F4F4]  bg-[#F4F4F4] p-3 rounded-full"
-              value={firstName}
-              onChangeText={setFirstName}
-            />
-          </View>
+       <View className="mb-4">
+  <Text className="text-[#434343] mb-2">
+    {t("UnregisteredFarmerDetails.FirstName")}
+  </Text>
+  <TextInput
+    className="border border-[#F4F4F4] bg-[#F4F4F4] p-3 rounded-full"
+    value={firstName}
+    onChangeText={handleFirstNameChange}
+    keyboardType="default"
+    autoCapitalize="words"
+    autoCorrect={false}
+    maxLength={50} // Add reasonable limit
+  />
+</View>
 
-          {/* Last Name */}
-          <View className="mb-4">
-            <Text className="text-[#434343] mb-2">
-              {t("UnregisteredFarmerDetails.LastName")}
-            </Text>
-            <TextInput
-            //  placeholder={t("UnregisteredFarmerDetails.LastName")}
-                     className="border border-[#F4F4F4]  bg-[#F4F4F4] p-3 rounded-full"
-              value={lastName}
-              onChangeText={setLastName}
-            />
-          </View>
+{/* Last Name */}
+<View className="mb-4">
+  <Text className="text-[#434343] mb-2">
+    {t("UnregisteredFarmerDetails.LastName")}
+  </Text>
+  <TextInput
+    className="border border-[#F4F4F4] bg-[#F4F4F4] p-3 rounded-full"
+    value={lastName}
+    onChangeText={handleLastNameChange}
+    keyboardType="default"
+    autoCapitalize="words"
+    autoCorrect={false}
+    maxLength={50} // Add reasonable limit
+  />
+</View>
 
           <View className="mb-4">
             <Text className="text-[#434343] mb-2">
@@ -608,22 +672,19 @@ If correct, share OTP only with the ${companyName} representative who contacts y
 
           {/* Account Holder's Name */}
           <View className="mb-4">
-            <Text className="text-[#434343] mb-2">
-              {t("UnregisteredFarmerDetails.AccountName")}
-            </Text>
-            <TextInput
-             // placeholder={t("UnregisteredFarmerDetails.AccountName")}
-              className="border border-[#F4F4F4]  bg-[#F4F4F4]  p-3 rounded-full"
-              value={accHolderName}
-              // onChangeText={setAccHolderName}
-              onChangeText={(text) => {
-                // Regex to allow only letters, spaces, and basic punctuation (you can adjust this as needed)
-                const cleanText = text.replace(/[^a-zA-Z\s]/g, ""); // Removes anything that is not a letter or space
-                setAccHolderName(cleanText);
-              }}
-            />
-          </View>
-
+  <Text className="text-[#434343] mb-2">
+    {t("UnregisteredFarmerDetails.AccountName")}
+  </Text>
+  <TextInput
+    className="border border-[#F4F4F4] bg-[#F4F4F4] p-3 rounded-full"
+    value={accHolderName}
+    onChangeText={handleAccountNameChange}
+    keyboardType="default"
+    autoCapitalize="words"
+    autoCorrect={false}
+    maxLength={100} // Bank account names can be longer
+  />
+</View>
           {/* Bank Name */}
           <View className="mb-4">
             <Text className="text-[#434343] mb-2">

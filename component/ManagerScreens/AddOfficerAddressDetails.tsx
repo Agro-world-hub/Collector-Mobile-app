@@ -121,25 +121,49 @@ const AddOfficerAddressDetails: React.FC = () => {
   };
 
   // Validation for matching account numbers
+  // const handleValidation = (key: string, value: string) => {
+  //   setFormData((prevState) => {
+  //     const updatedFormData = { ...prevState, [key]: value };
+  //     const { accountNumber, confirmAccountNumber } = updatedFormData;
+
+  //     if (
+  //       accountNumber &&
+  //       confirmAccountNumber &&
+  //       accountNumber !== confirmAccountNumber
+  //     ) {
+  //       setError(t("Error.Account numbers do not match."));
+  //     } else {
+  //       setError(""); // Clear error if they match
+  //     }
+
+  //     saveDataToStorage(updatedFormData); // Ensure data is saved after validation
+  //     return updatedFormData;
+  //   });
+  // };
+
   const handleValidation = (key: string, value: string) => {
-    setFormData((prevState) => {
-      const updatedFormData = { ...prevState, [key]: value };
-      const { accountNumber, confirmAccountNumber } = updatedFormData;
+  // Block special characters and letters - only allow numbers
+  const numbersOnly = value.replace(/[^0-9]/g, '');
+  
+  setFormData((prevState) => {
+    const updatedFormData = { ...prevState, [key]: numbersOnly };
+    const { accountNumber, confirmAccountNumber } = updatedFormData;
 
-      if (
-        accountNumber &&
-        confirmAccountNumber &&
-        accountNumber !== confirmAccountNumber
-      ) {
-        setError(t("Error.Account numbers do not match."));
-      } else {
-        setError(""); // Clear error if they match
-      }
+    if (
+      accountNumber &&
+      confirmAccountNumber &&
+      accountNumber !== confirmAccountNumber
+    ) {
+      setError(t("Error.Account numbers do not match."));
+    } else {
+      setError(""); // Clear error if they match
+    }
 
-      saveDataToStorage(updatedFormData); // Ensure data is saved after validation
-      return updatedFormData;
-    });
-  };
+    saveDataToStorage(updatedFormData); // Ensure data is saved after validation
+    return updatedFormData;
+  });
+};
+
 
   // Load saved data when the component mounts
   useEffect(() => {
@@ -529,33 +553,57 @@ const AddOfficerAddressDetails: React.FC = () => {
 
         {/* Bank Details */}
         <View className="px-8 mt-4">
+       <TextInput
+  placeholder={t("AddOfficerAddressDetails.AccountName")}
+  value={formData.accountHolderName}
+  onChangeText={(text) => {
+    // Block special characters and numbers - only allow letters and spaces
+    let filteredText = text.replace(/[^a-zA-Z\s]/g, '');
+    
+    // Prevent space at the beginning
+    if (filteredText.startsWith(' ')) {
+      filteredText = filteredText.trimStart();
+    }
+    
+    // Capitalize first letter of each word and make rest lowercase
+    const capitalizedText = filteredText
+      .toLowerCase()
+      .split(' ')
+      .map(word => {
+        if (word.length > 0) {
+          return word.charAt(0).toUpperCase() + word.slice(1);
+        }
+        return word;
+      })
+      .join(' ');
+    
+    // Update form data
+    handleInputChange("accountHolderName", capitalizedText);
+  }}
+  keyboardType="default"
+  autoCapitalize="words"
+  autoCorrect={false}
+  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+/>
           <TextInput
-            placeholder={t("AddOfficerAddressDetails.AccountName")}
-            value={formData.accountHolderName}
-            onChangeText={(text) =>
-              handleInputChange("accountHolderName", text)
-            }
-            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
-          />
-          <TextInput
-            placeholder={t("AddOfficerAddressDetails.AccountNum")}
-            keyboardType="numeric"
-            value={formData.accountNumber}
-            onChangeText={(text) => handleValidation("accountNumber", text)}
-            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
-          />
-          <TextInput
-            placeholder={t("AddOfficerAddressDetails.Confirm AccountNum")}
-            keyboardType="numeric"
-            value={formData.confirmAccountNumber}
-            onChangeText={(text) =>
-              handleValidation("confirmAccountNumber", text)
-            }
-            className={`border ${
-              error ? "border-red-500" : "border-[#F4F4F4] bg-[#F4F4F4]  "
-            } rounded-full px-3 py-2 mb-4 text-gray-700`}
-          />
-          {error && <Text className="text-red-500 text-sm mb-4">{error}</Text>}
+  placeholder={t("AddOfficerAddressDetails.AccountNum")}
+  keyboardType="numeric"
+  value={formData.accountNumber}
+  onChangeText={(text) => handleValidation("accountNumber", text)}
+  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+/>
+
+<TextInput
+  placeholder={t("AddOfficerAddressDetails.Confirm AccountNum")}
+  keyboardType="numeric"
+  value={formData.confirmAccountNumber}
+  onChangeText={(text) => handleValidation("confirmAccountNumber", text)}
+  className={`border ${
+    error ? "border-red-500" : "border-[#F4F4F4] bg-[#F4F4F4]"
+  } rounded-full px-3 py-2 mb-4 text-gray-700`}
+/>
+
+{error && <Text className="text-red-500 text-sm mb-4">{error}</Text>}
 
           <View className="">
             <View className="mb-4">
