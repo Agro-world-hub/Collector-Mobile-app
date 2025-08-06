@@ -250,7 +250,7 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
           {loading ? (
             <View className="flex-1 justify-center items-center mr-[40%] -mt-[10%]">
               <LottieView
-                source={require("../assets/lottie/collector.json")}
+                source={require("../assets/lottie/newLottie.json")}
                 autoPlay
                 loop
                 style={{ width: 350, height: 350 }}

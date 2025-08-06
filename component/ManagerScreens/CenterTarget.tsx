@@ -232,7 +232,7 @@ const sortByVarietyAndGrade = (data: TargetData[]) => {
                 {loading ? (
                   <View className="flex-1 justify-center items-center mr-[40%] ">
                     <LottieView
-                      source={require('../../assets/lottie/collector.json')}
+                      source={require('../../assets/lottie/newLottie.json')}
                       autoPlay
                       loop
                       style={{ width: 350, height: 350 }}

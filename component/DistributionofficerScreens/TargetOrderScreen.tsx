@@ -382,9 +382,9 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
   const getStatusColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
     switch (selectedStatus) {
       case 'Pending': 
-        return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
+        return 'bg-[#FF070733] border border-[#FF070733] text-[#FF0700]';
       case 'Opened': 
-        return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
+        return 'bg-[#FDFF99] border border-[#FDFF99] text-[#A8A100]';
       case 'Completed': 
         return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
       default: 
@@ -420,6 +420,45 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
   }
 };
 
+const getStatusBackgroundColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
+  switch (selectedStatus) {
+    case 'Pending': 
+      return '#FF070733'; // Light red background
+    case 'Opened': 
+      return '#FDFF99'; // Light yellow background
+    case 'Completed': 
+      return '#B7FFB9'; // Light green background
+    default: 
+      return '#F3F4F6'; // Gray background
+  }
+};
+
+const getStatusTextColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
+  switch (selectedStatus) {
+    case 'Pending': 
+      return '#FF0700'; // Red text
+    case 'Opened': 
+      return '#A8A100'; // Dark yellow text
+    case 'Completed': 
+      return '#6AD16D'; // Green text
+    default: 
+      return '#374151'; // Gray text
+  }
+};
+
+const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
+  switch (selectedStatus) {
+    case 'Pending': 
+      return '#FF070733'; // Light red border
+    case 'Opened': 
+      return '#F8FFA6'; // Light yellow border
+    case 'Completed': 
+      return '#B7FFB9'; // Light green border
+    default: 
+      return '#D1D5DB'; // Gray border
+  }
+};
+
   // Function to get detailed status display for debugging/info
   const getDetailedStatusDisplay = (item: TargetData) => {
     if (item.isPackage === 0) {
@@ -445,15 +484,15 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
       <View className="flex-row justify-center items-center py-4 bg-[#282828] px-4">
         <TouchableOpacity
           className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
+            selectedToggle === 'ToDo' ? 'bg-[#980775]' : 'bg-white'
           }`}
           onPress={() => setSelectedToggle('ToDo')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
             {t("TargetOrderScreen.Todo")}
           </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'ToDo' ? 'bg-white' : 'bg-[#2AAD7A]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'ToDo' ? 'text-[#2AAD7A]' : 'text-white'}`}>
+          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'ToDo' ? 'bg-white' : 'bg-[white]'}`}>
+            <Text className={`font-bold text-xs ${selectedToggle === 'ToDo' ? 'text-[#000000]' : 'text-white'}`}>
               {todoData.length.toString().padStart(2, '0')}
             </Text>
           </View>
@@ -461,15 +500,15 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
 
         <TouchableOpacity
           className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'Completed' ? 'bg-[#2AAD7A]' : 'bg-white'
+            selectedToggle === 'Completed' ? 'bg-[#980775]' : 'bg-white'
           }`}
           onPress={() => setSelectedToggle('Completed')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}>
             {t("TargetOrderScreen.Completed")}
           </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'Completed' ? 'bg-white' : 'bg-[#2AAD7A]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'Completed' ? 'text-[#2AAD7A]' : 'text-white'}`}>
+          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'Completed' ? 'bg-white' : 'bg-[white]'}`}>
+            <Text className={`font-bold text-xs ${selectedToggle === 'Completed' ? 'text-[#000000]' : 'text-white'}`}>
               {completedData.length.toString().padStart(2, '0')}
             </Text>
           </View>
@@ -482,7 +521,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         {/* Table Header */}
-        <View className="flex-row bg-[#2AAD7A] py-3">
+        <View className="flex-row bg-[#980775] py-3">
           <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
           <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
           
@@ -513,7 +552,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
         {loading ? (
           <View className="flex-1 justify-center items-center py-20">
             <LottieView
-              source={require('../../assets/lottie/collector.json')}
+              source={require('../../assets/lottie/newLottie.json')}
               autoPlay
               loop
               style={{ width: 200, height: 200 }}
@@ -533,7 +572,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
                 {selectedToggle === 'ToDo' ? (
                   <Text className="text-center font-medium">{(index + 1).toString().padStart(2, '0')}</Text>
                 ) : (
-                  <Ionicons name="flag" size={20} color="#2AAD7A" />
+                  <Ionicons name="flag" size={20} color="#980775" />
                 )}
               </View>
 
@@ -563,13 +602,30 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
                   
 
                   {/* Status */}
-                  <View className="flex-[2] items-center justify-center px-2">
-                    <View className={`px-3 py-2 rounded-lg ${getStatusColor(item.selectedStatus)}`}>
-                      <Text className="text-xs font-medium text-center">
-                        {getStatusText(item.selectedStatus)}
-                      </Text>
-                    </View>
-                  </View>
+                {/* Status */}
+<View className="flex-[2] items-center justify-center px-2">
+  <View 
+    style={{
+      backgroundColor: getStatusBackgroundColor(item.selectedStatus),
+      borderColor: getStatusBorderColor(item.selectedStatus),
+      borderWidth: 1,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderRadius: 20,
+    }}
+  >
+    <Text 
+      style={{
+        color: getStatusTextColor(item.selectedStatus),
+        fontSize: 12,
+        fontWeight: '500',
+        textAlign: 'center'
+      }}
+    >
+      {getStatusText(item.selectedStatus)}
+    </Text>
+  </View>
+</View>
                 </>
               ) : (
                 /* Completed Time */

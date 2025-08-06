@@ -419,6 +419,7 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
       return `Add: ${item.additionalItemStatus || 'N/A'} | Pkg: ${item.packageItemStatus || 'N/A'}`;
     }
   };
+  
 
    return (
     <View className="flex-1 bg-[#282828]">
@@ -434,15 +435,15 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
       <View className="flex-row justify-center items-center py-4 bg-[#282828] px-4">
         <TouchableOpacity
           className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
+            selectedToggle === 'ToDo' ? 'bg-[#980775]' : 'bg-white'
           }`}
           onPress={() => setSelectedToggle('ToDo')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
             {t("TargetOrderScreen.Todo")}
           </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'ToDo' ? 'bg-white' : 'bg-[#2AAD7A]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'ToDo' ? 'text-[#2AAD7A]' : 'text-white'}`}>
+          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'ToDo' ? 'bg-white' : 'bg-[white]'}`}>
+            <Text className={`font-bold text-xs ${selectedToggle === 'ToDo' ? 'text-[black]' : 'text-white'}`}>
               {todoData.length.toString().padStart(2, '0')}
             </Text>
           </View>
@@ -450,15 +451,15 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
 
         <TouchableOpacity
           className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'Completed' ? 'bg-[#2AAD7A]' : 'bg-white'
+            selectedToggle === 'Completed' ? 'bg-[#980775]' : 'bg-white'
           }`}
           onPress={() => setSelectedToggle('Completed')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}>
             {t("TargetOrderScreen.Completed")}
           </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'Completed' ? 'bg-white' : 'bg-[#2AAD7A]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'Completed' ? 'text-[#2AAD7A]' : 'text-white'}`}>
+          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'Completed' ? 'bg-white' : 'bg-[white]'}`}>
+            <Text className={`font-bold text-xs ${selectedToggle === 'Completed' ? 'text-[black]' : 'text-white'}`}>
               {completedData.length.toString().padStart(2, '0')}
             </Text>
           </View>
@@ -471,7 +472,7 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         {/* Table Header */}
-        <View className="flex-row bg-[#2AAD7A] py-3">
+        <View className="flex-row bg-[#980775] py-3">
           <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
           <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
           <Text className="flex-[2] text-center text-white font-bold">
@@ -495,7 +496,7 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
         {loading ? (
           <View className="flex-1 justify-center items-center py-20">
             <LottieView
-              source={require('../../assets/lottie/collector.json')}
+              source={require('../../assets/lottie/newLottie.json')}
               autoPlay
               loop
               style={{ width: 200, height: 200 }}
@@ -515,7 +516,7 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
                 {selectedToggle === 'ToDo' ? (
                   <Text className="text-center font-medium">{(index + 1).toString().padStart(2, '0')}</Text>
                 ) : (
-                  <Ionicons name="flag" size={20} color="#2AAD7A" />
+                  <Ionicons name="flag" size={20} color="#980775" />
                 )}
               </View>
 
@@ -533,7 +534,7 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
               {/* Status or Completed Time */}
               <View className="flex-[2] items-center justify-center px-2">
                 {selectedToggle === 'ToDo' ? (
-                  <View className={`px-3 py-2 rounded-lg ${getStatusColor(item.selectedStatus)}`}>
+                  <View className={`px-3 py-2 rounded-full ${getStatusColor(item.selectedStatus)}`}>
                     <Text className="text-xs font-medium text-center">
                       {getStatusText(item.selectedStatus)}
                     </Text>

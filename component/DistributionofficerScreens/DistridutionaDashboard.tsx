@@ -252,7 +252,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
       </TouchableOpacity>
 
       {/* Conditional Rendering for Daily Target */}
-      {targetPercentage !== null && targetPercentage < 100 ? (
+      {/* {targetPercentage !== null && targetPercentage < 100 ? (
         <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#DF9301]">
           <Text className="text-center text-yellow-600 font-bold">
             {" "}
@@ -278,7 +278,55 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
             {t("DistridutionaDashboard.Youhaveachieved")}
           </Text>
         </View>
-      )}
+      )} */}
+
+
+{/* Conditional Rendering for Daily Target */}
+{targetPercentage !== null && targetPercentage < 100 ? (
+  <View 
+    className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4"
+    style={{
+      shadowColor: '#000000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 4, // For Android
+    }}
+  >
+    <Text className="text-center text-yellow-600 font-bold">
+      {" "}
+      🚀{t("DistridutionaDashboard.Keep")}
+    </Text>
+
+    <Text className="text-center text-gray-500">
+      {t("DistridutionaDashboard.Youhavenotachieved")}
+    </Text>
+  </View>
+) : (
+  <View 
+    className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4"
+    style={{
+      shadowColor: '#000000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 4, // For Android
+    }}
+  >
+    <View className="flex-row justify-center items-center mb-2">
+      <Image
+        source={require("../../assets/images/hand.webp")} // Replace with your image path
+        className="w-8 h-8 mr-2"
+      />
+      <Text className="text-center text-[#2AAD7A] font-bold">
+        {t("DistridutionaDashboard.Completed")}
+      </Text>
+    </View>
+    <Text className="text-center text-gray-500">
+      {t("DistridutionaDashboard.Youhaveachieved")}
+    </Text>
+  </View>
+)}
 
       <View className="flex items-center justify-center my-6 mt-[13%]">
         <View className="relative">
@@ -286,7 +334,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
             size={100}
             width={8}
             fill={targetPercentage !== null ? targetPercentage : 0} // Dynamically set progress
-            tintColor="#34D399"
+            tintColor="#000000"
             backgroundColor="#E5E7EB"
           />
           <View className="absolute items-center justify-center h-24 w-24">
@@ -315,11 +363,11 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
 
         { jobRole === "Distribution Center Manager" ? (
            <TouchableOpacity           
-  className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative"           
+  className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative border border-[#980775]"           
   onPress={() => navigation.navigate("CenterTargetScreen", { centerId: centerId } as any)}         
 >
           <Image
-            source={require("../../assets/images/centericon.png")}
+            source={require("../../assets/images/New/centertarget.png")}
             className="w-8 h-8 absolute top-2 right-2"
           />
           <Text
@@ -333,16 +381,16 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
         ):(
 
  <TouchableOpacity
-          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative"
+          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg border border-[#980775] shadow-gray-500 relative"
           onPress={() => navigation.navigate("TargetOrderScreen" as any)}
         >
           <Image
-            source={require("../../assets/images/goal.webp")}
+            source={require("../../assets/images/New/packing.png")}
             className="w-8 h-8 absolute top-2 right-2"
           />
           <Text
             style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-            className="text-gray-700 text-lg absolute bottom-2 left-2"
+            className="text-[#555464] text-lg absolute bottom-2 left-2"
           >
             {t("DistridutionaDashboard.TargetOrders")}
           </Text>

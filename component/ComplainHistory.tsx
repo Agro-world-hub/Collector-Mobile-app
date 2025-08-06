@@ -126,7 +126,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
       {loading ? (
         <View className="flex-1 items-center justify-center">
           <LottieView
-            source={require("../assets/lottie/collector.json")}
+            source={require("../assets/lottie/newLottie.json")}
             autoPlay
             loop
             style={{ width: 300, height: 300 }}
