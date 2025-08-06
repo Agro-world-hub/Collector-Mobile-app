@@ -474,7 +474,7 @@ const handleRowPress = (item: OrderData) => {
     <View className="flex-1 bg-[#282828]">
       {/* Header */}
       <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
-        <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4">
+        <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4 bg-white/10 rounded-full p-2">
           <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
         <Text className="text-white text-lg font-bold">{officerId}</Text>
@@ -531,7 +531,7 @@ const handleRowPress = (item: OrderData) => {
               
               <TouchableOpacity
                 onPress={handleConfirmPass}
-                className="flex-1 ml-2 py-3 px-6 bg-[#2AAD7A] border border-[#319576] rounded-lg"
+                className="flex-1 ml-2 py-3 px-6 bg-[#980775] border border-[#980775] rounded-lg"
               >
                 <Text className="text-center text-white font-medium"> {t("DailyTargetListOfficerDistribution.Pass")}</Text>
               </TouchableOpacity>
@@ -544,15 +544,15 @@ const handleRowPress = (item: OrderData) => {
       <View className="flex-row justify-center items-center py-4 bg-[#282828] px-4">
         <TouchableOpacity
           className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
+            selectedToggle === 'ToDo' ? 'bg-[#980775]' : 'bg-white'
           }`}
           onPress={() => handleToggleChange('ToDo')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
             {t("TargetOrderScreen.Todo")}
           </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'ToDo' ? 'bg-white' : 'bg-[#2AAD7A]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'ToDo' ? 'text-[#2AAD7A]' : 'text-white'}`}>
+          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'ToDo' ? 'bg-white' : 'bg-[#980775]'}`}>
+            <Text className={`font-bold text-xs ${selectedToggle === 'ToDo' ? 'text-[#980775]' : 'text-white'}`}>
               {todoData.length.toString().padStart(2, '0')}
             </Text>
           </View>
@@ -560,15 +560,15 @@ const handleRowPress = (item: OrderData) => {
 
         <TouchableOpacity
           className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'Completed' ? 'bg-[#2AAD7A]' : 'bg-white'
+            selectedToggle === 'Completed' ? 'bg-[#980775]' : 'bg-white'
           }`}
           onPress={() => handleToggleChange('Completed')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}>
             {t("TargetOrderScreen.Completed")}
           </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'Completed' ? 'bg-white' : 'bg-[#2AAD7A]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'Completed' ? 'text-[#2AAD7A]' : 'text-white'}`}>
+          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'Completed' ? 'bg-white' : 'bg-[#980775]'}`}>
+            <Text className={`font-bold text-xs ${selectedToggle === 'Completed' ? 'text-[#980775]' : 'text-white'}`}>
               {completedData.length.toString().padStart(2, '0')}
             </Text>
           </View>
@@ -577,11 +577,12 @@ const handleRowPress = (item: OrderData) => {
 
       {/* Content */}
       <ScrollView
+      showsVerticalScrollIndicator= {false}
         className="flex-1 bg-white"
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         {/* Table Header */}
-        <View className="flex-row bg-[#2AAD7A] py-3">
+        <View className="flex-row bg-[#980775] py-3">
           {selectedToggle === 'ToDo' && (
             <TouchableOpacity 
               className="w-12 items-center justify-center"

@@ -93,16 +93,16 @@ const DistributionOfficerSummary: React.FC<OfficerSummaryProps> = ({
             <View className="flex-row  justify-center gap-4">
               <TouchableOpacity
                 onPress={onCancel}
-                className="p-2 py-2 bg-gray-300 rounded-lg"
+                className="p-2 py-2 border-[#95A1AC] border rounded-lg"
               >
-                <Text className="text-sm text-gray-700">{t("ClaimOfficer.Cancel")}</Text>
+                <Text className="text-sm text-[#6B7D8C] font-semibold">{t("ClaimOfficer.Cancel")}</Text>
               </TouchableOpacity>
   
               <TouchableOpacity
                 onPress={onConfirm}
-                className="p-2 py-2 bg-[#D16D6A] rounded-lg"
+                className="p-2  py-2 bg-[#FF0700] rounded-lg"
               >
-                <Text className="text-sm text-white">{t("DisclaimOfficer.Disclaim")}</Text>
+                <Text className="text-sm text-white font-semibold">{t("DisclaimOfficer.Disclaim")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -307,6 +307,7 @@ const fetchTaskSummary = async () => {
 
   return (
     <ScrollView
+    showsVerticalScrollIndicator= {false}
       className="flex-1 bg-white mb-10 "
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -321,7 +322,7 @@ const fetchTaskSummary = async () => {
             onPress={() =>
               navigation.navigate("Main", { screen: "DistributionOfficersList" })
             }
-            className="absolute top-4 left-4"
+            className="absolute top-4 left-4 bg-[#F6F6F680] rounded-full p-2"
           >
             <AntDesign name="left" size={22} color="#000" />
           </TouchableOpacity>
@@ -345,7 +346,7 @@ const fetchTaskSummary = async () => {
           )}
 
           {/* Profile Image with Green Border */}
-          <View className={`w-28 h-28 border-[6px] rounded-full items-center justify-center ${isOnline ? 'border-[#2AAD7A]' : 'border-gray-400'}`}>
+          <View className={`w-28 h-28 border-[6px] rounded-full items-center justify-center ${isOnline ? 'border-[#980775]' : 'border-gray-400'}`}>
 
             <Image
               source={
@@ -364,7 +365,7 @@ const fetchTaskSummary = async () => {
         </View>
 
         {/* Action Buttons Section */}
-        <View className="bg-[#2AAD7A] rounded-b-[45px] px-8 py-4 -mt-6 flex-row justify-around shadow-md z-0">
+        <View className="bg-[#980775] rounded-b-[45px] px-8 py-4 -mt-6 flex-row justify-around shadow-md z-0">
           {/* Phone Number 1 */}
           {phoneNumber1 ? (
             <TouchableOpacity
@@ -433,17 +434,17 @@ const fetchTaskSummary = async () => {
               size={120}
               width={10}
               fill={taskPercentage ?? 0} // Dynamically set fill percentage
-              tintColor="#0CB783"
+              tintColor="#21202B"
               backgroundColor="#E5E7EB"
             >
               {(fill) => (
-                <Text className="text-[#0CB783] font-bold text-xl">
+                <Text className="text-[#21202B] font-bold text-xl">
                   {Math.round(fill)}%
                 </Text>
               )}
             </CircularProgress>
 
-            <Text className="text-sm text-gray-500 mt-4">{t("OfficerSummary.Target Coverage")}</Text>
+            <Text className="text-base text-gray-500 mt-4">{t("OfficerSummary.Target Coverage")}</Text>
           </View>
 
              {/* <View className="flex items-center justify-center my-6 mt-[13%]">
@@ -478,7 +479,7 @@ const fetchTaskSummary = async () => {
 
           <View className="mt-6 mb-10 items-center">
             <TouchableOpacity
-              className="bg-[#2AAD7A] rounded-full w-64 py-3 h-12"
+              className="bg-black rounded-full w-64 py-3 h-12"
               onPress={() =>
                 navigation.navigate("DailyTargetListOfficerDistribution", {
                   officerId,
@@ -486,7 +487,7 @@ const fetchTaskSummary = async () => {
                 })
               }
             >
-              <Text className="text-white text-center font-medium">
+              <Text className="text-white text-center font-medium text-base">
               {t("OfficerSummary.OpenTarget")}
               </Text>
             </TouchableOpacity>

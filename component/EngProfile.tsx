@@ -622,10 +622,10 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
     >
       {/* Back Button */}
-      <TouchableOpacity onPress={() => handleBackPress()} className="">
+      <TouchableOpacity onPress={() => handleBackPress()} className="bg-[#F6F6F680] rounded-full p-2">
         <AntDesign name="left" size={24} color="#000502" />
       </TouchableOpacity>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator= {false}>
         {/* Profile Card */}
         <View className="flex-row items-center p-2 mt-4  mb-4">
           <Image

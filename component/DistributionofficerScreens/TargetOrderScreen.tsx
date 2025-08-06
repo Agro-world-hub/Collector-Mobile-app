@@ -474,7 +474,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
     <View className="flex-1 bg-[#282828]">
       {/* Header */}
       <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
-        <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4">
+        <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4 bg-white/10 rounded-full p-2">
           <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
         <Text className="text-white text-lg font-bold">{t("TargetOrderScreen.My Daily Target")}</Text>

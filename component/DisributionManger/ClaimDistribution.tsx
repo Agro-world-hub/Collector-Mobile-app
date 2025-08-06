@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useCallback} from "react";
 import {
   View,
   Text,
@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import DropDownPicker from "react-native-dropdown-picker";
 import i18n from "@/i18n/i18n";
 import { set } from "lodash";
+import { useFocusEffect } from "expo-router";
 
 interface OfficerDetails {
   id: number;
@@ -63,6 +64,7 @@ const ClaimOfficer: React.FC = () => {
 
   // const empPrefix = jobRole === 'Collection Officer' ? 'COO' : 'CUO';
   const empPrefix = "DIO";
+
 
   const handleSearch = async () => {
     Keyboard.dismiss();
@@ -157,6 +159,7 @@ const ClaimOfficer: React.FC = () => {
           t("Error.error"),
           t("Error.Failed to claim the officer. Please try again later.")
         );
+        setModalVisible(false)
       } else {
         Alert.alert(
           t("Error.Success"),
@@ -205,9 +208,9 @@ const ClaimOfficer: React.FC = () => {
             <View className="flex-row  justify-center gap-4">
               <TouchableOpacity
                 onPress={onCancel}
-                className="p-2 py-2 bg-gray-300 rounded-lg"
+                className="p-2 py-2  border-[#95A1AC] border rounded-lg"
               >
-                <Text className="text-sm text-gray-700">
+                <Text className="text-sm text-[#6B7D8C]">
                   {t("ClaimOfficer.Cancel")}
                 </Text>
               </TouchableOpacity>
@@ -217,7 +220,7 @@ const ClaimOfficer: React.FC = () => {
                 // className="p-2 py-2 bg-[#2AAD7A] rounded-lg"
                 disabled={onLoading} // Disable the button when loading is true
                 className={`p-2 py-2 rounded-lg ${
-                  onLoading ? "bg-gray-400" : "bg-[#2AAD7A]"
+                  onLoading ? "bg-gray-400" : "bg-black"
                 }`}
               >
                 <Text className="text-sm text-white">
@@ -232,10 +235,10 @@ const ClaimOfficer: React.FC = () => {
   };
 
   return (
-    <ScrollView className="flex-1 bg-white" keyboardShouldPersistTaps="handled">
+    <ScrollView className="flex-1 bg-white" keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator= {false}>
       {/* Header */}
       <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
-        <TouchableOpacity className="" onPress={() => navigation.navigate("DistributionOfficersList")}>
+        <TouchableOpacity className="bg-[#F6F6F680] rounded-full p-2" onPress={() => navigation.navigate("DistributionOfficersList")} >
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
         {/* <Text className="text-lg font-bold ml-[25%]"> {t("ClaimOfficer.ClaimOfficers")}</Text> */}
@@ -252,9 +255,9 @@ const ClaimOfficer: React.FC = () => {
         <Text className="font-semibold text-gray-800  mb-2 text-center">
           {t("ClaimOfficer.EMPID")}
         </Text>
-        <View className="flex-row items-center border border-gray-300 rounded-lg mb-4">
-          <View className="bg-gray-200 px-4 py-3 rounded-l-lg">
-            <Text className="text-gray-600 font-bold">{empPrefix}</Text>
+        <View className="flex-row items-center border border-gray-300 rounded-full mb-4">
+          <View className="bg-[#D2DADD] px-6 py-3 rounded-full">
+            <Text className="text-gray-600 font-semibold">{empPrefix}</Text>
           </View>
           <TextInput
             placeholder="ex: 0122"
@@ -272,9 +275,21 @@ const ClaimOfficer: React.FC = () => {
         <TouchableOpacity
           className={`py-4 rounded-full items-center mt-7 ${
             !empID || officerFound || searchLoading
-              ? "bg-gray-300"
-              : "bg-[#2AAD7A]"
+              ? "bg-[#ABABAB]"
+              : "bg-[#980775]"
           }`}
+           style={{
+    // iOS Shadow
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 2,
+    shadowRadius: 3.84,
+    // Android Shadow
+    elevation: 5,
+  }}
           disabled={!empID || officerFound}
           onPress={handleSearch}
         >
@@ -367,8 +382,20 @@ const ClaimOfficer: React.FC = () => {
 
           {/* Claim Officer Button */}
           <TouchableOpacity
-            className="mt-6 mb-10 bg-[#2AAD7A]    py-4 rounded-full"
+            className="mt-6 mb-10 bg-[#000000]    py-4 rounded-full"
             onPress={() => setModalVisible(true)}
+                     style={{
+    // iOS Shadow
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    // Android Shadow
+    elevation: 5,
+  }}
           >
             <Text
               className={`text-white text-lg ${

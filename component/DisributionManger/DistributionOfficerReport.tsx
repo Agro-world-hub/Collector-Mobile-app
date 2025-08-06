@@ -270,7 +270,7 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
       <View className="flex-row items-center  p-6 rounded-b-lg">
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          className="absolute top-6 left-4"
+          className="absolute top-4 left-4 bg-[#F6F6F680] rounded-full p-2 z-50"
         >
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
@@ -289,7 +289,7 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
           <View className="flex-row items-center">
             <TouchableOpacity
               onPress={() => setShowStartPicker((prev) => !prev)}
-              className="border border-gray-300 rounded-lg px-4 py-3 flex-1 flex-row justify-between items-center"
+              className="bg-[#F4F4F4] rounded-full px-4 py-3 flex-1 flex-row justify-between items-center"
             >
               <Text className="text-gray-500">{formatDate(startDate)}</Text>
               <Image
@@ -333,7 +333,7 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
           </Text>
           <TouchableOpacity
             onPress={() => setShowEndPicker((prev) => !prev)}
-            className="border border-gray-300 rounded-lg px-4 py-3 flex-row justify-between items-center"
+            className="bg-[#F4F4F4] rounded-full px-4 py-3 flex-row justify-between items-center"
           >
             <Text className="text-gray-500">{formatDate(endDate)}</Text>
             <Image
@@ -372,13 +372,13 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
           )}
         </View>
 
-        <View className="flex-row justify-center gap-2 items-center">
+        <View className="flex-row justify-center gap-2 items-center mt-2">
           <TouchableOpacity
             onPress={handleReset}
-            className="border border-gray-300 py-3 rounded-lg w-40 items-center"
+            className="border border-[#6B6B6B] py-2 rounded-full w-40 items-center"
           >
             <Text
-              className="text-gray-700 text-center"
+              className="text-[#858585] text-center text-base"
               numberOfLines={1}
               ellipsizeMode="tail"
             >
@@ -388,10 +388,10 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
 
           <TouchableOpacity
             onPress={handleGenerate}
-            className="bg-[#2AAD7A] py-3 rounded-lg w-40 items-center"
+            className="bg-[#980775] py-2 rounded-full w-40 items-center"
           >
             <Text
-              className="text-white font-semibold text-center"
+              className="text-white font-semibold text-center text-base"
               numberOfLines={1}
               ellipsizeMode="tail"
             >

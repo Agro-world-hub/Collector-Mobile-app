@@ -486,7 +486,8 @@
     "Claim":"හිමිකම් දෙන්න",
     "Select Job Role":"රැකියා භූමිකාව තෝරන්න",
     "Collection Officer":"එකතු කිරීමේ නිලධාරියා",
-    "Customer Officer": "පාරිභෝගික නිලධාරියා"
+    "Customer Officer": "පාරිභෝගික නිලධාරියා",
+    "Distribution Officer": "බෙදා හැරීමේ නිලධාරියා"
   },
   "DisclaimOfficer":{
     "Are you sure you want to disclaim this officer?":"මෙම නිලධාරියාගේ හිමිකම ඉවත් කිරීමට ඔබට අවශ්‍ය බව, ඔබට විශ්වාසද?",

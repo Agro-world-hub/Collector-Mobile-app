@@ -485,7 +485,8 @@
     "Claim":"Claim",
     "Select Job Role":"Select Job Role",
     "Collection Officer":"Collection Officer",
-    "Customer Officer": "Customer Officer"
+    "Customer Officer": "Customer Officer",
+    "Distribution Officer": "බෙදා හැරීමේ නිලධාරියා"
   },
   "DisclaimOfficer":{
     "Are you sure you want to disclaim this officer?":"Are you sure you want to disclaim this officer?",

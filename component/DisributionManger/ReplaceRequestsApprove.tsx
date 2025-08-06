@@ -316,7 +316,7 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
     <View className="flex-1 bg-white">
       {/* Header */}
       <View className="bg-white px-4 py-4 flex-row items-center border-b border-gray-100">
-        <TouchableOpacity className="mr-4" onPress={() => navigation.goBack()}>
+        <TouchableOpacity className="mr-4 bg-[#F6F6F680] rounded-full p-2 z-50" onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={24} color="#333" />
         </TouchableOpacity>
         <View className="flex-1 justify-center items-center">

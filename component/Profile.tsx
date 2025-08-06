@@ -1103,7 +1103,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
     >
       <View className="flex-row items-center mb-6">
-        <TouchableOpacity onPress={() => navigation.goBack()} className="">
+        <TouchableOpacity onPress={() => navigation.goBack()} className="bg-[#F6F6F680] rounded-full p-2">
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
         <Text className="flex-1 text-center text-xl font-bold text-black">
