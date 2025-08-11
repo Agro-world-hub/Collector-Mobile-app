@@ -548,6 +548,7 @@
     "Save":"සුරකින්න",
     "maximum amount receive":"ඔබට ලැබිය හැකි උපරිම මුදල:",
     "Select an officer":"--නිලධාරියෙකු තෝරන්න--"
+  
   },
   "ReportGenerator":{
     "LNG": "si",
@@ -945,7 +946,8 @@
     "Loading officers":"නිලධාරීන් පූරණය කිරීම..",
     "Selected Targets":"තෝරාගත් ඉලක්ක",
     "Save":"සුරකින්න",
-    "Dismiss":"ඉවත් කරන්න"
+    "Dismiss":"ඉවත් කරන්න",
+    "Short Stock Assignee":"කෙටි කොටස් පැවරුම්ලාභියා"
   },
     "ReplaceRequestsApprove":{
     "Loading replace request":"ප්‍රතිස්ථාපන ඉල්ලීම පූරණය වෙමින් පවතී...",
