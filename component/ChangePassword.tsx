@@ -8,6 +8,7 @@ import {
   Platform,
   KeyboardAvoidingView,
   BackHandler,
+  Keyboard,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -51,6 +52,46 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   const [secureConfirm, setSecureConfirm] = useState(true);
   const { t } = useTranslation();
 
+  const validatePassword = () => {
+    // Check if all fields are filled
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      Alert.alert('Error', 'All fields are required');
+      return false;
+    }
+
+    // Check if new password meets format requirements
+    if (newPassword.length < 8) {
+      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+      return false;
+    }
+
+    // Check for at least 1 uppercase letter
+    if (!/[A-Z]/.test(newPassword)) {
+      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+      return false;
+    }
+
+    // Check for at least 1 number
+    if (!/[0-9]/.test(newPassword)) {
+      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+      return false;
+    }
+
+    // Check for at least 1 special character
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(newPassword)) {
+      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+      return false;
+    }
+
+    // Check if new password and confirm password match
+    if (newPassword !== confirmPassword) {
+      Alert.alert('Error', 'New password and confirm password do not match');
+      return false;
+    }
+
+    return true;
+  };
+
   useEffect(() => {
     const fetchEmpid = async () => {
       try {
@@ -65,26 +106,32 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   }, []);
 
   const handleChangePassword = async () => {
-    if (!newPassword || !confirmPassword || !currentPassword) {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.Passwords are not allowed to be empty")
-      );
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.New password and confirm password do not match.")
-      );
-      return;
-    }
+    // if (!newPassword || !confirmPassword || !currentPassword) {
+    //   Alert.alert(
+    //     t("Error.error"),
+    //     t("Error.Passwords are not allowed to be empty")
+    //   );
+    //   return;
+    // }
+    // if (newPassword !== confirmPassword) {
+    //   Alert.alert(
+    //     t("Error.error"),
+    //     t("Error.New password and confirm password do not match.")
+    //   );
+    //   return;
+    // }
 
-    if (newPassword.length < 6) {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.New password must be at least 6 characters long.")
-      );
+    // if (newPassword.length < 6) {
+    //   Alert.alert(
+    //     t("Error.error"),
+    //     t("Error.New password must be at least 6 characters long.")
+    //   );
+    //   return;
+    // }
+
+        Keyboard.dismiss();
+    // Validate inputs before proceeding
+    if (!validatePassword()) {
       return;
     }
 
@@ -190,8 +237,13 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
               className="flex-1 h-[40px] "
            //   placeholder={t("ChangePassword.NewPassword")}
               secureTextEntry={secureNew}
-              onChangeText={setNewPassword}
+              // onChangeText={setNewPassword}
               value={newPassword}
+                 onChangeText={(text) => {
+      // Remove all spaces and prevent starting with space
+      const cleanText = text.replace(/\s/g, '');
+      setNewPassword(cleanText);
+    }}
             />
             <TouchableOpacity onPress={() => setSecureNew(!secureNew)}>
               <Icon
@@ -210,7 +262,12 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
               className="flex-1 h-[40px] bg-[#F4F4F4]"
              // placeholder={t("ChangePassword.ConfirmNewPassword")}
               secureTextEntry={secureConfirm}
-              onChangeText={setConfirmPassword}
+              // onChangeText={setConfirmPassword}
+                        onChangeText={(text) => {
+      // Remove all spaces and prevent starting with space
+      const cleanText = text.replace(/\s/g, '');
+      setConfirmPassword(cleanText);
+    }}
               value={confirmPassword}
             />
             <TouchableOpacity onPress={() => setSecureConfirm(!secureConfirm)}>
@@ -233,7 +290,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
             </Text>
           </TouchableOpacity>
         </View> */}
-        <View className="items-center justify-center pt-7 gap-y-5">
+        <View className="items-center justify-center pt-7 gap-y-5 mb-20">
   <TouchableOpacity
     className="bg-[#000000] w-[95%] p-3 rounded-full items-center justify-center"
     onPress={handleChangePassword}
