@@ -180,7 +180,7 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
         
         </View>
         <View className="p-2 rounded-full">
-          <AntDesign name="right" size={20} color="#000" />
+          <AntDesign name="right" size={20} color="#5f5c5cff" />
         </View>
       </View>
     </TouchableOpacity>

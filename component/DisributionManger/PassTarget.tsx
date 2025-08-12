@@ -77,7 +77,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
       return 'bg-[#F8FFA6]';
     }
     if (normalizedStatus === 'pending') {
-      return 'bg-[#FFB9B7]';
+      return 'bg-[#FF070733]';
     }
     
     // Sinhala translations
@@ -88,7 +88,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
       return 'bg-[#F8FFA6]';
     }
     if (normalizedStatus === 'අපේක්ෂිත' || normalizedStatus === 'පොරොත්තුවේ') {
-      return 'bg-[#FFB9B7]';
+      return 'bg-[#FF070733]';
     }
     
     // Tamil translations
@@ -99,7 +99,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
       return 'bg-[#F8FFA6]';
     }
     if (normalizedStatus === 'நிலுவையில்' || normalizedStatus === 'காத்திருக்கும்') {
-      return 'bg-[#FFB9B7]';
+      return 'bg-[#FF070733]';
     }
     
     return 'bg-gray-100';
@@ -117,7 +117,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
       return 'text-[#A8A100]';
     }
     if (normalizedStatus === 'pending') {
-      return 'text-[#D16D6A]';
+      return 'text-[#FF0700]';
     }
     
     // Sinhala translations
@@ -321,7 +321,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
   return (
     <View className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-[#2AAD7A] px-4 py-6 flex-row justify-center items-center">
+      <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
         <TouchableOpacity 
           onPress={() => navigation.goBack()} 
           className="absolute left-4"
@@ -337,35 +337,62 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
         }
       >
         {/* Assignee Selection */}
-        <View className="bg-white mx-4 my-2 p-4 rounded-lg shadow-sm">
-         <Text className="text-[#475A6A] font-semibold mb-2">{t("PassTarget.Select Assignee")}</Text>
+        <View className="bg-white mx-4 my-2 p-4 rounded-full shadow-sm">
+         {/* <Text className="text-[#475A6A] font-semibold mb-2">{t("PassTarget.Select Assignee")}</Text> */}
+         <View className="flex-row items-center mb-3">
+          <Text className="text-[#475A6A] font-semibold flex-1">
+            {selectedAssignee ? t("PassTarget.Short Stock Assignee") : t("PassTarget.Select Assignee")}
+          </Text>
+         
+        </View>
 
           {loadingOfficers ? (
             <View className="flex-row items-center justify-center py-4">
-              <ActivityIndicator size="small" color="#2AAD7A" />
+              <ActivityIndicator size="small" color="#282828" />
               <Text className="ml-2 text-gray-600">{t("PassTarget.Loading officers")}</Text>
             </View>
           ) : (
-            <SelectList
-              setSelected={setSelectedAssignee}
-              data={officers}
-              placeholder="--Select an officer--"
-              save="key"
-              search={true}
-              searchPlaceholder="Search officers..."
-              boxStyles={{
-                borderWidth: 1,
-                borderColor: "#e5e7eb",
-                borderRadius: 8,
-              }}
-              inputStyles={{ color: "#374151" }}
-              dropdownStyles={{
-                borderWidth: 1,
-                borderColor: "#e5e7eb",
-                borderRadius: 8,
-                marginTop: 4,
-              }}
-            />
+         <SelectList
+  setSelected={setSelectedAssignee}
+  data={officers}
+  placeholder="--Select an officer--"
+  save="key"
+  search={true}
+  searchPlaceholder="Search officers..."
+  boxStyles={{
+    borderWidth: 0,
+    backgroundColor: "#f3f4f6",
+    borderRadius: 25, // Fully rounded
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    marginVertical: 0,
+  }}
+  inputStyles={{ 
+    color: "#374151",
+    fontSize: 16,
+ 
+  }}
+  dropdownStyles={{
+    borderWidth: 0,
+    backgroundColor: "#f3f4f6",
+    borderRadius: 20, // Fully rounded for dropdown
+    marginTop: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  }}
+  dropdownItemStyles={{
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  }}
+  dropdownTextStyles={{
+    color: "#374151",
+    fontSize: 16,
+  }}
+  
+/>
           )}
         </View>
 
@@ -394,7 +421,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
         </View>
         <View className="w-36 items-center justify-center py-3">
           <View 
-            className={`px-5 py-1 rounded-md ${getStatusColor(item.status)}`}
+            className={`px-5 py-1 rounded-full ${getStatusColor(item.status)}`}
           >
             <Text 
               className={`text-xs font-medium ${getStatusTextColor(item.status)}`}
@@ -414,7 +441,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
         onPress={handleSave}
         disabled={loading || !selectedAssignee || loadingOfficers}
         className={`absolute bottom-10 left-4 right-4 py-3 rounded-full items-center shadow-md mr-6 ml-6 ${
-          loading || !selectedAssignee || loadingOfficers ? 'bg-white' : 'bg-[#2AAD7A]'
+          loading || !selectedAssignee || loadingOfficers ? 'bg-white' : 'bg-[#980775]'
         }`}
       >
         {loading ? (

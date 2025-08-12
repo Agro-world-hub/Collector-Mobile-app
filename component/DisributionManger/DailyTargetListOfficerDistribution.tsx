@@ -469,6 +469,20 @@ const handleRowPress = (item: OrderData) => {
     };
     fetchData();
   }, []);
+  
+const getStatusTextColor = (status: string) => {
+  switch(status?.toLowerCase()) {
+    case 'pending':
+      return 'text-[#FF0700]'; // Dark red text for pending
+    case 'opened':
+      return 'text-[#A8A100]'; // Dark yellow/brown text for opened
+    case 'completed':
+      return 'text-green-800'; // Dark green text for completed
+    default:
+      return 'text-gray-800'; // Default gray
+  }
+};
+
 
   return (
     <View className="flex-1 bg-[#282828]">
@@ -654,11 +668,11 @@ const handleRowPress = (item: OrderData) => {
                       <MaterialIcons 
                         name={selectedItems.has(item.distributedTargetItemId) ? "check-box" : "check-box-outline-blank"} 
                         size={20} 
-                        color={selectedItems.has(item.distributedTargetItemId) ? "#2AAD7A" : "#666"} 
+                        color={selectedItems.has(item.distributedTargetItemId) ? "black" : "#000000"} 
                       />
                     </TouchableOpacity>
                   ) : (
-                    <View className="w-6 h-6 bg-gray-200 rounded opacity-50" />
+                    <View className="w-5 h-5 bg-white border border-[#E2E8F0] rounded opacity-50" />
                   )}
                 </View>
               )}
@@ -668,7 +682,7 @@ const handleRowPress = (item: OrderData) => {
                 {selectedToggle === 'ToDo' ? (
                   <Text className="text-center font-medium">{(index + 1).toString().padStart(2, '0')}</Text>
                 ) : (
-                  <Ionicons name="flag" size={20} color="#2AAD7A" />
+                  <Ionicons name="flag" size={20} color="#980775" />
                 )}
               </View>
 
@@ -685,13 +699,20 @@ const handleRowPress = (item: OrderData) => {
 
               {selectedToggle === 'ToDo' ? (
                 /* Status */
-                <View className="flex-[2] items-center justify-center px-2">
-                  <View className={`px-3 py-2 rounded-lg border ${getStatusColor(item.selectedStatus)}`}>
-                    <Text className="text-xs font-medium text-center text-gray-800">
-                      {getStatusText(item.selectedStatus)}
-                    </Text>
-                  </View>
-                </View>
+                // <View className="flex-[2] items-center justify-center px-2">
+                //   <View className={`px-3 py-2 rounded-full border ${getStatusColor(item.selectedStatus)}`}>
+                //     <Text className="text-xs font-medium text-center text-gray-800">
+                //       {getStatusText(item.selectedStatus)}
+                //     </Text>
+                //   </View>
+                // </View>
+                 <View className="flex-[2] items-center justify-center px-2">
+    <View className={`px-3 py-2 rounded-full border ${getStatusColor(item.selectedStatus)}`}>
+      <Text className={`text-xs font-medium text-center ${getStatusTextColor(item.selectedStatus)}`}>
+        {getStatusText(item.selectedStatus)}
+      </Text>
+    </View>
+  </View>
               ) : (
                 /* Completed Time */
                 <View className="flex-[2] items-center justify-center px-2">

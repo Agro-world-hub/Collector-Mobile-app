@@ -1132,7 +1132,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
           >
             <Image
               source={require("../assets/images/Pencil.webp")}
-              style={{ width: 17, height: 17, tintColor: "green" }}
+              style={{ width: 17, height: 17, tintColor: "black" }}
             />
           </TouchableOpacity>
         </View>

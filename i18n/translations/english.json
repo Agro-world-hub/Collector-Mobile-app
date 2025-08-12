@@ -548,6 +548,7 @@
     "Save":"Save",
    "maximum amount receive":"The maximum amount you can receive:",
    "Select an officer":"--Select an officer--"
+
   },
   "ReportGenerator":{
     "LNG": "ta",
@@ -942,7 +943,8 @@
     "Loading officers":"Loading officers..",
     "Selected Targets":"Selected Targets",
     "Save":"Save",
-    "Dismiss":"Dismiss"
+    "Dismiss":"Dismiss",
+    "Short Stock Assignee":"Short Stock Assignee"
   },
   "ReplaceRequestsApprove":{
     "Loading replace request":"Loading replace request...",
