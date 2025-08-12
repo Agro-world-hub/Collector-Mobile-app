@@ -456,7 +456,8 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
-      className="flex-1 bg-white"
+      className="bg-white"
+      style={{ flex: 1}}
     >
       <ScrollView
         className="flex-1 "
