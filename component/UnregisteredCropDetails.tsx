@@ -701,7 +701,7 @@ TID: ${invoiceNumber}
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
-      className="flex-1"
+      style={{ flex: 1}}
     >
       <ScrollView
         className="flex-1 bg-gray-50 px-6 py-4 mb-8"

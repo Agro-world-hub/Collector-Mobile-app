@@ -427,7 +427,7 @@ const handleAccountNameChange = (text: string) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
-      className="flex-1"
+      style={{ flex: 1}}
     >
       <View className="flex-1 p-5 bg-white">
         {/* Header with Back Icon */}
