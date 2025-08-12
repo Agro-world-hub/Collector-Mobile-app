@@ -326,7 +326,7 @@ const ClaimOfficer: React.FC = () => {
             source={
               officerDetails?.image
                 ? { uri: officerDetails.image }
-                : require("../../assets/images/pcprofile 1.webp")
+                : require("../../assets/images/pcprofile.webp")
             }
             className="w-20 h-20 rounded-full mb-4"
           />

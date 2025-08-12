@@ -234,7 +234,19 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
 
       {/* Conditional Rendering for Daily Target */}
       {targetPercentage !== null && targetPercentage < 100 ? (
-        <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#DF9301]">
+       <View 
+  className="bg-white ml-[20px] w-[90%] rounded-[15px] mt-3 p-4"
+  style={{
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5, // for Android
+  }}
+>
           <Text className="text-center text-yellow-600 font-bold">
             {" "}
             🚀{t("DashBoard.Keep")}
@@ -245,7 +257,19 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
           </Text>
         </View>
       ) : (
-        <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#2AAD7A]">
+              <View 
+  className="bg-white ml-[20px] w-[90%] rounded-[15px] mt-3 p-4"
+  style={{
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5, // for Android
+  }}
+>
           <View className="flex-row justify-center items-center mb-2">
             <Image
               source={require("../assets/images/hand.webp")} // Replace with your image path
@@ -267,7 +291,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
             size={100}
             width={8}
             fill={targetPercentage !== null ? targetPercentage : 0} // Dynamically set progress
-            tintColor="#34D399"
+            tintColor="#000000"
             backgroundColor="#E5E7EB"
           />
           <View className="absolute items-center justify-center h-24 w-24">
@@ -294,13 +318,13 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
       {/* Action Buttons */}
       <View className="flex-row flex-wrap justify-between p-6 mt-[-5%]">
         <TouchableOpacity
-          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative"
+          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative border border-[#FFE300]"
           onPress={() => navigation.navigate("QRScanner" as any)}
         >
-          <Image
-            source={require("../assets/images/qrrr.webp")}
-            className="w-8 h-8 absolute top-2 right-2"
-          />
+           <Image
+                          source={require("../assets/images/New/qr.png")}
+                          className="w-8 h-8 absolute top-2 right-2"
+                        />
           <Text
             style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
             className="text-gray-700 text-lg absolute bottom-2 left-2"
@@ -310,13 +334,13 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative mb-5"
+          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative mb-5 border border-[#FF0086]"
           onPress={() => navigation.navigate("SearchFarmer" as any)}
         >
           <Image
-            source={require("../assets/images/nic.webp")}
-            className="w-8 h-8 absolute top-2 right-2"
-          />
+                         source={require("../assets/images/New/searchclient.png")}
+                         className="w-8 h-8 absolute top-2 right-2"
+                       />
           <Text
             style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
             className="text-gray-700 text-lg absolute bottom-2 left-2"

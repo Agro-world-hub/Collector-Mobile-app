@@ -1,6 +1,6 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Alert,Image } from 'react-native';
 import { RootStackParamList } from '../types';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,6 +10,7 @@ import LottieView from 'lottie-react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useTranslation } from "react-i18next";
 import { RouteProp } from '@react-navigation/native';
+import { Animated } from 'react-native';
 
 type CenterTargetScreenNavigationProps = StackNavigationProp<RootStackParamList, 'CenterTargetScreen'>;
 type CenterTargetScreenRouteProp = RouteProp<RootStackParamList, 'CenterTargetScreen'>;
@@ -93,6 +94,7 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   console.log("------centerId--------",centerId)
 
@@ -419,52 +421,247 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
       return `Add: ${item.additionalItemStatus || 'N/A'} | Pkg: ${item.packageItemStatus || 'N/A'}`;
     }
   };
+
+   const handleCheckboxToggle = (itemId: string) => {
+    setSelectedItems(prev => {
+      if (prev.includes(itemId)) {
+        return prev.filter(id => id !== itemId);
+      } else {
+        return [...prev, itemId];
+      }
+    });
+  };
+
+  // Updated checkbox component with selection state
+  const renderCheckbox = (item: TargetData) => {
+    const isSelected = selectedItems.includes(item.id);
+    
+    return (
+      <TouchableOpacity 
+        className="w-5 h-5 border-2 border-gray-400 rounded flex items-center justify-center"
+        onPress={() => handleCheckboxToggle(item.id)}
+      >
+        {isSelected && (
+          <View className="w-3 h-3 bg-[#980775] rounded"></View>
+        )}
+      </TouchableOpacity>
+    );
+  };
   
 
    return (
     <View className="flex-1 bg-[#282828]">
       {/* Header */}
-      <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
+      {/* <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
         <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4 bg-white/10 rounded-full p-2">
           <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
         <Text className="text-white text-lg font-bold">{t("CenterTarget.CenterTarget")}</Text>
+
+        <TouchableOpacity  className="absolute right-4 bg-white/10 rounded-full p-2">
+           <Image
+                     source={require("../../assets/images/New/filter.png")} // Replace with your PNG file path
+                     className="w-4 h-4" // Adjust width and height as needed
+                     resizeMode="contain" // Ensures the image scales proportionally
+                   />
+        </TouchableOpacity>
+        
+      </View> */}
+       {/* Header */}
+      {/* Header */}
+      <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
+        {/* Back Button */}
+        <TouchableOpacity 
+          onPress={() => navigation.goBack()} 
+          className="absolute left-4 bg-white/10 rounded-full p-2"
+        >
+          <AntDesign name="left" size={22} color="white" />
+        </TouchableOpacity>
+
+        {/* Title */}
+        <Text className="text-white text-lg font-bold">{t("CenterTarget.CenterTarget")}</Text>
+
+        {/* Conditional Right Icon based on selectedToggle */}
+        <TouchableOpacity 
+          className="absolute right-4 p-2"
+          onPress={() => {
+            if (selectedToggle === 'ToDo') {
+              // Add your filter functionality here
+              console.log('Filter pressed');
+            } else if (selectedToggle === 'Completed') {
+              // Add your close functionality here
+              console.log('Close pressed');
+            } else if (selectedToggle === 'Out') {
+              // Add your check/correct functionality here
+              console.log('Check pressed');
+            }
+          }}
+        >
+          {selectedToggle === 'ToDo' && (
+            <Image
+              source={require("../../assets/images/New/filter.png")}
+              className="w-4 h-4"
+              resizeMode="contain"
+            />
+          )}
+          
+         {selectedToggle === 'Completed' && (
+            <View className="flex-row items-center space-x-2">
+              <AntDesign name="close" size={20} color="white" />
+              <AntDesign name="check" size={20} color="white" />
+            </View>
+          )}
+          
+        </TouchableOpacity>
       </View>
 
       {/* Toggle Buttons */}
-      <View className="flex-row justify-center items-center py-4 bg-[#282828] px-4">
-        <TouchableOpacity
-          className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'ToDo' ? 'bg-[#980775]' : 'bg-white'
-          }`}
-          onPress={() => setSelectedToggle('ToDo')}
-        >
-          <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
-            {t("TargetOrderScreen.Todo")}
-          </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'ToDo' ? 'bg-white' : 'bg-[white]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'ToDo' ? 'text-[black]' : 'text-white'}`}>
-              {todoData.length.toString().padStart(2, '0')}
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'Completed' ? 'bg-[#980775]' : 'bg-white'
-          }`}
-          onPress={() => setSelectedToggle('Completed')}
-        >
-          <Text className={`font-bold mr-2 ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}>
-            {t("TargetOrderScreen.Completed")}
-          </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'Completed' ? 'bg-white' : 'bg-[white]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'Completed' ? 'text-[black]' : 'text-white'}`}>
-              {completedData.length.toString().padStart(2, '0')}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+      <View className="flex-row justify-center items-center py-4 bg-[#282828]">
+       
+          <Animated.View
+            style={{
+              transform: [{ scale: selectedToggle === "ToDo" ? 1.05 : 1 }],
+            }}
+          >
+            <TouchableOpacity
+              className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
+                selectedToggle === "ToDo" ? "bg-[#980775]" : "bg-white"
+              }`}
+              onPress={() => setSelectedToggle("ToDo")}
+              style={{
+                shadowColor: selectedToggle === "ToDo" ? "#980775" : "transparent",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: selectedToggle === "ToDo" ? 0.3 : 0,
+                shadowRadius: 4,
+                elevation: selectedToggle === "ToDo" ? 4 : 0,
+              }}
+            >
+              <Animated.Text
+                className={`font-bold ${
+                  selectedToggle === "ToDo" ? "text-white" : "text-black"
+                } ${selectedToggle === "ToDo" ? "mr-2" : ""}`}
+                style={{
+                  opacity: selectedToggle === "ToDo" ? 1 : 0.7,
+                }}
+              >
+                {t("DailyTarget.Todo")}
+              </Animated.Text>
+              
+              {selectedToggle === "ToDo" && (
+                <Animated.View
+                  className="bg-white rounded-full px-2 overflow-hidden"
+                  style={{
+                    opacity: 1,
+                    transform: [
+                      { scaleX: 1 },
+                      { scaleY: 1 }
+                    ],
+                  }}
+                >
+                  <Text className="text-[#000000] font-bold text-xs">
+                    {todoData.length}
+                  </Text>
+                </Animated.View>
+              )}
+            </TouchableOpacity>
+          </Animated.View>
+        
+          {/* Completed Button */}
+          <Animated.View
+            style={{
+              transform: [{ scale: selectedToggle === "Completed" ? 1.05 : 1 }],
+            }}
+          >
+            <TouchableOpacity
+              className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
+                selectedToggle === "Completed" ? "bg-[#980775]" : "bg-white"
+              }`}
+              onPress={() => setSelectedToggle("Completed")}
+              style={{
+                shadowColor: selectedToggle === "Completed" ? "#980775" : "transparent",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: selectedToggle === "Completed" ? 0.3 : 0,
+                shadowRadius: 4,
+                elevation: selectedToggle === "Completed" ? 4 : 0,
+              }}
+            >
+              <Animated.Text
+                className={`font-bold ${
+                  selectedToggle === "Completed" ? "text-white" : "text-black"
+                }`}
+                style={{
+                  opacity: selectedToggle === "Completed" ? 1 : 0.7,
+                }}
+              >
+                {t("DailyTarget.Completed")}
+              </Animated.Text>
+              
+              {selectedToggle === "Completed" && (
+                <Animated.View
+                  className="bg-white rounded-full px-2 ml-2 overflow-hidden"
+                  style={{
+                    opacity: 1,
+                    transform: [
+                      { scaleX: 1 },
+                      { scaleY: 1 }
+                    ],
+                  }}
+                >
+                  <Text className="text-[#000000] font-bold text-xs">
+                    {completedData.length}
+                  </Text>
+                </Animated.View>
+              )}
+            </TouchableOpacity>
+          </Animated.View>
+           <Animated.View
+            style={{
+              transform: [{ scale: selectedToggle === "Out" ? 1.05 : 1 }],
+            }}
+          >
+            <TouchableOpacity
+              className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
+                selectedToggle === "Out" ? "bg-[#980775]" : "bg-white"
+              }`}
+              onPress={() => setSelectedToggle("Out")}
+              style={{
+                shadowColor: selectedToggle === "Out" ? "#980775" : "transparent",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: selectedToggle === "Out" ? 0.3 : 0,
+                shadowRadius: 4,
+                elevation: selectedToggle === "Out" ? 4 : 0,
+              }}
+            >
+              <Animated.Text
+                className={`font-bold ${
+                  selectedToggle === "Out" ? "text-white" : "text-black"
+                }`}
+                style={{
+                  opacity: selectedToggle === "Out" ? 1 : 0.7,
+                }}
+              >
+                {t("DailyTarget.Out")}
+              </Animated.Text>
+              
+              {selectedToggle === "Completed" && (
+                <Animated.View
+                  className="bg-white rounded-full px-2 ml-2 overflow-hidden"
+                  style={{
+                    opacity: 1,
+                    transform: [
+                      { scaleX: 1 },
+                      { scaleY: 1 }
+                    ],
+                  }}
+                >
+                  <Text className="text-[#000000] font-bold text-xs">
+                    {completedData.length}
+                  </Text>
+                </Animated.View>
+              )}
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
 
       {/* Content */}
       <ScrollView
@@ -512,9 +709,12 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation ,rou
               }`}
               onPress={() => handleRowPress(item)}
             >
-              {/* Row Number */}
+              {/* Row Number or Checkbox */}
               <View className="flex-1 items-center justify-center relative">
-                {selectedToggle === 'ToDo' ? (
+                {selectedToggle === 'Completed' ? (
+                  // Dynamic Checkbox for Completed section
+                  renderCheckbox(item)
+                ) : selectedToggle === 'ToDo' ? (
                   <Text className="text-center font-medium">{(index + 1).toString().padStart(2, '0')}</Text>
                 ) : (
                   <Ionicons name="flag" size={20} color="#980775" />

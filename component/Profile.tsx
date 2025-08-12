@@ -1111,32 +1111,25 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
         </Text>
       </View>
 
-      <View className="items-center mb-6">
-        {/* <Image
-          source={require("../assets/images/mprofile.webp")}
-          className="w-28 h-28 rounded-full"
-        />  */}
-
-        <View className="items-center mb-6 relative">
+     <View className="items-center mb-6">
+      <View className="items-center mb-6 relative">
+        <Image
+          source={
+            profileImage && profileImage.uri
+              ? { uri: profileImage.uri }
+              : require("../assets/images/mprofile.webp")
+          }
+          style={{ width: 100, height: 100, borderRadius: 50 }}
+          defaultSource={require("../assets/images/mprofile.webp")}
+        />
+        {/* <View className="absolute right-0 bottom-0 p-1 bg-white rounded-full">
           <Image
-            source={
-              profileImage
-                ? profileImage
-                : require("../assets/images/pcprofile 1.webp")
-            }
-            style={{ width: 100, height: 100, borderRadius: 50 }}
+            source={require("../assets/images/Pencil.webp")}
+            style={{ width: 17, height: 17, tintColor: "black" }}
           />
-          <TouchableOpacity
-            className="absolute right-0 bottom-0 p-1 bg-white  rounded-full"
-            onPress={pickImage}
-          >
-            <Image
-              source={require("../assets/images/Pencil.webp")}
-              style={{ width: 17, height: 17, tintColor: "black" }}
-            />
-          </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
+    </View>
 
       <ScrollView
         contentContainerStyle={{ paddingHorizontal: 16 }}
@@ -1281,6 +1274,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               keyboardType="numeric"
               onChangeText={handlePhoneNumber2Change}
               maxLength={9}
+              editable={false}
             />
             {errorMessage2 && (
               <Text className="text-red-500">{errorMessage2}</Text>

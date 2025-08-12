@@ -865,8 +865,8 @@ const checkEmailExists = async (email: string) => {
           </View> */}
 
           {/* User ID Field */}
-          <View className="flex-row items-center border border-gray-300 rounded-lg mb-4 bg-gray-100">
-            {/* Prefix (30% width) */}
+          {/* <View className="flex-row items-center border border-gray-300 rounded-lg mb-4 bg-gray-100">
+        
             <View
               className="bg-gray-300 justify-center items-center"
               style={{
@@ -879,7 +879,7 @@ const checkEmailExists = async (email: string) => {
               </Text>
             </View>
 
-            {/* User ID (remaining 70% width) */}
+ 
             <View style={{ flex: 7 }}>
               <TextInput
                 placeholder="--User ID--"
@@ -891,7 +891,7 @@ const checkEmailExists = async (email: string) => {
                 }}
               />
             </View>
-          </View>
+          </View> */}
 
          <TextInput
   placeholder={t("AddOfficerBasicDetails.FirstNameEnglish")}

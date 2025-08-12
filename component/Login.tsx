@@ -284,6 +284,7 @@ if (passwordUpdateRequired) {
               //  placeholder={t("SignIn.Employee")}
                 // onChangeText={setEmpid}
                     onChangeText={(text) => setEmpid(text)}
+                    
     autoCapitalize="characters"  // Automatically capitalizes all letters
                 value={empid}
               />

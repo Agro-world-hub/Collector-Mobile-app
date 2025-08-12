@@ -268,7 +268,16 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({
             placeholderTextColor="grey"
             className="flex-1 text-sm text-gray-800"
             value={searchQuery}
-            onChangeText={handleSearch}
+           // onChangeText={handleSearch}
+            onChangeText={(text) => {
+      // Remove special characters (allow only letters, numbers, and spaces)
+      const cleanedText = text.replace(/[^a-zA-Z0-9\s]/g, '');
+      
+      // Prevent leading space
+      const finalText = cleanedText.replace(/^\s+/, '');
+      
+      handleSearch(finalText);
+    }}
           />
           <TouchableOpacity
             onPress={() => handleSearch(searchQuery)}
