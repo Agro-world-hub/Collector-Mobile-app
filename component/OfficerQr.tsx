@@ -219,7 +219,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
             />
           ) : (
             <Image
-              source={require("../assets/images/pcprofile 1.webp")}
+              source={require("../assets/images/pcprofile.webp")}
               className="w-20 h-20 rounded-full border-2 border-gray-300 mr-4"
             />
           )}

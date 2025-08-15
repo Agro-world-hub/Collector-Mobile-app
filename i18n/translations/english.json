@@ -216,7 +216,8 @@
     "Todo()":"Todo (kg)",
     "Completedkg":"Completed (kg)",
      "noCompletedTargets":"No Completed Target founds",
-     "NoTodoItems":"No Todo Target founds"
+     "NoTodoItems":"No Todo Target founds",
+      "Out":"Out"
   },
   "SearchPrice":{
     "LNG": "en",
@@ -933,6 +934,7 @@
     "Pass":"Pass",
     "Completed Time":"Completed Time",
     "Retry":"Retry"
+   
   },
   "DistributionOfficersList":{
     "EMPID":"EMP ID :"

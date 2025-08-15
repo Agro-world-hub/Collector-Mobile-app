@@ -19,6 +19,8 @@ import { environment } from "@/environment/environment";
 import LottieView from "lottie-react-native";
 import { useTranslation } from "react-i18next";
 
+import { Animated } from 'react-native';
+
 type DailyTargetNavigationProps = StackNavigationProp<
   RootStackParamList,
   "DailyTarget"
@@ -214,8 +216,8 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
       </View>
 
       {/* Toggle Buttons */}
-      <View className="flex-row justify-center items-center py-4 bg-[#282828]">
-        {/* To Do Button */}
+      {/* <View className="flex-row justify-center items-center py-4 bg-[#282828]">
+      
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
             selectedToggle === "ToDo" ? "bg-[#980775]" : "bg-white"
@@ -236,7 +238,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
           </View>
         </TouchableOpacity>
 
-        {/* Completed Button */}
+     
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
             selectedToggle === "Completed" ? "bg-[#980775]" : "bg-white"
@@ -256,8 +258,107 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
             </Text>
           </View>
         </TouchableOpacity>
-      </View>
+      </View> */}
+      {/* Toggle Buttons */}
+<View className="flex-row justify-center items-center py-4 bg-[#282828]">
+  {/* To Do Button */}
+  <Animated.View
+    style={{
+      transform: [{ scale: selectedToggle === "ToDo" ? 1.05 : 1 }],
+    }}
+  >
+    <TouchableOpacity
+      className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
+        selectedToggle === "ToDo" ? "bg-[#980775]" : "bg-white"
+      }`}
+      onPress={() => setSelectedToggle("ToDo")}
+      style={{
+        shadowColor: selectedToggle === "ToDo" ? "#980775" : "transparent",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: selectedToggle === "ToDo" ? 0.3 : 0,
+        shadowRadius: 4,
+        elevation: selectedToggle === "ToDo" ? 4 : 0,
+      }}
+    >
+      <Animated.Text
+        className={`font-bold ${
+          selectedToggle === "ToDo" ? "text-white" : "text-black"
+        } ${selectedToggle === "ToDo" ? "mr-2" : ""}`}
+        style={{
+          opacity: selectedToggle === "ToDo" ? 1 : 0.7,
+        }}
+      >
+        {t("DailyTarget.Todo")}
+      </Animated.Text>
+      
+      {selectedToggle === "ToDo" && (
+        <Animated.View
+          className="bg-white rounded-full px-2 overflow-hidden"
+          style={{
+            opacity: 1,
+            transform: [
+              { scaleX: 1 },
+              { scaleY: 1 }
+            ],
+          }}
+        >
+          <Text className="text-[#000000] font-bold text-xs">
+            {todoData.length}
+          </Text>
+        </Animated.View>
+      )}
+    </TouchableOpacity>
+  </Animated.View>
 
+  {/* Completed Button */}
+  <Animated.View
+    style={{
+      transform: [{ scale: selectedToggle === "Completed" ? 1.05 : 1 }],
+    }}
+  >
+    <TouchableOpacity
+      className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
+        selectedToggle === "Completed" ? "bg-[#980775]" : "bg-white"
+      }`}
+      onPress={() => setSelectedToggle("Completed")}
+      style={{
+        shadowColor: selectedToggle === "Completed" ? "#980775" : "transparent",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: selectedToggle === "Completed" ? 0.3 : 0,
+        shadowRadius: 4,
+        elevation: selectedToggle === "Completed" ? 4 : 0,
+      }}
+    >
+      <Animated.Text
+        className={`font-bold ${
+          selectedToggle === "Completed" ? "text-white" : "text-black"
+        }`}
+        style={{
+          opacity: selectedToggle === "Completed" ? 1 : 0.7,
+        }}
+      >
+        {t("DailyTarget.Completed")}
+      </Animated.Text>
+      
+      {selectedToggle === "Completed" && (
+        <Animated.View
+          className="bg-white rounded-full px-2 ml-2 overflow-hidden"
+          style={{
+            opacity: 1,
+            transform: [
+              { scaleX: 1 },
+              { scaleY: 1 }
+            ],
+          }}
+        >
+          <Text className="text-[#000000] font-bold text-xs">
+            {completedData.length}
+          </Text>
+        </Animated.View>
+      )}
+    </TouchableOpacity>
+  </Animated.View>
+</View>
       {/* Target List Table */}
       <ScrollView
         horizontal
