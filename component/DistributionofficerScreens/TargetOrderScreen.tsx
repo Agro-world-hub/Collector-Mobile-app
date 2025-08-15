@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useTranslation } from "react-i18next";
+import { Animated } from 'react-native';
 
 type TargetOrderScreenNavigationProps = StackNavigationProp<RootStackParamList, 'TargetOrderScreen'>;
 
@@ -382,9 +383,9 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
   const getStatusColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
     switch (selectedStatus) {
       case 'Pending': 
-        return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
+        return 'bg-[#FF070733] border border-[#FF070733] text-[#FF0700]';
       case 'Opened': 
-        return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
+        return 'bg-[#FDFF99] border border-[#FDFF99] text-[#A8A100]';
       case 'Completed': 
         return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
       default: 
@@ -392,14 +393,72 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
     }
   };
 
+  // const getStatusText = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
+  //   const statusMap = {
+  //     'Pending': t("Pending") || 'Pending',
+  //     'Opened': t("Opened") || 'Opened', 
+  //     'Completed': t("Completed") || 'Completed'
+  //   };
+  //   return statusMap[selectedStatus] || selectedStatus;
+  // };
+
   const getStatusText = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
-    const statusMap = {
-      'Pending': t("Pending") || 'Pending',
-      'Opened': t("Opened") || 'Opened', 
-      'Completed': t("Completed") || 'Completed'
-    };
-    return statusMap[selectedStatus] || selectedStatus;
-  };
+  switch (selectedStatus) {
+    case 'Pending':
+      return selectedLanguage === 'si' ? 'අපේක්ෂාවෙන්' : 
+             selectedLanguage === 'ta' ? 'நிலுவையில்' : 
+             t("Status.Pending") || 'Pending';
+    case 'Opened':
+      return selectedLanguage === 'si' ? 'විවෘත කර ඇත' : 
+             selectedLanguage === 'ta' ? 'திறக்கப்பட்டது' : 
+             t("Status.Opened") || 'Opened';
+    case 'Completed':
+      return selectedLanguage === 'si' ? 'සම්පූර්ණයි' : 
+             selectedLanguage === 'ta' ? 'நிறைவானது' : 
+             t("Status.Completed") || 'Completed';
+    default:
+      return selectedStatus;
+  }
+};
+
+const getStatusBackgroundColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
+  switch (selectedStatus) {
+    case 'Pending': 
+      return '#FF070733'; // Light red background
+    case 'Opened': 
+      return '#FDFF99'; // Light yellow background
+    case 'Completed': 
+      return '#B7FFB9'; // Light green background
+    default: 
+      return '#F3F4F6'; // Gray background
+  }
+};
+
+const getStatusTextColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
+  switch (selectedStatus) {
+    case 'Pending': 
+      return '#FF0700'; // Red text
+    case 'Opened': 
+      return '#A8A100'; // Dark yellow text
+    case 'Completed': 
+      return '#6AD16D'; // Green text
+    default: 
+      return '#374151'; // Gray text
+  }
+};
+
+const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
+  switch (selectedStatus) {
+    case 'Pending': 
+      return '#FF070733'; // Light red border
+    case 'Opened': 
+      return '#F8FFA6'; // Light yellow border
+    case 'Completed': 
+      return '#B7FFB9'; // Light green border
+    default: 
+      return '#D1D5DB'; // Gray border
+  }
+};
 
   // Function to get detailed status display for debugging/info
   const getDetailedStatusDisplay = (item: TargetData) => {
@@ -416,25 +475,25 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
     <View className="flex-1 bg-[#282828]">
       {/* Header */}
       <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
-        <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4">
+        <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4 bg-white/10 rounded-full p-2">
           <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
         <Text className="text-white text-lg font-bold">{t("TargetOrderScreen.My Daily Target")}</Text>
       </View>
 
       {/* Toggle Buttons */}
-      <View className="flex-row justify-center items-center py-4 bg-[#282828] px-4">
+      {/* <View className="flex-row justify-center items-center py-4 bg-[#282828] px-4">
         <TouchableOpacity
           className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
+            selectedToggle === 'ToDo' ? 'bg-[#980775]' : 'bg-white'
           }`}
           onPress={() => setSelectedToggle('ToDo')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
             {t("TargetOrderScreen.Todo")}
           </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'ToDo' ? 'bg-white' : 'bg-[#2AAD7A]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'ToDo' ? 'text-[#2AAD7A]' : 'text-white'}`}>
+          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'ToDo' ? 'bg-white' : 'bg-[white]'}`}>
+            <Text className={`font-bold text-xs ${selectedToggle === 'ToDo' ? 'text-[#000000]' : 'text-white'}`}>
               {todoData.length.toString().padStart(2, '0')}
             </Text>
           </View>
@@ -442,20 +501,119 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
 
         <TouchableOpacity
           className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'Completed' ? 'bg-[#2AAD7A]' : 'bg-white'
+            selectedToggle === 'Completed' ? 'bg-[#980775]' : 'bg-white'
           }`}
           onPress={() => setSelectedToggle('Completed')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}>
             {t("TargetOrderScreen.Completed")}
           </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'Completed' ? 'bg-white' : 'bg-[#2AAD7A]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'Completed' ? 'text-[#2AAD7A]' : 'text-white'}`}>
+          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'Completed' ? 'bg-white' : 'bg-[white]'}`}>
+            <Text className={`font-bold text-xs ${selectedToggle === 'Completed' ? 'text-[#000000]' : 'text-white'}`}>
               {completedData.length.toString().padStart(2, '0')}
             </Text>
           </View>
         </TouchableOpacity>
-      </View>
+      </View> */}
+   <View className="flex-row justify-center items-center py-4 bg-[#282828]">
+     {/* To Do Button */}
+     <Animated.View
+       style={{
+         transform: [{ scale: selectedToggle === "ToDo" ? 1.05 : 1 }],
+       }}
+     >
+       <TouchableOpacity
+         className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
+           selectedToggle === "ToDo" ? "bg-[#980775]" : "bg-white"
+         }`}
+         onPress={() => setSelectedToggle("ToDo")}
+         style={{
+           shadowColor: selectedToggle === "ToDo" ? "#980775" : "transparent",
+           shadowOffset: { width: 0, height: 2 },
+           shadowOpacity: selectedToggle === "ToDo" ? 0.3 : 0,
+           shadowRadius: 4,
+           elevation: selectedToggle === "ToDo" ? 4 : 0,
+         }}
+       >
+         <Animated.Text
+           className={`font-bold ${
+             selectedToggle === "ToDo" ? "text-white" : "text-black"
+           } ${selectedToggle === "ToDo" ? "mr-2" : ""}`}
+           style={{
+             opacity: selectedToggle === "ToDo" ? 1 : 0.7,
+           }}
+         >
+           {t("DailyTarget.Todo")}
+         </Animated.Text>
+         
+         {selectedToggle === "ToDo" && (
+           <Animated.View
+             className="bg-white rounded-full px-2 overflow-hidden"
+             style={{
+               opacity: 1,
+               transform: [
+                 { scaleX: 1 },
+                 { scaleY: 1 }
+               ],
+             }}
+           >
+             <Text className="text-[#000000] font-bold text-xs">
+               {todoData.length}
+             </Text>
+           </Animated.View>
+         )}
+       </TouchableOpacity>
+     </Animated.View>
+   
+     {/* Completed Button */}
+     <Animated.View
+       style={{
+         transform: [{ scale: selectedToggle === "Completed" ? 1.05 : 1 }],
+       }}
+     >
+       <TouchableOpacity
+         className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
+           selectedToggle === "Completed" ? "bg-[#980775]" : "bg-white"
+         }`}
+         onPress={() => setSelectedToggle("Completed")}
+         style={{
+           shadowColor: selectedToggle === "Completed" ? "#980775" : "transparent",
+           shadowOffset: { width: 0, height: 2 },
+           shadowOpacity: selectedToggle === "Completed" ? 0.3 : 0,
+           shadowRadius: 4,
+           elevation: selectedToggle === "Completed" ? 4 : 0,
+         }}
+       >
+         <Animated.Text
+           className={`font-bold ${
+             selectedToggle === "Completed" ? "text-white" : "text-black"
+           }`}
+           style={{
+             opacity: selectedToggle === "Completed" ? 1 : 0.7,
+           }}
+         >
+           {t("DailyTarget.Completed")}
+         </Animated.Text>
+         
+         {selectedToggle === "Completed" && (
+           <Animated.View
+             className="bg-white rounded-full px-2 ml-2 overflow-hidden"
+             style={{
+               opacity: 1,
+               transform: [
+                 { scaleX: 1 },
+                 { scaleY: 1 }
+               ],
+             }}
+           >
+             <Text className="text-[#000000] font-bold text-xs">
+               {completedData.length}
+             </Text>
+           </Animated.View>
+         )}
+       </TouchableOpacity>
+     </Animated.View>
+   </View>
 
       {/* Content */}
       <ScrollView
@@ -463,18 +621,18 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         {/* Table Header */}
-        <View className="flex-row bg-[#2AAD7A] py-3">
+        <View className="flex-row bg-[#980775] py-3">
           <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
           <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
           
           {selectedToggle === 'ToDo' ? (
             <>
-              <Text className="flex-[2] text-center text-white font-bold ">Date & Time</Text>
+              <Text className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Date")}</Text>
           
               <Text className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Status")}</Text>
             </>
           ) : (
-            <Text className="flex-[2] text-center text-white font-bold">Completed Time</Text>
+            <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Completed Time")}</Text>
           )}
         </View>
 
@@ -486,7 +644,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
               onPress={() => fetchTargets()} 
               className="mt-2 bg-red-500 px-4 py-2 rounded"
             >
-              <Text className="text-white text-center">Retry</Text>
+              <Text className="text-white text-center">{t("TargetOrderScreen.Retry")}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -494,7 +652,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
         {loading ? (
           <View className="flex-1 justify-center items-center py-20">
             <LottieView
-              source={require('../../assets/lottie/collector.json')}
+              source={require('../../assets/lottie/newLottie.json')}
               autoPlay
               loop
               style={{ width: 200, height: 200 }}
@@ -514,7 +672,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
                 {selectedToggle === 'ToDo' ? (
                   <Text className="text-center font-medium">{(index + 1).toString().padStart(2, '0')}</Text>
                 ) : (
-                  <Ionicons name="flag" size={20} color="#2AAD7A" />
+                  <Ionicons name="flag" size={20} color="#980775" />
                 )}
               </View>
 
@@ -544,13 +702,30 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
                   
 
                   {/* Status */}
-                  <View className="flex-[2] items-center justify-center px-2">
-                    <View className={`px-3 py-2 rounded-lg ${getStatusColor(item.selectedStatus)}`}>
-                      <Text className="text-xs font-medium text-center">
-                        {getStatusText(item.selectedStatus)}
-                      </Text>
-                    </View>
-                  </View>
+                {/* Status */}
+<View className="flex-[2] items-center justify-center px-2">
+  <View 
+    style={{
+      backgroundColor: getStatusBackgroundColor(item.selectedStatus),
+      borderColor: getStatusBorderColor(item.selectedStatus),
+      borderWidth: 1,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderRadius: 20,
+    }}
+  >
+    <Text 
+      style={{
+        color: getStatusTextColor(item.selectedStatus),
+        fontSize: 12,
+        fontWeight: '500',
+        textAlign: 'center'
+      }}
+    >
+      {getStatusText(item.selectedStatus)}
+    </Text>
+  </View>
+</View>
                 </>
               ) : (
                 /* Completed Time */

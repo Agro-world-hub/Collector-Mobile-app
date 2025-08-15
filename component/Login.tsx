@@ -32,7 +32,9 @@ interface LoginProps {
   navigation: LoginNavigationProp;
 }
 
-const loginImage = require("@/assets/images/bg.webp");
+const loginImage = require("@/assets/images/New/login.png");
+const user = require("@/assets/images/New/user.png")
+const passwordicon = require("@/assets/images/New/password.png")
 
 const Login: React.FC<LoginProps> = ({ navigation }) => {
   const [empid, setEmpid] = useState("");
@@ -158,7 +160,7 @@ if (passwordUpdateRequired) {
   navigation.navigate("ChangePassword", { empid } as any);
 } else {
   // Fixed: Check for both Distribution roles individually
-  if (jobRole === "Distribution Officer" || jobRole === "Distribution Manager") {
+  if (jobRole === "Distribution Officer" || jobRole === "Distribution Center Manager") {
     navigation.navigate("Main", { screen: "DistridutionaDashboard" });
   } else if (jobRole === "Collection Officer") {
     navigation.navigate("Main", { screen: "Dashboard" });
@@ -226,7 +228,7 @@ if (passwordUpdateRequired) {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
-      className="flex-1"
+      style={{ flex: 1}}
     >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
@@ -237,8 +239,12 @@ if (passwordUpdateRequired) {
           <AntDesign name="left" size={24} color="#000502" />
         </TouchableOpacity>
 
-        <View className="items-center mt-[-4%]">
-          <Image source={loginImage} style={{ width: 270, height: 350 }} />
+        <View className="items-center mt-[-6%]">
+          <Image 
+          source={loginImage} 
+          style={{ width: 270, height: 270 }}
+          resizeMode="contain"
+        />
 
           <Text className="font-bold text-2xl pt-[7%]">
             {t("SignIn.Wellcome")}
@@ -254,7 +260,7 @@ if (passwordUpdateRequired) {
           // **Lottie Loader while logging in**
           <View className="flex-1 justify-center items-center ">
             <LottieView
-              source={require("../assets/lottie/collector.json")} // Ensure you have a valid JSON file
+              source={require("../assets/lottie/newLottie.json")} // Ensure you have a valid JSON file
               autoPlay
               loop
               style={{ width: 300, height: 300 }}
@@ -265,13 +271,21 @@ if (passwordUpdateRequired) {
             <Text className="text-base pb-[2%] font-light">
               {t("SignIn.Employee")}
             </Text>
-            <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-full h-[53px] mb-5 bg-white px-3">
+            <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">
               {/* <Icon name="email" size={24} color="green" /> */}
-              <AntDesign name="user" size={24} color="green" />
+              {/* <AntDesign name="user" size={24} color="green" /> */}
+              <Image 
+              source={user} 
+               style={{ width: 24, height: 24 }}
+          resizeMode="contain"
+              />
               <TextInput
                 className="flex-1 h-[40px] text-base pl-2"
-                placeholder={t("SignIn.Employee")}
-                onChangeText={setEmpid}
+              //  placeholder={t("SignIn.Employee")}
+                // onChangeText={setEmpid}
+                    onChangeText={(text) => setEmpid(text)}
+                    
+    autoCapitalize="characters"  // Automatically capitalizes all letters
                 value={empid}
               />
             </View>
@@ -279,11 +293,15 @@ if (passwordUpdateRequired) {
             <Text className="text-base pb-[2%] font-light">
               {t("SignIn.Password")}
             </Text>
-            <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-full h-[53px] mb-10 bg-white px-3">
-              <Icon name="lock" size={24} color="green" />
+ <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">            
+     <Image 
+              source={passwordicon} 
+               style={{ width: 24, height: 24 }}
+          resizeMode="contain"
+              />
               <TextInput
                 className="flex-1 h-[40px] text-base pl-2"
-                placeholder={t("SignIn.Password")}
+              //  placeholder={t("SignIn.Password")}
                 secureTextEntry={secureTextEntry}
                 onChangeText={setPassword}
                 value={password}
@@ -294,13 +312,13 @@ if (passwordUpdateRequired) {
                 <Icon
                   name={secureTextEntry ? "eye-off-outline" : "eye-outline"}
                   size={24}
-                  color="green"
+                  color="black"
                 />
               </TouchableOpacity>
             </View>
 
             <TouchableOpacity
-              className="bg-[#2AAD7A] w-full p-3 rounded-3xl shadow-2xl items-center justify-center mb-[20%]"
+              className="bg-[#000000] w-full p-3 rounded-3xl shadow-2xl items-center justify-center mb-[20%]"
               onPress={handleLogin}
               disabled={loading} // Disable button while loading
             >

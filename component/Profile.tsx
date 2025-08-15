@@ -1103,7 +1103,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
     >
       <View className="flex-row items-center mb-6">
-        <TouchableOpacity onPress={() => navigation.goBack()} className="">
+        <TouchableOpacity onPress={() => navigation.goBack()} className="bg-[#F6F6F680] rounded-full p-2">
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
         <Text className="flex-1 text-center text-xl font-bold text-black">
@@ -1111,32 +1111,25 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
         </Text>
       </View>
 
-      <View className="items-center mb-6">
-        {/* <Image
-          source={require("../assets/images/mprofile.webp")}
-          className="w-28 h-28 rounded-full"
-        />  */}
-
-        <View className="items-center mb-6 relative">
+     <View className="items-center mb-6">
+      <View className="items-center mb-6 relative">
+        <Image
+          source={
+            profileImage && profileImage.uri
+              ? { uri: profileImage.uri }
+              : require("../assets/images/mprofile.webp")
+          }
+          style={{ width: 100, height: 100, borderRadius: 50 }}
+          defaultSource={require("../assets/images/mprofile.webp")}
+        />
+        {/* <View className="absolute right-0 bottom-0 p-1 bg-white rounded-full">
           <Image
-            source={
-              profileImage
-                ? profileImage
-                : require("../assets/images/pcprofile 1.webp")
-            }
-            style={{ width: 100, height: 100, borderRadius: 50 }}
+            source={require("../assets/images/Pencil.webp")}
+            style={{ width: 17, height: 17, tintColor: "black" }}
           />
-          <TouchableOpacity
-            className="absolute right-0 bottom-0 p-1 bg-white  rounded-full"
-            onPress={pickImage}
-          >
-            <Image
-              source={require("../assets/images/Pencil.webp")}
-              style={{ width: 17, height: 17, tintColor: "green" }}
-            />
-          </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
+    </View>
 
       <ScrollView
         contentContainerStyle={{ paddingHorizontal: 16 }}
@@ -1152,7 +1145,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.FirstName")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={getfirstName()}
               editable={false}
               style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
@@ -1167,7 +1160,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.LastName")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={getlastName()}
               editable={false}
               style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
@@ -1181,7 +1174,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.Company")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={getcompanyName()}
               editable={false}
               style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
@@ -1195,7 +1188,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.CenterCode")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={profileData.regcode}
               editable={false}
             />
@@ -1209,7 +1202,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.CenterName")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={profileData.collectionCenterName}
               editable={false}
             />
@@ -1223,7 +1216,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.Job")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={getTranslatedJobRole(
                 profileData.jobRole,
                 selectedLanguage
@@ -1241,7 +1234,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.NIC")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={profileData.nicNumber}
               editable={false}
             />
@@ -1254,12 +1247,13 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.Phone1")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={newPhoneNumber}
               placeholder="7XXXXXXXX"
               keyboardType="numeric"
               onChangeText={handlePhoneNumberChange}
               maxLength={9}
+              editable={false}
             />
             {errorMessage && (
               <Text className="text-red-500">{errorMessage}</Text>
@@ -1274,12 +1268,13 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.Phone2")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={newPhoneNumber2}
               placeholder="7XXXXXXXX"
               keyboardType="numeric"
               onChangeText={handlePhoneNumber2Change}
               maxLength={9}
+              editable={false}
             />
             {errorMessage2 && (
               <Text className="text-red-500">{errorMessage2}</Text>
@@ -1293,7 +1288,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.House")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={profileData.houseNumber}
               editable={false}
             />
@@ -1306,7 +1301,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.Street")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={profileData.streetName}
               editable={false}
             />
@@ -1320,7 +1315,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.City")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4] mb-2"
               value={getTranslatedCity(
                 profileData.city,
                 profileData.district,
@@ -1339,7 +1334,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.District")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4] mb-2"
               value={getTranslatedDistrict(
                 profileData.district,
                 selectedLanguage
@@ -1357,7 +1352,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {t("Profile.Province")}
             </Text>
             <TextInput
-              className="px-4 py-2 rounded-[35px] border border-gray-300 text-black mb-2"
+              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4] mb-2"
               value={getTranslatedProvince(
                 profileData.province,
                 selectedLanguage
@@ -1370,7 +1365,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
           {showUpdateButton  && (newPhoneNumber !== profileData.phoneNumber || newPhoneNumber2 !== profileData.phoneNumber2) && (
             <TouchableOpacity
               onPress={handleUpdatePhoneNumber}
-              className="bg-[#2AAD7A] py-3 rounded-[30px] mb-4"
+              className="bg-[#000000] py-3 rounded-[30px] mb-4"
             >
               <Text
                 style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}

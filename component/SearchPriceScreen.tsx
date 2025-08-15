@@ -225,7 +225,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
       <View className="flex-1 bg-white items-center justify-center">
         {/* <ActivityIndicator size="large" color="#26D041" /> */}
         <LottieView
-          source={require("../assets/lottie/collector.json")}
+          source={require("../assets/lottie/newLottie.json")}
           autoPlay
           loop
           style={{ width: 300, height: 300 }}
@@ -257,7 +257,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
             {t("SearchPrice.SearchPrice")}
           </Text>
           <Image
-            source={require("../assets/images/marketprice.webp")}
+            source={require("../assets/images/New/Searchcrop.png")}
             className="w-64 h-40 mb-6 mt-8"
             resizeMode="contain"
           />
@@ -283,9 +283,10 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
                 }}
                 setItems={setCropOptions}
                 placeholder={t("SearchPrice.SelectCrop")}
-                style={{
-                  backgroundColor: "white",
-                  borderColor: "#CFCFCF",
+                  style={{
+                  backgroundColor: "#F4F4F4",
+                  borderColor: "#F4F4F4",
+                  borderRadius:25
                 }}
                 placeholderStyle={{ color: "#9CA3AF" }}
                 textStyle={{
@@ -323,8 +324,9 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
                 placeholder={t("SearchPrice.SelectVariety")}
                 placeholderStyle={{ color: "#9CA3AF" }}
                 style={{
-                  backgroundColor: "white",
-                  borderColor: "#CFCFCF",
+                  backgroundColor: "#F4F4F4",
+                  borderColor: "#F4F4F4",
+                  borderRadius:25
                 }}
                 textStyle={{
                   color: "#000",
@@ -346,7 +348,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
 
           {/* Search Button */}
           <TouchableOpacity
-            className="bg-[#2AAD7A] w-full py-3 mb-4 rounded-[35px] items-center"
+            className="bg-[#000000] w-full py-3 mb-4 rounded-[35px] items-center"
             onPress={() => {
               if (selectedCrop && selectedVariety) {
                 setLoading(true);

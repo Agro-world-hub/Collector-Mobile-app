@@ -168,10 +168,10 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
       <View className="flex-row items-center bg-[#ADADAD1A] p-3 px-4 mb-4 rounded-xl">
         <View className="flex-1">
           <Text className="font-bold text-base text-gray-900">
-            Order ID: {item.invNo}
+            {t("ReplaceRequestsScreen.Order ID")} {item.invNo}
           </Text>
           <Text className="text-gray-700 text-sm">
-            Replacing Item: {item.replaceProductDisplayName}
+            {t("ReplaceRequestsScreen.Replacing Item")} {item.replaceProductDisplayName}
           </Text>
          
           <Text className="text-gray-500 text-sm">
@@ -180,7 +180,7 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
         
         </View>
         <View className="p-2 rounded-full">
-          <AntDesign name="right" size={20} color="#000" />
+          <AntDesign name="right" size={20} color="#5f5c5cff" />
         </View>
       </View>
     </TouchableOpacity>

@@ -124,32 +124,101 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
   };
 
   // Helper function to get status color
+  // const getStatusColor = (status: string) => {
+  //   switch (status?.toLowerCase()) {
+  //     case 'completed':
+  //       return 'bg-[#BBFFC6] border-[#BBFFC6] text-[#6AD16D]';
+  //     case 'opened':
+  //       return 'bg-[#F8FFA6] border-[#F8FFA6] text-[#A8A100]';
+  //     case 'pending':
+  //       return 'bg-[#FFB9B7] border-[#FFB9B7] text-[#D16D6A]';
+  //     default:
+  //       return 'bg-gray-100 border-gray-200';
+  //   }
+  // };
+
   const getStatusColor = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case 'completed':
-        return 'bg-[#BBFFC6] border-[#BBFFC6] text-[#6AD16D]';
-      case 'opened':
-        return 'bg-[#F8FFA6] border-[#F8FFA6] text-[#A8A100]';
-      case 'pending':
-        return 'bg-[#FFB9B7] border-[#FFB9B7] text-[#D16D6A]';
-      default:
-        return 'bg-gray-100 border-gray-200';
-    }
-  };
+  // Convert to lowercase and handle different language variations
+  const normalizedStatus = status?.toLowerCase();
+  
+  // English
+  if (normalizedStatus === 'completed') {
+    return 'bg-[#BBFFC6] border-[#BBFFC6] text-[#6AD16D]';
+  }
+  if (normalizedStatus === 'opened') {
+    return 'bg-[#F8FFA6] border-[#F8FFA6] text-[#A8A100]';
+  }
+  if (normalizedStatus === 'pending') {
+    return 'bg-[#FFB9B7] border-[#FFB9B7] text-[#D16D6A]';
+  }
+  
+  // Sinhala translations
+  if (normalizedStatus === 'සම්පූර්ණ' || normalizedStatus === 'සම්පූර්ණයි') {
+    return 'bg-[#BBFFC6] border-[#BBFFC6] text-[#6AD16D]';
+  }
+  if (normalizedStatus === 'විවෘත' || normalizedStatus === 'විවෘතයි') {
+    return 'bg-[#F8FFA6] border-[#F8FFA6] text-[#A8A100]';
+  }
+  if (normalizedStatus === 'අපේක්ෂිත' || normalizedStatus === 'පොරොත්තුවේ') {
+    return 'bg-[#FFB9B7] border-[#FFB9B7] text-[#D16D6A]';
+  }
+  
+  // Tamil translations
+  if (normalizedStatus === 'முடிக்கப்பட்டது' || normalizedStatus === 'நிறைவு') {
+    return 'bg-[#BBFFC6] border-[#BBFFC6] text-[#6AD16D]';
+  }
+  if (normalizedStatus === 'திறக்கப்பட்டது' || normalizedStatus === 'திறந்த') {
+    return 'bg-[#F8FFA6] border-[#F8FFA6] text-[#A8A100]';
+  }
+  if (normalizedStatus === 'நிலுவையில்' || normalizedStatus === 'காத்திருக்கும்') {
+    return 'bg-[#FFB9B7] border-[#FFB9B7] text-[#D16D6A]';
+  }
+  
+  return 'bg-gray-100 border-gray-200';
+};
 
   // Helper function to get status text
+  // const getStatusText = (status: string) => {
+  //   switch (status?.toLowerCase()) {
+  //     case 'completed':
+  //       return 'Completed';
+  //     case 'opened':
+  //       return 'Opened';
+  //     case 'pending':
+  //       return 'Pending';
+  //     default:
+  //       return 'Unknown';
+  //   }
+  // };
+
   const getStatusText = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case 'completed':
-        return 'Completed';
-      case 'opened':
-        return 'Opened';
-      case 'pending':
-        return 'Pending';
-      default:
-        return 'Unknown';
-    }
-  };
+  const normalizedStatus = status?.toLowerCase();
+  
+  // Return translated status based on current language
+  switch (normalizedStatus) {
+    case 'completed':
+    case 'සම්පූර්ණ':
+    case 'සම්පූර්ණයි':
+    case 'முடிக்கப்பட்டது':
+    case 'நிறைவு':
+      return t("Status.Completed");
+    case 'opened':
+    case 'විවෘත':
+    case 'විවෘතයි':
+    case 'திறக்கப்பட்டது':
+    case 'திறந்த':
+      return t("Status.Opened");
+    case 'pending':
+    case 'අපේක්ෂිත':
+    case 'පොරොත්තුවේ':
+    case 'நிலுவையில்':
+    case 'காத்திருக்கும்':
+      return t("Status.Pending");
+    default:
+      return t("Status.Unknown");
+  }
+};
+
 
   // Helper function to format completion time
   const formatCompletionTime = (timeString: string) => {
@@ -400,12 +469,26 @@ const handleRowPress = (item: OrderData) => {
     };
     fetchData();
   }, []);
+  
+const getStatusTextColor = (status: string) => {
+  switch(status?.toLowerCase()) {
+    case 'pending':
+      return 'text-[#FF0700]'; // Dark red text for pending
+    case 'opened':
+      return 'text-[#A8A100]'; // Dark yellow/brown text for opened
+    case 'completed':
+      return 'text-green-800'; // Dark green text for completed
+    default:
+      return 'text-gray-800'; // Default gray
+  }
+};
+
 
   return (
     <View className="flex-1 bg-[#282828]">
       {/* Header */}
       <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
-        <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4">
+        <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4 bg-white/10 rounded-full p-2">
           <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
         <Text className="text-white text-lg font-bold">{officerId}</Text>
@@ -447,7 +530,8 @@ const handleRowPress = (item: OrderData) => {
             
             {/* Message */}
             <Text className="text-center text-gray-800 text-base mb-6 leading-5">
-              Are you sure you want to pass this target to some other officer?
+              {t("DailyTargetListOfficerDistribution.Are you sure")}
+              
             </Text>
             
             {/* Buttons */}
@@ -456,14 +540,14 @@ const handleRowPress = (item: OrderData) => {
                 onPress={handleCancelPass}
                 className="flex-1 mr-2 py-3 px-6 bg-[#F6F7F9] border border-[#95A1AC] rounded-lg"
               >
-                <Text className="text-center text-gray-700 font-medium">Cancel</Text>
+                <Text className="text-center text-gray-700 font-medium"> {t("DailyTargetListOfficerDistribution.Cancel")}</Text>
               </TouchableOpacity>
               
               <TouchableOpacity
                 onPress={handleConfirmPass}
-                className="flex-1 ml-2 py-3 px-6 bg-[#2AAD7A] border border-[#319576] rounded-lg"
+                className="flex-1 ml-2 py-3 px-6 bg-[#980775] border border-[#980775] rounded-lg"
               >
-                <Text className="text-center text-white font-medium">Pass</Text>
+                <Text className="text-center text-white font-medium"> {t("DailyTargetListOfficerDistribution.Pass")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -474,15 +558,15 @@ const handleRowPress = (item: OrderData) => {
       <View className="flex-row justify-center items-center py-4 bg-[#282828] px-4">
         <TouchableOpacity
           className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
+            selectedToggle === 'ToDo' ? 'bg-[#980775]' : 'bg-white'
           }`}
           onPress={() => handleToggleChange('ToDo')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
             {t("TargetOrderScreen.Todo")}
           </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'ToDo' ? 'bg-white' : 'bg-[#2AAD7A]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'ToDo' ? 'text-[#2AAD7A]' : 'text-white'}`}>
+          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'ToDo' ? 'bg-white' : 'bg-[#980775]'}`}>
+            <Text className={`font-bold text-xs ${selectedToggle === 'ToDo' ? 'text-[#980775]' : 'text-white'}`}>
               {todoData.length.toString().padStart(2, '0')}
             </Text>
           </View>
@@ -490,15 +574,15 @@ const handleRowPress = (item: OrderData) => {
 
         <TouchableOpacity
           className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'Completed' ? 'bg-[#2AAD7A]' : 'bg-white'
+            selectedToggle === 'Completed' ? 'bg-[#980775]' : 'bg-white'
           }`}
           onPress={() => handleToggleChange('Completed')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}>
             {t("TargetOrderScreen.Completed")}
           </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'Completed' ? 'bg-white' : 'bg-[#2AAD7A]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'Completed' ? 'text-[#2AAD7A]' : 'text-white'}`}>
+          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'Completed' ? 'bg-white' : 'bg-[#980775]'}`}>
+            <Text className={`font-bold text-xs ${selectedToggle === 'Completed' ? 'text-[#980775]' : 'text-white'}`}>
               {completedData.length.toString().padStart(2, '0')}
             </Text>
           </View>
@@ -507,11 +591,12 @@ const handleRowPress = (item: OrderData) => {
 
       {/* Content */}
       <ScrollView
+      showsVerticalScrollIndicator= {false}
         className="flex-1 bg-white"
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         {/* Table Header */}
-        <View className="flex-row bg-[#2AAD7A] py-3">
+        <View className="flex-row bg-[#980775] py-3">
           {selectedToggle === 'ToDo' && (
             <TouchableOpacity 
               className="w-12 items-center justify-center"
@@ -535,7 +620,7 @@ const handleRowPress = (item: OrderData) => {
           {selectedToggle === 'ToDo' ? (
             <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Status")}</Text>
           ) : (
-            <Text className="flex-[2] text-center text-white font-bold">Completed Time</Text>
+            <Text className="flex-[2] text-center text-white font-bold">{t("DailyTargetListOfficerDistribution.Completed Time")}</Text>
           )}
         </View>
 
@@ -547,7 +632,7 @@ const handleRowPress = (item: OrderData) => {
               onPress={() => fetchTargets()} 
               className="mt-2 bg-red-500 px-4 py-2 rounded"
             >
-              <Text className="text-white text-center">Retry</Text>
+              <Text className="text-white text-center">{t("DailyTargetListOfficerDistribution.Retry")}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -555,7 +640,7 @@ const handleRowPress = (item: OrderData) => {
         {loading ? (
           <View className="flex-1 justify-center items-center py-20">
             <LottieView
-              source={require('../../assets/lottie/collector.json')}
+              source={require('../../assets/lottie/newLottie.json')}
               autoPlay
               loop
               style={{ width: 200, height: 200 }}
@@ -583,11 +668,11 @@ const handleRowPress = (item: OrderData) => {
                       <MaterialIcons 
                         name={selectedItems.has(item.distributedTargetItemId) ? "check-box" : "check-box-outline-blank"} 
                         size={20} 
-                        color={selectedItems.has(item.distributedTargetItemId) ? "#2AAD7A" : "#666"} 
+                        color={selectedItems.has(item.distributedTargetItemId) ? "black" : "#000000"} 
                       />
                     </TouchableOpacity>
                   ) : (
-                    <View className="w-6 h-6 bg-gray-200 rounded opacity-50" />
+                    <View className="w-5 h-5 bg-white border border-[#E2E8F0] rounded opacity-50" />
                   )}
                 </View>
               )}
@@ -597,7 +682,7 @@ const handleRowPress = (item: OrderData) => {
                 {selectedToggle === 'ToDo' ? (
                   <Text className="text-center font-medium">{(index + 1).toString().padStart(2, '0')}</Text>
                 ) : (
-                  <Ionicons name="flag" size={20} color="#2AAD7A" />
+                  <Ionicons name="flag" size={20} color="#980775" />
                 )}
               </View>
 
@@ -614,13 +699,20 @@ const handleRowPress = (item: OrderData) => {
 
               {selectedToggle === 'ToDo' ? (
                 /* Status */
-                <View className="flex-[2] items-center justify-center px-2">
-                  <View className={`px-3 py-2 rounded-lg border ${getStatusColor(item.selectedStatus)}`}>
-                    <Text className="text-xs font-medium text-center text-gray-800">
-                      {getStatusText(item.selectedStatus)}
-                    </Text>
-                  </View>
-                </View>
+                // <View className="flex-[2] items-center justify-center px-2">
+                //   <View className={`px-3 py-2 rounded-full border ${getStatusColor(item.selectedStatus)}`}>
+                //     <Text className="text-xs font-medium text-center text-gray-800">
+                //       {getStatusText(item.selectedStatus)}
+                //     </Text>
+                //   </View>
+                // </View>
+                 <View className="flex-[2] items-center justify-center px-2">
+    <View className={`px-3 py-2 rounded-full border ${getStatusColor(item.selectedStatus)}`}>
+      <Text className={`text-xs font-medium text-center ${getStatusTextColor(item.selectedStatus)}`}>
+        {getStatusText(item.selectedStatus)}
+      </Text>
+    </View>
+  </View>
               ) : (
                 /* Completed Time */
                 <View className="flex-[2] items-center justify-center px-2">

@@ -226,11 +226,11 @@ import useUserStore from "@/store/userStore";  // Import the global store
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../services/reducxStore";
 
-const homeIcon = require("../assets/images/homee.webp");
-const searchIcon = require("../assets/images/searchh.webp");
-const qrIcon = require("../assets/images/target.webp");
-const adminIcon = require("../assets/images/People.webp");
-const dataTransfer = require("../assets/images/Data Transfer.webp")
+const homeIcon = require("../assets/images/New/navhome.png");
+const searchIcon = require("../assets/images/New/navsearch.png");
+const qrIcon = require("../assets/images/New/navtarget.png");
+const adminIcon = require("../assets/images/New/navusers.png");
+const dataTransfer = require("../assets/images/New/transfer.png")
 
 const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
   // const { userRole, setUserRole, setToken, setEmpId } = useUserStore();
@@ -337,7 +337,7 @@ useEffect(() => {
     { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
     ];
     setTabs(tabs); 
-  }else if (userRole === "Distribution Manager") {
+  }else if (userRole === "Distribution Center Manager") {
      tabs = [
         { name: "DistridutionaDashboard", icon: homeIcon, focusedIcon: homeIcon },
            { name: "TargetOrderScreen", icon: qrIcon, focusedIcon: qrIcon },
@@ -365,7 +365,7 @@ useEffect(() => {
     currentTabName === "OfficerSummary" 
   ) {
     currentTabName = "CollectionOfficersList";
-  } else if (userRole === "Distribution Manager"  && currentTabName === "Dashboard"  ) {
+  } else if (userRole === "Distribution Center Manager"  && currentTabName === "Dashboard"  ) {
     currentTabName = "DistridutionaDashboard"; 
     navigation.navigate("DistridutionaDashboard");
   } else if(currentTabName === "ClaimDistribution"){
@@ -381,7 +381,7 @@ useEffect(() => {
   useEffect(() => {
     if (userRole === "Distribution Officer" && currentTabName == "Dashboard") {
       navigation.navigate("DistridutionaDashboard");
-    }else if (userRole === "Distribution Manager" && currentTabName === "Dashboard"){
+    }else if (userRole === "Distribution Center Manager" && currentTabName === "Dashboard"){
       console.log("hittt")
       navigation.navigate("DistridutionaDashboard");
     }
@@ -420,24 +420,18 @@ useEffect(() => {
 
   return (
     <View className={` ${currentTabName === "QRScanner" ? "bg-black" : "bg-white"}`}>
-      <View className="absolute bottom-0 flex-row  justify-between items-center bg-[#21202B] py-3 px-6 rounded-t-3xl w-full">
+      <View className="absolute bottom-0 flex-row  justify-between items-center bg-white py-3 px-6 rounded-t-3xl w-full border-t border-r border-l border-[#00000040] shadow-md">
         {tabs.map((tab, index) => {
           const isFocused = currentTabName === tab.name;
           return (
             <TouchableOpacity
               key={index}
               onPress={() => navigation.navigate(tab.name)}
-              className={`${isFocused ? "bg-green-500 p-4 rounded-full -mt-6 border-4 border-[#1A1920] shadow-md" : "items-center justify-center"}`}
+              className={`${isFocused ? "bg-[#FAE432] p-3 rounded-full border border-[#FAE432] shadow-md" : "items-center justify-center"}`}
               style={{
-                backgroundColor: isFocused ? "#34D399" : "transparent",
+                backgroundColor: isFocused ? "#FAE432" : "white",
                 padding: isFocused ? 8 : 6,
                 borderRadius: 50,
-                borderWidth: isFocused ? 2 : 0,
-                borderColor: "#1A1920",
-                shadowColor: isFocused ? "#000" : "transparent",
-                shadowOpacity: 0.2,
-                shadowRadius: 4,
-                elevation: isFocused ? 5 : 0,
               }}
             >
               <Image source={isFocused ? tab.focusedIcon : tab.icon} style={{ width: 24, height: 24, resizeMode: "contain" }} />

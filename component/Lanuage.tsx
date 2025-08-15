@@ -2,7 +2,7 @@ import React,{useEffect, useState, useContext, useCallback} from 'react';
 import { View, Text, Image, TouchableOpacity, BackHandler,  } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-const lg = require('../assets/images/lang1.webp');
+const lg = require('../assets/images/New/language.png');
 import { RootStackParamList } from './types';
 import { LanguageContext } from '@/context/LanguageContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -56,20 +56,20 @@ const Lanuage: React.FC<LanuageProps> = ({ navigation }) => {
   return (
     <ScrollView className = "bg-white">
     <View className="flex-1 bg-white items-center">
-      <Image className="mt-20 w-full h-30" source={lg} resizeMode="contain" />
+      <Image  className="mt-20 w-40 h-40 rounded-full mr-3" source={lg} resizeMode="contain" />
       <Text className="text-3xl pt-5 font-semibold">Language</Text>
       <Text className="text-lg pt-5 font-extralight">மொழியைத் தேர்ந்தெடுக்கவும்</Text>
       <Text className="text-lg pt-1 mb-0 font-extralight">කරුණාකර භාෂාව තෝරන්න</Text>
 
       {/* TouchableOpacity Buttons */}
       <View className="flex-1 justify-center w-64 px-4 mt-4 pt-0">
-        <TouchableOpacity className="bg-[#2AAD7A] p-4 rounded-3xl mb-6"  onPress={() => handleLanguageSelect("en")}>
+        <TouchableOpacity className="bg-[#413A3F] p-4 rounded-3xl mb-6"  onPress={() => handleLanguageSelect("en")}>
           <Text className="text-white text-lg text-center">ENGLISH</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="bg-[#2AAD7A] p-4 rounded-3xl mb-6 " onPress={() => handleLanguageSelect("si")} >
+        <TouchableOpacity className="bg-[#413A3F] p-4 rounded-3xl mb-6 " onPress={() => handleLanguageSelect("si")} >
           <Text className="text-white text-2xl text-center">සිංහල</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity className="bg-[#2AAD7A] p-4 rounded-3xl mb-12"  onPress={() => handleLanguageSelect("ta")}>
+        {/* <TouchableOpacity className="bg-[#413A3F] p-4 rounded-3xl mb-12"  onPress={() => handleLanguageSelect("ta")}>
           <Text className="text-white text-2xl text-center ">தமிழ்</Text>
         </TouchableOpacity> */}
       </View>

@@ -254,9 +254,9 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
   </TouchableOpacity>;
 
   return (
-    <View className="flex-1 bg-[#2AAD7A]">
-      <View className="bg-[#2AAD7A] py-6 px-4  relative">
-        <TouchableOpacity
+    <View className="flex-1 bg-[#313131]">
+      <View className="bg-[#313131] py-6 px-4  relative">
+        {/* <TouchableOpacity
           className="absolute top-6 left-4 z-50"
           onPress={() => {
             setShowFilter((prev) => !prev);
@@ -264,7 +264,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
           }}
         >
           <FontAwesome name="filter" size={24} color="#fff" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         {showFilter && (
           <View className="absolute z-50 flex-col top-14 left-6 bg-white shadow-lg rounded-lg">
             <TouchableOpacity
@@ -375,7 +375,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
           // Lottie Loader for 4 seconds
           <View className="flex-1 justify-center items-center -mt-[25%]">
             <LottieView
-              source={require("../../assets/lottie/collector.json")} // Ensure JSON file is correct
+              source={require("../../assets/lottie/newLottie.json")} // Ensure JSON file is correct
               autoPlay
               loop
               style={{ width: 350, height: 350 }}

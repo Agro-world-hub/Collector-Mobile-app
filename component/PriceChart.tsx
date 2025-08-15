@@ -45,9 +45,22 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.get(`api/unregisteredfarmercrop/unitPrices/${varietyId}`);
+      // const response = await api.get(`api/unregisteredfarmercrop/unitPrices/${varietyId}`);
+         const token = await AsyncStorage.getItem("token");
+
+    if (token) {
+      const response = await api.get(`api/unregisteredfarmercrop/unitPrices/${varietyId}`, {
+        headers: {
+          Authorization: `Bearer ${token}` // Pass the token in the Authorization header
+        }
+      });
+      
       setPriceData(response.data);
       setEditedPrices(response.data);
+         } else {
+      setError(t("Error.Failed to fetch prices"));
+      console.log("Token not found")
+    }
     } catch (error) {
       setError(t("Error.Failed to fetch prices"));
     } finally {
@@ -164,10 +177,10 @@ useFocusEffect(
   };
   
 
-  return (
-    <SafeAreaView className="flex-1 bg-gray-100">
+return (
+    <SafeAreaView className="flex-1 bg-whitegray-100">
       {/* Header */}
-      <View className="bg-[#2AAD7A] h-20 flex-row items-center" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
+      <View className="bg-[#313131] h-20 flex-row items-center" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
         <TouchableOpacity onPress={() => navigation.navigate("Main" as any, { screen: "SearchPriceScreen" })}>
           <AntDesign name="left" size={24} color="#fff" />
         </TouchableOpacity>
@@ -175,15 +188,15 @@ useFocusEffect(
       </View>
 
       {/* Content */}
-      <ScrollView className="flex-1" style={{ paddingHorizontal: wp(8), paddingVertical: hp(2) }}>
-        <View className="mb-4">
-          <Text className="text-gray-600 text-sm mb-1">{t("PriceChart.Crop")}</Text>
-          <TextInput className="border border-gray-300 rounded-lg px-4 py-2 text-gray-800" value={cropName} editable={false} />
+      <ScrollView className="flex-1 bg-white" style={{ paddingHorizontal: wp(8), paddingVertical: hp(2) }}>
+        <View className="mb-4 ">
+          <Text className="text-black text-sm mb-1">{t("PriceChart.Crop")}</Text>
+          <TextInput className="border border-[#F4F4F4] rounded-full bg-[#F4F4F4] px-4 py-2 text-gray-800 " value={cropName} editable={false} />
         </View>
 
-        <View className="mb-4">
-          <Text className="text-gray-600 text-sm mb-1">{t("PriceChart.Variety")}</Text>
-          <TextInput className="border border-gray-300 rounded-lg px-4 py-2 text-gray-800" value={varietyName} editable={false} />
+        <View className="mb-4 ">
+          <Text className="text-black text-sm mb-1">{t("PriceChart.Variety")}</Text>
+          <TextInput className="border border-[#F4F4F4] rounded-full px-4 py-2 text-gray-800 bg-[#F4F4F4]" value={varietyName} editable={false} />
         </View>
 
         {loading && (
@@ -201,13 +214,18 @@ useFocusEffect(
         {priceData.length > 0 && !loading && !error && (
           <View className="mb-6">
             <Text className="text-gray-600 text-sm mb-2">{t("PriceChart.UnitGrades")}</Text>
-            <View className="border border-gray-300 rounded-lg p-4">
+            <View className="border border-[#E7E7E7] rounded-lg p-4">
               {priceData.map((priceItem, index) => (
                 <View key={index} className="flex-row items-center mb-3">
                   {/* <Text className="w-32 text-gray-600">{`Grade ${priceItem.grade}`}</Text> */}
                   <Text className="w-32 text-gray-600">{`${t("PriceChart.Grade")} ${priceItem.grade}`}           Rs.</Text>
                   <TextInput
-                    className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-gray-800"
+                    className="flex-1 rounded-full px-4 py-2 text-gray-800"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: isEditable ? '#980775' : '#F4F4F4',
+                      backgroundColor: '#F4F4F4'
+                    }}
                     value={editedPrices[index]?.price}
                     editable={isEditable}
                     onChangeText={(newPrice) => handlePriceChange(index, newPrice)}
@@ -219,13 +237,13 @@ useFocusEffect(
           </View>
         )}
 
-<TouchableOpacity className="bg-[#2AAD7A] rounded-[45px] py-3 h-12 mt-4 w-3/4 mx-auto" onPress={handleButtonClick}>
+<TouchableOpacity className="bg-[#000000] rounded-[45px] py-3 h-12 mt-4 w-3/4 mx-auto" onPress={handleButtonClick}>
           <Text style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]} className="text-center text-base text-white font-semibold">{buttonText}</Text>
         </TouchableOpacity>
 
         {/* Secondary Button - Changes based on state */}
         <TouchableOpacity 
-          className="border border-gray-400 mt-4 py-3 h-12 rounded-full items-center w-3/4 mx-auto" 
+          className="border border-[#606060] mt-4 py-3 h-12 rounded-full items-center w-3/4 mx-auto" 
           onPress={() => {
             if (isEditable) {
               // If in edit mode, this acts as "Cancel"

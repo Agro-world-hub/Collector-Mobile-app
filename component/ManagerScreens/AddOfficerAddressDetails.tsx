@@ -121,25 +121,49 @@ const AddOfficerAddressDetails: React.FC = () => {
   };
 
   // Validation for matching account numbers
+  // const handleValidation = (key: string, value: string) => {
+  //   setFormData((prevState) => {
+  //     const updatedFormData = { ...prevState, [key]: value };
+  //     const { accountNumber, confirmAccountNumber } = updatedFormData;
+
+  //     if (
+  //       accountNumber &&
+  //       confirmAccountNumber &&
+  //       accountNumber !== confirmAccountNumber
+  //     ) {
+  //       setError(t("Error.Account numbers do not match."));
+  //     } else {
+  //       setError(""); // Clear error if they match
+  //     }
+
+  //     saveDataToStorage(updatedFormData); // Ensure data is saved after validation
+  //     return updatedFormData;
+  //   });
+  // };
+
   const handleValidation = (key: string, value: string) => {
-    setFormData((prevState) => {
-      const updatedFormData = { ...prevState, [key]: value };
-      const { accountNumber, confirmAccountNumber } = updatedFormData;
+  // Block special characters and letters - only allow numbers
+  const numbersOnly = value.replace(/[^0-9]/g, '');
+  
+  setFormData((prevState) => {
+    const updatedFormData = { ...prevState, [key]: numbersOnly };
+    const { accountNumber, confirmAccountNumber } = updatedFormData;
 
-      if (
-        accountNumber &&
-        confirmAccountNumber &&
-        accountNumber !== confirmAccountNumber
-      ) {
-        setError(t("Error.Account numbers do not match."));
-      } else {
-        setError(""); // Clear error if they match
-      }
+    if (
+      accountNumber &&
+      confirmAccountNumber &&
+      accountNumber !== confirmAccountNumber
+    ) {
+      setError(t("Error.Account numbers do not match."));
+    } else {
+      setError(""); // Clear error if they match
+    }
 
-      saveDataToStorage(updatedFormData); // Ensure data is saved after validation
-      return updatedFormData;
-    });
-  };
+    saveDataToStorage(updatedFormData); // Ensure data is saved after validation
+    return updatedFormData;
+  });
+};
+
 
   // Load saved data when the component mounts
   useEffect(() => {
@@ -417,7 +441,7 @@ const AddOfficerAddressDetails: React.FC = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
-      className="flex-1"
+      style={{ flex: 1}}
     >
       <ScrollView
         className="flex-1 bg-white"
@@ -447,7 +471,7 @@ const AddOfficerAddressDetails: React.FC = () => {
             onChangeText={(text) =>
               setFormData({ ...formData, houseNumber: text })
             }
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
             placeholder={t("AddOfficerAddressDetails.Street Name")}
@@ -455,19 +479,19 @@ const AddOfficerAddressDetails: React.FC = () => {
             onChangeText={(text) =>
               setFormData({ ...formData, streetName: text })
             }
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
             placeholder={t("AddOfficerAddressDetails.City")}
             value={formData.city}
             onChangeText={(text) => setFormData({ ...formData, city: text })}
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
           />
           <TextInput
             placeholder={t("AddOfficerAddressDetails.Country")}
             value={t("AddOfficerAddressDetails.Country")} // Always set to Sri Lanka
             editable={false} // Make the input non-editable
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
+            className="border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
           />
 
           <View style={{ marginBottom: 10 }}>
@@ -482,13 +506,12 @@ const AddOfficerAddressDetails: React.FC = () => {
                   ] || province.name.en,
               }))}
               boxStyles={{
-                borderColor: "#cccccc",
-                borderWidth: 1,
-                borderRadius: 5,
-                padding: 10,
-                paddingLeft: 15,
-                paddingRight: 15,
-              }}
+                    borderColor: "#F4F4F4", // Remove the border
+                    borderRadius: 25,
+                    width: "100%",
+                    height: 50,
+                    backgroundColor:"#F4F4F4",
+                  }}
               dropdownStyles={{
                 borderRadius: 5,
                 borderWidth: 1,
@@ -510,13 +533,12 @@ const AddOfficerAddressDetails: React.FC = () => {
                   value: district[selectedLanguage as keyof typeof district], // Value displayed in the selected language
                 }))}
                 boxStyles={{
-                  borderColor: "#cccccc",
-                  borderWidth: 1,
-                  borderRadius: 5,
-                  padding: 10,
-                  paddingLeft: 15,
-                  paddingRight: 15,
-                }}
+                    borderColor: "#F4F4F4", // Remove the border
+                    borderRadius: 25,
+                    width: "100%",
+                    height: 40,
+                    backgroundColor:"#F4F4F4",
+                  }}
                 dropdownStyles={{
                   borderRadius: 5,
                   borderWidth: 1,
@@ -531,33 +553,57 @@ const AddOfficerAddressDetails: React.FC = () => {
 
         {/* Bank Details */}
         <View className="px-8 mt-4">
+       <TextInput
+  placeholder={t("AddOfficerAddressDetails.AccountName")}
+  value={formData.accountHolderName}
+  onChangeText={(text) => {
+    // Block special characters and numbers - only allow letters and spaces
+    let filteredText = text.replace(/[^a-zA-Z\s]/g, '');
+    
+    // Prevent space at the beginning
+    if (filteredText.startsWith(' ')) {
+      filteredText = filteredText.trimStart();
+    }
+    
+    // Capitalize first letter of each word and make rest lowercase
+    const capitalizedText = filteredText
+      .toLowerCase()
+      .split(' ')
+      .map(word => {
+        if (word.length > 0) {
+          return word.charAt(0).toUpperCase() + word.slice(1);
+        }
+        return word;
+      })
+      .join(' ');
+    
+    // Update form data
+    handleInputChange("accountHolderName", capitalizedText);
+  }}
+  keyboardType="default"
+  autoCapitalize="words"
+  autoCorrect={false}
+  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+/>
           <TextInput
-            placeholder={t("AddOfficerAddressDetails.AccountName")}
-            value={formData.accountHolderName}
-            onChangeText={(text) =>
-              handleInputChange("accountHolderName", text)
-            }
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
-          />
-          <TextInput
-            placeholder={t("AddOfficerAddressDetails.AccountNum")}
-            keyboardType="numeric"
-            value={formData.accountNumber}
-            onChangeText={(text) => handleValidation("accountNumber", text)}
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-700"
-          />
-          <TextInput
-            placeholder={t("AddOfficerAddressDetails.Confirm AccountNum")}
-            keyboardType="numeric"
-            value={formData.confirmAccountNumber}
-            onChangeText={(text) =>
-              handleValidation("confirmAccountNumber", text)
-            }
-            className={`border ${
-              error ? "border-red-500" : "border-gray-300"
-            } rounded-lg px-3 py-2 mb-4 text-gray-700`}
-          />
-          {error && <Text className="text-red-500 text-sm mb-4">{error}</Text>}
+  placeholder={t("AddOfficerAddressDetails.AccountNum")}
+  keyboardType="numeric"
+  value={formData.accountNumber}
+  onChangeText={(text) => handleValidation("accountNumber", text)}
+  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+/>
+
+<TextInput
+  placeholder={t("AddOfficerAddressDetails.Confirm AccountNum")}
+  keyboardType="numeric"
+  value={formData.confirmAccountNumber}
+  onChangeText={(text) => handleValidation("confirmAccountNumber", text)}
+  className={`border ${
+    error ? "border-red-500" : "border-[#F4F4F4] bg-[#F4F4F4]"
+  } rounded-full px-3 py-2 mb-4 text-gray-700`}
+/>
+
+{error && <Text className="text-red-500 text-sm mb-4">{error}</Text>}
 
           <View className="">
             <View className="mb-4">
@@ -573,13 +619,12 @@ const AddOfficerAddressDetails: React.FC = () => {
                 }}
                 placeholder={t("AddOfficerAddressDetails.BankName")}
                 boxStyles={{
-                  borderColor: "#cccccc",
-                  borderWidth: 1,
-                  borderRadius: 5,
-                  padding: 10,
-                  paddingLeft: 15,
-                  paddingRight: 15,
-                }}
+                    borderColor: "#F4F4F4", // Remove the border
+                    borderRadius: 25,
+                    width: "100%",
+                    height: 50,
+                    backgroundColor:"#F4F4F4",
+                  }}
                 dropdownStyles={{
                   borderRadius: 5,
                   borderWidth: 1,
@@ -602,12 +647,11 @@ const AddOfficerAddressDetails: React.FC = () => {
                   }}
                   placeholder={t("AddOfficerAddressDetails.BranchName")}
                   boxStyles={{
-                    borderColor: "#cccccc",
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    padding: 10,
-                    paddingLeft: 15,
-                    paddingRight: 15,
+                    borderColor: "#F4F4F4", // Remove the border
+                    borderRadius: 25,
+                    width: "100%",
+                    height: 50,
+                    backgroundColor:"#F4F4F4",
                   }}
                   dropdownStyles={{
                     borderRadius: 5,
@@ -634,7 +678,7 @@ const AddOfficerAddressDetails: React.FC = () => {
           <TouchableOpacity
             onPress={handleSubmit}
             // className="bg-green-600 px-8 py-3 rounded-full"
-            className={`bg-green-600 px-8 py-3 rounded-full ${
+            className={`bg-[#000000] px-8 py-3 rounded-full ${
               loading ? "opacity-50" : ""
             }`}
             disabled={loading}

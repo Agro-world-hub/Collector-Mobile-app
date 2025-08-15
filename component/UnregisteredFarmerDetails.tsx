@@ -365,11 +365,69 @@ If correct, share OTP only with the ${companyName} representative who contacts y
     }
   };
 
+  const handleNameChange = (text: string, setName: (name: string) => void) => {
+  // Remove numbers and special characters - keep only letters and spaces
+  let filteredText = text.replace(/[^a-zA-Z\s]/g, '');
+  
+  // Prevent space at the beginning
+  if (filteredText.startsWith(' ')) {
+    filteredText = filteredText.trimStart();
+  }
+  
+  // Capitalize first letter and make rest lowercase, handle multiple words
+  const capitalizedText = filteredText
+    .toLowerCase()
+    .split(' ')
+    .map(word => {
+      if (word.length > 0) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+      return word;
+    })
+    .join(' ');
+  
+  setName(capitalizedText);
+};
+
+// Specific handlers for first and last name
+const handleFirstNameChange = (text: string) => {
+  handleNameChange(text, setFirstName);
+};
+
+const handleLastNameChange = (text: string) => {
+  handleNameChange(text, setLastName);
+};
+
+const handleAccountNameChange = (text: string) => {
+  // Remove numbers and special characters - keep only letters and spaces
+  let filteredText = text.replace(/[^a-zA-Z\s]/g, '');
+  
+  // Prevent space at the beginning
+  if (filteredText.startsWith(' ')) {
+    filteredText = filteredText.trimStart();
+  }
+  
+  // Capitalize first letter and make rest lowercase, handle multiple words
+  const capitalizedText = filteredText
+    .toLowerCase()
+    .split(' ')
+    .map(word => {
+      if (word.length > 0) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+      return word;
+    })
+    .join(' ');
+  
+  setAccHolderName(capitalizedText);
+};
+
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
-      className="flex-1"
+      style={{ flex: 1}}
     >
       <View className="flex-1 p-5 bg-white">
         {/* Header with Back Icon */}
@@ -387,30 +445,36 @@ If correct, share OTP only with the ${companyName} representative who contacts y
         {/* Scrollable Form */}
         <ScrollView className="flex-1 p-3">
           {/* First Name */}
-          <View className="mb-4">
-            <Text className="text-[#434343] mb-2">
-              {t("UnregisteredFarmerDetails.FirstName")}
-            </Text>
-            <TextInput
-              placeholder={t("UnregisteredFarmerDetails.FirstName")}
-              className="border border-gray-300  p-3 rounded-lg"
-              value={firstName}
-              onChangeText={setFirstName}
-            />
-          </View>
+       <View className="mb-4">
+  <Text className="text-[#434343] mb-2">
+    {t("UnregisteredFarmerDetails.FirstName")}
+  </Text>
+  <TextInput
+    className="border border-[#F4F4F4] bg-[#F4F4F4] p-3 rounded-full"
+    value={firstName}
+    onChangeText={handleFirstNameChange}
+    keyboardType="default"
+    autoCapitalize="words"
+    autoCorrect={false}
+    maxLength={50} // Add reasonable limit
+  />
+</View>
 
-          {/* Last Name */}
-          <View className="mb-4">
-            <Text className="text-[#434343] mb-2">
-              {t("UnregisteredFarmerDetails.LastName")}
-            </Text>
-            <TextInput
-              placeholder={t("UnregisteredFarmerDetails.LastName")}
-              className="border border-gray-300  p-3 rounded-lg"
-              value={lastName}
-              onChangeText={setLastName}
-            />
-          </View>
+{/* Last Name */}
+<View className="mb-4">
+  <Text className="text-[#434343] mb-2">
+    {t("UnregisteredFarmerDetails.LastName")}
+  </Text>
+  <TextInput
+    className="border border-[#F4F4F4] bg-[#F4F4F4] p-3 rounded-full"
+    value={lastName}
+    onChangeText={handleLastNameChange}
+    keyboardType="default"
+    autoCapitalize="words"
+    autoCorrect={false}
+    maxLength={50} // Add reasonable limit
+  />
+</View>
 
           <View className="mb-4">
             <Text className="text-[#434343] mb-2">
@@ -424,8 +488,14 @@ If correct, share OTP only with the ${companyName} representative who contacts y
                 { key: "Tamil", value: "தமிழ்" },
               ]}
               placeholder="Select Language"
-              boxStyles={{ borderColor: "#ccc", borderRadius: 8 }}
-              dropdownStyles={{ borderColor: "#ccc" }}
+              boxStyles={{ 
+                borderColor: "#F4F4F4", 
+                borderRadius: 25 ,
+               backgroundColor: "#F4F4F4"
+              }}
+              dropdownStyles={{ borderColor: "#ccc" ,
+                
+              }}
               search={false} // Optional: hide search inside dropdown
             />
           </View>
@@ -437,8 +507,8 @@ If correct, share OTP only with the ${companyName} representative who contacts y
             <TextInput
               placeholder={t("UnregisteredFarmerDetails.NIC")}
               className={`border ${
-                NICError ? "border-red-500" : "border-gray-300"
-              } p-3 rounded-lg`}
+                NICError ? "border-red-500" : "border border-[#F4F4F4]  bg-[#F4F4F4] "
+              } p-3 rounded-full`}
               value={NICnumber}
               onChangeText={(text) => {
                 // Ensure the 'v' is capitalized
@@ -490,8 +560,8 @@ If correct, share OTP only with the ${companyName} representative who contacts y
             </Text>
             <View
               className={`flex-row items-center border ${
-                phoneError ? "border-red-500" : "border-gray-300"
-              } p-3 rounded-lg`}
+                phoneError ? "border-red-500" : "border border-[#F4F4F4]  bg-[#F4F4F4]"
+              } p-3 rounded-full`}
             >
               <CountryPicker
                 countryCode={countryCode}
@@ -559,8 +629,12 @@ If correct, share OTP only with the ${companyName} representative who contacts y
                   key: district.value,
                   value: district.translationKey,
                 }))}
-                placeholder="Select District"
-                boxStyles={{ borderColor: "#ccc", borderRadius: 8 }}
+                placeholder="--Select District--"
+                 boxStyles={{ 
+                borderColor: "#F4F4F4", 
+                borderRadius: 25 ,
+               backgroundColor: "#F4F4F4"
+              }}
                 dropdownStyles={{ borderColor: "#ccc" }}
                 search={false} // Optional: hide search inside dropdown
               />
@@ -572,10 +646,10 @@ If correct, share OTP only with the ${companyName} representative who contacts y
               {t("UnregisteredFarmerDetails.AccountNum")}
             </Text>
             <TextInput
-              placeholder={t("UnregisteredFarmerDetails.AccountNum")}
+             // placeholder={t("UnregisteredFarmerDetails.AccountNum")}
               className={`border ${
-                accNumberError ? "border-red-500" : "border-gray-300"
-              } p-3 rounded-lg`}
+                accNumberError ? "border-red-500" : "border border-[#F4F4F4]  bg-[#F4F4F4]"
+              } p-3 rounded-full`}
               keyboardType="numeric"
               value={accNumber}
               onChangeText={(text) => {
@@ -598,22 +672,19 @@ If correct, share OTP only with the ${companyName} representative who contacts y
 
           {/* Account Holder's Name */}
           <View className="mb-4">
-            <Text className="text-[#434343] mb-2">
-              {t("UnregisteredFarmerDetails.AccountName")}
-            </Text>
-            <TextInput
-              placeholder={t("UnregisteredFarmerDetails.AccountName")}
-              className="border border-gray-300  p-3 rounded-lg"
-              value={accHolderName}
-              // onChangeText={setAccHolderName}
-              onChangeText={(text) => {
-                // Regex to allow only letters, spaces, and basic punctuation (you can adjust this as needed)
-                const cleanText = text.replace(/[^a-zA-Z\s]/g, ""); // Removes anything that is not a letter or space
-                setAccHolderName(cleanText);
-              }}
-            />
-          </View>
-
+  <Text className="text-[#434343] mb-2">
+    {t("UnregisteredFarmerDetails.AccountName")}
+  </Text>
+  <TextInput
+    className="border border-[#F4F4F4] bg-[#F4F4F4] p-3 rounded-full"
+    value={accHolderName}
+    onChangeText={handleAccountNameChange}
+    keyboardType="default"
+    autoCapitalize="words"
+    autoCorrect={false}
+    maxLength={100} // Bank account names can be longer
+  />
+</View>
           {/* Bank Name */}
           <View className="mb-4">
             <Text className="text-[#434343] mb-2">
@@ -626,8 +697,14 @@ If correct, share OTP only with the ${companyName} representative who contacts y
                   key: bank.name,
                   value: bank.name,
                 }))}
-                placeholder="Select Bank"
-                boxStyles={{ borderColor: "#ccc", borderRadius: 8 }}
+                placeholder="--Select Bank--"
+                
+                 boxStyles={{ 
+                borderColor: "#F4F4F4", 
+                borderRadius: 25 ,
+               backgroundColor: "#F4F4F4"
+              }}
+            
                 dropdownStyles={{ borderColor: "#ccc" }}
                 search={true}
               />
@@ -646,8 +723,12 @@ If correct, share OTP only with the ${companyName} representative who contacts y
                   key: branch.name,
                   value: branch.name,
                 }))}
-                placeholder="Select Branch"
-                boxStyles={{ borderColor: "#ccc", borderRadius: 8 }}
+                placeholder="--Select Branch--"
+                 boxStyles={{ 
+                borderColor: "#F4F4F4", 
+                borderRadius: 25 ,
+               backgroundColor: "#F4F4F4"
+              }}
                 dropdownStyles={{ borderColor: "#ccc" }}
                 search={true}
               />
@@ -657,7 +738,7 @@ If correct, share OTP only with the ${companyName} representative who contacts y
 
         <TouchableOpacity
           className={`p-3 rounded-full items-center mt-5 ${
-            loading ? "bg-gray-400 opacity-50" : "bg-[#2AAD7A]"
+            loading ? "bg-gray-400 opacity-50" : "bg-[#000000]"
           }`}
           onPress={() => {
             if (!loading) {

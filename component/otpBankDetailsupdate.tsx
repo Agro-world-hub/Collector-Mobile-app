@@ -88,7 +88,7 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({
           </Text>
 
           <Image
-            source={require("../assets/images/success.webp")}
+            source={require("../assets/images/New/otpsuccess.png")}
             style={{ width: 100, height: 100 }}
           />
 
@@ -96,7 +96,7 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({
             {t("BankDetailsUpdate.SuccessMessage")}
           </Text>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             className="bg-[#2AAD7A] px-6 py-2 rounded-full mt-6"
             onPress={() => {
               onClose();
@@ -106,14 +106,14 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({
             <Text className="text-white font-semibold">
               {t("Otpverification.OK")}
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* Progress Bar - Fixed to Bottom */}
           <View className="absolute bottom-0 left-0 right-0 h-2 bg-gray-200 rounded-b-2xl overflow-hidden">
             <Animated.View
               style={{
                 height: "100%",
-                backgroundColor: "#2AAD7A",
+                backgroundColor: "#980775",
                 width: progress.interpolate({
                   inputRange: [0, 100],
                   outputRange: ["0%", "100%"],
@@ -160,7 +160,7 @@ const ShowFailModal: React.FC<FailModalProps> = ({
           </Text>
 
           <Image
-            source={require("../assets/images/success.webp")}
+            source={require("../assets/images/New/error.png")}
             style={{ width: 100, height: 100 }}
           />
 
@@ -456,7 +456,8 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
-      className="flex-1"
+      className="bg-white"
+      style={{ flex: 1}}
     >
       <ScrollView
         className="flex-1 "
@@ -479,7 +480,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
           style={{ marginTop: dynamicStyles.margingTopForImage }}
         >
           <Image
-            source={require("../assets/images/otp.webp")}
+            source={require("../assets/images/New/opt.png")}
             style={{
               width: dynamicStyles.imageWidth,
               height: dynamicStyles.imageHeight,
@@ -487,12 +488,12 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
           />
 
           <View className="">
-            <Text className="mt-3 text-lg text-black text-center">
+            <Text className="mt-3 text-lg text-black text-center font-bold">
               {t("Otpverification.EnterCode")}
             </Text>
           </View>
           {language === "en" ? (
-            <View className="mt-5">
+            <View className="mt-4">
               <Text className="text-md text-gray-400">
                 {/* {t("OtpVerification.OTPCode")} */}
               </Text>
@@ -516,7 +517,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
               <TextInput
                 key={index}
                 ref={(el) => (inputRefs.current[index] = el as TextInput)}
-                className={`w-12 h-12 text-lg text-center rounded-lg ${
+                className={`w-12 h-12 text-lg text-center rounded-lg shadow-[#00000040] ${
                   otpCode[index]
                     ? "bg-[#FFFFFF] text-black pb-2"
                     : "bg-[#FFFFFF] text-black"
@@ -527,10 +528,20 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
                 onChangeText={(text) => handleOtpChange(text, index)}
                 placeholder={maskedCode[index] || "_"}
                 placeholderTextColor="lightgray"
-                style={{
-                  borderColor: "#0CB783",
-                  borderWidth: 2, // Adjust thickness if needed
-                }}
+               style={{
+        borderColor: "#FFC738",
+        borderWidth: 1,
+        // Shadow properties for drop shadow effect
+        shadowColor: "#000000",
+        shadowOffset: {
+          width: 0,
+          height: 4,
+        },
+     //   shadowOpacity: 0.25,
+        shadowRadius: 4,
+        // Android elevation for shadow
+        elevation: 4,
+      }}
               />
             ))}
           </View>
@@ -546,7 +557,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
             <Text
               className="mt-3 text-lg text-black text-center underline"
               onPress={disabledResend ? undefined : handleResendOTP}
-              style={{ color: disabledResend ? "gray" : "blue" }}
+              style={{ color: disabledResend ? "gray" : "black" }}
             >
               {timer > 0
                 ? `${t("Resend in ")} ${formatTime(timer)}`
@@ -563,7 +574,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
             <TouchableOpacity
               style={{ height: hp(7), width: wp(80) }}
               className={`flex items-center justify-center mx-auto rounded-full mb-8 ${
-                !isOtpValid || isVerified ? "bg-[#2AAD7A]" : "bg-[#2AAD7A]"
+                !isOtpValid || isVerified ? "bg-[#000000]" : "bg-[#000000]"
               }`}
               onPress={handleVerify}
               disabled={isVerified}

@@ -388,6 +388,10 @@ interface UserProfile {
   jobRole: string
 }
 
+
+const icon = require("@/assets/images/New/engprofileicon.png")
+
+
 const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const [isLanguageDropdownOpen, setLanguageDropdownOpen] =
     useState<boolean>(false);
@@ -618,10 +622,10 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
     >
       {/* Back Button */}
-      <TouchableOpacity onPress={() => handleBackPress()} className="">
+      <TouchableOpacity onPress={() => handleBackPress()} className="bg-[#F6F6F680] rounded-full p-2">
         <AntDesign name="left" size={24} color="#000502" />
       </TouchableOpacity>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator= {false}>
         {/* Profile Card */}
         <View className="flex-row items-center p-2 mt-4  mb-4">
           <Image
@@ -644,7 +648,12 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
             <Text className="text-gray-500">{profile?.empId}</Text>
           </View>
           <TouchableOpacity onPress={handleEditClick}>
-            <Ionicons name="create-outline" size={30} color="#2fcd46" />
+            {/* <Ionicons name="create-outline" size={30} color="#2fcd46" /> */}
+             <Image 
+              source={icon} 
+               style={{ width: 30, height: 30 }}
+          resizeMode="contain"
+              />
           </TouchableOpacity>
         </View>
 
@@ -678,7 +687,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
                   onPress={() => handleLanguageSelect(language)}
                   className={`flex-row items-center py-2 px-4 rounded-lg my-1 ${
                     selectedLanguage === language
-                      ? "bg-green-100"
+                      ? "bg-[#FFDFF7]"
                       : "bg-transparent"
                   }`}
                 >
@@ -686,7 +695,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
                     className={`text-base ${
                       selectedLanguage === language
                         ? "text-black"
-                        : "text-gray-500"
+                        : "#434343"
                     }`}
                   >
                     {language}
@@ -776,7 +785,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
                     className={`text-base ${
                       selectedComplaint === complaint
                         ? "text-black"
-                        : "text-gray-700"
+                        : "#434343"
                     }`}
                   >
                     {complaint}
@@ -795,7 +804,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
           {/* Logout */}
           <TouchableOpacity
-            className="flex-row items-center py-3"
+            className="flex-row items-center py-3 mb-20"
             onPress={handleLogout}
           >
             <Ionicons name="log-out-outline" size={20} color="red" />
