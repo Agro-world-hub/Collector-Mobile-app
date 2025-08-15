@@ -54,7 +54,19 @@ interface FamilyPackItem {
   selected: boolean;
   price: string;
   productType: number;
-  productTypeName?: string; // Add this field
+  productTypeName: string;
+  packageId: number; // Add package reference
+  packageName: string; // Add package name reference
+  originalItemId: number; // Keep original item ID for API calls
+}
+
+// Add interface for package groups if you want to group items by package
+interface PackageGroup {
+  packageId: number;
+  packageName: string;
+  items: FamilyPackItem[];
+  allSelected: boolean;
+  someSelected: boolean;
 }
 
 interface AdditionalItem {
@@ -176,6 +188,7 @@ const PendingOrderScreen: React.FC<PendingOrderScreenProps> = ({ navigation, rou
   const [showDropdown, setShowDropdown] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [selectedItemForReplace, setSelectedItemForReplace] = useState<FamilyPackItem | null>(null);
+  const [packageExpansions, setPackageExpansions] = useState<{ [key: number]: boolean }>({});
   const [showWarning, setShowWarning] = useState(false);
  // const [orderStatus, setOrderStatus] = useState('Pending'); // Track dynamic status
   const [completedTime, setCompletedTime] = useState<string | null>(null); // Track completion time
@@ -211,6 +224,7 @@ const [loadingRetailItems, setLoadingRetailItems] = useState(false);
 const [loading, setLoading] = useState<boolean>(true);
 const [error, setError] = useState<string | null>(null);
 const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+
   
   // Fetch selected language
   const fetchSelectedLanguage = async () => {
@@ -223,70 +237,197 @@ const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   };
 
 
+const fetchOrderData = async (orderId: string) => {
+  try {
+    // Get auth token from AsyncStorage
+    const token = await AsyncStorage.getItem('token');
+    
+    if (!token) {
+      Alert.alert(t("Error"), "Authentication token not found");
+      return null;
+    }
+
+    const response = await axios.get(
+      `${environment.API_BASE_URL}api/distribution/order-data/${orderId}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    console.log("datakbj===================",response.data)
+
+    if (response.data && response.data.success) {
+      return response.data.data; // Assuming the API returns { success: true, data: orderData }
+    } else {
+      throw new Error(response.data.message || 'Failed to fetch order data');
+    }
+  } catch (error) {
+    console.error('Error fetching order data:', error);
+    
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        Alert.alert(t("Error"), "Session expired. Please login again.");
+        // Navigate to login screen or handle logout
+        return null;
+      } else if (error.response?.status === 404) {
+        Alert.alert(t("Error"), "Order not found");
+        return null;
+      }
+    }
+    
+    Alert.alert(t("Error"), "Failed to fetch order data");
+    return null;
+  }
+};
 
 
+// Add these debug console logs in your fetchOrderData function to see what's happening
 
 useEffect(() => {
   const loadOrderData = async () => {
     setLoading(true);
     const orderData = await fetchOrderData(item.orderId);
-
-    if (orderData.packageData?.id) {
-        setPackageId(orderData.packageData.id);
-      }
     
     if (orderData) {
-      // Map Family Pack Items from packageData if it exists
-      const mappedFamilyPackItems: FamilyPackItem[] = orderData.packageData?.items?.map((item: any) => ({
-        id: item.id,
-        name: item.productName,
-        weight: `${item.qty} Kg`,
-        selected: item.isPacked === 1,
-        price: item.price || item.normalPrice || "0",
-        productType: item.productType ,// Make sure this is included and properly mapped
-        productTypeName: item.productTypeName
-      })) || [];
-
-      // Map Additional Items from additionalItems if it exists
-      const mappedAdditionalItems: AdditionalItem[] = orderData.additionalItems?.map((item: any) => ({
-        id: item.id.toString(),
-        name: item.productName,
-        weight: `${item.qty}${item.unit}`,
-        selected: item.isPacked === 1,
-        price: item.price || item.normalPrice || "0"
-      })) || [];
-
-      console.log('Mapped Family Pack Items:', mappedFamilyPackItems);
-      console.log('Mapped Additional Items:', mappedAdditionalItems);
-
-      // Set package name from backend data
-      if (orderData.packageData?.packageName) {
-        setPackageName(orderData.packageData.packageName);
+      console.log('=== DEBUG ORDER DATA ===');
+      console.log('Full Order Data:', JSON.stringify(orderData, null, 2));
+      
+      // Debug each package
+      if (orderData.packageData && Array.isArray(orderData.packageData)) {
+        orderData.packageData.forEach((packageInfo: any, packageIndex: number) => {
+          console.log(`=== PACKAGE ${packageIndex + 1} DEBUG ===`);
+          console.log('Package Info:', JSON.stringify(packageInfo, null, 2));
+          
+          if (packageInfo.items && Array.isArray(packageInfo.items)) {
+            packageInfo.items.forEach((item: any, itemIndex: number) => {
+              console.log(`Item ${itemIndex + 1}:`, {
+                productName: item.productName,
+                isPacked: item.isPacked,
+                isPackedType: typeof item.isPacked,
+                isPackedValue: item.isPacked === 1,
+                isPackedStrictEqual: item.isPacked === "1"
+              });
+            });
+          }
+        });
       }
-
-      if (orderData.packageData?.items && orderData.packageData.items.length > 0) {
-        const productTypeNames = orderData.packageData.items
-          .map((item: any) => item.productTypeName)
-          .filter((name: string) => name) // Remove null/undefined values
-          .filter((name: string, index: number, array: string[]) => array.indexOf(name) === index); // Remove duplicates
+      
+      // Debug additional items
+      if (orderData.additionalItems && Array.isArray(orderData.additionalItems)) {
+        console.log('=== ADDITIONAL ITEMS DEBUG ===');
+        orderData.additionalItems.forEach((item: any, itemIndex: number) => {
+          console.log(`Additional Item ${itemIndex + 1}:`, {
+            productName: item.productName,
+            isPacked: item.isPacked,
+            isPackedType: typeof item.isPacked,
+            isPackedValue: item.isPacked === 1,
+            isPackedStrictEqual: item.isPacked === "1"
+          });
+        });
+      }
+      
+      // Continue with your existing mapping logic...
+      // But update the selected mapping to handle both number and string
+      
+      let allFamilyPackItems: FamilyPackItem[] = [];
+      let packageNames: string[] = [];
+      let typeNames: string[] = [];
+      
+      if (orderData.packageData && Array.isArray(orderData.packageData)) {
+        orderData.packageData.forEach((packageInfo: any, packageIndex: number) => {
+          if (packageInfo.packageName) {
+            packageNames.push(packageInfo.packageName);
+          }
+          
+          if (packageIndex === 0 && packageInfo.id) {
+            setPackageId(packageInfo.id);
+          }
+          
+          if (packageInfo.items && Array.isArray(packageInfo.items)) {
+            const packageItems: FamilyPackItem[] = packageInfo.items.map((item: any) => {
+              // Fix: Handle both string and number isPacked values
+              const isPackedValue = item.isPacked === 1 || item.isPacked === "1" || item.isPacked === true;
+              
+              console.log(`Mapping ${item.productName}:`, {
+                originalIsPacked: item.isPacked,
+                mappedSelected: isPackedValue
+              });
+              
+              return {
+                id: `${packageInfo.id}_${item.id}`,
+                name: item.productName,
+                weight: `${item.qty} ${item.unit || 'Kg'}`,
+                selected: isPackedValue, // Updated logic
+                price: item.price || item.normalPrice || "0",
+                productType: item.productType,
+                productTypeName: item.productTypeName,
+                packageId: packageInfo.id,
+                packageName: packageInfo.packageName,
+                originalItemId: item.id
+              };
+            });
+            
+            allFamilyPackItems = [...allFamilyPackItems, ...packageItems];
+            
+            const packageTypeNames = packageInfo.items
+              .map((item: any) => item.productTypeName)
+              .filter((name: string) => name && !typeNames.includes(name));
+            typeNames = [...typeNames, ...packageTypeNames];
+          }
+        });
+      }
+      
+      // Fix: Handle additional items isPacked the same way
+      const mappedAdditionalItems: AdditionalItem[] = orderData.additionalItems?.map((item: any) => {
+        const isPackedValue = item.isPacked === 1 || item.isPacked === "1" || item.isPacked === true;
         
-        // Set the first product type name or join multiple names
-        if (productTypeNames.length > 0) {
-          setTypeeName(productTypeNames.join(', ')); // Join multiple types with comma
-        }
+        console.log(`Mapping additional ${item.productName}:`, {
+          originalIsPacked: item.isPacked,
+          mappedSelected: isPackedValue
+        });
+        
+        return {
+          id: item.id.toString(),
+          name: item.productName,
+          weight: `${item.qty}${item.unit || 'Kg'}`,
+          selected: isPackedValue, // Updated logic
+          price: item.price || item.normalPrice || "0"
+        };
+      }) || [];
+
+      console.log('=== FINAL MAPPED DATA ===');
+      console.log('Family Pack Items:', allFamilyPackItems.map(item => ({
+        name: item.name,
+        selected: item.selected,
+        packageName: item.packageName
+      })));
+      console.log('Additional Items:', mappedAdditionalItems.map(item => ({
+        name: item.name,
+        selected: item.selected
+      })));
+
+      // Rest of your existing code...
+      if (packageNames.length > 0) {
+        setPackageName(packageNames.join(' + '));
       }
 
-      setFamilyPackItems(mappedFamilyPackItems);
+      if (typeNames.length > 0) {
+        setTypeeName(typeNames.join(', '));
+      }
+
+      setFamilyPackItems(allFamilyPackItems);
       setAdditionalItems(mappedAdditionalItems);
       
-      // Set initial order status based on packed items
-      const allFamilyPacked = mappedFamilyPackItems.length === 0 || mappedFamilyPackItems.every(item => item.selected);
+      // Update status logic...
+      const allFamilyPacked = allFamilyPackItems.length === 0 || allFamilyPackItems.every(item => item.selected);
       const allAdditionalPacked = mappedAdditionalItems.length === 0 || mappedAdditionalItems.every(item => item.selected);
-      const someFamilyPacked = mappedFamilyPackItems.some(item => item.selected);
+      const someFamilyPacked = allFamilyPackItems.some(item => item.selected);
       const someAdditionalPacked = mappedAdditionalItems.some(item => item.selected);
 
-      // Update status logic to handle empty arrays
-      if (mappedFamilyPackItems.length === 0 && mappedAdditionalItems.length === 0) {
+      if (allFamilyPackItems.length === 0 && mappedAdditionalItems.length === 0) {
         setOrderStatus('Pending');
       } else if (allFamilyPacked && allAdditionalPacked) {
         setOrderStatus('Completed');
@@ -306,7 +447,58 @@ useEffect(() => {
   };
 
   loadOrderData();
+  fetchSelectedLanguage();
 }, [item.orderId, t]);
+
+// Also add debug logs to your toggle functions to see if they're working:
+
+const toggleFamilyPackItem = (id: string) => {
+  console.log('=== TOGGLE FAMILY PACK ITEM ===');
+  console.log('Toggling item ID:', id);
+  
+  setFamilyPackItems(prev => {
+    const updated = prev.map(item => {
+      if (item.id === id) {
+        console.log(`Toggling ${item.name} from ${item.selected} to ${!item.selected}`);
+        return { ...item, selected: !item.selected };
+      }
+      return item;
+    });
+    
+    console.log('Updated family pack items:', updated.map(item => ({
+      name: item.name,
+      selected: item.selected,
+      id: item.id
+    })));
+    
+    return updated;
+  });
+  setHasUnsavedChanges(true);
+};
+
+const toggleAdditionalItem = (id: string) => {
+  console.log('=== TOGGLE ADDITIONAL ITEM ===');
+  console.log('Toggling additional item ID:', id);
+  
+  setAdditionalItems(prev => {
+    const updated = prev.map(item => {
+      if (item.id === id) {
+        console.log(`Toggling ${item.name} from ${item.selected} to ${!item.selected}`);
+        return { ...item, selected: !item.selected };
+      }
+      return item;
+    });
+    
+    console.log('Updated additional items:', updated.map(item => ({
+      name: item.name,
+      selected: item.selected,
+      id: item.id
+    })));
+    
+    return updated;
+  });
+  setHasUnsavedChanges(true);
+};
 
 // Update helper functions to handle empty arrays
 const hasFamilyPackSelections = () => {
@@ -407,9 +599,9 @@ const handleCompleteOrder = async () => {
     setShowCompletionPrompt(false);
     resetCountdown();
 
-    // Prepare the data for backend update
-    const selectedFamilyItems = familyPackItems.map(item => ({
-      id: parseInt(item.id),
+    // **FIX: Create flat array of package items**
+    const flatPackageItems = familyPackItems.map(item => ({
+      id: item.originalItemId, // Use original item ID for API
       isPacked: 1 // Mark all as packed when completing
     }));
 
@@ -420,13 +612,13 @@ const handleCompleteOrder = async () => {
 
     const updateData = {
       orderId: item.orderId,
-      packageItems: selectedFamilyItems,
+      packageItems: flatPackageItems, // **FIXED: Now sending flat array**
       additionalItems: selectedAdditionalItems,
       status: 'Completed',
       isComplete: 1
     };
 
-    console.log('Completing order with data:', updateData);
+    console.log('Completing order with flat package items data:', updateData);
     
     // Make API call to update the order in backend
     const token = await AsyncStorage.getItem('token');
@@ -453,13 +645,13 @@ const handleCompleteOrder = async () => {
       // Clear unsaved changes flag
       setHasUnsavedChanges(false);
       
-      // **NEW: Call the distributed target API for completed order**
+      // Call the distributed target API for completed order
       try {
         console.log('Calling distributed target API for completed order...');
         
         const distributedTargetResponse = await axios.put(
           `${environment.API_BASE_URL}api/distribution/update-distributed-target/${item.orderId}`,
-          {}, // Empty body as the API likely uses the orderId from the URL
+          {},
           {
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -475,7 +667,6 @@ const handleCompleteOrder = async () => {
         }
       } catch (distributedTargetError) {
         console.error('Error updating distributed target:', distributedTargetError);
-        // Don't block the success flow, but log the error
       }
       
       // Show success modal
@@ -490,7 +681,7 @@ const handleCompleteOrder = async () => {
     console.error('Error completing order:', error);
     
     // Revert local state if API call failed
-    setOrderStatus('Opened'); // Revert to previous state
+    setOrderStatus('Opened');
     setCompletedTime(null);
     
     Alert.alert(
@@ -500,7 +691,6 @@ const handleCompleteOrder = async () => {
         {
           text: t("OK"),
           onPress: () => {
-            // Restart the timer if user wants to try again
             setShowCompletionPrompt(true);
             startCountdown();
           }
@@ -550,25 +740,36 @@ const handleCompleteOrder = async () => {
 
   
 
-  const toggleFamilyPackItem = (id: string) => {
-    setFamilyPackItems(prev => 
-      prev.map(item => 
-        item.id === id ? { ...item, selected: !item.selected } : item
-      )
-    );
-    setHasUnsavedChanges(true);
-  };
+  const togglePackageExpansion = (packageId: number) => {
+  setPackageExpansions(prev => ({
+    ...prev,
+    [packageId]: !prev[packageId]
+  }));
+};
 
-  const toggleAdditionalItem = (id: string) => {
-    setAdditionalItems(prev => 
-      prev.map(item => 
-        item.id === id ? { ...item, selected: !item.selected } : item
-      )
-    );
-    setHasUnsavedChanges(true);
-  };
+// Helper function to check if a package is expanded
+const isPackageExpanded = (packageId: number) => {
+  return packageExpansions[packageId] || false;
+};
 
-
+const getPackageGroups = () => {
+  const groups: { [key: number]: FamilyPackItem[] } = {};
+  
+  familyPackItems.forEach(item => {
+    if (!groups[item.packageId]) {
+      groups[item.packageId] = [];
+    }
+    groups[item.packageId].push(item);
+  });
+  
+  return Object.entries(groups).map(([packageId, items]) => ({
+    packageId: parseInt(packageId),
+    packageName: items[0]?.packageName || `Package ${packageId}`,
+    items,
+    allSelected: items.every(item => item.selected),
+    someSelected: items.some(item => item.selected)
+  }));
+};
 
 
 const handleReplaceProduct = (item: FamilyPackItem) => {
@@ -676,14 +877,14 @@ const handleReplaceSubmit = async () => {
     const priceValue = parseFloat(replaceData.price.replace(/[^\d.]/g, '')) || 0;
 
     // Prepare the replacement request data
-    const replacementRequest = {
+ const replacementRequest = {
       orderPackageId: packageId,
-      replaceId: parseInt(selectedItemForReplace.id),
-      originalItemId: parseInt(selectedItemForReplace.id),
+      replaceId: selectedItemForReplace.originalItemId, // Use originalItemId
+      originalItemId: selectedItemForReplace.originalItemId, // Add this required field
       productType: selectedItemForReplace.productType,
       productId: selectedRetailItem.id,
       qty: replaceData.quantity,
-      price: priceValue *1000, // Remove the *1000 multiplication temporarily
+      price: priceValue, // No multiplication needed
       status: "Pending"
     };
 
@@ -833,21 +1034,17 @@ const handleReplaceSubmit = async () => {
 
 const handleSubmit = async () => {
   try {
-    // Prepare package items update data
-    const selectedFamilyItems = familyPackItems
-      .filter(item => item.selected)
-      .map(item => ({
-        id: parseInt(item.id),
-        isPacked: 1 // Mark as packed
-      }));
+    // **FIX: Create flat array of package items instead of grouped**
+    const flatPackageItems = familyPackItems.map(item => ({
+      id: item.originalItemId, // Use original item ID for API
+      isPacked: item.selected ? 1 : 0
+    }));
 
-    // Prepare additional items update data
-    const selectedAdditionalItems = additionalItems
-      .filter(item => item.selected)
-      .map(item => ({
-        id: parseInt(item.id),
-        isPacked: 1 // Mark as packed
-      }));
+    // Prepare additional items update data (this was already correct)
+    const selectedAdditionalItems = additionalItems.map(item => ({
+      id: parseInt(item.id),
+      isPacked: item.selected ? 1 : 0
+    }));
 
     // Determine the new status
     const allFamilyPacked = familyPackItems.length === 0 || 
@@ -858,13 +1055,13 @@ const handleSubmit = async () => {
 
     const updateData = {
       orderId: item.orderId,
-      packageItems: selectedFamilyItems,
+      packageItems: flatPackageItems, // **FIXED: Now sending flat array**
       additionalItems: selectedAdditionalItems,
       status: newStatus,
-      isComplete: 0
+      isComplete: newStatus === 'Completed' ? 1 : 0
     };
 
-    console.log('Submitting order update:', updateData);
+    console.log('Submitting order update with flat package items:', updateData);
     
     // Get auth token
     const token = await AsyncStorage.getItem('token');
@@ -886,16 +1083,14 @@ const handleSubmit = async () => {
       setOrderStatus(newStatus);
       if (newStatus === 'Completed') {
         setCompletedTime(new Date().toLocaleString());
-      }
-      
-      // **NEW: Call the distributed target API when all items are selected**
-      if (newStatus === 'Completed') {
+        
+        // Call distributed target API for completed order
         try {
           console.log('Calling distributed target API for completed order...');
           
           const distributedTargetResponse = await axios.put(
             `${environment.API_BASE_URL}api/distribution/update-distributed-target/${item.orderId}`,
-            {}, // Empty body as the API likely uses the orderId from the URL
+            {},
             {
               headers: {
                 'Authorization': `Bearer ${token}`,
@@ -908,12 +1103,9 @@ const handleSubmit = async () => {
             console.log('Distributed target updated successfully');
           } else {
             console.warn('Distributed target update failed:', distributedTargetResponse.data.message);
-            // Don't throw error here as the main order update was successful
           }
         } catch (distributedTargetError) {
           console.error('Error updating distributed target:', distributedTargetError);
-          // Don't throw error here as the main order update was successful
-          // You might want to show a warning to the user but not block the success flow
         }
       }
       
@@ -935,7 +1127,6 @@ const handleSubmit = async () => {
     setShowSubmitModal(false);
   }
 };
-
 
 
 const handleSubmitPress = () => {
@@ -987,136 +1178,6 @@ useEffect(() => {
       {selected && <AntDesign name="check" size={14} color="white" />}
     </View>
   );
-
-
-
-  // const getStatusStyling = () => {
-  //   switch (orderStatus) {
-  //     case 'Completed':
-  //       return {
-  //         badge: 'bg-[#D4F7D4] border border-[#4CAF50]',
-  //         text: 'text-[#2E7D32]',
-  //         section: 'bg-[#D4F7D4] border border-[#4CAF50]'
-  //       };
-  //     case 'Opened':
-  //       return {
-  //         badge: 'bg-[#FFF9C4] border border-[#F9CC33]',
-  //         text: 'text-[#B8860B]',
-  //         section: 'bg-[#FFF9C4] border border-[#F9CC33]'
-  //       };
-  //     case 'In Progress':
-  //       return {
-  //         badge: 'bg-blue-100 border border-blue-300',
-  //         text: 'text-blue-700',
-  //         section: 'bg-blue-100 border border-blue-300'
-  //       };
-  //     default: // Pending
-  //       return {
-  //         badge: 'bg-[#FFB9B7] border border-[#FFB9B7]',
-  //         text: 'text-[#D16D6A]',
-  //         section: 'bg-[#FFF8F8] border border-[#D16D6A]'
-  //       };
-  //   }
-  // };
-
-const fetchOrderData = async (orderId: string) => {
-  try {
-    // Get auth token from AsyncStorage
-    const token = await AsyncStorage.getItem('token');
-    
-    if (!token) {
-      Alert.alert(t("Error"), "Authentication token not found");
-      return null;
-    }
-
-    const response = await axios.get(
-      `${environment.API_BASE_URL}api/distribution/order-data/${orderId}`,
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    console.log("datakbj===================",response.data)
-
-    if (response.data && response.data.success) {
-      return response.data.data; // Assuming the API returns { success: true, data: orderData }
-    } else {
-      throw new Error(response.data.message || 'Failed to fetch order data');
-    }
-  } catch (error) {
-    console.error('Error fetching order data:', error);
-    
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 401) {
-        Alert.alert(t("Error"), "Session expired. Please login again.");
-        // Navigate to login screen or handle logout
-        return null;
-      } else if (error.response?.status === 404) {
-        Alert.alert(t("Error"), "Order not found");
-        return null;
-      }
-    }
-    
-    Alert.alert(t("Error"), "Failed to fetch order data");
-    return null;
-  }
-};
-
-useEffect(() => {
-  const loadOrderData = async () => {
-    setLoading(true);
-    try {
-      const orderData = await fetchOrderData(item.orderId);
-      
-      if (orderData && orderData.packageData) {
-        console.log("Raw order data:", orderData);
-        
-        // Map backend data to frontend state with proper validation
-        const mappedFamilyPackItems: FamilyPackItem[] = orderData.packageData.items.map((backendItem: any) => {
-          console.log("Mapping backend item:", backendItem);
-          
-          return {
-            id: backendItem.id?.toString() || '',
-            name: backendItem.productName || backendItem.name || 'Unknown Product',
-            weight: backendItem.qty ? `${backendItem.qty} Kg` : `${backendItem.weight || '0'} Kg`,
-            selected: backendItem.isPacked === 1,
-            // Ensure price and productType are properly mapped
-            price: backendItem.price || backendItem.unitPrice || backendItem.pricePerKg || '0',
-            productType: backendItem.productType || backendItem.product_type || 0,
-            productTypeName: backendItem.productTypeName || backendItem.product_type_name 
-          };
-        }) || [];
-
-        console.log("Mapped family pack items:", mappedFamilyPackItems);
-        
-        setFamilyPackItems(mappedFamilyPackItems);
-        
-        // Set package ID for replacement requests
-        if (orderData.packageData.id) {
-          setPackageId(orderData.packageData.id);
-        }
-        
-        setError(null);
-      } else {
-        console.log("No package data found in order data");
-        setError(t('No package data found'));
-      }
-    } catch (error) {
-      console.error("Error in loadOrderData:", error);
-      setError(t('Failed to load order data'));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (item.orderId) {
-    loadOrderData();
-  }
-}, [item.orderId, t]); // Dependencies: rerun if orderId or translation function changes
-
 
   const statusText = () => {
   switch (orderStatus) {
@@ -1225,68 +1286,6 @@ const renderReplaceModal = () => {
     
     return productTypeMap[productType] || `Product Type ${productType}`;
   };
-
-//   const getDynamicStatus = (): 'Pending' | 'Opened' | 'Completed' => {
-//   const hasFamily = familyPackItems.length > 0;
-//   const hasAdditional = additionalItems.length > 0;
-  
-//   let allSelected = false;
-//   let someSelected = false;
-  
-//   if (hasFamily && hasAdditional) {
-//     allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
-//     someSelected = hasFamilyPackSelections() || hasAdditionalItemSelections();
-//   } else if (hasFamily && !hasAdditional) {
-//     allSelected = areAllFamilyPackItemsSelected();
-//     someSelected = hasFamilyPackSelections();
-//   } else if (!hasFamily && hasAdditional) {
-//     allSelected = areAllAdditionalItemsSelected();
-//     someSelected = hasAdditionalItemSelections();
-//   }
-  
-//   return allSelected ? 'Completed' : someSelected ? 'Opened' : 'Pending';
-// };
-
-// // Updated getStatusText function with proper translations
-// const getStatusText = (status: 'Pending' | 'Opened' | 'Completed') => {
-//   switch (status) {
-//     case 'Pending':
-//       return selectedLanguage === 'si' ? 'අපේක්ෂාවෙන්' : 
-//              selectedLanguage === 'ta' ? 'நிலுவையில்' : 
-//              t("Status.Pending") || 'Pending';
-//     case 'Opened':
-//       return selectedLanguage === 'si' ? 'විවෘත කර ඇත' : 
-//              selectedLanguage === 'ta' ? 'திறக்கப்பட்டது' : 
-//              t("Status.Opened") || 'Opened';
-//     case 'Completed':
-//       return selectedLanguage === 'si' ? 'සම්පූර්ණයි' : 
-//              selectedLanguage === 'ta' ? 'நிறைவானது' : 
-//              t("Status.Completed") || 'Completed';
-//     default:
-//       return status;
-//   }
-// };
-
-// // Get styling based on status
-// const getStatusStyling = (status: 'Pending' | 'Opened' | 'Completed') => {
-//   switch (status) {
-//     case 'Completed':
-//       return {
-//         badge: 'bg-[#D4F7D4] border border-[#4CAF50]',
-//         text: 'text-[#2E7D32]'
-//       };
-//     case 'Opened':
-//       return {
-//         badge: 'bg-[#FFF9C4] border border-[#F9CC33]',
-//         text: 'text-[#B8860B]'
-//       };
-//     default: // Pending
-//       return {
-//         badge: 'bg-[#FFB9B7] border border-[#FFB9B7]',
-//         text: 'text-[#D16D6A]'
-//       };
-//   }
-// };
 
 
 
@@ -1493,12 +1492,7 @@ const DynamicStatusBadge = () => {
     <View className="flex-1 bg-black/50 justify-center items-center px-6">
       <View className="bg-white rounded-2xl p-6 w-full max-w-sm">
         <View className="items-center mb-4">
-          {/* <LottieView 
-            source={require('@/assets/animations/success-animation.json')}
-            autoPlay
-            loop={false}
-            style={{ width: 100, height: 100 }}
-          /> */}
+    
         </View>
         <Text className="text-xl font-bold text-center mb-2">
          {t("PendingOrderScreen.Completed Successfully")}
@@ -1673,145 +1667,74 @@ const DynamicStatusBadge = () => {
   
   {/* Dynamic Status Badge */}
   <View className="mx-4 mt-4 mb-3 justify-center items-center">
-    {/* <View className={`px-3 py-2 rounded-lg ${
-      (() => {
-        const hasFamily = familyPackItems.length > 0;
-        const hasAdditional = additionalItems.length > 0;
-        
-        let allSelected = false;
-        let someSelected = false;
-        
-        if (hasFamily && hasAdditional) {
-          allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
-          someSelected = hasFamilyPackSelections() || hasAdditionalItemSelections();
-        } else if (hasFamily && !hasAdditional) {
-          allSelected = areAllFamilyPackItemsSelected();
-          someSelected = hasFamilyPackSelections();
-        } else if (!hasFamily && hasAdditional) {
-          allSelected = areAllAdditionalItemsSelected();
-          someSelected = hasAdditionalItemSelections();
-        }
-        
-        return allSelected
-          ? 'bg-[#D4F7D4] border border-[#4CAF50]' // Completed - Green
-          : someSelected
-            ? 'bg-[#FFF9C4] border border-[#F9CC33]' // Opened - Yellow
-            : 'bg-[#FFB9B7] border border-[#FFB9B7]'; // Pending - Red
-      })()
-    }`}>
-      <Text className={`font-medium text-sm ${
-        (() => {
-          const hasFamily = familyPackItems.length > 0;
-          const hasAdditional = additionalItems.length > 0;
-          
-          let allSelected = false;
-          let someSelected = false;
-          
-          if (hasFamily && hasAdditional) {
-            allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
-            someSelected = hasFamilyPackSelections() || hasAdditionalItemSelections();
-          } else if (hasFamily && !hasAdditional) {
-            allSelected = areAllFamilyPackItemsSelected();
-            someSelected = hasFamilyPackSelections();
-          } else if (!hasFamily && hasAdditional) {
-            allSelected = areAllAdditionalItemsSelected();
-            someSelected = hasAdditionalItemSelections();
-          }
-          
-          return allSelected
-            ? 'text-[#2E7D32]' // Completed - Dark green text
-            : someSelected
-              ? 'text-[#B8860B]' // Opened - Gold text
-              : 'text-[#D16D6A]'; // Pending - Red text
-        })()
-      }`}>
-        {(() => {
-          const hasFamily = familyPackItems.length > 0;
-          const hasAdditional = additionalItems.length > 0;
-          
-          let allSelected = false;
-          let someSelected = false;
-          
-          if (hasFamily && hasAdditional) {
-            allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
-            someSelected = hasFamilyPackSelections() || hasAdditionalItemSelections();
-          } else if (hasFamily && !hasAdditional) {
-            allSelected = areAllFamilyPackItemsSelected();
-            someSelected = hasFamilyPackSelections();
-          } else if (!hasFamily && hasAdditional) {
-            allSelected = areAllAdditionalItemsSelected();
-            someSelected = hasAdditionalItemSelections();
-          }
-          
-          return allSelected 
-            ? 'Completed' 
-            : someSelected
-              ? 'Opened'
-              : status;
-        })()}
-      </Text>
-    </View> */}
+  
     <DynamicStatusBadge />
   </View>
 
   {/* Family Pack Section - Only show if familyPackItems has data */}
   {familyPackItems.length > 0 && (
-    <View className="mx-4 mb-3">
-      <TouchableOpacity 
-        className={`px-4 py-3 rounded-lg flex-row justify-between items-center ${
-          areAllFamilyPackItemsSelected() 
-            ? 'bg-[#D4F7D4] border border-[#4CAF50]'
-            : hasFamilyPackSelections() 
-              ? 'bg-[#FFF9C4] border border-[#F9CC33]'
-              : 'bg-[#FFF8F8] border border-[#D16D6A]'
-        }`}
-        onPress={() => setFamilyPackExpanded(!familyPackExpanded)}
-      >
-        <Text className="text-[#000000] font-medium">
-          {packageName} {areAllFamilyPackItemsSelected() && orderStatus === 'Completed' ? '✓' : ''}
-        </Text>
-        <AntDesign 
-          name={familyPackExpanded ? "up" : "down"} 
-          size={16} 
-          color="#000000" 
-        />
-      </TouchableOpacity>
-      
-      {familyPackExpanded && (
-        <View className={`bg-white border border-t-0 rounded-b-lg px-4 py-4 ${
-          areAllFamilyPackItemsSelected() 
-            ? 'border-[#4CAF50]'
-            : hasFamilyPackSelections() 
-              ? 'border-[#F9CC33]'
-              : 'border-[#D16D6A]'
-        }`}>
-          {familyPackItems.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              className="flex-row justify-between items-center py-3 border-b border-gray-100 last:border-b-0"
-              onPress={() => toggleFamilyPackItem(item.id)}
-            >
-              <View className="flex-row">
-                <TouchableOpacity 
-                  className="w-8 h-8 items-center justify-center mr-3"
-                  onPress={() => handleReplaceProduct(item)}
-                >
-                  <Image source={loginImage} style={{ width: 20, height: 20 }}/>
-                </TouchableOpacity>
-                <View>
-                  <Text className={`font-medium ${item.selected && orderStatus === 'Completed' ? 'text-black' : 'text-black'}`}>
-                    {item.name}
-                  </Text>
-                  <Text className="text-gray-500 text-sm">{item.weight} </Text>
+  <View className="mx-4 mb-3">
+    {getPackageGroups().map((packageGroup, index) => (
+      <View key={packageGroup.packageId} className={index > 0 ? "mt-3" : ""}>
+        <TouchableOpacity 
+          className={`px-4 py-3 rounded-lg flex-row justify-between items-center ${
+            packageGroup.allSelected
+              ? 'bg-[#D4F7D4] border border-[#4CAF50]'
+              : packageGroup.someSelected 
+                ? 'bg-[#FFF9C4] border border-[#F9CC33]'
+                : 'bg-[#FFF8F8] border border-[#D16D6A]'
+          }`}
+          onPress={() => togglePackageExpansion(packageGroup.packageId)}
+        >
+          <Text className="text-[#000000] font-medium">
+            {packageGroup.packageName} {packageGroup.allSelected && orderStatus === 'Completed' ? '✓' : ''}
+          </Text>
+          <AntDesign 
+            name={isPackageExpanded(packageGroup.packageId) ? "up" : "down"} 
+            size={16} 
+            color="#000000" 
+          />
+        </TouchableOpacity>
+        
+        {isPackageExpanded(packageGroup.packageId) && (
+          <View className={`bg-white border border-t-0 rounded-b-lg px-4 py-4 ${
+            packageGroup.allSelected
+              ? 'border-[#4CAF50]'
+              : packageGroup.someSelected 
+                ? 'border-[#F9CC33]'
+                : 'border-[#D16D6A]'
+          }`}>
+            {packageGroup.items.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                className="flex-row justify-between items-center py-3 border-b border-gray-100 last:border-b-0"
+                onPress={() => toggleFamilyPackItem(item.id)}
+              >
+                <View className="flex-row">
+                  <TouchableOpacity 
+                    className="w-8 h-8 items-center justify-center mr-3"
+                    onPress={() => handleReplaceProduct(item)}
+                  >
+                    <Image source={loginImage} style={{ width: 20, height: 20 }}/>
+                  </TouchableOpacity>
+                  <View>
+                    <Text className={`font-medium ${item.selected && orderStatus === 'Completed' ? 'text-black' : 'text-black'}`}>
+                      {item.name}
+                    </Text>
+                    <Text className="text-gray-500 text-sm">{item.weight}</Text>
+                    {/* Optional: Show package info */}
+                    <Text className="text-gray-400 text-xs">{item.packageName}</Text>
+                  </View>
                 </View>
-              </View>
-              {renderCheckbox(item.selected)}
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-    </View>
-  )}
+                {renderCheckbox(item.selected)}
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+      </View>
+    ))}
+  </View>
+)}
 
   {/* Additional Items Section - Only show if additionalItems has data */}
   {additionalItems.length > 0 && (

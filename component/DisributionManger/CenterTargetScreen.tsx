@@ -1,6 +1,6 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Alert, Image, Modal } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Alert, Image, Modal, ActivityIndicator } from 'react-native';
 import { RootStackParamList } from '../types';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,6 +11,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { useTranslation } from "react-i18next";
 import { RouteProp } from '@react-navigation/native';
 import { Animated } from 'react-native';
+import {fetchOrderDetailsByIds, processOrdersForDelivery} from '@/component/DisributionManger/pdf';
+
 
 type CenterTargetScreenNavigationProps = StackNavigationProp<RootStackParamList, 'CenterTargetScreen'>;
 type CenterTargetScreenRouteProp = RouteProp<RootStackParamList, 'CenterTargetScreen'>;
@@ -93,6 +95,36 @@ interface DateOption {
   label: string;
   timeSlots: string[];
 }
+interface DetailedOrderResponse {
+  orderId: string;
+  customerEmail?: string;
+  email?: string;
+  customerName?: string;
+  name?: string;
+  customerPhone?: string;
+  phone?: string;
+  customerAddress?: string;
+  address?: string;
+  totalAmount?: number;
+  items?: OrderItem[];
+}
+
+interface OrderItem {
+  name: string;
+  grade: string;
+  quantity: string;
+  unitPrice: number;
+  total: number;
+}
+
+interface EnhancedTargetData extends TargetData {
+  customerEmail?: string;
+  customerName?: string;
+  customerPhone?: string;
+  customerAddress?: string;
+  totalAmount?: number;
+  items?: OrderItem[];
+}
 
 const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation, route }) => {
   const { centerId } = route.params;
@@ -122,6 +154,8 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation, rou
   const [hasCompletedFilter, setHasCompletedFilter] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 const [successCount, setSuccessCount] = useState(0);
+const MAX_SELECTED_ORDERS = 5;
+const [selectionLimitReached, setSelectionLimitReached] = useState(false);
   
   // New state for confirmation modal
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -584,15 +618,26 @@ const fetchTargets = useCallback(async () => {
                        selectedToggle === 'Completed' ? filteredCompletedData : 
                        outData;
 
-  const handleCheckboxToggle = (itemId: string) => {
-    setSelectedItems(prev => {
-      if (prev.includes(itemId)) {
-        return prev.filter(id => id !== itemId);
-      } else {
-        return [...prev, itemId];
+const handleCheckboxToggle = (itemId: string) => {
+  setSelectedItems(prev => {
+    if (prev.includes(itemId)) {
+      setSelectionLimitReached(false);
+      return prev.filter(id => id !== itemId);
+    } else {
+      if (prev.length >= MAX_SELECTED_ORDERS) {
+        setSelectionLimitReached(true);
+        Alert.alert(
+          t("Limit Reached"),
+          t("You can only select up to 5 orders at a time for delivery"),
+          [{ text: t("OK") }]
+        );
+        return prev;
       }
-    });
-  };
+      setSelectionLimitReached(false);
+      return [...prev, itemId];
+    }
+  });
+};
 
   const renderCheckbox = (item: TargetData) => {
     const isSelected = selectedItems.includes(item.id);
@@ -655,7 +700,7 @@ const fetchTargets = useCallback(async () => {
 
 
 
-//   const confirmAction = async () => {
+// const confirmAction = async () => {
 //   try {
 //     setLoading(true);
 //     const authToken = await AsyncStorage.getItem("token");
@@ -664,11 +709,22 @@ const fetchTargets = useCallback(async () => {
 //       throw new Error("Authentication token not found. Please login again.");
 //     }
 
-//     // Prepare the order IDs from selected items
-//     const orderIds = selectedItems.map(itemId => {
-//       const item = [...todoData, ...completedData, ...outData].find(i => i.id === itemId);
-//       return item?.orderId;
-//     }).filter(Boolean); // Remove any undefined values
+//     // Get selected order items with full data - Add null check
+//     const selectedOrdersData = selectedItems
+//       .map(itemId => {
+//         const item = [...todoData, ...completedData, ...outData].find(i => i.id === itemId);
+//         return item;
+//       })
+//       .filter((item): item is TargetData => item !== undefined);
+
+//     if (selectedOrdersData.length === 0) {
+//       throw new Error("No valid order items found for selection");
+//     }
+
+//     // Prepare order IDs for status update
+//     const orderIds = selectedOrdersData
+//       .map(item => item.orderId)
+//       .filter((id): id is string => id !== undefined && id !== null);
 
 //     if (orderIds.length === 0) {
 //       throw new Error("No valid order IDs found for selected items");
@@ -676,10 +732,10 @@ const fetchTargets = useCallback(async () => {
 
 //     console.log("Updating orders to Out For Delivery:", orderIds);
 
-//     // Make API call to update status
-//     const response = await axios.put(
+//     // Step 1: Update order status to "Out For Delivery"
+//     const statusUpdateResponse = await axios.put(
 //       `${environment.API_BASE_URL}api/distribution/update-outForDelivery`,
-//       { orderIds }, // Send array of orderIds in request body
+//       { orderIds },
 //       {
 //         headers: {
 //           Authorization: `Bearer ${authToken}`,
@@ -688,36 +744,88 @@ const fetchTargets = useCallback(async () => {
 //       }
 //     );
 
-//     if (response.data.success) {
-//       console.log("Successfully updated orders:", response.data);
-      
-//       // Show success message
-//       Alert.alert(
-//         "Success",
-//         `${orderIds.length} orders have been marked as Out For Delivery`,
-//         [{ text: "OK" }]
-//       );
-      
-//       // Clear selections and close modal
-//       setSelectedItems([]);
-//       setShowConfirmModal(false);
-      
-//       // Refresh data
-//       await fetchTargets();
-//     } else {
-//       throw new Error(response.data.message || "Failed to update orders");
+//     if (!statusUpdateResponse.data?.success) {
+//       throw new Error(statusUpdateResponse.data?.message || "Failed to update order status");
 //     }
-//   } catch (error: any) {
+
+//     console.log("Status updated successfully:", statusUpdateResponse.data);
+
+//     // Step 2: Prepare orders with your email as default (no need for customer API call)
+//     let ordersWithDetails: EnhancedTargetData[] = selectedOrdersData.map(order => {
+//       // Calculate some basic values
+//       const unitPrice = 100; // Default unit price
+//       const totalAmount = (order.target || 0) * unitPrice;
+//       const tax = totalAmount * 0.08; // 8% tax
+//       const deliveryCharges = 500; // Default delivery charge
+//       const subtotal = totalAmount;
+//       const grandTotal = subtotal + tax + deliveryCharges;
+
+//       return {
+//         ...order,
+//         // Always use your email and default customer info
+//         customerEmail: 'hashinikadilrukshi15@gmail.com',
+//         customerName: `Customer for Order ${order.invoiceNo}`,
+//         customerPhone: '+94 77 123 4567',
+//         customerAddress: 'Colombo, Sri Lanka',
+//         totalAmount: grandTotal,
+//         subtotal: subtotal,
+//         tax: tax,
+//         deliveryCharges: deliveryCharges,
+//         items: [{
+//           name: `Order ${order.invoiceNo}`,
+//           grade: order.grade || 'A',
+//           quantity: `${order.target || 0} units`,
+//           unitPrice: unitPrice,
+//           total: totalAmount
+//         }],
+//         outDlvrDate: new Date().toISOString()
+//       };
+//     });
+
+//     console.log("Processing orders for PDF generation and email sending...");
+//     console.log("Processing orders for delivery:", ordersWithDetails.length, "- Using email: hashinikadilrukshi15@gmail.com");
+    
+//     // Step 3: Generate PDFs and send emails (no customer API call needed)
+//     const emailResult = await processOrdersForDelivery(ordersWithDetails, authToken);
+    
+//     console.log("Email processing result:", emailResult);
+    
+//     // Step 4: Show success modal
+//     setSuccessCount(orderIds.length);
+//     setShowConfirmModal(false);
+//     setShowSuccessModal(true);
+    
+//     // Clear selections
+//     setSelectedItems([]);
+    
+//     // Auto-hide success modal after 4 seconds
+//     setTimeout(() => {
+//       setShowSuccessModal(false);
+//     }, 4000);
+    
+//     // Refresh data to reflect changes
+//     await fetchTargets();
+
+//   } catch (error: unknown) {
 //     console.error('Error in confirmAction:', error);
     
 //     let errorMessage = "Failed to update orders. Please try again.";
-//     if (error.response?.data?.message) {
-//       errorMessage = error.response.data.message;
-//     } else if (error.message) {
+    
+//     if (error instanceof Error) {
 //       errorMessage = error.message;
+//     } else if (typeof error === 'object' && error !== null && 'response' in error) {
+//       const axiosError = error as any;
+//       if (axiosError.response?.data?.message) {
+//         errorMessage = axiosError.response.data.message;
+//       } else if (axiosError.response?.status === 401) {
+//         errorMessage = "Authentication failed. Please login again.";
+//       } else if (axiosError.response?.status === 403) {
+//         errorMessage = "You don't have permission to perform this action.";
+//       }
 //     }
     
 //     Alert.alert("Error", errorMessage, [{ text: "OK" }]);
+    
 //   } finally {
 //     setLoading(false);
 //   }
@@ -727,16 +835,27 @@ const confirmAction = async () => {
   try {
     setLoading(true);
     const authToken = await AsyncStorage.getItem("token");
-    
+
     if (!authToken) {
       throw new Error("Authentication token not found. Please login again.");
     }
 
-    // Prepare the order IDs from selected items
-    const orderIds = selectedItems.map(itemId => {
-      const item = [...todoData, ...completedData, ...outData].find(i => i.id === itemId);
-      return item?.orderId;
-    }).filter(Boolean);
+    // Get selected order items with full data - Add null check
+    const selectedOrdersData = selectedItems
+      .map(itemId => {
+        const item = [...todoData, ...completedData, ...outData].find(i => i.id === itemId);
+        return item;
+      })
+      .filter((item): item is TargetData => item !== undefined);
+
+    if (selectedOrdersData.length === 0) {
+      throw new Error("No valid order items found for selection");
+    }
+
+    // Prepare order IDs for status update
+    const orderIds = selectedOrdersData
+      .map(item => item.orderId)
+      .filter((id): id is string => id !== undefined && id !== null);
 
     if (orderIds.length === 0) {
       throw new Error("No valid order IDs found for selected items");
@@ -744,8 +863,8 @@ const confirmAction = async () => {
 
     console.log("Updating orders to Out For Delivery:", orderIds);
 
-    // Make API call to update status
-    const response = await axios.put(
+    // Step 1: Update order status to "Out For Delivery"
+    const statusUpdateResponse = await axios.put(
       `${environment.API_BASE_URL}api/distribution/update-outForDelivery`,
       { orderIds },
       {
@@ -756,47 +875,93 @@ const confirmAction = async () => {
       }
     );
 
-    if (response.data.success) {
-      console.log("Successfully updated orders:", response.data);
-      
-      // Show success modal instead of alert
-      setSuccessCount(orderIds.length);
-      setShowConfirmModal(false);
-      setShowSuccessModal(true);
-      
-      // Clear selections
-      setSelectedItems([]);
-      
-      // Auto-hide success modal after 3 seconds
-      setTimeout(() => {
-        setShowSuccessModal(false);
-      }, 3000);
-      
-      // Refresh data
-      await fetchTargets();
-    } else {
-      throw new Error(response.data.message || "Failed to update orders");
+    if (!statusUpdateResponse.data?.success) {
+      throw new Error(statusUpdateResponse.data?.message || "Failed to update order status");
     }
+
+    console.log("Status updated successfully:", statusUpdateResponse.data);
+
+    // Step 2: Fetch complete order details for PDF generation
+    console.log("Fetching complete order details for:", orderIds);
+    
+    const orderDetailsResult = await fetchOrderDetailsByIds(orderIds, authToken);
+    
+    if (orderDetailsResult.failed.length > 0) {
+      console.warn("Some orders failed to fetch:", orderDetailsResult.failed);
+    }
+    
+    if (orderDetailsResult.successful.length === 0) {
+      throw new Error("Failed to fetch any order details for PDF generation");
+    }
+
+    console.log(`Fetched ${orderDetailsResult.successful.length} complete order details`);
+    console.log("Sample order structure:", {
+      keys: Object.keys(orderDetailsResult.successful[0] || {}),
+      hasOrder: !!orderDetailsResult.successful[0]?.order,
+      hasInvoiceNumber: !!orderDetailsResult.successful[0]?.invoiceNumber
+    });
+
+    // Step 3: Process orders for PDF generation and email sending using complete order data
+    console.log("Processing orders for PDF generation and email sending...");
+    
+    // Pass the complete order objects (not just IDs) to processOrdersForDelivery
+    const emailResult = await processOrdersForDelivery(orderDetailsResult.successful, authToken);
+    
+    console.log("Email processing result:", emailResult);
+
+    // Step 4: Show results
+    let successMessage = `Successfully processed ${orderIds.length} orders.`;
+    
+    if (emailResult.success && emailResult.emailsSent > 0) {
+      successMessage += ` ${emailResult.emailsSent} invoices sent via email.`;
+    }
+    
+    if (emailResult.errors && emailResult.errors.length > 0) {
+      console.warn("Some orders had issues:", emailResult.errors);
+      successMessage += ` ${emailResult.errors.length} orders had issues with PDF generation.`;
+    }
+
+    // Step 5: Show success modal
+    setSuccessCount(orderIds.length);
+    setShowConfirmModal(false);
+    setShowSuccessModal(true);
+
+    // Clear selections
+    setSelectedItems([]);
+
+    // Auto-hide success modal after 4 seconds
+    setTimeout(() => {
+      setShowSuccessModal(false);
+    }, 4000);
+
+    // Refresh data to reflect changes
+    await fetchTargets();
+
   } catch (error: unknown) {
     console.error('Error in confirmAction:', error);
-    
+
     let errorMessage = "Failed to update orders. Please try again.";
-    
-    // Properly handle unknown error type
+
     if (error instanceof Error) {
       errorMessage = error.message;
     } else if (typeof error === 'object' && error !== null && 'response' in error) {
       const axiosError = error as any;
       if (axiosError.response?.data?.message) {
         errorMessage = axiosError.response.data.message;
+      } else if (axiosError.response?.status === 401) {
+        errorMessage = "Authentication failed. Please login again.";
+      } else if (axiosError.response?.status === 403) {
+        errorMessage = "You don't have permission to perform this action.";
       }
     }
-    
+
     Alert.alert("Error", errorMessage, [{ text: "OK" }]);
+
   } finally {
     setLoading(false);
   }
 };
+
 const SuccessModal = () => {
   const progress = useRef(new Animated.Value(0)).current;
 
@@ -922,7 +1087,35 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
           <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
 
-        <Text className="text-white text-lg font-bold">{t("CenterTarget.CenterTarget")}</Text>
+        {/* <Text className="text-white text-lg font-bold">{t("CenterTarget.CenterTarget")}</Text> */}
+        {selectedToggle === 'ToDo' && (
+
+      <Text className="text-white text-lg font-bold">
+        Centre Target : {selectedDateFilter ? selectedDateFilter : 'All'}
+      </Text>
+      
+   
+  
+  )}
+    {selectedToggle === 'Completed' && (
+
+      <Text className="text-white text-lg font-bold">
+        Centre Target 
+      </Text>
+      
+   
+  
+  )}
+    {selectedToggle === 'Out' && (
+
+      <Text className="text-white text-lg font-bold">
+        Centre Target 
+      </Text>
+      
+   
+  
+  )}
+
 
         <View className="absolute right-4 flex-row items-center space-x-2">
           {/* Filter Icon for ToDo */}
@@ -1288,42 +1481,92 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
       )}
 
       {/* Confirmation Modal */}
-      {showConfirmModal && (
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={showConfirmModal}
-          onRequestClose={() => setShowConfirmModal(false)}
-        >
-          <View className="flex-1 justify-center items-center bg-black/50">
-            <View className="bg-white rounded-lg p-6 w-11/12 max-w-sm">
-              <Text className="text-lg font-bold mb-4 text-center text-gray-800">
-                Confirm Action
-              </Text>
-              
-              <Text className="text-center text-gray-600 mb-6">
-                Are you sure you want to send these selected {selectedItems.length} orders out for delivery?
-              </Text>
-              
-              <View className="flex-row justify-between">
-                <TouchableOpacity 
-                  className="bg-gray-300 px-4 py-3 rounded-lg flex-1 mr-2"
-                  onPress={() => setShowConfirmModal(false)}
-                >
-                  <Text className="text-center font-medium text-gray-700">Cancel</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity 
-                  className="bg-[#980775] px-4 py-3 rounded-lg flex-1 ml-2"
-                  onPress={confirmAction}
-                >
-                  <Text className="text-center font-medium text-white">Out</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+     {showConfirmModal && (
+  <Modal
+    animationType="fade"
+    transparent={true}
+    visible={showConfirmModal}
+    onRequestClose={() => {
+      // Prevent closing modal when loading
+      if (!loading) {
+        setShowConfirmModal(false);
+      }
+    }}
+  >
+ 
+<Text className="text-center text-gray-600 mb-6">
+  {selectedItems.length > MAX_SELECTED_ORDERS ? (
+    <Text className="text-red-500">
+      {t("You can only process up to 5 orders at a time")}
+    </Text>
+  ) : (
+    `Are you sure you want to send these selected ${selectedItems.length} orders out for delivery?`
+  )}
+</Text>
+
+    <View className="flex-1 justify-center items-center bg-black/50">
+      <View className="bg-white rounded-lg p-6 w-11/12 max-w-sm">
+        <Text className="text-lg font-bold mb-4 text-center text-gray-800">
+          Confirm Action
+        </Text>
+        
+        <Text className="text-center text-gray-600 mb-6">
+          Are you sure you want to send these selected {selectedItems.length} orders out for delivery?
+        </Text>
+        
+        {/* Loading indicator when processing */}
+        {loading && (
+          <View className="mb-4 items-center">
+            <ActivityIndicator size="large" color="#980775" />
+            <Text className="text-center text-gray-600 mt-2">
+              Processing orders...
+            </Text>
           </View>
-        </Modal>
-      )}
+        )}
+        
+        <View className="flex-row justify-between">
+          {/* Cancel button - disabled when loading */}
+          <TouchableOpacity
+            className={`px-4 py-3 rounded-lg flex-1 mr-2 ${
+              loading ? 'bg-gray-200' : 'bg-gray-300'
+            }`}
+            onPress={() => setShowConfirmModal(false)}
+            disabled={loading}
+          >
+            <Text className={`text-center font-medium ${
+              loading ? 'text-gray-400' : 'text-gray-700'
+            }`}>
+              Cancel
+            </Text>
+          </TouchableOpacity>
+          
+          {/* Out button - disabled when loading with visual feedback */}
+          <TouchableOpacity
+            className={`px-4 py-3 rounded-lg flex-1 ml-2 ${
+              loading ? 'bg-gray-400' : 'bg-[#980775]'
+            }`}
+            onPress={confirmAction}
+            disabled={loading}
+            style={loading ? { opacity: 0.6 } : { opacity: 1 }}
+          >
+            <View className="flex-row justify-center items-center">
+              {loading && (
+                <ActivityIndicator 
+                  size="small" 
+                  color="white" 
+                  className="mr-2"
+                />
+              )}
+              <Text className="text-center font-medium text-white">
+                {loading ? 'Processing...' : 'Out'}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  </Modal>
+)}
 
       {/* Content */}
    <ScrollView
