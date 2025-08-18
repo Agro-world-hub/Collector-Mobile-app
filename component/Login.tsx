@@ -211,7 +211,7 @@ if (passwordUpdateRequired) {
   };
 
   const handleNavBack = async () => {
-    navigation.navigate("Lanuage");
+    navigation.navigate("Login");
     await AsyncStorage.removeItem("@user_language");
   };
 
@@ -235,11 +235,11 @@ if (passwordUpdateRequired) {
         keyboardShouldPersistTaps="handled"
         className=" bg-white"
       >
-        <TouchableOpacity onPress={() => handleNavBack()} className="p-4">
+        {/* <TouchableOpacity onPress={() => handleNavBack()} className="p-4">
           <AntDesign name="left" size={24} color="#000502" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        <View className="items-center mt-[-6%]">
+        <View className="items-center mt-[8%]">
           <Image 
           source={loginImage} 
           style={{ width: 270, height: 270 }}

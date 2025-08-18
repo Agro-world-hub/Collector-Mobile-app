@@ -659,10 +659,10 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
         <View className="flex-1 p-4">
           {/* Horizontal Line */}
-          <View className="h-0.5 bg-[#D2D2D2] my-4" />
+          {/* <View className="h-0.5 bg-[#D2D2D2] my-4" /> */}
 
           {/* Language Settings */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => setLanguageDropdownOpen(!isLanguageDropdownOpen)}
             className="flex-row items-center py-3"
           >
@@ -675,7 +675,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
               size={20}
               color="black"
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {isLanguageDropdownOpen && (
             <View className="pl-8">
