@@ -193,10 +193,10 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
 
   // Watch for resetImage prop changes to clear the image
   useEffect(() => {
-    if (resetImage) {
+    if (resetImage || disabled) {
       setImage(null);
     }
-  }, [resetImage]);
+  }, [resetImage, disabled]);
 
   // Compress and resize image to reduce payload size
   const processImage = async (uri: string): Promise<string | null> => {
@@ -260,7 +260,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
       Alert.alert("No image captured", "Please capture an image.");
     }
   };
-  const backgroundColor = image ? '#2AAD7A' : (disabled ? 'gray' : 'black');
+  const backgroundColor = image ? '#980775' : (disabled ? 'gray' : 'black');
 
   
   return (

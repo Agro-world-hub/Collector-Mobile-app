@@ -214,7 +214,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
           style={{
             width: scanningAreaSize,
             height: scanningAreaSize,
-            borderColor: "#34D399",
+            borderColor: "#FAE432",
             borderWidth: 2,
             borderRadius: 10,
           }}
@@ -226,7 +226,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
         <View style={{ position: "absolute", bottom: 50, alignSelf: "center" }}>
           <TouchableOpacity
             style={{
-              backgroundColor: "#34D399",
+              backgroundColor: "#FAE432",
               paddingVertical: 10,
               paddingHorizontal: 20,
               borderRadius: 8,
@@ -242,46 +242,50 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
         </View>
       )}
 
-      {/* Unsuccessful Modal */}
-      <Modal
-        transparent={true}
-        visible={isUnsuccessfulModalVisible}
-        animationType="slide"
-      >
-        <View className="flex-1 justify-center items-center bg-gray-900 bg-opacity-50">
-          <View className="bg-white rounded-lg w-72 p-6 items-center">
-            <Text className="text-xl font-bold mb-4">
-              {t("QRScanner.Failed")}
-            </Text>
-            <View className="mb-4">
-              <Image
-                source={require("../assets/images/error.webp")} // Replace with your own error image
-                className="w-24 h-24"
-              />
-            </View>
-            <Text className="text-gray-700">{t("QRScanner.SearchNIC")}</Text>
-
-            {/* Red Loading Bar */}
-            <View className="w-full h-2 bg-gray-300 rounded-full overflow-hidden mt-6">
-              <Animated.View
-                className="h-full bg-red-500"
-                style={{ width: unsuccessfulLoadingBarWidth }}
-              />
-            </View>
-
-            <TouchableOpacity
-              className="bg-red-500 p-2 rounded-xl mt-4 px-4"
-              onPress={() => {
-                setIsUnsuccessfulModalVisible(false);
-                setErrorMessage(null); // Clear error message when closing
-                navigation.navigate("SearchFarmer" as any);
-              }}
-            >
-              <Text className="text-white">{t("QRScanner.Close")}</Text>
-            </TouchableOpacity>
-          </View>
+ {/* Unsuccessful Modal */}
+{/* Unsuccessful Modal */}
+<Modal
+  transparent={true}
+  visible={isUnsuccessfulModalVisible}
+  animationType="slide"
+>
+  <View className="flex-1 justify-center items-center bg-black bg-opacity-70">
+    <View className="bg-white rounded-lg w-72 h-80 items-center relative overflow-hidden">
+      <View className="p-6 items-center">
+        <Text className="text-xl font-bold mb-4">
+          {t("QRScanner.Failed")}
+        </Text>
+        <View className="mb-4">
+          <Image
+            source={require("../assets/images/New/error.png")} // Replace with your own error image
+            className="w-32 h-32"
+            resizeMode="contain"
+          />
         </View>
-      </Modal>
+        <Text className="text-gray-700">{t("QRScanner.SearchNIC")}</Text>
+      </View>
+      
+      {/* Red Loading Bar at bottom */}
+      <View className="absolute bottom-0 left-0 w-full h-2 bg-gray-300">
+        <Animated.View
+          className="h-full bg-red-500"
+          style={{ width: unsuccessfulLoadingBarWidth }}
+        />
+      </View>
+      
+      {/* <TouchableOpacity
+        className="bg-red-500 p-2 rounded-xl mt-4 px-4"
+        onPress={() => {
+          setIsUnsuccessfulModalVisible(false);
+          setErrorMessage(null); // Clear error message when closing
+          navigation.navigate("SearchFarmer" as any);
+        }}
+      >
+        <Text className="text-white">{t("QRScanner.Close")}</Text>
+      </TouchableOpacity> */}
+    </View>
+  </View>
+</Modal>
     </View>
   );
 };

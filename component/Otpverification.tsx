@@ -80,7 +80,7 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({
           </Text>
 
           <Image
-            source={require("../assets/images/success.webp")}
+            source={require("../assets/images/New/otpsuccess.png")}
             style={{ width: 100, height: 100 }}
           />
 
@@ -88,21 +88,21 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({
             {t("Otpverification.Registration")}
           </Text>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             className="bg-[#2AAD7A] px-6 py-2 rounded-full mt-6"
             onPress={onClose}
           >
             <Text className="text-white font-semibold">
               {t("Otpverification.OK")}
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* Progress Bar - Fixed to Bottom */}
           <View className="absolute bottom-0 left-0 right-0 h-2 bg-gray-200 rounded-b-2xl overflow-hidden">
             <Animated.View
               style={{
                 height: "100%",
-                backgroundColor: "#2AAD7A",
+                backgroundColor: "#980775",
                 width: progress.interpolate({
                   inputRange: [0, 100],
                   outputRange: ["0%", "100%"],
@@ -352,7 +352,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
 
   return (
     <ScrollView
-      className="flex-1 "
+      className="flex-1 bg-white"
       style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}
     >
       <View>
@@ -371,7 +371,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         style={{ marginTop: dynamicStyles.margingTopForImage }}
       >
         <Image
-          source={require("../assets/images/otp.webp")}
+          source={require("../assets/images/New/opt.png")}
           style={{
             width: dynamicStyles.imageWidth,
             height: dynamicStyles.imageHeight,
@@ -379,7 +379,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         />
 
         <View className="">
-          <Text className="mt-3 text-lg text-black text-center">
+          <Text className="mt-3 text-lg text-black text-center font-bold">
             {t("Otpverification.EnterCode")}
           </Text>
         </View>
@@ -421,7 +421,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
               placeholder={maskedCode[index] || "_"}
               placeholderTextColor="lightgray"
               style={{
-                borderColor: "#0CB783",
+                borderColor: "#FFC738",
                 borderWidth: 2, // Adjust thickness if needed
               }}
             />
@@ -439,7 +439,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
           <Text
             className="mt-3 text-lg text-black text-center underline"
             onPress={disabledResend ? undefined : handleResendOTP}
-            style={{ color: disabledResend ? "gray" : "blue" }}
+            style={{ color: disabledResend ? "gray" : "black" }}
           >
             {timer > 0
               ? `${t("Resend in ")} ${formatTime(timer)}`
@@ -456,7 +456,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
           <TouchableOpacity
             style={{ height: hp(7), width: wp(80) }}
             className={`flex items-center justify-center mx-auto rounded-full ${
-              !isOtpValid || isVerified ? "bg-[#2AAD7A]" : "bg-[#2AAD7A]"
+              !isOtpValid || isVerified ? "bg-[#000000]" : "bg-[#000000]"
             }`}
             onPress={handleVerify}
             disabled={isVerified}

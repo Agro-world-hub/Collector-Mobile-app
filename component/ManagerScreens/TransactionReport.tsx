@@ -316,162 +316,177 @@ console.log(formattedDate);
     const html = `
     <html>
       <head>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            font-size: 10px; /* Base font size for body text */
-            background-color: white;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 30px;
-            box-sizing: border-box;
-            border-radius: 20px;
-            overflow: hidden;
-          }
-          h1 {
-            text-align: center;
-            font-size: 22px; /* Increased main title size */
-            margin-bottom: 15px;
-            font-weight: bold;
-          }
-          .header-line {
-            border-top: 1px solid #000;
-            margin: 5px 0 15px 0;
-          }
-          .header-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-          }
-          .header-item {
-            margin-bottom: 5px;
-            font-size: 11px; /* Slightly larger for header items */
-          }
-          .section-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-size: 14px; /* Larger for section titles */
-          }
-          .supplier-section {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-          }
-          .supplier-section div div:not(.section-title) {
-            font-size: 10px; /* Regular size for supplier details */
-          }
-          .received-by-section {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-          }
-          .received-by-section div div:not(.section-title) {
-            font-size: 10px; /* Regular size for receiver details */
-          }
-          .table-title {
-            font-weight: bold;
-            margin: 15px 0 5px 0;
-            text-align: center;
-            background-color: #D6E6F4;
-            padding: 8px;
-            border: 1px solid #000;
-            font-size: 16px; /* Larger font for table title */
-          }
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
-            background-color: white;
-          }
-          th {
-            background-color:rgb(255, 255, 255);
-            text-align: center;
-            padding: 8px;
-            border: 1px solid #000;
-            font-weight: bold;
-            font-size: 12px; /* Larger for table headers */
-          }
-          td {
-            padding: 8px;
-            text-align: center;
-            border: 1px solid #000;
-            background-color: white;
-            font-size: 10px; /* Normal size for table data */
-          }
-          .total-row {
-            display: flex;
-            justify-content: flex-end;
-            margin: 10px 0;
-          }
-          .total-box {
-            display: flex;
-            background-color: white;
-            border: 1px solid #000;
-          }
-          .total-label {
-            padding: 8px;
-            font-weight: bold;
-            border-right: 1px solid #000;
-            background-color: #D6E6F4;
-            font-size: 13px; /* Larger for total label */
-          }
-          .total-value {
-            padding: 8px;
-            min-width: 150px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 13px; /* Larger for total value */
-          }
-          .note {
-            font-size: 11px; /* Smaller for the note text */
-            margin: 15px 0;
-            font-style: italic;
-            text-align: justify;
-          }
-          .qr-section {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-          }
-          .qr-container {
-            text-align: center;
-          }
-          .qr-code {
-            width: 100px;
-            height: 100px;
-            display: block;
-            margin: 0 auto;
-          }
-          .qr-label {
-            margin-top: 5px;
-            font-weight: bold;
-            font-size: 11px; /* Slightly larger for QR labels */
-          }
-          .button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            gap: 20px;
-          }
-          .button {
-            width: 40px;
-            height: 40px;
-            background-color: black;
-            border-radius: 5px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 8px;
-            text-align: center;
-          }
-          .button-icon {
-            font-size: 14px;
-            margin-bottom: 3px;
-          }
-        </style>
+         <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      font-size: 10px;
+      background-color: white;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px;
+      box-sizing: border-box;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    .header-line {
+      border-top: 1px solid #000;
+      margin: 5px 0 15px 0;
+    }
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+    .header-item {
+      margin-bottom: 5px;
+      font-size: 11px;
+    }
+    .section-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+    .supplier-section {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+    .supplier-section div div:not(.section-title) {
+      font-size: 10px;
+    }
+    .received-by-section {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+    .received-by-section div div:not(.section-title) {
+      font-size: 10px;
+    }
+    .table-title {
+      font-weight: bold;
+      margin: 15px 0 5px 0;
+      text-align: center;
+      background-color: #D6E6F4;
+      padding: 8px;
+      border: 1px solid #000;
+      font-size: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+      background-color: white;
+    }
+    th {
+      background-color: rgb(255, 255, 255);
+      text-align: center;
+      padding: 8px;
+      border: 1px solid #000;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    td {
+      padding: 8px;
+      text-align: center;
+      border: 1px solid #000;
+      font-size: 10px;
+    }
+    
+    /* Alternating row colors */
+    tbody tr:nth-child(odd) {
+      background-color: #f9f9f9; /* Light gray for odd rows */
+    }
+    
+    tbody tr:nth-child(even) {
+      background-color: #ffffff; /* White for even rows */
+    }
+    
+    /* Optional: Hover effect for better interactivity */
+    tbody tr:hover {
+      background-color: #e6f3ff; /* Light blue on hover */
+    }
+    
+    .total-row {
+      display: flex;
+      justify-content: flex-end;
+      margin: 10px 0;
+    }
+    .total-box {
+      display: flex;
+      background-color: white;
+      border: 1px solid #000;
+    }
+    .total-label {
+      padding: 8px;
+      font-weight: bold;
+      border-right: 1px solid #000;
+      background-color: #D6E6F4;
+      font-size: 13px;
+    }
+    .total-value {
+      padding: 8px;
+      min-width: 150px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 13px;
+      background-color: #F2F2F2;
+    }
+    .note {
+      font-size: 11px;
+      margin: 15px 0;
+      font-style: italic;
+      text-align: justify;
+    }
+    .qr-section {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+    .qr-container {
+      text-align: center;
+    }
+    .qr-code {
+      width: 100px;
+      height: 100px;
+      display: block;
+      margin: 0 auto;
+    }
+    .qr-label {
+      margin-top: 5px;
+      font-weight: bold;
+      font-size: 11px;
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      gap: 20px;
+    }
+    .button {
+      width: 40px;
+      height: 40px;
+      background-color: black;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 8px;
+      text-align: center;
+    }
+    .button-icon {
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+  </style>
       </head>
       <body>
         <h1>${t("NewReport.Goods Received Note")}</h1>

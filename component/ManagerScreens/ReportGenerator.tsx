@@ -287,7 +287,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
           <View className="flex-row items-center">
             <TouchableOpacity
               onPress={() => setShowStartPicker((prev) => !prev)}
-              className="border border-gray-300 rounded-lg px-4 py-3 flex-1 flex-row justify-between items-center"
+              className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-4 py-3 flex-1 flex-row justify-between items-center"
             >
               <Text className="text-gray-500">{formatDate(startDate)}</Text>
               <Image
@@ -331,7 +331,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
           </Text>
           <TouchableOpacity
             onPress={() => setShowEndPicker((prev) => !prev)}
-            className="border border-gray-300 rounded-lg px-4 py-3 flex-row justify-between items-center"
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-4 py-3 flex-row justify-between items-center"
           >
             <Text className="text-gray-500">{formatDate(endDate)}</Text>
             <Image
@@ -373,7 +373,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
         <View className="flex-row justify-center gap-2 items-center">
           <TouchableOpacity
             onPress={handleReset}
-            className="border border-gray-300 py-3 rounded-lg w-40 items-center"
+            className="border border-[#6B6B6B] py-3 rounded-full w-40 items-center"
           >
             <Text
               className="text-gray-700 text-center"
@@ -386,7 +386,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
 
           <TouchableOpacity
             onPress={handleGenerate}
-            className="bg-[#2AAD7A] py-3 rounded-lg w-40 items-center"
+            className="bg-[#980775] py-3 rounded-full w-40 items-center"
           >
             <Text
               className="text-white font-semibold text-center"
@@ -428,7 +428,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
           <View className="flex-row space-x-8">
             <TouchableOpacity
               onPress={handleDownload}
-              className="bg-[#A4A4A4] rounded-lg items-center justify-center"
+              className="bg-[#000000] rounded-lg items-center justify-center"
               style={{ width: 100, height: 70 }} // Explicit width and height
             >
               <Ionicons name="download" size={24} color="white" />
@@ -439,7 +439,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
 
             <TouchableOpacity
               onPress={handleShare}
-              className="bg-[#A4A4A4] rounded-lg items-center justify-center"
+              className="bg-[#000000] rounded-lg items-center justify-center"
               style={{ width: 100, height: 70 }} // Explicit width and height
             >
               <Ionicons name="share-social" size={24} color="white" />
@@ -452,7 +452,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
       ) : generateAgain ? (
         <View className="items-center justify-center flex-1">
           <LottieView
-            source={require("../../assets/lottie/collector.json")}
+            source={require("../../assets/lottie/newLottie.json")}
             autoPlay
             loop
             style={{ width: 250, height: 250 }}

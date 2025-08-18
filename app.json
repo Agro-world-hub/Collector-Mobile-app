@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/images/favicon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#21202b"
+      "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
@@ -38,6 +38,7 @@
       ]
     },
     "android": {
+      "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/favicon.png",
         "backgroundColor": "#21202b"
@@ -86,17 +87,7 @@
         }
       ],
       "expo-font",
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "targetSdkVersion": 35
-          },
-          "ios": {
-            "deploymentTarget": "15.1"
-          }
-        }
-      ]
+      "expo-build-properties"
     ],
     "experiments": {
       "typedRoutes": true

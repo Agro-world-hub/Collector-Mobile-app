@@ -223,17 +223,27 @@ import axios from "axios";
 import { environment } from "@/environment/environment";
 import { AppState, AppStateStatus } from "react-native";
 import useUserStore from "@/store/userStore";  // Import the global store
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../services/reducxStore";
 
-const homeIcon = require("../assets/images/homee.webp");
-const searchIcon = require("../assets/images/searchh.webp");
-const qrIcon = require("../assets/images/target.webp");
-const adminIcon = require("../assets/images/People.webp");
+const homeIcon = require("../assets/images/New/navhome.png");
+const searchIcon = require("../assets/images/New/navsearch.png");
+const qrIcon = require("../assets/images/New/navtarget.png");
+const adminIcon = require("../assets/images/New/navusers.png");
+const dataTransfer = require("../assets/images/New/transfer.png")
 
 const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
-  const { userRole, setUserRole, setToken, setEmpId } = useUserStore(); // Get data from the global store
-  console.log("User role from store:", userRole);
+  // const { userRole, setUserRole, setToken, setEmpId } = useUserStore();
+  const [token, setToken] = useState('')
   const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false);
+const [showBottomNav, setShowBottomNav] = useState(true);
+ const dispatch = useDispatch();
+const [tabs, setTabs] = useState<any[]>([]);
 
+   const userRole = useSelector(
+    (state: RootState) => state.auth.jobRole
+  );
+console.log('user rolllllllll', userRole)
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -255,19 +265,19 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
   }, []);
 
   // Fetch the user role once and store it globally
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      try {
-        const role = await AsyncStorage.getItem("jobRole");
-        setUserRole(role ?? "");  // Set the role in the store, fallback to empty string if null
-        console.log("User role:", role);
-      } catch (error) {
-        console.error("Error fetching user role:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchUserRole = async () => {
+  //     try {
+  //       const role = await AsyncStorage.getItem("jobRole");
+  //       setUserRole(role ?? "");  // Set the role in the store, fallback to empty string if null
+  //       console.log("User role:", role);
+  //     } catch (error) {
+  //       console.error("Error fetching user role:", error);
+  //     }
+  //   };
 
-    fetchUserRole();
-  }, [setUserRole]);
+  //   fetchUserRole();
+  // }, [setUserRole]);
 
   // Check claim status only once and navigate accordingly
   useEffect(() => {
@@ -302,24 +312,8 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
   }, [userRole, setToken, navigation]);
 
   // Determine the current tab
-  let currentTabName = state.routes[state.index]?.name || "Dashboard";
-  console.log("Current tab:", currentTabName);
-  
- if (currentTabName === "PriceChart") {
-    currentTabName = "SearchPriceScreen";
-  } else if (
-    currentTabName === "EditTargetManager" ||
-    currentTabName === "PassTargetScreen" ||
-    currentTabName === "RecieveTargetScreen"
-  ) {
-    currentTabName = "DailyTarget";
-  } else if (
-    currentTabName === "TransactionList" ||
-    currentTabName === "OfficerSummary"
-  ) {
-    currentTabName = "CollectionOfficersList";
-  }
 
+useEffect(() => {
 
   // Define tabs based on userRole
   let tabs = [
@@ -335,13 +329,47 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
       { name: "CollectionOfficersList", icon: adminIcon, focusedIcon: adminIcon },
       { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
     ];
-  }
-
-  if (userRole === "Distribution Officer") {
+    setTabs(tabs); 
+  } else if (userRole === "Collection Officer") {
     tabs = [
-      { name: "DistridutionaDashboard", icon: homeIcon, focusedIcon: homeIcon },
-    
+         { name: "DailyTargetList", icon: qrIcon, focusedIcon: qrIcon },
+    { name: "Dashboard", icon: homeIcon, focusedIcon: homeIcon },
+    { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
     ];
+    setTabs(tabs); 
+  }else if (userRole === "Distribution Center Manager") {
+     tabs = [
+        { name: "DistridutionaDashboard", icon: homeIcon, focusedIcon: homeIcon },
+           { name: "TargetOrderScreen", icon: qrIcon, focusedIcon: qrIcon },
+      { name: "DistributionOfficersList", icon: adminIcon, focusedIcon: adminIcon },
+        { name: "ReplaceRequestsScreen", icon: dataTransfer, focusedIcon: dataTransfer },
+
+      ];
+    setTabs(tabs); 
+  }
+  }, [userRole]); // Re-run this effect when userRole changes
+
+  let currentTabName = state.routes[state.index]?.name || "Dashboard";
+  console.log("Current tab:", currentTabName);
+  
+ if (currentTabName === "PriceChart") {
+    currentTabName = "SearchPriceScreen";
+  } else if (
+    currentTabName === "EditTargetManager" ||
+    currentTabName === "PassTargetScreen" ||
+    currentTabName === "RecieveTargetScreen"
+  ) {
+    currentTabName = "DailyTarget";
+  } else if (
+    currentTabName === "TransactionList" ||
+    currentTabName === "OfficerSummary" 
+  ) {
+    currentTabName = "CollectionOfficersList";
+  } else if (userRole === "Distribution Center Manager"  && currentTabName === "Dashboard"  ) {
+    currentTabName = "DistridutionaDashboard"; 
+    navigation.navigate("DistridutionaDashboard");
+  } else if(currentTabName === "ClaimDistribution"){
+   currentTabName ="DistributionOfficersList"
   }
 
   useEffect(() => {
@@ -353,6 +381,9 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
   useEffect(() => {
     if (userRole === "Distribution Officer" && currentTabName == "Dashboard") {
       navigation.navigate("DistridutionaDashboard");
+    }else if (userRole === "Distribution Center Manager" && currentTabName === "Dashboard"){
+      console.log("hittt")
+      navigation.navigate("DistridutionaDashboard");
     }
   }, [userRole, currentTabName, navigation]);
 
@@ -360,7 +391,7 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
     const onlineStatus = async () => {
       AppState.addEventListener("change", async (nextAppState) => {
         const storedEmpId = await AsyncStorage.getItem("empid");
-        setEmpId(storedEmpId ?? "");  // Store empId globally, fallback to empty string if null
+        // setEmpId(storedEmpId ?? "");  // Store empId globally, fallback to empty string if null
 
         if (nextAppState === "background") {
           setTimeout(async () => {
@@ -379,30 +410,28 @@ const BottomNav = ({ navigation, state }: { navigation: any; state: any }) => {
     };
 
     onlineStatus();
-  }, [setEmpId, navigation]);
+  }, [ navigation]);
 
-  if (isKeyboardVisible) return null;
+
+
+  if (isKeyboardVisible || userRole==="Distribution Officer") return null;
+
+  // if (isKeyboardVisible) return null;
 
   return (
     <View className={` ${currentTabName === "QRScanner" ? "bg-black" : "bg-white"}`}>
-      <View className="absolute bottom-0 flex-row  justify-between items-center bg-[#21202B] py-3 px-6 rounded-t-3xl w-full">
+      <View className="absolute bottom-0 flex-row  justify-between items-center bg-white py-3 px-6 rounded-t-3xl w-full border-t border-r border-l border-[#00000040] shadow-md">
         {tabs.map((tab, index) => {
           const isFocused = currentTabName === tab.name;
           return (
             <TouchableOpacity
               key={index}
               onPress={() => navigation.navigate(tab.name)}
-              className={`${isFocused ? "bg-green-500 p-4 rounded-full -mt-6 border-4 border-[#1A1920] shadow-md" : "items-center justify-center"}`}
+              className={`${isFocused ? "bg-[#FAE432] p-3 rounded-full border border-[#FAE432] shadow-md" : "items-center justify-center"}`}
               style={{
-                backgroundColor: isFocused ? "#34D399" : "transparent",
+                backgroundColor: isFocused ? "#FAE432" : "white",
                 padding: isFocused ? 8 : 6,
                 borderRadius: 50,
-                borderWidth: isFocused ? 2 : 0,
-                borderColor: "#1A1920",
-                shadowColor: isFocused ? "#000" : "transparent",
-                shadowOpacity: 0.2,
-                shadowRadius: 4,
-                elevation: isFocused ? 5 : 0,
               }}
             >
               <Image source={isFocused ? tab.focusedIcon : tab.icon} style={{ width: 24, height: 24, resizeMode: "contain" }} />

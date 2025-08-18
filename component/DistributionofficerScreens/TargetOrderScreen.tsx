@@ -1,22 +1,21 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Alert } from 'react-native';
 import { RootStackParamList } from '../types';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {environment }from '@/environment/environment';
+import { environment } from '@/environment/environment';
 import { Ionicons } from '@expo/vector-icons';
-import LottieView from 'lottie-react-native'; // Import LottieView
+import LottieView from 'lottie-react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useTranslation } from "react-i18next";
+import { Animated } from 'react-native';
 
 type TargetOrderScreenNavigationProps = StackNavigationProp<RootStackParamList, 'TargetOrderScreen'>;
 
 interface TargetOrderScreenProps {
   navigation: TargetOrderScreenNavigationProps;
 }
-
-
 
 interface TargetData {
   id: string;
@@ -32,9 +31,58 @@ interface TargetData {
   createdAt: string;
   updatedAt: string;
   completedTime?: string | null;
+  selectedStatus: 'Pending' | 'Opened' | 'Completed'; // Changed from packageStatus to selectedStatus
+  additionalItemStatus: 'Pending' | 'Opened' | 'Completed' | null;
+  packageItemStatus: 'Pending' | 'Opened' | 'Completed' | null;
+  totalAdditionalItems: number;
+  packedAdditionalItems: number;
+  pendingAdditionalItems: number;
+  totalPackageItems: number | null;
+  packedPackageItems: number | null;
+  packageIsLock: number;
+  pendingPackageItems: number | null;
+  isPackage: number;
+  orderId: string;
+  sheduleDate: string;
+  sheduleTime: string;
 }
 
-
+// Backend API response interface - Updated to match actual API response
+interface ApiTargetData {
+  distributedTargetId: string;
+  companycenterId: string;
+  userId: string;
+  target: number;
+  complete: number;
+  targetCreatedAt: string;
+  distributedTargetItemId: string;
+  orderId: string;
+  isComplete: boolean;
+  completeTime: string | null;
+  itemCreatedAt: string;
+  processOrderId: string;
+  invNo: string;
+  transactionId: string;
+  paymentMethod: string;
+  isPaid: boolean;
+  amount: number;
+  status: string;
+  orderCreatedAt: string;
+  reportStatus: string;
+  selectedStatus: 'Pending' | 'Opened' | 'Completed';
+  additionalItemStatus: 'Pending' | 'Opened' | 'Completed' | null;
+  packageItemStatus: 'Pending' | 'Opened' | 'Completed' | null;
+  totalAdditionalItems: number;
+  packedAdditionalItems: number;
+  pendingAdditionalItems: number;
+  totalPackageItems: number | null;
+  packedPackageItems: number | null;
+  pendingPackageItems: number | null;
+  isPackage: number;
+  packageIsLock: number;
+  sheduleDate: string;
+  sheduleTime: string;
+}
 const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => {
   const [todoData, setTodoData] = useState<TargetData[]>([]);
   const [completedData, setCompletedData] = useState<TargetData[]>([]);
@@ -89,146 +137,209 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
     });
   };
 
-  const fetchTargets = async () => {
-    setLoading(true);
-    const startTime = Date.now();
+  // Function to format schedule time (remove "Within" text)
+  const formatScheduleTime = (timeString: string): string => {
+    if (!timeString) return '';
+    
+    // Remove "Within" text and trim whitespace
+    return timeString.replace(/^Within\s*/i, '').trim();
+  };
+
+  // Function to format schedule date (month and date only)
+  const formatScheduleDate = (dateString: string): string => {
+    if (!dateString) return '';
+    
     try {
-      // Hardcoded data to demonstrate all 4 statuses
-      const hardcodedData = [
-        {
-          id: '1',
-          invoiceNo: '241205000020',
-          varietyNameEnglish: 'Tea Variety A',
-          varietyNameSinhala: 'තේ වර්ගය A',
-          varietyNameTamil: 'தேயிலை வகை A',
-          grade: 'A',
-          target: 100,
-          complete: 0,
-          todo: 100,
-          status: 'Pending',
-          createdAt: '2025-05-26T08:00:00Z',
-          updatedAt: '2025-05-26T08:00:00Z',
-          completedTime: null
-        },
-        {
-          id: '2',
-          invoiceNo: '241205000021',
-          varietyNameEnglish: 'Tea Variety B',
-          varietyNameSinhala: 'තේ වර්ගය B',
-          varietyNameTamil: 'தேயிலை வகை B',
-          grade: 'B',
-          target: 150,
-          complete: 0,
-          todo: 150,
-          status: 'Opened',
-          createdAt: '2025-05-26T09:00:00Z',
-          updatedAt: '2025-05-26T09:00:00Z',
-          completedTime: null
-        },
-        {
-          id: '3',
-          invoiceNo: '241205000022',
-          varietyNameEnglish: 'Tea Variety C',
-          varietyNameSinhala: 'තේ වර්ගය C',
-          varietyNameTamil: 'தேயிலை வகை C',
-          grade: 'A',
-          target: 200,
-          complete: 75,
-          todo: 125,
-          status: 'Pending',
-          createdAt: '2025-05-26T07:00:00Z',
-          updatedAt: '2025-05-26T10:30:00Z',
-          completedTime: null
-        },
-        {
-          id: '4',
-          invoiceNo: '241205000023',
-          varietyNameEnglish: 'Tea Variety D',
-          varietyNameSinhala: 'තේ වර්ගය D',
-          varietyNameTamil: 'தேயிலை வகை D',
-          grade: 'C',
-          target: 120,
-          complete: 120,
-          todo: 0,
-          status: 'Opened',
-          createdAt: '2025-05-26T06:00:00Z',
-          updatedAt: '2025-05-26T11:00:00Z',
-          completedTime: '2025/05/26 11:00AM'
-        },
-        // Add more data for demonstration
-        {
-          id: '5',
-          invoiceNo: '241205000024',
-          varietyNameEnglish: 'Tea Variety E',
-          varietyNameSinhala: 'තේ වර්ගය E',
-          varietyNameTamil: 'தேயிலை வகை E',
-          grade: 'B',
-          target: 80,
-          complete: 0,
-          todo: 80,
-          status: 'Completed',
-          createdAt: '2025-05-26T12:00:00Z',
-          updatedAt: '2025-05-26T12:00:00Z',
-          completedTime: null
-        }
-      ];
-
-      // Process the hardcoded data
-      const allData = hardcodedData.map((item: any) => ({
-        ...item,
-        target: Number(item.target || 0),
-        complete: Number(item.complete || 0),
-        todo: Number(item.todo || 0),
-      }));
-
-      const todoItems = allData.filter((item: TargetData) => 
-        ['Pending',  'Opened'].includes(item.status || '')
-      );
-      const completedItems = allData.filter((item: TargetData) => 
-        item.status === 'Completed'
-      );
-
-      setTodoData(sortByVarietyAndGrade(todoItems));
-      setCompletedData(sortByVarietyAndGrade(completedItems));
-      setError(null);
-    } catch (err) {
-      console.error('Fetch error:', err);
-      setError(t("Error.Failed to fetch data."));
-    } finally {
-      const elapsedTime = Date.now() - startTime;
-      const remainingTime = 2000 - elapsedTime;
-      setTimeout(() => setLoading(false), remainingTime > 0 ? remainingTime : 0);
+      const date = new Date(dateString);
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      return `${month}/${day}`;
+    } catch (error) {
+      console.error('Error formatting schedule date:', error);
+      return '';
     }
   };
 
-  // Navigation function for row clicks
-  const handleRowPress = (item: TargetData) => {
-   const navigationParams = {
-    item: item,
-    centerCode: centerCode || '', // Ensure centerCode is not null
-    status: item.status,
-    allData: selectedToggle === 'ToDo' ? todoData : completedData
+  // Function to check if schedule date is today
+  const isScheduleDateToday = (dateString: string): boolean => {
+    if (!dateString) return false;
+    
+    try {
+      const scheduleDate = new Date(dateString);
+      const today = new Date();
+      
+      return scheduleDate.getFullYear() === today.getFullYear() &&
+             scheduleDate.getMonth() === today.getMonth() &&
+             scheduleDate.getDate() === today.getDate();
+    } catch (error) {
+      console.error('Error checking if date is today:', error);
+      return false;
+    }
   };
 
-    // Navigate to different screens based on status
-   switch (item.status) {
-    case 'Pending':
-      navigation.navigate('PendingOrderScreen', navigationParams);
-      break;
-    case 'Opened':
-      navigation.navigate('PendingOrderScreen', navigationParams);
-      break;
-    case 'In Progress':
-      navigation.navigate('PendingOrderScreen', navigationParams);
-      break;
-    case 'Completed':
-      navigation.navigate('PendingOrderScreen', navigationParams);
-      break;
-    default:
-      // Fallback navigation
-      navigation.navigate('PendingOrderScreen', navigationParams);
-      break;
-  }
+  // Updated function to map API data to frontend format using selectedStatus
+  const mapApiDataToTargetData = (apiData: ApiTargetData[]): TargetData[] => {
+    return apiData.map((item, index) => ({
+      id: item.distributedTargetItemId || `${item.distributedTargetId}_${index}`,
+      invoiceNo: item.invNo,
+      varietyNameEnglish: `Order ${item.invNo}`,
+      varietyNameSinhala: `ඇණවුම ${item.invNo}`,
+      varietyNameTamil: `ஆர்டர் ${item.invNo}`,
+      grade: 'A',
+      target: item.target,
+      complete: item.complete,
+      todo: item.target - item.complete,
+      // Use selectedStatus as the primary status
+      status: mapSelectedStatusToStatus(item.selectedStatus, item.isComplete),
+      createdAt: item.targetCreatedAt,
+      updatedAt: item.itemCreatedAt,
+      completedTime: item.completeTime,
+      selectedStatus: item.selectedStatus,
+      additionalItemStatus: item.additionalItemStatus,
+      packageItemStatus: item.packageItemStatus,
+      totalAdditionalItems: item.totalAdditionalItems || 0,
+      packedAdditionalItems: item.packedAdditionalItems || 0,
+      pendingAdditionalItems: item.pendingAdditionalItems || 0,
+      totalPackageItems: item.totalPackageItems,
+      packageIsLock: item.packageIsLock,
+      packedPackageItems: item.packedPackageItems,
+      pendingPackageItems: item.pendingPackageItems,
+      isPackage: item.isPackage,
+      orderId: item.orderId,
+      sheduleDate: item.sheduleDate,
+      sheduleTime: item.sheduleTime
+    }));
+  };
+
+  // Map selectedStatus to display status
+  const mapSelectedStatusToStatus = (
+    selectedStatus: 'Pending' | 'Opened' | 'Completed', 
+    isComplete: boolean
+  ): 'Pending' | 'Opened' | 'Completed' | 'In Progress' => {
+    if (isComplete) {
+      return 'Completed';
+    }
+    
+    switch (selectedStatus) {
+      case 'Pending':
+        return 'Pending';
+      case 'Opened':
+        return 'Opened';
+      case 'Completed':
+        return 'Completed';
+      default:
+        return 'Pending';
+    }
+  };
+
+  const fetchTargets = useCallback(async () => {
+    setLoading(true);
+    try {
+      const authToken = await AsyncStorage.getItem("token");
+      
+      if (!authToken) {
+        throw new Error("Authentication token not found. Please login again.");
+      }
+
+      console.log("Making request to:", `${environment.API_BASE_URL}api/distribution/officer-target`);
+      console.log("Auth token exists:", !!authToken);
+
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/distribution/officer-target`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log("Response status:", response.status);
+      console.log("Response data:", response.data);
+
+      if (response.data.success) {
+        const apiData = response.data.data;
+        
+        // Map API data to frontend format
+        const mappedData = mapApiDataToTargetData(apiData);
+        
+        console.log("Mapped data:", mappedData);
+        
+        // Filter based on selectedStatus instead of packageStatus
+        const todoItems = mappedData.filter((item: TargetData) => 
+          ['Pending', 'Opened'].includes(item.selectedStatus) 
+        );
+        
+        const completedItems = mappedData.filter(
+          (item: TargetData) => item.selectedStatus === 'Completed' 
+        );
+
+        console.log("Todo Items:", todoItems);
+        console.log("Completed Items:", completedItems);
+
+        setTodoData(sortByVarietyAndGrade(todoItems));
+        setCompletedData(sortByVarietyAndGrade(completedItems));
+        setError(null);
+      }
+    } catch (err: any) {
+      console.error('Fetch error:', err);
+      console.error('Error response:', err.response?.data);
+      console.error('Error status:', err.response?.status);
+      
+      let errorMessage = t("Error.Failed to fetch data.");
+      
+      if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.response?.status === 400) {
+        errorMessage = "Bad request - please check your authentication";
+      } else if (err.response?.status === 401) {
+        errorMessage = "Unauthorized - please login again";
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
+      
+      setTodoData([]);
+      setCompletedData([]);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, [selectedLanguage, t]);
+
+  // Updated navigation function with lock check
+  const handleRowPress = (item: TargetData) => {
+    // Check if package is locked
+    if (item.packageIsLock === 1) {
+      Alert.alert(
+        t("Alert.Locked Package") || "Locked Package",
+        t("Alert.This package is locked and cannot be accessed") || "This package is locked and cannot be accessed.",
+        [{ text: t("Alert.OK") || "OK" }]
+      );
+      return;
+    }
+
+    const navigationParams = {
+      item: item,
+      centerCode: centerCode || '',
+      status: item.selectedStatus,
+      orderId: item.orderId,
+      invoiceNo: item.invoiceNo,
+      allData: selectedToggle === 'ToDo' ? todoData : completedData
+    };
+
+    // Navigate based on selectedStatus
+    switch (item.selectedStatus) {
+      case 'Pending':
+      case 'Opened':
+      case 'Completed':
+        navigation.navigate('PendingOrderScreen', navigationParams);
+        break;
+      default:
+        navigation.navigate('PendingOrderScreen', navigationParams);
+        break;
+    }
   };
 
   const formatCompletionTime = (dateString: string | null): string | null => {
@@ -254,69 +365,135 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
   useEffect(() => {
     const fetchData = async () => {
       await fetchSelectedLanguage();
-      await fetchTargets();
       const centerCode = await AsyncStorage.getItem('centerCode');
       setcenterCode(centerCode);
+      await fetchTargets();
     };
     fetchData();
-  }, []);
+  }, [fetchTargets]);
 
-  const onRefresh = async () => {
+  const onRefresh = () => {
     setRefreshing(true);
-    await fetchTargets();
-    setRefreshing(false);
+    fetchTargets();
   };
 
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
+  // Updated to use selectedStatus for styling
+  const getStatusColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
+    switch (selectedStatus) {
       case 'Pending': 
-        return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
+        return 'bg-[#FF070733] border border-[#FF070733] text-[#FF0700]';
       case 'Opened': 
-        return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
-      case 'In Progress': 
-        return 'bg-blue-100 border border-blue-300 text-blue-700';
-      // case 'Completed': 
-      //   return 'bg-[#BBFFC6] border border-[#BBFFC6] text-[#308233]';
+        return 'bg-[#FDFF99] border border-[#FDFF99] text-[#A8A100]';
+      case 'Completed': 
+        return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
       default: 
         return 'bg-gray-100 border border-gray-300 text-gray-700';
     }
   };
 
-  const getStatusText = (status: string) => {
-    const statusMap = {
-      'Pending': t("Pending") || 'Pending',
-      'Opened': t("Opened") || 'Opened', 
-      'In Progress': t("InProgress") || 'In Progress',
-      'Completed': t("Completed") || 'Completed'
-    };
-    return statusMap[status as keyof typeof statusMap] || status;
+  // const getStatusText = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
+  //   const statusMap = {
+  //     'Pending': t("Pending") || 'Pending',
+  //     'Opened': t("Opened") || 'Opened', 
+  //     'Completed': t("Completed") || 'Completed'
+  //   };
+  //   return statusMap[selectedStatus] || selectedStatus;
+  // };
+
+  const getStatusText = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
+  switch (selectedStatus) {
+    case 'Pending':
+      return selectedLanguage === 'si' ? 'අපේක්ෂාවෙන්' : 
+             selectedLanguage === 'ta' ? 'நிலுவையில்' : 
+             t("Status.Pending") || 'Pending';
+    case 'Opened':
+      return selectedLanguage === 'si' ? 'විවෘත කර ඇත' : 
+             selectedLanguage === 'ta' ? 'திறக்கப்பட்டது' : 
+             t("Status.Opened") || 'Opened';
+    case 'Completed':
+      return selectedLanguage === 'si' ? 'සම්පූර්ණයි' : 
+             selectedLanguage === 'ta' ? 'நிறைவானது' : 
+             t("Status.Completed") || 'Completed';
+    default:
+      return selectedStatus;
+  }
+};
+
+const getStatusBackgroundColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
+  switch (selectedStatus) {
+    case 'Pending': 
+      return '#FF070733'; // Light red background
+    case 'Opened': 
+      return '#FDFF99'; // Light yellow background
+    case 'Completed': 
+      return '#B7FFB9'; // Light green background
+    default: 
+      return '#F3F4F6'; // Gray background
+  }
+};
+
+const getStatusTextColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
+  switch (selectedStatus) {
+    case 'Pending': 
+      return '#FF0700'; // Red text
+    case 'Opened': 
+      return '#A8A100'; // Dark yellow text
+    case 'Completed': 
+      return '#6AD16D'; // Green text
+    default: 
+      return '#374151'; // Gray text
+  }
+};
+
+const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
+  switch (selectedStatus) {
+    case 'Pending': 
+      return '#FF070733'; // Light red border
+    case 'Opened': 
+      return '#F8FFA6'; // Light yellow border
+    case 'Completed': 
+      return '#B7FFB9'; // Light green border
+    default: 
+      return '#D1D5DB'; // Gray border
+  }
+};
+
+  // Function to get detailed status display for debugging/info
+  const getDetailedStatusDisplay = (item: TargetData) => {
+    if (item.isPackage === 0) {
+      // Only additional items
+      return `Additional: ${item.additionalItemStatus || 'N/A'}`;
+    } else {
+      // Both additional and package items
+      return `Add: ${item.additionalItemStatus || 'N/A'} | Pkg: ${item.packageItemStatus || 'N/A'}`;
+    }
   };
 
   return (
     <View className="flex-1 bg-[#282828]">
       {/* Header */}
       <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
-        <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4">
+        <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4 bg-white/10 rounded-full p-2">
           <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
         <Text className="text-white text-lg font-bold">{t("TargetOrderScreen.My Daily Target")}</Text>
       </View>
 
       {/* Toggle Buttons */}
-      <View className="flex-row justify-center items-center py-4 bg-[#282828] px-4">
+      {/* <View className="flex-row justify-center items-center py-4 bg-[#282828] px-4">
         <TouchableOpacity
           className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'ToDo' ? 'bg-[#2AAD7A]' : 'bg-white'
+            selectedToggle === 'ToDo' ? 'bg-[#980775]' : 'bg-white'
           }`}
           onPress={() => setSelectedToggle('ToDo')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
             {t("TargetOrderScreen.Todo")}
           </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'ToDo' ? 'bg-white' : 'bg-[#2AAD7A]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'ToDo' ? 'text-[#2AAD7A]' : 'text-white'}`}>
+          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'ToDo' ? 'bg-white' : 'bg-[white]'}`}>
+            <Text className={`font-bold text-xs ${selectedToggle === 'ToDo' ? 'text-[#000000]' : 'text-white'}`}>
               {todoData.length.toString().padStart(2, '0')}
             </Text>
           </View>
@@ -324,20 +501,119 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
 
         <TouchableOpacity
           className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'Completed' ? 'bg-[#2AAD7A]' : 'bg-white'
+            selectedToggle === 'Completed' ? 'bg-[#980775]' : 'bg-white'
           }`}
           onPress={() => setSelectedToggle('Completed')}
         >
           <Text className={`font-bold mr-2 ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}>
             {t("TargetOrderScreen.Completed")}
           </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'Completed' ? 'bg-white' : 'bg-[#2AAD7A]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'Completed' ? 'text-[#2AAD7A]' : 'text-white'}`}>
+          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'Completed' ? 'bg-white' : 'bg-[white]'}`}>
+            <Text className={`font-bold text-xs ${selectedToggle === 'Completed' ? 'text-[#000000]' : 'text-white'}`}>
               {completedData.length.toString().padStart(2, '0')}
             </Text>
           </View>
         </TouchableOpacity>
-      </View>
+      </View> */}
+   <View className="flex-row justify-center items-center py-4 bg-[#282828]">
+     {/* To Do Button */}
+     <Animated.View
+       style={{
+         transform: [{ scale: selectedToggle === "ToDo" ? 1.05 : 1 }],
+       }}
+     >
+       <TouchableOpacity
+         className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
+           selectedToggle === "ToDo" ? "bg-[#980775]" : "bg-white"
+         }`}
+         onPress={() => setSelectedToggle("ToDo")}
+         style={{
+           shadowColor: selectedToggle === "ToDo" ? "#980775" : "transparent",
+           shadowOffset: { width: 0, height: 2 },
+           shadowOpacity: selectedToggle === "ToDo" ? 0.3 : 0,
+           shadowRadius: 4,
+           elevation: selectedToggle === "ToDo" ? 4 : 0,
+         }}
+       >
+         <Animated.Text
+           className={`font-bold ${
+             selectedToggle === "ToDo" ? "text-white" : "text-black"
+           } ${selectedToggle === "ToDo" ? "mr-2" : ""}`}
+           style={{
+             opacity: selectedToggle === "ToDo" ? 1 : 0.7,
+           }}
+         >
+           {t("DailyTarget.Todo")}
+         </Animated.Text>
+         
+         {selectedToggle === "ToDo" && (
+           <Animated.View
+             className="bg-white rounded-full px-2 overflow-hidden"
+             style={{
+               opacity: 1,
+               transform: [
+                 { scaleX: 1 },
+                 { scaleY: 1 }
+               ],
+             }}
+           >
+             <Text className="text-[#000000] font-bold text-xs">
+               {todoData.length}
+             </Text>
+           </Animated.View>
+         )}
+       </TouchableOpacity>
+     </Animated.View>
+   
+     {/* Completed Button */}
+     <Animated.View
+       style={{
+         transform: [{ scale: selectedToggle === "Completed" ? 1.05 : 1 }],
+       }}
+     >
+       <TouchableOpacity
+         className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
+           selectedToggle === "Completed" ? "bg-[#980775]" : "bg-white"
+         }`}
+         onPress={() => setSelectedToggle("Completed")}
+         style={{
+           shadowColor: selectedToggle === "Completed" ? "#980775" : "transparent",
+           shadowOffset: { width: 0, height: 2 },
+           shadowOpacity: selectedToggle === "Completed" ? 0.3 : 0,
+           shadowRadius: 4,
+           elevation: selectedToggle === "Completed" ? 4 : 0,
+         }}
+       >
+         <Animated.Text
+           className={`font-bold ${
+             selectedToggle === "Completed" ? "text-white" : "text-black"
+           }`}
+           style={{
+             opacity: selectedToggle === "Completed" ? 1 : 0.7,
+           }}
+         >
+           {t("DailyTarget.Completed")}
+         </Animated.Text>
+         
+         {selectedToggle === "Completed" && (
+           <Animated.View
+             className="bg-white rounded-full px-2 ml-2 overflow-hidden"
+             style={{
+               opacity: 1,
+               transform: [
+                 { scaleX: 1 },
+                 { scaleY: 1 }
+               ],
+             }}
+           >
+             <Text className="text-[#000000] font-bold text-xs">
+               {completedData.length}
+             </Text>
+           </Animated.View>
+         )}
+       </TouchableOpacity>
+     </Animated.View>
+   </View>
 
       {/* Content */}
       <ScrollView
@@ -345,18 +621,38 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         {/* Table Header */}
-        <View className="flex-row bg-[#2AAD7A] py-3">
+        <View className="flex-row bg-[#980775] py-3">
           <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
           <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
-          <Text className="flex-[2] text-center text-white font-bold">
-            {selectedToggle === 'ToDo' ? t("TargetOrderScreen.Status") : "Completed Time"}
-          </Text>
+          
+          {selectedToggle === 'ToDo' ? (
+            <>
+              <Text className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Date")}</Text>
+          
+              <Text className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Status")}</Text>
+            </>
+          ) : (
+            <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Completed Time")}</Text>
+          )}
         </View>
+
+        {/* Error Message */}
+        {error && (
+          <View className="bg-red-100 border border-red-400 px-4 py-3 mx-4 mt-4 rounded">
+            <Text className="text-red-700 text-center">{error}</Text>
+            <TouchableOpacity 
+              onPress={() => fetchTargets()} 
+              className="mt-2 bg-red-500 px-4 py-2 rounded"
+            >
+              <Text className="text-white text-center">{t("TargetOrderScreen.Retry")}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {loading ? (
           <View className="flex-1 justify-center items-center py-20">
             <LottieView
-              source={require('../../assets/lottie/collector.json')}
+              source={require('../../assets/lottie/newLottie.json')}
               autoPlay
               loop
               style={{ width: 200, height: 200 }}
@@ -365,19 +661,18 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
         ) : displayedData.length > 0 ? (
           displayedData.map((item, index) => (
             <TouchableOpacity
-              key={index}
+              key={item.id || index}
               className={`flex-row py-4 border-b border-gray-200 ${
                 index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
               }`}
               onPress={() => handleRowPress(item)}
-              activeOpacity={0.7}
             >
               {/* Row Number */}
               <View className="flex-1 items-center justify-center relative">
                 {selectedToggle === 'ToDo' ? (
                   <Text className="text-center font-medium">{(index + 1).toString().padStart(2, '0')}</Text>
                 ) : (
-                  <Ionicons name="flag" size={20} color="#2AAD7A" />
+                  <Ionicons name="flag" size={20} color="#980775" />
                 )}
               </View>
 
@@ -386,22 +681,60 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
                 <Text className="text-center font-medium text-gray-800">
                   {item.invoiceNo || `INV${item.id || (index + 1).toString().padStart(6, '0')}`}
                 </Text>
-              </View>
-
-              {/* Status or Completed Time */}
-              <View className="flex-[2] items-center justify-center px-2">
-                {selectedToggle === 'ToDo' ? (
-                  <View className={`px-3 py-2 rounded-lg ${getStatusColor(item.status || 'Pending')}`}>
-                    <Text className="text-xs font-medium text-center">
-                      {getStatusText(item.status || 'Pending')}
-                    </Text>
-                  </View>
-                ) : (
-                  <Text className="text-center text-gray-600 text-sm">
-                    {item.completedTime || formatCompletionTime(item.updatedAt as any) || 'N/A'}
-                  </Text>
+                {/* Red dot indicator for locked packages */}
+                {item.packageIsLock === 1 && (
+                  <View className="absolute right-1 top-1 w-3 h-3 bg-red-500 rounded-full"></View>
                 )}
               </View>
+
+              {selectedToggle === 'ToDo' ? (
+                <>
+                  {/* Date */}
+                  <View className="flex-[2] items-center justify-center px-2">
+                    <Text className={`text-center font-medium text-xs ${
+                      isScheduleDateToday(item.sheduleDate) ? 'text-red-600' : 'text-gray-800'
+                    }`}>
+                      {formatScheduleDate(item.sheduleDate)}  {formatScheduleTime(item.sheduleTime) || 'N/A'}
+                    </Text>
+                  </View>
+
+                  {/* Time */}
+                  
+
+                  {/* Status */}
+                {/* Status */}
+<View className="flex-[2] items-center justify-center px-2">
+  <View 
+    style={{
+      backgroundColor: getStatusBackgroundColor(item.selectedStatus),
+      borderColor: getStatusBorderColor(item.selectedStatus),
+      borderWidth: 1,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderRadius: 20,
+    }}
+  >
+    <Text 
+      style={{
+        color: getStatusTextColor(item.selectedStatus),
+        fontSize: 12,
+        fontWeight: '500',
+        textAlign: 'center'
+      }}
+    >
+      {getStatusText(item.selectedStatus)}
+    </Text>
+  </View>
+</View>
+                </>
+              ) : (
+                /* Completed Time */
+                <View className="flex-[2] items-center justify-center px-2">
+                  <Text className="text-center text-gray-600 text-sm">
+                    {item.completedTime ? formatCompletionTime(item.completedTime) : 'N/A'}
+                  </Text>
+                </View>
+              )}
             </TouchableOpacity>
           ))
         ) : (

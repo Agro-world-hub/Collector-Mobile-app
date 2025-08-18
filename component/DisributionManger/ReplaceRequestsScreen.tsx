@@ -1,0 +1,230 @@
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+  RefreshControl,
+} from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "../types";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { environment } from '@/environment/environment';
+
+type ReplaceRequestsNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "ReplaceRequestsScreen"
+>;
+
+interface ReplaceRequestsProps {
+  navigation: ReplaceRequestsNavigationProp;
+  route: ReplaceRequestsRouteProp;
+}
+
+type ReplaceRequestsRouteProp = RouteProp<RootStackParamList, "ReplaceRequestsScreen">;
+
+interface ReplaceRequestItem {
+  id: string;
+  orderId: string;
+  orderPackageId: string;
+  productDisplayName: string;
+  createdAt: string;
+  status: string;
+  price: string;
+  qty: string;
+  productTypeName: string;
+  invNo: string;
+  productType: string;
+  productId: string;
+  userId: string;
+  packageId?: string;
+  productNormalPrice?: string;
+  productDiscountedPrice?: string;
+  replaceProductDisplayName?:string;
+  replaceQty?:string;
+  replacePrice?:string;
+}
+
+const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
+  route,
+  navigation,
+}) => {
+  const { t } = useTranslation();
+  const [replaceRequests, setReplaceRequests] = useState<ReplaceRequestItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchReplaceRequests = useCallback(async () => {
+    try {
+      const authToken = await AsyncStorage.getItem("token");
+      
+      if (!authToken) {
+        throw new Error("Authentication token not found. Please login again.");
+      }
+
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/distribution-manager/get-replacerequest`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log("bhdjaovm", response.data);
+
+      if (response.data.success) {
+        // Map the API response data to our frontend format
+        const mappedData = response.data.data.map((item: any) => ({
+          id: item.id.toString(),
+          orderId: item.orderId ? item.orderId.toString() : '',
+          orderPackageId: item.orderPackageId.toString(),
+          productDisplayName: item.productDisplayName,
+          createdAt: new Date(item.createdAt).toLocaleString(),
+          status: item.status,
+          price: item.price,
+          qty: item.qty,
+          productTypeName: item.productTypeName,
+          invNo: item.invNo,
+          productType: item.productType,
+          productId: item.productId,
+          userId: item.userId,
+          packageId: item.packageId,
+          productNormalPrice: item.productNormalPrice,
+          productDiscountedPrice: item.productDiscountedPrice,
+          replaceProductDisplayName:item.replaceProductDisplayName,
+          replaceQty:item.replaceQty,
+          replacePrice:item.replacePrice
+        }));
+        
+        setReplaceRequests(mappedData);
+      }
+    } catch (error) {
+      console.error("Error fetching replace requests:", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchReplaceRequests();
+  }, [fetchReplaceRequests]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchReplaceRequests();
+  }, [fetchReplaceRequests]);
+
+  const handleNavigateToApprove = (item: ReplaceRequestItem) => {
+    navigation.navigate("ReplaceRequestsApprove" as any, {
+      replaceRequestData: {
+        id: item.id,
+        orderId: item.orderId || item.invNo, // Use invNo if orderId is not available
+        orderPackageId: item.orderPackageId,
+        productDisplayName: item.productDisplayName,
+        productTypeName: item.productTypeName,
+        price: item.price,
+        originalQty: item.qty,
+        status: item.status,
+        createdAt: item.createdAt,
+        invNo: item.invNo,
+        productType: item.productType,
+        productId: item.productId,
+        userId: item.userId,
+        packageId: item.packageId,
+        productNormalPrice: item.productNormalPrice,
+        productDiscountedPrice: item.productDiscountedPrice,
+        qty: item.qty,
+        replaceProductDisplayName:item.replaceProductDisplayName,
+        replaceQty:item.replaceQty,
+          replacePrice:item.replacePrice
+      }
+    });
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return 'text-orange-500';
+      case 'approved':
+        return 'text-green-500';
+      case 'rejected':
+        return 'text-red-500';
+      default:
+        return 'text-gray-500';
+    }
+  };
+
+  const renderRequestItem = ({ item }: { item: ReplaceRequestItem }) => (
+    <TouchableOpacity onPress={() => handleNavigateToApprove(item)}>
+      <View className="flex-row items-center bg-[#ADADAD1A] p-3 px-4 mb-4 rounded-xl">
+        <View className="flex-1">
+          <Text className="font-bold text-base text-gray-900">
+            {t("ReplaceRequestsScreen.Order ID")} {item.invNo}
+          </Text>
+          <Text className="text-gray-700 text-sm">
+            {t("ReplaceRequestsScreen.Replacing Item")} {item.replaceProductDisplayName}
+          </Text>
+         
+          <Text className="text-gray-500 text-sm">
+            {t("Requested Time")}: {item.createdAt}
+          </Text>
+        
+        </View>
+        <View className="p-2 rounded-full">
+          <AntDesign name="right" size={20} color="#5f5c5cff" />
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center bg-white">
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  return (
+    <ScrollView 
+      className="flex-1 bg-white p-4"
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <View className="mb-6">
+        <Text className="text-lg font-bold text-center">{t("Replace Requests")}</Text>
+      </View>
+
+      <View className="px-4">
+        <Text className="text-base pb-4 text-[#21202B] font-semibold">
+          {t("All")} ({replaceRequests.length})
+        </Text>
+        
+        {replaceRequests.length === 0 ? (
+          <Text className="text-center text-gray-500 py-10">
+            {t("No replace requests found")}
+          </Text>
+        ) : (
+          <FlatList 
+            data={replaceRequests}
+            keyExtractor={(item) => item.id}
+            renderItem={renderRequestItem}
+            scrollEnabled={false}
+          />
+        )}
+      </View>
+    </ScrollView>
+  );
+};
+
+export default ReplaceRequestsScreen;

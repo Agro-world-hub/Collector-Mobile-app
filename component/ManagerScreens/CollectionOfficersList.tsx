@@ -254,8 +254,8 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
   </TouchableOpacity>;
 
   return (
-    <View className="flex-1 bg-[#2AAD7A]">
-      <View className="bg-[#2AAD7A] py-6 px-4  relative">
+    <View className="flex-1 bg-[#313131]">
+      <View className="bg-[#313131] py-6 px-4  relative">
         {/* <TouchableOpacity
           className="absolute top-6 left-4 z-50"
           onPress={() => {
@@ -375,7 +375,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
           // Lottie Loader for 4 seconds
           <View className="flex-1 justify-center items-center -mt-[25%]">
             <LottieView
-              source={require("../../assets/lottie/collector.json")} // Ensure JSON file is correct
+              source={require("../../assets/lottie/newLottie.json")} // Ensure JSON file is correct
               autoPlay
               loop
               style={{ width: 350, height: 350 }}
@@ -410,7 +410,8 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
           onPress={async () => {
             try {
               await AsyncStorage.removeItem("officerFormData"); // Clear stored data
-              navigation.navigate("AddOfficerBasicDetails" as any);
+              // navigation.navigate("AddOfficerBasicDetails" as any);
+              navigation.navigate("AddOfficerBasicDetails", {jobRolle:"Collection Officer"});
             } catch (error) {
               console.error("Error clearing form data:", error);
             }

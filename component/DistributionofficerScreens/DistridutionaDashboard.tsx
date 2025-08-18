@@ -40,11 +40,15 @@ interface ProfileData {
   companyNameSinhala: string;
   companyNameEnglish: string;
   companyNameTamil: string;
+  jobRole:string;
+  centerId: number;
 }
 
 const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigation }) => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [empId, setEmpId] = useState<string | null>(null);
+  const [jobRole, setJobeRole] = useState<string | null>(null);
+    const [centerId, setCenterId] = useState<string | null>(null);
   const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
@@ -64,13 +68,16 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
       const token = await AsyncStorage.getItem("token");
       if (token) {
         const response = await axios.get(
-          `${environment.API_BASE_URL}api/collection-officer/user-profile`,
+          `${environment.API_BASE_URL}api/distribution-manager/user-profile`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
         setProfile(response.data.data);
         setEmpId(response.data.data.empId);
+        setJobeRole(response.data.data.jobRole)
+  
+        setCenterId(response.data.data.centerId); 
         console.log("data:", response.data.data);
       }
     } catch (error) {
@@ -78,34 +85,45 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
     }
   };
 
+  console.log("jobeJole-----------------",jobRole)
+   console.log("centerId--------",centerId)
+
   const fetchTargetPercentage = async () => {
-    try {
-      const token = await AsyncStorage.getItem("token");
-      if (!token) {
-        Alert.alert(t("Error.error"), t("Error.User not authenticated."));
-        return;
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) {
+      Alert.alert(t("Error.error"), t("Error.User not authenticated."));
+      return;
+    }
+    const response = await axios.get(
+      `${environment.API_BASE_URL}api/distribution/get-distribution-target`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
       }
-      const response = await axios.get(
-        `${environment.API_BASE_URL}api/target/officer-task-summary`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+    );
+    console.log("response for percentage target", response.data);
+    
+    if (response.data.success && response.data.data && response.data.data.length > 0) {
+      const targets = response.data.data;
+      
+      // Option 1: Use first target only
+      const firstTarget = targets[0];
+      const percentage = parseInt(
+        firstTarget.completionPercentage.replace("%", ""),
+        10
       );
-      console.log("response for percentage target", response.data);
-      if (response.data.success) {
-        const percentage = parseInt(
-          response.data.completionPercentage.replace("%", ""),
-          10
-        );
-        setTargetPercentage(percentage);
-      } else {
-        setTargetPercentage(0);
-      }
-    } catch (error) {
-      console.error("Failed to fetch target percentage:", error);
+      setTargetPercentage(percentage);
+      
+    
+      
+    } else {
       setTargetPercentage(0);
     }
-  };
+  } catch (error) {
+    console.error("Failed to fetch target percentage:", error);
+    setTargetPercentage(0);
+  }
+};
 
   useEffect(() => {
     fetchUserProfile();
@@ -158,6 +176,10 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
     }
   };
 
+
+
+  
+
   const getFullName = () => {
     if (!profile) return "Loading...";
     switch (selectedLanguage) {
@@ -189,7 +211,6 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
       };
     }
   };
-
   
 
   return (
@@ -231,7 +252,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
       </TouchableOpacity>
 
       {/* Conditional Rendering for Daily Target */}
-      {targetPercentage !== null && targetPercentage < 100 ? (
+      {/* {targetPercentage !== null && targetPercentage < 100 ? (
         <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#DF9301]">
           <Text className="text-center text-yellow-600 font-bold">
             {" "}
@@ -257,7 +278,55 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
             {t("DistridutionaDashboard.Youhaveachieved")}
           </Text>
         </View>
-      )}
+      )} */}
+
+
+{/* Conditional Rendering for Daily Target */}
+{targetPercentage !== null && targetPercentage < 100 ? (
+  <View 
+    className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4"
+    style={{
+      shadowColor: '#000000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 4, // For Android
+    }}
+  >
+    <Text className="text-center text-yellow-600 font-bold">
+      {" "}
+      🚀{t("DistridutionaDashboard.Keep")}
+    </Text>
+
+    <Text className="text-center text-gray-500">
+      {t("DistridutionaDashboard.Youhavenotachieved")}
+    </Text>
+  </View>
+) : (
+  <View 
+    className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4"
+    style={{
+      shadowColor: '#000000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 4, // For Android
+    }}
+  >
+    <View className="flex-row justify-center items-center mb-2">
+      <Image
+        source={require("../../assets/images/hand.webp")} // Replace with your image path
+        className="w-8 h-8 mr-2"
+      />
+      <Text className="text-center text-[#2AAD7A] font-bold">
+        {t("DistridutionaDashboard.Completed")}
+      </Text>
+    </View>
+    <Text className="text-center text-gray-500">
+      {t("DistridutionaDashboard.Youhaveachieved")}
+    </Text>
+  </View>
+)}
 
       <View className="flex items-center justify-center my-6 mt-[13%]">
         <View className="relative">
@@ -265,11 +334,11 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
             size={100}
             width={8}
             fill={targetPercentage !== null ? targetPercentage : 0} // Dynamically set progress
-            tintColor="#34D399"
+            tintColor="#000000"
             backgroundColor="#E5E7EB"
           />
           <View className="absolute items-center justify-center h-24 w-24">
-            <Text className="text-2xl font-bold">
+            <Text className="text-2xl font-bold ml-3  mt-1">
               {targetPercentage !== null ? `${targetPercentage}%` : "0%"}
             </Text>
           </View>
@@ -291,21 +360,47 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
 
       {/* Action Buttons */}
       <View className="flex-row flex-wrap justify-between p-6 mt-[-5%]">
-        <TouchableOpacity
-          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative"
-          onPress={() => navigation.navigate("TargetOrderScreen" as any)}
-        >
+
+        { jobRole === "Distribution Center Manager" ? (
+           <TouchableOpacity           
+  className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative border border-[#980775]"           
+  onPress={() => navigation.navigate("CenterTargetScreen", { centerId: centerId } as any)}         
+>
           <Image
-            source={require("../../assets/images/goal.webp")}
+            source={require("../../assets/images/New/centertarget.png")}
             className="w-8 h-8 absolute top-2 right-2"
           />
           <Text
             style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
             className="text-gray-700 text-lg absolute bottom-2 left-2"
           >
+            {t("CenterTarget.CenterTarget")}
+          </Text>
+        </TouchableOpacity>
+
+        ):(
+
+ <TouchableOpacity
+          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg border border-[#980775] shadow-gray-500 relative"
+          onPress={() => navigation.navigate("TargetOrderScreen" as any)}
+        >
+          <Image
+            source={require("../../assets/images/New/packing.png")}
+            className="w-8 h-8 absolute top-2 right-2"
+          />
+          <Text
+            style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+            className="text-[#555464] text-lg absolute bottom-2 left-2"
+          >
             {t("DistridutionaDashboard.TargetOrders")}
           </Text>
         </TouchableOpacity>
+        
+        
+
+
+        )}
+       
 
        
       </View>

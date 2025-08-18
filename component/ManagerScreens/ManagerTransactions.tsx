@@ -227,7 +227,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({
     <SafeAreaView className="flex-1 bg-white">
       <View>
         {/* Header */}
-        <View className="bg-[#2AAD7A] p-4  rounded-b-[35px] shadow-md">
+        <View className="bg-[#313131] p-4  rounded-b-[35px] shadow-md">
           <View className="flex-row items-center justify-between">
             <TouchableOpacity
               onPress={() => navigation.goBack()}
@@ -268,7 +268,16 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({
             placeholderTextColor="grey"
             className="flex-1 text-sm text-gray-800"
             value={searchQuery}
-            onChangeText={handleSearch}
+           // onChangeText={handleSearch}
+            onChangeText={(text) => {
+      // Remove special characters (allow only letters, numbers, and spaces)
+      const cleanedText = text.replace(/[^a-zA-Z0-9\s]/g, '');
+      
+      // Prevent leading space
+      const finalText = cleanedText.replace(/^\s+/, '');
+      
+      handleSearch(finalText);
+    }}
           />
           <TouchableOpacity
             onPress={() => handleSearch(searchQuery)}
@@ -323,7 +332,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({
       {loading ? (
         <View className="flex-1 justify-center items-center">
           <LottieView
-            source={require("../../assets/lottie/collector.json")}
+            source={require("../../assets/lottie/newLottie.json")}
             autoPlay
             loop
             style={{ width: 150, height: 150 }}

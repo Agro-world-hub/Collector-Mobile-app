@@ -78,7 +78,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({
     <ScrollView className="bg-white">
       <View className="flex-1 bg-white">
         {/* Header */}
-        <View className="flex-row items-center bg-[#2AAD7A] p-6 rounded-b-lg">
+        <View className="flex-row items-center bg-[#313131] p-6 rounded-b-lg">
           {/* <TouchableOpacity onPress={() => navigation.navigate("EditTargetScreen")}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity> */}
@@ -123,7 +123,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({
               {t("EditTargetManager.TotalTarget")}
             </Text>
             <TextInput
-              className="border border-gray-300 rounded-md px-3 py-2 mt-2 text-gray-800"
+              className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mt-2 text-gray-800"
               value={dailyTarget ? dailyTarget.toString() : "0"}
               editable={false}
             />
@@ -134,7 +134,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({
             <Text className="text-gray-600 font-medium">
               {t("EditTargetManager.My Target")}
             </Text>
-            <View className="flex-row items-center mt-2 border border-gray-300 rounded-md px-3 py-2">
+            <View className="flex-row items-center mt-2 border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2">
               {/* <TextInput
             className="flex-1 text-gray-800"
             value={target ? target.toString() : '0'}
@@ -150,7 +150,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({
                 <Ionicons
                   name={isEditing ? "pencil" : "pencil"}
                   size={20}
-                  color={isEditing ? "green" : "green"}
+                  color={isEditing ? "#F4F4F4" : "black"}
                 />
               </TouchableOpacity>
             </View>
@@ -159,7 +159,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({
             {isEditing && (
               <View className="flex-row justify-center space-x-4 mt-4 p-5">
                 <TouchableOpacity
-                  className="flex-1 bg-[#D16D6A] px-6 py-2 rounded-md items-center"
+                  className="flex-1 bg-[#FF0700] px-6 py-2 rounded-full items-center"
                   onPress={() =>
                     navigation.navigate("Main", {
                       screen: "PassTargetScreen",
@@ -182,7 +182,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  className="flex-1 bg-[#2AAD7A] px-6 py-2 rounded-md items-center"
+                  className="flex-1 bg-[#980775] px-6 py-2 rounded-full items-center"
                   onPress={() =>
                     navigation.navigate("Main", {
                       screen: "RecieveTargetScreen",
@@ -215,7 +215,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({
               {t("EditTargetManager.Amount")}
             </Text>
             <TextInput
-              className="border border-gray-300 rounded-md px-3 py-2 mt-2 text-gray-800"
+              className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mt-2 text-gray-800"
               value={todo ? todo.toString() : "0"}
               editable={false}
             />

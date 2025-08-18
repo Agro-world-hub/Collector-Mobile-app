@@ -376,7 +376,7 @@
     "WeneedCamera":" We need camera access to scan QR codes. Please enable camera permissions in your device settings.",
     "Close":"Close",
     "TapScan":"Tap to Scan Again",
-    "Failed":"Failed",
+    "Failed":"Failed !",
     "SearchNIC":"Search by User’s NIC number",
     "Requesting for camera permission":"Requesting for camera permission"
   },
@@ -485,7 +485,8 @@
     "Claim":"Claim",
     "Select Job Role":"Select Job Role",
     "Collection Officer":"Collection Officer",
-    "Customer Officer": "Customer Officer"
+    "Customer Officer": "Customer Officer",
+    "Distribution Officer": "බෙදා හැරීමේ නිලධාරියා"
   },
   "DisclaimOfficer":{
     "Are you sure you want to disclaim this officer?":"Are you sure you want to disclaim this officer?",
@@ -837,5 +838,126 @@
 
     "ContactUs":"எங்களைத் தொடர்பு கொள்ளவும்",
     "ContactUsText": "இந்த தனியுரிமைக் கொள்கை தொடர்பாக ஏதேனும் கேள்விகள், கவலைகள் அல்லது கோரிக்கைகள் இருந்தால், அல்லது உங்கள் தனிப்பட்ட தரவு தொடர்பான உங்கள் உரிமைகளைப் பயன்படுத்த விரும்பினால், info@agroworld.lk என்ற முகவரியில் எங்களைத் தொடர்பு கொள்ளவும். மாற்றாக, நீங்கள் எங்களை எண். 46/42, நவம் மாவத்தை, கொழும்பு 02. இலங்கை என்ற முகவரிக்கு அஞ்சல் மூலம் தொடர்பு கொள்ளலாம்."
-    }
+    },
+    "DistridutionaDashboard":{
+     "LNG": "ta",
+    "Keep": "தொடர்ந்து செல்லுங்கள்!",
+     "Youhavenotachieved":"இன்று உங்கள் தினசரி இலக்கை நீங்கள் அடையவில்லை",
+     "Completed":"முடிந்தது!",
+     "Youhaveachieved":"இன்று உங்கள் தினசரி இலக்கை நீங்கள் அடைந்துவிட்டீர்கள்",
+    "Yourtarget": "உங்கள் இலக்கு",
+    "Progress": "முன்னேற்றம்",
+    "TargetOrders":"இலக்கு ஆர்டர்கள்",
+    "Search": "NIC மூலம் தேடு",
+    "Pending":"நிலுவையில் உள்ளது",
+     "Opened": "திறக்கப்பட்டது"
+   
+  },
+  "TargetOrderScreen" :{
+     "LNG": "ta",
+    "CenterTarget":"மைய இலக்கு",
+    "Todo":"செய்ய",
+    "Completed":"முடிந்தது",
+    "No":"இல்லை",
+    "Variety":"வகை",
+    "Grade":"தரம்",
+    "Target":"இலக்கு (கிலோ))",
+    "Todo()":"செய்ய வேண்டியவை (கிலோ)",
+    "My Daily Target":"எனது தினசரி இலக்கு",
+    "Invoice No":"விலைப்பட்டியல் எண்",
+    "Status":"நிலை",
+    "Date":"தேதி & நேரம்",
+    "Completed Time":"முடிக்கப்பட்ட நேரம்",
+    "Retry":"மீண்டும் முயற்சிக்கவும்"
+  },
+  "OpenedOrderScreen":{
+    "INV No":"செய்ய வேண்டியவை எண் :",
+    "Pending":"நிலுவையில் உள்ளது",
+    "Additional Items":"கூடுதல் உருப்படிகள்",
+    "Submit":"சமர்ப்பி",
+    "Leave without Submitting": "சமர்ப்பிக்காமல் வெளியேறு",
+    "Stay on page":"பக்கத்தில் இரு",
+    "You have unsubmitted changes":"உங்களிடம் சமர்ப்பிக்கப்படாத மாற்றங்கள் உள்ளன!",
+    "If you leave this page now, your changes will be lost.":"நீங்கள் இப்போது இந்தப் பக்கத்தை விட்டு வெளியேறினால், உங்கள் மாற்றங்கள் இழக்கப்படும்.",
+    "Do you want to continue without saving?":"சேமிக்காமல் தொடர விரும்புகிறீர்களா?",
+    "Opened":"திறக்கப்பட்டது",
+    "Completed":"முடிந்தது"
+  },
+  "PendingOrderScreen":{
+    "Custom Selected Items":"தனிப்பயன் தேர்ந்தெடுக்கப்பட்ட உருப்படிகள்",
+    "Back to Edit":"திருத்தத்திற்குத் திரும்பு",
+    "Mark as Completed":"முடிந்ததாகக் குறி",
+    "TapGoback":"திருத்த 'திருத்த' என்பதைத் தட்டவும்.",
+    "MarkingAs":"விரைவில் முடிந்ததாகக் குறியிடுதல்",
+    "FinishUp":"முடிந்தது!",
+    "Save":"சேமி",
+    "All checked":"அனைத்தும் சரிபார்க்கப்பட்டது. ஆர்டர் நகரும்",
+    "Completed":"முடிந்தது",
+    "onsave":"சேமித்ததில்.",
+    "Unchecked items":"தேர்வு செய்யப்படாத உருப்படிகள் அப்படியே இருக்கும். சேமிப்பது இப்போது ஆர்டரை வைத்திருக்கும்",
+    "Opened":"திறக்கப்பட்டது",
+    "Status":"நிலை",
+    "Leave without Submitting":"சமர்ப்பிக்காமல் வெளியேறு",
+    "OK":"சரி",
+    "TheOrder":"ஆர்டர் முடிந்ததாகக் குறிக்கப்பட்டுள்ளது.",
+    "Completed Successfully":"வெற்றிகரமாக முடிந்தது!",
+    "Go Back":"செல் திரும்பவும்",
+    "Send Replace Request":"மாற்று கோரிக்கையை அனுப்பு",
+    "No products available":"தயாரிப்பு எதுவும் கிடைக்கவில்லை",
+    "Rs":"ரூ",
+    "New Product Details":"புதிய தயாரிப்பு விவரங்கள்",
+    "Product Type":"தயாரிப்பு வகை:",
+    "Selected product":"தேர்ந்தெடுக்கப்பட்ட தயாரிப்பு:",
+    "Replace Product":"தயாரிப்பு மாற்றவும்",
+    "Marking as completed in":"முடிந்ததாகக் குறிப்பது",
+    "seconds":"வினாடிகள்"
+
+  },
+  "Status": {
+    "Pending": "நிலுவையில் உள்ளது",
+    "Opened": "திறக்கப்பட்டது",
+    "Completed": "முடிக்கப்பட்டது",
+    "InProgress": "செயல்பாட்டில் உள்ளது"
+  },
+  "TimerContainer":{
+    "Start":"தொடங்கு",
+    "Pause":"இடைநிறுத்தம்",
+    "Reset":"மீட்டமை"
+  },
+  "DailyTargetListOfficerDistribution":{
+    "Are you sure":"இந்த இலக்கை வேறு எந்த அதிகாரிக்கும் அனுப்ப விரும்புகிறீர்களா?",
+    "Cancel":"ரத்துசெய்",
+    "Pass":"தேர்வு",
+    "Completed Time":"முடிக்கப்பட்ட நேரம்",
+    "Retry":"மீண்டும் முயற்சிக்கவும்"
+  },
+  "DistributionOfficersList":{
+    "EMPID":"EMP ஐடி :"
+  },
+  "PassTarget":{
+    "EMP ID":"EMP ஐடி",
+    "Select Assignee":"ஒதுக்கீட்டாளரைத் தேர்ந்தெடுக்கவும்",
+    "Loading officers":"ஏற்றுகிறது அதிகாரிகள்..",
+    "Selected Targets":"தேர்ந்தெடுக்கப்பட்ட இலக்குகள்",
+    "Save":"சேமி",
+    "Dismiss":"நிராகரி"
+  },
+  "ReplaceRequestsApprove":{
+    "Loading replace request":"மாற்று கோரிக்கையை ஏற்றுகிறது...",
+    "Order ID":"ஆர்டர் ஐடி:",
+    "Defined product":"வரையறுக்கப்பட்ட தயாரிப்பு",
+    "Relevant Product Type":"தொடர்புடைய தயாரிப்பு வகை:",
+    "Replacing Product Details":"தயாரிப்பு விவரங்களை மாற்றுதல்",
+    "ID":"ஐடி:",
+    "No products available":"தயாரிப்புகள் எதுவும் கிடைக்கவில்லை",
+    "Approve":"அங்கீகரி",
+    "Rs":"ரூ."
+  },
+  "ReplaceRequestsScreen":{
+    "Order ID":"ஆர்டர் ஐடி:",
+    "Replacing Item":"உருப்படியை மாற்றுதல்:"
+  }
+
+
+
 }

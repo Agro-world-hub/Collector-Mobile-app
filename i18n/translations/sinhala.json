@@ -216,15 +216,16 @@
     "Todo()":"කරන්න (kg)",
     "Completedkg":"සම්පූර්ණ (kg)",
       "noCompletedTargets":"සම්පූර්ණ කළ ඉලක්ක හමු නොවීය",
-     "NoTodoItems":" ඉලක්ක හමු නොවීය"
+     "NoTodoItems":" ඉලක්ක හමු නොවීය",
+      "Out":"Out"
   },
   "SearchPrice":{
     "LNG": "si",
     "SearchPrice":"මිල සොයන්න",
     "Crop":"බෝගයේ නම",
-    "SelectCrop":"බෝග තෝරන්න",
+    "SelectCrop":"--බෝග තෝරන්න--",
     "Variety":"විවිධත්වය",
-    "SelectVariety":"ප්‍රභේදය තෝරන්න",
+    "SelectVariety":"--ප්‍රභේදය තෝරන්න--",
     "Search":"සොයන්න",
     "Selection Required":"තේරීම අවශ්‍යයි",
     "Please select both Crop and Variety to continue":"කරුණාකර ඉදිරියට යාමට බෝග සහ ප්‍රභේද දෙකම තෝරන්න.",
@@ -267,7 +268,7 @@
      "AccountNumberError":"කරුණාකර වලංගු ගිණුම් අංකයක් ඇතුළත් කරන්න.",
       "InvalidNIC":"NIC එක ඉලක්කම් 12 කින් හෝ ඉලක්කම් 9 කින් පසුව V හෝ v විය යුතුය",
       "OnlyDigitsAllowed":"ඉලක්කම් සඳහා පමණක් අවසර ඇත",
-      "MustStartWith7":"7 න් පටන් ගත යුතුයි",
+      "MustStartWith7":"අවලංගු දුරකථන අංකයකි. ආකෘතිය 7 න් ආරම්භ විය යුතුය (උදා: 7XXXXXXXXX)",
       "InvalidPhoneLength":"වලංගු නොවන දුරකථන අංක දිග"
   },
   "PriceChart":{
@@ -377,7 +378,7 @@
     "WeneedCamera":" QR කේත පරිලෝකනය කිරීමට අපට කැමරා ප්‍රවේශය අවශ්‍යයි. කරුණාකර ඔබගේ උපාංග සැකසුම් තුළ කැමරා අවසර සබල කරන්න.",
     "Close":"වසන්න",
     "TapScan":"නැවත ස්කෑන් කිරීමට තට්ටු කරන්න",
-    "Failed":"අසාර්ථක",
+    "Failed":"අසාර්ථක !",
     "SearchNIC":"පරිශීලකයාගේ NIC අංකය අනුව සොයන්න",
     "Requesting for camera permission":"කැමරා අවසරය ඉල්ලා සිටීම"
   },
@@ -486,7 +487,8 @@
     "Claim":"හිමිකම් දෙන්න",
     "Select Job Role":"රැකියා භූමිකාව තෝරන්න",
     "Collection Officer":"එකතු කිරීමේ නිලධාරියා",
-    "Customer Officer": "පාරිභෝගික නිලධාරියා"
+    "Customer Officer": "පාරිභෝගික නිලධාරියා",
+    "Distribution Officer": "බෙදා හැරීමේ නිලධාරියා"
   },
   "DisclaimOfficer":{
     "Are you sure you want to disclaim this officer?":"මෙම නිලධාරියාගේ හිමිකම ඉවත් කිරීමට ඔබට අවශ්‍ය බව, ඔබට විශ්වාසද?",
@@ -547,6 +549,7 @@
     "Save":"සුරකින්න",
     "maximum amount receive":"ඔබට ලැබිය හැකි උපරිම මුදල:",
     "Select an officer":"--නිලධාරියෙකු තෝරන්න--"
+  
   },
   "ReportGenerator":{
     "LNG": "si",
@@ -850,6 +853,7 @@
     "Yourtarget": "ඔබේ ඉලක්කය",
     "Progress": "ප්‍රගතිය",
     "Scan":"QR ස්කෑන් කරන්න",
+     "TargetOrders":"ඉලක්ක ඇණවුම්",
     "Search": "ජාතික හැඳුනුම්පත අනුව සොයන්න"
   },
   "TargetOrderScreen" :{
@@ -864,7 +868,13 @@
     "Todo()":"කරන්න (kg)",
     "My Daily Target":"මගේ දෛනික ඉලක්කය",
     "Invoice No":"ඉන්වොයිස් අංකය",
-    "Status":"තත්ත්වය"
+    "Status":"තත්ත්වය",
+    "Date":"දිනය සහ වේලාව",
+    "Completed Time":"සම්පූර්ණ කළ කාලය",
+    "Retry":"නැවත උත්සාහ කරන්න",
+    "Pending":"අපේක්ෂා කෙරේ",
+     "Opened": "විවෘත කර ඇත"
+  
   },
   "OpenedOrderScreen":{
     "INV No ":"ඉන්වොයිස් අංකය:",
@@ -878,6 +888,83 @@
     "Do you want to continue without saving?":"ඔබට සුරැකීමකින් තොරව ඉදිරියට යාමට අවශ්‍යද?",
     "Opened":"විවෘත කරන ලදී",
     "Completed":"සම්පූර්ණ කරන ලදී"
+  },
+  "PendingOrderScreen":{
+    "Custom Selected Items":"අභිරුචි තෝරාගත් අයිතම",
+    "Back to Edit":"සංස්කරණයට ආපසු",
+    "Mark as Completed":"සම්පූර්ණ ලෙස සලකුණු කරන්න",
+    "TapGoback":"සංස්කරණය කිරීමට 'ආපසු යන්න' තට්ටු කරන්න.",
+    "MarkingAs":"ඉක්මනින් සම්පූර්ණ කළ ලෙස සලකුණු කිරීම.",
+    "FinishUp":"අවසන් කරන්න!",
+    "Save":"සුරකින්න",
+    "All checked":"සියල්ල පරීක්ෂා කර ඇත. ඇණවුම වෙත ගෙන යනු ඇත",
+    "Completed":"සම්පූර්ණ කරන ලදී",
+    "onsave":"සුරකින්න",
+    "Unchecked items":"සලකුණු නොකළ අයිතම ඉතිරිව ඇත. සුරැකීම දැන් ඇණවුම තබා ගනී",
+    "Opened":"විවෘත කරන ලදී",
+    "Status":"තත්වය.",
+    "Leave without Submitting":"ඉදිරිපත් නොකර පිටවීම",
+    "OK":"හරි",
+    "TheOrder":"ඇණවුම සම්පූර්ණ කළ ලෙස සලකුණු කර ඇත.",
+    "Completed Successfully":"සාර්ථකව සම්පූර්ණ කරන ලදී!",
+    "Go Back":"ආපසු යන්න",
+    "Send Replace Request":"ප්‍රතිස්ථාපන ඉල්ලීම යවන්න",
+    "No products available":"නිෂ්පාදන නොමැත",
+    "Rs":"රු",
+    "New Product Details":"නව නිෂ්පාදන විස්තර",
+    "Product Type":"නිෂ්පාදන වර්ගය::",
+    "Selected product":"තෝරාගත් නිෂ්පාදනය:",
+    "Replace Product":"නිෂ්පාදනය ප්‍රතිස්ථාපනය කරන්න",
+      "Marking as completed in":"සම්පූර්ණ ලෙස සලකුණු කිරීම",
+    "seconds":"තත්පර.",
+     "You have unsubmitted changes":"ඔබට ඉදිරිපත් නොකළ වෙනස්කම් තිබේ!"
+
+  },
+   "Status": {
+    "Pending": "අපේක්ෂා කෙරේ",
+    "Opened": "විවෘතයි",
+    "Completed": "සම්පූර්ණයි",
+    "InProgress": "ප්‍රගතියෙන්"
+  },
+    "TimerContainer":{
+    "Start":"ආරම්භ කරන්න",
+    "Pause":"විරාමය",
+    "Reset":"නැවත සකසන්න"
+  },
+    "DailyTargetListOfficerDistribution":{
+    "Are you sure":"ඔබට මෙම ඉලක්කය වෙනත් නිලධාරියෙකුට ලබා දීමට අවශ්‍ය බව ඔබට විශ්වාසද?",
+    "Cancel":"අවලංගු කරන්න",
+    "Pass":"සමත්",
+    
+    "Completed Time":"සම්පූර්ණ කළ කාලය",
+    "Retry":"නැවත උත්සාහ කරන්න"
+  },
+   "DistributionOfficersList":{
+    "EMPID":"EMP හැඳුනුම්පත :"
+  },
+    "PassTarget":{
+    "EMP ID":"EMP හැඳුනුම්පත",
+    "Select Assignee":"පැවරුම්කරු තෝරන්න",
+    "Loading officers":"නිලධාරීන් පූරණය කිරීම..",
+    "Selected Targets":"තෝරාගත් ඉලක්ක",
+    "Save":"සුරකින්න",
+    "Dismiss":"ඉවත් කරන්න",
+    "Short Stock Assignee":"කෙටි කොටස් පැවරුම්ලාභියා"
+  },
+    "ReplaceRequestsApprove":{
+    "Loading replace request":"ප්‍රතිස්ථාපන ඉල්ලීම පූරණය වෙමින් පවතී...",
+    "Order ID":"ඇණවුම් හැඳුනුම්පත:",
+    "Defined product":"නිර්වචනය කළ නිෂ්පාදනය",
+    "Relevant Product Type":"අදාළ නිෂ්පාදන වර්ගය:",
+    "Replacing Product Details":"නිෂ්පාදන විස්තර ප්‍රතිස්ථාපනය කිරීම",
+    "ID":"අංකය:",
+    "No products available":"නිෂ්පාදන නොමැත",
+    "Approve":"අනුමත කරන්න",
+     "Rs":"රු."
+  },
+    "ReplaceRequestsScreen":{
+    "Order ID":"ඇණවුම් හැඳුනුම්පත:",
+    "Replacing Item":"අයිතමය ප්‍රතිස්ථාපනය කිරීම:"
   }
 
 }

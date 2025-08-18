@@ -8,6 +8,7 @@ import {
   Platform,
   KeyboardAvoidingView,
   BackHandler,
+  Keyboard,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -51,6 +52,46 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   const [secureConfirm, setSecureConfirm] = useState(true);
   const { t } = useTranslation();
 
+  const validatePassword = () => {
+    // Check if all fields are filled
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      Alert.alert('Error', 'All fields are required');
+      return false;
+    }
+
+    // Check if new password meets format requirements
+    if (newPassword.length < 8) {
+      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+      return false;
+    }
+
+    // Check for at least 1 uppercase letter
+    if (!/[A-Z]/.test(newPassword)) {
+      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+      return false;
+    }
+
+    // Check for at least 1 number
+    if (!/[0-9]/.test(newPassword)) {
+      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+      return false;
+    }
+
+    // Check for at least 1 special character
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(newPassword)) {
+      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+      return false;
+    }
+
+    // Check if new password and confirm password match
+    if (newPassword !== confirmPassword) {
+      Alert.alert('Error', 'New password and confirm password do not match');
+      return false;
+    }
+
+    return true;
+  };
+
   useEffect(() => {
     const fetchEmpid = async () => {
       try {
@@ -65,26 +106,32 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   }, []);
 
   const handleChangePassword = async () => {
-    if (!newPassword || !confirmPassword || !currentPassword) {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.Passwords are not allowed to be empty")
-      );
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.New password and confirm password do not match.")
-      );
-      return;
-    }
+    // if (!newPassword || !confirmPassword || !currentPassword) {
+    //   Alert.alert(
+    //     t("Error.error"),
+    //     t("Error.Passwords are not allowed to be empty")
+    //   );
+    //   return;
+    // }
+    // if (newPassword !== confirmPassword) {
+    //   Alert.alert(
+    //     t("Error.error"),
+    //     t("Error.New password and confirm password do not match.")
+    //   );
+    //   return;
+    // }
 
-    if (newPassword.length < 6) {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.New password must be at least 6 characters long.")
-      );
+    // if (newPassword.length < 6) {
+    //   Alert.alert(
+    //     t("Error.error"),
+    //     t("Error.New password must be at least 6 characters long.")
+    //   );
+    //   return;
+    // }
+
+        Keyboard.dismiss();
+    // Validate inputs before proceeding
+    if (!validatePassword()) {
       return;
     }
 
@@ -128,22 +175,22 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
-      className="flex-1"
+      style={{ flex: 1}}
     >
       <ScrollView
         className="flex-1 bg-white"
         style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
         keyboardShouldPersistTaps="handled"
       >
-        <TouchableOpacity onPress={() => navigation.goBack()} className="">
+        <TouchableOpacity onPress={() => navigation.goBack()} className="bg-[#F6F6F680] rounded-full p-2">
           <AntDesign name="left" size={24} color="#000502" />
         </TouchableOpacity>
 
-        <View className="flex-row items-center justify-center mt-[-5%] space-x-[-30%] ml-[5%]">
+        <View className="flex-row items-center justify-center mt-[2%] space-x-[-30%] ml-[5%]">
          <Image
-            source={require("@/assets/images/Mobile.webp")}
+            source={require("@/assets/images/cangepassword.png")}
             resizeMode="contain"
-            className="w-20 h-20"
+            className="w-30 h-20"
           /> 
           {/* <Image
             source={require("@/assets/images/Codinetflat.webp")}
@@ -165,19 +212,19 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           <Text className="font-normal pb-2 ml-[-55%]">
             {t("ChangePassword.CurrentPassword")}
           </Text>
-          <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-[95%] h-[53px] mb-8 bg-white px-3">
-            <TextInput
-              className="flex-1 h-[40px] text-base"
-              placeholder={t("ChangePassword.CurrentPassword")}
-              secureTextEntry={secureCurrent}
-              onChangeText={setCurrentPassword}
-              value={currentPassword}
-            />
+          <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">
+          <TextInput
+            className="flex-1 h-[40px] bg-[#F4F4F4]"
+          //  placeholder={t("ChangePassword.CurrentPassword")}
+            secureTextEntry={secureCurrent}
+            onChangeText={setCurrentPassword}
+            value={currentPassword}
+          />
             <TouchableOpacity onPress={() => setSecureCurrent(!secureCurrent)}>
               <Icon
                 name={secureCurrent ? "eye-off-outline" : "eye-outline"}
                 size={24}
-                color="#2AAD7A"
+                color="#0000000"
               />
             </TouchableOpacity>
           </View>
@@ -185,19 +232,24 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           <Text className="font-normal pb-2 ml-[-60%]">
             {t("ChangePassword.NewPassword")}
           </Text>
-          <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-[95%] h-[53px] mb-8 bg-white px-3">
+             <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">
             <TextInput
-              className="flex-1 h-[40px] text-base"
-              placeholder={t("ChangePassword.NewPassword")}
+              className="flex-1 h-[40px] "
+           //   placeholder={t("ChangePassword.NewPassword")}
               secureTextEntry={secureNew}
-              onChangeText={setNewPassword}
+              // onChangeText={setNewPassword}
               value={newPassword}
+                 onChangeText={(text) => {
+      // Remove all spaces and prevent starting with space
+      const cleanText = text.replace(/\s/g, '');
+      setNewPassword(cleanText);
+    }}
             />
             <TouchableOpacity onPress={() => setSecureNew(!secureNew)}>
               <Icon
                 name={secureNew ? "eye-off-outline" : "eye-outline"}
                 size={24}
-                color="#2AAD7A"
+                color="#000000"
               />
             </TouchableOpacity>
           </View>
@@ -205,34 +257,51 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           <Text className="font-normal pb-2 ml-[-45%]">
             {t("ChangePassword.ConfirmNewPassword")}
           </Text>
-          <View className="flex-row items-center border border-[#D5D5D5] rounded-3xl w-[95%] h-[53px] mb-5 bg-white px-3">
+           <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">
             <TextInput
-              className="flex-1 h-[40px] text-base"
-              placeholder={t("ChangePassword.ConfirmNewPassword")}
+              className="flex-1 h-[40px] bg-[#F4F4F4]"
+             // placeholder={t("ChangePassword.ConfirmNewPassword")}
               secureTextEntry={secureConfirm}
-              onChangeText={setConfirmPassword}
+              // onChangeText={setConfirmPassword}
+                        onChangeText={(text) => {
+      // Remove all spaces and prevent starting with space
+      const cleanText = text.replace(/\s/g, '');
+      setConfirmPassword(cleanText);
+    }}
               value={confirmPassword}
             />
             <TouchableOpacity onPress={() => setSecureConfirm(!secureConfirm)}>
               <Icon
                 name={secureConfirm ? "eye-off-outline" : "eye-outline"}
                 size={24}
-                color="#2AAD7A"
+                color="#000000"
               />
             </TouchableOpacity>
           </View>
         </View>
 
-        <View className="items-center pt-7 gap-y-5">
+        {/* <View className="items-center justify-center pt-7 gap-y-5">
           <TouchableOpacity
-            className="bg-[#2AAD7A] w-[95%] p-3 rounded-3xl"
+            className="bg-[#000000] w-[95%] p-3 rounded-full"
             onPress={handleChangePassword}
           >
             <Text className="text-center pt-1 text-xl font-light text-white">
               {t("ChangePassword.Next")}
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
+        <View className="items-center justify-center pt-7 gap-y-5 mb-20">
+  <TouchableOpacity
+    className="bg-[#000000] w-[95%] p-3 rounded-full items-center justify-center"
+    onPress={handleChangePassword}
+  >
+    {/* 1️⃣ parent now centers its children */}
+    <Text className="text-xl font-light text-white">
+      {t("ChangePassword.Next")}
+    </Text>
+  </TouchableOpacity>
+</View>
+
       </ScrollView>
     </KeyboardAvoidingView>
   );

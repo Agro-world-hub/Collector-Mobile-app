@@ -19,7 +19,7 @@
     "**/*.tsx", // Includes all .ts and .tsx files in the project
     ".expo/types/**/*.ts", // Includes Expo-specific types
     "expo-env.d.ts" // Includes any custom environment definitions you create
-  ],
+, "component/DisributionManger/pdf.js"  ],
   "extends": "expo/tsconfig.base", // Extends Expo's default TypeScript configuration for compatibility
   "exclude": ["node_modules"] // Excludes node_modules from being included in the type-checking
 }

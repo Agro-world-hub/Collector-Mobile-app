@@ -233,7 +233,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
                       width: 300,
                       height: 300,
                       borderWidth: 1,
-                      borderColor: "#00C853",
+                      borderColor: "#FAE432",
                     }} // Adding border and dimensions
                   />
                 ) : (
@@ -249,7 +249,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
                 {/* <TouchableOpacity className="bg-[#2AAD7A] w-[300px] py-3 rounded-full items-center" onPress={() => navigation.navigate('UnregisteredCropDetails' as any, { userId })}> */}
                 <TouchableOpacity
                   className={`w-[300px] py-3 rounded-full items-center ${
-                    !farmerQRCode ? "bg-gray-400" : "bg-[#2AAD7A]"
+                    !farmerQRCode ? "bg-gray-400" : "bg-[#000000]"
                   }`}
                   onPress={() =>
                     navigation.navigate("Main", {
@@ -266,7 +266,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
 
                 {/* Complain Button */}
                 <TouchableOpacity
-                  className="border border-gray-400 w-[300px] mt-4 py-3 rounded-full items-center"
+                  className="border border-[#606060] w-[300px] mt-4 py-3 rounded-full items-center"
                   onPress={() =>
                     navigation.navigate("ComplainPage" as any, {
                       farmerName,
@@ -286,7 +286,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
               {/* Download and Share buttons */}
               <View className="flex-row justify-around w-full mt-6">
                 <TouchableOpacity
-                  className="bg-[#A4A4A4] p-4 h-[80px] w-[120px] rounded-lg items-center"
+                  className="bg-[#000000] p-4 h-[80px] w-[120px] rounded-lg items-center"
                   onPress={downloadQRCode}
                 >
                   <Image
@@ -299,7 +299,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="bg-[#A4A4A4] p-4 h-[80px] w-[120px] rounded-lg items-center"
+                  className="bg-[#000000] p-4 h-[80px] w-[120px] rounded-lg items-center"
                   onPress={shareQRCode}
                 >
                   <Image

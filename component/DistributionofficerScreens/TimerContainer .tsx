@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { View, Text, Animated, TouchableOpacity } from 'react-native';
 import Svg, { Circle, G } from 'react-native-svg';
+import { useTranslation } from "react-i18next";
 
 // Type definitions
 interface CircleProgressProps {
@@ -44,6 +45,7 @@ const CircleProgress: React.FC<CircleProgressProps> = ({
   const circumference = 2 * Math.PI * radius;
   const strokeDasharray = circumference;
   const strokeDashoffset = circumference * (1 - progress);
+  
 
   return (
     <Svg width={size} height={size} style={{ position: 'absolute' }}>
@@ -95,6 +97,7 @@ const Timer: React.FC<TimerProps> = ({
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number | null>(null);
   const pausedTimeRef = useRef<number>(minutes * 60 * 1000);
+  const { t } = useTranslation();
   
   // Calculate total time in milliseconds
   const totalTime = minutes * 60 * 1000;
@@ -179,6 +182,7 @@ const Timer: React.FC<TimerProps> = ({
   const mins = Math.floor((timeLeft % 3600000) / 60000);
   const secs = Math.floor((timeLeft % 60000) / 1000);
   const mils = Math.floor((timeLeft % 1000) / 10);
+   
 
   const pad = (num: number): string => num.toString().padStart(2, '0');
   const displayTime = `${pad(mins)}:${pad(secs)}${showMs ? `:${pad(mils)}` : ''}`;
@@ -234,6 +238,7 @@ const Timer: React.FC<TimerProps> = ({
 const TimerContainer: React.FC = () => {
   const [running, setRunning] = useState<boolean>(false);
   const [reset, setReset] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const handleStart = (): void => setRunning(true);
   const handlePause = (): void => setRunning(false);
@@ -290,7 +295,7 @@ const TimerContainer: React.FC = () => {
             fontWeight: '600',
             textAlign: 'center',
           }}>
-            Start
+             {t("TimerContainer.Start")}
           </Text>
         </TouchableOpacity>
         
@@ -308,7 +313,7 @@ const TimerContainer: React.FC = () => {
             fontWeight: '600',
             textAlign: 'center',
           }}>
-            Pause
+             {t("TimerContainer.Pause")}
           </Text>
         </TouchableOpacity>
         
@@ -326,7 +331,7 @@ const TimerContainer: React.FC = () => {
             fontWeight: '600',
             textAlign: 'center',
           }}>
-            Reset
+             {t("TimerContainer.Reset")}
           </Text>
         </TouchableOpacity>
       </View>
