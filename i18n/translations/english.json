@@ -178,7 +178,7 @@
     "View":"View My QR Code",
     "ChangePassword":"Change Password",
     "Complaints":"Complaints",
-    "Report Complaint":"Report Complaint",
+    "Report Complaint":"Report a Complaint",
     "View Complaint History":"View Complaint History",
     "Logout": "Logout",
     "Need Help":"Need Help?",
@@ -632,7 +632,7 @@
     "complaintFailed": "Failed to add a complaint. Please try again.",
     "Tellus": "Tell us the",
     "Problem": "Problem",
-    "selectCategory": "Select Complain Category",
+    "selectCategory": "Select Complaint Category",
     "finace": "Finance",
     "sorry": "Sorry",
     "Finance": "Finance",
@@ -815,12 +815,12 @@
     "LNG": "en",
     "PrivacyPolicy": "Privacy Policy",
      "Date": "28 April 2025",
-    "PrivacyPlicyCompany": "Privacy Policy for Collector Mobile Application",
+    "PrivacyPlicyCompany": "Privacy Policy for CoDi-Net Mobile Application",
     "By": "Effective Date: ",
-    "explain": "This Privacy Policy (“Policy”) governs the manner in which Polygon Holdings (Private) Limited (“we,“ “us,“ or “our“) collects, uses, maintains, and discloses information collected from users (“you“ or “your“) of the Collector mobile application (“App“). By accessing or using the App, you agree to the collection and use of information in accordance with this Policy. If you do not agree with this Policy, please refrain from using the App.",
+    "explain": "This Privacy Policy (“Policy”) governs the manner in which Polygon Holdings (Private) Limited (“we,“ “us,“ or “our“) collects, uses, maintains, and discloses information collected from users (“you“ or “your“) of the CoDi-Net mobile application (“App“). By accessing or using the App, you agree to the collection and use of information in accordance with this Policy. If you do not agree with this Policy, please refrain from using the App.",
 
     "InformationWeCollect": "Information We Collect",
-    "RegistrationInformationTxt": "When you use the Collector App, we may collect personal information such as your full name, mobile number, National Identity Card (NIC) number, email address, profile photo, and work identification details. Additionally, we collect work-related information including QR code scans, farmer registration details, collection reports, complaint histories, daily targets, and transaction histories. Device-related information such as the type of device you use, operating system version, and the version of the App installed may also be gathered. Furthermore, we monitor usage data such as login timestamps, language preferences, and activity logs within the App to facilitate seamless operation, security, and user experience optimization.",
+    "RegistrationInformationTxt": "When you use the CoDi-Net App, we may collect personal information such as your full name, mobile number, National Identity Card (NIC) number, email address, profile photo, and work identification details. Additionally, we collect work-related information including QR code scans, farmer registration details, collection reports, complaint histories, daily targets, and transaction histories. Device-related information such as the type of device you use, operating system version, and the version of the App installed may also be gathered. Furthermore, we monitor usage data such as login timestamps, language preferences, and activity logs within the App to facilitate seamless operation, security, and user experience optimization.",
 
     "HowWeUseYourInformation": "How We Use Your Information",
     "ToProvideServicesTxt": "The information collected is used primarily to verify your identity and enable secure access to the App. It assists us in creating, maintaining, and managing your user profile and work reports to ensure operational accountability. We use this data to track your daily activities, monitor performance metrics, and assess target completions. Your information also supports the processing and recording of collection requests, management of farmer registrations, handling of complaints, and general supervision of field operations. Additionally, the data enables us to improve the functionality and reliability of the App, deliver better services, communicate important updates, issue service-related notifications, and comply with our legal and regulatory obligations.",
@@ -835,7 +835,7 @@
     "YourPrivacyChoicesTxt": "You have certain rights regarding your personal data. These include the right to access, correct, or update your information as necessary. You may also request the deletion of your profile once your service period with Polygon Holdings (Private) Limited ends, subject to compliance with internal company procedures and applicable legal requirements. Additionally, you have the right to inquire about how your data is processed and to seek further information regarding the handling of your personal information. To exercise any of these rights, you may contact us using the contact details provided at the end of this Policy.",
 
     "ChildrensPrivacy": "Children’s Privacy",
-    "ChildrensPrivacyTxt": "The Collector App is intended solely for use by employees and authorized agents of Polygon Holdings (Private) Limited. and is not directed toward individuals under the age of 18. We do not knowingly collect or solicit personal information from minors. Should we become aware that we have inadvertently collected personal data from a person under the age of 18, we will promptly take steps to delete such information from our records.",
+    "ChildrensPrivacyTxt": "The CoDi-Net App is intended solely for use by employees and authorized agents of Polygon Holdings (Private) Limited. and is not directed toward individuals under the age of 18. We do not knowingly collect or solicit personal information from minors. Should we become aware that we have inadvertently collected personal data from a person under the age of 18, we will promptly take steps to delete such information from our records.",
 
     "UpdatestothisPrivacyPolicy": "Changes to This Privacy Policy",
     "UpdatestothisPrivacyPolicyTxt": "We reserve the right to modify or update this Privacy Policy at any time to reflect changes in our operational practices, technological advancements, or legal requirements. Any updates will be effective as of the date indicated at the top of this Policy. In the event of material changes, we will provide appropriate notice within the App. We encourage you to periodically review this Policy to stay informed about how we are protecting your information and to understand your rights with respect to your personal data.",

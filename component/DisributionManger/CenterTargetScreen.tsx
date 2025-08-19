@@ -1081,11 +1081,12 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
       {/* Header */}
       <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
         <TouchableOpacity 
-          onPress={() => navigation.goBack()} 
-          className="absolute left-4 bg-white/10 rounded-full p-2"
-        >
-          <AntDesign name="left" size={22} color="white" />
-        </TouchableOpacity>
+  onPress={() => navigation.goBack()} 
+  className="absolute left-4 bg-white/10 rounded-full  justify-center items-center"
+  style={{width: 40, height: 40}} // Set fixed dimensions for perfect circle
+>
+  <AntDesign name="left" size={22} color="white" />
+</TouchableOpacity>
 
         {/* <Text className="text-white text-lg font-bold">{t("CenterTarget.CenterTarget")}</Text> */}
         {selectedToggle === 'ToDo' && (
@@ -1726,7 +1727,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
           ? t("DailyTarget.NoTodoItems") || "No items to do"
           : selectedToggle === 'Completed'
           ? t("DailyTarget.noCompletedTargets") || "No completed items"
-          : "No out for delivery items"
+          : "No out for delivery orders"
         }
       </Text>
       {((selectedToggle === 'ToDo' && selectedDateFilter) || 

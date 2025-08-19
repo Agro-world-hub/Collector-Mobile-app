@@ -43,139 +43,288 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
   const [loading, setLoading] = useState(false); // State for showing loader
   const { t } = useTranslation();
 const dispatch = useDispatch();
-  const handleLogin = async () => {
-    Keyboard.dismiss(); // Dismiss the keyboard
-    if (!empid && !password) {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.Password & Employee ID are not allowed to be empty")
-      );
-      return false;
-    }
+//   const handleLogin = async () => {
+//     Keyboard.dismiss(); // Dismiss the keyboard
+//     if (!empid && !password) {
+//       Alert.alert(
+//         t("Error.error"),
+//         t("Error.Password & Employee ID are not allowed to be empty")
+//       );
+//       return false;
+//     }
 
-    // Second check: Only password is empty
-    if (empid && !password) {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.Password is not allowed to be empty")
-      );
-      return false;
-    }
+//     // Second check: Only password is empty
+//     if (empid && !password) {
+//       Alert.alert(
+//         t("Error.error"),
+//         t("Error.Password is not allowed to be empty")
+//       );
+//       return false;
+//     }
 
-    // Third check: Only employee ID is empty
-    if (!empid && password) {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.Employee ID is not allowed to be empty")
-      );
-      return false;
-    }
-    setLoading(true); // Show loader when login starts
-    await AsyncStorage.removeItem("token");
-    await AsyncStorage.removeItem("jobRole");
-    await AsyncStorage.removeItem("companyNameEnglish");
-    await AsyncStorage.removeItem("companyNameSinhala");
-    await AsyncStorage.removeItem("companyNameTamil");
-    await AsyncStorage.removeItem("empid");
-    try {
-      const response = await fetch(
-        `${environment.API_BASE_URL}api/collection-officer/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            empId: empid,
-            password,
-          }),
-        }
-      );
-
-      const data = await response.json();
-      console.log("Login response:", data);
-
-      if (!response.ok) {
-        setLoading(false);
-        if (response.status === 404) {
-          Alert.alert(t("Error.error"), t("Error.Invalid EMP ID & Password"));
-        } else if (response.status === 401) {
-          Alert.alert(
-            t("Error.error"),
-            t("Error.Invalid Password. Please try again.")
-          );
-        } else if (data.status === "error") {
-          console.log("Login error:", data);
-          Alert.alert(t("Error.error"), t("Error.Invalid EMP ID"));
-        } else {
-          Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
-        }
-        return;
-      }
-
-      // Login successful
-      const {
-        token,
-        passwordUpdateRequired,
-        jobRole,
-        empId,
-        companyNameEnglish,
-        companyNameSinhala,
-        companyNameTamil,
-      } = data;
-      await AsyncStorage.setItem("token", token);
-      await AsyncStorage.setItem("jobRole", jobRole);
-      await AsyncStorage.setItem("companyNameEnglish", companyNameEnglish);
-      await AsyncStorage.setItem("companyNameSinhala", companyNameSinhala);
-      await AsyncStorage.setItem("companyNameTamil", companyNameTamil);
-      await AsyncStorage.setItem("empid", empId.toString());
-dispatch(setUser({ token, jobRole, empId: empId.toString() }));
-      if (token) {
-        const timestamp = new Date();
-        const expirationTime = new Date(
-          timestamp.getTime() + 8 * 60 * 60 * 1000
-          // timestamp.getTime() + 2 * 60 * 1000
-        );
-        await AsyncStorage.multiSet([
-          ["tokenStoredTime", timestamp.toISOString()],
-          ["tokenExpirationTime", expirationTime.toISOString()],
-        ]);
-      }
-
-      console.log("llllllll========================",passwordUpdateRequired)
-      await status(empId, true);
-      setTimeout(() => {
-        setLoading(false);
-//         if (passwordUpdateRequired) {
-//           navigation.navigate("ChangePassword", { empid } as any);
-//         } else {
-//           if (jobRole === "Collection Officer") {
-//             navigation.navigate("Main", { screen: "Dashboard" });
-//           } else {
-//             navigation.navigate("Main", { screen: "ManagerDashboard" });
-//           }
+//     // Third check: Only employee ID is empty
+//     if (!empid && password) {
+//       Alert.alert(
+//         t("Error.error"),
+//         t("Error.Employee ID is not allowed to be empty")
+//       );
+//       return false;
+//     }
+//     setLoading(true); // Show loader when login starts
+//     await AsyncStorage.removeItem("token");
+//     await AsyncStorage.removeItem("jobRole");
+//     await AsyncStorage.removeItem("companyNameEnglish");
+//     await AsyncStorage.removeItem("companyNameSinhala");
+//     await AsyncStorage.removeItem("companyNameTamil");
+//     await AsyncStorage.removeItem("empid");
+//     try {
+//       const response = await fetch(
+//         `${environment.API_BASE_URL}api/collection-officer/login`,
+//         {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//           body: JSON.stringify({
+//             empId: empid,
+//             password,
+//           }),
 //         }
+//       );
 
-if (passwordUpdateRequired) {
-  navigation.navigate("ChangePassword", { empid } as any);
-} else {
-  // Fixed: Check for both Distribution roles individually
-  if (jobRole === "Distribution Officer" || jobRole === "Distribution Center Manager") {
-    navigation.navigate("Main", { screen: "DistridutionaDashboard" });
-  } else if (jobRole === "Collection Officer") {
-    navigation.navigate("Main", { screen: "Dashboard" });
-  } else {
-    navigation.navigate("Main", { screen: "ManagerDashboard" });
+//       const data = await response.json();
+//       console.log("Login response:", data);
+
+//       if (!response.ok) {
+//         setLoading(false);
+//         if (response.status === 404) {
+//           Alert.alert(t("Error.error"), t("Error.Invalid EMP ID & Password"));
+//         } else if (response.status === 401) {
+//           Alert.alert(
+//             t("Error.error"),
+//             t("Error.Invalid Password. Please try again.")
+//           );
+//         } else if (data.status === "error") {
+//           console.log("Login error:", data);
+//           Alert.alert(t("Error.error"), t("Error.Invalid EMP ID"));
+//         } else {
+//           Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+//         }
+//         return;
+//       }
+
+//       // Login successful
+//       const {
+//         token,
+//         passwordUpdateRequired,
+//         jobRole,
+//         empId,
+//         companyNameEnglish,
+//         companyNameSinhala,
+//         companyNameTamil,
+//       } = data;
+//       await AsyncStorage.setItem("token", token);
+//       await AsyncStorage.setItem("jobRole", jobRole);
+//       await AsyncStorage.setItem("companyNameEnglish", companyNameEnglish);
+//       await AsyncStorage.setItem("companyNameSinhala", companyNameSinhala);
+//       await AsyncStorage.setItem("companyNameTamil", companyNameTamil);
+//       await AsyncStorage.setItem("empid", empId.toString());
+// dispatch(setUser({ token, jobRole, empId: empId.toString() }));
+//       if (token) {
+//         const timestamp = new Date();
+//         const expirationTime = new Date(
+//           timestamp.getTime() + 8 * 60 * 60 * 1000
+//           // timestamp.getTime() + 2 * 60 * 1000
+//         );
+//         await AsyncStorage.multiSet([
+//           ["tokenStoredTime", timestamp.toISOString()],
+//           ["tokenExpirationTime", expirationTime.toISOString()],
+//         ]);
+//       }
+
+//       console.log("llllllll========================",passwordUpdateRequired)
+//       await status(empId, true);
+//       setTimeout(() => {
+//         setLoading(false);
+// //         if (passwordUpdateRequired) {
+// //           navigation.navigate("ChangePassword", { empid } as any);
+// //         } else {
+// //           if (jobRole === "Collection Officer") {
+// //             navigation.navigate("Main", { screen: "Dashboard" });
+// //           } else {
+// //             navigation.navigate("Main", { screen: "ManagerDashboard" });
+// //           }
+// //         }
+
+// if (passwordUpdateRequired) {
+//   navigation.navigate("ChangePassword", { empid } as any);
+// } else {
+//   // Fixed: Check for both Distribution roles individually
+//   if (jobRole === "Distribution Officer" || jobRole === "Distribution Center Manager") {
+//     navigation.navigate("Main", { screen: "DistridutionaDashboard" });
+//   } else if (jobRole === "Collection Officer") {
+//     navigation.navigate("Main", { screen: "Dashboard" });
+//   } else {
+//     navigation.navigate("Main", { screen: "ManagerDashboard" });
+//   }
+// }
+
+//       }, 4000);
+//     } catch (error) {
+//       setLoading(false);
+//       console.error("Login error:", error);
+//       Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+//     }
+//   };
+
+const handleLogin = async () => {
+  Keyboard.dismiss(); // Dismiss the keyboard
+  if (!empid && !password) {
+    Alert.alert(
+      t("Error.error"),
+      t("Error.Password & Employee ID are not allowed to be empty")
+    );
+    return false;
   }
-}
 
-      }, 4000);
-    } catch (error) {
+  // Second check: Only password is empty
+  if (empid && !password) {
+    Alert.alert(
+      t("Error.error"),
+      t("Error.Password is not allowed to be empty")
+    );
+    return false;
+  }
+
+  // Third check: Only employee ID is empty
+  if (!empid && password) {
+    Alert.alert(
+      t("Error.error"),
+      t("Error.Employee ID is not allowed to be empty")
+    );
+    return false;
+  }
+  
+  setLoading(true); // Show loader when login starts
+  await AsyncStorage.removeItem("token");
+  await AsyncStorage.removeItem("jobRole");
+  await AsyncStorage.removeItem("companyNameEnglish");
+  await AsyncStorage.removeItem("companyNameSinhala");
+  await AsyncStorage.removeItem("companyNameTamil");
+  await AsyncStorage.removeItem("empid");
+  
+  try {
+    const response = await fetch(
+      `${environment.API_BASE_URL}api/collection-officer/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          empId: empid,
+          password,
+        }),
+      }
+    );
+
+    const data = await response.json();
+    console.log("Login response:", data);
+
+    if (!response.ok) {
       setLoading(false);
-      console.error("Login error:", error);
-      Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+      if (response.status === 404) {
+        Alert.alert(t("Error.error"), t("Error.Invalid EMP ID & Password"));
+      } else if (response.status === 401) {
+        Alert.alert(
+          t("Error.error"),
+          t("Error.Invalid Password. Please try again.")
+        );
+      } else if (data.status === "error") {
+        console.log("Login error:", data);
+        Alert.alert(t("Error.error"), t("Error.Invalid EMP ID"));
+      } else {
+        Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+      }
+      return;
     }
-  };
+
+    // Login successful - extract job role for validation
+    const {
+      token,
+      passwordUpdateRequired,
+      jobRole,
+      empId,
+      companyNameEnglish,
+      companyNameSinhala,
+      companyNameTamil,
+    } = data;
+
+    // **NEW: Define allowed roles**
+    const allowedRoles = [
+      "Collection Officer",
+      "Collection Center Manager", 
+      "Distribution Officer",
+      "Distribution Center Manager"
+    ];
+
+    // **NEW: Check if the user's job role is allowed**
+    if (!allowedRoles.includes(jobRole)) {
+      setLoading(false);
+      Alert.alert(
+        t("Error.error"),
+        "Access denied. Your role is not authorized to use this application."
+      );
+      return;
+    }
+
+    // Continue with normal login flow if role is authorized
+    await AsyncStorage.setItem("token", token);
+    await AsyncStorage.setItem("jobRole", jobRole);
+    await AsyncStorage.setItem("companyNameEnglish", companyNameEnglish);
+    await AsyncStorage.setItem("companyNameSinhala", companyNameSinhala);
+    await AsyncStorage.setItem("companyNameTamil", companyNameTamil);
+    await AsyncStorage.setItem("empid", empId.toString());
+    dispatch(setUser({ token, jobRole, empId: empId.toString() }));
+    
+    if (token) {
+      const timestamp = new Date();
+      const expirationTime = new Date(
+        timestamp.getTime() + 8 * 60 * 60 * 1000
+        // timestamp.getTime() + 2 * 60 * 1000
+      );
+      await AsyncStorage.multiSet([
+        ["tokenStoredTime", timestamp.toISOString()],
+        ["tokenExpirationTime", expirationTime.toISOString()],
+      ]);
+    }
+
+    console.log("llllllll========================", passwordUpdateRequired);
+    await status(empId, true);
+    
+    setTimeout(() => {
+      setLoading(false);
+      
+      if (passwordUpdateRequired) {
+        navigation.navigate("ChangePassword", { empid } as any);
+      } else {
+        // Navigate based on role
+        if (jobRole === "Distribution Officer" || jobRole === "Distribution Center Manager") {
+          navigation.navigate("Main", { screen: "DistridutionaDashboard" });
+        } else if (jobRole === "Collection Officer") {
+          navigation.navigate("Main", { screen: "Dashboard" });
+        } else if (jobRole === "Collection Center Manager") {
+          navigation.navigate("Main", { screen: "ManagerDashboard" });
+        }
+      }
+    }, 4000);
+    
+  } catch (error) {
+    setLoading(false);
+    console.error("Login error:", error);
+    Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+  }
+};
 
   const status = async (empId: string, status: boolean) => {
     try {

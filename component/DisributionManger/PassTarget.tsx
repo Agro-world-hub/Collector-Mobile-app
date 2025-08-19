@@ -51,7 +51,12 @@ interface Officer {
 }
 
 const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
-  const { officerId, selectedItems: passedSelectedItems = [], invoiceNumbers = [] , processOrderId=[] } = route.params;
+  const { 
+    selectedItems: passedSelectedItems = [], 
+    invoiceNumbers = [], 
+    processOrderId = [],
+    officerId // Add this to get the current officer ID
+  } = route.params;
   const [loading, setLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -175,7 +180,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
   };
 
   // Fetch officers from API
-  const fetchOfficers = useCallback(async () => {
+ const fetchOfficers = useCallback(async () => {
     setLoadingOfficers(true);
     try {
       const authToken = await AsyncStorage.getItem("token");
@@ -190,12 +195,31 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
       );
 
       if (response.data.success && response.data.data) {
-        // Transform officer data for dropdown
-        const officerDropdownData = response.data.data.map((officer: Officer) => ({
-          key: officer.id.toString(),
-          value: `${officer.firstNameEnglish} ${officer.lastNameEnglish} (${officer.empId})`
-        }));
+        console.log("All officers from API:", response.data.data);
+        console.log("Current officerId to filter out:", officerId);
         
+        // Transform officer data for dropdown and filter out current officer
+        const officerDropdownData = response.data.data
+          .filter((officer: Officer) => {
+            // Debug logging
+            console.log(`Comparing officer ID: ${officer.id} (${typeof officer.id}) with current officer: ${officerId} (${typeof officerId})`);
+            console.log(`Officer empId: ${officer.empId}`);
+            
+            // Try multiple comparison methods since we're not sure which field contains the matching ID
+            const isCurrentOfficerById = officer.id?.toString() === officerId?.toString();
+            const isCurrentOfficerByEmpId = officer.empId?.toString() === officerId?.toString();
+            
+            console.log(`isCurrentOfficerById: ${isCurrentOfficerById}, isCurrentOfficerByEmpId: ${isCurrentOfficerByEmpId}`);
+            
+            // Exclude if either ID or empId matches the current officerId
+            return !isCurrentOfficerById && !isCurrentOfficerByEmpId;
+          })
+          .map((officer: Officer) => ({
+            key: officer.id.toString(),
+            value: `${officer.firstNameEnglish} ${officer.lastNameEnglish} (${officer.empId})`
+          }));
+        
+        console.log("Filtered officers for dropdown:", officerDropdownData);
         setOfficers(officerDropdownData);
       } else {
         setError(t("Error.Failed to load officers."));
@@ -206,7 +230,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
     } finally {
       setLoadingOfficers(false);
     }
-  }, [t]);
+  }, [t, officerId]);
 
   // Convert passed selectedItems to display format with correct invoice numbers
   const prepareTargetItems = useCallback(() => {
