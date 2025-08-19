@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "Collector",
-    "slug": "Collector",
+    "name": "CoDi-Net",
+    "slug": "CoDi-Net",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/CoDiNet.png",
+    "icon": "./assets/images/adaptive-icon2.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/CoDiNet.png",
+      "image": "./assets/images/adaptive-icon2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -40,10 +40,10 @@
     "android": {
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/CoDiNet.png",
+        "foregroundImage": "./assets/images/adaptive-icon2.png",
         "backgroundColor": "#ffffff"
       },
-      "versionCode": 2,
+      "versionCode": 5,
       "package": "com.polygonagro.Collector",
       "permissions": [
         "INTERNET",
@@ -74,7 +74,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "14a5f6c8-9211-4c6c-b85d-63bd1fb682da"
+        "projectId": "c7adba18-0c21-49d3-b0d7-ffca54ed88a1"
       }
     },
     "plugins": [

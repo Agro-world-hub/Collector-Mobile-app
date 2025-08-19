@@ -622,7 +622,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
     >
       {/* Back Button */}
-      <TouchableOpacity onPress={() => handleBackPress()} className="bg-[#F6F6F680] rounded-full p-2">
+      <TouchableOpacity onPress={() => handleBackPress()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
         <AntDesign name="left" size={24} color="#000502" />
       </TouchableOpacity>
       <ScrollView showsVerticalScrollIndicator= {false}>
