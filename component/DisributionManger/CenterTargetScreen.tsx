@@ -1065,7 +1065,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     if (outHour >= startHour && outHour < endHour) {
       return 'On Time';
     } else if (outHour < startHour) {
-      return 'Early';
+      return 'On Time';
     } else {
       return 'Late';
     }
@@ -1100,9 +1100,10 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
   )}
     {selectedToggle === 'Completed' && (
 
-      <Text className="text-white text-lg font-bold">
-        Centre Target 
+     <Text className="text-white text-lg font-bold">
+        Centre Target : {selectedDateFilter ? selectedDateFilter : 'All'}
       </Text>
+      
       
    
   
@@ -1495,21 +1496,18 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     }}
   >
  
-<Text className="text-center text-gray-600 mb-6">
-  {selectedItems.length > MAX_SELECTED_ORDERS ? (
-    <Text className="text-red-500">
-      {t("You can only process up to 5 orders at a time")}
-    </Text>
-  ) : (
-    `Are you sure you want to send these selected ${selectedItems.length} orders out for delivery?`
-  )}
-</Text>
+
 
     <View className="flex-1 justify-center items-center bg-black/50">
       <View className="bg-white rounded-lg p-6 w-11/12 max-w-sm">
-        <Text className="text-lg font-bold mb-4 text-center text-gray-800">
-          Confirm Action
-        </Text>
+       <View className="items-center mb-2">
+      <View className="w-10 h-10 rounded-lg bg-[#F6F7F9] justify-center items-center ">
+        <Image
+          source={require("../../assets/images/New/Errorcentertarget.png")}
+          style={{ width: 20, height: 20 }}
+        />
+      </View>
+    </View>
         
         <Text className="text-center text-gray-600 mb-6">
           Are you sure you want to send these selected {selectedItems.length} orders out for delivery?
@@ -1657,15 +1655,15 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
   <View className={`px-3 py-2 rounded-full ${
     getOutingStatus(item.outDlvrDate, item.sheduleTime) === 'On Time'
       ? 'bg-' // Add background color if needed
-      : getOutingStatus(item.outDlvrDate, item.sheduleTime) === 'Early'
+      : getOutingStatus(item.outDlvrDate, item.sheduleTime) === 'On Time'
       ? 'bg-' // Add background color if needed
       : 'bg-' // Add background color if needed
   }`}>
     <Text className={`text-xs font-medium text-center ${
       getOutingStatus(item.outDlvrDate, item.sheduleTime) === 'On Time'
         ? 'text-[#980775]'
-        : getOutingStatus(item.outDlvrDate, item.sheduleTime) === 'Early'
-        ? 'text-[#000000]'
+        : getOutingStatus(item.outDlvrDate, item.sheduleTime) === 'On Time'
+        ? 'text-[#980775]'
         : 'text-[#FF0700]'
     }`}>
       {getOutingStatus(item.outDlvrDate, item.sheduleTime)}
@@ -1682,7 +1680,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
               </Text>
             </View>
 
-            {/* Scheduled Info */}
+    
             <View className="flex-[2] items-center justify-center px-2">
               <Text className={`text-center font-medium text-xs ${
                 isScheduleDateToday(item.sheduleDate) ? 'text-red-600' : 'text-gray-800'
@@ -1730,15 +1728,15 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
           : "No out for delivery orders"
         }
       </Text>
-      {((selectedToggle === 'ToDo' && selectedDateFilter) || 
+      {/* {((selectedToggle === 'ToDo' && selectedDateFilter) || 
         (selectedToggle === 'Completed' && completedDateFilter)) && (
-        <TouchableOpacity
-          onPress={() => selectedToggle === 'ToDo' ? clearAllFilters() : clearCompletedFilters()}
-          className="mt-2 bg-[#980775] px-4 py-2 rounded-lg"
-        >
-          <Text className="text-white text-sm">Clear Filter</Text>
-        </TouchableOpacity>
-      )}
+        // <TouchableOpacity
+        //   onPress={() => selectedToggle === 'ToDo' ? clearAllFilters() : clearCompletedFilters()}
+        //   className="mt-2 bg-[#980775] px-4 py-2 rounded-lg"
+        // >
+        //   <Text className="text-white text-sm">Clear Filter</Text>
+        // </TouchableOpacity>
+      )} */}
     </View>
   )}
 </ScrollView>

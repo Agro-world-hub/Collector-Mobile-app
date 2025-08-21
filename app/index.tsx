@@ -64,7 +64,7 @@ import RecieveTargetBetweenOfficers from "@/component/ManagerScreens/RecieveTarg
 import PassTargetBetweenOfficers from "@/component/ManagerScreens/PassTargetBetweenOfficers";
 import OTPE from "@/component/Otpverification";
 import { AppState } from "react-native";
-import NetInfo from "@react-native-community/netinfo";
+
 import ManagerDashboard from "@/component/ManagerScreens/ManagerDashboard";
 import CenterTarget from "@/component/ManagerScreens/CenterTarget";
 import ManagerTransactions from "@/component/ManagerScreens/ManagerTransactions";
@@ -111,6 +111,9 @@ import { RootState } from '../services/reducxStore';
 
 import ReplaceRequestsApprove from '@/component/DisributionManger/ReplaceRequestsApprove';
 import DistributionOfficerReport from '@/component/DisributionManger/DistributionOfficerReport'
+
+import { Alert } from "react-native";
+import NetInfo from "@react-native-community/netinfo"
 
 LogBox.ignoreAllLogs(true);
 NativeWindStyleSheet.setOutput({
@@ -220,12 +223,39 @@ function MainTabNavigator() {
   );
 }
 
+
+
 const Index = () => {
   useEffect(() => {
     onlineStatus();
     
   }, []);
+const [isOfflineAlertShown, setIsOfflineAlertShown] = useState(false);
 
+  useEffect(() => {
+    const unsubscribeNetInfo = NetInfo.addEventListener(state => {
+      if (!state.isConnected && !isOfflineAlertShown) {
+        setIsOfflineAlertShown(true); // mark that alert is shown
+        Alert.alert(
+          "No Internet Connection",
+          "Please turn on mobile data or Wi-Fi to continue.",
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                // Reset flag after user presses OK
+                setIsOfflineAlertShown(false);
+              },
+            },
+          ]
+        );
+      }
+    });
+
+    return () => {
+      unsubscribeNetInfo();
+    };
+  }, [isOfflineAlertShown]);
   const onlineStatus = async () => {
     AppState.addEventListener("change", async (nextAppState) => {
       console.log("App state changed toooolllllll:", nextAppState);

@@ -10,6 +10,7 @@ import LottieView from 'lottie-react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useTranslation } from "react-i18next";
 import { Animated } from 'react-native';
+import { useFocusEffect } from 'expo-router';
 
 type TargetOrderScreenNavigationProps = StackNavigationProp<RootStackParamList, 'TargetOrderScreen'>;
 
@@ -93,6 +94,25 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+
+
+   useFocusEffect(
+    useCallback(() => {
+      // Refresh data when screen gains focus
+      fetchTargets();
+      
+      // Optional: You can also set up a polling interval for continuous refresh
+      const interval = setInterval(() => {
+        fetchTargets();
+      }, 30000); // Refresh every 30 seconds
+
+      // Cleanup function
+      return () => {
+        clearInterval(interval);
+      };
+    }, [])
+  );
+
 
   const fetchSelectedLanguage = async () => {
     try {

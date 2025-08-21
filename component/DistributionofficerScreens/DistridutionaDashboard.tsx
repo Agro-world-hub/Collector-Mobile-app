@@ -113,9 +113,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
         10
       );
       setTargetPercentage(percentage);
-      
-    
-      
+       
     } else {
       setTargetPercentage(0);
     }
@@ -221,36 +219,41 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
       }
     >
       {/* Profile Section */}
-      <TouchableOpacity
-        className="flex-row items-center mb-4 p-4"
-        onPress={() => navigation.navigate("EngProfile")}
-      >
-        <Image
-          source={
-            profile?.image
-              ? { uri: profile.image }
-              : require("../../assets/images/mprofile.webp")
-          }
-          className="w-16 h-16 rounded-full mr-3"
-          onError={() => console.log("Failed to load image")}
-        />
+   <TouchableOpacity         
+  className="flex-row items-center mb-4 p-4"         
+  onPress={() => navigation.navigate("EngProfile")}       
+>         
+  <Image           
+    source={             
+      profile?.image               
+        ? { uri: profile.image }               
+        : require("../../assets/images/mprofile.webp")           
+    }           
+    className="w-16 h-16 rounded-full mr-3"           
+    onError={() => console.log("Failed to load image")}         
+  />          
 
-        <View>
-          <Text
-            style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-            className="text-lg font-bold"
-          >
-            {getFullName()}
-          </Text>
-          <Text
-            style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-            className="text-gray-500"
-          >
-            {getcompanyName()}
-          </Text>
-        </View>
-      </TouchableOpacity>
-
+  <View style={{ flex: 1 }}>           
+    <Text             
+      style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}             
+      className="text-lg font-bold"           
+    >             
+      {getFullName()}           
+    </Text>           
+    
+    <Text             
+      style={[
+        { fontSize: 16 }, 
+        getTextStyle(selectedLanguage)
+      ]}             
+      className="text-gray-500"
+      numberOfLines={1}
+      ellipsizeMode="tail"           
+    >             
+      {getcompanyName()}           
+    </Text>         
+  </View>       
+</TouchableOpacity>
       {/* Conditional Rendering for Daily Target */}
       {/* {targetPercentage !== null && targetPercentage < 100 ? (
         <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#DF9301]">
@@ -395,14 +398,8 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
             {t("DistridutionaDashboard.TargetOrders")}
           </Text>
         </TouchableOpacity>
-        
-        
-
-
         )}
-       
-
-       
+              
       </View>
     </ScrollView>
   );

@@ -358,6 +358,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 import { LanguageContext } from "@/context/LanguageContext";
+import LottieView from 'lottie-react-native';
 
 type EngProfileNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -396,7 +397,6 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const [isLanguageDropdownOpen, setLanguageDropdownOpen] =
     useState<boolean>(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  //const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const [empid, setEmpid] = useState<string>("");
   const [selectedComplaint, setSelectedComplaint] = useState<string | null>(
@@ -404,18 +404,20 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   );
   const [isComplaintDropdownOpen, setComplaintDropdownOpen] =
     useState<boolean>(false);
+  const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false); // Add this state
   const { t } = useTranslation();
   const { changeLanguage } = useContext(LanguageContext);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
 
   const fetchSelectedLanguage = async () => {
     try {
-      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
-      setSelectedLanguage(lang || "en"); // Default to English if not set
+      const lang = await AsyncStorage.getItem("@user_language");
+      setSelectedLanguage(lang || "en");
     } catch (error) {
       console.error("Error fetching language preference:", error);
     }
   };
+
   useEffect(() => {
     const fetchData = async () => {
       await fetchSelectedLanguage();
@@ -429,15 +431,12 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
     if (currentScreen === "EngProfile" && profile?.jobRole === "Distribution Officer") {
       navigation.navigate("Main", { screen: "DistridutionaDashboard" })
     } else if(currentScreen === "EngProfile" && profile?.jobRole === "Collection Officer" || profile?.jobRole === "Collection Center Manger" ){
-      // navigation.reset({
-      //   index: 0,
-      //   routes: [{ name: "Main" }],
-      // });
       navigation.navigate("Main", { screen: "Dashboard" })
     }else {
       navigation.goBack();
     }
   };
+
   const complaintOptions = [
     t("EngProfile.Report Complaint"),
     t("EngProfile.View Complaint History"),
@@ -474,23 +473,25 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
     fetchUserProfile();
   }, []);
+
   const HanldeAsynStorage = async (lng: string) => {
     console.log("Selected language:", lng);
     await AsyncStorage.setItem("@user_language", lng);
   };
+
   const LanguageSelect = async (language: string) => {
     try {
       await AsyncStorage.setItem("@user_language", language);
       changeLanguage(language);
     } catch (error) {}
   };
+
   const handleLanguageSelect = (language: string) => {
     console.log("Selected language:", language);
     setSelectedLanguage(language);
     setLanguageDropdownOpen(false);
     try {
       if (language === "English") {
-        console;
         LanguageSelect("en");
         HanldeAsynStorage("en");
       } else if (language === "தமிழ்") {
@@ -504,7 +505,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   };
 
   const handleCall = () => {
-    const phoneNumber = "+1234567890"; // Replace with the actual number
+    const phoneNumber = "+1234567890";
     const url = `tel:${phoneNumber}`;
     Linking.canOpenURL(url)
       .then((supported) => {
@@ -517,30 +518,31 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       .catch((err) => console.error("An error occurred", err));
   };
 
+  // Updated handleLogout function with Lottie animation
   const handleLogout = async () => {
     try {
+      setIsLoggingOut(true); // Show loading animation
+      
       const empId = await AsyncStorage.getItem("empid");
       await status(empId!, false);
-      // Disconnect the socket connection
-      // if (socket.connected) {
-      //   socket.disconnect();
-      //   console.log("Socket disconnected.");
-      // }
 
-      // Remove the token and empId from AsyncStorage (or any storage you're using)
+      // Remove the token and empId from AsyncStorage
       await AsyncStorage.removeItem("token");
       await AsyncStorage.removeItem("jobRole");
       await AsyncStorage.removeItem("companyNameEnglish");
       await AsyncStorage.removeItem("companyNameSinhala");
       await AsyncStorage.removeItem("companyNameTamil");
       await AsyncStorage.removeItem("empid");
-      // Optionally, you can also remove it from your app's state (if stored there)
-      // setEmpId(null);  // Clear empId from the app's state (if using useState)
 
-      // Navigate to the Login screen
-      navigation.navigate("Login");
+      // Small delay to show the animation before navigation
+      setTimeout(() => {
+        setIsLoggingOut(false);
+        navigation.navigate("Login");
+      }, 2000); // 2 seconds delay to show animation
+
     } catch (error) {
       console.error("An error occurred during logout:", error);
+      setIsLoggingOut(false); // Hide loading animation on error
       Alert.alert(t("Error.error"), t("Error.Failed to log out."));
     }
   };
@@ -548,6 +550,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const handleEditClick = () => {
     navigation.navigate("Profile" as any, { jobRole: profile?.jobRole });
   };
+
   const status = async (empId: string, status: boolean) => {
     try {
       const token = await AsyncStorage.getItem("token");
@@ -562,17 +565,17 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Add token in Authorization header
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            empId: empId, // Use the passed empId
-            status: status, // Use the passed status
+            empId: empId,
+            status: status,
           }),
         }
       );
 
       if (response) {
-        console.log("User is marked as ofline");
+        console.log("User is marked as offline");
       } else {
         console.log("Failed to update online status");
       }
@@ -584,13 +587,13 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const getTextStyle = (language: string) => {
     if (language === "si") {
       return {
-        fontSize: 14, // Smaller text size for Sinhala
-        lineHeight: 20, // Space between lines
+        fontSize: 14,
+        lineHeight: 20,
       };
     }
     return {
-      fontSize: 16, // Default font size
-      lineHeight: 25, // Default line height
+      fontSize: 16,
+      lineHeight: 25,
     };
   };
 
@@ -605,6 +608,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
         return `${profile.firstNameEnglish} ${profile.lastNameEnglish}`;
     }
   };
+
   const getcompanyName = () => {
     if (!profile) return "Loading...";
     switch (selectedLanguage) {
@@ -616,6 +620,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
         return `${profile.companyNameEnglish} `;
     }
   };
+
   return (
     <View
       className="flex-1 bg-white "
@@ -625,7 +630,8 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       <TouchableOpacity onPress={() => handleBackPress()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
         <AntDesign name="left" size={24} color="#000502" />
       </TouchableOpacity>
-      <ScrollView showsVerticalScrollIndicator= {false}>
+      
+      <ScrollView showsVerticalScrollIndicator={false}>
         {/* Profile Card */}
         <View className="flex-row items-center p-2 mt-4  mb-4">
           <Image
@@ -644,43 +650,23 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
             >
               {getFullName()}
             </Text>
-
             <Text className="text-gray-500">{profile?.empId}</Text>
           </View>
+          
           <TouchableOpacity onPress={handleEditClick}>
-            {/* <Ionicons name="create-outline" size={30} color="#2fcd46" /> */}
-             <Image 
+            <Image 
               source={icon} 
-               style={{ width: 30, height: 30 }}
-          resizeMode="contain"
-              />
+              style={{ width: 30, height: 30 }}
+              resizeMode="contain"
+            />
           </TouchableOpacity>
         </View>
 
-        <View className="flex-1 p-4">
-          {/* Horizontal Line */}
-          {/* <View className="h-0.5 bg-[#D2D2D2] my-4" /> */}
+        
 
-          {/* Language Settings */}
-          {/* <TouchableOpacity
-            onPress={() => setLanguageDropdownOpen(!isLanguageDropdownOpen)}
-            className="flex-row items-center py-3"
-          >
-            <Ionicons name="globe-outline" size={20} color="black" />
-            <Text className="flex-1 text-lg ml-2">
-              {t("EngProfile.Language")}
-            </Text>
-            <Ionicons
-              name={isLanguageDropdownOpen ? "chevron-up" : "chevron-down"}
-              size={20}
-              color="black"
-            />
-          </TouchableOpacity> */}
-
+        <View className="flex-1 p-4 mt-[-10]">
           {isLanguageDropdownOpen && (
             <View className="pl-8">
-                            {/* {["English", "සිංහල", "தமிழ்"].map((language) => ( */}
-
               {["English", "සිංහල"].map((language) => (
                 <TouchableOpacity
                   key={language}
@@ -709,7 +695,23 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
               ))}
             </View>
           )}
+  <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
+
+         <TouchableOpacity
+            onPress={() => setLanguageDropdownOpen(!isLanguageDropdownOpen)}
+            className="flex-row items-center py-3"
+          >
+            <Ionicons name="globe-outline" size={20} color="black" />
+            <Text className="flex-1 text-lg ml-2">
+              {t("EngProfile.Language")}
+            </Text>
+            <Ionicons
+              name={isLanguageDropdownOpen ? "chevron-up" : "chevron-down"}
+              size={20}
+              color="black"
+            />
+          </TouchableOpacity>
           {/* Horizontal Line */}
           <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
@@ -802,10 +804,11 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
           <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
-          {/* Logout */}
+          {/* Logout Button */}
           <TouchableOpacity
             className="flex-row items-center py-3 mb-20"
             onPress={handleLogout}
+            disabled={isLoggingOut} // Disable button while logging out
           >
             <Ionicons name="log-out-outline" size={20} color="red" />
             <Text className="flex-1 text-lg ml-2 text-red-500">
@@ -814,6 +817,43 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* Logout Lottie Animation Overlay */}
+      {isLoggingOut && (
+        <View 
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '120%',
+            height: '100%',
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 9999,
+          }}
+        >
+          <LottieView
+            source={require('../assets/lottie/newLottie.json')}
+            autoPlay
+            loop
+            style={{ width: 200, height: 200 }}
+          />
+          <Text 
+            style={{
+              fontSize: 18,
+              color: '#374151',
+              marginTop: 20,
+              textAlign: 'center',
+              fontWeight: '500',
+            }}
+          >
+            {t("Logging out...") || "Logging out..."}
+          </Text>
+        </View>
+      )}
     </View>
   );
 };
