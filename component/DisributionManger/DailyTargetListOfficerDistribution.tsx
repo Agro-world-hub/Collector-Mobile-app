@@ -692,9 +692,9 @@ const getStatusTextColor = (status: string) => {
                   {item.invNo || `INV${item.processOrderId.toString().padStart(6, '0')}`}
                 </Text>
                 {/* Red dot indicator for locked packages */}
-                {item.packageIsLock === 1 && (
+                {/* {item.packageIsLock === 1 && (
                   <View className="absolute right-1 top-1 w-3 h-3 bg-red-500 rounded-full"></View>
-                )}
+                )} */}
               </View>
 
               {selectedToggle === 'ToDo' ? (

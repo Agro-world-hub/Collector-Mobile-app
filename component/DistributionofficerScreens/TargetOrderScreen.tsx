@@ -48,6 +48,7 @@ interface TargetData {
   sheduleTime: string;
 }
 
+
 // Backend API response interface - Updated to match actual API response
 interface ApiTargetData {
   distributedTargetId: string;
@@ -80,10 +81,35 @@ interface ApiTargetData {
   packedPackageItems: number | null;
   pendingPackageItems: number | null;
   isPackage: number;
-  packageIsLock: number;
+  packageIsLock?: number; // This might not exist in API response
   sheduleDate: string;
   sheduleTime: string;
+  
+  // Based on your actual API response, these fields are at root level
+  totalPackages?: number;
+  lockedPackages?: number; // This is the field we need to check!
+  
+  // Optional nested structures (in case they exist in some responses)
+  packageData?: {
+    totalPackages: number;
+    lockedPackages: number;
+    items: {
+      total: number;
+      packed: number;
+      pending: number;
+      status: string | null;
+    };
+  };
+  
+  additionalItems?: {
+    total: number;
+    packed: number;
+    pending: number;
+    status: string;
+  };
 }
+
+
 const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => {
   const [todoData, setTodoData] = useState<TargetData[]>([]);
   const [completedData, setCompletedData] = useState<TargetData[]>([]);
@@ -198,38 +224,41 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
   };
 
   // Updated function to map API data to frontend format using selectedStatus
-  const mapApiDataToTargetData = (apiData: ApiTargetData[]): TargetData[] => {
-    return apiData.map((item, index) => ({
-      id: item.distributedTargetItemId || `${item.distributedTargetId}_${index}`,
-      invoiceNo: item.invNo,
-      varietyNameEnglish: `Order ${item.invNo}`,
-      varietyNameSinhala: `ඇණවුම ${item.invNo}`,
-      varietyNameTamil: `ஆர்டர் ${item.invNo}`,
-      grade: 'A',
-      target: item.target,
-      complete: item.complete,
-      todo: item.target - item.complete,
-      // Use selectedStatus as the primary status
-      status: mapSelectedStatusToStatus(item.selectedStatus, item.isComplete),
-      createdAt: item.targetCreatedAt,
-      updatedAt: item.itemCreatedAt,
-      completedTime: item.completeTime,
-      selectedStatus: item.selectedStatus,
-      additionalItemStatus: item.additionalItemStatus,
-      packageItemStatus: item.packageItemStatus,
-      totalAdditionalItems: item.totalAdditionalItems || 0,
-      packedAdditionalItems: item.packedAdditionalItems || 0,
-      pendingAdditionalItems: item.pendingAdditionalItems || 0,
-      totalPackageItems: item.totalPackageItems,
-      packageIsLock: item.packageIsLock,
-      packedPackageItems: item.packedPackageItems,
-      pendingPackageItems: item.pendingPackageItems,
-      isPackage: item.isPackage,
-      orderId: item.orderId,
-      sheduleDate: item.sheduleDate,
-      sheduleTime: item.sheduleTime
-    }));
-  };
+// Updated function to map API data to frontend format using selectedStatus
+const mapApiDataToTargetData = (apiData: ApiTargetData[]): TargetData[] => {
+  return apiData.map((item, index) => ({
+    id: item.distributedTargetItemId || `${item.distributedTargetId}_${index}`,
+    invoiceNo: item.invNo,
+    varietyNameEnglish: `Order ${item.invNo}`,
+    varietyNameSinhala: `ඇණවුම ${item.invNo}`,
+    varietyNameTamil: `ஆர்டர் ${item.invNo}`,
+    grade: 'A',
+    target: item.target,
+    complete: item.complete,
+    todo: item.target - item.complete,
+    // Use selectedStatus as the primary status
+    status: mapSelectedStatusToStatus(item.selectedStatus, item.isComplete),
+    createdAt: item.targetCreatedAt,
+    updatedAt: item.itemCreatedAt,
+    completedTime: item.completeTime,
+    selectedStatus: item.selectedStatus,
+    additionalItemStatus: item.additionalItemStatus,
+    packageItemStatus: item.packageItemStatus,
+    totalAdditionalItems: item.totalAdditionalItems || 0,
+    packedAdditionalItems: item.packedAdditionalItems || 0,
+    pendingAdditionalItems: item.pendingAdditionalItems || 0,
+    totalPackageItems: item.totalPackageItems,
+    packedPackageItems: item.packedPackageItems,
+    pendingPackageItems: item.pendingPackageItems,
+    isPackage: item.isPackage,
+    orderId: item.orderId,
+    sheduleDate: item.sheduleDate,
+    sheduleTime: item.sheduleTime,
+    
+    // FIXED: Properly handle package lock status from API response with null check
+    packageIsLock: (item.lockedPackages && item.lockedPackages > 0) ? 1 : 0
+  }));
+};
 
   // Map selectedStatus to display status
   const mapSelectedStatusToStatus = (
@@ -252,82 +281,94 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
     }
   };
 
-  const fetchTargets = useCallback(async () => {
-    setLoading(true);
-    try {
-      const authToken = await AsyncStorage.getItem("token");
-      
-      if (!authToken) {
-        throw new Error("Authentication token not found. Please login again.");
+const fetchTargets = useCallback(async () => {
+  setLoading(true);
+  try {
+    const authToken = await AsyncStorage.getItem("token");
+    
+    if (!authToken) {
+      throw new Error("Authentication token not found. Please login again.");
+    }
+
+    console.log("Making request to:", `${environment.API_BASE_URL}api/distribution/officer-target`);
+    console.log("Auth token exists:", !!authToken);
+
+    const response = await axios.get(
+      `${environment.API_BASE_URL}api/distribution/officer-target`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
       }
+    );
 
-      console.log("Making request to:", `${environment.API_BASE_URL}api/distribution/officer-target`);
-      console.log("Auth token exists:", !!authToken);
+    console.log("Response status:", response.status);
+    console.log("Response data:", response.data);
 
-      const response = await axios.get(
-        `${environment.API_BASE_URL}api/distribution/officer-target`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-        }
+    if (response.data.success) {
+      const apiData = response.data.data;
+      
+      // Debug: Log the first item to see its structure
+      if (apiData && apiData.length > 0) {
+        console.log("First API item structure:", JSON.stringify(apiData[0], null, 2));
+        console.log("Package lock field in first item:", apiData[0].packageIsLock);
+        console.log("Package data in first item:", apiData[0].packageData);
+      }
+      
+      // Map API data to frontend format
+      const mappedData = mapApiDataToTargetData(apiData);
+      
+      // Debug: Log the first mapped item
+      if (mappedData && mappedData.length > 0) {
+        console.log("First mapped item:", JSON.stringify(mappedData[0], null, 2));
+        console.log("Package lock in mapped item:", mappedData[0].packageIsLock);
+      }
+      
+      console.log("Mapped data:", mappedData);
+      
+      // Filter based on selectedStatus instead of packageStatus
+      const todoItems = mappedData.filter((item: TargetData) => 
+        ['Pending', 'Opened'].includes(item.selectedStatus) 
+      );
+      
+      const completedItems = mappedData.filter(
+        (item: TargetData) => item.selectedStatus === 'Completed' 
       );
 
-      console.log("Response status:", response.status);
-      console.log("Response data:", response.data);
+      console.log("Todo Items:", todoItems);
+      console.log("Completed Items:", completedItems);
 
-      if (response.data.success) {
-        const apiData = response.data.data;
-        
-        // Map API data to frontend format
-        const mappedData = mapApiDataToTargetData(apiData);
-        
-        console.log("Mapped data:", mappedData);
-        
-        // Filter based on selectedStatus instead of packageStatus
-        const todoItems = mappedData.filter((item: TargetData) => 
-          ['Pending', 'Opened'].includes(item.selectedStatus) 
-        );
-        
-        const completedItems = mappedData.filter(
-          (item: TargetData) => item.selectedStatus === 'Completed' 
-        );
-
-        console.log("Todo Items:", todoItems);
-        console.log("Completed Items:", completedItems);
-
-        setTodoData(sortByVarietyAndGrade(todoItems));
-        setCompletedData(sortByVarietyAndGrade(completedItems));
-        setError(null);
-      }
-    } catch (err: any) {
-      console.error('Fetch error:', err);
-      console.error('Error response:', err.response?.data);
-      console.error('Error status:', err.response?.status);
-      
-      let errorMessage = t("Error.Failed to fetch data.");
-      
-      if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      } else if (err.response?.status === 400) {
-        errorMessage = "Bad request - please check your authentication";
-      } else if (err.response?.status === 401) {
-        errorMessage = "Unauthorized - please login again";
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-      
-      setError(errorMessage);
-      
-      setTodoData([]);
-      setCompletedData([]);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
+      setTodoData(sortByVarietyAndGrade(todoItems));
+      setCompletedData(sortByVarietyAndGrade(completedItems));
+      setError(null);
     }
-  }, [selectedLanguage, t]);
-
+  } catch (err: any) {
+    console.error('Fetch error:', err);
+    console.error('Error response:', err.response?.data);
+    console.error('Error status:', err.response?.status);
+    
+    let errorMessage = t("Error.Failed to fetch data.");
+    
+    if (err.response?.data?.message) {
+      errorMessage = err.response.data.message;
+    } else if (err.response?.status === 400) {
+      errorMessage = "Bad request - please check your authentication";
+    } else if (err.response?.status === 401) {
+      errorMessage = "Unauthorized - please login again";
+    } else if (err.message) {
+      errorMessage = err.message;
+    }
+    
+    setError(errorMessage);
+    
+    setTodoData([]);
+    setCompletedData([]);
+  } finally {
+    setLoading(false);
+    setRefreshing(false);
+  }
+}, [selectedLanguage, t]);
   // Updated navigation function with lock check
   const handleRowPress = (item: TargetData) => {
     // Check if package is locked
@@ -703,7 +744,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
                 </Text>
                 {/* Red dot indicator for locked packages */}
                 {item.packageIsLock === 1 && (
-                  <View className="absolute right-1 top-1 w-3 h-3 bg-red-500 rounded-full"></View>
+                  <View className="absolute right-[-2] top-3 w-3 h-3 bg-red-500 rounded-full"></View>
                 )}
               </View>
 
