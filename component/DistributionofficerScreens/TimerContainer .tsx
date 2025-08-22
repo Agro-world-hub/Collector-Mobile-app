@@ -99,10 +99,10 @@ const Timer: React.FC<TimerProps> = ({
   const pausedTimeRef = useRef<number>(minutes * 60 * 1000);
   const { t } = useTranslation();
   
-  // Calculate total time in milliseconds
+ 
   const totalTime = minutes * 60 * 1000;
 
-  // Memoized completion handler
+
   const handleCompletion = useCallback(() => {
     if (!isCompleted) {
       setIsCompleted(true);
@@ -111,7 +111,7 @@ const Timer: React.FC<TimerProps> = ({
     }
   }, [isCompleted, setRunning, onComplete]);
 
-  // Handle reset
+
   useEffect(() => {
     if (reset) {
       setTimeLeft(totalTime);
@@ -122,14 +122,14 @@ const Timer: React.FC<TimerProps> = ({
     }
   }, [reset, totalTime, setReset]);
 
-  // Handle timer completion
+ 
   useEffect(() => {
     if (timeLeft <= 0 && !isCompleted) {
       handleCompletion();
     }
   }, [timeLeft, isCompleted, handleCompletion]);
 
-  // Main timer logic with smooth updates
+
   useEffect(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -153,9 +153,9 @@ const Timer: React.FC<TimerProps> = ({
           clearInterval(intervalRef.current as NodeJS.Timeout);
           intervalRef.current = null;
         }
-      }, 16); // ~60fps for smooth animation
+      }, 16); 
     } else if (!running && timeLeft > 0) {
-      // When paused, save the current time left
+    
       pausedTimeRef.current = timeLeft;
       startTimeRef.current = null;
     }
@@ -168,7 +168,7 @@ const Timer: React.FC<TimerProps> = ({
     };
   }, [running, timeLeft, isCompleted]);
 
-  // Cleanup on unmount
+
   useEffect(() => {
     return () => {
       if (intervalRef.current) {
@@ -177,7 +177,7 @@ const Timer: React.FC<TimerProps> = ({
     };
   }, []);
 
-  // Calculate display values
+  
   const progress = Math.max(0, Math.min(1, timeLeft / totalTime));
   const mins = Math.floor((timeLeft % 3600000) / 60000);
   const secs = Math.floor((timeLeft % 60000) / 1000);
@@ -197,7 +197,7 @@ const Timer: React.FC<TimerProps> = ({
       alignItems: 'center',
       position: 'relative'
     }}>
-      {/* Background Circle */}
+   
       <View style={{
         width: innerSize,
         height: innerSize,
@@ -211,7 +211,7 @@ const Timer: React.FC<TimerProps> = ({
         elevation: 5,
       }}/>
       
-      {/* Progress Circle */}
+  
       <CircleProgress
         size={size}
         strokeWidth={strokeWidth}
@@ -220,7 +220,7 @@ const Timer: React.FC<TimerProps> = ({
         backgroundColor={backgroundColor}
       />
       
-      {/* Timer Text */}
+      
       <Text style={{ 
         fontSize, 
         color: fillColor,

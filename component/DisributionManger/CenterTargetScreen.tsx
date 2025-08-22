@@ -14,6 +14,7 @@ import { Animated } from 'react-native';
 import {fetchOrderDetailsByIds, processOrdersForDelivery} from '@/component/DisributionManger/pdf';
 
 
+
 type CenterTargetScreenNavigationProps = StackNavigationProp<RootStackParamList, 'CenterTargetScreen'>;
 type CenterTargetScreenRouteProp = RouteProp<RootStackParamList, 'CenterTargetScreen'>;
 
@@ -184,12 +185,12 @@ const [selectionLimitReached, setSelectionLimitReached] = useState(false);
     return [
       {
         date: today,
-        label: 'Today',
+        label: t("CenterTargetScreen.Today"),
         timeSlots
       },
       {
         date: tomorrow,
-        label: 'Tomorrow',
+        label: t("CenterTargetScreen.Tomorrow"),
         timeSlots
       },
       {
@@ -859,7 +860,7 @@ const SuccessModal = () => {
         <View className="bg-white rounded-2xl p-8 w-11/12 max-w-sm items-center">
           {/* Success Title */}
           <Text className="text-2xl font-bold mb-6 text-center text-gray-800">
-            Success!
+            {t("CenterTargetScreen.Succes")}
           </Text>
           
           {/* Success Icon */}
@@ -870,7 +871,7 @@ const SuccessModal = () => {
           
           {/* Success Message */}
           <Text className="text-center text-gray-600 text-base leading-6 mb-8">
-            {successCount} order{successCount !== 1 ? 's' : ''} {successCount !== 1 ? 'have' : 'has'} been sent out{'\n'}for delivery
+            {successCount} {t("CenterTargetScreen.order")}{successCount !== 1 ? 's' : ''} {successCount !== 1 ? 'have' : 'has'} {t("CenterTargetScreen.been sent out")}{'\n'}{t("CenterTargetScreen.for delivery")}
           </Text>
           
           {/* Progress Bar */}
@@ -933,11 +934,11 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     
     // Check if out time is within the scheduled time range
     if (outHour >= startHour && outHour < endHour) {
-      return 'On Time';
+      return t("CenterTargetScreen.On Time");
     } else if (outHour < startHour) {
-      return 'On Time';
+      return t("CenterTargetScreen.On Time");
     } else {
-      return 'Late';
+      return t("CenterTargetScreen.Late");
     }
   } catch (error) {
     console.error('Error determining outing status:', error);
@@ -962,7 +963,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
         {selectedToggle === 'ToDo' && (
 
       <Text className="text-white text-lg font-bold">
-        Centre Target : {selectedDateFilter ? selectedDateFilter : 'All'}
+        {t("CenterTargetScreen.Centre Target")} : {selectedDateFilter ? selectedDateFilter : t("CenterTargetScreen.All")}
       </Text>
       
    
@@ -971,7 +972,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     {selectedToggle === 'Completed' && (
 
      <Text className="text-white text-lg font-bold">
-        Centre Target : {selectedDateFilter ? selectedDateFilter : 'All'}
+         {t("CenterTargetScreen.Centre Target")} : {selectedDateFilter ? selectedDateFilter : t("CenterTargetScreen.All")}
       </Text>
       
       
@@ -981,7 +982,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     {selectedToggle === 'Out' && (
 
       <Text className="text-white text-lg font-bold">
-        Centre Target 
+         {t("CenterTargetScreen.Centre Target")} 
       </Text>
       
    
@@ -1171,7 +1172,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
                 opacity: selectedToggle === "Out" ? 1 : 0.7,
               }}
             >
-              {t("DailyTarget.Out")}
+              {t("CenterTargetScreen.Out")}
             </Animated.Text>
             
             {selectedToggle === "Out" && (
@@ -1205,7 +1206,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
           <View className="flex-1 justify-center items-center bg-black/50">
             <View className="bg-white rounded-lg p-6 w-11/12 max-w-md">
               <Text className="text-lg font-bold mb-6 text-center text-gray-800">
-                Select Date (ToDo)
+                 {t("CenterTargetScreen.Select Date")}
               </Text>
               
               {/* Clear Date Filter Option */}
@@ -1223,7 +1224,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
                 <Text className={`text-center font-medium text-lg ${
                   selectedDateFilter === null ? 'text-white' : 'text-gray-700'
                 }`}>
-                  All Dates
+                  {t("CenterTargetScreen.All Datese")}
                 </Text>
               </TouchableOpacity>
 
@@ -1266,7 +1267,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
                 className="bg-gray-300 px-6 py-3 rounded-lg mt-4"
                 onPress={() => setShowCalendarModal(false)}
               >
-                <Text className="text-center font-medium text-gray-700">Close</Text>
+                <Text className="text-center font-medium text-gray-700">  {t("CenterTargetScreen.Close")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -1284,7 +1285,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
           <View className="flex-1 justify-center items-center bg-black/50">
             <View className="bg-white rounded-lg p-6 w-11/12 max-w-md">
               <Text className="text-lg font-bold mb-6 text-center text-gray-800">
-                Select Completion Date
+                {t("CenterTargetScreen.Select Completion Date")}
               </Text>
               
               {/* Clear Date Filter Option */}
@@ -1302,7 +1303,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
                 <Text className={`text-center font-medium text-lg ${
                   completedDateFilter === null ? 'text-white' : 'text-gray-700'
                 }`}>
-                  All Completion Dates
+                   {t("CenterTargetScreen.All Completion Dates")}
                 </Text>
               </TouchableOpacity>
 
@@ -1345,7 +1346,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
                 className="bg-gray-300 px-6 py-3 rounded-lg mt-4"
                 onPress={() => setShowCompletedCalendarModal(false)}
               >
-                <Text className="text-center font-medium text-gray-700">Close</Text>
+                <Text className="text-center font-medium text-gray-700"> {t("CenterTargetScreen.Close")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -1380,7 +1381,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     </View>
         
         <Text className="text-center text-gray-600 mb-6">
-          Are you sure you want to send these selected {selectedItems.length} orders out for delivery?
+          {t("CenterTargetScreen.Are you sure you want to send these selected")} {selectedItems.length}  {t("CenterTargetScreen.orders out for delivery")}
         </Text>
         
         {/* Loading indicator when processing */}
@@ -1388,7 +1389,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
           <View className="mb-4 items-center">
             <ActivityIndicator size="large" color="#980775" />
             <Text className="text-center text-gray-600 mt-2">
-              Processing orders...
+              {t("CenterTargetScreen.Processing orders")}
             </Text>
           </View>
         )}
@@ -1405,7 +1406,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
             <Text className={`text-center font-medium ${
               loading ? 'text-gray-400' : 'text-gray-700'
             }`}>
-              Cancel
+               {t("CenterTargetScreen.Cancel")}
             </Text>
           </TouchableOpacity>
           
@@ -1446,20 +1447,20 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
   {/* Table Header - Changes based on selected toggle */}
   {selectedToggle === 'Out' ? (
     <View className="flex-row bg-[#980775] py-3">
-      <Text className="flex-1 text-center text-white font-bold">No</Text>
-      <Text className="flex-[2] text-center text-white font-bold">Invoice No</Text>
-      <Text className="flex-[2] text-center text-white font-bold">Out Time</Text>
-      <Text className="flex-[2] text-center text-white font-bold">Outing Status</Text>
+      <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
+      <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
+      <Text className="flex-[2] text-center text-white font-bold">{t("CenterTargetScreen.Out Time")}</Text>
+      <Text className="flex-[2] text-center text-white font-bold">{t("CenterTargetScreen.Outing Status")}</Text>
     </View>
   ) : (
     <View className="flex-row bg-[#980775] py-3">
       <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
       <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
       <Text className="flex-[2] text-center text-white font-bold">
-        {selectedToggle === 'Completed' ? 'Completed' : t("TargetOrderScreen.Date")}
+        {selectedToggle === 'Completed' ? t("CenterTargetScreen.Completed") : t("TargetOrderScreen.Date")}
       </Text>
       <Text className="flex-[2] text-center text-white font-bold">
-        {selectedToggle === 'ToDo' ? t("TargetOrderScreen.Status") : "Scheduled"}
+        {selectedToggle === 'ToDo' ? t("TargetOrderScreen.Status") : t("CenterTargetScreen.Scheduled")}
       </Text>
     </View>
   )}
@@ -1592,10 +1593,10 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
       />
       <Text className="text-gray-500 mt-4 text-center">
         {selectedToggle === 'ToDo' 
-          ? t("DailyTarget.NoTodoItems") || "No items to do"
+          ? t("DailyTarget.NoTodoItems") || t("DailyTarget.NoTodoItems")
           : selectedToggle === 'Completed'
-          ? t("DailyTarget.noCompletedTargets") || "No completed items"
-          : "No out for delivery orders"
+          ? t("DailyTarget.noCompletedTargets") || t("DailyTarget.noCompletedTargets")
+          : t("CenterTargetScreen.No out for delivery orders")
         }
       </Text>
       {/* {((selectedToggle === 'ToDo' && selectedDateFilter) || 

@@ -151,16 +151,16 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
   
    useFocusEffect(
     useCallback(() => {
-      // Refresh data when screen gains focus
+   
       fetchTargets();
       fetchUserProfile();
       
-      // Optional: You can also set up a polling interval for continuous refresh
+      
       const interval = setInterval(() => {
         fetchTargets();
-      }, 30000); // Refresh every 30 seconds
+      }, 30000); 
 
-      // Cleanup function
+   
       return () => {
         clearInterval(interval);
       };

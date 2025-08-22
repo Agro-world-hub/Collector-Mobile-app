@@ -176,7 +176,7 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
           </Text>
          
           <Text className="text-gray-500 text-sm">
-            {t("Requested Time")}: {item.createdAt}
+           {t("ReplaceRequestsScreen.Requested Time")} : {item.createdAt}
           </Text>
         
         </View>
@@ -203,12 +203,12 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
       }
     >
       <View className="mb-6">
-        <Text className="text-lg font-bold text-center">{t("Replace Requests")}</Text>
+        <Text className="text-lg font-bold text-center"> {t("ReplaceRequestsScreen.Replace Requests")}</Text>
       </View>
 
       <View className="px-4">
         <Text className="text-base pb-4 text-[#21202B] font-semibold">
-          {t("All")} ({replaceRequests.length})
+         {t("ReplaceRequestsScreen.All")} ({replaceRequests.length})
         </Text>
         
         {replaceRequests.length === 0 ? (
@@ -220,7 +220,7 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
                        style={{ width: 150, height: 150 }}
                      />
             <Text className="text-center text-gray-500 mt-4">
-              {t("No replace requests found")}
+             {t("ReplaceRequestsScreen.No replace requests found")}
             </Text>
           </View>
         ) : (

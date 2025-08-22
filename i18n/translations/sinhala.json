@@ -964,7 +964,39 @@
   },
     "ReplaceRequestsScreen":{
     "Order ID":"ඇණවුම් හැඳුනුම්පත:",
-    "Replacing Item":"අයිතමය ප්‍රතිස්ථාපනය කිරීම:"
+    "Replacing Item":"අයිතමය ප්‍රතිස්ථාපනය කිරීම:",
+       "Requested Time":"ඉල්ලන ලද කාලය",
+    "Replace Requests":"ඉල්ලීම් ප්‍රතිස්ථාපනය කරන්න",
+    "All":"සියල්ල",
+    "No replace requests found":"ප්‍රතිස්ථාපන ඉල්ලීම් හමු නොවීය"
+
+},
+  "CenterTargetScreen":{
+    "Success":"සාර්ථකත්වය",
+    "order":"ඇණවුම",
+    "been sent out":"යවා ඇත",
+    "for delivery":"බෙදා හැරීම සඳහා",
+    "Centre Target":"මධ්‍යස්ථාන ඉලක්කය",
+    "Select Date":"දිනය තෝරන්න (කළ යුතු දේ)",
+    "All Dates":"සියලු දිනයන්",
+    "Close":"වසන්න",
+    "Select Completion Date":"සම්පූර්ණ කිරීමේ දිනය තෝරන්න",
+    "All Completion Dates":"සියලු සම්පූර්ණ කිරීමේ දිනයන්",
+    "Are you sure you want to send these selected":"තෝරාගත් මෙම තෝරාගත් ඒවා යැවීමට ඔබට විශ්වාසද",
+    "orders out for delivery":"බෙදා හැරීමට ඇණවුම් තිබේ?",
+    "Processing orders":"සැකසුම් ඇණවුම්.",
+    "Cancel":"අවලංගු කරන්න",
+    "Out Time":"නිමා කිරීමේ කාලය",
+    "Outing Status":"පිටවීමේ තත්ත්වය",
+    "Today":"අද",
+     "Tomorrow":"හෙට",
+      "All":"සියල්ල",
+      "Out":"පිටතට",
+      "Completed":"සම්පූර්ණ",
+     "Scheduled":"උපලේඛනගත",
+    "On Time":"නියමිත වේලාවට",
+     "Late":"ප්‍රමාදයි",
+     "No out for delivery orders":"බෙදාහැරීමේ ඇණවුම් සඳහා පිටවීමක් නැත"
   }
 
 }

@@ -961,7 +961,39 @@
   },
   "ReplaceRequestsScreen":{
     "Order ID":"Order ID:",
-    "Replacing Item":"Replacing Item:"
+    "Replacing Item":"Replacing Item:",
+    "Requested Time":"Requested Time",
+    "Replace Requests":"Replace Requests",
+    "All":"All",
+    "No replace requests found":"No replace requests found"
+  },
+  "CenterTargetScreen":{
+    "Success":"Success!",
+    "order":"order",
+    "been sent out":"been sent out",
+    "for delivery":"for delivery",
+    "Centre Target":"Centre Target",
+    "Select Date":"Select Date (ToDo)",
+    "All Dates":"All Dates",
+    "Close":"Close",
+    "Select Completion Date":"Select Completion Date",
+    "All Completion Dates":"All Completion Dates",
+    "Are you sure you want to send these selected":"Are you sure you want to send these selected",
+    "orders out for delivery":"orders out for delivery?",
+    "Processing orders":"Processing orders...",
+    "Cancel":"Cancel",
+    "Out Time":"Out Time",
+    "Outing Status":"Outing Status",
+     "Today":"Today",
+     "Tomorrow":"Tomorrow",
+     "All":"All",
+     "Out":"Out",
+     "Completed":"Completed",
+     "Scheduled":"Scheduled",
+     "On Time":"On Time",
+     "Late":"Late",
+     "No out for delivery orders":"No out for delivery orders"
+     
   }
 
 
