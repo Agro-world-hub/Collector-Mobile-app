@@ -20,6 +20,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import NetInfo from "@react-native-community/netinfo";
 
 type ReplaceRequestsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -251,6 +252,11 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
       Alert.alert('Error', 'Please select a product and enter quantity');
       return;
     }
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
 
     try {
       setSubmitting(true);

@@ -10,6 +10,7 @@ import {environment }from '@/environment/environment';
 import { useTranslation } from "react-i18next";
 import { navigate } from 'expo-router/build/global-state/routing';
 import { ScrollView } from 'react-native-gesture-handler';
+import NetInfo from "@react-native-community/netinfo";
 
 // Define the navigation prop type
 type RecieveTargetBetweenOfficersScreenNavigationProps = StackNavigationProp<RootStackParamList, 'RecieveTargetBetweenOfficers'>;
@@ -230,6 +231,11 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
             );
       return;
     }
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
   
     try {
       setFetchingTarget(true);

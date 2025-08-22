@@ -25,6 +25,7 @@ import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import CircularProgress from 'react-native-circular-progress-indicator';
 import TimerContainer from '@/component/DistributionofficerScreens/TimerContainer '
 import Timer from '@/component/DistributionofficerScreens/TimerContainer '
+import NetInfo from "@react-native-community/netinfo";
 
 
 
@@ -399,13 +400,7 @@ useEffect(() => {
         // Get package quantity
         const packageQty = packageInfo.packageQty || 1;
         
-        // if (packageInfo.packageName) {
-        //   // Display package name with quantity if > 1
-        //   const displayName = packageQty > 1 
-        //     ? `${packageInfo.packageName} (x${packageQty})`
-        //     : packageInfo.packageName;
-        //   packageNames.push(displayName);
-        // }
+     
         if (packageInfo.packageName) {
   // Display package name with quantity if > 1
   const displayName = packageQty > 1 
@@ -664,6 +659,11 @@ const handleCompleteOrder = async () => {
     
     console.log('Starting order completion...');
     setOrderCompletionState('completing');
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
     
     try {
         // Update UI state
@@ -831,12 +831,6 @@ const startCountdown = () => {
 
   
 
-//   const togglePackageExpansion = (packageId: number) => {
-//   setPackageExpansions(prev => ({
-//     ...prev,
-//     [packageId]: !prev[packageId]
-//   }));
-// };
 
 const togglePackageExpansion = (packageId: number) => {
   // Allow expansion for all order statuses - user should control visibility
@@ -852,32 +846,7 @@ const isPackageExpanded = (packageId: number) => {
 };
 
 
-// const getPackageGroups = () => {
-//   const groups: { [key: number]: FamilyPackItem[] } = {};
-  
-//   familyPackItems.forEach(item => {
-//     if (!groups[item.packageId]) {
-//       groups[item.packageId] = [];
-//     }
-//     groups[item.packageId].push(item);
-//   });
-  
-//   return Object.entries(groups).map(([packageId, items]) => {
-//     const packageQty = items[0]?.packageQty || 1;
-//     const displayName = packageQty > 1 
-//       ? `${items[0]?.packageName || `Package ${packageId}`} (x${packageQty})`
-//       : items[0]?.packageName || `Package ${packageId}`;
-    
-//     return {
-//       packageId: parseInt(packageId),
-//       packageName: displayName, // Use the formatted name with quantity
-//       packageQty: packageQty,
-//       items,
-//       allSelected: items.every(item => item.selected),
-//       someSelected: items.some(item => item.selected)
-//     };
-//   });
-// };
+
 
 const getPackageGroups = () => {
   const groups: { [key: number]: FamilyPackItem[] } = {};
@@ -1065,6 +1034,11 @@ const handleReplaceSubmit = async () => {
       return;
     }
 
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
+
     // Make API call to create replacement request
     const response = await axios.post(
       `${environment.API_BASE_URL}api/distribution/replace-order-package`,
@@ -1163,42 +1137,14 @@ const handleReplaceSubmit = async () => {
     }
   };
 
-  // const handleProcessOrder = () => {
-  //   if (!inputWeight || parseFloat(inputWeight) <= 0) {
-  //     Alert.alert(t("Error"), t("Please enter a valid weight"));
-  //     return;
-  //   }
-
-  //   const weight = parseFloat(inputWeight);
-  //   const newComplete = orderData.complete + weight;
-  //   const newTodo = Math.max(0, orderData.target - newComplete);
-  //   const newStatus = newComplete >= orderData.target ? 'Completed' : 'In Progress';
-
-  //   const updatedItem: OrderItem = {
-  //     ...orderData,
-  //     complete: newComplete,
-  //     todo: newTodo,
-  //     status: newStatus,
-  //     completedTime: newStatus === 'Completed' ? new Date().toLocaleString() : null
-  //   };
-
-  //   if (newStatus === 'Completed') {
-  //     navigation.navigate('CompletedOrderScreen' as any, { 
-  //       item: updatedItem, 
-  //       centerCode 
-  //     });
-  //   } else {
-  //     navigation.navigate('InProgressOrderScreen' as any, { 
-  //       item: updatedItem, 
-  //       centerCode 
-  //     });
-  //   }
-  // };
-
-
 
 
 const handleSubmit = async () => {
+
+    const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
   try {
     // **FIX: Create flat array of package items instead of grouped**
     const flatPackageItems = familyPackItems.map(item => ({
@@ -1339,11 +1285,6 @@ useEffect(() => {
 }, [familyPackItems, additionalItems]);
  
 
-  // const renderCheckbox = (selected: boolean) => (
-  //   <View className={`w-6 h-6 border-2 rounded ${selected ? 'bg-black border-black' : 'border-gray-300 bg-white'} items-center justify-center`}>
-  //     {selected && <AntDesign name="check" size={14} color="white" />}
-  //   </View>
-  // );
   const renderCheckbox = (selected: boolean) => (
   <View className={`w-6 h-6 border-2 rounded ${selected ? 'bg-black border-black' : 'border-gray-300 bg-white'} items-center justify-center ${orderStatus === 'Completed' ? 'opacity-50' : ''}`}>
     {selected && <AntDesign name="check" size={14} color="white" />}

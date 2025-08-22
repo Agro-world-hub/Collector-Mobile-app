@@ -11,6 +11,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { useTranslation } from "react-i18next";
 import { Animated } from 'react-native';
 import { useFocusEffect } from 'expo-router';
+import NetInfo from "@react-native-community/netinfo";
 
 type TargetOrderScreenNavigationProps = StackNavigationProp<RootStackParamList, 'TargetOrderScreen'>;
 
@@ -120,12 +121,39 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [jobRole, setJobeRole] = useState<string | null>(null);
 
 
+    const fetchUserProfile = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (token) {
+        const response = await axios.get(
+          `${environment.API_BASE_URL}api/distribution-manager/user-profile`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+    
+        setJobeRole(response.data.data.jobRole)
+  
+
+        console.log("data:", response.data.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch user profile:", error);
+    }
+  };
+
+  console.log("jobeJole-----------------",jobRole)
+
+  
+  
    useFocusEffect(
     useCallback(() => {
       // Refresh data when screen gains focus
       fetchTargets();
+      fetchUserProfile();
       
       // Optional: You can also set up a polling interval for continuous refresh
       const interval = setInterval(() => {
@@ -372,11 +400,11 @@ const fetchTargets = useCallback(async () => {
   // Updated navigation function with lock check
   const handleRowPress = (item: TargetData) => {
     // Check if package is locked
-    if (item.packageIsLock === 1) {
+    if (item.packageIsLock === 1 && jobRole ==="Distribution Officer") {
       Alert.alert(
-        t("Alert.Locked Package") || "Locked Package",
-        t("Alert.This package is locked and cannot be accessed") || "This package is locked and cannot be accessed.",
-        [{ text: t("Alert.OK") || "OK" }]
+        t("Locked Package") || "Locked Package",
+        t("This package is locked and cannot be accessed") || "This package is locked and cannot be accessed.",
+        [{ text: t("OK") || "OK" }]
       );
       return;
     }
@@ -454,14 +482,6 @@ const fetchTargets = useCallback(async () => {
     }
   };
 
-  // const getStatusText = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
-  //   const statusMap = {
-  //     'Pending': t("Pending") || 'Pending',
-  //     'Opened': t("Opened") || 'Opened', 
-  //     'Completed': t("Completed") || 'Completed'
-  //   };
-  //   return statusMap[selectedStatus] || selectedStatus;
-  // };
 
   const getStatusText = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
   switch (selectedStatus) {
@@ -542,40 +562,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
         <Text className="text-white text-lg font-bold">{t("TargetOrderScreen.My Daily Target")}</Text>
       </View>
 
-      {/* Toggle Buttons */}
-      {/* <View className="flex-row justify-center items-center py-4 bg-[#282828] px-4">
-        <TouchableOpacity
-          className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'ToDo' ? 'bg-[#980775]' : 'bg-white'
-          }`}
-          onPress={() => setSelectedToggle('ToDo')}
-        >
-          <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
-            {t("TargetOrderScreen.Todo")}
-          </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'ToDo' ? 'bg-white' : 'bg-[white]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'ToDo' ? 'text-[#000000]' : 'text-white'}`}>
-              {todoData.length.toString().padStart(2, '0')}
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          className={`flex-1 mx-2 py-3 rounded-full flex-row items-center justify-center ${
-            selectedToggle === 'Completed' ? 'bg-[#980775]' : 'bg-white'
-          }`}
-          onPress={() => setSelectedToggle('Completed')}
-        >
-          <Text className={`font-bold mr-2 ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}>
-            {t("TargetOrderScreen.Completed")}
-          </Text>
-          <View className={`rounded-full px-2 py-1 ${selectedToggle === 'Completed' ? 'bg-white' : 'bg-[white]'}`}>
-            <Text className={`font-bold text-xs ${selectedToggle === 'Completed' ? 'text-[#000000]' : 'text-white'}`}>
-              {completedData.length.toString().padStart(2, '0')}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View> */}
+   
    <View className="flex-row justify-center items-center py-4 bg-[#282828]">
      {/* To Do Button */}
      <Animated.View
@@ -743,7 +730,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
                   {item.invoiceNo || `INV${item.id || (index + 1).toString().padStart(6, '0')}`}
                 </Text>
                 {/* Red dot indicator for locked packages */}
-                {item.packageIsLock === 1 && (
+                 {item.packageIsLock === 1 && jobRole === "Distribution Officer" && (
                   <View className="absolute right-[-2] top-3 w-3 h-3 bg-red-500 rounded-full"></View>
                 )}
               </View>

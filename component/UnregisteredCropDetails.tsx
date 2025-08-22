@@ -32,6 +32,7 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { useTranslation } from "react-i18next";
 import LottieView from "lottie-react-native";
 import { Ionicons } from "@expo/vector-icons";
+import NetInfo from "@react-native-community/netinfo";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -469,6 +470,11 @@ setUsedVarietyIds(prev => [...prev, selectedVariety]);
   };
 
   const handleSubmit = async () => {
+
+     const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
     try {
       if (crops.length === 0) {
         alert("Please add at least one crop to proceed.");

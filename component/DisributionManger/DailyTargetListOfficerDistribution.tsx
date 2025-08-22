@@ -18,6 +18,7 @@ import { RouteProp, useFocusEffect } from "@react-navigation/native";
 import { RootStackParamList } from "../types";
 import { environment } from "@/environment/environment";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
 
 type DailyTargetListOfficerDistributiontNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -123,19 +124,7 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
     return scheduleDate.toDateString() === today.toDateString();
   };
 
-  // Helper function to get status color
-  // const getStatusColor = (status: string) => {
-  //   switch (status?.toLowerCase()) {
-  //     case 'completed':
-  //       return 'bg-[#BBFFC6] border-[#BBFFC6] text-[#6AD16D]';
-  //     case 'opened':
-  //       return 'bg-[#F8FFA6] border-[#F8FFA6] text-[#A8A100]';
-  //     case 'pending':
-  //       return 'bg-[#FFB9B7] border-[#FFB9B7] text-[#D16D6A]';
-  //     default:
-  //       return 'bg-gray-100 border-gray-200';
-  //   }
-  // };
+  
 
   const getStatusColor = (status: string) => {
   // Convert to lowercase and handle different language variations
@@ -177,19 +166,7 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
   return 'bg-gray-100 border-gray-200';
 };
 
-  // Helper function to get status text
-  // const getStatusText = (status: string) => {
-  //   switch (status?.toLowerCase()) {
-  //     case 'completed':
-  //       return 'Completed';
-  //     case 'opened':
-  //       return 'Opened';
-  //     case 'pending':
-  //       return 'Pending';
-  //     default:
-  //       return 'Unknown';
-  //   }
-  // };
+
 
   const getStatusText = (status: string) => {
   const normalizedStatus = status?.toLowerCase();
@@ -258,25 +235,7 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
     }
   };
 
-  // Helper function to handle row press
-  // const handleRowPress = (item: OrderData) => {
-  //   if (isSelectionMode) {
-  //     // If in selection mode, toggle selection
-  //     handleItemSelect(item);
-  //   } else if (canSelectItem(item)) {
-  //     // If not in selection mode and item can be selected, navigate directly
-  //     console.log("Single item navigation:", item);
-  //     navigation.navigate('PassTarget' as any, { 
-  //       officerId: officerId,
-  //       selectedItems: [item.distributedTargetItemId],
-  //       collectionOfficerId: collectionOfficerId,
-  //       invNo: item.invNo || invNo
-  //     });
-  //   }
-  //   // No action for opened or completed items when not in selection mode
-  // };
 
-  // Helper function to select all pending items
   const selectAllPendingItems = () => {
     const pendingItems = todoData.filter(item => canSelectItem(item));
     const allPendingIds = new Set(pendingItems.map(item => item.distributedTargetItemId));

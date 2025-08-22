@@ -22,6 +22,7 @@ import { KeyboardAvoidingView } from "react-native";
 import { Platform } from "react-native";
 import bankNames from "../../assets/jsons/banks.json";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
 
 type AddOfficerAddressDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -226,6 +227,11 @@ const AddOfficerAddressDetails: React.FC = () => {
     };
 
     console.log("Combined data for passing to backend:", combinedData);
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
 
     try {
       setLoading(true);

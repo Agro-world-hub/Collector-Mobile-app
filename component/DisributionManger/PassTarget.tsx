@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { environment } from "@/environment/environment";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
 
 // Updated PassTarget component interfaces and implementation:
 
@@ -269,6 +270,11 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
 
     setLoading(true);
     setError(null); // Clear previous errors
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
     
     try {
       const authToken = await AsyncStorage.getItem("token");

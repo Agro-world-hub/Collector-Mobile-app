@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LottieView from "lottie-react-native"; // Import Lottie for animation
 import BottomNav from "../BottomNav";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
 
 const { width } = Dimensions.get("window");
 const scale = (size: number) => (width / 375) * size;
@@ -238,64 +239,12 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
     </TouchableOpacity>
   );
 
-  // Handling the button for adding new officers
-  // <TouchableOpacity
-  //   onPress={async () => {
-  //     try {
-  //       await AsyncStorage.removeItem("officerFormData"); // Clear stored data
-  //       navigation.navigate("AddOfficerBasicDetails" as any);
-  //     } catch (error) {
-  //       console.error("Error clearing form data:", error);
-  //     }
-  //   }}
-  //   className="absolute bottom-5 right-5 bg-black w-14 h-14 rounded-full justify-center items-center shadow-lg"
-  // >
-  //   <Ionicons name="add" size={scale(24)} color="#fff" />
-  // </TouchableOpacity>;
+ 
 
   return (
     <View className="flex-1 bg-[#313131]">
       <View className="bg-[#313131] py-6 px-4  relative">
-        {/* <TouchableOpacity
-          className="absolute top-6 left-4 z-50"
-          onPress={() => {
-            setShowFilter((prev) => !prev);
-            setShowMenu(false);
-          }}
-        >
-          <FontAwesome name="filter" size={24} color="#fff" />
-        </TouchableOpacity> */}
-        {/* {showFilter && (
-          <View className="absolute z-50 flex-col top-14 left-6 bg-white shadow-lg rounded-lg">
-            <TouchableOpacity
-              className={`px-4 py-2 bg-white rounded-lg  ${
-                selectedJobRole === "Driver" ? "bg-gray-200" : ""
-              }`}
-              onPress={() => {
-                setSelectedJobRole("Driver");
-                setShowFilter(false); // Close the filter
-              }}
-            >
-              <Text className="text-gray-700 font-semibold">
-                {t("CollectionOfficersList.Drivers")}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className={`px-4 py-2 bg-white rounded-lg  ${
-                selectedJobRole === "Collection Officer" ? "bg-gray-200" : ""
-              }`}
-              onPress={() => {
-                setSelectedJobRole("Collection Officer");
-                setShowFilter(false); // Close the filter
-              }}
-            >
-              <Text className="text-gray-700 font-semibold">
-                {t("CollectionOfficersList.Collection Officers")}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )} */}
-
+    
         <Text
           style={{ fontSize: 18 }}
           className="text-white text-center font-bold"

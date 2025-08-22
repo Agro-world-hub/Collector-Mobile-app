@@ -151,8 +151,7 @@ const NewReport: React.FC<NewReportProps> = ({ navigation }) => {
     return sum + subTotal;
   }, 0);
 
-  // Format numbers consistently
-  // Add this formatting function at the top of your component or where other utility functions are defined
+  
   const formatNumberWithCommas = (value: number | string): string => {
     // Convert to number if it's a string
     const numValue = typeof value === "string" ? parseFloat(value) : value;
