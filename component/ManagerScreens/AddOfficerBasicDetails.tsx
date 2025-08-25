@@ -736,7 +736,7 @@ const checkEmailExists = async (email: string) => {
             source={
               selectedImage
                 ? { uri: `data:image/png;base64,${selectedImage}` }
-                : require("../../assets/images/user1.png")
+                : require("../../assets/images/user2.png")
             }
             className="w-24 h-24 rounded-full"
           />

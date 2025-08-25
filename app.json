@@ -74,9 +74,8 @@
         "origin": false
       },
       "eas": {
-        "projectId": "9c4e5134-10ef-4626-a25a-d419801aefe5"
+        "projectId": "c7adba18-0c21-49d3-b0d7-ffca54ed88a1"
       }
-    
     },
     "plugins": [
       "expo-router",
