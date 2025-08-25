@@ -22,6 +22,7 @@ import axios from "axios";
 import { useFocusEffect } from "expo-router";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NetInfo from "@react-native-community/netinfo";
 
 type OfficerSummaryNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -117,28 +118,7 @@ const DistributionOfficerSummary: React.FC<OfficerSummaryProps> = ({
     );
   };
 
-  // Fetch task summary and completion percentage
-  // const fetchTaskSummary = async () => {
-  //   try {
-  //     const res = await axios.get(
-  //       `${environment.API_BASE_URL}api/distribution-manager/officer-task-summary/${collectionOfficerId}`
-  //     );
 
-  //     console.log("\\\\\\\\\\\\\\\\\\\\\\\\",res.data)
-
-  //     if (res.data.success) {
-  //       const { totalTasks, completedTasks } = res.data;
-  //       const percentage =
-  //         totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-  //       setTaskPercentage(percentage);
-  //     } else {
-  //       Alert.alert(t("Error.error"), t("Error.No task summary found for this officer."));
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching task summary:", error);
-  //     Alert.alert(t("Error.error"), t("Error.Failed to fetch task summary."));
-  //   }
-  // };
 
   // Replace your existing fetchTaskSummary function with this:
 const fetchTaskSummary = async () => {
@@ -161,45 +141,7 @@ const fetchTaskSummary = async () => {
     Alert.alert(t("Error.error"), t("Error.Failed to fetch task summary."));
   }
 };
-//     const fetchTargetPercentage = async () => {
-//   try {
-//     const token = await AsyncStorage.getItem("token");
-//     if (!token) {
-//       Alert.alert(t("Error.error"), t("Error.User not authenticated."));
-//       return;
-//     }
-//     const response = await axios.get(
-//       `${environment.API_BASE_URL}api/distribution/get-distribution-target`,
-//       {
-//         headers: { Authorization: `Bearer ${token}` },
-//       }
-//     );
-//     console.log("response for percentage target", response.data);
-    
-//     if (response.data.success && response.data.data && response.data.data.length > 0) {
-//       const targets = response.data.data;
-      
-//       // Option 1: Use first target only
-//       const firstTarget = targets[0];
-//       const percentage = parseInt(
-//         firstTarget.completionPercentage.replace("%", ""),
-//         10
-//       );
-//       setTargetPercentage(percentage);
-      
-    
-      
-//     } else {
-//       setTargetPercentage(0);
-//     }
-//   } catch (error) {
-//     console.error("Failed to fetch target percentage:", error);
-//     setTargetPercentage(0);
-//   }
-// };
 
-
- 
 
 
 
@@ -228,6 +170,11 @@ const fetchTaskSummary = async () => {
       Alert.alert(t("Error.error"), t("Error.Missing collectionOfficerId"));
       return;
     }
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
 
     try {
       const res = await fetch(

@@ -26,6 +26,7 @@ import { Modal } from "react-native";
 import { Animated } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { ScrollView } from "react-native-gesture-handler";
+import NetInfo from "@react-native-community/netinfo";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -300,6 +301,11 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
       return;
     }
 
+      const netState = await NetInfo.fetch();
+       if (!netState.isConnected) {
+      return; 
+       }
+
     try {
       const refId = referenceId;
 
@@ -321,6 +327,8 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
       if (statusCode === "1000") {
         setIsVerified(true);
         setModalVisible(true);
+
+   
 
         const response = await axios.post(
           `${environment.API_BASE_URL}api/farmer/FarmerBankDetails`,

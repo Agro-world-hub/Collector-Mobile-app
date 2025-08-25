@@ -15,6 +15,8 @@ import LottieView from "lottie-react-native";
 import { RootStackParamList } from "./types";
 import { useTranslation } from "react-i18next";
 import { Animated } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
+
 
 type DailyTargetListNavigationProps = StackNavigationProp<
   RootStackParamList,

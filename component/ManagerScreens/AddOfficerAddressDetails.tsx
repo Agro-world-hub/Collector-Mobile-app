@@ -22,6 +22,7 @@ import { KeyboardAvoidingView } from "react-native";
 import { Platform } from "react-native";
 import bankNames from "../../assets/jsons/banks.json";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
 
 type AddOfficerAddressDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -226,6 +227,11 @@ const AddOfficerAddressDetails: React.FC = () => {
     };
 
     console.log("Combined data for passing to backend:", combinedData);
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
 
     try {
       setLoading(true);
@@ -536,7 +542,7 @@ const AddOfficerAddressDetails: React.FC = () => {
                     borderColor: "#F4F4F4", // Remove the border
                     borderRadius: 25,
                     width: "100%",
-                    height: 40,
+                    height: 50,
                     backgroundColor:"#F4F4F4",
                   }}
                 dropdownStyles={{
@@ -608,30 +614,32 @@ const AddOfficerAddressDetails: React.FC = () => {
           <View className="">
             <View className="mb-4">
               <SelectList
-                setSelected={handleBankSelection} // Handle bank selection
-                data={bankNames.map((bank) => ({
-                  key: bank.name, // Bank name as key
-                  value: bank.name, // Display name in dropdown
-                }))}
-                defaultOption={{
-                  key: formData.bankName,
-                  value: formData.bankName,
-                }}
-                placeholder={t("AddOfficerAddressDetails.BankName")}
-                boxStyles={{
-                    borderColor: "#F4F4F4", // Remove the border
-                    borderRadius: 25,
-                    width: "100%",
-                    height: 50,
-                    backgroundColor:"#F4F4F4",
-                  }}
-                dropdownStyles={{
-                  borderRadius: 5,
-                  borderWidth: 1,
-                  borderColor: "#cccccc",
-                }}
-                search={true}
-              />
+    setSelected={handleBankSelection}
+    data={bankNames
+      .sort((a, b) => a.name.localeCompare(b.name)) // Sort banks A-Z
+      .map((bank) => ({
+        key: bank.name,
+        value: bank.name,
+      }))}
+    defaultOption={{
+      key: formData.bankName,
+      value: formData.bankName,
+    }}
+    placeholder={t("AddOfficerAddressDetails.BankName")}
+    boxStyles={{
+      borderColor: "#F4F4F4",
+      borderRadius: 25,
+      width: "100%",
+      height: 50,
+      backgroundColor: "#F4F4F4",
+    }}
+    dropdownStyles={{
+      borderRadius: 5,
+      borderWidth: 1,
+      borderColor: "#cccccc",
+    }}
+    search={true}
+  />
             </View>
             <View>
               {filteredBranches.length > 0 && (

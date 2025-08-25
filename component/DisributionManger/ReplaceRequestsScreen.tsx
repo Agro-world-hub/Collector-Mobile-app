@@ -16,6 +16,7 @@ import { RootStackParamList } from "../types";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { environment } from '@/environment/environment';
+import LottieView from 'lottie-react-native';
 
 type ReplaceRequestsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -175,7 +176,7 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
           </Text>
          
           <Text className="text-gray-500 text-sm">
-            {t("Requested Time")}: {item.createdAt}
+           {t("ReplaceRequestsScreen.Requested Time")} : {item.createdAt}
           </Text>
         
         </View>
@@ -202,18 +203,26 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
       }
     >
       <View className="mb-6">
-        <Text className="text-lg font-bold text-center">{t("Replace Requests")}</Text>
+        <Text className="text-lg font-bold text-center"> {t("ReplaceRequestsScreen.Replace Requests")}</Text>
       </View>
 
       <View className="px-4">
         <Text className="text-base pb-4 text-[#21202B] font-semibold">
-          {t("All")} ({replaceRequests.length})
+         {t("ReplaceRequestsScreen.All")} ({replaceRequests.length})
         </Text>
         
         {replaceRequests.length === 0 ? (
-          <Text className="text-center text-gray-500 py-10">
-            {t("No replace requests found")}
-          </Text>
+          <View className="items-center justify-center py-10 mt-[40%]">
+            <LottieView
+                       source={require('../../assets/lottie/NoComplaints.json')}
+                       autoPlay
+                       loop
+                       style={{ width: 150, height: 150 }}
+                     />
+            <Text className="text-center text-gray-500 mt-4">
+             {t("ReplaceRequestsScreen.No replace requests found")}
+            </Text>
+          </View>
         ) : (
           <FlatList 
             data={replaceRequests}

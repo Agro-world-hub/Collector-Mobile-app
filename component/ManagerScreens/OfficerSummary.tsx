@@ -21,6 +21,7 @@ import {environment }from '@/environment/environment';
 import axios from "axios";
 import { useFocusEffect } from "expo-router";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
 
 type OfficerSummaryNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -159,6 +160,11 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
       Alert.alert(t("Error.error"), t("Error.Missing collectionOfficerId"));
       return;
     }
+
+     const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
 
     try {
       const res = await fetch(

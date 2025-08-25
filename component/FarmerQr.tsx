@@ -161,9 +161,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
     }
   };
 
-  //  if (loading) {
-  //     return <FarmerQrSkeletonLoader />;
-  //   }
+ 
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {

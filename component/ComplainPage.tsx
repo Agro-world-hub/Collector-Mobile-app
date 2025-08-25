@@ -29,7 +29,12 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { use } from "i18next";
 import { useFocusEffect } from "@react-navigation/native";
 import LottieView from "lottie-react-native";
+import NetInfo from "@react-native-community/netinfo";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+
+
+
+
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
@@ -140,6 +145,11 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
       );
       return;
     }
+
+  const netState = await NetInfo.fetch();
+    if (!netState.isConnected) {
+    return; 
+  }
 
     try {
       const storedLanguage = await AsyncStorage.getItem("@user_language");

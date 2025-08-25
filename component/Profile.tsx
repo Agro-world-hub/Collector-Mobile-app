@@ -1097,7 +1097,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     ],
   };
 
-  return (
+ return (
     <View
       className="flex-1 bg-white"
       style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
@@ -1144,12 +1144,17 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {" "}
               {t("Profile.FirstName")}
             </Text>
-            <TextInput
-              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
-              value={getfirstName()}
-              editable={false}
-              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-            />
+            <View className="rounded-[35px] border border-[#F4F4F4] bg-[#F4F4F4]">
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <TextInput
+                  className="px-4 py-2 text-black min-w-full"
+                  value={getfirstName()}
+                  editable={false}
+                  style={[{ fontSize: 16, minWidth: 250 }, getTextStyle(selectedLanguage)]}
+                  scrollEnabled={false}
+                />
+              </ScrollView>
+            </View>
           </View>
           <View>
             <Text
@@ -1159,12 +1164,17 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               {" "}
               {t("Profile.LastName")}
             </Text>
-            <TextInput
-              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
-              value={getlastName()}
-              editable={false}
-              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-            />
+            <View className="rounded-[35px] border border-[#F4F4F4] bg-[#F4F4F4]">
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <TextInput
+                  className="px-4 py-2 text-black min-w-full"
+                  value={getlastName()}
+                  editable={false}
+                  style={[{ fontSize: 16, minWidth: 250 }, getTextStyle(selectedLanguage)]}
+                  scrollEnabled={false}
+                />
+              </ScrollView>
+            </View>
           </View>
           <View>
             <Text
@@ -1173,12 +1183,17 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             >
               {t("Profile.Company")}
             </Text>
-            <TextInput
-              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
-              value={getcompanyName()}
-              editable={false}
-              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-            />
+            <View className="rounded-[35px] border border-[#F4F4F4] bg-[#F4F4F4]">
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <TextInput
+                  className="px-4 py-2 text-black min-w-full"
+                  value={getcompanyName()}
+                  editable={false}
+                  style={[{ fontSize: 16, minWidth: 250 }, getTextStyle(selectedLanguage)]}
+                  scrollEnabled={false}
+                />
+              </ScrollView>
+            </View>
           </View>
           <View>
             <Text
@@ -1191,6 +1206,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={profileData.regcode}
               editable={false}
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
             />
           </View>
 
@@ -1201,11 +1217,17 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
             >
               {t("Profile.CenterName")}
             </Text>
-            <TextInput
-              className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
-              value={profileData.collectionCenterName}
-              editable={false}
-            />
+            <View className="rounded-[35px] border border-[#F4F4F4] bg-[#F4F4F4]">
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <TextInput
+                  className="px-4 py-2 text-black min-w-full"
+                  value={profileData.collectionCenterName}
+                  editable={false}
+                  style={[{ fontSize: 16, minWidth: 250 }, getTextStyle(selectedLanguage)]}
+                  scrollEnabled={false}
+                />
+              </ScrollView>
+            </View>
           </View>
 
           <View>
@@ -1237,6 +1259,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={profileData.nicNumber}
               editable={false}
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
             />
           </View>
           <View>
@@ -1254,6 +1277,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               onChangeText={handlePhoneNumberChange}
               maxLength={9}
               editable={false}
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
             />
             {errorMessage && (
               <Text className="text-red-500">{errorMessage}</Text>
@@ -1275,6 +1299,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               onChangeText={handlePhoneNumber2Change}
               maxLength={9}
               editable={false}
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
             />
             {errorMessage2 && (
               <Text className="text-red-500">{errorMessage2}</Text>
@@ -1291,6 +1316,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={profileData.houseNumber}
               editable={false}
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
             />
           </View>
           <View>
@@ -1304,6 +1330,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               className="px-4 py-2 rounded-[35px] border border-[#F4F4F4] text-black bg-[#F4F4F4]"
               value={profileData.streetName}
               editable={false}
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
             />
           </View>
 

@@ -736,7 +736,7 @@ const checkEmailExists = async (email: string) => {
             source={
               selectedImage
                 ? { uri: `data:image/png;base64,${selectedImage}` }
-                : require("../../assets/images/user1.webp")
+                : require("../../assets/images/user1.png")
             }
             className="w-24 h-24 rounded-full"
           />
@@ -959,7 +959,7 @@ const checkEmailExists = async (email: string) => {
           borderColor: "#F4F4F4", // Fixed: Removed backticks
           borderRadius: 25,
           width: "100%",
-          height: 40,
+          height: 45,
           backgroundColor: "#F4F4F4", // Fixed: Removed backticks
         }}
         dropdownStyles={{ borderColor: "#ccc" }}
@@ -1002,7 +1002,7 @@ const checkEmailExists = async (email: string) => {
           borderColor: "#F4F4F4", // Fixed: Removed backticks
           borderRadius: 25,
           width: "100%",
-          height: 40,
+          height: 45,
           backgroundColor: "#F4F4F4", // Fixed: Removed backticks
         }}
         dropdownStyles={{ borderColor: "#ccc" }}
