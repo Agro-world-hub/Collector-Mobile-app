@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { environment } from "@/environment/environment";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
 
 // Updated PassTarget component interfaces and implementation:
 
@@ -51,7 +52,12 @@ interface Officer {
 }
 
 const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
-  const { officerId, selectedItems: passedSelectedItems = [], invoiceNumbers = [] , processOrderId=[] } = route.params;
+  const { 
+    selectedItems: passedSelectedItems = [], 
+    invoiceNumbers = [], 
+    processOrderId = [],
+    officerId // Add this to get the current officer ID
+  } = route.params;
   const [loading, setLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,10 +65,39 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
   const [targetItems, setTargetItems] = useState<TargetItem[]>([]);
   const [officers, setOfficers] = useState<{key: string, value: string}[]>([]);
   const [loadingOfficers, setLoadingOfficers] = useState<boolean>(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   console.log("Passed selectedItems:", passedSelectedItems);
   console.log("Passed invoiceNumbers:", invoiceNumbers);
+
+  // Helper function to get officer name based on current language
+  const getOfficerName = useCallback((officer: Officer) => {
+    const currentLanguage = i18n.language;
+    
+    let firstName = "";
+    let lastName = "";
+    
+    switch (currentLanguage) {
+      case 'si': // Sinhala
+      case 'sinhala':
+        firstName = officer.firstNameSinhala || officer.firstNameEnglish;
+        lastName = officer.lastNameSinhala || officer.lastNameEnglish;
+        break;
+      case 'ta': // Tamil
+      case 'tamil':
+        firstName = officer.firstNameTamil || officer.firstNameEnglish;
+        lastName = officer.lastNameTamil || officer.lastNameEnglish;
+        break;
+      case 'en': // English
+      case 'english':
+      default:
+        firstName = officer.firstNameEnglish;
+        lastName = officer.lastNameEnglish;
+        break;
+    }
+    
+    return `${firstName} ${lastName} (${officer.empId})`;
+  }, [i18n.language]);
 
   // Helper function to get status color (language independent)
   const getStatusColor = (status: string) => {
@@ -190,12 +225,31 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
       );
 
       if (response.data.success && response.data.data) {
-        // Transform officer data for dropdown
-        const officerDropdownData = response.data.data.map((officer: Officer) => ({
-          key: officer.id.toString(),
-          value: `${officer.firstNameEnglish} ${officer.lastNameEnglish} (${officer.empId})`
-        }));
+        console.log("All officers from API:", response.data.data);
+        console.log("Current officerId to filter out:", officerId);
         
+        // Transform officer data for dropdown and filter out current officer
+        const officerDropdownData = response.data.data
+          .filter((officer: Officer) => {
+            // Debug logging
+            console.log(`Comparing officer ID: ${officer.id} (${typeof officer.id}) with current officer: ${officerId} (${typeof officerId})`);
+            console.log(`Officer empId: ${officer.empId}`);
+            
+            // Try multiple comparison methods since we're not sure which field contains the matching ID
+            const isCurrentOfficerById = officer.id?.toString() === officerId?.toString();
+            const isCurrentOfficerByEmpId = officer.empId?.toString() === officerId?.toString();
+            
+            console.log(`isCurrentOfficerById: ${isCurrentOfficerById}, isCurrentOfficerByEmpId: ${isCurrentOfficerByEmpId}`);
+            
+            // Exclude if either ID or empId matches the current officerId
+            return !isCurrentOfficerById && !isCurrentOfficerByEmpId;
+          })
+          .map((officer: Officer) => ({
+            key: officer.id.toString(),
+            value: getOfficerName(officer) // Use the multilingual name function
+          }));
+        
+        console.log("Filtered officers for dropdown:", officerDropdownData);
         setOfficers(officerDropdownData);
       } else {
         setError(t("Error.Failed to load officers."));
@@ -206,7 +260,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
     } finally {
       setLoadingOfficers(false);
     }
-  }, [t]);
+  }, [t, officerId, getOfficerName]);
 
   // Convert passed selectedItems to display format with correct invoice numbers
   const prepareTargetItems = useCallback(() => {
@@ -230,6 +284,13 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
     }, [prepareTargetItems, fetchOfficers])
   );
 
+  // Re-fetch officers when language changes to update the dropdown
+  useEffect(() => {
+    fetchOfficers();
+    // Reset selected assignee when language changes to avoid confusion
+    setSelectedAssignee("");
+  }, [i18n.language, fetchOfficers]);
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     prepareTargetItems();
@@ -245,6 +306,11 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
 
     setLoading(true);
     setError(null); // Clear previous errors
+
+    const netState = await NetInfo.fetch();
+    if (!netState.isConnected) {
+      return; 
+    }
     
     try {
       const authToken = await AsyncStorage.getItem("token");
@@ -254,7 +320,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
         assigneeOfficerId: selectedAssignee, // This is the selected officer ID from dropdown
         targetItems: passedSelectedItems, // Array of distributedTargetItemIds
         invoiceNumbers: invoiceNumbers, // Send invoice numbers array to API
-        processOrderId:processOrderId
+        processOrderId: processOrderId
       };
 
       console.log("Saving data:", saveData); // For debugging
@@ -338,7 +404,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
       >
         {/* Assignee Selection */}
         <View className="bg-white mx-4 my-2 p-4 rounded-full shadow-sm">
-         {/* <Text className="text-[#475A6A] font-semibold mb-2">{t("PassTarget.Select Assignee")}</Text> */}
+       
          <View className="flex-row items-center mb-3">
           <Text className="text-[#475A6A] font-semibold flex-1">
             {selectedAssignee ? t("PassTarget.Short Stock Assignee") : t("PassTarget.Select Assignee")}
@@ -352,88 +418,86 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
               <Text className="ml-2 text-gray-600">{t("PassTarget.Loading officers")}</Text>
             </View>
           ) : (
-         <SelectList
-  setSelected={setSelectedAssignee}
-  data={officers}
-  placeholder="--Select an officer--"
-  save="key"
-  search={true}
-  searchPlaceholder="Search officers..."
-  boxStyles={{
-    borderWidth: 0,
-    backgroundColor: "#f3f4f6",
-    borderRadius: 25, // Fully rounded
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    marginVertical: 0,
-  }}
-  inputStyles={{ 
-    color: "#374151",
-    fontSize: 16,
- 
-  }}
-  dropdownStyles={{
-    borderWidth: 0,
-    backgroundColor: "#f3f4f6",
-    borderRadius: 20, // Fully rounded for dropdown
-    marginTop: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  }}
-  dropdownItemStyles={{
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  }}
-  dropdownTextStyles={{
-    color: "#374151",
-    fontSize: 16,
-  }}
-  
-/>
+            <SelectList
+              setSelected={setSelectedAssignee}
+              data={officers}
+              placeholder={t("PassTargetBetweenOfficers.Select an officer")}
+              save="key"
+              search={true}
+              searchPlaceholder={t("PassTarget.Search officers")}
+              boxStyles={{
+                borderWidth: 0,
+                backgroundColor: "#f3f4f6",
+                borderRadius: 25, // Fully rounded
+                paddingHorizontal: 16,
+                paddingVertical: 14,
+                marginVertical: 0,
+              }}
+              inputStyles={{ 
+                color: "#374151",
+                fontSize: 16,
+              }}
+              dropdownStyles={{
+                borderWidth: 0,
+                backgroundColor: "#f3f4f6",
+                borderRadius: 20, // Fully rounded for dropdown
+                marginTop: 8,
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 3,
+              }}
+              dropdownItemStyles={{
+                paddingVertical: 12,
+                paddingHorizontal: 16,
+              }}
+              dropdownTextStyles={{
+                color: "#374151",
+                fontSize: 16,
+              }}
+            />
           )}
         </View>
 
-      {/* Selected Targets */}
-<View className="bg-white  my-2 rounded-lg  mb-20">
-  <View className="items-center justify-center">
-  <Text style={{ fontStyle: 'italic', color: '#2d3748', marginBottom: 12 }}>
-    --{t("PassTarget.Selected Targets")}--
-  </Text>
-  </View>
-  
-  {/* Table */}
-  <View className="border border-gray-300 rounded-md ">
-    
-    {/* Table Rows */}
-    {targetItems.map((item: TargetItem) => (
-      <View 
-        key={item.distributedTargetItemId} 
-        className="flex-row border-b border-gray-300  px-[-19]"
-      >
-        <View className="w-16 items-center justify-center border-r border-gray-300 py-3">
-          <Text className="text-[#606060] font-medium">{String(item.id).padStart(2, '0')}</Text>
-        </View>
-        <View className="flex-1 items-center justify-center border-r border-gray-300 py-3">
-          <Text className="text-[#000000] font-medium">{item.invoiceNumber}</Text>
-        </View>
-        <View className="w-36 items-center justify-center py-3">
-          <View 
-            className={`px-5 py-1 rounded-full ${getStatusColor(item.status)}`}
-          >
-            <Text 
-              className={`text-xs font-medium ${getStatusTextColor(item.status)}`}
-            >
-              {getStatusText(item.status)}
+        {/* Selected Targets */}
+        <View className="bg-white my-2 rounded-lg mb-20">
+          <View className="items-center justify-center">
+            <Text style={{ fontStyle: 'italic', color: '#2d3748', marginBottom: 12 }}>
+              --{t("PassTarget.Selected Targets")}--
             </Text>
           </View>
+          
+          {/* Table */}
+          <View className="border border-gray-300 rounded-md">
+            
+            {/* Table Rows */}
+            {targetItems.map((item: TargetItem) => (
+              <View 
+                key={item.distributedTargetItemId} 
+                className="flex-row border-b border-gray-300 px-[-19]"
+              >
+                <View className="w-16 items-center justify-center border-r border-gray-300 py-3">
+                  <Text className="text-[#606060] font-medium">{String(item.id).padStart(2, '0')}</Text>
+                </View>
+                <View className="flex-1 items-center justify-center border-r border-gray-300 py-3">
+                  <Text className="text-[#000000] font-medium">{item.invoiceNumber}</Text>
+                </View>
+                <View className="w-36 items-center justify-center py-3">
+                  <View 
+                    className={`px-5 py-1 rounded-full ${getStatusColor(item.status)}`}
+                  >
+                    <Text 
+                      className={`text-xs font-medium ${getStatusTextColor(item.status)}`}
+                    >
+                      {getStatusText(item.status)}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            ))}
+          </View>
         </View>
-      </View>
-    ))}
-  </View>
-</View>
       </ScrollView>
 
       {/* Save Button */}

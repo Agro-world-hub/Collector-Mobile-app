@@ -12,6 +12,7 @@ import {
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -109,6 +110,11 @@ useFocusEffect(
         );
         return;
       }
+
+       const netState = await NetInfo.fetch();
+       if (!netState.isConnected) {
+       return; 
+       }
       
       try {
         const token = await AsyncStorage.getItem("token");

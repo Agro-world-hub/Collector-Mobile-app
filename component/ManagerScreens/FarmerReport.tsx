@@ -185,10 +185,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
         api.get(
           `api/unregisteredfarmercrop/user-crops/today/${userId}/${registeredFarmerId}`
         ),
-        // Commented out officer QR code fetching
-        // api.get(`api/collection-officer/get-officer-Qr`, {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // }),
+
       ]);
 
       const data = detailsResponse.data;

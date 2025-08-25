@@ -14,6 +14,7 @@ import { Animated } from 'react-native';
 import {fetchOrderDetailsByIds, processOrdersForDelivery} from '@/component/DisributionManger/pdf';
 
 
+
 type CenterTargetScreenNavigationProps = StackNavigationProp<RootStackParamList, 'CenterTargetScreen'>;
 type CenterTargetScreenRouteProp = RouteProp<RootStackParamList, 'CenterTargetScreen'>;
 
@@ -184,12 +185,12 @@ const [selectionLimitReached, setSelectionLimitReached] = useState(false);
     return [
       {
         date: today,
-        label: 'Today',
+        label: t("CenterTargetScreen.Today"),
         timeSlots
       },
       {
         date: tomorrow,
-        label: 'Tomorrow',
+        label: t("CenterTargetScreen.Tomorrow"),
         timeSlots
       },
       {
@@ -700,136 +701,6 @@ const handleCheckboxToggle = (itemId: string) => {
 
 
 
-// const confirmAction = async () => {
-//   try {
-//     setLoading(true);
-//     const authToken = await AsyncStorage.getItem("token");
-    
-//     if (!authToken) {
-//       throw new Error("Authentication token not found. Please login again.");
-//     }
-
-//     // Get selected order items with full data - Add null check
-//     const selectedOrdersData = selectedItems
-//       .map(itemId => {
-//         const item = [...todoData, ...completedData, ...outData].find(i => i.id === itemId);
-//         return item;
-//       })
-//       .filter((item): item is TargetData => item !== undefined);
-
-//     if (selectedOrdersData.length === 0) {
-//       throw new Error("No valid order items found for selection");
-//     }
-
-//     // Prepare order IDs for status update
-//     const orderIds = selectedOrdersData
-//       .map(item => item.orderId)
-//       .filter((id): id is string => id !== undefined && id !== null);
-
-//     if (orderIds.length === 0) {
-//       throw new Error("No valid order IDs found for selected items");
-//     }
-
-//     console.log("Updating orders to Out For Delivery:", orderIds);
-
-//     // Step 1: Update order status to "Out For Delivery"
-//     const statusUpdateResponse = await axios.put(
-//       `${environment.API_BASE_URL}api/distribution/update-outForDelivery`,
-//       { orderIds },
-//       {
-//         headers: {
-//           Authorization: `Bearer ${authToken}`,
-//           'Content-Type': 'application/json',
-//         },
-//       }
-//     );
-
-//     if (!statusUpdateResponse.data?.success) {
-//       throw new Error(statusUpdateResponse.data?.message || "Failed to update order status");
-//     }
-
-//     console.log("Status updated successfully:", statusUpdateResponse.data);
-
-//     // Step 2: Prepare orders with your email as default (no need for customer API call)
-//     let ordersWithDetails: EnhancedTargetData[] = selectedOrdersData.map(order => {
-//       // Calculate some basic values
-//       const unitPrice = 100; // Default unit price
-//       const totalAmount = (order.target || 0) * unitPrice;
-//       const tax = totalAmount * 0.08; // 8% tax
-//       const deliveryCharges = 500; // Default delivery charge
-//       const subtotal = totalAmount;
-//       const grandTotal = subtotal + tax + deliveryCharges;
-
-//       return {
-//         ...order,
-//         // Always use your email and default customer info
-//         customerEmail: 'hashinikadilrukshi15@gmail.com',
-//         customerName: `Customer for Order ${order.invoiceNo}`,
-//         customerPhone: '+94 77 123 4567',
-//         customerAddress: 'Colombo, Sri Lanka',
-//         totalAmount: grandTotal,
-//         subtotal: subtotal,
-//         tax: tax,
-//         deliveryCharges: deliveryCharges,
-//         items: [{
-//           name: `Order ${order.invoiceNo}`,
-//           grade: order.grade || 'A',
-//           quantity: `${order.target || 0} units`,
-//           unitPrice: unitPrice,
-//           total: totalAmount
-//         }],
-//         outDlvrDate: new Date().toISOString()
-//       };
-//     });
-
-//     console.log("Processing orders for PDF generation and email sending...");
-//     console.log("Processing orders for delivery:", ordersWithDetails.length, "- Using email: hashinikadilrukshi15@gmail.com");
-    
-//     // Step 3: Generate PDFs and send emails (no customer API call needed)
-//     const emailResult = await processOrdersForDelivery(ordersWithDetails, authToken);
-    
-//     console.log("Email processing result:", emailResult);
-    
-//     // Step 4: Show success modal
-//     setSuccessCount(orderIds.length);
-//     setShowConfirmModal(false);
-//     setShowSuccessModal(true);
-    
-//     // Clear selections
-//     setSelectedItems([]);
-    
-//     // Auto-hide success modal after 4 seconds
-//     setTimeout(() => {
-//       setShowSuccessModal(false);
-//     }, 4000);
-    
-//     // Refresh data to reflect changes
-//     await fetchTargets();
-
-//   } catch (error: unknown) {
-//     console.error('Error in confirmAction:', error);
-    
-//     let errorMessage = "Failed to update orders. Please try again.";
-    
-//     if (error instanceof Error) {
-//       errorMessage = error.message;
-//     } else if (typeof error === 'object' && error !== null && 'response' in error) {
-//       const axiosError = error as any;
-//       if (axiosError.response?.data?.message) {
-//         errorMessage = axiosError.response.data.message;
-//       } else if (axiosError.response?.status === 401) {
-//         errorMessage = "Authentication failed. Please login again.";
-//       } else if (axiosError.response?.status === 403) {
-//         errorMessage = "You don't have permission to perform this action.";
-//       }
-//     }
-    
-//     Alert.alert("Error", errorMessage, [{ text: "OK" }]);
-    
-//   } finally {
-//     setLoading(false);
-//   }
-// };
 
 const confirmAction = async () => {
   try {
@@ -989,7 +860,7 @@ const SuccessModal = () => {
         <View className="bg-white rounded-2xl p-8 w-11/12 max-w-sm items-center">
           {/* Success Title */}
           <Text className="text-2xl font-bold mb-6 text-center text-gray-800">
-            Success!
+            {t("CenterTargetScreen.Succes")}
           </Text>
           
           {/* Success Icon */}
@@ -1000,7 +871,7 @@ const SuccessModal = () => {
           
           {/* Success Message */}
           <Text className="text-center text-gray-600 text-base leading-6 mb-8">
-            {successCount} order{successCount !== 1 ? 's' : ''} {successCount !== 1 ? 'have' : 'has'} been sent out{'\n'}for delivery
+            {successCount} {t("CenterTargetScreen.order")}{successCount !== 1 ? 's' : ''} {successCount !== 1 ? 'have' : 'has'} {t("CenterTargetScreen.been sent out")}{'\n'}{t("CenterTargetScreen.for delivery")}
           </Text>
           
           {/* Progress Bar */}
@@ -1063,11 +934,11 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     
     // Check if out time is within the scheduled time range
     if (outHour >= startHour && outHour < endHour) {
-      return 'On Time';
+      return t("CenterTargetScreen.On Time");
     } else if (outHour < startHour) {
-      return 'Early';
+      return t("CenterTargetScreen.On Time");
     } else {
-      return 'Late';
+      return t("CenterTargetScreen.Late");
     }
   } catch (error) {
     console.error('Error determining outing status:', error);
@@ -1081,17 +952,18 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
       {/* Header */}
       <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
         <TouchableOpacity 
-          onPress={() => navigation.goBack()} 
-          className="absolute left-4 bg-white/10 rounded-full p-2"
-        >
-          <AntDesign name="left" size={22} color="white" />
-        </TouchableOpacity>
+  onPress={() => navigation.goBack()} 
+  className="absolute left-4 bg-white/10 rounded-full  justify-center items-center"
+  style={{width: 40, height: 40}} // Set fixed dimensions for perfect circle
+>
+  <AntDesign name="left" size={22} color="white" />
+</TouchableOpacity>
 
         {/* <Text className="text-white text-lg font-bold">{t("CenterTarget.CenterTarget")}</Text> */}
         {selectedToggle === 'ToDo' && (
 
       <Text className="text-white text-lg font-bold">
-        Centre Target : {selectedDateFilter ? selectedDateFilter : 'All'}
+        {t("CenterTargetScreen.Centre Target")} : {selectedDateFilter ? selectedDateFilter : t("CenterTargetScreen.All")}
       </Text>
       
    
@@ -1099,9 +971,10 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
   )}
     {selectedToggle === 'Completed' && (
 
-      <Text className="text-white text-lg font-bold">
-        Centre Target 
+     <Text className="text-white text-lg font-bold">
+         {t("CenterTargetScreen.Centre Target")} : {selectedDateFilter ? selectedDateFilter : t("CenterTargetScreen.All")}
       </Text>
+      
       
    
   
@@ -1109,7 +982,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     {selectedToggle === 'Out' && (
 
       <Text className="text-white text-lg font-bold">
-        Centre Target 
+         {t("CenterTargetScreen.Centre Target")} 
       </Text>
       
    
@@ -1299,7 +1172,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
                 opacity: selectedToggle === "Out" ? 1 : 0.7,
               }}
             >
-              {t("DailyTarget.Out")}
+              {t("CenterTargetScreen.Out")}
             </Animated.Text>
             
             {selectedToggle === "Out" && (
@@ -1333,7 +1206,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
           <View className="flex-1 justify-center items-center bg-black/50">
             <View className="bg-white rounded-lg p-6 w-11/12 max-w-md">
               <Text className="text-lg font-bold mb-6 text-center text-gray-800">
-                Select Date (ToDo)
+                 {t("CenterTargetScreen.Select Date")}
               </Text>
               
               {/* Clear Date Filter Option */}
@@ -1351,7 +1224,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
                 <Text className={`text-center font-medium text-lg ${
                   selectedDateFilter === null ? 'text-white' : 'text-gray-700'
                 }`}>
-                  All Dates
+                  {t("CenterTargetScreen.All Datese")}
                 </Text>
               </TouchableOpacity>
 
@@ -1394,7 +1267,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
                 className="bg-gray-300 px-6 py-3 rounded-lg mt-4"
                 onPress={() => setShowCalendarModal(false)}
               >
-                <Text className="text-center font-medium text-gray-700">Close</Text>
+                <Text className="text-center font-medium text-gray-700">  {t("CenterTargetScreen.Close")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -1412,7 +1285,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
           <View className="flex-1 justify-center items-center bg-black/50">
             <View className="bg-white rounded-lg p-6 w-11/12 max-w-md">
               <Text className="text-lg font-bold mb-6 text-center text-gray-800">
-                Select Completion Date
+                {t("CenterTargetScreen.Select Completion Date")}
               </Text>
               
               {/* Clear Date Filter Option */}
@@ -1430,7 +1303,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
                 <Text className={`text-center font-medium text-lg ${
                   completedDateFilter === null ? 'text-white' : 'text-gray-700'
                 }`}>
-                  All Completion Dates
+                   {t("CenterTargetScreen.All Completion Dates")}
                 </Text>
               </TouchableOpacity>
 
@@ -1473,7 +1346,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
                 className="bg-gray-300 px-6 py-3 rounded-lg mt-4"
                 onPress={() => setShowCompletedCalendarModal(false)}
               >
-                <Text className="text-center font-medium text-gray-700">Close</Text>
+                <Text className="text-center font-medium text-gray-700"> {t("CenterTargetScreen.Close")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -1494,24 +1367,21 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     }}
   >
  
-<Text className="text-center text-gray-600 mb-6">
-  {selectedItems.length > MAX_SELECTED_ORDERS ? (
-    <Text className="text-red-500">
-      {t("You can only process up to 5 orders at a time")}
-    </Text>
-  ) : (
-    `Are you sure you want to send these selected ${selectedItems.length} orders out for delivery?`
-  )}
-</Text>
+
 
     <View className="flex-1 justify-center items-center bg-black/50">
       <View className="bg-white rounded-lg p-6 w-11/12 max-w-sm">
-        <Text className="text-lg font-bold mb-4 text-center text-gray-800">
-          Confirm Action
-        </Text>
+       <View className="items-center mb-2">
+      <View className="w-10 h-10 rounded-lg bg-[#F6F7F9] justify-center items-center ">
+        <Image
+          source={require("../../assets/images/New/Errorcentertarget.png")}
+          style={{ width: 20, height: 20 }}
+        />
+      </View>
+    </View>
         
         <Text className="text-center text-gray-600 mb-6">
-          Are you sure you want to send these selected {selectedItems.length} orders out for delivery?
+          {t("CenterTargetScreen.Are you sure you want to send these selected")} {selectedItems.length}  {t("CenterTargetScreen.orders out for delivery")}
         </Text>
         
         {/* Loading indicator when processing */}
@@ -1519,7 +1389,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
           <View className="mb-4 items-center">
             <ActivityIndicator size="large" color="#980775" />
             <Text className="text-center text-gray-600 mt-2">
-              Processing orders...
+              {t("CenterTargetScreen.Processing orders")}
             </Text>
           </View>
         )}
@@ -1536,7 +1406,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
             <Text className={`text-center font-medium ${
               loading ? 'text-gray-400' : 'text-gray-700'
             }`}>
-              Cancel
+               {t("CenterTargetScreen.Cancel")}
             </Text>
           </TouchableOpacity>
           
@@ -1577,20 +1447,20 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
   {/* Table Header - Changes based on selected toggle */}
   {selectedToggle === 'Out' ? (
     <View className="flex-row bg-[#980775] py-3">
-      <Text className="flex-1 text-center text-white font-bold">No</Text>
-      <Text className="flex-[2] text-center text-white font-bold">Invoice No</Text>
-      <Text className="flex-[2] text-center text-white font-bold">Out Time</Text>
-      <Text className="flex-[2] text-center text-white font-bold">Outing Status</Text>
+      <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
+      <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
+      <Text className="flex-[2] text-center text-white font-bold">{t("CenterTargetScreen.Out Time")}</Text>
+      <Text className="flex-[2] text-center text-white font-bold">{t("CenterTargetScreen.Outing Status")}</Text>
     </View>
   ) : (
     <View className="flex-row bg-[#980775] py-3">
       <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
       <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
       <Text className="flex-[2] text-center text-white font-bold">
-        {selectedToggle === 'Completed' ? 'Completed' : t("TargetOrderScreen.Date")}
+        {selectedToggle === 'Completed' ? t("CenterTargetScreen.Completed") : t("TargetOrderScreen.Date")}
       </Text>
       <Text className="flex-[2] text-center text-white font-bold">
-        {selectedToggle === 'ToDo' ? t("TargetOrderScreen.Status") : "Scheduled"}
+        {selectedToggle === 'ToDo' ? t("TargetOrderScreen.Status") : t("CenterTargetScreen.Scheduled")}
       </Text>
     </View>
   )}
@@ -1656,15 +1526,15 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
   <View className={`px-3 py-2 rounded-full ${
     getOutingStatus(item.outDlvrDate, item.sheduleTime) === 'On Time'
       ? 'bg-' // Add background color if needed
-      : getOutingStatus(item.outDlvrDate, item.sheduleTime) === 'Early'
+      : getOutingStatus(item.outDlvrDate, item.sheduleTime) === 'On Time'
       ? 'bg-' // Add background color if needed
       : 'bg-' // Add background color if needed
   }`}>
     <Text className={`text-xs font-medium text-center ${
       getOutingStatus(item.outDlvrDate, item.sheduleTime) === 'On Time'
         ? 'text-[#980775]'
-        : getOutingStatus(item.outDlvrDate, item.sheduleTime) === 'Early'
-        ? 'text-[#000000]'
+        : getOutingStatus(item.outDlvrDate, item.sheduleTime) === 'On Time'
+        ? 'text-[#980775]'
         : 'text-[#FF0700]'
     }`}>
       {getOutingStatus(item.outDlvrDate, item.sheduleTime)}
@@ -1681,7 +1551,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
               </Text>
             </View>
 
-            {/* Scheduled Info */}
+    
             <View className="flex-[2] items-center justify-center px-2">
               <Text className={`text-center font-medium text-xs ${
                 isScheduleDateToday(item.sheduleDate) ? 'text-red-600' : 'text-gray-800'
@@ -1723,21 +1593,21 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
       />
       <Text className="text-gray-500 mt-4 text-center">
         {selectedToggle === 'ToDo' 
-          ? t("DailyTarget.NoTodoItems") || "No items to do"
+          ? t("DailyTarget.NoTodoItems") || t("DailyTarget.NoTodoItems")
           : selectedToggle === 'Completed'
-          ? t("DailyTarget.noCompletedTargets") || "No completed items"
-          : "No out for delivery items"
+          ? t("DailyTarget.noCompletedTargets") || t("DailyTarget.noCompletedTargets")
+          : t("CenterTargetScreen.No out for delivery orders")
         }
       </Text>
-      {((selectedToggle === 'ToDo' && selectedDateFilter) || 
+      {/* {((selectedToggle === 'ToDo' && selectedDateFilter) || 
         (selectedToggle === 'Completed' && completedDateFilter)) && (
-        <TouchableOpacity
-          onPress={() => selectedToggle === 'ToDo' ? clearAllFilters() : clearCompletedFilters()}
-          className="mt-2 bg-[#980775] px-4 py-2 rounded-lg"
-        >
-          <Text className="text-white text-sm">Clear Filter</Text>
-        </TouchableOpacity>
-      )}
+        // <TouchableOpacity
+        //   onPress={() => selectedToggle === 'ToDo' ? clearAllFilters() : clearCompletedFilters()}
+        //   className="mt-2 bg-[#980775] px-4 py-2 rounded-lg"
+        // >
+        //   <Text className="text-white text-sm">Clear Filter</Text>
+        // </TouchableOpacity>
+      )} */}
     </View>
   )}
 </ScrollView>

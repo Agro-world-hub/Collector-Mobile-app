@@ -24,6 +24,9 @@ import {
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useTranslation } from "react-i18next";
 import { useFocusEffect } from "expo-router";
+import NetInfo from "@react-native-community/netinfo";
+
+
 type ChangePasswordNavigationProp = StackNavigationProp<
   RootStackParamList,
   "ChangePassword"
@@ -106,34 +109,17 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   }, []);
 
   const handleChangePassword = async () => {
-    // if (!newPassword || !confirmPassword || !currentPassword) {
-    //   Alert.alert(
-    //     t("Error.error"),
-    //     t("Error.Passwords are not allowed to be empty")
-    //   );
-    //   return;
-    // }
-    // if (newPassword !== confirmPassword) {
-    //   Alert.alert(
-    //     t("Error.error"),
-    //     t("Error.New password and confirm password do not match.")
-    //   );
-    //   return;
-    // }
-
-    // if (newPassword.length < 6) {
-    //   Alert.alert(
-    //     t("Error.error"),
-    //     t("Error.New password must be at least 6 characters long.")
-    //   );
-    //   return;
-    // }
-
+    
         Keyboard.dismiss();
     // Validate inputs before proceeding
     if (!validatePassword()) {
       return;
     }
+
+     const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
 
     try {
       const response = await axios.post(
@@ -280,16 +266,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
           </View>
         </View>
 
-        {/* <View className="items-center justify-center pt-7 gap-y-5">
-          <TouchableOpacity
-            className="bg-[#000000] w-[95%] p-3 rounded-full"
-            onPress={handleChangePassword}
-          >
-            <Text className="text-center pt-1 text-xl font-light text-white">
-              {t("ChangePassword.Next")}
-            </Text>
-          </TouchableOpacity>
-        </View> */}
+     
         <View className="items-center justify-center pt-7 gap-y-5 mb-20">
   <TouchableOpacity
     className="bg-[#000000] w-[95%] p-3 rounded-full items-center justify-center"

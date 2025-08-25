@@ -16,6 +16,7 @@ import axios from "axios";
 import { environment } from "@/environment/environment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
 
 type SetTargetScreenNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -251,6 +252,11 @@ const SetTargetScreen: React.FC<SetTargetScreenProps> = ({
         qtyC: target.gradeC,
       })),
     };
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
 
     try {
       const token = await AsyncStorage.getItem("token");

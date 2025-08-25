@@ -24,6 +24,9 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { SelectList } from "react-native-dropdown-select-list";
 import { navigate } from "expo-router/build/global-state/routing";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NetInfo from "@react-native-community/netinfo";
+
+
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
@@ -131,6 +134,11 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       setLoading(false);
       return;
     }
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
 
     try {
       const apiUrl = "https://api.getshoutout.com/otpservice/send";

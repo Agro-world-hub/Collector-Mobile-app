@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "Collector",
-    "slug": "Collector",
+    "name": "CoDi-Net",
+    "slug": "CoDi-Net",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/favicon.png",
+    "icon": "./assets/images/adaptive-icon2.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/favicon.png",
+      "image": "./assets/images/adaptive-icon2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -40,10 +40,10 @@
     "android": {
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/favicon.png",
-        "backgroundColor": "#21202b"
+        "foregroundImage": "./assets/images/adaptive-icon2.png",
+        "backgroundColor": "#ffffff"
       },
-      "versionCode": 2,
+      "versionCode": 5,
       "package": "com.polygonagro.Collector",
       "permissions": [
         "INTERNET",
@@ -76,6 +76,7 @@
       "eas": {
         "projectId": "9c4e5134-10ef-4626-a25a-d419801aefe5"
       }
+    
     },
     "plugins": [
       "expo-router",

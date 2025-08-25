@@ -18,6 +18,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { environment } from "@/environment/environment";
 import { useTranslation } from "react-i18next";
 import DropDownPicker from "react-native-dropdown-picker";
+import NetInfo from "@react-native-community/netinfo";
 
 type PassTargetScreenNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -198,6 +199,11 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
       );
       return;
     }
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
 
     try {
       setSubmitting(true);

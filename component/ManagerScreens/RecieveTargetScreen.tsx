@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { environment } from "@/environment/environment";
 import { ScrollView } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
 
 // Define the navigation prop type
 type RecieveTargetScreenNavigationProps = StackNavigationProp<
@@ -257,6 +258,11 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
       );
       return;
     }
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
 
     try {
       setFetchingTarget(true);

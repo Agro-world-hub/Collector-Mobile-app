@@ -163,11 +163,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
             mimeType: "application/pdf",
             UTI: "com.adobe.pdf",
           });
-          // Alert.alert(
-          //   t("Error.PDF Ready"),
-          //   t("Error.To save to Downloads, select 'Save to device' or similar option from the share menu"),
-          //   [{ text: "OK" }]
-          // );
+       
         } else {
           Alert.alert(
             t("Error.error"),

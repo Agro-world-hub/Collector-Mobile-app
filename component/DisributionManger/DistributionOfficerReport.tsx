@@ -13,6 +13,7 @@ import * as FileSystem from "expo-file-system";
 import { ScrollView } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
 import LottieView from "lottie-react-native";
+import NetInfo from "@react-native-community/netinfo";
 
 type DistributionOfficerReportNavigationProp = StackNavigationProp<
   RootStackParamList,

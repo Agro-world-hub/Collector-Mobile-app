@@ -33,6 +33,7 @@ import { ActivityIndicator } from "react-native";
 import { KeyboardAvoidingView } from "react-native";
 import { Platform } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import NetInfo from "@react-native-community/netinfo";
 import { SelectList } from "react-native-dropdown-select-list";
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -209,6 +210,12 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       return;
     }
     await AsyncStorage.removeItem("referenceId");
+
+     const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
+
     try {
       const checkApiUrl = `api/farmer/farmer-register-checker`;
       const checkBody = {

@@ -26,6 +26,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import i18n from "@/i18n/i18n";
 import { set } from "lodash";
 import { useFocusEffect } from "expo-router";
+import NetInfo from "@react-native-community/netinfo";
 
 interface OfficerDetails {
   id: number;
@@ -70,6 +71,12 @@ const ClaimOfficer: React.FC = () => {
     Keyboard.dismiss();
     setSearchLoading(true);
     console.log(empID, jobRole);
+
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
     try {
       const userToken = await AsyncStorage.getItem("token");
 

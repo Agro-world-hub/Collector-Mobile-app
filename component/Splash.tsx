@@ -131,14 +131,14 @@ dispatch(setUser({ token: userToken ?? '', jobRole: role ?? '', empId: emp ?? ''
             "tokenStoredTime",
             "tokenExpirationTime",
           ]);
-          navigation.navigate("Lanuage");
+          navigation.navigate("Login");
         }
       } else {
-        navigation.navigate("Lanuage");
+        navigation.navigate("Login");
       }
     } catch (error) {
       console.error("Error checking token expiration or password status:", error);
-      navigation.navigate("Lanuage");
+      navigation.navigate("Login");
     }
   };
   return (
