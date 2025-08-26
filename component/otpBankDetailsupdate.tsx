@@ -567,9 +567,9 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
               onPress={disabledResend ? undefined : handleResendOTP}
               style={{ color: disabledResend ? "gray" : "black" }}
             >
-              {timer > 0
-                ? `${t("Resend in ")} ${formatTime(timer)}`
-                : `${t("Resend again")}`}
+                {timer > 0
+              ? `${t("Otpverification.Resend in")} ${formatTime(timer)}`
+              : `${t("Otpverification.Resend again")}`}
             </Text>
           </View>
 
