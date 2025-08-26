@@ -302,7 +302,8 @@ const fetchOrderData = async (orderId: string) => {
     const token = await AsyncStorage.getItem('token');
     
     if (!token) {
-      Alert.alert(t("Error"), "Authentication token not found");
+    //  Alert.alert(t("Error"), "Authentication token not found");
+    Alert.alert(t("Error.error"), t("Error.User not authenticated."));
       return null;
     }
 
@@ -328,16 +329,19 @@ const fetchOrderData = async (orderId: string) => {
     
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
-        Alert.alert(t("Error"), "Session expired. Please login again.");
+     //   Alert.alert(t("Error"), "Session expired. Please login again.");
+      Alert.alert(t("Error.Error"), t("Error.Session expired") );
         // Navigate to login screen or handle logout
         return null;
       } else if (error.response?.status === 404) {
-        Alert.alert(t("Error"), "Order not found");
+       // Alert.alert(t("Error"), "Order not found");
+       Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") );
         return null;
       }
     }
     
-    Alert.alert(t("Error"), "Failed to fetch order data");
+   // Alert.alert(t("Error"), "Failed to fetch order data");
+   Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") );
     return null;
   }
 };
@@ -745,11 +749,11 @@ const handleCompleteOrder = async () => {
         setCompletedTime(null);
         
         Alert.alert(
-            t("Error"), 
-            t("Failed to complete order. Please try again."),
+            t("Error.Error"), 
+             t("Error.Failed to complete order"), 
             [
                 {
-                    text: t("OK"),
+                    text: t("Error.Ok"),
                     onPress: () => {
                         setShowCompletionPrompt(true);
                         startCountdown();
@@ -876,7 +880,7 @@ const getPackageGroups = () => {
 
 const handleReplaceProduct = (item: FamilyPackItem) => {
    if (orderStatus === 'Completed') {
-    Alert.alert(t("Info"), t("Cannot replace products in completed orders"));
+    Alert.alert( t("Error.Info"),  t("Error.Cannot replace products in completed orders"));
     return;
   }
   
@@ -900,9 +904,9 @@ const handleReplaceProduct = (item: FamilyPackItem) => {
     if (!item.price || item.price === undefined) {
       console.log("Price is undefined, attempting to fetch latest data");
       Alert.alert(
-        t("Error"),
-        "Product price information is not available. Please try again.",
-        [{ text: t("OK") }]
+        t("Error.Error"),
+        t("Error.Product price information is not available"),
+        [{ text: t("Error.Ok") }]
       );
       return;
     }
@@ -946,9 +950,9 @@ const handleReplaceProduct = (item: FamilyPackItem) => {
       setShowReplaceModal(true);
     } else {
       Alert.alert(
-        t("Error"),
-        "Invalid product data. Please refresh and try again.",
-        [{ text: t("OK") }]
+        t("Error.Error"),
+        t("Error.Invalid product data"),
+        [{ text: t("Error.Ok") }]
       );
     }
   }, 100); // Small delay to ensure state is updated
@@ -956,17 +960,17 @@ const handleReplaceProduct = (item: FamilyPackItem) => {
 
 const handleReplaceSubmit = async () => {
   if (!replaceData.newProduct || !replaceData.quantity || !replaceData.price) {
-    Alert.alert(t("Error"), "Please fill all required fields");
+    Alert.alert(t("Error.Error"),t("Error.Please fill all required fields"));
     return;
   }
 
   if (!packageId) {
-    Alert.alert(t("Error"), "Package ID not found");
+    Alert.alert(t("Error.Error"),t("Error.Package ID not found"));
     return;
   }
 
   if (!selectedItemForReplace) {
-    Alert.alert(t("Error"), "No item selected for replacement");
+    Alert.alert(t("Error.Error"),t("Error.No item selected for replacement"));
     return;
   }
 
@@ -1030,7 +1034,8 @@ const handleReplaceSubmit = async () => {
     // Get token and add validation
     const token = await AsyncStorage.getItem('token');
     if (!token) {
-      Alert.alert(t("Error"), "Authentication token not found. Please login again.");
+     // Alert.alert(t("Error"), "Authentication token not found. Please login again.");
+     Alert.alert(t("Error.error"), t("Error.User not authenticated."));
       return;
     }
 
@@ -1053,10 +1058,10 @@ const handleReplaceSubmit = async () => {
 
     if (response.data.success) {
       Alert.alert(
-        t("Success"),
-        t("Replacement request submitted successfully!"),
+        t("Error.Success"),
+         t("Error.Replacement request submitted successfully"),
         [{ 
-          text: t("OK"), 
+          text: t("Error.Ok"), 
           onPress: () => {
             // Reset state before navigation
             setShowReplaceModal(false);
@@ -1089,37 +1094,40 @@ const handleReplaceSubmit = async () => {
       if (error.response?.status === 403) {
         console.log('403 Error Details:', error.response?.data);
         const errorMessage = error.response?.data?.message || "You don't have permission to create replacement requests.";
-        Alert.alert(
-          t("Permission Denied"),
-          errorMessage + " Please contact your administrator."
-        );
+        // Alert.alert(
+        //   t("Permission Denied"),
+        //   errorMessage + " Please contact your administrator."
+        // );
+       Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") ) 
       } else if (error.response?.status === 401) {
         Alert.alert(
-          t("Authentication Error"),
-          t("Your session has expired. Please login again.")
+         t("Error.Authentication Error"),
+           t("Error.Your session has expired")
         );
       } else if (error.response?.status === 400) {
         console.log('400 Error Response:', error.response?.data);
         Alert.alert(
-          t("Invalid Request"),
-          t("Please check your input data and try again.")
+           t("Error.Invalid Request"),
+           t("Error.Please check your input data and try again")
         );
       } else if (error.response?.status === 500) {
-        Alert.alert(
-          t("Server Error"),
-          t("Internal server error. Please try again later.")
-        );
+        // Alert.alert(
+        //   t("Server Error"),
+        //   t("Internal server error. Please try again later.")
+        // );
+        Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") )
       } else {
         Alert.alert(
-          t("Error"),
-          t("Failed to submit replacement request. Please try again.")
+          t("Error.Error"),
+          t("Error.Failed to submit replacement request")
         );
       }
     } else {
-      Alert.alert(
-        t("Error"), 
-        t("An unexpected error occurred. Please try again.")
-      );
+      // Alert.alert(
+      //   t("Error"), 
+      //   t("An unexpected error occurred. Please try again.")
+      // );
+      Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") )
     }
   }
 };
@@ -1222,9 +1230,9 @@ const handleSubmit = async () => {
       }
       
       Alert.alert(
-        t("Success"),
-        t("Order updated successfully!"),
-        [{ text: t("OK"), onPress: () => navigation.goBack() }]
+         t("Error.Success"),
+        t("Error.Order updated successfully"),
+        [{ text: t("Error.Ok"), onPress: () => navigation.goBack() }]
       );
     } else {
       throw new Error(response.data.message || 'Failed to update order');
@@ -1235,7 +1243,8 @@ const handleSubmit = async () => {
     
   } catch (error) {
     console.error('Error updating order:', error);
-    Alert.alert(t("Error"), t("Failed to update order"));
+  //  Alert.alert(t("Error"), t("Failed to update order"));
+  Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") )
     setShowSubmitModal(false);
   }
 };
@@ -1311,7 +1320,8 @@ const fetchRetailItems = async () => {
     const token = await AsyncStorage.getItem('token');
     
     if (!token) {
-      Alert.alert(t("Error"), "Authentication token not found");
+      //Alert.alert(t("Error"), "Authentication token not found");
+       Alert.alert(t("Error.error"), t("Error.User not authenticated."));
       return;
     }
 
@@ -1339,7 +1349,8 @@ const fetchRetailItems = async () => {
     }
   } catch (error) {
     console.error('Error fetching retail items:', error);
-    Alert.alert(t("Error"), "Failed to fetch retail items");
+   // Alert.alert(t("Error"), "Failed to fetch retail items");
+     Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") )
     setRetailItems([]);
   } finally {
     setLoadingRetailItems(false);

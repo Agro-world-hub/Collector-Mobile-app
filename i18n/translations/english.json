@@ -170,7 +170,33 @@
 "Invalid email address. Please enter a valid email format (e.g. example@domain.com).": "Invalid email address. Please enter a valid email format (e.g. example@domain.com).",
 "Cannot add negative values for loadIn.": "Cannot add negative values for load (kg).",
 "Phone numbers cannot be the same.": "Phone numbers cannot be the same.",
-"InvalidPhoneNumber":"Invalid Phone Number"
+"InvalidPhoneNumber":"Invalid Phone Number",
+"No Selection":"No Selection",
+"Please select at least one pending item":"Please select at least one pending item.",
+"Replace request approved successfully":"Replace request approved successfully",
+"Please select a product and enter quantity":"Please select a product and enter quantity",
+"Session expired":"Session expired. Please login again.",
+"Failed to complete order":"Failed to complete order. Please try again.",
+"Info":"Info",
+"Cannot replace products in completed orders":"Cannot replace products in completed orders",
+"Product price information is not available":"Product price information is not available. Please try again.",
+"Invalid product data":"Invalid product data. Please refresh and try again.",
+"Please fill all required fields":"Please fill all required fields",
+"Package ID not found":"Package ID not found",
+"No item selected for replacement":"No item selected for replacement",
+"Replacement request submitted successfully":"Replacement request submitted successfully!",
+"Authentication Error":"Authentication Error",
+"Your session has expired":"Your session has expired. Please login again.",
+"Invalid Request":"Invalid Request",
+"Please check your input data and try again":"Please check your input data and try again.",
+"Failed to submit replacement request":"Failed to submit replacement request. Please try again.",
+"Order updated successfully":"Order updated successfully!",
+"Locked Package":"Locked Package",
+"This package is locked and cannot be accessed":"This package is locked and cannot be accessed",
+"Invalid phone number":"Invalid phone number. Format must start with 7 (e.g., 7XXXXXXXX).",
+"Phone number must be 9 digits long":"Phone number must be 9 digits long.",
+"Invalid Gmail address":"Invalid Gmail address. Gmail addresses cannot have consecutive dots (.), leading/trailing dots, or special characters except + and .",
+"Invalid email address Example":"Invalid email address. Please enter a valid email format (e.g. example@domain.com)."
   },
   "EngProfile":{
     "LNG": "en",
@@ -974,7 +1000,7 @@
     "for delivery":"for delivery",
     "Centre Target":"Centre Target",
     "Select Date":"Select Date (ToDo)",
-    "All Dates":"All Dates",
+    "All Datese":"All Dates",
     "Close":"Close",
     "Select Completion Date":"Select Completion Date",
     "All Completion Dates":"All Completion Dates",
@@ -992,8 +1018,10 @@
      "Scheduled":"Scheduled",
      "On Time":"On Time",
      "Late":"Late",
-     "No out for delivery orders":"No out for delivery orders"
-     
+     "No out for delivery orders":"No out for delivery orders",
+     "Limit Reached":"Limit Reached",
+     "You can only select up to 5 orders at a time for delivery":"You can only select up to 5 orders at a time for delivery",
+     "OK":"OK"
   }
 
 

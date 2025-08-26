@@ -146,8 +146,8 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
       const date = new Date().toISOString().slice(0, 10); // Get the current date (YYYY-MM-DD)
       const fileName = `Report_${officerId}_${date}.pdf`; // Example file name
 
-      // Define tempFilePath here, outside the if block so it's available throughout the function
-      let tempFilePath = uri; // Default to the original URI
+    
+      let tempFilePath = uri; 
 
       if (Platform.OS === "android") {
         // Create a temporary file in cache

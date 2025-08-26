@@ -17,6 +17,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { environment } from '@/environment/environment';
 import LottieView from 'lottie-react-native';
+import i18n from "@/i18n/i18n";
 
 type ReplaceRequestsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -168,7 +169,15 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
     <TouchableOpacity onPress={() => handleNavigateToApprove(item)}>
       <View className="flex-row items-center bg-[#ADADAD1A] p-3 px-4 mb-4 rounded-xl">
         <View className="flex-1">
-          <Text className="font-bold text-base text-gray-900">
+          <Text 
+            style={[
+  i18n.language === "si"
+    ? { fontSize: 14 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+          className="font-bold text-base text-gray-900">
             {t("ReplaceRequestsScreen.Order ID")} {item.invNo}
           </Text>
           <Text className="text-gray-700 text-sm">

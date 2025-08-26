@@ -453,14 +453,14 @@ const handlePhoneNumber1Change = (input: string) => {
   if (numbersOnly.length === 0) {
     setError1(""); // Clear error when empty
   } else if (!numbersOnly.startsWith('7')) {
-    setError1("Invalid phone number. Format must start with 7 (e.g., 7XXXXXXXX).");
+    setError1(t("Error.Invalid phone number"));
   } else if (numbersOnly.length < 9) {
-    setError1("Phone number must be 9 digits long.");
+    setError1(t("Error.Phone number must be 9 digits long"));
   } else if (validatePhoneNumber(numbersOnly)) {
     setError1("");
     checkPhoneExists(numbersOnly);
   } else {
-    setError1("Invalid phone number. Format must start with 7 (e.g., 7XXXXXXXX).");
+    setError1(t("Error.Invalid phone number"));
   }
 };
 
@@ -509,14 +509,14 @@ const handlePhoneNumber2Change = (input: string) => {
   if (numbersOnly.length === 0) {
     setError2(""); // Clear error when empty
   } else if (!numbersOnly.startsWith('7')) {
-    setError2("Invalid phone number. Format must start with 7 (e.g., 7XXXXXXXX).");
+    setError2(t("Error.Invalid phone number"));
   } else if (numbersOnly.length < 9) {
-    setError2("Phone number must be 9 digits long.");
+    setError2(t("Error.Phone number must be 9 digits long"));
   } else if (validatePhoneNumber(numbersOnly)) {
     setError2("");
     checkPhone2Exists(numbersOnly);
   } else {
-    setError2("Invalid phone number. Format must start with 7 (e.g., 7XXXXXXXX).");
+    setError2(t("Error.Invalid phone number"));
   }
 };
 
@@ -633,11 +633,11 @@ const handleEmailChange = (input: string) => {
     
     if (domain === 'gmail.com' || domain === 'googlemail.com') {
       setErrorEmail(
-        t("Error.Invalid Gmail address. Gmail addresses cannot have consecutive dots (.), leading/trailing dots, or special characters except + and .")
+        t("Error.Invalid Gmail address")
       );
     } else {
       setErrorEmail(
-        t("Error.Invalid email address. Please enter a valid email format (e.g. example@domain.com).")
+        t("Error.Invalid email address Example")
       );
     }
     return;
@@ -653,7 +653,7 @@ const checkEmailExists = async (email: string) => {
   // Double-check validation before API call
   if (!validateEmail(email)) {
     setErrorEmail(
-      t("Error.Invalid email address. Please enter a valid email format (e.g. example@domain.com).")
+       t("Error.Invalid email address Example")
     );
     return;
   }
@@ -686,7 +686,7 @@ const checkEmailExists = async (email: string) => {
       console.error("Data:", error.response.data);
     }
     // Set a generic error message if the check fails
-    setErrorEmail(t("Error.Failed to verify email. Please try again."));
+    setErrorEmail(t("Error.somethingWentWrong"));
   } finally {
     setIsValidating(false);
   }
@@ -736,7 +736,7 @@ const checkEmailExists = async (email: string) => {
             source={
               selectedImage
                 ? { uri: `data:image/png;base64,${selectedImage}` }
-                : require("../../assets/images/user1.png")
+                : require("../../assets/images/user2.png")
             }
             className="w-24 h-24 rounded-full"
           />

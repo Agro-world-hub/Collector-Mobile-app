@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { RouteProp } from '@react-navigation/native';
 import { Animated } from 'react-native';
 import {fetchOrderDetailsByIds, processOrdersForDelivery} from '@/component/DisributionManger/pdf';
+import i18n from "@/i18n/i18n";
 
 
 
@@ -263,6 +264,11 @@ const [selectionLimitReached, setSelectionLimitReached] = useState(false);
         return t("Status.Unknown");
     }
   };
+
+  const getStatusTextStyle = () => ({
+  fontSize: i18n.language === "si" ? 15 : i18n.language === "ta" ? 12 : 20
+});
+
 
   const getGradePriority = (grade: string): number => {
     switch (grade) {
@@ -628,9 +634,9 @@ const handleCheckboxToggle = (itemId: string) => {
       if (prev.length >= MAX_SELECTED_ORDERS) {
         setSelectionLimitReached(true);
         Alert.alert(
-          t("Limit Reached"),
-          t("You can only select up to 5 orders at a time for delivery"),
-          [{ text: t("OK") }]
+          t("CenterTargetScreen.Limit Reached"),
+          t("CenterTargetScreen.You can only select up to 5 orders at a time for delivery"),
+          [{ text: t("CenterTargetScreen.OK") }]
         );
         return prev;
       }
@@ -826,7 +832,7 @@ const confirmAction = async () => {
       }
     }
 
-    Alert.alert("Error", errorMessage, [{ text: "OK" }]);
+    Alert.alert(t("Error.somethingWentWrong"), errorMessage,     [{ text: t("CenterTargetScreen.OK") }]);
 
   } finally {
     setLoading(false);
@@ -962,7 +968,16 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
         {/* <Text className="text-white text-lg font-bold">{t("CenterTarget.CenterTarget")}</Text> */}
         {selectedToggle === 'ToDo' && (
 
-      <Text className="text-white text-lg font-bold">
+      <Text 
+      style={[
+  i18n.language === "si"
+    ? { fontSize: 14 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 20 }
+]}
+
+      className="text-white text-lg font-bold">
         {t("CenterTargetScreen.Centre Target")} : {selectedDateFilter ? selectedDateFilter : t("CenterTargetScreen.All")}
       </Text>
       
@@ -971,7 +986,15 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
   )}
     {selectedToggle === 'Completed' && (
 
-     <Text className="text-white text-lg font-bold">
+     <Text className="text-white text-lg font-bold"
+           style={[
+  i18n.language === "si"
+    ? { fontSize: 14 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 20 }
+]}
+     >
          {t("CenterTargetScreen.Centre Target")} : {selectedDateFilter ? selectedDateFilter : t("CenterTargetScreen.All")}
       </Text>
       
@@ -981,7 +1004,15 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
   )}
     {selectedToggle === 'Out' && (
 
-      <Text className="text-white text-lg font-bold">
+      <Text 
+            style={[
+  i18n.language === "si"
+    ? { fontSize: 14 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 20 }
+]}
+      className="text-white text-lg font-bold">
          {t("CenterTargetScreen.Centre Target")} 
       </Text>
       
@@ -1068,14 +1099,29 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
               elevation: selectedToggle === "ToDo" ? 4 : 0,
             }}
           >
-            <Animated.Text
+            {/* <Animated.Text
               className={`font-bold ${
                 selectedToggle === "ToDo" ? "text-white" : "text-black"
               } ${selectedToggle === "ToDo" ? "mr-2" : ""}`}
               style={{
                 opacity: selectedToggle === "ToDo" ? 1 : 0.7,
               }}
-            >
+              
+            > */}
+            <Animated.Text
+  className={`font-bold ${
+    selectedToggle === "ToDo" ? "text-white" : "text-black"
+  } ${selectedToggle === "ToDo" ? "mr-2" : ""}`}
+  style={[
+    { opacity: selectedToggle === "ToDo" ? 1 : 0.7 },
+    i18n.language === "si"
+      ? { fontSize: 13 }
+      : i18n.language === "ta"
+      ? { fontSize: 12 }
+      : { fontSize: 15 }
+  ]}
+>
+
               {t("DailyTarget.Todo")}
             </Animated.Text>
             
@@ -1120,9 +1166,17 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
               className={`font-bold ${
                 selectedToggle === "Completed" ? "text-white" : "text-black"
               }`}
-              style={{
-                opacity: selectedToggle === "Completed" ? 1 : 0.7,
-              }}
+              // style={{
+              //   opacity: selectedToggle === "Completed" ? 1 : 0.7,
+              // }}
+                style={[
+    { opacity: selectedToggle === "ToDo" ? 1 : 0.7 },
+    i18n.language === "si"
+      ? { fontSize: 13 }
+      : i18n.language === "ta"
+      ? { fontSize: 12 }
+      : { fontSize: 15 }
+  ]}
             >
               {t("DailyTarget.Completed")}
             </Animated.Text>
@@ -1168,9 +1222,17 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
               className={`font-bold ${
                 selectedToggle === "Out" ? "text-white" : "text-black"
               }`}
-              style={{
-                opacity: selectedToggle === "Out" ? 1 : 0.7,
-              }}
+              // style={{
+              //   opacity: selectedToggle === "Out" ? 1 : 0.7,
+              // }}
+                style={[
+    { opacity: selectedToggle === "ToDo" ? 1 : 0.7 },
+    i18n.language === "si"
+      ? { fontSize: 13 }
+      : i18n.language === "ta"
+      ? { fontSize: 12 }
+      : { fontSize: 15 }
+  ]}
             >
               {t("CenterTargetScreen.Out")}
             </Animated.Text>
@@ -1284,7 +1346,9 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
         >
           <View className="flex-1 justify-center items-center bg-black/50">
             <View className="bg-white rounded-lg p-6 w-11/12 max-w-md">
-              <Text className="text-lg font-bold mb-6 text-center text-gray-800">
+              <Text 
+              
+              className="text-lg font-bold mb-6 text-center text-gray-800">
                 {t("CenterTargetScreen.Select Completion Date")}
               </Text>
               
@@ -1447,19 +1511,83 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
   {/* Table Header - Changes based on selected toggle */}
   {selectedToggle === 'Out' ? (
     <View className="flex-row bg-[#980775] py-3">
-      <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
-      <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
-      <Text className="flex-[2] text-center text-white font-bold">{t("CenterTargetScreen.Out Time")}</Text>
-      <Text className="flex-[2] text-center text-white font-bold">{t("CenterTargetScreen.Outing Status")}</Text>
+      <Text 
+            style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
+      <Text 
+                  style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
+      <Text 
+                  style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      className="flex-[2] text-center text-white font-bold">{t("CenterTargetScreen.Out Time")}</Text>
+      <Text 
+                  style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      className="flex-[2] text-center text-white font-bold">{t("CenterTargetScreen.Outing Status")}</Text>
     </View>
   ) : (
     <View className="flex-row bg-[#980775] py-3">
-      <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
-      <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
-      <Text className="flex-[2] text-center text-white font-bold">
+      <Text 
+                  style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
+      <Text 
+                  style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
+      <Text 
+                  style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      className="flex-[2] text-center text-white font-bold">
         {selectedToggle === 'Completed' ? t("CenterTargetScreen.Completed") : t("TargetOrderScreen.Date")}
       </Text>
-      <Text className="flex-[2] text-center text-white font-bold">
+      <Text 
+                  style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      className="flex-[2] text-center text-white font-bold">
         {selectedToggle === 'ToDo' ? t("TargetOrderScreen.Status") : t("CenterTargetScreen.Scheduled")}
       </Text>
     </View>
@@ -1574,7 +1702,15 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
             {/* Status */}
             <View className="flex-[2] items-center justify-center px-2">
               <View className={`px-3 py-2 rounded-full ${getStatusColor(item.selectedStatus)}`}>
-                <Text className="text-xs font-medium text-center">
+                <Text 
+                            style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+                className="text-xs font-medium text-center">
                   {getStatusText(item.selectedStatus)}
                 </Text>
               </View>
