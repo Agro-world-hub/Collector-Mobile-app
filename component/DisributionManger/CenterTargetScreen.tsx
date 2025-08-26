@@ -202,41 +202,41 @@ const [selectionLimitReached, setSelectionLimitReached] = useState(false);
     ];
   };
 
-  const getStatusColor = (status: string) => {
-    const normalizedStatus = status?.toLowerCase();
+  // const getStatusColor = (status: string) => {
+  //   const normalizedStatus = status?.toLowerCase();
     
-    if (normalizedStatus === 'completed') {
-      return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
-    }
-    if (normalizedStatus === 'opened') {
-      return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
-    }
-    if (normalizedStatus === 'pending') {
-      return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
-    }
+  //   if (normalizedStatus === 'completed') {
+  //     return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
+  //   }
+  //   if (normalizedStatus === 'opened') {
+  //     return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
+  //   }
+  //   if (normalizedStatus === 'pending') {
+  //     return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
+  //   }
     
-    if (normalizedStatus === 'සම්පූර්ණ' || normalizedStatus === 'සම්පූර්ණයි') {
-      return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
-    }
-    if (normalizedStatus === 'විවෘත' || normalizedStatus === 'විවෘතයි') {
-      return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
-    }
-    if (normalizedStatus === 'අපේක්ෂිත' || normalizedStatus === 'පොරොත්තුවේ') {
-      return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
-    }
+  //   if (normalizedStatus === 'සම්පූර්ණ' || normalizedStatus === 'සම්පූර්ණයි') {
+  //     return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
+  //   }
+  //   if (normalizedStatus === 'විවෘත' || normalizedStatus === 'විවෘතයි') {
+  //     return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
+  //   }
+  //   if (normalizedStatus === 'අපේක්ෂිත' || normalizedStatus === 'පොරොත්තුවේ') {
+  //     return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
+  //   }
     
-    if (normalizedStatus === 'முடிக்கப்பட்டது' || normalizedStatus === 'நிறைவு') {
-      return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
-    }
-    if (normalizedStatus === 'திறக்கப்பட்டது' || normalizedStatus === 'திறந்த') {
-      return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
-    }
-    if (normalizedStatus === 'நிலுவையில்' || normalizedStatus === 'காத்திருக்கும்') {
-      return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
-    }
+  //   if (normalizedStatus === 'முடிக்கப்பட்டது' || normalizedStatus === 'நிறைவு') {
+  //     return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
+  //   }
+  //   if (normalizedStatus === 'திறக்கப்பட்டது' || normalizedStatus === 'திறந்த') {
+  //     return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
+  //   }
+  //   if (normalizedStatus === 'நிலுவையில்' || normalizedStatus === 'காத்திருக்கும்') {
+  //     return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
+  //   }
     
-    return 'bg-gray-100 border border-gray-300 text-gray-700';
-  };
+  //   return 'bg-gray-100 border border-gray-300 text-gray-700';
+  // };
 
   const getStatusText = (status: string) => {
     const normalizedStatus = status?.toLowerCase();
@@ -268,6 +268,100 @@ const [selectionLimitReached, setSelectionLimitReached] = useState(false);
   const getStatusTextStyle = () => ({
   fontSize: i18n.language === "si" ? 15 : i18n.language === "ta" ? 12 : 20
 });
+
+
+const getStatusColor = (status: string) => {
+  const normalizedStatus = status?.toLowerCase();
+  
+  // Return only background and border classes
+  if (normalizedStatus === 'completed') {
+    return 'bg-[#B7FFB9] border border-[#B7FFB9]';
+  }
+  if (normalizedStatus === 'opened') {
+    return 'bg-[#FBFF0066] border border-[#FBFF0066]';
+  }
+  if (normalizedStatus === 'pending') {
+    return 'bg-[#FF070733] border border-[#FF070733]';
+  }
+  
+  if (normalizedStatus === 'සම්පූර්ණ' || normalizedStatus === 'සම්පූර්ණයි') {
+    return 'bg-[#B7FFB9] border border-[#B7FFB9]';
+  }
+  if (normalizedStatus === 'විවෘත' || normalizedStatus === 'විවෘතයි') {
+    return 'bg-[#FBFF0066] border border-[#FBFF0066]';
+  }
+  if (normalizedStatus === 'අපේක්ෂිත' || normalizedStatus === 'පොරොත්තුවේ') {
+    return 'bg-[#FF070733] border border-[#FF070733]';
+  }
+  
+  if (normalizedStatus === 'முடிக்கப்பட்டது' || normalizedStatus === 'நிறைவு') {
+    return 'bg-[#B7FFB9] border border-[#B7FFB9]';
+  }
+  if (normalizedStatus === 'திறக்கப்பட்டது' || normalizedStatus === 'திறந்த') {
+    return 'bg-[#FBFF0066] border border-[#FBFF0066]';
+  }
+  if (normalizedStatus === 'நிலுவையில்' || normalizedStatus === 'காத்திருக்கும்') {
+    return 'bg-[#FF070733] border border-[#FF070733]';
+  }
+  
+  return 'bg-gray-100 border border-gray-300';
+};
+
+// const getStatusTextColor = (status: string) => {
+//   const normalizedStatus = status?.toLowerCase();
+  
+//   if (normalizedStatus === 'completed' || 
+//       normalizedStatus === 'සම්පූර්ණ' || 
+//       normalizedStatus === 'සම්පූර්ණයි' ||
+//       normalizedStatus === 'முடிக்கப்பட்டது' || 
+//       normalizedStatus === 'நிறைவு') {
+//     return 'text-[#6AD16D]';
+//   }
+//   if (normalizedStatus === 'opened' || 
+//       normalizedStatus === 'විවෘත' || 
+//       normalizedStatus === 'විවෘතයි' ||
+//       normalizedStatus === 'திறக்கப்பட்டது' || 
+//       normalizedStatus === 'திறந்த') {
+//     return 'text-[#A8A100]';
+//   }
+//   if (normalizedStatus === 'pending' || 
+//       normalizedStatus === 'අපේක්ෂිත' || 
+//       normalizedStatus === 'පොරොත්තුවේ' ||
+//       normalizedStatus === 'நிலுவையில்' || 
+//       normalizedStatus === 'காத்திருக்கும்') {
+//     return 'text-[#D16D6A]';
+//   }
+  
+//   return 'text-gray-700';
+// };
+
+const getStatusTextColor = (status: string) => {
+  const normalizedStatus = status?.toLowerCase();
+  
+  if (normalizedStatus === 'completed' || 
+      normalizedStatus === 'සම්පූර්ණ' || 
+      normalizedStatus === 'සම්පූර්ණයි' ||
+      normalizedStatus === 'முடிக்கப்பட்டது' || 
+      normalizedStatus === 'நிறைவு') {
+    return 'text-[#6AD16D]';
+  }
+  if (normalizedStatus === 'opened' || 
+      normalizedStatus === 'විවෘත' || 
+      normalizedStatus === 'විවෘතයි' ||
+      normalizedStatus === 'திறக்கப்பட்டது' || 
+      normalizedStatus === 'திறந்த') {
+    return 'text-[#A8A100]';
+  }
+  if (normalizedStatus === 'pending' || 
+      normalizedStatus === 'අපේක්ෂිත' || 
+      normalizedStatus === 'පොරොත්තුවේ' ||
+      normalizedStatus === 'நிலுவையில்' || 
+      normalizedStatus === 'காத்திருக்கும்') {
+    return 'text-[#FF0700]';
+  }
+  
+  return 'text-gray-700';
+};
 
 
   const getGradePriority = (grade: string): number => {
@@ -866,7 +960,7 @@ const SuccessModal = () => {
         <View className="bg-white rounded-2xl p-8 w-11/12 max-w-sm items-center">
           {/* Success Title */}
           <Text className="text-2xl font-bold mb-6 text-center text-gray-800">
-            {t("CenterTargetScreen.Succes")}
+            {t("CenterTargetScreen.Success")}
           </Text>
           
           {/* Success Icon */}
@@ -1685,7 +1779,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
             </View>
 
             {/* Status */}
-            <View className="flex-[2] items-center justify-center px-2">
+            {/* <View className="flex-[2] items-center justify-center px-2">
               <View className={`px-3 py-2 rounded-full ${getStatusColor(item.selectedStatus)}`}>
                 <Text 
                             style={[
@@ -1699,7 +1793,23 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
                   {getStatusText(item.selectedStatus)}
                 </Text>
               </View>
-            </View>
+            </View> */}
+
+            {/* Status */}
+<View className="flex-[2] items-center justify-center px-2">
+  <View className={`px-3 py-2 rounded-full ${getStatusColor(item.selectedStatus)}`}>
+    <Text 
+      style={[
+        i18n.language === "si" ? { fontSize: 12 } :
+        i18n.language === "ta" ? { fontSize: 12 } :
+        { fontSize: 12 }
+      ]}
+      className={`font-medium text-center ${getStatusTextColor(item.selectedStatus)}`}
+    >
+      {getStatusText(item.selectedStatus)}
+    </Text>
+  </View>
+</View>
           </>
         )}
       </TouchableOpacity>

@@ -204,6 +204,7 @@ const [orderStatus, setOrderStatus] = useState<'Pending' | 'Opened' | 'Completed
 );
 
 const [selectpackage, setSelectpackage] = useState(false);
+const [isUserInitiatedCompletion, setIsUserInitiatedCompletion] = useState(false);
 const [isReplacementPriceHigher, setIsReplacementPriceHigher] = useState(false);
 const [selectopen, setSelectopen,] = useState(false);
 const [packageName, setPackageName] = useState<string>('Family Pack');
@@ -582,9 +583,39 @@ const toggleAdditionalItem = (id: string) => {
 };
 
 // Update the timer effect to not trigger for completed orders
+// useEffect(() => {
+//   // BULLETPROOF: Only check items, don't trigger multiple times
+//   if (orderCompletionState !== 'idle' || orderStatus === 'Completed') return;
+  
+//   const hasFamily = familyPackItems.length > 0;
+//   const hasAdditional = additionalItems.length > 0;
+  
+//   let allSelected = false;
+  
+//   if (hasFamily && hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+//   } else if (hasFamily && !hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected();
+//   } else if (!hasFamily && hasAdditional) {
+//     allSelected = areAllAdditionalItemsSelected();
+//   }
+  
+//   if (allSelected && !showCompletionPrompt && !countdownInterval) {
+//     console.log('All items selected - starting countdown');
+//     startCountdown();
+//   } else if (!allSelected && showCompletionPrompt) {
+//     console.log('Not all items selected - stopping countdown');
+//     setShowCompletionPrompt(false);
+//     resetCountdown();
+//   }
+// }, [familyPackItems, additionalItems, orderStatus]);
+
+
+// Replace the problematic useEffect with this:
 useEffect(() => {
-  // BULLETPROOF: Only check items, don't trigger multiple times
-  if (orderCompletionState !== 'idle' || orderStatus === 'Completed') return;
+  // Only check completion status, don't trigger modal automatically
+
+  if (orderCompletionState !== 'idle' || orderStatus === 'Completed' || isUserInitiatedCompletion) return;
   
   const hasFamily = familyPackItems.length > 0;
   const hasAdditional = additionalItems.length > 0;
@@ -599,13 +630,10 @@ useEffect(() => {
     allSelected = areAllAdditionalItemsSelected();
   }
   
-  if (allSelected && !showCompletionPrompt && !countdownInterval) {
-    console.log('All items selected - starting countdown');
-    startCountdown();
-  } else if (!allSelected && showCompletionPrompt) {
-    console.log('Not all items selected - stopping countdown');
-    setShowCompletionPrompt(false);
-    resetCountdown();
+  // ONLY update status, don't show completion prompt automatically
+  if (allSelected) {
+    // Just update the visual status, don't trigger the modal
+    console.log('All items selected - updating status only');
   }
 }, [familyPackItems, additionalItems, orderStatus]);
 
@@ -795,10 +823,10 @@ const startCountdown = () => {
 
 
 
-  const handleBackToEdit = () => {
-    setShowCompletionPrompt(false);
-    resetCountdown();
-  };
+  // const handleBackToEdit = () => {
+  //   setShowCompletionPrompt(false);
+  //   resetCountdown();
+  // };
   // Replace product form data
   const [replaceData, setReplaceData] = useState<ReplaceProductData>({
     selectedProduct: '',
@@ -1282,6 +1310,61 @@ const handleSubmit = async () => {
 };
 
 
+// const handleSubmitPress = () => {
+//   const hasFamily = familyPackItems.length > 0;
+//   const hasAdditional = additionalItems.length > 0;
+  
+//   let allSelected = false;
+  
+//   if (hasFamily && hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+//   } else if (hasFamily && !hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected();
+//   } else if (!hasFamily && hasAdditional) {
+//     allSelected = areAllAdditionalItemsSelected();
+//   }
+  
+//   if (allSelected) {
+//     // If all items are selected, show completion prompt
+//     if (!showCompletionPrompt) {
+//       setShowCompletionPrompt(true);
+//       startCountdown();
+//     }
+//   } else {
+//     // If not all items are selected, submit immediately
+//     handleSubmit();
+//   }
+// }
+
+// const handleSubmitPress = () => {
+//   const hasFamily = familyPackItems.length > 0;
+//   const hasAdditional = additionalItems.length > 0;
+  
+//   let allSelected = false;
+  
+//   if (hasFamily && hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+//   } else if (hasFamily && !hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected();
+//   } else if (!hasFamily && hasAdditional) {
+//     allSelected = areAllAdditionalItemsSelected();
+//   }
+  
+//   if (allSelected) {
+//     // If user clicks Save AND all items are selected, show completion prompt
+//     console.log('User clicked Save with all items selected - showing completion prompt');
+//     setShowCompletionPrompt(true);
+//     startCountdown();
+//   } else {
+//     // If not all items are selected, submit immediately
+//     console.log('Not all items selected - submitting immediately');
+//     handleSubmit();
+//   }
+// }
+
+
+
+// Update handleSubmitPress
 const handleSubmitPress = () => {
   const hasFamily = familyPackItems.length > 0;
   const hasAdditional = additionalItems.length > 0;
@@ -1297,16 +1380,29 @@ const handleSubmitPress = () => {
   }
   
   if (allSelected) {
-    // If all items are selected, show completion prompt
-    if (!showCompletionPrompt) {
-      setShowCompletionPrompt(true);
-      startCountdown();
-    }
+    // Mark as user-initiated and show completion prompt
+    setIsUserInitiatedCompletion(true);
+    setShowCompletionPrompt(true);
+    startCountdown();
   } else {
-    // If not all items are selected, submit immediately
+    // Regular submission
     handleSubmit();
   }
 }
+
+// Update the useEffect to respect user initiation
+// useEffect(() => {
+//   if (orderCompletionState !== 'idle' || orderStatus === 'Completed' || isUserInitiatedCompletion) return;
+  
+//   // ... rest of the logic for automatic status update only
+// }, [familyPackItems, additionalItems, orderStatus, isUserInitiatedCompletion]);
+
+// Reset the flag when modal closes
+const handleBackToEdit = () => {
+  setShowCompletionPrompt(false);
+  setIsUserInitiatedCompletion(false); // Reset the flag
+  resetCountdown();
+};
 
 useEffect(() => {
   const hasFamily = familyPackItems.length > 0;
