@@ -1,7 +1,7 @@
 {
   "SignIn": {
     "LNG": "si",
-    "Wellcome": "සාදරයෙන් පිළිගනිමු!",
+    "Wellcome": "ආයුබෝවන්!",
     "SigntoLogin":"කරුණාකර පුරනය වීමට පුරනය වන්න.",
     "Employee":"සේවක හැඳුනුම්පත",
     "Password": "මුරපදය",
@@ -197,10 +197,6 @@
 "Phone number must be 9 digits long":"දුරකථන අංකය ඉලක්කම් 9ක් දිග විය යුතුය.",
 "Invalid Gmail address":"අවලංගු Gmail ලිපිනය. Gmail ලිපිනවල අනුප්‍රාප්තික තිත් (.), ප්‍රමුඛ/අනුප්‍රාප්තික තිත් හෝ + සහ හැර විශේෂ අක්ෂර තිබිය නොහැක.",
 "Invalid email address Example":"අවලංගු විද්‍යුත් තැපැල් ලිපිනය. කරුණාකර වලංගු විද්‍යුත් තැපැල් ආකෘතියක් ඇතුළත් කරන්න (උදා: example@domain.com)."
- 
-
-
-
   },
 "EngProfile":{
     "LNG": "si",
@@ -395,9 +391,9 @@
   },
   "ChangePassword":{
     "LNG": "si",
-    "ChoosePassword":"නව මුරපදයක් තෝරන්න",
-    "Changepassword":" මුරපදය වෙනස් කර එය ආරක්ෂිතව තබා ගන්න",
-    "CurrentPassword":"වත්මන් මුරපදය",
+    "ChoosePassword":"මුරපදය වෙනස් කිරීම",
+    "Changepassword":"ඔබගේ මුරපදය වෙනස් කර එය සුරක්ෂිතව තබා ගන්න",
+    "CurrentPassword":"වත්මන් මුර පදය",
     "NewPassword":"නව මුරපදය",
     "ConfirmNewPassword":"නව මුරපදය තහවුරු කරන්න",
      "Next":"ඊළඟ"
@@ -579,7 +575,6 @@
     "Save":"සුරකින්න",
     "maximum amount receive":"ඔබට ලැබිය හැකි උපරිම මුදල:",
     "Select an officer":"--නිලධාරියෙකු තෝරන්න--"
-  
   },
   "ReportGenerator":{
     "LNG": "si",
@@ -872,7 +867,6 @@
 
     "ContactUs":"අප අමතන්න",
     "ContactUsText": "ඔබට කිසියම් මෙම රහස්‍යතා ප්‍රතිපත්තිය පිළිබඳ ප්‍රශ්න, ගැටළු හෝ ඉල්ලීම් හෝ ඔබේ පුද්ගලික දත්තවලට අදාළ ඔබේ අයිතිවාසිකම්  දැන ගැනීමට කිරීමට ඔබ කැමති නම්, කරුණාකර info@polygon.lk හා සම්බන්ධ වන්න. විකල්පයක් ලෙස, ඔබට අංක 46/42, නවම් මාවත, කොළඹ 02. ශ්‍රී ලංකාව යන ලිපිනයෙන් තැපෑලෙන් අප හා සම්බන්ධ විය හැකිය."
-
   },
    "DistridutionaDashboard":{
      "LNG": "si",
@@ -884,7 +878,8 @@
     "Progress": "ප්‍රගතිය",
     "Scan":"QR ස්කෑන් කරන්න",
      "TargetOrders":"ඉලක්ක ඇණවුම්",
-    "Search": "ජාතික හැඳුනුම්පත අනුව සොයන්න"
+    "Search": "ජාතික හැඳුනුම්පත අනුව සොයන්න",
+     "Opened": "විවෘත"
   },
   "TargetOrderScreen" :{
        "LNG": "si",
@@ -904,7 +899,6 @@
     "Retry":"නැවත උත්සාහ කරන්න",
     "Pending":"අපේක්ෂා කෙරේ",
      "Opened": "විවෘත කර ඇත"
-  
   },
   "OpenedOrderScreen":{
     "INV No ":"ඉන්වොයිස් අංකය:",
@@ -948,7 +942,6 @@
       "Marking as completed in":"සම්පූර්ණ ලෙස සලකුණු කිරීම",
     "seconds":"තත්පර.",
      "You have unsubmitted changes":"ඔබට ඉදිරිපත් නොකළ වෙනස්කම් තිබේ!"
-
   },
    "Status": {
     "Pending": "අපේක්ෂා කෙරේ",
@@ -965,7 +958,6 @@
     "Are you sure":"ඔබට මෙම ඉලක්කය වෙනත් නිලධාරියෙකුට ලබා දීමට අවශ්‍ය බව ඔබට විශ්වාසද?",
     "Cancel":"අවලංගු කරන්න",
     "Pass":"සමත්",
-    
     "Completed Time":"සම්පූර්ණ කළ කාලය",
     "Retry":"නැවත උත්සාහ කරන්න"
   },
@@ -995,11 +987,10 @@
     "ReplaceRequestsScreen":{
     "Order ID":"ඇණවුම් හැඳුනුම්පත:",
     "Replacing Item":"අයිතමය ප්‍රතිස්ථාපනය කිරීම:",
-       "Requested Time":"ඉල්ලන ලද කාලය",
+    "Requested Time":"ඉල්ලන ලද කාලය",
     "Replace Requests":"ඉල්ලීම් ප්‍රතිස්ථාපනය කරන්න",
     "All":"සියල්ල",
     "No replace requests found":"ප්‍රතිස්ථාපන ඉල්ලීම් හමු නොවීය"
-
 },
   "CenterTargetScreen":{
     "Success":"සාර්ථකත්වය",
@@ -1030,7 +1021,5 @@
       "Limit Reached":"සීමාව ළඟා විය",
      "You can only select up to 5 orders at a time for delivery":"බෙදාහැරීම සඳහා ඔබට වරකට ඇණවුම් 5ක් දක්වා පමණක් තෝරා ගත හැකිය",
      "OK":"හරි"
- 
   }
-
 }

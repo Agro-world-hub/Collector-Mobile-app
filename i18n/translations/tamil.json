@@ -1,7 +1,7 @@
 {
   "SignIn": {
     "LNG": "en",
-    "Wellcome": "Welcome !",
+    "Wellcome": "Welcome!",
     "SigntoLogin": "Please Sign in to login",
     "Employee":"Employee ID",
     "Password": "Password",
@@ -20,7 +20,7 @@
   },
   "Error":{
     "error":"Sorry",
-    "Failed to fetch empid.":"Failed to fetch empid.",
+    "Failed to fetch empid.":"Failed to fetch Employee ID.",
     "New password and confirm password do not match.":"New password and confirm password do not match.",
     "New password must be at least 6 characters long.":"New password must be at least 6 characters long.",
     "Failed to update password.":"Failed to update password.",
@@ -28,10 +28,10 @@
     "Unable to open dialer.":"Unable to open dialer.",
     "An error occurred during logout:":"An error occurred during logout:",
     "Failed to fetch farmer details":"Failed to fetch farmer details",
-    "noQRCodeAvailable":"no QRCode Available",
-    "failedSaveQRCode":"failed Save QRCode",
-    "Invalid EMP ID":"Invalid EMP ID",
-    "Invalid EMP ID & Password":"Invalid EMP ID & Password",
+    "noQRCodeAvailable":"No QR Code Available",
+    "failedSaveQRCode":"Failed Save QR Code",
+    "Invalid EMP ID":"Invalid Employee ID",
+    "Invalid EMP ID & Password":"Invalid Employee ID & Password",
     "Invalid Password. Please try again.":"Invalid Password. Please try again.",
     "An error occurred. Try again.":"An error occurred. Try again.",
     "Something went wrong. Please try again.":"Something went wrong. Please try again.",
@@ -39,10 +39,10 @@
     "Failed to fetch details":"Failed to fetch details",
     "No QR Code available.":"No QR Code available.",
     "Failed to share QR Code.":"Failed to share QR Code.",
-    "errorOccurred":"error Occurred",
-    "somethingWentWrong":"something Went Wrong. Please try again later.",
-    "otpResent":"otpResent",
-    "otpResendFailed":"otp Resend Failed",
+    "errorOccurred":"Error Occurred",
+    "somethingWentWrong":"Something went wrong. Please try again later.",
+    "otpResent":"OTP Resent Successfully!",
+    "otpResendFailed":"OTP Resend Failed",
     "You must change the prices before submitting. Please update the values.":"You must change the prices before submitting. Please update the values.",
     "Failed to submit price update.":"Failed to submit price update.",
     "Failed to load profile data":"Failed to load profile data",
@@ -56,9 +56,9 @@
     "PDF was not generated.":"PDF was not generated.",
     "Failed to search for farmer.":"Failed to search for farmer.",
     "An unexpected error occurred.":"An unexpected error occurred.",
-    "no any prices found":"no any prices found !",
+    "no any prices found":"No any prices found !",
     "Failed to submit crop details. Please try again.":"Failed to submit crop details. Please try again.",
-    "otpSendFailed":"otp Send Failed",
+    "otpSendFailed":"OTP Send Failed",
     "Please fill in all required fields.":"Please fill in all required fields.",
     "Account numbers do not match.":"Account numbers do not match.",
     "Validation Errors":"Validation Errors",
@@ -168,9 +168,35 @@
 "NIC Number must be 9 digits followed by 'V' or 12 digits.": "NIC Number must be 9 digits followed by 'V' or 12 digits.",
 "Email is required": "Email is required",
 "Invalid email address. Please enter a valid email format (e.g. example@domain.com).": "Invalid email address. Please enter a valid email format (e.g. example@domain.com).",
-"Cannot add negative values for loadIn.": "Cannot add negative values for loadIn.",
+"Cannot add negative values for loadIn.": "Cannot add negative values for load (kg).",
 "Phone numbers cannot be the same.": "Phone numbers cannot be the same.",
-"InvalidPhoneNumber":"Invalid Phone Number"
+"InvalidPhoneNumber":"Invalid Phone Number",
+"No Selection":"No Selection",
+"Please select at least one pending item":"Please select at least one pending item.",
+"Replace request approved successfully":"Replace request approved successfully",
+"Please select a product and enter quantity":"Please select a product and enter quantity",
+"Session expired":"Session expired. Please login again.",
+"Failed to complete order":"Failed to complete order. Please try again.",
+"Info":"Info",
+"Cannot replace products in completed orders":"Cannot replace products in completed orders",
+"Product price information is not available":"Product price information is not available. Please try again.",
+"Invalid product data":"Invalid product data. Please refresh and try again.",
+"Please fill all required fields":"Please fill all required fields",
+"Package ID not found":"Package ID not found",
+"No item selected for replacement":"No item selected for replacement",
+"Replacement request submitted successfully":"Replacement request submitted successfully!",
+"Authentication Error":"Authentication Error",
+"Your session has expired":"Your session has expired. Please login again.",
+"Invalid Request":"Invalid Request",
+"Please check your input data and try again":"Please check your input data and try again.",
+"Failed to submit replacement request":"Failed to submit replacement request. Please try again.",
+"Order updated successfully":"Order updated successfully!",
+"Locked Package":"Locked Package",
+"This package is locked and cannot be accessed":"This package is locked and cannot be accessed",
+"Invalid phone number":"Invalid phone number. Format must start with 7 (e.g., 7XXXXXXXX).",
+"Phone number must be 9 digits long":"Phone number must be 9 digits long.",
+"Invalid Gmail address":"Invalid Gmail address. Gmail addresses cannot have consecutive dots (.), leading/trailing dots, or special characters except + and .",
+"Invalid email address Example":"Invalid email address. Please enter a valid email format (e.g. example@domain.com)."
   },
   "EngProfile":{
     "LNG": "en",
@@ -178,7 +204,7 @@
     "View":"View My QR Code",
     "ChangePassword":"Change Password",
     "Complaints":"Complaints",
-    "Report Complaint":"Report Complaint",
+    "Report Complaint":"Report a Complaint",
     "View Complaint History":"View Complaint History",
     "Logout": "Logout",
     "Need Help":"Need Help?",
@@ -214,17 +240,18 @@
     "Grade":"Grade",
     "Target":"Target (kg)",
     "Todo()":"Todo (kg)",
-     "Completedkg":"Completed (kg)",
+    "Completedkg":"Completed (kg)",
      "noCompletedTargets":"No Completed Target founds",
-     "NoTodoItems":"No Todo Target founds"
+     "NoTodoItems":"No Todo Target founds",
+      "Out":"Out"
   },
   "SearchPrice":{
     "LNG": "en",
     "SearchPrice":"Search Price",
     "Crop":"Crop Name",
-    "SelectCrop":"Select Crop",
+    "SelectCrop":"--Select Crop--",
     "Variety":"Variety",
-    "SelectVariety":"Select Variety",
+    "SelectVariety":"--Select Variety--",
     "Search":"Search",
     "Selection Required":"Selection Required",
     "Please select both Crop and Variety to continue":"Please select both Crop and Variety to continue.",
@@ -267,8 +294,8 @@
     "AccountNumberError":"Please enter a valid account number",
     "InvalidNIC":"NIC must be either 12 digits or 9 digits followed by V or v",
     "OnlyDigitsAllowed":"Only Digits Allowed",
-    "MustStartWith7":"Must Start With 7",
-    "InvalidPhoneLength":"Invalid phone number length"
+    "MustStartWith7":"Invalid phone number. Format must start with 7 (e.g., 7XXXXXXXX)",
+    "InvalidPhoneLength":"Invalid phone number"
   },
   "PriceChart":{
     "LNG": "en",
@@ -315,7 +342,8 @@
     "Add":"Add",
     "Done":"Done",
     "Select Crop":"Select Crop",
-    "Select Variety":"Select Variety"
+    "Select Variety":"Select Variety",
+    "Processing...":"Processing..."
   },
   "ReportPage":{
     "LNG": "en",
@@ -363,12 +391,12 @@
   },
   "ChangePassword":{
     "LNG": "en",
-    "ChoosePassword":"Choose a New Password",
-    "Changepassword":" Change the password and keep it secured",
+    "ChoosePassword":"Change Password",
+    "Changepassword":"Change the password and keep it secured",
     "CurrentPassword":"Current Password",
     "NewPassword":"New Password",
     "ConfirmNewPassword":"Confirm New Password",
-     "Next":"Next"
+    "Next":"Next"
   },
   "QRScanner":{
     "LNG": "en",
@@ -459,7 +487,7 @@
     "Submit":"Submit",
     "Select Province":"Select Province",
     "Select District":"Select District",
-    "next":"next"
+    "next":"Next"
   },
   "CenterTarget":{
     "LNG": "en",
@@ -486,7 +514,7 @@
     "Select Job Role":"Select Job Role",
     "Collection Officer":"Collection Officer",
     "Customer Officer": "Customer Officer",
-    "Distribution Officer": "බෙදා හැරීමේ නිලධාරියා"
+    "Distribution Officer": "Distribution Officer"
   },
   "DisclaimOfficer":{
     "Are you sure you want to disclaim this officer?":"Are you sure you want to disclaim this officer?",
@@ -501,8 +529,8 @@
     "Officers List":"Officers List",
     "Drivers List": "Drivers List",
     "Officers / Drivers List": "Officers List ",
+    "Drivers": "Drivers",
     "Not Approved":"Not Approved"
-   
   },
   "EditTargetManager":{
     "LNG": "en",
@@ -629,15 +657,15 @@
     "complaintFailed": "Failed to add a complaint. Please try again.",
     "Tellus": "Tell us the",
     "Problem": "Problem",
-    "selectCategory": "Select Complain Category",
+    "selectCategory": "Select Complaint Category",
     "finace": "Finance",
     "sorry": "Sorry",
     "Finance": "Finance",
     "Agriculture": "Agriculture",
     "Call Center": "Call Centre",
     "Procuiment": "Procuiment",
-    "WewilRespond": "We will respond to you within two days of receiving your message.",
-    "Kindlysubmit": "Kindly submit your complaint here..",
+    "WewilRespond": "We will get back to the farmer within 2 days after hearing from you",
+    "Kindlysubmit": "Add the Complaint here..",
     "Submit": "Submit",
     "Other": "Other"
   }  ,
@@ -675,10 +703,10 @@
   "Transport":{
     "LNG": "en",
     "Register Drivers":"Register Drivers",
-    "Add Farmer Requests":"Add Farmer Requests",
+    "Add Farmer Requests":"Farm Gate Collection",
     "View Farmer Requests":"View Farmer Requests",
     "Driver":"Driver",
-    "Add Collection Request":"Add Collection Request",
+    "Add Collection Request":"Add Farm Gate Collection",
     "Enter Valide NIC" :"Enter Valid NIC"
   },
   "VehicleDetails":{
@@ -757,7 +785,8 @@
     "Assigned":"Assigned",
     "Cancelled":"Cancelled",
     "On way":"On way",
-    "Scheduled":"Scheduled"
+    "Scheduled":"Scheduled",
+    "Canceled by":"Canceled by"
   },
   "NewReport":{
     "LNG": "en",
@@ -794,12 +823,12 @@
     "Generated PDF file not found":"Generated PDF file not found",
     "Failed to share PDF file":"Failed to share PDF file",
     "No transactions found for this date": "No transactions found for this date",
-     "PDF Ready":"PDF Ready",
-      "To save to Downloads":"To save to Downloads, select 'Save to device' or similar option from the share menu",
-      "Save GRN Report":"Save GRN Report",
-      "Info":"Info",
-          "Use the 'Save to Files' option to save to Downloads":"Use the 'Save to Files' option to save to Downloads",
-          "Failed to prepare PDF for download":"Failed to prepare PDF for download."
+    "PDF Ready":"PDF Ready",
+    "To save to Downloads":"To save to Downloads, select 'Save to device' or similar option from the share menu",
+    "Save GRN Report":"Save GRN Report",
+    "Info":"Info",
+    "Use the 'Save to Files' option to save to Downloads":"Use the 'Save to Files' option to save to Downloads",
+    "Failed to prepare PDF for download":"Failed to prepare PDF for download."
   },
   "BankDetailsUpdate":{
     "Success":"Success",
@@ -807,157 +836,192 @@
     "Failed":"Failed",
     "FailedMessage":"Bank Details Update Failed!"
   },
-    "PrivacyPlicy": {
-    "LNG": "ta",
-    "PrivacyPolicy": "தனியுரிமைக் கொள்கை",
-       "Date": "28 ஏப்ரல் 2025",
-    "PrivacyPlicyCompany": "கலெக்டர் மொபைல் பயன்பாட்டிற்கான தனியுரிமைக் கொள்கை",
-    "By": "செயல்படும் தேதி: ",
-    "explain": "இந்த தனியுரிமைக் கொள்கை (“கொள்கை”) அக்ரோ வேர்ல்ட் (பிரைவேட்) லிமிடெட் (“நாங்கள்” அல்லது “எங்கள்”)கலெக்டர் மொபைல் பயன்பாட்டின் (“ஆப்”) பயனர்களிடமிருந்து (“நீங்கள்” அல்லது “உங்கள்”) சேகரிக்கப்பட்ட தகவல்களைச் சேகரிக்கும், பயன்படுத்தும், பராமரிக்கும் மற்றும் வெளிப்படுத்தும் முறையை நிர்வகிக்கிறது. செயலியை அணுகுவதன் மூலமோ அல்லது பயன்படுத்துவதன் மூலமோ, இந்தக் கொள்கையின்படி தகவல்களைச் சேகரித்துப் பயன்படுத்துவதை நீங்கள் ஒப்புக்கொள்கிறீர்கள். இந்தக் கொள்கையுடன் நீங்கள் உடன்படவில்லை என்றால், தயவுசெய்து செயலியைப் பயன்படுத்துவதைத் தவிர்க்கவும்.",
+  "PrivacyPlicy": {
+    "LNG": "en",
+    "PrivacyPolicy": "Privacy Policy",
+     "Date": "28 April 2025",
+    "PrivacyPlicyCompany": "Privacy Policy for CoDi-Net Mobile Application",
+    "By": "Effective Date: ",
+    "explain": "This Privacy Policy (“Policy”) governs the manner in which Polygon Holdings (Private) Limited (“we,“ “us,“ or “our“) collects, uses, maintains, and discloses information collected from users (“you“ or “your“) of the CoDi-Net mobile application (“App“). By accessing or using the App, you agree to the collection and use of information in accordance with this Policy. If you do not agree with this Policy, please refrain from using the App.",
 
-    "InformationWeCollect": "நாங்கள் சேகரிக்கும் தகவல்",
-    "RegistrationInformationTxt": "நீங்கள் கலெக்டர் செயலியைப் பயன்படுத்தும்போது, ​​உங்கள் முழுப் பெயர், மொபைல் எண், தேசிய அடையாள அட்டை (NIC) எண், மின்னஞ்சல் முகவரி, சுயவிவரப் புகைப்படம் மற்றும் பணி அடையாள விவரங்கள் போன்ற தனிப்பட்ட தகவல்களை நாங்கள் சேகரிக்கலாம். கூடுதலாக, QR குறியீடு ஸ்கேன்கள், விவசாயி பதிவு விவரங்கள், சேகரிப்பு அறிக்கைகள், புகார் வரலாறுகள், தினசரி இலக்குகள் மற்றும் பரிவர்த்தனை வரலாறுகள் உள்ளிட்ட பணி தொடர்பான தகவல்களை நாங்கள் சேகரிக்கிறோம். நீங்கள் பயன்படுத்தும் சாதனத்தின் வகை, இயக்க முறைமை பதிப்பு மற்றும் நிறுவப்பட்ட செயலியின் பதிப்பு போன்ற சாதனம் தொடர்பான தகவல்களும் சேகரிக்கப்படலாம். மேலும், தடையற்ற செயல்பாடு, பாதுகாப்பு மற்றும் பயனர் அனுபவ உகப்பாக்கத்தை எளிதாக்க, பயன்பாட்டிற்குள் உள்நுழைவு நேர முத்திரைகள், மொழி விருப்பத்தேர்வுகள் மற்றும் செயல்பாட்டு பதிவுகள் போன்ற பயன்பாட்டுத் தரவை நாங்கள் கண்காணிக்கிறோம்.",
+    "InformationWeCollect": "Information We Collect",
+    "RegistrationInformationTxt": "When you use the CoDi-Net App, we may collect personal information such as your full name, mobile number, National Identity Card (NIC) number, email address, profile photo, and work identification details. Additionally, we collect work-related information including QR code scans, farmer registration details, collection reports, complaint histories, daily targets, and transaction histories. Device-related information such as the type of device you use, operating system version, and the version of the App installed may also be gathered. Furthermore, we monitor usage data such as login timestamps, language preferences, and activity logs within the App to facilitate seamless operation, security, and user experience optimization.",
 
-    "HowWeUseYourInformation": "உங்கள் தகவலை நாங்கள் எவ்வாறு பயன்படுத்துகிறோம்",
-    "ToProvideServicesTxt": "சேகரிக்கப்பட்ட தகவல்கள் முதன்மையாக உங்கள் அடையாளத்தைச் சரிபார்க்கவும், செயலிக்கான பாதுகாப்பான அணுகலை இயக்கவும் பயன்படுத்தப்படுகின்றன. செயல்பாட்டுப் பொறுப்பை உறுதி செய்வதற்காக, உங்கள் பயனர் சுயவிவரம் மற்றும் பணி அறிக்கைகளை உருவாக்குதல், பராமரித்தல் மற்றும் நிர்வகித்தல் ஆகியவற்றில் இது எங்களுக்கு உதவுகிறது. உங்கள் அன்றாட செயல்பாடுகளைக் கண்காணிக்கவும், செயல்திறன் அளவீடுகளைக் கண்காணிக்கவும், இலக்கு நிறைவுகளை மதிப்பிடவும் இந்தத் தரவை நாங்கள் பயன்படுத்துகிறோம். சேகரிப்பு கோரிக்கைகளைச் செயலாக்குதல் மற்றும் பதிவு செய்தல், விவசாயி பதிவுகளை நிர்வகித்தல், புகார்களைக் கையாளுதல் மற்றும் கள செயல்பாடுகளின் பொதுவான மேற்பார்வை ஆகியவற்றையும் உங்கள் தகவல் ஆதரிக்கிறது. கூடுதலாக, செயலியின் செயல்பாடு மற்றும் நம்பகத்தன்மையை மேம்படுத்தவும், சிறந்த சேவைகளை வழங்கவும், முக்கியமான புதுப்பிப்புகளைத் தொடர்பு கொள்ளவும், சேவை தொடர்பான அறிவிப்புகளை வெளியிடவும், எங்கள் சட்ட மற்றும் ஒழுங்குமுறை கடமைகளுக்கு இணங்கவும் தரவு எங்களுக்கு உதவுகிறது.",
+    "HowWeUseYourInformation": "How We Use Your Information",
+    "ToProvideServicesTxt": "The information collected is used primarily to verify your identity and enable secure access to the App. It assists us in creating, maintaining, and managing your user profile and work reports to ensure operational accountability. We use this data to track your daily activities, monitor performance metrics, and assess target completions. Your information also supports the processing and recording of collection requests, management of farmer registrations, handling of complaints, and general supervision of field operations. Additionally, the data enables us to improve the functionality and reliability of the App, deliver better services, communicate important updates, issue service-related notifications, and comply with our legal and regulatory obligations.",
 
-    "InformationSharingandDisclosure": "தகவல் பகிர்வு",
-    "ServiceProvidersTxt": "உங்கள் தனிப்பட்ட தரவை மூன்றாம் தரப்பினருக்கு நாங்கள் விற்கவோ, வாடகைக்கு விடவோ அல்லது வர்த்தகம் செய்யவோ மாட்டோம். செயல்பாட்டு கண்காணிப்பு, பணியாளர் மேலாண்மை மற்றும் சேவை மேம்பாட்டு முயற்சிகளை ஆதரிக்க, உங்கள் தகவல்கள் அக்ரோ வேர்ல்ட் (பிரைவேட்) லிமிடெட் நிறுவனத்திற்குள் உள்நாட்டில் பகிரப்படலாம். பணி கண்காணிப்பு, பணியாளர் மதிப்பீடுகள் மற்றும் நிறுவன அறிக்கையிடலை எளிதாக்க அங்கீகரிக்கப்பட்ட மேற்பார்வையாளர்கள் அல்லது நிர்வாகிகள் உங்கள் தகவல்களை அணுகலாம். சில சந்தர்ப்பங்களில், சட்டக் கடமைகள், ஒழுங்குமுறைத் தேவைகள் அல்லது அரசு அல்லது சட்ட அமலாக்க நிறுவனங்களின் சட்டப்பூர்வ கோரிக்கைகளுக்கு பதிலளிக்கும் விதமாக உங்கள் தகவலை வெளியிட வேண்டியிருக்கும்.",
+    "InformationSharingandDisclosure": "Sharing of Information",
+    "ServiceProvidersTxt": "We do not sell, rent, or trade your personal data to third parties. Your information may be shared internally within Polygon Holdings (Private) Limited to support operational monitoring, employee management, and service improvement efforts. Authorized supervisors or administrators may access your information to facilitate work tracking, employee evaluations, and organizational reporting. In certain cases, we may be required to disclose your information in response to legal obligations, regulatory requirements, or lawful requests from government or law enforcement agencies.",
 
-    "SecurityofYourInformation": "தரவு சேமிப்பு மற்றும் பாதுகாப்பு",
-    "SecurityofYourInformationTxt": "உங்கள் தகவல் அக்ரோ வேர்ல்ட் (பிரைவேட்) லிமிடெட் நிர்வகிக்கும் பாதுகாக்கப்பட்ட சேவையகங்களில் பாதுகாப்பாக சேமிக்கப்படுகிறது. உங்கள் தனிப்பட்ட மற்றும் பணி தொடர்பான தகவல்களை அங்கீகரிக்கப்படாத அணுகல், மாற்றம், வெளிப்படுத்தல் அல்லது அழிவிலிருந்து பாதுகாக்க வடிவமைக்கப்பட்ட நிர்வாக, தொழில்நுட்ப மற்றும் உடல் பாதுகாப்பு நடவடிக்கைகளை நாங்கள் செயல்படுத்துகிறோம். உங்கள் தரவை அணுகுவது, தங்கள் பணி கடமைகளைச் செய்ய அத்தகைய அணுகல் தேவைப்படும் அங்கீகரிக்கப்பட்ட பணியாளர்களுக்கு மட்டுமே. உங்கள் தகவலைப் பாதுகாக்க நாங்கள் தொழில்துறை-தர நடைமுறைகளைப் பயன்படுத்தினாலும், இணையம் அல்லது மின்னணு சேமிப்பக அமைப்பு வழியாக பரிமாற்றும் எந்த முறையும் முற்றிலும் பாதுகாப்பானது என்று உத்தரவாதம் அளிக்க முடியாது. எனவே, உங்கள் தனிப்பட்ட தகவலைப் பாதுகாக்க நாங்கள் முயற்சிக்கும் அதே வேளையில், அதன் முழுமையான பாதுகாப்பை நாங்கள் உத்தரவாதம் செய்ய முடியாது.",
+    "SecurityofYourInformation": "Data Storage and Security",
+    "SecurityofYourInformationTxt": "We do not sell, rent, or trade your personal data to third parties. Your information may be shared internally within Polygon Holdings (Private) Limited to support operational monitoring, employee management, and service improvement efforts. Authorized supervisors or administrators may access your information to facilitate work tracking, employee evaluations, and organizational reporting. In certain cases, we may be required to disclose your information in response to legal obligations, regulatory requirements, or lawful requests from government or law enforcement agencies.",
 
-    "YourPrivacyChoices": "உங்கள் உரிமைகள்",
-    "YourPrivacyChoicesTxt": "உங்கள் தனிப்பட்ட தரவு தொடர்பாக உங்களுக்கு சில உரிமைகள் உள்ளன. தேவைப்பட்டால் உங்கள் தகவலை அணுக, திருத்த அல்லது புதுப்பிக்க உரிமை இதில் அடங்கும். அக்ரோ வேர்ல்ட் (பிரைவேட்) லிமிடெட் உடனான உங்கள் சேவை காலம் முடிந்ததும், உள் நிறுவன நடைமுறைகள் மற்றும் பொருந்தக்கூடிய சட்டத் தேவைகளுக்கு இணங்க, உங்கள் சுயவிவரத்தை நீக்கவும் நீங்கள் கோரலாம். கூடுதலாக, உங்கள் தரவு எவ்வாறு செயலாக்கப்படுகிறது என்பது குறித்து விசாரிக்கவும், உங்கள் தனிப்பட்ட தகவல்களைக் கையாள்வது தொடர்பான கூடுதல் தகவல்களைப் பெறவும் உங்களுக்கு உரிமை உண்டு. இந்த உரிமைகளில் ஏதேனும் ஒன்றைப் பயன்படுத்த, இந்தக் கொள்கையின் இறுதியில் வழங்கப்பட்டுள்ள தொடர்பு விவரங்களைப் பயன்படுத்தி எங்களைத் தொடர்பு கொள்ளலாம்.",
+    "YourPrivacyChoices": "Your Rights",
+    "YourPrivacyChoicesTxt": "You have certain rights regarding your personal data. These include the right to access, correct, or update your information as necessary. You may also request the deletion of your profile once your service period with Polygon Holdings (Private) Limited ends, subject to compliance with internal company procedures and applicable legal requirements. Additionally, you have the right to inquire about how your data is processed and to seek further information regarding the handling of your personal information. To exercise any of these rights, you may contact us using the contact details provided at the end of this Policy.",
 
-    "ChildrensPrivacy": "குழந்தைகளின் தனியுரிமை",
-    "ChildrensPrivacyTxt": "கலெக்டர் செயலி, அக்ரோ வேர்ல்ட் (பிரைவேட்) லிமிடெட்டின் ஊழியர்கள் மற்றும் அங்கீகரிக்கப்பட்ட முகவர்களால் மட்டுமே பயன்படுத்தப்பட வேண்டும், மேலும் இது 18 வயதுக்குட்பட்ட நபர்களை நோக்கியதல்ல. நாங்கள் தெரிந்தே சிறார்களிடமிருந்து தனிப்பட்ட தகவல்களைச் சேகரிக்கவோ அல்லது கோரவோ மாட்டோம். 18 வயதுக்குட்பட்ட ஒருவரிடமிருந்து தனிப்பட்ட தரவை நாங்கள் தற்செயலாகச் சேகரித்துள்ளோம் என்பது எங்களுக்குத் தெரிந்தால், எங்கள் பதிவுகளிலிருந்து அத்தகைய தகவல்களை நீக்க உடனடியாக நடவடிக்கை எடுப்போம்.",
+    "ChildrensPrivacy": "Children’s Privacy",
+    "ChildrensPrivacyTxt": "The CoDi-Net App is intended solely for use by employees and authorized agents of Polygon Holdings (Private) Limited. and is not directed toward individuals under the age of 18. We do not knowingly collect or solicit personal information from minors. Should we become aware that we have inadvertently collected personal data from a person under the age of 18, we will promptly take steps to delete such information from our records.",
 
-    "UpdatestothisPrivacyPolicy": "இந்தத் தனியுரிமைக் கொள்கையில் மாற்றங்கள்",
-    "UpdatestothisPrivacyPolicyTxt": "எங்கள் செயல்பாட்டு நடைமுறைகள், தொழில்நுட்ப முன்னேற்றங்கள் அல்லது சட்டத் தேவைகளில் ஏற்படும் மாற்றங்களைப் பிரதிபலிக்கும் வகையில், இந்தத் தனியுரிமைக் கொள்கையை எந்த நேரத்திலும் மாற்றவோ அல்லது புதுப்பிக்கவோ எங்களுக்கு உரிமை உண்டு. இந்தக் கொள்கையின் மேலே குறிப்பிடப்பட்டுள்ள தேதியிலிருந்து எந்தவொரு புதுப்பிப்புகளும் நடைமுறைக்கு வரும். குறிப்பிடத்தக்க மாற்றங்கள் ஏற்பட்டால், பயன்பாட்டிற்குள் பொருத்தமான அறிவிப்பை வழங்குவோம். உங்கள் தகவலை நாங்கள் எவ்வாறு பாதுகாக்கிறோம் என்பது குறித்தும், உங்கள் தனிப்பட்ட தரவு தொடர்பான உங்கள் உரிமைகளைப் புரிந்துகொள்வது குறித்தும் தொடர்ந்து தெரிந்துகொள்ள இந்தக் கொள்கையை அவ்வப்போது மதிப்பாய்வு செய்யுமாறு நாங்கள் உங்களை ஊக்குவிக்கிறோம்.",
+    "UpdatestothisPrivacyPolicy": "Changes to This Privacy Policy",
+    "UpdatestothisPrivacyPolicyTxt": "We reserve the right to modify or update this Privacy Policy at any time to reflect changes in our operational practices, technological advancements, or legal requirements. Any updates will be effective as of the date indicated at the top of this Policy. In the event of material changes, we will provide appropriate notice within the App. We encourage you to periodically review this Policy to stay informed about how we are protecting your information and to understand your rights with respect to your personal data.",
 
-    "ContactUs":"எங்களைத் தொடர்பு கொள்ளவும்",
-    "ContactUsText": "இந்த தனியுரிமைக் கொள்கை தொடர்பாக ஏதேனும் கேள்விகள், கவலைகள் அல்லது கோரிக்கைகள் இருந்தால், அல்லது உங்கள் தனிப்பட்ட தரவு தொடர்பான உங்கள் உரிமைகளைப் பயன்படுத்த விரும்பினால், info@agroworld.lk என்ற முகவரியில் எங்களைத் தொடர்பு கொள்ளவும். மாற்றாக, நீங்கள் எங்களை எண். 46/42, நவம் மாவத்தை, கொழும்பு 02. இலங்கை என்ற முகவரிக்கு அஞ்சல் மூலம் தொடர்பு கொள்ளலாம்."
-    },
-    "DistridutionaDashboard":{
-     "LNG": "ta",
-    "Keep": "தொடர்ந்து செல்லுங்கள்!",
-     "Youhavenotachieved":"இன்று உங்கள் தினசரி இலக்கை நீங்கள் அடையவில்லை",
-     "Completed":"முடிந்தது!",
-     "Youhaveachieved":"இன்று உங்கள் தினசரி இலக்கை நீங்கள் அடைந்துவிட்டீர்கள்",
-    "Yourtarget": "உங்கள் இலக்கு",
-    "Progress": "முன்னேற்றம்",
-    "TargetOrders":"இலக்கு ஆர்டர்கள்",
-    "Search": "NIC மூலம் தேடு",
-    "Pending":"நிலுவையில் உள்ளது",
-     "Opened": "திறக்கப்பட்டது"
-   
+    "ContactUs":"Contact Us",
+    "ContactUsText": "If you have any questions, concerns, or requests regarding this Privacy Policy, or if you wish to exercise your rights related to your personal data, please contact us at info@polygon.lk . Alternatively, you may reach us by mail at No. 46/42, Nawam Mawatha, Colombo 02. Sri Lanka."
+  },
+  "DistridutionaDashboard":{
+     "LNG": "en",
+    "Keep": "Keep Going!",
+     "Youhavenotachieved":"You haven't achieved your daily target today",
+     "Completed":"Completed!",
+     "Youhaveachieved":"You have achieved your daily target today",
+    "Yourtarget": "Your Target",
+    "Progress": "Progress",
+    "TargetOrders":"Target Orders",
+    "Search": "Search By NIC",
+    "Pending":"Pending",
+     "Opened": "Opened"
   },
   "TargetOrderScreen" :{
-     "LNG": "ta",
-    "CenterTarget":"மைய இலக்கு",
-    "Todo":"செய்ய",
-    "Completed":"முடிந்தது",
-    "No":"இல்லை",
-    "Variety":"வகை",
-    "Grade":"தரம்",
-    "Target":"இலக்கு (கிலோ))",
-    "Todo()":"செய்ய வேண்டியவை (கிலோ)",
-    "My Daily Target":"எனது தினசரி இலக்கு",
-    "Invoice No":"விலைப்பட்டியல் எண்",
-    "Status":"நிலை",
-    "Date":"தேதி & நேரம்",
-    "Completed Time":"முடிக்கப்பட்ட நேரம்",
-    "Retry":"மீண்டும் முயற்சிக்கவும்"
+     "LNG": "en",
+    "CenterTarget":"Centre Target",
+    "Todo":"To do",
+    "Completed":"Completed",
+    "No":"No",
+    "Variety":"Variety",
+    "Grade":"Grade",
+    "Target":"Target (kg)",
+    "Todo()":"Todo (kg)",
+    "My Daily Target":"My Daily Target",
+    "Invoice No":"Invoice No",
+    "Status":"Status",
+    "Date":"Date & Time",
+    "Completed Time":"Completed Time",
+    "Retry":"Retry",
+      "Pending":"Pending",
+     "Opened": "Opened"
   },
   "OpenedOrderScreen":{
-    "INV No":"செய்ய வேண்டியவை எண் :",
-    "Pending":"நிலுவையில் உள்ளது",
-    "Additional Items":"கூடுதல் உருப்படிகள்",
-    "Submit":"சமர்ப்பி",
-    "Leave without Submitting": "சமர்ப்பிக்காமல் வெளியேறு",
-    "Stay on page":"பக்கத்தில் இரு",
-    "You have unsubmitted changes":"உங்களிடம் சமர்ப்பிக்கப்படாத மாற்றங்கள் உள்ளன!",
-    "If you leave this page now, your changes will be lost.":"நீங்கள் இப்போது இந்தப் பக்கத்தை விட்டு வெளியேறினால், உங்கள் மாற்றங்கள் இழக்கப்படும்.",
-    "Do you want to continue without saving?":"சேமிக்காமல் தொடர விரும்புகிறீர்களா?",
-    "Opened":"திறக்கப்பட்டது",
-    "Completed":"முடிந்தது"
+    "INV No":"INV No :",
+    "Pending":"Pending",
+    "Additional Items":"Additional Items",
+    "Submit":"Submit",
+    "Leave without Submitting": "Leave without Submitting",
+    "Stay on page":"Stay on page",
+    "You have unsubmitted changes":"You have unsubmitted changes!",
+    "If you leave this page now, your changes will be lost.":"If you leave this page now, your changes will be lost.",
+    "Do you want to continue without saving?":"Do you want to continue without saving?",
+    "Opened":"Opened",
+    "Completed":"Completed"
   },
   "PendingOrderScreen":{
-    "Custom Selected Items":"தனிப்பயன் தேர்ந்தெடுக்கப்பட்ட உருப்படிகள்",
-    "Back to Edit":"திருத்தத்திற்குத் திரும்பு",
-    "Mark as Completed":"முடிந்ததாகக் குறி",
-    "TapGoback":"திருத்த 'திருத்த' என்பதைத் தட்டவும்.",
-    "MarkingAs":"விரைவில் முடிந்ததாகக் குறியிடுதல்",
-    "FinishUp":"முடிந்தது!",
-    "Save":"சேமி",
-    "All checked":"அனைத்தும் சரிபார்க்கப்பட்டது. ஆர்டர் நகரும்",
-    "Completed":"முடிந்தது",
-    "onsave":"சேமித்ததில்.",
-    "Unchecked items":"தேர்வு செய்யப்படாத உருப்படிகள் அப்படியே இருக்கும். சேமிப்பது இப்போது ஆர்டரை வைத்திருக்கும்",
-    "Opened":"திறக்கப்பட்டது",
-    "Status":"நிலை",
-    "Leave without Submitting":"சமர்ப்பிக்காமல் வெளியேறு",
-    "OK":"சரி",
-    "TheOrder":"ஆர்டர் முடிந்ததாகக் குறிக்கப்பட்டுள்ளது.",
-    "Completed Successfully":"வெற்றிகரமாக முடிந்தது!",
-    "Go Back":"செல் திரும்பவும்",
-    "Send Replace Request":"மாற்று கோரிக்கையை அனுப்பு",
-    "No products available":"தயாரிப்பு எதுவும் கிடைக்கவில்லை",
-    "Rs":"ரூ",
-    "New Product Details":"புதிய தயாரிப்பு விவரங்கள்",
-    "Product Type":"தயாரிப்பு வகை:",
-    "Selected product":"தேர்ந்தெடுக்கப்பட்ட தயாரிப்பு:",
-    "Replace Product":"தயாரிப்பு மாற்றவும்",
-    "Marking as completed in":"முடிந்ததாகக் குறிப்பது",
-    "seconds":"வினாடிகள்"
-
+    "Custom Selected Items":"Custom Selected Items",
+    "Back to Edit":"Back to Edit",
+    "Mark as Completed":"Mark as Completed",
+    "TapGoback":"Tap 'Go Back' to edit.",
+    "MarkingAs":"Marking as completed soon.",
+    "FinishUp":"Finish up!",
+    "Save":"Save",
+    "All checked":"All checked. Order will move to",
+    "Completed":"Completed",
+    "onsave":"on save.",
+    "Unchecked items":"Unchecked items remain. Saving now keeps the order in",
+    "Opened":"Opened",
+    "Status":"Status.",
+    "Leave without Submitting":"Leave without Submitting",
+    "OK":"OK",
+    "TheOrder":"The order has been marked as completed.",
+    "Completed Successfully":"Completed Successfully!",
+    "Go Back":"Go Back",
+    "Send Replace Request":"Send Replace Request",
+    "No products available":"No products available",
+    "Rs":"Rs",
+    "New Product Details":"New Product Details",
+    "Product Type":"Product Type:",
+    "Selected product":"Selected product:",
+    "Replace Product":"Replace Product",
+    "Marking as completed in":"Marking as completed in",
+    "seconds":"seconds.",
+    "You have unsubmitted changes":"You have unsubmitted changes!"
   },
   "Status": {
-    "Pending": "நிலுவையில் உள்ளது",
-    "Opened": "திறக்கப்பட்டது",
-    "Completed": "முடிக்கப்பட்டது",
-    "InProgress": "செயல்பாட்டில் உள்ளது"
+    "Pending": "Pending",
+    "Opened": "Opened",
+    "Completed": "Completed",
+    "InProgress": "In Progress"
   },
   "TimerContainer":{
-    "Start":"தொடங்கு",
-    "Pause":"இடைநிறுத்தம்",
-    "Reset":"மீட்டமை"
+    "Start":"Start",
+    "Pause":"Pause",
+    "Reset":"Reset"
   },
   "DailyTargetListOfficerDistribution":{
-    "Are you sure":"இந்த இலக்கை வேறு எந்த அதிகாரிக்கும் அனுப்ப விரும்புகிறீர்களா?",
-    "Cancel":"ரத்துசெய்",
-    "Pass":"தேர்வு",
-    "Completed Time":"முடிக்கப்பட்ட நேரம்",
-    "Retry":"மீண்டும் முயற்சிக்கவும்"
+    "Are you sure":"Are you sure you want to pass this target to some other officer?",
+    "Cancel":"Cancel",
+    "Pass":"Pass",
+    "Completed Time":"Completed Time",
+    "Retry":"Retry"
   },
   "DistributionOfficersList":{
-    "EMPID":"EMP ஐடி :"
+    "EMPID":"EMP ID :"
   },
   "PassTarget":{
-    "EMP ID":"EMP ஐடி",
-    "Select Assignee":"ஒதுக்கீட்டாளரைத் தேர்ந்தெடுக்கவும்",
-    "Loading officers":"ஏற்றுகிறது அதிகாரிகள்..",
-    "Selected Targets":"தேர்ந்தெடுக்கப்பட்ட இலக்குகள்",
-    "Save":"சேமி",
-    "Dismiss":"நிராகரி"
+    "EMP ID":"EMP ID",
+    "Select Assignee":"Select Assignee",
+    "Loading officers":"Loading officers..",
+    "Selected Targets":"Selected Targets",
+    "Save":"Save",
+    "Dismiss":"Dismiss",
+    "Short Stock Assignee":"Short Stock Assignee"
   },
   "ReplaceRequestsApprove":{
-    "Loading replace request":"மாற்று கோரிக்கையை ஏற்றுகிறது...",
-    "Order ID":"ஆர்டர் ஐடி:",
-    "Defined product":"வரையறுக்கப்பட்ட தயாரிப்பு",
-    "Relevant Product Type":"தொடர்புடைய தயாரிப்பு வகை:",
-    "Replacing Product Details":"தயாரிப்பு விவரங்களை மாற்றுதல்",
-    "ID":"ஐடி:",
-    "No products available":"தயாரிப்புகள் எதுவும் கிடைக்கவில்லை",
-    "Approve":"அங்கீகரி",
-    "Rs":"ரூ."
+    "Loading replace request":"Loading replace request...",
+    "Order ID":"Order ID:",
+    "Defined product":"Defined product",
+    "Relevant Product Type":"Relevant Product Type:",
+    "Replacing Product Details":"Replacing Product Details",
+    "ID":"ID:",
+    "No products available":"No products available",
+    "Approve":"Approve",
+    "Rs":"Rs."
   },
   "ReplaceRequestsScreen":{
-    "Order ID":"ஆர்டர் ஐடி:",
-    "Replacing Item":"உருப்படியை மாற்றுதல்:"
+    "Order ID":"Order ID:",
+    "Replacing Item":"Replacing Item:",
+    "Requested Time":"Requested Time",
+    "Replace Requests":"Replace Requests",
+    "All":"All",
+    "No replace requests found":"No replace requests found"
+  },
+  "CenterTargetScreen":{
+    "Success":"Success!",
+    "order":"order",
+    "been sent out":"been sent out",
+    "for delivery":"for delivery",
+    "Centre Target":"Centre Target",
+    "Select Date":"Select Date (ToDo)",
+    "All Datese":"All Dates",
+    "Close":"Close",
+    "Select Completion Date":"Select Completion Date",
+    "All Completion Dates":"All Completion Dates",
+    "Are you sure you want to send these selected":"Are you sure you want to send these selected",
+    "orders out for delivery":"orders out for delivery?",
+    "Processing orders":"Processing orders...",
+    "Cancel":"Cancel",
+    "Out Time":"Out Time",
+    "Outing Status":"Outing Status",
+     "Today":"Today",
+     "Tomorrow":"Tomorrow",
+     "All":"All",
+     "Out":"Out",
+     "Completed":"Completed",
+     "Scheduled":"Scheduled",
+     "On Time":"On Time",
+     "Late":"Late",
+     "No out for delivery orders":"No out for delivery orders",
+     "Limit Reached":"Limit Reached",
+     "You can only select up to 5 orders at a time for delivery":"You can only select up to 5 orders at a time for delivery",
+     "OK":"OK"
   }
-
-
-
 }
+
+
