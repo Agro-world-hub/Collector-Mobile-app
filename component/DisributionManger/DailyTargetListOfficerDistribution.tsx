@@ -280,7 +280,7 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
   // Show confirmation modal when pass button is clicked
   const handlePassButtonPress = () => {
     if (selectedItems.size === 0) {
-      Alert.alert("No Selection", "Please select at least one pending item.");
+      Alert.alert(t("Error.No Selection"), t("Error.Please select at least one pending item"));
       return;
     }
     setShowConfirmModal(true);

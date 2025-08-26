@@ -170,7 +170,37 @@
 "Invalid email address. Please enter a valid email format (e.g. example@domain.com).": "අවලංගු විද්‍යුත් තැපැල් ලිපිනයකි. කරුණාකර වලංගු විද්‍යුත් තැපැල් ආකෘතියක් ඇතුළත් කරන්න (උදා: example@domain.com).",
 "Cannot add negative values for load.": "භාරය සඳහා සෘණ අගයන් එකතු කළ නොහැක (kg).",
 "Phone numbers cannot be the same.": "දුරකථන අංක දෙකම එකම විය නොහැක.",
-"InvalidPhoneNumber":"දුරකථන අංකය වලංගු නොවේ"
+"InvalidPhoneNumber":"දුරකථන අංකය වලංගු නොවේ",
+"No Selection":"තේරීමක් නැත",
+"Please select at least one pending item":"කරුණාකර අවම වශයෙන් එක් පොරොත්තු අයිතමයක් හෝ තෝරන්න.",
+"Replace request approved successfully":"ප්‍රතිස්ථාපන ඉල්ලීම සාර්ථකව අනුමත කරන ලදී",
+"Please select a product and enter quantity":"කරුණාකර නිෂ්පාදනයක් තෝරා ප්‍රමාණය ඇතුළත් කරන්න.",
+"Session expired":"සැසිය කල් ඉකුත් විය. කරුණාකර නැවත පුරනය වන්න.",
+"Failed to complete order":"ඇණවුම සම්පූර්ණ කිරීමට අසමත් විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+"Info":"තොරතුරු",
+"Cannot replace products in completed orders":"සම්පූර්ණ කරන ලද ඇණවුම්වල නිෂ්පාදන ප්‍රතිස්ථාපනය කළ නොහැක",
+"Product price information is not available":"නිෂ්පාදන මිල තොරතුරු නොමැත. කරුණාකර නැවත උත්සාහ කරන්න.",
+"Invalid product data":"අවලංගු නිෂ්පාදන දත්ත. කරුණාකර නැවුම් කර නැවත උත්සාහ කරන්න.",
+"Please fill all required fields":"කරුණාකර අවශ්‍ය සියලුම ක්ෂේත්‍ර පුරවන්න",
+"Package ID not found":"පැකේජ හැඳුනුම්පත හමු නොවීය",
+"No item selected for replacement":"ප්‍රතිස්ථාපනය සඳහා කිසිදු අයිතමයක් තෝරාගෙන නොමැත",
+"Replacement request submitted successfully":"ප්‍රතිස්ථාපන ඉල්ලීම සාර්ථකව ඉදිරිපත් කරන ලදී!",
+"Authentication Error":"සත්‍යාපන දෝෂය",
+"Your session has expired":"ඔබේ සැසිය කල් ඉකුත් වී ඇත. කරුණාකර නැවත පුරනය වන්න.",
+"Invalid Request":"අවලංගු ඉල්ලීම",
+"Please check your input data and try again":"කරුණාකර ඔබේ ආදාන දත්ත පරීක්ෂා කර නැවත උත්සාහ කරන්න.",
+"Failed to submit replacement request":"ප්‍රතිස්ථාපන ඉල්ලීම ඉදිරිපත් කිරීමට අපොහොසත් විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+"Order updated successfully":"ඇණවුම සාර්ථකව යාවත්කාලීන කරන ලදී!",
+"Locked Package":"අගුළු දැමූ පැකේජය",
+"This package is locked and cannot be accessed":"මෙම පැකේජය අගුළු දමා ඇති අතර ප්‍රවේශ විය නොහැක",
+"Invalid phone number":"අවලංගු දුරකථන අංකය. ආකෘතිය 7 න් ආරම්භ විය යුතුය (උදා: 7XXXXXXXX).",
+"Phone number must be 9 digits long":"දුරකථන අංකය ඉලක්කම් 9ක් දිග විය යුතුය.",
+"Invalid Gmail address":"අවලංගු Gmail ලිපිනය. Gmail ලිපිනවල අනුප්‍රාප්තික තිත් (.), ප්‍රමුඛ/අනුප්‍රාප්තික තිත් හෝ + සහ හැර විශේෂ අක්ෂර තිබිය නොහැක.",
+"Invalid email address Example":"අවලංගු විද්‍යුත් තැපැල් ලිපිනය. කරුණාකර වලංගු විද්‍යුත් තැපැල් ආකෘතියක් ඇතුළත් කරන්න (උදා: example@domain.com)."
+ 
+
+
+
   },
 "EngProfile":{
     "LNG": "si",
@@ -978,7 +1008,7 @@
     "for delivery":"බෙදා හැරීම සඳහා",
     "Centre Target":"මධ්‍යස්ථාන ඉලක්කය",
     "Select Date":"දිනය තෝරන්න (කළ යුතු දේ)",
-    "All Dates":"සියලු දිනයන්",
+    "All Datese":"සියලු දිනයන්",
     "Close":"වසන්න",
     "Select Completion Date":"සම්පූර්ණ කිරීමේ දිනය තෝරන්න",
     "All Completion Dates":"සියලු සම්පූර්ණ කිරීමේ දිනයන්",
@@ -996,7 +1026,11 @@
      "Scheduled":"උපලේඛනගත",
     "On Time":"නියමිත වේලාවට",
      "Late":"ප්‍රමාදයි",
-     "No out for delivery orders":"බෙදාහැරීමේ ඇණවුම් සඳහා පිටවීමක් නැත"
+     "No out for delivery orders":"බෙදාහැරීමේ ඇණවුම් සඳහා පිටවීමක් නැත",
+      "Limit Reached":"සීමාව ළඟා විය",
+     "You can only select up to 5 orders at a time for delivery":"බෙදාහැරීම සඳහා ඔබට වරකට ඇණවුම් 5ක් දක්වා පමණක් තෝරා ගත හැකිය",
+     "OK":"හරි"
+ 
   }
 
 }

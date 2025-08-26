@@ -21,6 +21,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import NetInfo from "@react-native-community/netinfo";
+import i18n from "@/i18n/i18n";
 
 type ReplaceRequestsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -249,7 +250,7 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
 
   const handleApprove = async () => {
     if (!replaceData.newProduct || !replaceData.quantity) {
-      Alert.alert('Error', 'Please select a product and enter quantity');
+      Alert.alert(t("Error.Error"), t("Error.Please select a product and enter quantity"));
       return;
     }
 
@@ -293,15 +294,17 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
       console.log("Approval response:", response.data);
 
       if (response.data.success) {
-        Alert.alert('Success', 'Replace request approved successfully', [
+        Alert.alert(t("Error.Success"), t("Error.Replace request approved successfully"), [
           { text: 'OK', onPress: () => navigation.goBack() }
         ]);
       } else {
-        Alert.alert('Error', response.data.message || 'Failed to approve replace request');
+        //Alert.alert('Error', response.data.message || 'Failed to approve replace request');
+         Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") );
       }
     } catch (error) {
       console.error('Error approving replace request:', error);
-      Alert.alert('Error', 'Failed to approve replace request');
+     // Alert.alert('Error', 'Failed to approve replace request');
+     Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") );
     } finally {
       setSubmitting(false);
     }
@@ -326,7 +329,15 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
           <AntDesign name="left" size={24} color="#333" />
         </TouchableOpacity>
         <View className="flex-1 justify-center items-center">
-          <Text className="text-gray-800 text-lg font-medium">{t("ReplaceRequestsApprove.Order ID")} {replaceData.invNo}</Text>
+          <Text 
+                                      style={[
+  i18n.language === "si"
+    ? { fontSize: 14 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+          className="text-gray-800 text-lg font-medium">{t("ReplaceRequestsApprove.Order ID")} {replaceData.invNo}</Text>
         </View>
       </View>
 
@@ -367,13 +378,13 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
           </View>
         )} */}
 
-        {/* Replacing Product Details */}
+
         <View className="px-2 mt-2">
           <Text className="text-center text-black mb-4 font-medium">
             -- {t("ReplaceRequestsApprove.Replacing Product Details")}--
           </Text>
 
-          {/* Product Selection Dropdown */}
+
           <View className="mb-4">
             <TouchableOpacity
               className="border border-gray-300 rounded-full p-4 flex-row justify-between items-center bg-white"
@@ -417,7 +428,7 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
             )}
           </View>
 
-          {/* Quantity Input */}
+  
           <View className="mb-4">
             <TextInput
               className="border border-gray-300 rounded-full p-4 bg-white"
@@ -428,7 +439,6 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
             />
           </View>
 
-          {/* Price Display */}
           <View className="mb-8">
             <View className="border border-gray-300 rounded-full p-4 bg-gray-50">
               <Text className="text-black">

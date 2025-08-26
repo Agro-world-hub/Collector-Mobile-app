@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { Animated } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import NetInfo from "@react-native-community/netinfo";
+import i18n from "@/i18n/i18n";
 
 type TargetOrderScreenNavigationProps = StackNavigationProp<RootStackParamList, 'TargetOrderScreen'>;
 
@@ -402,9 +403,9 @@ const fetchTargets = useCallback(async () => {
     // Check if package is locked
     if (item.packageIsLock === 1 && jobRole ==="Distribution Officer") {
       Alert.alert(
-        t("Locked Package") || "Locked Package",
-        t("This package is locked and cannot be accessed") || "This package is locked and cannot be accessed.",
-        [{ text: t("OK") || "OK" }]
+       ("Error.Locked Package"),
+        ("Error.This package is locked and cannot be accessed"),
+        [{ text: t("Error.Ok")  }]
       );
       return;
     }
@@ -670,17 +671,57 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
       >
         {/* Table Header */}
         <View className="flex-row bg-[#980775] py-3">
-          <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
-          <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
+          <Text 
+             style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+          className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
+          <Text 
+             style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+          className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
           
           {selectedToggle === 'ToDo' ? (
             <>
-              <Text className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Date")}</Text>
+              <Text 
+                 style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+              className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Date")}</Text>
           
-              <Text className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Status")}</Text>
+              <Text 
+                 style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+              className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Status")}</Text>
             </>
           ) : (
-            <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Completed Time")}</Text>
+            <Text 
+               style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+            className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Completed Time")}</Text>
           )}
         </View>
 
@@ -765,7 +806,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
     <Text 
       style={{
         color: getStatusTextColor(item.selectedStatus),
-        fontSize: 12,
+        fontSize: 11,
         fontWeight: '500',
         textAlign: 'center'
       }}
