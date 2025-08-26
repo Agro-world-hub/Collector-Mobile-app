@@ -1,7 +1,7 @@
 {
   "SignIn": {
     "LNG": "en",
-    "Wellcome": "Welcome !",
+    "Wellcome": "Welcome!",
     "SigntoLogin": "Please Sign in to login",
     "Employee":"Employee ID",
     "Password": "Password",
@@ -392,7 +392,7 @@
   "ChangePassword":{
     "LNG": "en",
     "ChoosePassword":"Change Password",
-    "Changepassword":" Change the password and keep it secured",
+    "Changepassword":"Change the password and keep it secured",
     "CurrentPassword":"Current Password",
     "NewPassword":"New Password",
     "ConfirmNewPassword":"Confirm New Password",
@@ -575,7 +575,6 @@
     "Save":"Save",
    "maximum amount receive":"The maximum amount you can receive:",
    "Select an officer":"--Select an officer--"
-
   },
   "ReportGenerator":{
     "LNG": "ta",
@@ -881,7 +880,6 @@
     "Search": "Search By NIC",
     "Pending":"Pending",
      "Opened": "Opened"
-   
   },
   "TargetOrderScreen" :{
      "LNG": "en",
@@ -898,7 +896,9 @@
     "Status":"Status",
     "Date":"Date & Time",
     "Completed Time":"Completed Time",
-    "Retry":"Retry"
+    "Retry":"Retry",
+      "Pending":"Pending",
+     "Opened": "Opened"
   },
   "OpenedOrderScreen":{
     "INV No":"INV No :",
@@ -940,8 +940,8 @@
     "Selected product":"Selected product:",
     "Replace Product":"Replace Product",
     "Marking as completed in":"Marking as completed in",
-    "seconds":"seconds."
-
+    "seconds":"seconds.",
+    "You have unsubmitted changes":"You have unsubmitted changes!"
   },
   "Status": {
     "Pending": "Pending",
@@ -960,7 +960,6 @@
     "Pass":"Pass",
     "Completed Time":"Completed Time",
     "Retry":"Retry"
-   
   },
   "DistributionOfficersList":{
     "EMPID":"EMP ID :"
@@ -1023,10 +1022,6 @@
      "You can only select up to 5 orders at a time for delivery":"You can only select up to 5 orders at a time for delivery",
      "OK":"OK"
   }
-
-
-
-
 }
 
 
