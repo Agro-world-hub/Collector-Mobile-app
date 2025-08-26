@@ -1,16 +1,16 @@
 {
   "SignIn": {
-    "LNG": "en",
-    "Wellcome": "Welcome!",
-    "SigntoLogin": "Please Sign in to login",
-    "Employee":"Employee ID",
-    "Password": "Password",
-    "Sign":"Sign In"
+    "LNG": "ta",
+    "Wellcome": "வரவேற்கிறோம்!",
+    "SigntoLogin": "கணக்கை அணுக உள்நுழையவும்.",
+    "Employee":"பணியாளர் அடையாள எண்",
+    "Password": "கடவுச்சொல்",
+    "Sign":"உள்நுழை"
   },
   "DashBoard":{
-    "LNG": "en",
-    "Keep": "Keep Going!",
-     "Youhavenotachieved":"You haven't achieved your daily target today",
+    "LNG": "ta",
+    "Keep": "தொடருங்கள்!",
+     "Youhavenotachieved":"இன்றைய உங்கள் இலக்கை நீங்கள் அடையவில்லை.",
      "Completed":"Completed!",
      "Youhaveachieved":"You have achieved your daily target today",
     "Yourtarget": "Your Target",

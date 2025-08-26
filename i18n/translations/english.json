@@ -5,12 +5,12 @@
     "SigntoLogin": "Please Sign in to login",
     "Employee":"Employee ID",
     "Password": "Password",
-    "Sign":"Sign In"
+    "Sign":"Sign in"
   },
   "DashBoard":{
     "LNG": "en",
     "Keep": "Keep Going!",
-     "Youhavenotachieved":"You haven't achieved your daily target today",
+     "Youhavenotachieved":"You haven’t achieved your daily target today",
      "Completed":"Completed!",
      "Youhaveachieved":"You have achieved your daily target today",
     "Yourtarget": "Your Target",
