@@ -947,7 +947,8 @@
     "Replace Product":"නිෂ්පාදනය ප්‍රතිස්ථාපනය කරන්න",
       "Marking as completed in":"සම්පූර්ණ ලෙස සලකුණු කිරීම",
     "seconds":"තත්පර.",
-     "You have unsubmitted changes":"ඔබට ඉදිරිපත් නොකළ වෙනස්කම් තිබේ!"
+     "You have unsubmitted changes":"ඔබට ඉදිරිපත් නොකළ වෙනස්කම් තිබේ!",
+      "Update":"යාවත්කාලීන කරන්න"
 
   },
    "Status": {

@@ -123,7 +123,7 @@
     "Officer created successfully":"Officer created successfully!",
     "Phone numbers updated successfully":"Phone numbers updated successfully",
     "Submitted":"Submitted",
-    "Your complaint has Submit successfuly":"Your complaint has Submit successfuly!",
+    "Your complaint has Submit successfuly":"Your complaint has been submitted successfully!",
     "No Prices Available":"No Prices Available",
     "No prices are available for the selected variety.":"No prices are available for the selected variety.",
     "Prices for the selected variety were not found.":"Prices for the selected variety were not found.",
@@ -940,7 +940,8 @@
     "Selected product":"Selected product:",
     "Replace Product":"Replace Product",
     "Marking as completed in":"Marking as completed in",
-    "seconds":"seconds."
+    "seconds":"seconds.",
+    "Update":"Update"
 
   },
   "Status": {
