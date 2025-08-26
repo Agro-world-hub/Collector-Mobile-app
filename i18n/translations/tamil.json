@@ -941,7 +941,8 @@
     "Replace Product":"Replace Product",
     "Marking as completed in":"Marking as completed in",
     "seconds":"seconds.",
-    "You have unsubmitted changes":"You have unsubmitted changes!"
+    "You have unsubmitted changes":"You have unsubmitted changes!",
+    "Update":"Update"
   },
   "Status": {
     "Pending": "Pending",
@@ -1023,5 +1024,4 @@
      "OK":"OK"
   }
 }
-
 
