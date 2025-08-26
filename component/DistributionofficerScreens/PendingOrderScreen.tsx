@@ -204,6 +204,7 @@ const [orderStatus, setOrderStatus] = useState<'Pending' | 'Opened' | 'Completed
 );
 
 const [selectpackage, setSelectpackage] = useState(false);
+const [isReplacementPriceHigher, setIsReplacementPriceHigher] = useState(false);
 const [selectopen, setSelectopen,] = useState(false);
 const [packageName, setPackageName] = useState<string>('Family Pack');
 const [packageId, setPackageId] = useState<number | null>(null);  
@@ -878,84 +879,115 @@ const getPackageGroups = () => {
 };
 
 
-const handleReplaceProduct = (item: FamilyPackItem) => {
-   if (orderStatus === 'Completed') {
-    Alert.alert( t("Error.Info"),  t("Error.Cannot replace products in completed orders"));
-    return;
-  }
+// const handleReplaceProduct = (item: FamilyPackItem) => {
+//    if (orderStatus === 'Completed') {
+//     Alert.alert( t("Error.Info"),  t("Error.Cannot replace products in completed orders"));
+//     return;
+//   }
   
-  // Rest of your existing handleReplaceProduct code...
-  if (!item) {
-    console.log("No item provided to handleReplaceProduct");
-    return;
-  }
+//   // Rest of your existing handleReplaceProduct code...
+//   if (!item) {
+//     console.log("No item provided to handleReplaceProduct");
+//     return;
+//   }
 
-  // Add a small delay to ensure data is fully loaded
-  setTimeout(() => {
-    console.log("Original item data:", {
-      name: item.name,
-      price: item.price,
-      weight: item.weight,
-      productType: item.productType,
-      id: item.id
-    });
+//   // Add a small delay to ensure data is fully loaded
+//   setTimeout(() => {
+//     console.log("Original item data:", {
+//       name: item.name,
+//       price: item.price,
+//       weight: item.weight,
+//       productType: item.productType,
+//       id: item.id
+//     });
 
-    // Validate required data before proceeding
-    if (!item.price || item.price === undefined) {
-      console.log("Price is undefined, attempting to fetch latest data");
-      Alert.alert(
-        t("Error.Error"),
-        t("Error.Product price information is not available"),
-        [{ text: t("Error.Ok") }]
-      );
-      return;
-    }
+//     // Validate required data before proceeding
+//     if (!item.price || item.price === undefined) {
+//       console.log("Price is undefined, attempting to fetch latest data");
+//       Alert.alert(
+//         t("Error.Error"),
+//         t("Error.Product price information is not available"),
+//         [{ text: t("Error.Ok") }]
+//       );
+//       return;
+//     }
 
-    if (!item.productType || item.productType === undefined) {
-      console.log("ProductType is undefined, using default");
-      // You might want to set a default or fetch the latest data
-    }
+//     if (!item.productType || item.productType === undefined) {
+//       console.log("ProductType is undefined, using default");
+//       // You might want to set a default or fetch the latest data
+//     }
 
-    const weightKg = parseFloat(item.weight) || 0;
-    const itemPrice = parseFloat(item.price) || 0;
+//     const weightKg = parseFloat(item.weight) || 0;
+//     const itemPrice = parseFloat(item.price) || 0;
     
    
+//     const totalPrice = itemPrice.toFixed();
+    
+//     // If you need unit price per kg, calculate it from total price
+//     const unitPricePerKg = weightKg > 0 ? (itemPrice / weightKg) : '0.00';
+
+//     console.log("Price calculation:", {
+//       itemPrice,
+//       weightKg,
+//       totalPrice,
+//       unitPricePerKg,
+//       originalPrice: item.price,
+//       productType: item.productType
+//     });
+
+//     // Only proceed if we have valid data
+//     if (itemPrice > 0 && weightKg > 0) {
+//       setReplaceData({
+//         selectedProduct: `${item.name} - ${item.weight}Kg - Rs.${totalPrice}`,
+//         selectedProductPrice: totalPrice,
+//         productType: item.productType || 0, 
+//         newProduct: '',
+//         quantity: '',
+//         price: `Rs.${totalPrice}`, 
+//         productTypeName: item.productTypeName || ''
+//       });
+
+//       setSelectedItemForReplace(item);
+//       setShowReplaceModal(true);
+//     } else {
+//       Alert.alert(
+//         t("Error.Error"),
+//         t("Error.Invalid product data"),
+//         [{ text: t("Error.Ok") }]
+//       );
+//     }
+//   }, 100); // Small delay to ensure state is updated
+// };
+
+const handleReplaceProduct = (item: FamilyPackItem) => {
+  if (orderStatus === 'Completed') {
+    Alert.alert(t("Error.Info"), t("Error.Cannot replace products in completed orders"));
+    return;
+  }
+
+  setTimeout(() => {
+    const weightKg = parseFloat(item.weight) || 0;
+    const itemPrice = parseFloat(item.price) || 0;
     const totalPrice = itemPrice.toFixed();
     
-    // If you need unit price per kg, calculate it from total price
-    const unitPricePerKg = weightKg > 0 ? (itemPrice / weightKg) : '0.00';
+    // Extract numeric price for comparison
+    const numericPrice = itemPrice;
 
-    console.log("Price calculation:", {
-      itemPrice,
-      weightKg,
-      totalPrice,
-      unitPricePerKg,
-      originalPrice: item.price,
-      productType: item.productType
+    setReplaceData({
+      selectedProduct: `${item.name} - ${item.weight}Kg - Rs.${totalPrice}`,
+      selectedProductPrice: numericPrice.toString(), // Store as string for comparison
+      productType: item.productType || 0,
+      newProduct: '',
+      quantity: '',
+      price: `Rs.${totalPrice}`,
+      productTypeName: item.productTypeName || ''
     });
 
-    // Only proceed if we have valid data
-    if (itemPrice > 0 && weightKg > 0) {
-      setReplaceData({
-        selectedProduct: `${item.name} - ${item.weight}Kg - Rs.${totalPrice}`,
-        selectedProductPrice: totalPrice,
-        productType: item.productType || 0, 
-        newProduct: '',
-        quantity: '',
-        price: `Rs.${totalPrice}`, 
-        productTypeName: item.productTypeName || ''
-      });
-
-      setSelectedItemForReplace(item);
-      setShowReplaceModal(true);
-    } else {
-      Alert.alert(
-        t("Error.Error"),
-        t("Error.Invalid product data"),
-        [{ text: t("Error.Ok") }]
-      );
-    }
-  }, 100); // Small delay to ensure state is updated
+    // Reset price comparison state
+    setIsReplacementPriceHigher(false);
+    setSelectedItemForReplace(item);
+    setShowReplaceModal(true);
+  }, 100);
 };
 
 const handleReplaceSubmit = async () => {
@@ -1370,28 +1402,63 @@ const renderReplaceModal = () => {
                          replaceData.quantity && 
                          replaceData.price;
 
+  // const handleProductSelect = (product: RetailItem) => {
+  //   setReplaceData(prev => ({
+  //     ...prev,
+  //     newProduct: product.displayName,
+  //     price: `Rs.${(product.discountedPrice || product.normalPrice || 0).toFixed(2)}`
+  //   }));
+  //   setShowDropdown(false);
+  // };
+
   const handleProductSelect = (product: RetailItem) => {
+  const selectedProductPrice = parseFloat(replaceData.selectedProductPrice) || 0;
+  const newProductPrice = product.discountedPrice || product.normalPrice || 0;
+  
+  setReplaceData(prev => ({
+    ...prev,
+    newProduct: product.displayName,
+    price: `Rs.${newProductPrice.toFixed(2)}`
+  }));
+  
+  // Check if replacement price is higher
+  setIsReplacementPriceHigher(newProductPrice > selectedProductPrice);
+  setShowDropdown(false);
+};
+
+const handleQuantityChange = (text: string) => {
+  if (/^\d*\.?\d*$/.test(text)) {
+    const selectedProduct = retailItems.find(item => 
+      item.displayName === replaceData.newProduct
+    );
+    const price = selectedProduct ? (selectedProduct.discountedPrice || selectedProduct.normalPrice || 0) : 0;
+    const totalPrice = text ? (parseFloat(text) * price) : price;
+    const selectedProductPrice = parseFloat(replaceData.selectedProductPrice) || 0;
+    
     setReplaceData(prev => ({
       ...prev,
-      newProduct: product.displayName,
-      price: `Rs.${(product.discountedPrice || product.normalPrice || 0).toFixed(2)}`
+      quantity: text,
+      price: text ? `Rs.${totalPrice.toFixed(2)}` : `Rs.${price.toFixed(2)}`
     }));
-    setShowDropdown(false);
-  };
+    
+    // Check if replacement price is higher
+    setIsReplacementPriceHigher(totalPrice > selectedProductPrice);
+  }
+};
 
-  const handleQuantityChange = (text: string) => {
-    if (/^\d*\.?\d*$/.test(text)) {
-      const selectedProduct = retailItems.find(item => 
-        item.displayName === replaceData.newProduct
-      );
-      const price = selectedProduct ? (selectedProduct.discountedPrice || selectedProduct.normalPrice || 0) : 0;
-      setReplaceData(prev => ({
-        ...prev,
-        quantity: text,
-        price: text ? `Rs.${(parseFloat(text) * price).toFixed(2)}` : `Rs.${price.toFixed(2)}`
-      }));
-    }
-  };
+  // const handleQuantityChange = (text: string) => {
+  //   if (/^\d*\.?\d*$/.test(text)) {
+  //     const selectedProduct = retailItems.find(item => 
+  //       item.displayName === replaceData.newProduct
+  //     );
+  //     const price = selectedProduct ? (selectedProduct.discountedPrice || selectedProduct.normalPrice || 0) : 0;
+  //     setReplaceData(prev => ({
+  //       ...prev,
+  //       quantity: text,
+  //       price: text ? `Rs.${(parseFloat(text) * price).toFixed(2)}` : `Rs.${price.toFixed(2)}`
+  //     }));
+  //   }
+  // };
 
   // Get product type name for display
   const getProductTypeName = (productType: string) => {
@@ -1503,14 +1570,18 @@ const renderReplaceModal = () => {
 
             {/* Action Buttons */}
             <View className="space-y-3">
-             <TouchableOpacity
-  className={`py-3 rounded-full px-3 ${isFormComplete ? 'bg-[#FA0000]' : 'bg-[#FA0000]/50'}`}
-  onPress={isFormComplete ? handleReplaceSubmit : undefined}
-  disabled={!isFormComplete}
+          <TouchableOpacity
+  className={`py-3 rounded-full px-3 ${
+    isFormComplete && !isReplacementPriceHigher 
+      ? 'bg-[#FA0000]' 
+      : 'bg-[#FA0000]/50'
+  }`}
+  onPress={isFormComplete && !isReplacementPriceHigher ? handleReplaceSubmit : undefined}
+  disabled={!isFormComplete || isReplacementPriceHigher}
 >
   <Text className="text-white text-center font-medium">
     {jobRole === "Distribution Center Manager" 
-      ? "Update" 
+      ? t("PendingOrderScreen.Update")
       : t("PendingOrderScreen.Send Replace Request")}
   </Text>
 </TouchableOpacity>
@@ -1528,7 +1599,28 @@ const renderReplaceModal = () => {
   );
 };
 
-  const getDynamicStatus = (): 'Pending' | 'Opened' | 'Completed' => {
+//   const getDynamicStatus = (): 'Pending' | 'Opened' | 'Completed' => {
+//   const hasFamily = familyPackItems.length > 0;
+//   const hasAdditional = additionalItems.length > 0;
+  
+//   let allSelected = false;
+//   let someSelected = false;
+  
+//   if (hasFamily && hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+//     someSelected = hasFamilyPackSelections() || hasAdditionalItemSelections();
+//   } else if (hasFamily && !hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected();
+//     someSelected = hasFamilyPackSelections();
+//   } else if (!hasFamily && hasAdditional) {
+//     allSelected = areAllAdditionalItemsSelected();
+//     someSelected = hasAdditionalItemSelections();
+//   }
+  
+//   return allSelected ? 'Completed' : someSelected ? 'Opened' : 'Pending';
+// };
+
+const getDynamicStatus = (): 'Pending' | 'Opened' | 'Completed' => {
   const hasFamily = familyPackItems.length > 0;
   const hasAdditional = additionalItems.length > 0;
   
@@ -1536,8 +1628,23 @@ const renderReplaceModal = () => {
   let someSelected = false;
   
   if (hasFamily && hasAdditional) {
-    allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
-    someSelected = hasFamilyPackSelections() || hasAdditionalItemSelections();
+    const familyAllSelected = areAllFamilyPackItemsSelected();
+    const familyHasSelections = hasFamilyPackSelections();
+    const additionalAllSelected = areAllAdditionalItemsSelected();
+    const additionalHasSelections = hasAdditionalItemSelections();
+    
+    allSelected = familyAllSelected && additionalAllSelected;
+    
+    // Check if one is completed and other is pending (no selections)
+    const oneCompletedOnePending = 
+      (familyAllSelected && !additionalHasSelections) || 
+      (additionalAllSelected && !familyHasSelections);
+    
+    if (oneCompletedOnePending) {
+      return 'Pending'; // Return Pending when one is completed and other has no selections
+    }
+    
+    someSelected = familyHasSelections || additionalHasSelections;
   } else if (hasFamily && !hasAdditional) {
     allSelected = areAllFamilyPackItemsSelected();
     someSelected = hasFamilyPackSelections();
@@ -1900,7 +2007,7 @@ return (
                         >
                           <View className="flex-row items-center flex-1">
                             {/* Don't show replace button for completed orders */}
-                            {orderStatus !== 'Completed' && (
+                            {/* {orderStatus !== 'Completed' && (
             <TouchableOpacity
               className="w-8 h-8 items-center justify-center mr-3"
               onPress={() => handleReplaceProduct(item)}
@@ -1911,7 +2018,20 @@ return (
                 <Image source={RedIcon} style={{ width: 20, height: 20 }}/>
               )}
             </TouchableOpacity>
-          )}
+          )} */}
+          {orderStatus !== 'Completed' && (
+  <View className="w-8 h-8 items-center justify-center mr-3">
+    {item.selected ? (
+      // Show disabled image (not clickable)
+      <Image source={disable} style={{ width: 20, height: 20, opacity: 0.5 }}/>
+    ) : (
+      // Show clickable red icon
+      <TouchableOpacity onPress={() => handleReplaceProduct(item)}>
+        <Image source={RedIcon} style={{ width: 20, height: 20 }}/>
+      </TouchableOpacity>
+    )}
+  </View>
+)}
                             <View className="flex-1">
                               <Text className={`font-medium text-black ${
                                 orderStatus === 'Completed' && item.selected 

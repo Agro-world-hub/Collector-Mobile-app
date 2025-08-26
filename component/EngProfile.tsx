@@ -336,8 +336,8 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
         
 
-        <View className="flex-1 p-4 mt-[-10]">
-          {isLanguageDropdownOpen && (
+        <View className="flex-1 p-4 mt-[-30]">
+          {/* {isLanguageDropdownOpen && (
             <View className="pl-8">
               {["English", "සිංහල"].map((language) => (
                 <TouchableOpacity
@@ -366,11 +366,61 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
                 </TouchableOpacity>
               ))}
             </View>
+          )} */}
+
+            {/* Horizontal Line */}
+          <View className="h-0.5 bg-[#D2D2D2] my-4" />
+
+           <TouchableOpacity
+    onPress={() => setLanguageDropdownOpen(!isLanguageDropdownOpen)}
+    className="flex-row items-center py-3"
+  >
+    <Ionicons name="globe-outline" size={20} color="black" />
+    <Text className="flex-1 text-lg ml-2">
+      {t("EngProfile.Language")}
+    </Text>
+    <Ionicons
+      name={isLanguageDropdownOpen ? "chevron-up" : "chevron-down"}
+      size={20}
+      color="black"
+    />
+  </TouchableOpacity>
+
+  {/* Then render dropdown AFTER the trigger */}
+  {isLanguageDropdownOpen && (
+    <View className="pl-8 bg-white  rounded-lg mt-2">
+      {["English", "සිංහල"].map((language) => (
+        <TouchableOpacity
+          key={language}
+          onPress={() => handleLanguageSelect(language)}
+          className={`flex-row items-center py-2 px-4 rounded-lg my-1 ${
+            selectedLanguage === language
+              ? "bg-[#FFDFF7]"
+              : "bg-transparent"
+          }`}
+        >
+          <Text
+            className={`text-base ${
+              selectedLanguage === language
+                ? "text-black"
+                : "text-[#434343]"  // Fixed: Added "text-" prefix
+            }`}
+          >
+            {language}
+          </Text>
+          {selectedLanguage === language && (
+            <View className="absolute right-4">
+              <Ionicons name="checkmark" size={20} color="black" />
+            </View>
           )}
+        </TouchableOpacity>
+      ))}
+    </View>
+  )}
   <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
 
-         <TouchableOpacity
+         {/* <TouchableOpacity
             onPress={() => setLanguageDropdownOpen(!isLanguageDropdownOpen)}
             className="flex-row items-center py-3"
           >
@@ -383,9 +433,8 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
               size={20}
               color="black"
             />
-          </TouchableOpacity>
-          {/* Horizontal Line */}
-          <View className="h-0.5 bg-[#D2D2D2] my-4" />
+          </TouchableOpacity> */}
+        
 
           {/* View My QR Code */}
           <TouchableOpacity

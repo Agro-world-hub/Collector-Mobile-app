@@ -121,26 +121,7 @@ const AddOfficerAddressDetails: React.FC = () => {
     });
   };
 
-  // Validation for matching account numbers
-  // const handleValidation = (key: string, value: string) => {
-  //   setFormData((prevState) => {
-  //     const updatedFormData = { ...prevState, [key]: value };
-  //     const { accountNumber, confirmAccountNumber } = updatedFormData;
 
-  //     if (
-  //       accountNumber &&
-  //       confirmAccountNumber &&
-  //       accountNumber !== confirmAccountNumber
-  //     ) {
-  //       setError(t("Error.Account numbers do not match."));
-  //     } else {
-  //       setError(""); // Clear error if they match
-  //     }
-
-  //     saveDataToStorage(updatedFormData); // Ensure data is saved after validation
-  //     return updatedFormData;
-  //   });
-  // };
 
   const handleValidation = (key: string, value: string) => {
   // Block special characters and letters - only allow numbers
@@ -425,14 +406,28 @@ const AddOfficerAddressDetails: React.FC = () => {
     }
   }, [bankName]);
 
+  // const handleBankSelection = (selectedBank: string) => {
+  //   setBankName(selectedBank);
+  //   setFormData((prevData) => {
+  //     const updatedData = { ...prevData, bankName: selectedBank }; // Update the form data with new bankName
+  //     saveDataToStorage(updatedData); // Save every time bank name changes
+  //     return updatedData;
+  //   });
+  // };
+
   const handleBankSelection = (selectedBank: string) => {
-    setBankName(selectedBank);
-    setFormData((prevData) => {
-      const updatedData = { ...prevData, bankName: selectedBank }; // Update the form data with new bankName
-      saveDataToStorage(updatedData); // Save every time bank name changes
-      return updatedData;
-    });
-  };
+  setBankName(selectedBank);
+  setBranchName(""); // Clear the branch name when bank changes
+  setFormData((prevData) => {
+    const updatedData = { 
+      ...prevData, 
+      bankName: selectedBank,
+      branchName: "" // Also clear branchName in formData
+    };
+    saveDataToStorage(updatedData); // Save every time bank name changes
+    return updatedData;
+  });
+};
 
   const handleBranchSelection = (selectedBranch: string) => {
     setBranchName(selectedBranch);

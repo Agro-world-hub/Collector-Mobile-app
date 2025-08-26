@@ -966,58 +966,43 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
 </TouchableOpacity>
 
         {/* <Text className="text-white text-lg font-bold">{t("CenterTarget.CenterTarget")}</Text> */}
-        {selectedToggle === 'ToDo' && (
-
-      <Text 
+  {selectedToggle === 'ToDo' && (
+    <Text 
       style={[
-  i18n.language === "si"
-    ? { fontSize: 14 }
-    : i18n.language === "ta"
-    ? { fontSize: 12 }
-    : { fontSize: 20 }
-]}
-
-      className="text-white text-lg font-bold">
-        {t("CenterTargetScreen.Centre Target")} : {selectedDateFilter ? selectedDateFilter : t("CenterTargetScreen.All")}
-      </Text>
-      
-   
-  
+        i18n.language === "si" ? { fontSize: 14 } :
+        i18n.language === "ta" ? { fontSize: 12 } :
+        { fontSize: 20 }
+      ]}
+      className="text-white text-lg font-bold"
+    >
+      {t("CenterTargetScreen.Centre Target")} : {selectedDateFilter ? selectedDateFilter : t("CenterTargetScreen.All")}
+    </Text>
   )}
-    {selectedToggle === 'Completed' && (
-
-     <Text className="text-white text-lg font-bold"
-           style={[
-  i18n.language === "si"
-    ? { fontSize: 14 }
-    : i18n.language === "ta"
-    ? { fontSize: 12 }
-    : { fontSize: 20 }
-]}
-     >
-         {t("CenterTargetScreen.Centre Target")} : {selectedDateFilter ? selectedDateFilter : t("CenterTargetScreen.All")}
-      </Text>
-      
-      
-   
   
+  {selectedToggle === 'Completed' && (
+    <Text 
+      style={[
+        i18n.language === "si" ? { fontSize: 14 } :
+        i18n.language === "ta" ? { fontSize: 12 } :
+        { fontSize: 20 }
+      ]}
+      className="text-white text-lg font-bold"
+    >
+      {t("CenterTargetScreen.Centre Target")} : {completedDateFilter ? completedDateFilter : t("CenterTargetScreen.All")}
+    </Text>
   )}
-    {selectedToggle === 'Out' && (
-
-      <Text 
-            style={[
-  i18n.language === "si"
-    ? { fontSize: 14 }
-    : i18n.language === "ta"
-    ? { fontSize: 12 }
-    : { fontSize: 20 }
-]}
-      className="text-white text-lg font-bold">
-         {t("CenterTargetScreen.Centre Target")} 
-      </Text>
-      
-   
   
+  {selectedToggle === 'Out' && (
+    <Text 
+      style={[
+        i18n.language === "si" ? { fontSize: 14 } :
+        i18n.language === "ta" ? { fontSize: 12 } :
+        { fontSize: 20 }
+      ]}
+      className="text-white text-lg font-bold"
+    >
+      {t("CenterTargetScreen.Centre Target")} 
+    </Text>
   )}
 
 
@@ -1448,15 +1433,15 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
           {t("CenterTargetScreen.Are you sure you want to send these selected")} {selectedItems.length}  {t("CenterTargetScreen.orders out for delivery")}
         </Text>
         
-        {/* Loading indicator when processing */}
-        {loading && (
+     
+        {/* {loading && (
           <View className="mb-4 items-center">
             <ActivityIndicator size="large" color="#980775" />
             <Text className="text-center text-gray-600 mt-2">
               {t("CenterTargetScreen.Processing orders")}
             </Text>
           </View>
-        )}
+        )} */}
         
         <View className="flex-row justify-between">
           {/* Cancel button - disabled when loading */}
@@ -1708,7 +1693,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     ? { fontSize: 12 }
     : i18n.language === "ta"
     ? { fontSize: 12 }
-    : { fontSize: 15 }
+    : { fontSize: 12 }
 ]}
                 className="text-xs font-medium text-center">
                   {getStatusText(item.selectedStatus)}
