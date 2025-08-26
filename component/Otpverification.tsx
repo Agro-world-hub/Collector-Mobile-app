@@ -449,8 +449,8 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
             style={{ color: disabledResend ? "gray" : "black" }}
           >
             {timer > 0
-              ? `${t("Resend in ")} ${formatTime(timer)}`
-              : `${t("Resend again")}`}
+              ? `${t("Otpverification.Resend in")} ${formatTime(timer)}`
+              : `${t("Otpverification.Resend again")}`}
           </Text>
         </View>
 
