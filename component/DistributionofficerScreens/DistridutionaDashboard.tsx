@@ -318,7 +318,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
   >
     <View className="flex-row justify-center items-center mb-2">
       <Image
-        source={require("../../assets/images/hand.webp")} // Replace with your image path
+        source={require("../../assets/images/New/Applause.png")} // Replace with your image path
         className="w-8 h-8 mr-2"
       />
       <Text className="text-center text-[#2AAD7A] font-bold">
@@ -366,7 +366,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
 
         { jobRole === "Distribution Center Manager" ? (
            <TouchableOpacity           
-  className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative border border-[#980775]"           
+  className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative border border-[#980775] mb-50"           
   onPress={() => navigation.navigate("CenterTargetScreen", { centerId: centerId } as any)}         
 >
           <Image
@@ -384,7 +384,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
         ):(
 
  <TouchableOpacity
-          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg border border-[#980775] shadow-gray-500 relative"
+          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg border border-[#980775] shadow-gray-500 relative mb-50"
           onPress={() => navigation.navigate("TargetOrderScreen" as any)}
         >
           <Image
