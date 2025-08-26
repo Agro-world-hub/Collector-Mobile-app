@@ -405,10 +405,22 @@ const checkNicExists = async (nic: string) => {
 };
 
 // Sinhala name validation function
+// const handleSinhalaNameChange = (text: string, fieldName: string) => {
+//   // Only allow Sinhala characters and spaces - block English, numbers, special chars
+//   // Sinhala Unicode range: \u0D80-\u0DFF
+//   let filteredText = text.replace(/[^\u0D80-\u0DFF\s]/g, '');
+  
+//   // Prevent space at the beginning
+//   if (filteredText.startsWith(' ')) {
+//     filteredText = filteredText.trimStart();
+//   }
+  
+//   setFormData({ ...formData, [fieldName]: filteredText });
+// };
+
 const handleSinhalaNameChange = (text: string, fieldName: string) => {
-  // Only allow Sinhala characters and spaces - block English, numbers, special chars
-  // Sinhala Unicode range: \u0D80-\u0DFF
-  let filteredText = text.replace(/[^\u0D80-\u0DFF\s]/g, '');
+  // Allow all characters, just prevent space at the beginning
+  let filteredText = text;
   
   // Prevent space at the beginning
   if (filteredText.startsWith(' ')) {
@@ -419,10 +431,22 @@ const handleSinhalaNameChange = (text: string, fieldName: string) => {
 };
 
 // Tamil name validation function
+// const handleTamilNameChange = (text: string, fieldName: string) => {
+//   // Only allow Tamil characters and spaces - block English, numbers, special chars
+//   // Tamil Unicode range: \u0B80-\u0BFF
+//   let filteredText = text.replace(/[^\u0B80-\u0BFF\s]/g, '');
+  
+//   // Prevent space at the beginning
+//   if (filteredText.startsWith(' ')) {
+//     filteredText = filteredText.trimStart();
+//   }
+  
+//   setFormData({ ...formData, [fieldName]: filteredText });
+// };
+
 const handleTamilNameChange = (text: string, fieldName: string) => {
-  // Only allow Tamil characters and spaces - block English, numbers, special chars
-  // Tamil Unicode range: \u0B80-\u0BFF
-  let filteredText = text.replace(/[^\u0B80-\u0BFF\s]/g, '');
+  // Allow all characters, just prevent space at the beginning
+  let filteredText = text;
   
   // Prevent space at the beginning
   if (filteredText.startsWith(' ')) {
