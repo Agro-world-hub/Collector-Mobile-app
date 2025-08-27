@@ -147,7 +147,7 @@ dispatch(setUser({ token: userToken ?? '', jobRole: role ?? '', empId: emp ?? ''
     <View className="flex-1 bg-white relative justify-center">
       <Image
         source={Top} 
-        className="w-[50%] h-[18%] absolute left-0 top-0"
+        className="w-[50%] h-[18%] absolute left-0 top-0 -mt-2"
         resizeMode="contain"
       />
       <Image

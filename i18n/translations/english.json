@@ -889,21 +889,21 @@
   },
   "ReplaceRequestsApprove":{
     "Loading replace request":"Loading replace request...",
-    "Order ID":"Order ID:",
+    "Order ID":"ஆர்டர் இல்லை:",
     "Defined product":"Defined product",
     "Relevant Product Type":"Relevant Product Type:",
-    "Replacing Product Details":"Replacing Product Details",
+    "Replacing Product Details":"மாற்றப்பட வேண்டிய பொருள் விவரங்கள்",
     "ID":"ID:",
     "No products available":"No products available",
-    "Approve":"Approve",
+    "Approve":"ஒப்புதல்",
     "Rs":"Rs."
   },
   "ReplaceRequestsScreen":{
-    "Order ID":"Order ID:",
-    "Replacing Item":"Replacing Item:",
-    "Requested Time":"Requested Time",
-    "Replace Requests":"Replace Requests",
-    "All":"All",
+    "Order ID":"ஆர்டர் இல்லை:",
+    "Replacing Item":"பொருளை மாற்றுகிறது:",
+    "Requested Time":"கோரப்பட்ட நேரம்",
+    "Replace Requests":"கோரிக்கைகளை மாற்றவும்",
+    "All":"எல்லாம்",
     "No replace requests found":"No replace requests found"
   },
   "CenterTargetScreen":{

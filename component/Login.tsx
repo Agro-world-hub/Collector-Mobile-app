@@ -24,6 +24,10 @@ import LottieView from "lottie-react-native"; // Import LottieView
 import { useFocusEffect } from "expo-router";
 import { setUser } from '../store/authSlice';
 import { useDispatch } from "react-redux";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import NetInfo from "@react-native-community/netinfo";
 // import socket from "@/services/socket";
 
@@ -235,7 +239,7 @@ const handleLogin = async () => {
   };
 
   const handleNavBack = async () => {
-    navigation.navigate("Login");
+    navigation.navigate("Lanuage");
     await AsyncStorage.removeItem("@user_language");
   };
 
@@ -252,18 +256,21 @@ const handleLogin = async () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
-      style={{ flex: 1}}
+      style={{ flex: 1, backgroundColor: "white" }}
     >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
         className=" bg-white"
       >
-        {/* <TouchableOpacity onPress={() => handleNavBack()} className="p-4">
-          <AntDesign name="left" size={24} color="#000502" />
-        </TouchableOpacity> */}
+                    <View className="flex-row items-center justify-between " style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }} >
+                  <TouchableOpacity  onPress={() => handleNavBack()}>
+                    <AntDesign name="left" size={22} color="black" style={{ paddingHorizontal: wp(3), paddingVertical: hp(1.5), backgroundColor: "#F6F6F680" , borderRadius: 50 }}/>
+                  </TouchableOpacity>
+                  <View style={{ width: 22 }} /> {/* Placeholder to balance the header */}
+                </View>
 
-        <View className="items-center mt-[8%]">
+        <View className="items-center ">
           <Image 
           source={loginImage} 
           style={{ width: 270, height: 270 }}

@@ -195,7 +195,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
         </View>
 
         <View className="items-center pt-[12%]">
-          <Text className="font-normal pb-2 ml-[-55%]">
+          <Text className="font-normal pb-2 self-start ml-4">
             {t("ChangePassword.CurrentPassword")}
           </Text>
           <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">
@@ -215,7 +215,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
             </TouchableOpacity>
           </View>
 
-          <Text className="font-normal pb-2 ml-[-60%]">
+          <Text className="font-normal pb-2 items-start self-start ml-4 ">
             {t("ChangePassword.NewPassword")}
           </Text>
              <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">
@@ -240,7 +240,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
             </TouchableOpacity>
           </View>
 
-          <Text className="font-normal pb-2 ml-[-45%]">
+          <Text className="font-normal pb-2 self-start ml-4">
             {t("ChangePassword.ConfirmNewPassword")}
           </Text>
            <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">

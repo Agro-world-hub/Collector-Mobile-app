@@ -245,18 +245,24 @@ const [selectionLimitReached, setSelectionLimitReached] = useState(false);
       case 'completed':
       case 'සම්පූර්ණ':
       case 'සම්පූර්ණයි':
+        case 'සම්පූර්ණ කළ':
+          case 'முடிந்தது':
       case 'முடிக்கப்பட்டது':
       case 'நிறைவு':
         return t("Status.Completed");
       case 'opened':
       case 'විවෘත':
       case 'විවෘතයි':
+        case 'විවෘත කරන ලද':
+          case 'திறக்கப்பட்டது':
       case 'திறக்கப்பட்டது':
       case 'திறந்த':
         return t("Status.Opened");
       case 'pending':
       case 'අපේක්ෂිත':
       case 'පොරොත්තුවේ':
+      case 'අපරිපූර්ණ':
+      case 'நிலுவையில் உள்ளது':
       case 'நிலுவையில்':
       case 'காத்திருக்கும்':
         return t("Status.Pending");
@@ -283,24 +289,24 @@ const getStatusColor = (status: string) => {
   if (normalizedStatus === 'pending') {
     return 'bg-[#FF070733] border border-[#FF070733]';
   }
-  
-  if (normalizedStatus === 'සම්පූර්ණ' || normalizedStatus === 'සම්පූර්ණයි') {
+
+  if (normalizedStatus === 'සම්පූර්ණ' || normalizedStatus === 'සම්පූර්ණයි' || normalizedStatus === 'සම්පූර්ණ කළ') {
     return 'bg-[#B7FFB9] border border-[#B7FFB9]';
   }
-  if (normalizedStatus === 'විවෘත' || normalizedStatus === 'විවෘතයි') {
+  if (normalizedStatus === 'විවෘත' || normalizedStatus === 'විවෘතයි' || normalizedStatus === 'විවෘත කරන ලද') {
     return 'bg-[#FBFF0066] border border-[#FBFF0066]';
   }
-  if (normalizedStatus === 'අපේක්ෂිත' || normalizedStatus === 'පොරොත්තුවේ') {
+  if (normalizedStatus === 'අපේක්ෂිත' || normalizedStatus === 'පොරොත්තුවේ' || normalizedStatus === 'අපරිපූර්ණ') {
     return 'bg-[#FF070733] border border-[#FF070733]';
   }
-  
-  if (normalizedStatus === 'முடிக்கப்பட்டது' || normalizedStatus === 'நிறைவு') {
+
+  if (normalizedStatus === 'முடிக்கப்பட்டது' || normalizedStatus === 'நிறைவு' || normalizedStatus === 'முடிக்கப்பட்ட') {
     return 'bg-[#B7FFB9] border border-[#B7FFB9]';
   }
-  if (normalizedStatus === 'திறக்கப்பட்டது' || normalizedStatus === 'திறந்த') {
+  if (normalizedStatus === 'திறக்கப்பட்டது' || normalizedStatus === 'திறந்த' || normalizedStatus === 'திறந்தது') {
     return 'bg-[#FBFF0066] border border-[#FBFF0066]';
   }
-  if (normalizedStatus === 'நிலுவையில்' || normalizedStatus === 'காத்திருக்கும்') {
+  if (normalizedStatus === 'நிலுவையில்' || normalizedStatus === 'காத்திருக்கும்' || normalizedStatus === 'நிலுவையில் உள்ளது') {
     return 'bg-[#FF070733] border border-[#FF070733]';
   }
   
@@ -341,22 +347,28 @@ const getStatusTextColor = (status: string) => {
   if (normalizedStatus === 'completed' || 
       normalizedStatus === 'සම්පූර්ණ' || 
       normalizedStatus === 'සම්පූර්ණයි' ||
+      normalizedStatus === 'සම්පූර්ණ කළ' ||
       normalizedStatus === 'முடிக்கப்பட்டது' || 
-      normalizedStatus === 'நிறைவு') {
+      normalizedStatus === 'நிறைவு' || 
+      normalizedStatus === 'முடிக்கப்பட்ட') {
     return 'text-[#6AD16D]';
   }
   if (normalizedStatus === 'opened' || 
       normalizedStatus === 'විවෘත' || 
       normalizedStatus === 'විවෘතයි' ||
+      normalizedStatus === 'විවෘත කරන ලද' ||
       normalizedStatus === 'திறக்கப்பட்டது' || 
-      normalizedStatus === 'திறந்த') {
+      normalizedStatus === 'திறந்த' || 
+      normalizedStatus === 'திறந்தது' ) {
     return 'text-[#A8A100]';
   }
   if (normalizedStatus === 'pending' || 
       normalizedStatus === 'අපේක්ෂිත' || 
       normalizedStatus === 'පොරොත්තුවේ' ||
+      normalizedStatus === 'අපරිපූර්ණ' ||
       normalizedStatus === 'நிலுவையில்' || 
-      normalizedStatus === 'காத்திருக்கும்') {
+      normalizedStatus === 'காத்திருக்கும்' || 
+      normalizedStatus === 'நிலுவையில் உள்ளது') {
     return 'text-[#FF0700]';
   }
   

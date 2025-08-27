@@ -69,9 +69,9 @@ const Lanuage: React.FC<LanuageProps> = ({ navigation }) => {
         <TouchableOpacity className="bg-[#413A3F] p-4 rounded-3xl mb-6 " onPress={() => handleLanguageSelect("si")} >
           <Text className="text-white text-2xl text-center">සිංහල</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity className="bg-[#413A3F] p-4 rounded-3xl mb-12"  onPress={() => handleLanguageSelect("ta")}>
+        <TouchableOpacity className="bg-[#413A3F] p-4 rounded-3xl mb-12"  onPress={() => handleLanguageSelect("ta")}>
           <Text className="text-white text-2xl text-center ">தமிழ்</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     </View>
     </ScrollView>
