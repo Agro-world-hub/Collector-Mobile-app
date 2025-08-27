@@ -838,8 +838,8 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
     i18n.language === "si"
     ? { fontSize: 12 }
     : i18n.language === "ta"
-    ? { fontSize: 12 }
-    : { fontSize: 12 }]}
+    ? { fontSize: 9 }
+    : { fontSize: 14 }]}
 
     >
       {getStatusText(item.selectedStatus)}

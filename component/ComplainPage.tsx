@@ -211,7 +211,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
       enabled
       style={{ flex: 1 }}
     >
-      <SafeAreaView className="flex-1 bg-[#FFFFFF]pb-20">
+      <SafeAreaView className="flex-1 bg-[#FFFFFF]">
         {loading ? (
           // Lottie Loader displays for 2 seconds
           <View className="flex-1 justify-center items-center">
@@ -224,24 +224,19 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
           </View>
         ) : (
           <>
-            <View className=" absolute z-10 ">
-              <AntDesign
-                name="left"
-                size={24}
-                color="#000000"
-                onPress={() => navigation.goBack()}
-                style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}
-              />
-            </View>
-            <ScrollView className="flex-1 " keyboardShouldPersistTaps="handled">
-              <View className="items-center p-2 pb-20">
+
+            <ScrollView className="flex-1 " keyboardShouldPersistTaps="handled" style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}>
+                       <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                         <AntDesign name="left" size={24} color="#000502" />
+                       </TouchableOpacity>
+              <View className="items-center p-2 pb-20 -mt-10">
                 <Image
                   source={require("../assets/images/complain.webp")}
                   className="w-36 h-36 "
                   resizeMode="contain"
                 />
 
-                <View className="w-[90%] items-center p-6 shadow-2xl bg-[#FFFFFF] rounded-xl">
+                <View className="w-[100%] items-center p-6 shadow-2xl bg-[#FFFFFF] rounded-xl">
                   <View className="flex-row ">
                     <Text className="text-2xl font-semibold text-center mb-4 color-[#424242]">
                       {t("ReportComplaint.Tellus")}
