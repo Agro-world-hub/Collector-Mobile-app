@@ -934,6 +934,9 @@
      "No out for delivery orders":"බෙදාහැරීමේ ඇණවුම් සඳහා පිටවීමක් නැත",
       "Limit Reached":"සීමාව ළඟා විය",
      "You can only select up to 5 orders at a time for delivery":"බෙදාහැරීම සඳහා ඔබට වරකට ඇණවුම් 5ක් දක්වා පමණක් තෝරා ගත හැකිය",
-     "OK":"හරි"
+     "OK":"හරි",
+     "Processing":"සකසමින්...",
+      "have":"ඇත",
+     "has":"ඇත"
   }
 }

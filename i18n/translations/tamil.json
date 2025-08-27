@@ -934,7 +934,10 @@
      "No out for delivery orders":"No out for delivery orders",
      "Limit Reached":"Limit Reached",
      "You can only select up to 5 orders at a time for delivery":"You can only select up to 5 orders at a time for delivery",
-     "OK":"OK"
+     "OK":"OK",
+     "Processing":"Processing...",
+      "have":"have",
+     "has":"has"
   }
 }
 
