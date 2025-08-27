@@ -212,7 +212,7 @@ const [packageId, setPackageId] = useState<number | null>(null);
  const [isCompletingOrder, setIsCompletingOrder] = useState(false);
  const [hasCompletedOrder, setHasCompletedOrder] = useState(false);
  const [orderCompletionState, setOrderCompletionState] = useState<'idle' | 'completing' | 'completed'>('idle');
-
+const [isDataLoaded, setIsDataLoaded] = useState(false);
 
 const [typeName, setTypeeName] = useState<string>('');
   //const [completedTime, setCompletedTime] = useState<string | null>(item.completedTime || null);
@@ -322,6 +322,7 @@ const fetchOrderData = async (orderId: string) => {
     console.log("datakbj===================",response.data)
 
     if (response.data && response.data.success) {
+      setIsDataLoaded(true);
       return response.data.data; // Assuming the API returns { success: true, data: orderData }
     } else {
       throw new Error(response.data.message || 'Failed to fetch order data');
@@ -2030,7 +2031,7 @@ return (
     </View>
 
     {/* Loading State */}
-    {isLoading ? (
+    {/* {isLoading ? (
       <View className="flex-1 justify-center items-center py-20">
         <LottieView
           source={require('../../assets/lottie/newLottie.json')}
@@ -2039,7 +2040,17 @@ return (
           style={{ width: 200, height: 200 }}
         />
       </View>
-    ) : (
+    ) : ( */}
+    {isLoading || !isDataLoaded ? (
+        <View className="flex-1 justify-center items-center py-20">
+          <LottieView
+            source={require('../../assets/lottie/newLottie.json')}
+            autoPlay
+            loop
+            style={{ width: 200, height: 200 }}
+          />
+        </View>
+      ) : (
       <>
         <ScrollView 
           className="flex-1" 
@@ -2067,7 +2078,7 @@ return (
           } ${orderStatus === 'Completed' ? 'opacity-100' : ''}`}
           onPress={() => togglePackageExpansion(packageGroup.packageId)}
         >
-          <View className="flex-row items-center">
+          {/* <View className="flex-row items-center">
             <Text className="text-[#000000] font-medium">
               {packageGroup.packageName}
             </Text>
@@ -2079,7 +2090,20 @@ return (
             {orderStatus === 'Completed' && packageGroup.allSelected && (
               <Text className="text-[#000000] font-medium ml-1">✓</Text>
             )}
-          </View>
+          </View> */}
+          <View className="flex-row items-center">
+  <Text className="text-[#000000] font-normal">
+    {packageGroup.packageName}
+  </Text>
+  {packageGroup.packageQty > 1 && (
+    <Text className="text-black font-bold ml-1">
+      (x{packageGroup.packageQty})
+    </Text>
+  )}
+  {orderStatus === 'Completed' && packageGroup.allSelected && (
+    <Text className="text-[#000000] font-medium ml-1">✓</Text>
+  )}
+</View>
           <AntDesign 
             name={isPackageExpanded(packageGroup.packageId) ? "up" : "down"} 
             size={16} 

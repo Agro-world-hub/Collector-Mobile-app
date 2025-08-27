@@ -202,41 +202,7 @@ const [selectionLimitReached, setSelectionLimitReached] = useState(false);
     ];
   };
 
-  // const getStatusColor = (status: string) => {
-  //   const normalizedStatus = status?.toLowerCase();
-    
-  //   if (normalizedStatus === 'completed') {
-  //     return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
-  //   }
-  //   if (normalizedStatus === 'opened') {
-  //     return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
-  //   }
-  //   if (normalizedStatus === 'pending') {
-  //     return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
-  //   }
-    
-  //   if (normalizedStatus === 'සම්පූර්ණ' || normalizedStatus === 'සම්පූර්ණයි') {
-  //     return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
-  //   }
-  //   if (normalizedStatus === 'විවෘත' || normalizedStatus === 'විවෘතයි') {
-  //     return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
-  //   }
-  //   if (normalizedStatus === 'අපේක්ෂිත' || normalizedStatus === 'පොරොත්තුවේ') {
-  //     return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
-  //   }
-    
-  //   if (normalizedStatus === 'முடிக்கப்பட்டது' || normalizedStatus === 'நிறைவு') {
-  //     return 'bg-[#B7FFB9] border border-[#B7FFB9] text-[#6AD16D]';
-  //   }
-  //   if (normalizedStatus === 'திறக்கப்பட்டது' || normalizedStatus === 'திறந்த') {
-  //     return 'bg-[#F8FFA6] border border-[#F8FFA6] text-[#A8A100]';
-  //   }
-  //   if (normalizedStatus === 'நிலுவையில்' || normalizedStatus === 'காத்திருக்கும்') {
-  //     return 'bg-[#FFB9B7] border border-[#FFB9B7] text-[#D16D6A]';
-  //   }
-    
-  //   return 'bg-gray-100 border border-gray-300 text-gray-700';
-  // };
+
 
   const getStatusText = (status: string) => {
     const normalizedStatus = status?.toLowerCase();
@@ -313,33 +279,7 @@ const getStatusColor = (status: string) => {
   return 'bg-gray-100 border border-gray-300';
 };
 
-// const getStatusTextColor = (status: string) => {
-//   const normalizedStatus = status?.toLowerCase();
-  
-//   if (normalizedStatus === 'completed' || 
-//       normalizedStatus === 'සම්පූර්ණ' || 
-//       normalizedStatus === 'සම්පූර්ණයි' ||
-//       normalizedStatus === 'முடிக்கப்பட்டது' || 
-//       normalizedStatus === 'நிறைவு') {
-//     return 'text-[#6AD16D]';
-//   }
-//   if (normalizedStatus === 'opened' || 
-//       normalizedStatus === 'විවෘත' || 
-//       normalizedStatus === 'විවෘතයි' ||
-//       normalizedStatus === 'திறக்கப்பட்டது' || 
-//       normalizedStatus === 'திறந்த') {
-//     return 'text-[#A8A100]';
-//   }
-//   if (normalizedStatus === 'pending' || 
-//       normalizedStatus === 'අපේක්ෂිත' || 
-//       normalizedStatus === 'පොරොත්තුවේ' ||
-//       normalizedStatus === 'நிலுவையில்' || 
-//       normalizedStatus === 'காத்திருக்கும்') {
-//     return 'text-[#D16D6A]';
-//   }
-  
-//   return 'text-gray-700';
-// };
+
 
 const getStatusTextColor = (status: string) => {
   const normalizedStatus = status?.toLowerCase();
@@ -542,25 +482,50 @@ const fetchTargets = useCallback(async () => {
     return 'bg-gray-100 border border-gray-300 text-gray-700';
   };
 
-  const formatCompletionTime = (dateString: string | null): string | null => {
-    if (!dateString) return null;
+  // const formatCompletionTime = (dateString: string | null): string | null => {
+  //   if (!dateString) return null;
     
-    try {
-      const date = new Date(dateString);
-      const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
-      const hours = date.getHours();
-      const minutes = date.getMinutes().toString().padStart(2, '0');
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      const displayHours = hours % 12 || 12;
+  //   try {
+  //     const date = new Date(dateString);
+  //     const year = date.getFullYear();
+  //     const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  //     const day = date.getDate().toString().padStart(2, '0');
+  //     const hours = date.getHours();
+  //     const minutes = date.getMinutes().toString().padStart(2, '0');
+  //     const ampm = hours >= 12 ? 'PM' : 'AM';
+  //     const displayHours = hours % 12 || 12;
       
-      return `${year}/${month}/${day} ${displayHours.toString().padStart(2, '0')}:${minutes}${ampm}`;
-    } catch (error) {
-      console.error('Error formatting date:', error);
-      return null;
-    }
-  };
+  //     return `${year}/${month}/${day} ${displayHours.toString().padStart(2, '0')}:${minutes}${ampm}`;
+  //   } catch (error) {
+  //     console.error('Error formatting date:', error);
+  //     return null;
+  //   }
+  // };
+
+  const formatCompletionTime = (dateString: string | null): string | null => {
+  if (!dateString) return null;
+  
+  try {
+    const date = new Date(dateString);
+    
+    // Add 6 hours and 30 minutes (6.5 hours = 6.5 * 60 * 60 * 1000 milliseconds)
+    const offsetMilliseconds = 6.5 * 60 * 60 * 1000;
+    const adjustedDate = new Date(date.getTime() + offsetMilliseconds);
+    
+    const year = adjustedDate.getFullYear();
+    const month = (adjustedDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = adjustedDate.getDate().toString().padStart(2, '0');
+    const hours = adjustedDate.getHours();
+    const minutes = adjustedDate.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours % 12 || 12;
+    
+    return `${year}/${month}/${day} ${displayHours.toString().padStart(2, '0')}:${minutes}${ampm}`;
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return null;
+  }
+};
 
   // Function to clear all filters for ToDo
   const clearAllFilters = () => {
@@ -580,6 +545,97 @@ const fetchTargets = useCallback(async () => {
     const isFilterActive = selectedDateFilter !== null || selectedStatusFilter !== null;
     setHasActiveFilter(isFilterActive);
   }, [selectedDateFilter, selectedStatusFilter]);
+const getCompletionStatus = (completedTime: string | null | undefined, scheduleTime: string | null | undefined): 'on-time' | 'late' | 'unknown' => {
+  if (!completedTime || !scheduleTime) return 'unknown';
+  
+  try {
+    // Parse completed time with timezone adjustment
+    const completedDate = new Date(completedTime);
+    const offsetMilliseconds = 6.5 * 60 * 60 * 1000;
+    const adjustedCompletedDate = new Date(completedDate.getTime() + offsetMilliseconds);
+    
+    // Check if the completion date is today
+    const today = new Date();
+    const isToday = adjustedCompletedDate.getDate() === today.getDate() &&
+                   adjustedCompletedDate.getMonth() === today.getMonth() &&
+                   adjustedCompletedDate.getFullYear() === today.getFullYear();
+    
+    // If not today, return 'unknown' to show black color
+    if (!isToday) return 'unknown';
+    
+    const completedHour = adjustedCompletedDate.getHours();
+    const completedMinute = adjustedCompletedDate.getMinutes();
+    const completedTotalMinutes = completedHour * 60 + completedMinute;
+    
+    // Extract time range from scheduleTime (e.g., "Within 8-12 PM" or "8-12 PM")
+    const timeRangeMatch = scheduleTime.match(/(\d+)-(\d+)\s*(AM|PM)/i);
+    if (!timeRangeMatch) return 'unknown';
+    
+    const [, startHourStr, endHourStr, period] = timeRangeMatch;
+    let startHour = parseInt(startHourStr);
+    let endHour = parseInt(endHourStr);
+    
+    // Convert to 24-hour format
+    if (period.toUpperCase() === 'PM') {
+      if (startHour !== 12) startHour += 12;
+      if (endHour !== 12) endHour += 12;
+    } else if (period.toUpperCase() === 'AM') {
+      if (startHour === 12) startHour = 0;
+      if (endHour === 12) endHour = 0;
+    }
+    
+    const startTotalMinutes = startHour * 60;
+    const endTotalMinutes = endHour * 60;
+    
+    // Check if completion time is within the scheduled time slot
+    if (completedTotalMinutes >= startTotalMinutes && completedTotalMinutes <= endTotalMinutes) {
+      return 'on-time';
+    } else {
+      return 'late';
+    }
+    
+  } catch (error) {
+    console.error('Error determining completion status:', error);
+    return 'unknown';
+  }
+};
+
+const getCompletionStatusColor = (status: 'on-time' | 'late' | 'unknown'): string => {
+  switch (status) {
+    case 'on-time':
+      return 'text-[#980775]'; // Purple for on time
+    case 'late':
+      return 'text-[#FF0700]'; // Red for late
+    default:
+      return 'text-black'; // Black for unknown/other dates
+  }
+};
+
+const getCompletionStatusText = (status: 'on-time' | 'late' | 'unknown'): string => {
+  switch (status) {
+    case 'on-time':
+      return t("CenterTargetScreen.On Time");
+    case 'late':
+      return t("CenterTargetScreen.Late");
+    default:
+      return '';
+  }
+};
+
+// Helper function to format schedule display for completed items
+const getScheduleDisplayForCompleted = (scheduleDate: string, scheduleTime: string) => {
+  if (!scheduleDate || !scheduleTime) return 'N/A';
+  
+  const isToday = isScheduleDateToday(scheduleDate);
+  const timeSlot = formatScheduleTime(scheduleTime);
+  
+  if (isToday) {
+    return `Today\n${timeSlot}`;
+  } else {
+    return `${formatScheduleDate(scheduleDate)}\n${timeSlot}`;
+  }
+};
+
 
   // Update hasCompletedFilter whenever completed filters change
   useEffect(() => {
@@ -1079,7 +1135,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
         i18n.language === "ta" ? { fontSize: 12 } :
         { fontSize: 20 }
       ]}
-      className="text-white text-lg font-bold"
+      className="text-white text-lg "
     >
       {t("CenterTargetScreen.Centre Target")} : {selectedDateFilter ? selectedDateFilter : t("CenterTargetScreen.All")}
     </Text>
@@ -1092,7 +1148,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
         i18n.language === "ta" ? { fontSize: 12 } :
         { fontSize: 20 }
       ]}
-      className="text-white text-lg font-bold"
+      className="text-white text-lg "
     >
       {t("CenterTargetScreen.Centre Target")} : {completedDateFilter ? completedDateFilter : t("CenterTargetScreen.All")}
     </Text>
@@ -1105,7 +1161,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
         i18n.language === "ta" ? { fontSize: 12 } :
         { fontSize: 20 }
       ]}
-      className="text-white text-lg font-bold"
+      className="text-white text-lg "
     >
       {t("CenterTargetScreen.Centre Target")} 
     </Text>
@@ -1762,23 +1818,36 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
 </View>
           </>
         ) : selectedToggle === 'Completed' ? (
-          <>
-            {/* Completed Time */}
-            <View className="flex-[2] items-center justify-center px-2">
-              <Text className="text-center text-gray-600 text-sm">
-                {item.completedTime ? formatCompletionTime(item.completedTime) : 'N/A'}
-              </Text>
-            </View>
+         
+           <>
+    {/* Completed Time */}
+    <View className="flex-[2] items-center justify-center px-2">
+      <Text className="text-center text-gray-600 text-sm">
+        {item.completedTime ? formatCompletionTime(item.completedTime) : 'N/A'}
+      </Text>
+    </View>
 
+    {/* Schedule Display with Status */}
+<View className="flex-[2] items-center justify-center px-2">
+  {(() => {
+    const status = getCompletionStatus(item.completedTime, item.sheduleTime);
+    const scheduleDisplay = getScheduleDisplayForCompleted(item.sheduleDate, item.sheduleTime);
     
-            <View className="flex-[2] items-center justify-center px-2">
-              <Text className={`text-center font-medium text-xs ${
-                isScheduleDateToday(item.sheduleDate) ? 'text-red-600' : 'text-gray-800'
-              }`}>
-                {formatScheduleDate(item.sheduleDate)} {formatScheduleTime(item.sheduleTime) || 'N/A'}
-              </Text>
-            </View>
-          </>
+    return (
+      <View className="items-center">
+        <Text className={`text-center font-medium text-xs ${
+          // Only show red/purple for TODAY's scheduled date, everything else black
+          isScheduleDateToday(item.sheduleDate) 
+            ? (status === 'on-time' ? 'text-[#980775]' : status === 'late' ? 'text-[#FF0700]' : 'text-[#980775]')
+            : 'text-black'
+        }`}>
+          {scheduleDisplay}
+        </Text>
+      </View>
+    );
+  })()}
+</View>
+  </>
         ) : (
           <>
             {/* Date & Time */}

@@ -432,25 +432,50 @@ const fetchTargets = useCallback(async () => {
     }
   };
 
-  const formatCompletionTime = (dateString: string | null): string | null => {
-    if (!dateString) return null;
+  // const formatCompletionTime = (dateString: string | null): string | null => {
+  //   if (!dateString) return null;
     
-    try {
-      const date = new Date(dateString);
-      const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
-      const hours = date.getHours();
-      const minutes = date.getMinutes().toString().padStart(2, '0');
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      const displayHours = hours % 12 || 12;
+  //   try {
+  //     const date = new Date(dateString);
+  //     const year = date.getFullYear();
+  //     const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  //     const day = date.getDate().toString().padStart(2, '0');
+  //     const hours = date.getHours();
+  //     const minutes = date.getMinutes().toString().padStart(2, '0');
+  //     const ampm = hours >= 12 ? 'PM' : 'AM';
+  //     const displayHours = hours % 12 || 12;
       
-      return `${year}/${month}/${day} ${displayHours.toString().padStart(2, '0')}:${minutes}${ampm}`;
-    } catch (error) {
-      console.error('Error formatting date:', error);
-      return null;
-    }
-  };
+  //     return `${year}/${month}/${day} ${displayHours.toString().padStart(2, '0')}:${minutes}${ampm}`;
+  //   } catch (error) {
+  //     console.error('Error formatting date:', error);
+  //     return null;
+  //   }
+  // };
+
+  const formatCompletionTime = (dateString: string | null): string | null => {
+  if (!dateString) return null;
+  
+  try {
+    const date = new Date(dateString);
+    
+    // Add 6 hours and 30 minutes (6.5 hours = 6.5 * 60 * 60 * 1000 milliseconds)
+    const offsetMilliseconds = 6.5 * 60 * 60 * 1000;
+    const adjustedDate = new Date(date.getTime() + offsetMilliseconds);
+    
+    const year = adjustedDate.getFullYear();
+    const month = (adjustedDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = adjustedDate.getDate().toString().padStart(2, '0');
+    const hours = adjustedDate.getHours();
+    const minutes = adjustedDate.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours % 12 || 12;
+    
+    return `${year}/${month}/${day} ${displayHours.toString().padStart(2, '0')}:${minutes}${ampm}`;
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return null;
+  }
+};
 
   useEffect(() => {
     const fetchData = async () => {
