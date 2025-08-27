@@ -80,6 +80,9 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   onCancel,
   onDelete,
 }) => {
+
+   const { t } = useTranslation();
+
   return (
     <Modal
       visible={visible}
@@ -109,14 +112,14 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
               className="flex-1 py-3 px-5 border border-gray-300 rounded-lg items-center min-w-[80px]"
               onPress={onCancel}
             >
-              <Text className="text-gray-700 text-base font-medium">Cancel</Text>
+              <Text className="text-gray-700 text-base font-medium">{t("UnregisteredCropDetails.Cancel")}</Text>
             </TouchableOpacity>
             
             <TouchableOpacity 
               className="flex-1 py-3 px-5 bg-red-500 rounded-lg items-center min-w-[80px]"
               onPress={onDelete}
             >
-              <Text className="text-white text-base font-medium">Delete</Text>
+              <Text className="text-white text-base font-medium">{t("UnregisteredCropDetails.Delete")}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -444,9 +447,15 @@ const handleQuantityChange = (grade: "A" | "B" | "C", value: string) => {
 
   if (gradesWithQuantityButNoImage.length > 0) {
     Alert.alert(
-      "Upload Image First",
-      `Please upload image for Grade ${gradesWithQuantityButNoImage[0]} before entering quantity for Grade ${grade}.`,
-      [{ text: "OK" }]
+      t("Error.Upload Image First"),
+     // `Please upload image for Grade ${gradesWithQuantityButNoImage[0]} before entering quantity for Grade ${grade}.`,
+      t("UnregisteredCropDetails.Please upload image for Grade",
+        {
+          grade:grade,
+          gradesWithQuantityButNoImage:gradesWithQuantityButNoImage[0]
+        }
+      ),
+      [{ text: t("Error.Ok") }]
     );
     return;
   }
@@ -487,14 +496,20 @@ const incrementCropCount = async () => {
 
   if (missingImages.length > 0) {
     Alert.alert(
-      "Images Required",
-      `Please upload images for: ${missingImages.join(", ")} before adding this crop.`
+      t("UnregisteredCropDetails.Images Required"),
+     // `Please upload images for: ${missingImages.join(", ")} before adding this crop.`
+     t("UnregisteredCropDetails.Please upload images for",
+        {
+          missingImages:missingImages.join(", ")
+         
+        }
+      ),
     );
     return;
   }
 
   if (!selectedCrop || !selectedVariety) {
-    Alert.alert("Incomplete Selection", "Please select both a crop and a variety before adding.");
+    Alert.alert(t("UnregisteredCropDetails.Incomplete Seletcion"), t("UnregisteredCropDetails.Please select both a crop and a variety before adding"));
     return;
   }
 
@@ -546,10 +561,21 @@ const handleImagePick = (
 ) => {
   // Check if quantity is entered for this grade
   if (quantities[grade] <= 0) {
-    Alert.alert(
-      "Add Quantity First",
-      `Please enter quantity for Grade ${grade} before adding an image.`,
-      [{ text: "OK" }]
+    // Alert.alert(
+    //   "Add Quantity First",
+    //   `Please enter quantity for Grade ${grade} before adding an image.`,
+    //   [{ text: "OK" }]
+    // );
+     Alert.alert(
+      t("UnregisteredCropDetails.Add Quantity First"),
+     // `Please upload image for Grade ${gradesWithQuantityButNoImage[0]} before entering quantity for Grade ${grade}.`,
+      t("UnregisteredCropDetails.Please enter quantity",
+        {
+          grade:grade
+       
+        }
+      ),
+      [{ text: t("Error.Ok") }]
     );
     return;
   }
@@ -609,16 +635,16 @@ const handleSubmit = async () => {
   // Check if user has unsaved crop details
   if (hasUnsavedCropDetails()) {
     Alert.alert(
-      "Unsaved Crop Details",
-      "You have entered crop details but haven't added them. Do you want to submit without adding the current crop?",
+      t("Error.Unsaved Crop Details"),
+      t("Error.You have entered crop details but"),
       [
         {
-          text: "No",
+          text: t("Error.No"),
           style: "cancel",
           onPress: () => console.log("User cancelled submission"),
         },
         {
-          text: "Yes",
+          text: t("Error.Yes"),
           style: "default",
           onPress: () => proceedWithSubmit(),
         },
@@ -640,7 +666,7 @@ const proceedWithSubmit = async () => {
 
   try {
     if (crops.length === 0) {
-      Alert.alert("No Crops", "Please add at least one crop to proceed.");
+      Alert.alert(t("Error.No Crops"), t("Error.Please add at least one crop to proceed"));
       return;
     }
 
@@ -649,7 +675,7 @@ const proceedWithSubmit = async () => {
     const invoiceNumber = await generateInvoiceNumber();
     
     if (!invoiceNumber) {
-      Alert.alert("Error", "Failed to generate invoice number.");
+      Alert.alert(t("Error.error"), t("Error.Failed to generate invoice number"));
       return;
     }
 
@@ -706,7 +732,7 @@ const proceedWithSubmit = async () => {
     navigation.navigate("NewReport" as any, { userId, registeredFarmerId });
   } catch (error) {
     console.error("Error submitting crop data:", error);
-    Alert.alert("Error", "Failed to submit crop details. Please try again.");
+    Alert.alert(t("Error.error"), t("Error.Failed to submit crop details"));
     setLoading(false);
   } finally {
     setLoading(false);
@@ -1234,19 +1260,27 @@ const handleDeleteGrade = () => {
         <DeleteModal
   visible={deleteVarietyModal.visible}
   title="Confirm Delete"
-  message={`Are you sure you want to delete previously added ${deleteVarietyModal.varietyName}?`}
+//  message={`Are you sure you want to delete previously added ${deleteVarietyModal.varietyName}?`}
+  message={t('UnregisteredCropDetails.Are you sure you want to delete previously added', { varietyName: deleteVarietyModal.varietyName })}
   onCancel={() => setDeleteVarietyModal({ visible: false, index: -1, varietyName: '' })}
   onDelete={handleDeleteVariety}
 />
 
 {/* Delete Grade Modal */}
-<DeleteModal
+{/* <DeleteModal
   visible={deleteGradeModal.visible}
   title="Confirm Delete"
   message={`Are you sure you want to delete previously added ${deleteGradeModal.varietyName} - Grade ${deleteGradeModal.grade}?`}
   onCancel={() => setDeleteGradeModal({ visible: false, cropIndex: -1, grade: 'A',    varietyName: '',
  })}
   onDelete={handleDeleteGrade}
+/> */}
+<DeleteModal 
+  visible={deleteGradeModal.visible}   
+  title={t('UnregisteredCropDetails.ConfirmDelete')}
+  message={t('UnregisteredCropDetails.Are you sure you want to delete grade', { varietyName: deleteGradeModal.varietyName, grade: deleteGradeModal.grade })}
+  onCancel={() => setDeleteGradeModal({ visible: false, cropIndex: -1, grade: 'A', varietyName: '' })}   
+  onDelete={handleDeleteGrade} 
 />
       </ScrollView>
     </KeyboardAvoidingView>

@@ -767,7 +767,7 @@ const handleCompleteOrder = async () => {
             console.log('Order completed successfully - modal should show');
             
         } else {
-            throw new Error(response.data.message || 'Failed to complete order');
+            throw new Error(response.data.message || t("PendingOrderScreen.Failed to complete order"));
         }
         
     } catch (error) {
@@ -1042,7 +1042,7 @@ const handleReplaceSubmit = async () => {
     );
 
     if (!selectedRetailItem) {
-      throw new Error("Selected product not found");
+      throw new Error(t("PendingOrderScreen.Selected product not found"));
     }
 
     // FIXED PRICE PARSING - Extract numeric price correctly
@@ -1145,7 +1145,7 @@ const handleReplaceSubmit = async () => {
         }]
       );
     } else {
-      throw new Error(response.data.message || 'Failed to submit replacement request');
+      throw new Error(response.data.message || t("PendingOrderScreen.Failed to submit replacement request"));
     }
   } catch (error) {
     console.error('Error submitting replacement request:', error);
@@ -1890,7 +1890,7 @@ const resetCountdown = () => {
       <View className="flex-1 bg-black/50 justify-center items-center px-6">
         <View className="bg-white rounded-2xl p-6 w-full max-w-sm">
           <Text className="text-lg font-semibold text-center mb-2">
-         You have unsubmitted changes
+         {t("PendingOrderScreen.You have unsubmitted changes")}
           </Text>
           <Text className="text-gray-600 text-center mb-6">
            {t("OpenedOrderScreen.If you leave this page now, your changes will be lost.")}{'\n'}

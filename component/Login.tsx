@@ -152,7 +152,7 @@ const handleLogin = async () => {
       setLoading(false);
       Alert.alert(
         t("Error.error"),
-        "Access denied. Your role is not authorized to use this application."
+        t("Error.Access denied")
       );
       return;
     }

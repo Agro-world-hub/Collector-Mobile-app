@@ -58,37 +58,37 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   const validatePassword = () => {
     // Check if all fields are filled
     if (!currentPassword || !newPassword || !confirmPassword) {
-      Alert.alert('Error', 'All fields are required');
+      Alert.alert(t("Error.error"), t("Error.All fields are required"));
       return false;
     }
 
     // Check if new password meets format requirements
     if (newPassword.length < 8) {
-      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+      Alert.alert(t("Error.error"), t("Error.Your password must contain"));
       return false;
     }
 
     // Check for at least 1 uppercase letter
     if (!/[A-Z]/.test(newPassword)) {
-      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+      Alert.alert(t("Error.error"), t("Error.Your password must contain a minimum"));
       return false;
     }
 
     // Check for at least 1 number
     if (!/[0-9]/.test(newPassword)) {
-      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+      Alert.alert(t("Error.error"), t("Error.Your password must contain"));
       return false;
     }
 
     // Check for at least 1 special character
     if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(newPassword)) {
-      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+       Alert.alert(t("Error.error"), t("Error.Your password must contain a minimum"));
       return false;
     }
 
     // Check if new password and confirm password match
     if (newPassword !== confirmPassword) {
-      Alert.alert('Error', 'New password and confirm password do not match');
+      Alert.alert(t("Error.error"), 'New password and confirm password do not match');
       return false;
     }
 
@@ -132,7 +132,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
       );
 
       console.log("Password update response:", response.data);
-      Alert.alert("Success", "Password updated successfully");
+      Alert.alert(t("Error.Success"), t("Error.Password updated successfully"));
       navigation.navigate("Login");
     } catch (error) {
       // Alert.alert(t("Error.error"), t("Error.Failed to update password."));
