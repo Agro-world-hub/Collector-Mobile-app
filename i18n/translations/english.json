@@ -443,7 +443,7 @@
     "FirstName":"First Name",
     "LastName":"Last Name ",
     "NIC":"NIC Number",
-    "Phone":"Phone Number",
+    "Phone":"Mobile Number",
     "Address":"Address",
     "AccountNum":"Account Number",
     "AccountName":"Account Holder's Name",
@@ -887,7 +887,6 @@
     "Failed to complete order":"Failed to complete order.Please Try again later",
     "Selected product not found":"Selected product not found.Please Try again later",
     "Failed to submit replacement request":"Failed to submit replacement request.Please Try again later"
-    
   },
   "Status": {
     "Pending": "Pending",
@@ -921,21 +920,21 @@
   },
   "ReplaceRequestsApprove":{
     "Loading replace request":"Loading replace request...",
-    "Order ID":"ஆர்டர் இல்லை:",
+    "Order ID":"Order ID:",
     "Defined product":"Defined product",
     "Relevant Product Type":"Relevant Product Type:",
-    "Replacing Product Details":"மாற்றப்பட வேண்டிய பொருள் விவரங்கள்",
+    "Replacing Product Details":"Replacing Product Details",
     "ID":"ID:",
     "No products available":"No products available",
-    "Approve":"ஒப்புதல்",
+    "Approve":"Approve",
     "Rs":"Rs."
   },
-  "ReplaceRequestsScreen":{
-    "Order ID":"ஆர்டர் இல்லை:",
-    "Replacing Item":"பொருளை மாற்றுகிறது:",
-    "Requested Time":"கோரப்பட்ட நேரம்",
-    "Replace Requests":"கோரிக்கைகளை மாற்றவும்",
-    "All":"எல்லாம்",
+    "ReplaceRequestsScreen":{
+    "Order ID":"Order ID:",
+    "Replacing Item":"Replacing Item:",
+    "Requested Time":"Requested Time",
+    "Replace Requests":"Replace Requests",
+    "All":"All",
     "No replace requests found":"No replace requests found"
   },
   "CenterTargetScreen":{
