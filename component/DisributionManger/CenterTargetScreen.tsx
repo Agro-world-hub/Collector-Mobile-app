@@ -1038,9 +1038,18 @@ const SuccessModal = () => {
           />
           
           {/* Success Message */}
-          <Text className="text-center text-gray-600 text-base leading-6 mb-8">
+          {/* <Text className="text-center text-gray-600 text-base leading-6 mb-8">
             {successCount} {t("CenterTargetScreen.order")}{successCount !== 1 ? 's' : ''} {successCount !== 1 ? t("CenterTargetScreen.have") : t("CenterTargetScreen.has")} {t("CenterTargetScreen.been sent out")}{'\n'}{t("CenterTargetScreen.for delivery")}
-          </Text>
+          </Text> */}
+
+
+
+      <Text className="text-center text-gray-600 mb-6">
+  {successCount === 1    
+    ? t("CenterTargetScreen.order one", { count: successCount })
+    : t("CenterTargetScreen.orders out for delivery", { count: successCount })
+  }
+</Text>
           
           {/* Progress Bar */}
           <View className="absolute bottom-0 left-0 right-0 h-2 bg-gray-200 rounded-b-2xl overflow-hidden">
@@ -1591,9 +1600,16 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
       </View>
     </View>
         
-        <Text className="text-center text-gray-600 mb-6">
+        {/* <Text className="text-center text-gray-600 mb-6">
           {t("CenterTargetScreen.Are you sure you want to send these selected")} {selectedItems.length}  {t("CenterTargetScreen.orders out for delivery")}
-        </Text>
+        </Text> */}
+
+       <Text className="text-center text-gray-600 mb-6">
+  {selectedItems.length === 1    
+    ? t("CenterTargetScreen.Are you sure you want to send these selected")    
+    : t("CenterTargetScreen.Are you sure you want", { count: selectedItems.length })
+  }
+</Text>
         
      
         {/* {loading && (

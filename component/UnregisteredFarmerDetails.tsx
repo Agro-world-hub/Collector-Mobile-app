@@ -205,7 +205,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       !bankName ||
       !branchName // Removed trailing comma
     ) {
-      Alert.alert("Sorry", "Please fill all fields");
+      Alert.alert(t("Error.error"), t("Error.Please fill all fields"));
       setLoading(false);
       return;
     }

@@ -20,6 +20,7 @@
   },
   "Error":{
     "error":"Sorry",
+    "Error":"Error",
     "Failed to fetch empid.":"Failed to fetch Employee ID.",
     "New password and confirm password do not match.":"New password and confirm password do not match.",
     "New password must be at least 6 characters long.":"New password must be at least 6 characters long.",
@@ -196,7 +197,23 @@
 "Invalid phone number":"Invalid phone number. Format must start with 7 (e.g., 7XXXXXXXX).",
 "Phone number must be 9 digits long":"Phone number must be 9 digits long.",
 "Invalid Gmail address":"Invalid Gmail address. Gmail addresses cannot have consecutive dots (.), leading/trailing dots, or special characters except + and .",
-"Invalid email address Example":"Invalid email address. Please enter a valid email format (e.g. example@domain.com)."
+"Invalid email address Example":"Invalid email address. Please enter a valid email format (e.g. example@domain.com).",
+"All fields are required":"All fields are required",
+"Your password must contain":"Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.",
+"Your password must contain a minimum":"Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.",
+"New password and confirm password do not match":"New password and confirm password do not match",
+"Password updated successfully":"Password updated successfully",
+"Access denied":"Access denied. Your role is not authorized to use this application.",
+"Please fill all fields":"Please fill all fields",
+"Upload Image First":"Upload Image First",
+"Unsaved Crop Details":"Unsaved Crop Details",
+"You have entered crop details but":"You have entered crop details but haven't added them. Do you want to submit without adding the current crop?",
+"Yes":"Yes",
+"No":"No",
+"No Crops":"No Crops",
+"Please add at least one crop to proceed":"Please add at least one crop to proceed.",
+"Failed to generate invoice number":"Failed to generate invoice number.Please Try again later",
+"Failed to submit crop details":"Failed to submit crop details. Please try again."
   },
   "EngProfile":{
     "LNG": "en",
@@ -343,7 +360,18 @@
     "Done":"Done",
     "Select Crop":"Select Crop",
     "Select Variety":"Select Variety",
-    "Processing...":"Processing..."
+    "Processing...":"Processing...",
+    "Cancel":"Cancel",
+    "Delete":"Delete",
+    "Please upload image for Grade":"Please upload image for Grade {{gradesWithQuantityButNoImage}} before entering quantity for Grade {{grade}}",
+    "Images Required":"Images Required",
+    "Please upload images for":"Please upload images for: {{missingImages}} before adding this crop.",
+    "Add Quantity First":"Add Quantity First",
+    "Please enter quantity":"Please enter quantity for Grade {{grade}} before adding an image.",
+    "Incomplete Selection":"Incomplete Selection",
+    "Please select both a crop and a variety before adding":"Please select both a crop and a variety before adding.",
+  "Are you sure you want to delete previously added":"Are you sure you want to delete previously added {{varietyName}}?",
+  "Are you sure you want to delete grade":"Are you sure you want to delete previously added {{varietyName}} - Grade {{grade}}?"
   },
   "ReportPage":{
     "LNG": "en",
@@ -855,7 +883,11 @@
     "Marking as completed in":"Marking as completed in",
     "seconds":"seconds.",
     "You have unsubmitted changes":"You have unsubmitted changes!",
-    "Update":"Update"
+    "Update":"Update",
+    "Failed to complete order":"Failed to complete order.Please Try again later",
+    "Selected product not found":"Selected product not found.Please Try again later",
+    "Failed to submit replacement request":"Failed to submit replacement request.Please Try again later"
+    
   },
   "Status": {
     "Pending": "Pending",
@@ -917,8 +949,10 @@
     "Close":"Close",
     "Select Completion Date":"Select Completion Date",
     "All Completion Dates":"All Completion Dates",
-    "Are you sure you want to send these selected":"Are you sure you want to send these selected",
-    "orders out for delivery":"orders out for delivery?",
+    "Are you sure you want to send these selected":"Are you sure you want to send this selected order out for delivery?",
+    "Are you sure you want":"Are you sure you want to send these selected {{count}} orders out for delivery?",
+    "orders out for delivery":"{{count}} orders have been sent out for delivery.",
+    "order one":"{{count}} order has been sent out for delivery.",
     "Processing orders":"Processing orders...",
     "Cancel":"Cancel",
     "Out Time":"Out Time",
@@ -937,7 +971,9 @@
      "OK":"OK",
      "Processing":"Processing...",
      "have":"have",
-     "has":"has"
+     "has":"has",
+     "01 order has been sent out for delivery":"01 order has been sent out for delivery.",
+     "orders have been sent out for delivery":"{{successCount}} orders have been sent out for delivery"
   }
 }
 

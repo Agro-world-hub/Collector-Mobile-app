@@ -20,6 +20,7 @@
   },
   "Error":{
     "error":"සමාවෙන්න",
+    "Error":"දෝෂය",
     "Failed to fetch empid.":"සේවක හැඳුනුම්පත ලබා ගැනීමට අසමත් විය.",
     "New password and confirm password do not match.":"නව මුරපදය සහ තහවුරු කිරීමේ මුරපදය නොගැලපේ.",
     "New password must be at least 6 characters long.":"නව මුරපදය අවම වශයෙන් අක්ෂර 6 ක් දිග විය යුතුය.",
@@ -196,7 +197,23 @@
 "Invalid phone number":"අවලංගු දුරකථන අංකය. ආකෘතිය 7 න් ආරම්භ විය යුතුය (උදා: 7XXXXXXXX).",
 "Phone number must be 9 digits long":"දුරකථන අංකය ඉලක්කම් 9ක් දිග විය යුතුය.",
 "Invalid Gmail address":"අවලංගු Gmail ලිපිනය. Gmail ලිපිනවල අනුප්‍රාප්තික තිත් (.), ප්‍රමුඛ/අනුප්‍රාප්තික තිත් හෝ + සහ හැර විශේෂ අක්ෂර තිබිය නොහැක.",
-"Invalid email address Example":"අවලංගු විද්‍යුත් තැපැල් ලිපිනය. කරුණාකර වලංගු විද්‍යුත් තැපැල් ආකෘතියක් ඇතුළත් කරන්න (උදා: example@domain.com)."
+"Invalid email address Example":"අවලංගු විද්‍යුත් තැපැල් ලිපිනය. කරුණාකර වලංගු විද්‍යුත් තැපැල් ආකෘතියක් ඇතුළත් කරන්න (උදා: example@domain.com).",
+"All fields are required":"සියලුම ක්ෂේත්‍ර අවශ්‍යයි.",
+"Your password must contain":"ඔබගේ මුරපදයේ අවම වශයෙන් අක්ෂර 8 ක් අඩංගු විය යුතු අතර එක් ලොකු අකුරක්, අංක සහ විශේෂ අක්ෂරයක් අඩංගු විය යුතුය.",
+"Your password must contain a minimum":"ඔබගේ මුරපදයේ අවම වශයෙන් අක්ෂර 8 ක් අඩංගු විය යුතු අතර එක් ලොකු අකුරක්, අංක සහ විශේෂ අක්ෂරයක් අඩංගු විය යුතුය.",
+"New password and confirm password do not match":"නව මුරපදය සහ තහවුරු කිරීමේ මුරපදය නොගැලපේ.",
+"Password updated successfully":"මුරපදය සාර්ථකව යාවත්කාලීන කරන ලදී",
+"Access denied":"ප්‍රවේශය ප්‍රතික්ෂේප කරන ලදී. මෙම යෙදුම භාවිතා කිරීමට ඔබගේ භූමිකාවට අවසර නැත.",
+"Please fill all fields":"කරුණාකර සියලුම ක්ෂේත්‍ර පුරවන්න.",
+"Upload Image First":"පළමුව රූපය උඩුගත කරන්න",
+"Unsaved Crop Details":"සුරකින ලද බෝග විස්තර",
+"You have entered crop details but":"ඔබ බෝග විස්තර ඇතුළත් කර ඇත නමුත් ඒවා එකතු කර නැත. වත්මන් බෝගය එකතු නොකර ඉදිරිපත් කිරීමට ඔබට අවශ්‍යද?",
+"Yes":"ඔව්",
+"No":"නැත",
+"No Crops":"බෝග නැත",
+"Please add at least one crop to proceed":"ඉදිරියට යාමට කරුණාකර අවම වශයෙන් එක් බෝගයක් හෝ එක් කරන්න.",
+"Failed to generate invoice number":"ඉන්වොයිස් අංකය ජනනය කිරීමට අපොහොසත් විය. කරුණාකර පසුව නැවත උත්සාහ කරන්න",
+"Failed to submit crop details":"බෝග විස්තර ඉදිරිපත් කිරීමට අපොහොසත් විය. කරුණාකර නැවත උත්සාහ කරන්න."
   },
 "EngProfile":{
     "LNG": "si",
@@ -343,7 +360,19 @@
     "Done":"තහවුරු කරන්න",
     "Select Crop":"--බෝගය තෝරන්න--",
     "Select Variety":"--ප්‍රභේදය තෝරන්න--",
-    "Processing...":"සකසමින්..."
+    "Processing...":"සකසමින්...",
+    "Cancel":"අවලංගු කරන්න",
+    "Delete":"මකන්න",
+      "Please upload image for Grade":"{{grade}} ශ්‍රේණිය සඳහා ප්‍රමාණය ඇතුළත් කිරීමට පෙර {{gradesWithQuantityButNoImage}} ශ්‍රේණිය සඳහා රූපය උඩුගත කරන්න.",
+      "Images Required":"රූප අවශ්‍යයි",
+       "Please upload images for":"මෙම කප්පාදුව එකතු කිරීමට පෙර කරුණාකර: {{missingImages}} සඳහා පින්තූර උඩුගත කරන්න.",
+       "Add Quantity First":"පළමුව ප්‍රමාණය එකතු කරන්න",
+       "Please enter quantity":"රූපයක් එක් කිරීමට පෙර කරුණාකර {{ශ්‍රේණිය}} ශ්‍රේණිය සඳහා ප්‍රමාණය ඇතුළත් කරන්න.",
+           "Incomplete Selection":"අසම්පූර්ණ තේරීම",
+    "Please select both a crop and a variety before adding":"එකතු කිරීමට පෙර කරුණාකර බෝගයක් සහ ප්‍රභේදයක් යන දෙකම තෝරන්න.",
+"Are you sure you want to delete previously added":"කලින් එකතු කළ {{varietyName}} මකා දැමීමට ඔබට අවශ්‍ය බව ඔබට විශ්වාසද?",
+"Are you sure you want to delete grade":"කලින් එකතු කළ {{varietyName}} - ශ්‍රේණිය {{grade}} මැකීමට ඔබට අවශ්‍ය බව ඔබට විශ්වාසද?"
+
   },
   "ReportPage":{
     "LNG": "si",
@@ -855,7 +884,10 @@
       "Marking as completed in":"සම්පූර්ණ ලෙස සලකුණු කිරීම",
     "seconds":"තත්පර.",
      "You have unsubmitted changes":"ඔබට ඉදිරිපත් නොකළ වෙනස්කම් තිබේ!",
-     "Update":"යාවත්කාලීන කරන්න"
+     "Update":"යාවත්කාලීන කරන්න",
+     "Failed to complete order":"ඇණවුම සම්පූර්ණ කිරීමට අසමත් විය. කරුණාකර පසුව නැවත උත්සාහ කරන්න.",
+     "Selected product not found":"තෝරාගත් නිෂ්පාදනය හමු නොවීය. කරුණාකර පසුව නැවත උත්සාහ කරන්න.",
+      "Failed to submit replacement request":"ප්‍රතිස්ථාපන ඉල්ලීම ඉදිරිපත් කිරීමට අපොහොසත් විය. කරුණාකර පසුව නැවත උත්සාහ කරන්න."
   },
    "Status": {
     "Pending": "අපරිපූර්ණ",
@@ -917,8 +949,10 @@
     "Close":"වසන්න",
     "Select Completion Date":"සම්පූර්ණ කිරීමේ දිනය තෝරන්න",
     "All Completion Dates":"සියලු සම්පූර්ණ කිරීමේ දිනයන්",
-    "Are you sure you want to send these selected":"තෝරාගත් මෙම තෝරාගත් ඒවා යැවීමට ඔබට විශ්වාසද",
-    "orders out for delivery":"බෙදා හැරීමට ඇණවුම් තිබේ?",
+    "Are you sure you want to send these selected":"තෝරාගත් මෙම තෝරාගත් ඒවා යැවීමට ඔබට විශ්වාසද?",
+     "Are you sure you want":"ඔබට මෙම තෝරාගත් {{count}} ඇණවුම් බෙදා හැරීම සඳහා යැවීමට අවශ්‍ය බව විශ්වාසද?",
+    "orders out for delivery":"ඇණවුම් {{count}}  බෙදා හැරීම සඳහා යවා ඇත.",
+     "order one":"ඇණවුම් {{count}} බෙදා හැරීම සඳහා යවා ඇත.",
     "Processing orders":"සැකසුම් ඇණවුම්.",
     "Cancel":"අවලංගු කරන්න",
     "Out Time":"පිටතට යන වේලාව",
@@ -937,6 +971,8 @@
      "OK":"හරි",
      "Processing":"සකසමින්...",
       "have":"ඇත",
-     "has":"ඇත"
+     "has":"ඇත",
+      "01 order has been sent out for delivery":"ඇණවුම් 01ක් බෙදා හැරීම සඳහා යවා ඇත.",
+      "orders have been sent out for delivery":"බෙදා හැරීම සඳහා ඇණවුම් යවා ඇත."
   }
 }
