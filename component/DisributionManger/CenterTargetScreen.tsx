@@ -1042,10 +1042,12 @@ const SuccessModal = () => {
             {successCount} {t("CenterTargetScreen.order")}{successCount !== 1 ? 's' : ''} {successCount !== 1 ? t("CenterTargetScreen.have") : t("CenterTargetScreen.has")} {t("CenterTargetScreen.been sent out")}{'\n'}{t("CenterTargetScreen.for delivery")}
           </Text> */}
 
-<Text className="text-center text-gray-600 text-base leading-6 mb-8">
-  {successCount === 1 
-    ? `01 ${t("CenterTargetScreen.order")} ${t("CenterTargetScreen.been sent out")} ${t("CenterTargetScreen.for delivery")}`
-    : `${successCount} ${t("CenterTargetScreen.orders out for delivery")}`
+
+
+      <Text className="text-center text-gray-600 mb-6">
+  {successCount === 1    
+    ? t("CenterTargetScreen.order one", { count: successCount })
+    : t("CenterTargetScreen.orders out for delivery", { count: successCount })
   }
 </Text>
           
