@@ -2014,8 +2014,8 @@ const resetCountdown = () => {
 return (
   <View className="flex-1 bg-white">
     {/* Header */}
-    <View className="bg-white px-4 py-4 flex-row items-center border-b border-gray-100">
-      <TouchableOpacity onPress={handleBackPress} className="mr-4">
+    <View className="bg-white px-4 py-4 flex-row items-center ">
+      <TouchableOpacity onPress={handleBackPress} className="absolute left-4 bg-[#F6F6F680] rounded-full p-2 z-10">
         <AntDesign name="left" size={24} color="#333" />
       </TouchableOpacity>
       <View className="flex-1 justify-center items-center">

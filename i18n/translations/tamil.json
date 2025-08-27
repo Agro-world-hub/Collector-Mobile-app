@@ -498,7 +498,7 @@
     "No":"எண்",
     "Variety":"வகை",
     "Grade":"தரம்",
-    "Target":"Target (kg)",
+    "Target":"இலக்கு (kg)",
     "Todo()":"செய்ய (kg)"
   },
   "ClaimOfficer":{
@@ -599,7 +599,7 @@
    "No":"எண்",
      "Variety":"வகை",
     "Grade":"தரம்",
-    "Target":"Target",
+    "Target":"இலக்கு",
  "kg":"(kg)",
    "Action":"Action",
      "Save":"சேமிக்க"
@@ -802,9 +802,9 @@
     "No":"எண்",
     "Variety":"வகை",
     "Grade":"தரம்",
-    "Target":"Target (kg)",
+    "Target":"இலக்கு (kg)",
     "Todo()":"செய்ய (kg)",
-    "My Daily Target":"My Daily Target",
+    "My Daily Target":"எனது இலக்கு",
     "Invoice No":"விலைப்பட்டியல் எண்",
     "Status":"தகவல் நிலை",
     "Date":"திகதி & நேரம்",
