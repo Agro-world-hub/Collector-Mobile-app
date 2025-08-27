@@ -1039,7 +1039,7 @@ const SuccessModal = () => {
           
           {/* Success Message */}
           <Text className="text-center text-gray-600 text-base leading-6 mb-8">
-            {successCount} {t("CenterTargetScreen.order")}{successCount !== 1 ? 's' : ''} {successCount !== 1 ? 'have' : 'has'} {t("CenterTargetScreen.been sent out")}{'\n'}{t("CenterTargetScreen.for delivery")}
+            {successCount} {t("CenterTargetScreen.order")}{successCount !== 1 ? 's' : ''} {successCount !== 1 ? t("CenterTargetScreen.have") : t("CenterTargetScreen.has")} {t("CenterTargetScreen.been sent out")}{'\n'}{t("CenterTargetScreen.for delivery")}
           </Text>
           
           {/* Progress Bar */}
@@ -1639,7 +1639,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
                 />
               )}
               <Text className="text-center font-medium text-white">
-                {loading ? 'Processing...' : 'Out'}
+                {loading ? t("CenterTargetScreen.Processing") : t("CenterTargetScreen.Out")}
               </Text>
             </View>
           </TouchableOpacity>
