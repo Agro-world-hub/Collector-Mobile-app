@@ -512,16 +512,16 @@ const fetchTargets = useCallback(async () => {
   const getStatusText = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
   switch (selectedStatus) {
     case 'Pending':
-      return selectedLanguage === 'si' ? 'අපේක්ෂාවෙන්' : 
+      return selectedLanguage === 'si' ? 'අපරිපූර්ණ' : 
              selectedLanguage === 'ta' ? 'நிலுவையில்' : 
              t("Status.Pending") || 'Pending';
     case 'Opened':
-      return selectedLanguage === 'si' ? 'විවෘත කර ඇත' : 
+      return selectedLanguage === 'si' ? 'විවෘත කළ' : 
              selectedLanguage === 'ta' ? 'திறக்கப்பட்டது' : 
              t("Status.Opened") || 'Opened';
     case 'Completed':
-      return selectedLanguage === 'si' ? 'සම්පූර්ණයි' : 
-             selectedLanguage === 'ta' ? 'நிறைவானது' : 
+      return selectedLanguage === 'si' ? 'සම්පූර්ණ කළ' : 
+             selectedLanguage === 'ta' ? 'முடிந்தது' : 
              t("Status.Completed") || 'Completed';
     default:
       return selectedStatus;
@@ -829,12 +829,18 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
     }}
   >
     <Text 
-      style={{
+      style={[{
         color: getStatusTextColor(item.selectedStatus),
         fontSize: 11,
         fontWeight: '500',
-        textAlign: 'center'
-      }}
+        textAlign: 'center',
+      },
+    i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 12 }]}
+
     >
       {getStatusText(item.selectedStatus)}
     </Text>

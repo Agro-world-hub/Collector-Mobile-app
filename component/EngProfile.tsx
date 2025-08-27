@@ -20,11 +20,12 @@ import {
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useTranslation } from "react-i18next";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { useNavigation, useRoute, RouteProp, useFocusEffect } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 import { LanguageContext } from "@/context/LanguageContext";
 import LottieView from 'lottie-react-native';
 import NetInfo from "@react-native-community/netinfo";
+import { set } from "lodash";
 
 type EngProfileNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -71,9 +72,10 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const [isComplaintDropdownOpen, setComplaintDropdownOpen] =
     useState<boolean>(false);
   const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false); // Add this state
-  const { t } = useTranslation();
+  const { t ,  i18n} = useTranslation();
   const { changeLanguage } = useContext(LanguageContext);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+  console.log("Selected language:", selectedLanguage);
 
   const fetchSelectedLanguage = async () => {
     try {
@@ -83,7 +85,23 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       console.error("Error fetching language preference:", error);
     }
   };
-
+   useFocusEffect(
+    React.useCallback(() => {
+      console.log("Current language:", i18n.language);
+      setComplaintDropdownOpen(false)
+      setLanguageDropdownOpen(false);
+      if (i18n.language === "en") {
+         LanguageSelect("en");
+        setSelectedLanguage("ENGLISH");
+      } else if (i18n.language === "si") {
+        LanguageSelect("si");
+        setSelectedLanguage("SINHALA");
+      } else if (i18n.language === "ta") {
+        LanguageSelect("ta");
+        setSelectedLanguage("TAMIL");
+      }
+    }, [i18n.language]) // The effect will run when i18n.language changes
+  );
   useEffect(() => {
     const fetchData = async () => {
       await fetchSelectedLanguage();
@@ -160,10 +178,10 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       if (language === "English") {
         LanguageSelect("en");
         HanldeAsynStorage("en");
-      } else if (language === "தமிழ்") {
+      } else if (language === "TAMIL") {
         LanguageSelect("ta");
         HanldeAsynStorage("ta");
-      } else if (language === "සිංහල") {
+      } else if (language === "SINHALA") {
         LanguageSelect("si");
         HanldeAsynStorage("si");
       }
@@ -389,12 +407,15 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   {/* Then render dropdown AFTER the trigger */}
   {isLanguageDropdownOpen && (
     <View className="pl-8 bg-white  rounded-lg mt-2">
-      {["English", "සිංහල"].map((language) => (
-        <TouchableOpacity
-          key={language}
-          onPress={() => handleLanguageSelect(language)}
-          className={`flex-row items-center py-2 px-4 rounded-lg my-1 ${
-            selectedLanguage === language
+      {["ENGLISH", "SINHALA", "TAMIL"].map((language) => {
+        const displayLanguage =
+          language === "SINHALA" ? "සිංහල" : language === "TAMIL" ? "தமிழ்" : language === "ENGLISH" ? "English" : language;
+        return (
+          <TouchableOpacity
+            key={language}
+            onPress={() => handleLanguageSelect(language)}
+            className={`flex-row items-center py-2 px-4 rounded-lg my-1 ${
+              selectedLanguage === language
               ? "bg-[#FFDFF7]"
               : "bg-transparent"
           }`}
@@ -406,7 +427,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
                 : "text-[#434343]"  // Fixed: Added "text-" prefix
             }`}
           >
-            {language}
+            {displayLanguage}
           </Text>
           {selectedLanguage === language && (
             <View className="absolute right-4">
@@ -414,7 +435,8 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
             </View>
           )}
         </TouchableOpacity>
-      ))}
+           );
+              })}
     </View>
   )}
   <View className="h-0.5 bg-[#D2D2D2] my-4" />

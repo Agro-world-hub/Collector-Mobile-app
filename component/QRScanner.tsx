@@ -193,7 +193,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
   return (
     <View style={{ flex: 1, position: "relative" }}>
                     <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
-                      <TouchableOpacity  className="bg-[#F6F6F680] rounded-full p-2 justify-center w-10 " onPress={() => navigation.goBack()}>
+                      <TouchableOpacity  className="bg-[#F6F6F680] rounded-full p-2 justify-center w-10 z-20 " onPress={() => navigation.goBack()}>
                         <AntDesign name="left" size={24} color="#000" />
                       </TouchableOpacity>
                       {/* <Text className="text-lg font-bold ml-[25%]"> {t("ClaimOfficer.ClaimOfficers")}</Text> */}

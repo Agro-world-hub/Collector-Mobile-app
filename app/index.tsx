@@ -333,7 +333,7 @@ const [isOfflineAlertShown, setIsOfflineAlertShown] = useState(false);
           />
           {/* <Stack.Screen name="UnregisteredCropDetails" component={UnregisteredCropDetails as any} /> */}
 
-          {/* <Stack.Screen name="Lanuage" component={Lanuage} /> */}
+         <Stack.Screen name="Lanuage" component={Lanuage} /> 
 
 
 
