@@ -778,7 +778,7 @@ TID: ${invoiceNumber}
       const response = await axios.post(apiUrl, body, { headers });
 
       if (response.data.referenceId) {
-        Alert.alert("Success", "SMS notification sent successfully!");
+       // Alert.alert("Success", "SMS notification sent successfully!");
       }
     } catch (error) {
       console.error("Error sending SMS:", error);

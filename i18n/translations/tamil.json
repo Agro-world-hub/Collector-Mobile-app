@@ -918,6 +918,7 @@
     "Select Completion Date":"Select Completion Date",
     "All Completion Dates":"All Completion Dates",
     "Are you sure you want to send these selected":"Are you sure you want to send these selected",
+     "Are you sure you want":"",
     "orders out for delivery":"orders out for delivery?",
     "Processing orders":"Processing orders...",
     "Cancel":"Cancel",
@@ -937,7 +938,9 @@
      "OK":"OK",
      "Processing":"Processing...",
       "have":"have",
-     "has":"has"
+     "has":"has",
+      "01 order has been sent out for delivery":"01 order has been sent out for delivery.",
+      "orders have been sent out for delivery":"orders have been sent out for delivery"
   }
 }
 

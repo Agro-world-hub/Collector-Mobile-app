@@ -917,7 +917,8 @@
     "Close":"වසන්න",
     "Select Completion Date":"සම්පූර්ණ කිරීමේ දිනය තෝරන්න",
     "All Completion Dates":"සියලු සම්පූර්ණ කිරීමේ දිනයන්",
-    "Are you sure you want to send these selected":"තෝරාගත් මෙම තෝරාගත් ඒවා යැවීමට ඔබට විශ්වාසද",
+    "Are you sure you want to send these selected":"තෝරාගත් මෙම තෝරාගත් ඒවා යැවීමට ඔබට විශ්වාසද?",
+     "Are you sure you want":"ඔබට මෙම තෝරාගත් {{count}} ඇණවුම් බෙදා හැරීම සඳහා යැවීමට අවශ්‍ය බව විශ්වාසද?",
     "orders out for delivery":"බෙදා හැරීමට ඇණවුම් තිබේ?",
     "Processing orders":"සැකසුම් ඇණවුම්.",
     "Cancel":"අවලංගු කරන්න",
@@ -937,6 +938,8 @@
      "OK":"හරි",
      "Processing":"සකසමින්...",
       "have":"ඇත",
-     "has":"ඇත"
+     "has":"ඇත",
+      "01 order has been sent out for delivery":"ඇණවුම් 01ක් බෙදා හැරීම සඳහා යවා ඇත.",
+      "orders have been sent out for delivery":"බෙදා හැරීම සඳහා ඇණවුම් යවා ඇත."
   }
 }
