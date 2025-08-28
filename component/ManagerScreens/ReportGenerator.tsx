@@ -13,6 +13,7 @@ import * as FileSystem from "expo-file-system";
 import { ScrollView } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
 import LottieView from "lottie-react-native";
+import i18n from "@/i18n/i18n";
 
 type ReportGeneratorNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -264,7 +265,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
       <View className="flex-row items-center  p-6 rounded-b-lg">
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          className="absolute top-6 left-4"
+          className="absolute top-5 left-4 bg-[#f3f3f380] rounded-full p-2 justify-center w-10"
         >
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
@@ -375,6 +376,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
               className="text-gray-700 text-center"
               numberOfLines={1}
               ellipsizeMode="tail"
+          
             >
               {t("ReportGenerator.Reset")}
             </Text>
@@ -388,6 +390,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
               className="text-white font-semibold text-center"
               numberOfLines={1}
               ellipsizeMode="tail"
+
             >
               {t("ReportGenerator.Generate")}
             </Text>
@@ -428,7 +431,15 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
               style={{ width: 100, height: 70 }} // Explicit width and height
             >
               <Ionicons name="download" size={24} color="white" />
-              <Text className="text-sm text-white mt-1">
+              <Text className="text-sm text-white mt-1"
+                                                                                       style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 14 }
+]}
+              >
                 {t("ReportGenerator.Download")}
               </Text>
             </TouchableOpacity>
@@ -439,7 +450,15 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
               style={{ width: 100, height: 70 }} // Explicit width and height
             >
               <Ionicons name="share-social" size={24} color="white" />
-              <Text className="text-sm text-white mt-1">
+              <Text className="text-sm text-white mt-1"
+                                                                                       style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 14 }
+]}
+              >
                 {t("ReportGenerator.Share")}
               </Text>
             </TouchableOpacity>

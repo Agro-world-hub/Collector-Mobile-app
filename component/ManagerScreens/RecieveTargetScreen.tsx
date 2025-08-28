@@ -344,10 +344,12 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
                 ],
               });
             }}
+            className="bg-[#FFFFFF1A] rounded-full p-2 justify-center w-10"
           >
            <AntDesign name="left" size={22} color="white" />
           </TouchableOpacity>
-          <Text className="text-white text-lg font-semibold text-center w-full">
+          {/* <Text className="text-white text-lg font-semibold text-center w-full"> */}
+             <Text className="flex-1 text-center text-xl font-semibold text-white mr-[6%]">
             {getvarietyName()}
           </Text>
         </View>

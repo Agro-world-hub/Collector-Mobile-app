@@ -191,12 +191,16 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
     <View className="flex-1 bg-[#282828] ">
       {/* Header */}
       <View className="bg-[#282828] px-4 py-3 flex-row justify-center items-center">
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => navigation.goBack()}
           className="absolute left-4"
         >
           <AntDesign name="left" size={22} color="white" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+         <TouchableOpacity onPress={() => navigation.goBack()}
+                  className="absolute top-2 left-4 bg-[#FFFFFF1A] rounded-full  p-2 justify-center w-10" >
+                                                                 <AntDesign name="left" size={24} color="#000502" />
+                                                               </TouchableOpacity>
         <Text className="text-white text-lg font-bold">{officerId}</Text>
       </View>
 

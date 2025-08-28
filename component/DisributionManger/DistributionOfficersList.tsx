@@ -19,6 +19,7 @@ import LottieView from "lottie-react-native"; // Import Lottie for animation
 import BottomNav from "../BottomNav";
 import { useTranslation } from "react-i18next";
 import NetInfo from "@react-native-community/netinfo";
+import i18n from "@/i18n/i18n";
 
 const { width } = Dimensions.get("window");
 const scale = (size: number) => (width / 375) * size;
@@ -220,17 +221,41 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
       </View>
 
       <View className="flex-1">
-        <Text className="text-[18px] font-semibold text-gray-900">
+             {/* <Text className="text-red-500 text-xs font-semibold mr-2 self-end">
+          {t("CollectionOfficersList.Not Approved")}
+        </Text> */}
+           {item.status === "Not Approved" && (
+        <Text className="text-red-500 text-xs font-semibold mr-2 self-end"
+              style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 9 }
+    : { fontSize: 12 }
+]}
+        >
+          {t("CollectionOfficersList.Not Approved")}
+        </Text>
+      )}
+        <Text className="text-[18px] font-semibold text-gray-900"
+         style={[
+  i18n.language === "si"
+    ? { fontSize: 16 }
+    : i18n.language === "ta"
+    ? { fontSize: 14 }
+    : { fontSize: 17 }
+]}
+        >
           {getOfficerName(item)}
         </Text>
         <Text className="text-sm text-gray-500"> {t("DistributionOfficersList.EMPID")}  {item.empId}</Text>
       </View>
 
-      {item.status === "Not Approved" && (
+      {/* {item.status === "Not Approved" && (
         <Text className="text-red-500 text-xs font-semibold mr-2 mt-[-12%]">
-          {t("CollectionOfficersList.Not Approved")}
+          {t("CollectionOfficersList.Not Approve")}
         </Text>
-      )}
+      )} */}
 
       {/* Conditionally render the chevron icon based on the officer's status */}
       {item.status !== "Not Approved" && (

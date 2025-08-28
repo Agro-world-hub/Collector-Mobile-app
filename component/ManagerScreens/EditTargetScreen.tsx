@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import i18n from "@/i18n/i18n";
 
 type EditTargetScreenNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -81,11 +82,14 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({
   return (
     <View className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-row items-center bg-[#2AAD7A] p-6 rounded-b-lg">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="white" />
+      <View className="flex-row items-center bg-[#313131] p-6 rounded-b-lg">
+        <TouchableOpacity onPress={() => navigation.goBack()}
+          className="bg-[#FFFFFF1A] rounded-full p-2 justify-center w-10"
+          >
+         <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-semibold text-center w-full">
+        {/* <Text className="text-white text-lg font-semibold text-center w-full"> */}
+         <Text className="flex-1 text-center text-xl font-semibold text-white mr-[6%]">
           {getvarietyName()}
         </Text>
       </View>
@@ -118,7 +122,7 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({
               <Ionicons
                 name={isEditing ? "pencil" : "pencil"}
                 size={20}
-                color={isEditing ? "green" : "green"}
+                color={isEditing ? "#F4F4F4" : "black"}
               />
             </TouchableOpacity>
           </View>
@@ -127,7 +131,7 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({
           {isEditing && (
             <View className="flex-row justify-center space-x-4 mt-4 p-5">
               <TouchableOpacity
-                className="flex-1 bg-[#D16D6A] px-6 py-2 rounded-md items-center"
+                className="flex-1 bg-[#FF0700] px-6 py-2 rounded-full items-center"
                 onPress={() =>
                   navigation.navigate("PassTargetBetweenOfficers" as any, {
                     varietyNameEnglish,
@@ -142,12 +146,20 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({
                   })
                 } // Save and exit edit mode
               >
-                <Text className="text-white font-medium">
+                <Text className="text-white font-medium"
+                                                                     style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 14 }
+]}
+                >
                   {t("EditTargetManager.Pass")}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="flex-1 bg-[#2AAD7A] px-6 py-2 rounded-md items-center"
+                className="flex-1 bg-[#980775] px-6 py-2 rounded-full items-center"
                 onPress={() =>
                   navigation.navigate("RecieveTargetBetweenOfficers" as any, {
                     varietyNameEnglish,
@@ -162,7 +174,15 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({
                   })
                 } // Save and exit edit mode
               >
-                <Text className="text-white font-medium">
+                <Text className="text-white font-medium"
+                                                                     style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 14 }
+]}
+                >
                   {t("EditTargetManager.Receive")}
                 </Text>
               </TouchableOpacity>

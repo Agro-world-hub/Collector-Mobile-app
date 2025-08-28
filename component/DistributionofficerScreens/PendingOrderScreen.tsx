@@ -1757,11 +1757,11 @@ const getDynamicStatus = (): 'Pending' | 'Opened' | 'Completed' => {
 const getStatusText = (status: 'Pending' | 'Opened' | 'Completed') => {
   switch (status) {
     case 'Pending':
-      return selectedLanguage === 'si' ? 'අපේක්ෂාවෙන්' : 
+      return selectedLanguage === 'si' ? 'අපරිපූර්ණ' : 
              selectedLanguage === 'ta' ? 'நிலுவையில்' : 
              t("Status.Pending") || 'Pending';
     case 'Opened':
-      return selectedLanguage === 'si' ? 'විවෘත කර ඇත' : 
+      return selectedLanguage === 'si' ? 'විවෘත කළ' : 
              selectedLanguage === 'ta' ? 'திறக்கப்பட்டது' : 
              t("Status.Opened") || 'Opened';
     case 'Completed':
@@ -1876,7 +1876,72 @@ const resetCountdown = () => {
     setShowCompletionPrompt(false);
 };
 
+const getWarningMessage = (allSelected: boolean) => {
+  if (allSelected) {
+    // All items selected message
+    if (selectedLanguage === 'si') {
+      return (
+        <>
+          සියල්ල පරීක්ෂා කර ඇත. ඇණවුම සුරකින විට{' '}
+          <Text style={{ fontWeight: 'bold' }}>'සම්පූර්ණයි'</Text> තත්වයට මාරු වේ.
+        </>
+      );
+    } else if (selectedLanguage === 'ta') {
+      return (
+        <>
+          அனைத்தும் சரிபார்க்கப்பட்டது. சேமிக்கும்போது ஆர்டர்{' '}
+          <Text style={{ fontWeight: 'bold' }}>'நிறைவானது'</Text> நிலைக்கு மாறும்.
+        </>
+      );
+    } else {
+      return (
+        <>
+          All checked. Order will move to{' '}
+          <Text style={{ fontWeight: 'bold' }}>'Completed'</Text> on save.
+        </>
+      );
+    }
+  } else {
+    // Some items unchecked message
+    if (selectedLanguage === 'si') {
+      return (
+        <>
+          පරීක්ෂා නොකළ අයිතම ඉතිරිව ඇත. දැන් සුරැකීමෙන් ඇණවුම{' '}
+          <Text style={{ fontWeight: 'bold' }}>'විවෘත කර ඇත'</Text> තත්වයේ පවතී.
+        </>
+      );
+    } else if (selectedLanguage === 'ta') {
+      return (
+        <>
+          சரிபார்க்கப்படாத உருப்படிகள் உள்ளன. இப்போது சேமிப்பது ஆர்டரை{' '}
+          <Text style={{ fontWeight: 'bold' }}>'திறக்கப்பட்டது'</Text> நிலையில் வைத்திருக்கும்.
+        </>
+      );
+    } else {
+      return (
+        <>
+          Unchecked items remain. Saving now keeps the order in{' '}
+          <Text style={{ fontWeight: 'bold' }}>'Opened'</Text> Status.
+        </>
+      );
+    }
+  }
+};
 
+// Helper function to calculate if all items are selected (extracted to avoid repetition)
+const calculateAllSelected = () => {
+  const hasFamily = familyPackItems.length > 0;
+  const hasAdditional = additionalItems.length > 0;
+  
+  if (hasFamily && hasAdditional) {
+    return areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+  } else if (hasFamily && !hasAdditional) {
+    return areAllFamilyPackItemsSelected();
+  } else if (!hasFamily && hasAdditional) {
+    return areAllAdditionalItemsSelected();
+  }
+  return false;
+};
 
 
 
@@ -2265,7 +2330,7 @@ return (
           )}
 
           {/* Warning Message - Only show for non-completed orders */}
-          {showWarning && orderStatus !== 'Completed' && (
+          {/* {showWarning && orderStatus !== 'Completed' && (
             <View className="mx-4 mb-4 bg-white px-4 py-2">
               <Text 
                 className="text-sm text-center italic"
@@ -2308,14 +2373,40 @@ return (
                         allSelected = areAllAdditionalItemsSelected();
                       }
                       
-                      return allSelected
-                        ? <>  {t("PendingOrderScreen.All checked")} <Text style={{ fontWeight: 'bold' }}> {t("PendingOrderScreen.Completed")} </Text> {t("PendingOrderScreen.onsave")}</>
-                        : <> {t("PendingOrderScreen.Unchecked items")} <Text style={{ fontWeight: 'bold' }}>{t("PendingOrderScreen.Opened")}</Text> {t("PendingOrderScreen.Status")}</>;
+                    //   return allSelected
+                    //     ? <>  {t("PendingOrderScreen.All checked")} <Text style={{ fontWeight: 'bold' }}> {t("PendingOrderScreen.Completed")} </Text> {t("PendingOrderScreen.onsave")}</>
+                    //     : <> {t("PendingOrderScreen.Unchecked items")} <Text style={{ fontWeight: 'bold' }}>{t("PendingOrderScreen.Opened")}</Text> {t("PendingOrderScreen.Status")}</>;
+                    // })()
+                     return allSelected
+                        ? <>  All checked. Order will move to <Text style={{ fontWeight: 'bold' }}> 'Completed' </Text> on save.</>
+                        : <> Unchecked items remain. Saving now keeps the order in  <Text style={{ fontWeight: 'bold' }}>'Opened'</Text> Status.</>;
                     })()
                 }
               </Text>
             </View>
-          )}
+          )} */}
+          {showWarning && orderStatus !== 'Completed' && (
+  <View className="mx-4 mb-4 bg-white px-4 py-2">
+    <Text
+      className="text-sm text-center italic"
+      style={{
+        color: (() => {
+          const allSelected = calculateAllSelected();
+          return orderStatus === 'Opened'
+            ? '#FA0000'
+            : allSelected
+              ? '#308233'
+              : '#FA0000';
+        })()
+      }}
+    >
+      {orderStatus === 'Opened'
+        ? ""
+        : getWarningMessage(calculateAllSelected())
+      }
+    </Text>
+  </View>
+)}
 
           {/* Completed Order Summary - Show completion details */}
           {/* {orderStatus === 'Completed' && (

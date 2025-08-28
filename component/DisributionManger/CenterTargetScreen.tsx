@@ -225,12 +225,10 @@ const [selectionLimitReached, setSelectionLimitReached] = useState(false);
       case 'திறந்த':
         return t("Status.Opened");
       case 'pending':
-      case 'අපේක්ෂිත':
-      case 'පොරොත්තුවේ':
+    
       case 'අපරිපූර්ණ':
-      case 'நிலுவையில் உள்ளது':
       case 'நிலுவையில்':
-      case 'காத்திருக்கும்':
+    
         return t("Status.Pending");
       default:
         return t("Status.Unknown");
@@ -262,7 +260,7 @@ const getStatusColor = (status: string) => {
   if (normalizedStatus === 'විවෘත' || normalizedStatus === 'විවෘතයි' || normalizedStatus === 'විවෘත කරන ලද') {
     return 'bg-[#FBFF0066] border border-[#FBFF0066]';
   }
-  if (normalizedStatus === 'අපේක්ෂිත' || normalizedStatus === 'පොරොත්තුවේ' || normalizedStatus === 'අපරිපූර්ණ') {
+  if ( normalizedStatus === 'අපරිපූර්ණ') {
     return 'bg-[#FF070733] border border-[#FF070733]';
   }
 
@@ -272,7 +270,7 @@ const getStatusColor = (status: string) => {
   if (normalizedStatus === 'திறக்கப்பட்டது' || normalizedStatus === 'திறந்த' || normalizedStatus === 'திறந்தது') {
     return 'bg-[#FBFF0066] border border-[#FBFF0066]';
   }
-  if (normalizedStatus === 'நிலுவையில்' || normalizedStatus === 'காத்திருக்கும்' || normalizedStatus === 'நிலுவையில் உள்ளது') {
+  if (normalizedStatus === 'நிலுவையில்') {
     return 'bg-[#FF070733] border border-[#FF070733]';
   }
   
@@ -303,12 +301,10 @@ const getStatusTextColor = (status: string) => {
     return 'text-[#A8A100]';
   }
   if (normalizedStatus === 'pending' || 
-      normalizedStatus === 'අපේක්ෂිත' || 
-      normalizedStatus === 'පොරොත්තුවේ' ||
+   
       normalizedStatus === 'අපරිපූර්ණ' ||
-      normalizedStatus === 'நிலுவையில்' || 
-      normalizedStatus === 'காத்திருக்கும்' || 
-      normalizedStatus === 'நிலுவையில் உள்ளது') {
+    
+      normalizedStatus === 'நிலுவையில்') {
     return 'text-[#FF0700]';
   }
   
@@ -1898,7 +1894,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     <Text 
       style={[
         i18n.language === "si" ? { fontSize: 12 } :
-        i18n.language === "ta" ? { fontSize: 12 } :
+        i18n.language === "ta" ? { fontSize: 9 } :
         { fontSize: 12 }
       ]}
       className={`font-medium text-center ${getStatusTextColor(item.selectedStatus)}`}

@@ -27,6 +27,9 @@ import { AppState } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 import { useFocusEffect } from "expo-router";
+import i18n from "@/i18n/i18n";
+
+
 
 type AddOfficerBasicDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -741,12 +744,12 @@ const checkEmailExists = async (email: string) => {
                 console.error("Error clearing form data:", error);
               }
             }}
-            className="pr-4"
+            className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10"
           >
             <AntDesign name="left" size={24} color="#000502" />
           </TouchableOpacity>
 
-          <View className="flex-1 justify-center items-center">
+          <View className="flex-1 justify-center items-center mr-[8%]">
             <Text className="text-lg font-bold text-center">
               {t("AddOfficerBasicDetails.AddOfficer")}
             </Text>
@@ -793,7 +796,15 @@ const checkEmailExists = async (email: string) => {
               size={20}
               color="#980775"
             />
-            <Text className="ml-2 text-gray-700">
+            <Text className="ml-2 text-gray-700"
+                       style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 10 }
+    : { fontSize: 14 }
+]}
+            >
               {t("AddOfficerBasicDetails.Permanent")}
             </Text>
           </TouchableOpacity>
@@ -808,7 +819,15 @@ const checkEmailExists = async (email: string) => {
               size={20}
               color="#980775"
             />
-            <Text className="ml-2 text-gray-700">
+            <Text className="ml-2 text-gray-700"
+                       style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 10 }
+    : { fontSize: 14 }
+]}
+            >
               {t("AddOfficerBasicDetails.Temporary")}
             </Text>
           </TouchableOpacity>

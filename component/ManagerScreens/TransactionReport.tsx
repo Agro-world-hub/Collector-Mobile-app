@@ -677,10 +677,13 @@ const handleDownloadPDF = async () => {
   return (
     <ScrollView className="flex-1 bg-white p-4">
       <View className="flex-row items-center mb-4">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        {/* <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={24} color="#000" />
-        </TouchableOpacity>
-        <Text className="text-xl font-bold text-center w-full">{t("NewReport.Goods Received Note")}</Text>
+        </TouchableOpacity> */}
+        <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                                                               <AntDesign name="left" size={24} color="#000502" />
+                                                             </TouchableOpacity>
+        <Text className="flex-1 text-center text-xl font-bold text-black mr-[6%]">{t("NewReport.Goods Received Note")}</Text>
       </View>
 
       {/* GRN Header */}

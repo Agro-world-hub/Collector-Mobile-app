@@ -19,6 +19,7 @@ import { RootStackParamList } from "../types";
 import { environment } from "@/environment/environment";
 import { useTranslation } from "react-i18next";
 import NetInfo from "@react-native-community/netinfo";
+import i18n from "@/i18n/i18n";
 
 type DailyTargetListOfficerDistributiontNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -499,14 +500,30 @@ const getStatusTextColor = (status: string) => {
                 onPress={handleCancelPass}
                 className="flex-1 mr-2 py-3 px-6 bg-[#F6F7F9] border border-[#95A1AC] rounded-lg"
               >
-                <Text className="text-center text-gray-700 font-medium"> {t("DailyTargetListOfficerDistribution.Cancel")}</Text>
+                <Text className="text-center text-gray-700 font-medium"
+                                                                     style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 14 }
+]}
+                > {t("DailyTargetListOfficerDistribution.Cancel")}</Text>
               </TouchableOpacity>
               
               <TouchableOpacity
                 onPress={handleConfirmPass}
                 className="flex-1 ml-2 py-3 px-6 bg-[#980775] border border-[#980775] rounded-lg"
               >
-                <Text className="text-center text-white font-medium"> {t("DailyTargetListOfficerDistribution.Pass")}</Text>
+                <Text className="text-center text-white font-medium"
+                                                                     style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 14 }
+]}
+                > {t("DailyTargetListOfficerDistribution.Pass")}</Text>
               </TouchableOpacity>
             </View>
           </View>

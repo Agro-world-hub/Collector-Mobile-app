@@ -254,14 +254,20 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
         {/* Header Section */}
         <View className="bg-white rounded-b-[25px] px-4 pt-12 pb-6 items-center shadow-lg z-10">
           {/* Back Icon */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() =>
               navigation.navigate("Main", { screen: "CollectionOfficersList" })
             }
             className="absolute top-4 left-4"
           >
             <AntDesign name="left" size={22} color="#000" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <TouchableOpacity onPress={() =>
+              navigation.navigate("Main", { screen: "CollectionOfficersList" })
+            }
+          className="absolute top-4 left-4 bg-[#F6F6F680] rounded-full  p-2 justify-center w-10" >
+                                                         <AntDesign name="left" size={24} color="#000502" />
+                                                       </TouchableOpacity>
 
           <TouchableOpacity
             className="absolute top-4 right-4"
