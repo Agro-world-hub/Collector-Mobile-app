@@ -27,6 +27,9 @@ import { AppState } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 import { useFocusEffect } from "expo-router";
+import i18n from "@/i18n/i18n";
+
+
 
 type AddOfficerBasicDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -405,10 +408,22 @@ const checkNicExists = async (nic: string) => {
 };
 
 // Sinhala name validation function
+// const handleSinhalaNameChange = (text: string, fieldName: string) => {
+//   // Only allow Sinhala characters and spaces - block English, numbers, special chars
+//   // Sinhala Unicode range: \u0D80-\u0DFF
+//   let filteredText = text.replace(/[^\u0D80-\u0DFF\s]/g, '');
+  
+//   // Prevent space at the beginning
+//   if (filteredText.startsWith(' ')) {
+//     filteredText = filteredText.trimStart();
+//   }
+  
+//   setFormData({ ...formData, [fieldName]: filteredText });
+// };
+
 const handleSinhalaNameChange = (text: string, fieldName: string) => {
-  // Only allow Sinhala characters and spaces - block English, numbers, special chars
-  // Sinhala Unicode range: \u0D80-\u0DFF
-  let filteredText = text.replace(/[^\u0D80-\u0DFF\s]/g, '');
+  // Allow all characters, just prevent space at the beginning
+  let filteredText = text;
   
   // Prevent space at the beginning
   if (filteredText.startsWith(' ')) {
@@ -419,10 +434,22 @@ const handleSinhalaNameChange = (text: string, fieldName: string) => {
 };
 
 // Tamil name validation function
+// const handleTamilNameChange = (text: string, fieldName: string) => {
+//   // Only allow Tamil characters and spaces - block English, numbers, special chars
+//   // Tamil Unicode range: \u0B80-\u0BFF
+//   let filteredText = text.replace(/[^\u0B80-\u0BFF\s]/g, '');
+  
+//   // Prevent space at the beginning
+//   if (filteredText.startsWith(' ')) {
+//     filteredText = filteredText.trimStart();
+//   }
+  
+//   setFormData({ ...formData, [fieldName]: filteredText });
+// };
+
 const handleTamilNameChange = (text: string, fieldName: string) => {
-  // Only allow Tamil characters and spaces - block English, numbers, special chars
-  // Tamil Unicode range: \u0B80-\u0BFF
-  let filteredText = text.replace(/[^\u0B80-\u0BFF\s]/g, '');
+  // Allow all characters, just prevent space at the beginning
+  let filteredText = text;
   
   // Prevent space at the beginning
   if (filteredText.startsWith(' ')) {
@@ -453,14 +480,14 @@ const handlePhoneNumber1Change = (input: string) => {
   if (numbersOnly.length === 0) {
     setError1(""); // Clear error when empty
   } else if (!numbersOnly.startsWith('7')) {
-    setError1("Invalid phone number. Format must start with 7 (e.g., 7XXXXXXXX).");
+    setError1(t("Error.Invalid phone number"));
   } else if (numbersOnly.length < 9) {
-    setError1("Phone number must be 9 digits long.");
+    setError1(t("Error.Phone number must be 9 digits long"));
   } else if (validatePhoneNumber(numbersOnly)) {
     setError1("");
     checkPhoneExists(numbersOnly);
   } else {
-    setError1("Invalid phone number. Format must start with 7 (e.g., 7XXXXXXXX).");
+    setError1(t("Error.Invalid phone number"));
   }
 };
 
@@ -509,14 +536,14 @@ const handlePhoneNumber2Change = (input: string) => {
   if (numbersOnly.length === 0) {
     setError2(""); // Clear error when empty
   } else if (!numbersOnly.startsWith('7')) {
-    setError2("Invalid phone number. Format must start with 7 (e.g., 7XXXXXXXX).");
+    setError2(t("Error.Invalid phone number"));
   } else if (numbersOnly.length < 9) {
-    setError2("Phone number must be 9 digits long.");
+    setError2(t("Error.Phone number must be 9 digits long"));
   } else if (validatePhoneNumber(numbersOnly)) {
     setError2("");
     checkPhone2Exists(numbersOnly);
   } else {
-    setError2("Invalid phone number. Format must start with 7 (e.g., 7XXXXXXXX).");
+    setError2(t("Error.Invalid phone number"));
   }
 };
 
@@ -633,11 +660,11 @@ const handleEmailChange = (input: string) => {
     
     if (domain === 'gmail.com' || domain === 'googlemail.com') {
       setErrorEmail(
-        t("Error.Invalid Gmail address. Gmail addresses cannot have consecutive dots (.), leading/trailing dots, or special characters except + and .")
+        t("Error.Invalid Gmail address")
       );
     } else {
       setErrorEmail(
-        t("Error.Invalid email address. Please enter a valid email format (e.g. example@domain.com).")
+        t("Error.Invalid email address Example")
       );
     }
     return;
@@ -653,7 +680,7 @@ const checkEmailExists = async (email: string) => {
   // Double-check validation before API call
   if (!validateEmail(email)) {
     setErrorEmail(
-      t("Error.Invalid email address. Please enter a valid email format (e.g. example@domain.com).")
+       t("Error.Invalid email address Example")
     );
     return;
   }
@@ -686,7 +713,7 @@ const checkEmailExists = async (email: string) => {
       console.error("Data:", error.response.data);
     }
     // Set a generic error message if the check fails
-    setErrorEmail(t("Error.Failed to verify email. Please try again."));
+    setErrorEmail(t("Error.somethingWentWrong"));
   } finally {
     setIsValidating(false);
   }
@@ -717,12 +744,12 @@ const checkEmailExists = async (email: string) => {
                 console.error("Error clearing form data:", error);
               }
             }}
-            className="pr-4"
+            className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10"
           >
             <AntDesign name="left" size={24} color="#000502" />
           </TouchableOpacity>
 
-          <View className="flex-1 justify-center items-center">
+          <View className="flex-1 justify-center items-center mr-[8%]">
             <Text className="text-lg font-bold text-center">
               {t("AddOfficerBasicDetails.AddOfficer")}
             </Text>
@@ -769,7 +796,15 @@ const checkEmailExists = async (email: string) => {
               size={20}
               color="#980775"
             />
-            <Text className="ml-2 text-gray-700">
+            <Text className="ml-2 text-gray-700"
+                       style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 10 }
+    : { fontSize: 14 }
+]}
+            >
               {t("AddOfficerBasicDetails.Permanent")}
             </Text>
           </TouchableOpacity>
@@ -784,7 +819,15 @@ const checkEmailExists = async (email: string) => {
               size={20}
               color="#980775"
             />
-            <Text className="ml-2 text-gray-700">
+            <Text className="ml-2 text-gray-700"
+                       style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 10 }
+    : { fontSize: 14 }
+]}
+            >
               {t("AddOfficerBasicDetails.Temporary")}
             </Text>
           </TouchableOpacity>

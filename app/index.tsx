@@ -91,7 +91,7 @@ import DistridutionaDashboard from "@/component/DistributionofficerScreens/Distr
 import TargetOrderScreen from "@/component/DistributionofficerScreens/TargetOrderScreen"
 
 import PendingOrderScreen from "@/component/DistributionofficerScreens/PendingOrderScreen"
-import CompletedOrderScreen from "@/component/DistributionofficerScreens/CompletedOrderScreen"
+
 import Timer from "@/component/DistributionofficerScreens/TimerContainer "
 import TimerContainer from "@/component/DistributionofficerScreens/TimerContainer "
 import CenterTargetScreen from "@/component/DisributionManger/CenterTargetScreen"
@@ -333,7 +333,7 @@ const [isOfflineAlertShown, setIsOfflineAlertShown] = useState(false);
           />
           {/* <Stack.Screen name="UnregisteredCropDetails" component={UnregisteredCropDetails as any} /> */}
 
-          {/* <Stack.Screen name="Lanuage" component={Lanuage} /> */}
+         <Stack.Screen name="Lanuage" component={Lanuage} /> 
 
 
 
@@ -439,7 +439,7 @@ const [isOfflineAlertShown, setIsOfflineAlertShown] = useState(false);
              {/* <Stack.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} />  */}
 
 <Stack.Screen name="PendingOrderScreen" component={PendingOrderScreen as any} /> 
-   <Stack.Screen name="CompletedOrderScreen" component={CompletedOrderScreen as any} />    
+
    <Stack.Screen name="Timer" component={Timer as any} />    
    <Stack.Screen name="TimerContainer" component={TimerContainer as any} />  
 <Stack.Screen name="CenterTargetScreen" component={CenterTargetScreen as any} /> 

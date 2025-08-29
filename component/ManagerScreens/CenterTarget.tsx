@@ -170,7 +170,9 @@ const sortByVarietyAndGrade = (data: TargetData[]) => {
           <View className="flex-1 bg-[#282828] ">
             {/* Header */}
             <View className="bg-[#282828] px-4 py-3 flex-row justify-center items-center">
-              <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-6 left-4">
+              <TouchableOpacity onPress={() => navigation.goBack()} 
+              className="absolute top-4 left-4 bg-[#FFFFFF1A] rounded-full p-2 justify-center w-10"
+              >
                 <AntDesign name="left" size={22} color="white" />
               </TouchableOpacity>
               {/* <Text className="text-white text-lg font-bold ml-[35%] mt-[3%]">{t("CenterTarget.CenterTarget")}</Text> */}

@@ -24,8 +24,8 @@ interface PassTargetProps {
     params: {
       collectionOfficerId?: number;
       officerId: string;
-      selectedItems: number[]; // Array of distributedTargetItemIds
-      invoiceNumbers: string[]; // Array of invoice numbers corresponding to selectedItems
+      selectedItems: number[]; 
+      invoiceNumbers: string[]; 
       processOrderId: string[];
     };
   };

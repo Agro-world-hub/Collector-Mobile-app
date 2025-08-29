@@ -205,7 +205,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       !bankName ||
       !branchName // Removed trailing comma
     ) {
-      Alert.alert("Sorry", "Please fill all fields");
+      Alert.alert(t("Error.error"), t("Error.Please fill all fields"));
       setLoading(false);
       return;
     }
@@ -439,11 +439,14 @@ const handleAccountNameChange = (text: string) => {
       <View className="flex-1 p-5 bg-white">
         {/* Header with Back Icon */}
         <View className="flex-row items-center mb-4">
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          {/* <TouchableOpacity onPress={() => navigation.goBack()}>
             <AntDesign name="left" size={22} color="#000" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+           <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                                             <AntDesign name="left" size={24} color="#000502" />
+                                           </TouchableOpacity>
           <View className="w-full items-center">
-            <Text className="text-xl font-bold text-center">
+            <Text className="text-xl font-bold text-center mr-[11%]">
               {t("UnregisteredFarmerDetails.FillDetails")}
             </Text>
           </View>

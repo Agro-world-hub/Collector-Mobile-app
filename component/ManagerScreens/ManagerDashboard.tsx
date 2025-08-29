@@ -50,15 +50,16 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState<"Collection" | "Transport">(
     "Collection"
   );
-  const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
+  const [targetPercentage, setTargetPercentage] = useState<number | null>(null);
+  const [isLoadingTarget, setIsLoadingTarget] = useState(true); // Add loading state
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
 
   const fetchSelectedLanguage = async () => {
     try {
-      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
-      setSelectedLanguage(lang || "en"); // Default to English if not set
+      const lang = await AsyncStorage.getItem("@user_language");
+      setSelectedLanguage(lang || "en");
     } catch (error) {
       console.error("Error fetching language preference:", error);
     }
@@ -87,17 +88,19 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
   const getTextStyle = (language: string) => {
     if (language === "si") {
       return {
-        fontSize: 14, // Smaller text size for Sinhala
-        lineHeight: 20, // Space between lines
+        fontSize: 14,
+        lineHeight: 20,
       };
     }
   };
 
   const fetchTargetPercentage = async () => {
+    setIsLoadingTarget(true); // Set loading to true when starting fetch
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
         Alert.alert(t("Error.error"), t("Error.User not authenticated."));
+        setIsLoadingTarget(false);
         return;
       }
       const response = await axios.get(
@@ -119,13 +122,11 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
     } catch (error) {
       console.error("Failed to fetch target percentage:", error);
       setTargetPercentage(0);
+    } finally {
+      setIsLoadingTarget(false); // Set loading to false when done
     }
   };
 
-  // useEffect(() => {
-  //   fetchUserProfile();
-  //   fetchTargetPercentage();
-  // }, []);
   useEffect(() => {
     const fetchData = async () => {
       await fetchSelectedLanguage();
@@ -151,6 +152,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
         BackHandler.removeEventListener("hardwareBackPress", onBackPress);
     }, [])
   );
+
   const getFullName = () => {
     if (!profile) return "Loading...";
     switch (selectedLanguage) {
@@ -162,6 +164,7 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
         return `${profile.firstNameEnglish} ${profile.lastNameEnglish}`;
     }
   };
+
   const getcompanyName = () => {
     if (!profile) return "Loading...";
     switch (selectedLanguage) {
@@ -200,6 +203,52 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
       navigation.navigate("Login");
     }
   };
+
+  // Function to render target status
+  const renderTargetStatus = () => {
+    // Show loading state while fetching
+    if (isLoadingTarget) {
+      return (
+        <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-gray-300">
+          <Text className="text-center text-gray-500">
+            Loading target status...
+          </Text>
+        </View>
+      );
+    }
+
+    // Show appropriate status based on target percentage
+    if (targetPercentage !== null && targetPercentage < 100) {
+      return (
+        <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#DF9301]">
+          <Text className="text-center text-yellow-600 font-bold">
+            🚀 {t("ManagerDashboard.Keep")}
+          </Text>
+          <Text className="text-center text-gray-500">
+            {t("ManagerDashboard.Youhavenotachieved")}
+          </Text>
+        </View>
+      );
+    } else {
+      return (
+        <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#2AAD7A]">
+          <View className="flex-row justify-center items-center mb-2">
+            <Image
+              source={require("../../assets/images/hand.webp")}
+              className="w-8 h-8 mr-2"
+            />
+            <Text className="text-center text-[#2AAD7A] font-bold">
+              {t("ManagerDashboard.Completed")}
+            </Text>
+          </View>
+          <Text className="text-center text-gray-500">
+            {t("ManagerDashboard.Youhaveachieved")}
+          </Text>
+        </View>
+      );
+    }
+  };
+
   return (
     <ScrollView
       className="flex-1 bg-white p-3"
@@ -238,85 +287,10 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
         </View>
       </TouchableOpacity>
 
-      {/* <View className="bg-white shadow-sm mb-6">
-        <View className="flex-row p-2">
-          <TouchableOpacity
-            className="flex-1 p-2 items-center flex-row justify-center"
-            onPress={() => setActiveTab("Collection")}
-          >
-            <Image
-              source={require("../../assets/images/shop.png")}
-              className={`w-6 h-6 mr-2 ${
-                activeTab === "Collection" ? "opacity-100" : "opacity-50"
-              }`}
-            />
-            <Text
-              className={`text-base font-bold ${
-                activeTab === "Collection" ? "text-black" : "text-gray-500"
-              }`}
-            >
-              {t("ManagerDashboard.Collection")}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            className="flex-1 p-2 items-center flex-row justify-center"
-            onPress={() => setActiveTab("Transport")}
-          >
-            <Image
-              source={require("../../assets/images/truck.png")}
-              className={`w-6 h-6 mr-2 ${
-                activeTab === "Transport" ? "opacity-100" : "opacity-50"
-              }`}
-            />
-            <Text
-              className={`text-base font-bold ${
-                activeTab === "Transport" ? "text-black" : "text-gray-500"
-              }`}
-            >
-              {t("ManagerDashboard.Transport")}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View className="h-[3px] bg-gray-300 flex-row">
-          <View
-            className={`flex-1 ${activeTab === "Collection" ? "bg-black" : ""}`}
-          />
-          <View
-            className={`flex-1 ${activeTab === "Transport" ? "bg-black" : ""}`}
-          />
-        </View>
-      </View> */}
-
       {activeTab === "Collection" ? (
         <>
-          {/* Conditional Rendering for Daily Target */}
-          {targetPercentage !== null && targetPercentage < 100 ? (
-            <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#DF9301]">
-              <Text className="text-center text-yellow-600 font-bold">
-                🚀 {t("ManagerDashboard.Keep")}
-              </Text>
-              <Text className="text-center text-gray-500">
-                {t("ManagerDashboard.Youhavenotachieved")}
-              </Text>
-            </View>
-          ) : (
-            <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#2AAD7A]">
-              <View className="flex-row justify-center items-center mb-2">
-                <Image
-                  source={require("../../assets/images/hand.webp")}
-                  className="w-8 h-8 mr-2"
-                />
-                <Text className="text-center text-[#2AAD7A] font-bold">
-                  {t("ManagerDashboard.Completed")}
-                </Text>
-              </View>
-              <Text className="text-center text-gray-500">
-                {t("ManagerDashboard.Youhaveachieved")}
-              </Text>
-            </View>
-          )}
+          {/* Render target status using the new function */}
+          {renderTargetStatus()}
 
           {/* Target Progress */}
           <View className="flex-row items-center justify-between mb-[-5%] p-7 mt-[4%] ">
@@ -330,13 +304,13 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ navigation }) => {
               <CircularProgress
                 size={100}
                 width={8}
-                fill={targetPercentage !== null ? targetPercentage : 0} // Dynamically set progress
+                fill={targetPercentage !== null ? targetPercentage : 0}
                 tintColor="#000000"
                 backgroundColor="#EEEEEE"
               />
               <View className="absolute items-center justify-center h-24 w-24">
                 <Text className="text-2xl font-bold">
-                  {targetPercentage !== null ? `${targetPercentage}%` : "0%"}
+                  {isLoadingTarget ? "..." : (targetPercentage !== null ? `${targetPercentage}%` : "0%")}
                 </Text>
               </View>
             </View>

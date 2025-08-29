@@ -62,17 +62,19 @@ const Splash: React.FC<SplashProps> = ({ navigation }) => {
   // }, [navigation]);
 
   const checkPasswordStatus = async (token: string) => {
+    console.log('Checking password status...', token);
     try {
-      const response = await fetch(`${environment.API_BASE_URL}/user/password-update`, {
+      const response = await fetch(`${environment.API_BASE_URL}api/collection-officer/password-update`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
-
       if (response.ok) {
         const data = await response.json();
+        console.log('Password update status:', data);
+
         return data.data.passwordUpdated;
       } else {
         throw new Error('Failed to fetch password status');
@@ -112,7 +114,7 @@ dispatch(setUser({ token: userToken ?? '', jobRole: role ?? '', empId: emp ?? ''
               index: 0,
               routes: [{ name: 'Main', params: { screen: 'Dashboard' } }]
             });
-          } else if (jobRole === "Collection Manager") {
+          } else if (jobRole === "Collection Center Manager") {
             navigation.reset({
               index: 0,
               routes: [{ name: 'Main', params: { screen: 'ManagerDashboard' } }]
@@ -145,7 +147,7 @@ dispatch(setUser({ token: userToken ?? '', jobRole: role ?? '', empId: emp ?? ''
     <View className="flex-1 bg-white relative justify-center">
       <Image
         source={Top} 
-        className="w-[50%] h-[18%] absolute left-0 top-0"
+        className="w-[50%] h-[18%] absolute left-0 top-0 -mt-2"
         resizeMode="contain"
       />
       <Image

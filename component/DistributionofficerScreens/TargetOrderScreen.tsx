@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { Animated } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import NetInfo from "@react-native-community/netinfo";
+import i18n from "@/i18n/i18n";
 
 type TargetOrderScreenNavigationProps = StackNavigationProp<RootStackParamList, 'TargetOrderScreen'>;
 
@@ -402,9 +403,9 @@ const fetchTargets = useCallback(async () => {
     // Check if package is locked
     if (item.packageIsLock === 1 && jobRole ==="Distribution Officer") {
       Alert.alert(
-        t("Locked Package") || "Locked Package",
-        t("This package is locked and cannot be accessed") || "This package is locked and cannot be accessed.",
-        [{ text: t("OK") || "OK" }]
+       ("Error.Locked Package"),
+        ("Error.This package is locked and cannot be accessed"),
+        [{ text: t("Error.Ok")  }]
       );
       return;
     }
@@ -431,25 +432,50 @@ const fetchTargets = useCallback(async () => {
     }
   };
 
-  const formatCompletionTime = (dateString: string | null): string | null => {
-    if (!dateString) return null;
+  // const formatCompletionTime = (dateString: string | null): string | null => {
+  //   if (!dateString) return null;
     
-    try {
-      const date = new Date(dateString);
-      const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
-      const hours = date.getHours();
-      const minutes = date.getMinutes().toString().padStart(2, '0');
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      const displayHours = hours % 12 || 12;
+  //   try {
+  //     const date = new Date(dateString);
+  //     const year = date.getFullYear();
+  //     const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  //     const day = date.getDate().toString().padStart(2, '0');
+  //     const hours = date.getHours();
+  //     const minutes = date.getMinutes().toString().padStart(2, '0');
+  //     const ampm = hours >= 12 ? 'PM' : 'AM';
+  //     const displayHours = hours % 12 || 12;
       
-      return `${year}/${month}/${day} ${displayHours.toString().padStart(2, '0')}:${minutes}${ampm}`;
-    } catch (error) {
-      console.error('Error formatting date:', error);
-      return null;
-    }
-  };
+  //     return `${year}/${month}/${day} ${displayHours.toString().padStart(2, '0')}:${minutes}${ampm}`;
+  //   } catch (error) {
+  //     console.error('Error formatting date:', error);
+  //     return null;
+  //   }
+  // };
+
+  const formatCompletionTime = (dateString: string | null): string | null => {
+  if (!dateString) return null;
+  
+  try {
+    const date = new Date(dateString);
+    
+    // Add 6 hours and 30 minutes (6.5 hours = 6.5 * 60 * 60 * 1000 milliseconds)
+    const offsetMilliseconds = 6.5 * 60 * 60 * 1000;
+    const adjustedDate = new Date(date.getTime() + offsetMilliseconds);
+    
+    const year = adjustedDate.getFullYear();
+    const month = (adjustedDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = adjustedDate.getDate().toString().padStart(2, '0');
+    const hours = adjustedDate.getHours();
+    const minutes = adjustedDate.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours % 12 || 12;
+    
+    return `${year}/${month}/${day} ${displayHours.toString().padStart(2, '0')}:${minutes}${ampm}`;
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return null;
+  }
+};
 
   useEffect(() => {
     const fetchData = async () => {
@@ -486,16 +512,16 @@ const fetchTargets = useCallback(async () => {
   const getStatusText = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
   switch (selectedStatus) {
     case 'Pending':
-      return selectedLanguage === 'si' ? 'අපේක්ෂාවෙන්' : 
+      return selectedLanguage === 'si' ? 'අපරිපූර්ණ' : 
              selectedLanguage === 'ta' ? 'நிலுவையில்' : 
              t("Status.Pending") || 'Pending';
     case 'Opened':
-      return selectedLanguage === 'si' ? 'විවෘත කර ඇත' : 
+      return selectedLanguage === 'si' ? 'විවෘත කළ' : 
              selectedLanguage === 'ta' ? 'திறக்கப்பட்டது' : 
              t("Status.Opened") || 'Opened';
     case 'Completed':
-      return selectedLanguage === 'si' ? 'සම්පූර්ණයි' : 
-             selectedLanguage === 'ta' ? 'நிறைவானது' : 
+      return selectedLanguage === 'si' ? 'සම්පූර්ණ කළ' : 
+             selectedLanguage === 'ta' ? 'முடிந்தது' : 
              t("Status.Completed") || 'Completed';
     default:
       return selectedStatus;
@@ -670,17 +696,57 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
       >
         {/* Table Header */}
         <View className="flex-row bg-[#980775] py-3">
-          <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
-          <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
+          <Text 
+             style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+          className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
+          <Text 
+             style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+          className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
           
           {selectedToggle === 'ToDo' ? (
             <>
-              <Text className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Date")}</Text>
+              <Text 
+                 style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+              className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Date")}</Text>
           
-              <Text className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Status")}</Text>
+              <Text 
+                 style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+              className="flex-[2] text-center text-white font-bold ">{t("TargetOrderScreen.Status")}</Text>
             </>
           ) : (
-            <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Completed Time")}</Text>
+            <Text 
+               style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+            className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Completed Time")}</Text>
           )}
         </View>
 
@@ -763,12 +829,18 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
     }}
   >
     <Text 
-      style={{
+      style={[{
         color: getStatusTextColor(item.selectedStatus),
-        fontSize: 12,
+        fontSize: 11,
         fontWeight: '500',
-        textAlign: 'center'
-      }}
+        textAlign: 'center',
+      },
+    i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 9 }
+    : { fontSize: 14 }]}
+
     >
       {getStatusText(item.selectedStatus)}
     </Text>

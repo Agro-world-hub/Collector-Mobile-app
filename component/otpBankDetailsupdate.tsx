@@ -473,11 +473,14 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}
       >
         <View>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          {/* <TouchableOpacity onPress={() => navigation.goBack()}>
             <AntDesign name="left" size={22} color="#000" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                                   <AntDesign name="left" size={24} color="#000502" />
+                                 </TouchableOpacity>
         </View>
-        <View className="flex justify-center items-center mt-0">
+        <View className="flex justify-center items-center mt-0 mr-[5%]">
           <Text className="text-black" style={{ fontSize: wp(8) }}>
             {/* {t("OtpVerification.OTPVerification")} */}
           </Text>
@@ -567,9 +570,9 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
               onPress={disabledResend ? undefined : handleResendOTP}
               style={{ color: disabledResend ? "gray" : "black" }}
             >
-              {timer > 0
-                ? `${t("Resend in ")} ${formatTime(timer)}`
-                : `${t("Resend again")}`}
+                {timer > 0
+              ? `${t("Otpverification.Resend in")} ${formatTime(timer)}`
+              : `${t("Otpverification.Resend again")}`}
             </Text>
           </View>
 

@@ -20,11 +20,12 @@ import {
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useTranslation } from "react-i18next";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { useNavigation, useRoute, RouteProp, useFocusEffect } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 import { LanguageContext } from "@/context/LanguageContext";
 import LottieView from 'lottie-react-native';
 import NetInfo from "@react-native-community/netinfo";
+import { set } from "lodash";
 
 type EngProfileNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -71,9 +72,10 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const [isComplaintDropdownOpen, setComplaintDropdownOpen] =
     useState<boolean>(false);
   const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false); // Add this state
-  const { t } = useTranslation();
+  const { t ,  i18n} = useTranslation();
   const { changeLanguage } = useContext(LanguageContext);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+  console.log("Selected language:", selectedLanguage);
 
   const fetchSelectedLanguage = async () => {
     try {
@@ -83,7 +85,23 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
       console.error("Error fetching language preference:", error);
     }
   };
-
+   useFocusEffect(
+    React.useCallback(() => {
+      console.log("Current language:", i18n.language);
+      setComplaintDropdownOpen(false)
+      setLanguageDropdownOpen(false);
+      if (i18n.language === "en") {
+         LanguageSelect("en");
+        setSelectedLanguage("ENGLISH");
+      } else if (i18n.language === "si") {
+        LanguageSelect("si");
+        setSelectedLanguage("SINHALA");
+      } else if (i18n.language === "ta") {
+        LanguageSelect("ta");
+        setSelectedLanguage("TAMIL");
+      }
+    }, [i18n.language]) // The effect will run when i18n.language changes
+  );
   useEffect(() => {
     const fetchData = async () => {
       await fetchSelectedLanguage();
@@ -157,13 +175,13 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
     setSelectedLanguage(language);
     setLanguageDropdownOpen(false);
     try {
-      if (language === "English") {
+      if (language === "ENGLISH") {
         LanguageSelect("en");
         HanldeAsynStorage("en");
-      } else if (language === "தமிழ்") {
+      } else if (language === "TAMIL") {
         LanguageSelect("ta");
         HanldeAsynStorage("ta");
-      } else if (language === "සිංහල") {
+      } else if (language === "SINHALA") {
         LanguageSelect("si");
         HanldeAsynStorage("si");
       }
@@ -336,8 +354,8 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
 
         
 
-        <View className="flex-1 p-4 mt-[-10]">
-          {isLanguageDropdownOpen && (
+        <View className="flex-1 p-4 mt-[-30]">
+          {/* {isLanguageDropdownOpen && (
             <View className="pl-8">
               {["English", "සිංහල"].map((language) => (
                 <TouchableOpacity
@@ -366,11 +384,65 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
                 </TouchableOpacity>
               ))}
             </View>
+          )} */}
+
+            {/* Horizontal Line */}
+          <View className="h-0.5 bg-[#D2D2D2] my-4" />
+
+           <TouchableOpacity
+    onPress={() => setLanguageDropdownOpen(!isLanguageDropdownOpen)}
+    className="flex-row items-center py-3"
+  >
+    <Ionicons name="globe-outline" size={20} color="black" />
+    <Text className="flex-1 text-lg ml-2">
+      {t("EngProfile.Language")}
+    </Text>
+    <Ionicons
+      name={isLanguageDropdownOpen ? "chevron-up" : "chevron-down"}
+      size={20}
+      color="black"
+    />
+  </TouchableOpacity>
+
+  {/* Then render dropdown AFTER the trigger */}
+  {isLanguageDropdownOpen && (
+    <View className="pl-8 bg-white  rounded-lg mt-2">
+      {["ENGLISH", "SINHALA", "TAMIL"].map((language) => {
+        const displayLanguage =
+          language === "SINHALA" ? "සිංහල" : language === "TAMIL" ? "தமிழ்" : language === "ENGLISH" ? "English" : language;
+        return (
+          <TouchableOpacity
+            key={language}
+            onPress={() => handleLanguageSelect(language)}
+            className={`flex-row items-center py-2 px-4 rounded-lg my-1 ${
+              selectedLanguage === language
+              ? "bg-[#FFDFF7]"
+              : "bg-transparent"
+          }`}
+        >
+          <Text
+            className={`text-base ${
+              selectedLanguage === language
+                ? "text-black"
+                : "text-[#434343]"  // Fixed: Added "text-" prefix
+            }`}
+          >
+            {displayLanguage}
+          </Text>
+          {selectedLanguage === language && (
+            <View className="absolute right-4">
+              <Ionicons name="checkmark" size={20} color="black" />
+            </View>
           )}
+        </TouchableOpacity>
+           );
+              })}
+    </View>
+  )}
   <View className="h-0.5 bg-[#D2D2D2] my-4" />
 
 
-         <TouchableOpacity
+         {/* <TouchableOpacity
             onPress={() => setLanguageDropdownOpen(!isLanguageDropdownOpen)}
             className="flex-row items-center py-3"
           >
@@ -383,9 +455,8 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
               size={20}
               color="black"
             />
-          </TouchableOpacity>
-          {/* Horizontal Line */}
-          <View className="h-0.5 bg-[#D2D2D2] my-4" />
+          </TouchableOpacity> */}
+        
 
           {/* View My QR Code */}
           <TouchableOpacity
@@ -522,7 +593,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
               fontWeight: '500',
             }}
           >
-            {t("Logging out...") || "Logging out..."}
+            {t("EngProfile.Logging out") }
           </Text>
         </View>
       )}

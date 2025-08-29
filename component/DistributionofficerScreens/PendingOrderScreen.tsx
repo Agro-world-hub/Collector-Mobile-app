@@ -26,6 +26,7 @@ import CircularProgress from 'react-native-circular-progress-indicator';
 import TimerContainer from '@/component/DistributionofficerScreens/TimerContainer '
 import Timer from '@/component/DistributionofficerScreens/TimerContainer '
 import NetInfo from "@react-native-community/netinfo";
+import i18n from "@/i18n/i18n";
 
 
 
@@ -204,13 +205,15 @@ const [orderStatus, setOrderStatus] = useState<'Pending' | 'Opened' | 'Completed
 );
 
 const [selectpackage, setSelectpackage] = useState(false);
+const [isUserInitiatedCompletion, setIsUserInitiatedCompletion] = useState(false);
+const [isReplacementPriceHigher, setIsReplacementPriceHigher] = useState(false);
 const [selectopen, setSelectopen,] = useState(false);
 const [packageName, setPackageName] = useState<string>('Family Pack');
 const [packageId, setPackageId] = useState<number | null>(null);  
  const [isCompletingOrder, setIsCompletingOrder] = useState(false);
  const [hasCompletedOrder, setHasCompletedOrder] = useState(false);
  const [orderCompletionState, setOrderCompletionState] = useState<'idle' | 'completing' | 'completed'>('idle');
-
+const [isDataLoaded, setIsDataLoaded] = useState(false);
 
 const [typeName, setTypeeName] = useState<string>('');
   //const [completedTime, setCompletedTime] = useState<string | null>(item.completedTime || null);
@@ -302,7 +305,8 @@ const fetchOrderData = async (orderId: string) => {
     const token = await AsyncStorage.getItem('token');
     
     if (!token) {
-      Alert.alert(t("Error"), "Authentication token not found");
+    //  Alert.alert(t("Error"), "Authentication token not found");
+    Alert.alert(t("Error.error"), t("Error.User not authenticated."));
       return null;
     }
 
@@ -319,6 +323,7 @@ const fetchOrderData = async (orderId: string) => {
     console.log("datakbj===================",response.data)
 
     if (response.data && response.data.success) {
+      setIsDataLoaded(true);
       return response.data.data; // Assuming the API returns { success: true, data: orderData }
     } else {
       throw new Error(response.data.message || 'Failed to fetch order data');
@@ -328,16 +333,19 @@ const fetchOrderData = async (orderId: string) => {
     
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
-        Alert.alert(t("Error"), "Session expired. Please login again.");
+     //   Alert.alert(t("Error"), "Session expired. Please login again.");
+      Alert.alert(t("Error.Error"), t("Error.Session expired") );
         // Navigate to login screen or handle logout
         return null;
       } else if (error.response?.status === 404) {
-        Alert.alert(t("Error"), "Order not found");
+       // Alert.alert(t("Error"), "Order not found");
+       Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") );
         return null;
       }
     }
     
-    Alert.alert(t("Error"), "Failed to fetch order data");
+   // Alert.alert(t("Error"), "Failed to fetch order data");
+   Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") );
     return null;
   }
 };
@@ -577,9 +585,39 @@ const toggleAdditionalItem = (id: string) => {
 };
 
 // Update the timer effect to not trigger for completed orders
+// useEffect(() => {
+//   // BULLETPROOF: Only check items, don't trigger multiple times
+//   if (orderCompletionState !== 'idle' || orderStatus === 'Completed') return;
+  
+//   const hasFamily = familyPackItems.length > 0;
+//   const hasAdditional = additionalItems.length > 0;
+  
+//   let allSelected = false;
+  
+//   if (hasFamily && hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+//   } else if (hasFamily && !hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected();
+//   } else if (!hasFamily && hasAdditional) {
+//     allSelected = areAllAdditionalItemsSelected();
+//   }
+  
+//   if (allSelected && !showCompletionPrompt && !countdownInterval) {
+//     console.log('All items selected - starting countdown');
+//     startCountdown();
+//   } else if (!allSelected && showCompletionPrompt) {
+//     console.log('Not all items selected - stopping countdown');
+//     setShowCompletionPrompt(false);
+//     resetCountdown();
+//   }
+// }, [familyPackItems, additionalItems, orderStatus]);
+
+
+// Replace the problematic useEffect with this:
 useEffect(() => {
-  // BULLETPROOF: Only check items, don't trigger multiple times
-  if (orderCompletionState !== 'idle' || orderStatus === 'Completed') return;
+  // Only check completion status, don't trigger modal automatically
+
+  if (orderCompletionState !== 'idle' || orderStatus === 'Completed' || isUserInitiatedCompletion) return;
   
   const hasFamily = familyPackItems.length > 0;
   const hasAdditional = additionalItems.length > 0;
@@ -594,13 +632,10 @@ useEffect(() => {
     allSelected = areAllAdditionalItemsSelected();
   }
   
-  if (allSelected && !showCompletionPrompt && !countdownInterval) {
-    console.log('All items selected - starting countdown');
-    startCountdown();
-  } else if (!allSelected && showCompletionPrompt) {
-    console.log('Not all items selected - stopping countdown');
-    setShowCompletionPrompt(false);
-    resetCountdown();
+  // ONLY update status, don't show completion prompt automatically
+  if (allSelected) {
+    // Just update the visual status, don't trigger the modal
+    console.log('All items selected - updating status only');
   }
 }, [familyPackItems, additionalItems, orderStatus]);
 
@@ -733,7 +768,7 @@ const handleCompleteOrder = async () => {
             console.log('Order completed successfully - modal should show');
             
         } else {
-            throw new Error(response.data.message || 'Failed to complete order');
+            throw new Error(response.data.message || t("PendingOrderScreen.Failed to complete order"));
         }
         
     } catch (error) {
@@ -745,11 +780,11 @@ const handleCompleteOrder = async () => {
         setCompletedTime(null);
         
         Alert.alert(
-            t("Error"), 
-            t("Failed to complete order. Please try again."),
+            t("Error.Error"), 
+             t("Error.Failed to complete order"), 
             [
                 {
-                    text: t("OK"),
+                    text: t("Error.Ok"),
                     onPress: () => {
                         setShowCompletionPrompt(true);
                         startCountdown();
@@ -790,10 +825,10 @@ const startCountdown = () => {
 
 
 
-  const handleBackToEdit = () => {
-    setShowCompletionPrompt(false);
-    resetCountdown();
-  };
+  // const handleBackToEdit = () => {
+  //   setShowCompletionPrompt(false);
+  //   resetCountdown();
+  // };
   // Replace product form data
   const [replaceData, setReplaceData] = useState<ReplaceProductData>({
     selectedProduct: '',
@@ -874,99 +909,130 @@ const getPackageGroups = () => {
 };
 
 
-const handleReplaceProduct = (item: FamilyPackItem) => {
-   if (orderStatus === 'Completed') {
-    Alert.alert(t("Info"), t("Cannot replace products in completed orders"));
-    return;
-  }
+// const handleReplaceProduct = (item: FamilyPackItem) => {
+//    if (orderStatus === 'Completed') {
+//     Alert.alert( t("Error.Info"),  t("Error.Cannot replace products in completed orders"));
+//     return;
+//   }
   
-  // Rest of your existing handleReplaceProduct code...
-  if (!item) {
-    console.log("No item provided to handleReplaceProduct");
-    return;
-  }
+//   // Rest of your existing handleReplaceProduct code...
+//   if (!item) {
+//     console.log("No item provided to handleReplaceProduct");
+//     return;
+//   }
 
-  // Add a small delay to ensure data is fully loaded
-  setTimeout(() => {
-    console.log("Original item data:", {
-      name: item.name,
-      price: item.price,
-      weight: item.weight,
-      productType: item.productType,
-      id: item.id
-    });
+//   // Add a small delay to ensure data is fully loaded
+//   setTimeout(() => {
+//     console.log("Original item data:", {
+//       name: item.name,
+//       price: item.price,
+//       weight: item.weight,
+//       productType: item.productType,
+//       id: item.id
+//     });
 
-    // Validate required data before proceeding
-    if (!item.price || item.price === undefined) {
-      console.log("Price is undefined, attempting to fetch latest data");
-      Alert.alert(
-        t("Error"),
-        "Product price information is not available. Please try again.",
-        [{ text: t("OK") }]
-      );
-      return;
-    }
+//     // Validate required data before proceeding
+//     if (!item.price || item.price === undefined) {
+//       console.log("Price is undefined, attempting to fetch latest data");
+//       Alert.alert(
+//         t("Error.Error"),
+//         t("Error.Product price information is not available"),
+//         [{ text: t("Error.Ok") }]
+//       );
+//       return;
+//     }
 
-    if (!item.productType || item.productType === undefined) {
-      console.log("ProductType is undefined, using default");
-      // You might want to set a default or fetch the latest data
-    }
+//     if (!item.productType || item.productType === undefined) {
+//       console.log("ProductType is undefined, using default");
+//       // You might want to set a default or fetch the latest data
+//     }
 
-    const weightKg = parseFloat(item.weight) || 0;
-    const itemPrice = parseFloat(item.price) || 0;
+//     const weightKg = parseFloat(item.weight) || 0;
+//     const itemPrice = parseFloat(item.price) || 0;
     
    
+//     const totalPrice = itemPrice.toFixed();
+    
+//     // If you need unit price per kg, calculate it from total price
+//     const unitPricePerKg = weightKg > 0 ? (itemPrice / weightKg) : '0.00';
+
+//     console.log("Price calculation:", {
+//       itemPrice,
+//       weightKg,
+//       totalPrice,
+//       unitPricePerKg,
+//       originalPrice: item.price,
+//       productType: item.productType
+//     });
+
+//     // Only proceed if we have valid data
+//     if (itemPrice > 0 && weightKg > 0) {
+//       setReplaceData({
+//         selectedProduct: `${item.name} - ${item.weight}Kg - Rs.${totalPrice}`,
+//         selectedProductPrice: totalPrice,
+//         productType: item.productType || 0, 
+//         newProduct: '',
+//         quantity: '',
+//         price: `Rs.${totalPrice}`, 
+//         productTypeName: item.productTypeName || ''
+//       });
+
+//       setSelectedItemForReplace(item);
+//       setShowReplaceModal(true);
+//     } else {
+//       Alert.alert(
+//         t("Error.Error"),
+//         t("Error.Invalid product data"),
+//         [{ text: t("Error.Ok") }]
+//       );
+//     }
+//   }, 100); // Small delay to ensure state is updated
+// };
+
+const handleReplaceProduct = (item: FamilyPackItem) => {
+  if (orderStatus === 'Completed') {
+    Alert.alert(t("Error.Info"), t("Error.Cannot replace products in completed orders"));
+    return;
+  }
+
+  setTimeout(() => {
+    const weightKg = parseFloat(item.weight) || 0;
+    const itemPrice = parseFloat(item.price) || 0;
     const totalPrice = itemPrice.toFixed();
     
-    // If you need unit price per kg, calculate it from total price
-    const unitPricePerKg = weightKg > 0 ? (itemPrice / weightKg) : '0.00';
+    // Extract numeric price for comparison
+    const numericPrice = itemPrice;
 
-    console.log("Price calculation:", {
-      itemPrice,
-      weightKg,
-      totalPrice,
-      unitPricePerKg,
-      originalPrice: item.price,
-      productType: item.productType
+    setReplaceData({
+      selectedProduct: `${item.name} - ${item.weight}Kg - Rs.${totalPrice}`,
+      selectedProductPrice: numericPrice.toString(), // Store as string for comparison
+      productType: item.productType || 0,
+      newProduct: '',
+      quantity: '',
+      price: `Rs.${totalPrice}`,
+      productTypeName: item.productTypeName || ''
     });
 
-    // Only proceed if we have valid data
-    if (itemPrice > 0 && weightKg > 0) {
-      setReplaceData({
-        selectedProduct: `${item.name} - ${item.weight}Kg - Rs.${totalPrice}`,
-        selectedProductPrice: totalPrice,
-        productType: item.productType || 0, 
-        newProduct: '',
-        quantity: '',
-        price: `Rs.${totalPrice}`, 
-        productTypeName: item.productTypeName || ''
-      });
-
-      setSelectedItemForReplace(item);
-      setShowReplaceModal(true);
-    } else {
-      Alert.alert(
-        t("Error"),
-        "Invalid product data. Please refresh and try again.",
-        [{ text: t("OK") }]
-      );
-    }
-  }, 100); // Small delay to ensure state is updated
+    // Reset price comparison state
+    setIsReplacementPriceHigher(false);
+    setSelectedItemForReplace(item);
+    setShowReplaceModal(true);
+  }, 100);
 };
 
 const handleReplaceSubmit = async () => {
   if (!replaceData.newProduct || !replaceData.quantity || !replaceData.price) {
-    Alert.alert(t("Error"), "Please fill all required fields");
+    Alert.alert(t("Error.Error"),t("Error.Please fill all required fields"));
     return;
   }
 
   if (!packageId) {
-    Alert.alert(t("Error"), "Package ID not found");
+    Alert.alert(t("Error.Error"),t("Error.Package ID not found"));
     return;
   }
 
   if (!selectedItemForReplace) {
-    Alert.alert(t("Error"), "No item selected for replacement");
+    Alert.alert(t("Error.Error"),t("Error.No item selected for replacement"));
     return;
   }
 
@@ -977,7 +1043,7 @@ const handleReplaceSubmit = async () => {
     );
 
     if (!selectedRetailItem) {
-      throw new Error("Selected product not found");
+      throw new Error(t("PendingOrderScreen.Selected product not found"));
     }
 
     // FIXED PRICE PARSING - Extract numeric price correctly
@@ -1030,7 +1096,8 @@ const handleReplaceSubmit = async () => {
     // Get token and add validation
     const token = await AsyncStorage.getItem('token');
     if (!token) {
-      Alert.alert(t("Error"), "Authentication token not found. Please login again.");
+     // Alert.alert(t("Error"), "Authentication token not found. Please login again.");
+     Alert.alert(t("Error.error"), t("Error.User not authenticated."));
       return;
     }
 
@@ -1053,10 +1120,10 @@ const handleReplaceSubmit = async () => {
 
     if (response.data.success) {
       Alert.alert(
-        t("Success"),
-        t("Replacement request submitted successfully!"),
+        t("Error.Success"),
+         t("Error.Replacement request submitted successfully"),
         [{ 
-          text: t("OK"), 
+          text: t("Error.Ok"), 
           onPress: () => {
             // Reset state before navigation
             setShowReplaceModal(false);
@@ -1079,7 +1146,7 @@ const handleReplaceSubmit = async () => {
         }]
       );
     } else {
-      throw new Error(response.data.message || 'Failed to submit replacement request');
+      throw new Error(response.data.message || t("PendingOrderScreen.Failed to submit replacement request"));
     }
   } catch (error) {
     console.error('Error submitting replacement request:', error);
@@ -1089,37 +1156,40 @@ const handleReplaceSubmit = async () => {
       if (error.response?.status === 403) {
         console.log('403 Error Details:', error.response?.data);
         const errorMessage = error.response?.data?.message || "You don't have permission to create replacement requests.";
-        Alert.alert(
-          t("Permission Denied"),
-          errorMessage + " Please contact your administrator."
-        );
+        // Alert.alert(
+        //   t("Permission Denied"),
+        //   errorMessage + " Please contact your administrator."
+        // );
+       Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") ) 
       } else if (error.response?.status === 401) {
         Alert.alert(
-          t("Authentication Error"),
-          t("Your session has expired. Please login again.")
+         t("Error.Authentication Error"),
+           t("Error.Your session has expired")
         );
       } else if (error.response?.status === 400) {
         console.log('400 Error Response:', error.response?.data);
         Alert.alert(
-          t("Invalid Request"),
-          t("Please check your input data and try again.")
+           t("Error.Invalid Request"),
+           t("Error.Please check your input data and try again")
         );
       } else if (error.response?.status === 500) {
-        Alert.alert(
-          t("Server Error"),
-          t("Internal server error. Please try again later.")
-        );
+        // Alert.alert(
+        //   t("Server Error"),
+        //   t("Internal server error. Please try again later.")
+        // );
+        Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") )
       } else {
         Alert.alert(
-          t("Error"),
-          t("Failed to submit replacement request. Please try again.")
+          t("Error.Error"),
+          t("Error.Failed to submit replacement request")
         );
       }
     } else {
-      Alert.alert(
-        t("Error"), 
-        t("An unexpected error occurred. Please try again.")
-      );
+      // Alert.alert(
+      //   t("Error"), 
+      //   t("An unexpected error occurred. Please try again.")
+      // );
+      Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") )
     }
   }
 };
@@ -1222,12 +1292,12 @@ const handleSubmit = async () => {
       }
       
       Alert.alert(
-        t("Success"),
-        t("Order updated successfully!"),
-        [{ text: t("OK"), onPress: () => navigation.goBack() }]
+         t("Error.Success"),
+        t("Error.Order updated successfully"),
+        [{ text: t("Error.Ok"), onPress: () => navigation.goBack() }]
       );
     } else {
-      throw new Error(response.data.message || 'Failed to update order');
+      throw new Error(response.data.message || t("Error.somethingWentWrong"));
     }
     
     setHasUnsavedChanges(false);
@@ -1235,12 +1305,68 @@ const handleSubmit = async () => {
     
   } catch (error) {
     console.error('Error updating order:', error);
-    Alert.alert(t("Error"), t("Failed to update order"));
+  //  Alert.alert(t("Error"), t("Failed to update order"));
+  Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") )
     setShowSubmitModal(false);
   }
 };
 
 
+// const handleSubmitPress = () => {
+//   const hasFamily = familyPackItems.length > 0;
+//   const hasAdditional = additionalItems.length > 0;
+  
+//   let allSelected = false;
+  
+//   if (hasFamily && hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+//   } else if (hasFamily && !hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected();
+//   } else if (!hasFamily && hasAdditional) {
+//     allSelected = areAllAdditionalItemsSelected();
+//   }
+  
+//   if (allSelected) {
+//     // If all items are selected, show completion prompt
+//     if (!showCompletionPrompt) {
+//       setShowCompletionPrompt(true);
+//       startCountdown();
+//     }
+//   } else {
+//     // If not all items are selected, submit immediately
+//     handleSubmit();
+//   }
+// }
+
+// const handleSubmitPress = () => {
+//   const hasFamily = familyPackItems.length > 0;
+//   const hasAdditional = additionalItems.length > 0;
+  
+//   let allSelected = false;
+  
+//   if (hasFamily && hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+//   } else if (hasFamily && !hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected();
+//   } else if (!hasFamily && hasAdditional) {
+//     allSelected = areAllAdditionalItemsSelected();
+//   }
+  
+//   if (allSelected) {
+//     // If user clicks Save AND all items are selected, show completion prompt
+//     console.log('User clicked Save with all items selected - showing completion prompt');
+//     setShowCompletionPrompt(true);
+//     startCountdown();
+//   } else {
+//     // If not all items are selected, submit immediately
+//     console.log('Not all items selected - submitting immediately');
+//     handleSubmit();
+//   }
+// }
+
+
+
+// Update handleSubmitPress
 const handleSubmitPress = () => {
   const hasFamily = familyPackItems.length > 0;
   const hasAdditional = additionalItems.length > 0;
@@ -1256,16 +1382,29 @@ const handleSubmitPress = () => {
   }
   
   if (allSelected) {
-    // If all items are selected, show completion prompt
-    if (!showCompletionPrompt) {
-      setShowCompletionPrompt(true);
-      startCountdown();
-    }
+    // Mark as user-initiated and show completion prompt
+    setIsUserInitiatedCompletion(true);
+    setShowCompletionPrompt(true);
+    startCountdown();
   } else {
-    // If not all items are selected, submit immediately
+    // Regular submission
     handleSubmit();
   }
 }
+
+// Update the useEffect to respect user initiation
+// useEffect(() => {
+//   if (orderCompletionState !== 'idle' || orderStatus === 'Completed' || isUserInitiatedCompletion) return;
+  
+//   // ... rest of the logic for automatic status update only
+// }, [familyPackItems, additionalItems, orderStatus, isUserInitiatedCompletion]);
+
+// Reset the flag when modal closes
+const handleBackToEdit = () => {
+  setShowCompletionPrompt(false);
+  setIsUserInitiatedCompletion(false); // Reset the flag
+  resetCountdown();
+};
 
 useEffect(() => {
   const hasFamily = familyPackItems.length > 0;
@@ -1311,7 +1450,8 @@ const fetchRetailItems = async () => {
     const token = await AsyncStorage.getItem('token');
     
     if (!token) {
-      Alert.alert(t("Error"), "Authentication token not found");
+      //Alert.alert(t("Error"), "Authentication token not found");
+       Alert.alert(t("Error.error"), t("Error.User not authenticated."));
       return;
     }
 
@@ -1339,7 +1479,8 @@ const fetchRetailItems = async () => {
     }
   } catch (error) {
     console.error('Error fetching retail items:', error);
-    Alert.alert(t("Error"), "Failed to fetch retail items");
+   // Alert.alert(t("Error"), "Failed to fetch retail items");
+     Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") )
     setRetailItems([]);
   } finally {
     setLoadingRetailItems(false);
@@ -1359,28 +1500,63 @@ const renderReplaceModal = () => {
                          replaceData.quantity && 
                          replaceData.price;
 
+  // const handleProductSelect = (product: RetailItem) => {
+  //   setReplaceData(prev => ({
+  //     ...prev,
+  //     newProduct: product.displayName,
+  //     price: `Rs.${(product.discountedPrice || product.normalPrice || 0).toFixed(2)}`
+  //   }));
+  //   setShowDropdown(false);
+  // };
+
   const handleProductSelect = (product: RetailItem) => {
+  const selectedProductPrice = parseFloat(replaceData.selectedProductPrice) || 0;
+  const newProductPrice = product.discountedPrice || product.normalPrice || 0;
+  
+  setReplaceData(prev => ({
+    ...prev,
+    newProduct: product.displayName,
+    price: `Rs.${newProductPrice.toFixed(2)}`
+  }));
+  
+  // Check if replacement price is higher
+  setIsReplacementPriceHigher(newProductPrice > selectedProductPrice);
+  setShowDropdown(false);
+};
+
+const handleQuantityChange = (text: string) => {
+  if (/^\d*\.?\d*$/.test(text)) {
+    const selectedProduct = retailItems.find(item => 
+      item.displayName === replaceData.newProduct
+    );
+    const price = selectedProduct ? (selectedProduct.discountedPrice || selectedProduct.normalPrice || 0) : 0;
+    const totalPrice = text ? (parseFloat(text) * price) : price;
+    const selectedProductPrice = parseFloat(replaceData.selectedProductPrice) || 0;
+    
     setReplaceData(prev => ({
       ...prev,
-      newProduct: product.displayName,
-      price: `Rs.${(product.discountedPrice || product.normalPrice || 0).toFixed(2)}`
+      quantity: text,
+      price: text ? `Rs.${totalPrice.toFixed(2)}` : `Rs.${price.toFixed(2)}`
     }));
-    setShowDropdown(false);
-  };
+    
+    // Check if replacement price is higher
+    setIsReplacementPriceHigher(totalPrice > selectedProductPrice);
+  }
+};
 
-  const handleQuantityChange = (text: string) => {
-    if (/^\d*\.?\d*$/.test(text)) {
-      const selectedProduct = retailItems.find(item => 
-        item.displayName === replaceData.newProduct
-      );
-      const price = selectedProduct ? (selectedProduct.discountedPrice || selectedProduct.normalPrice || 0) : 0;
-      setReplaceData(prev => ({
-        ...prev,
-        quantity: text,
-        price: text ? `Rs.${(parseFloat(text) * price).toFixed(2)}` : `Rs.${price.toFixed(2)}`
-      }));
-    }
-  };
+  // const handleQuantityChange = (text: string) => {
+  //   if (/^\d*\.?\d*$/.test(text)) {
+  //     const selectedProduct = retailItems.find(item => 
+  //       item.displayName === replaceData.newProduct
+  //     );
+  //     const price = selectedProduct ? (selectedProduct.discountedPrice || selectedProduct.normalPrice || 0) : 0;
+  //     setReplaceData(prev => ({
+  //       ...prev,
+  //       quantity: text,
+  //       price: text ? `Rs.${(parseFloat(text) * price).toFixed(2)}` : `Rs.${price.toFixed(2)}`
+  //     }));
+  //   }
+  // };
 
   // Get product type name for display
   const getProductTypeName = (productType: string) => {
@@ -1492,14 +1668,18 @@ const renderReplaceModal = () => {
 
             {/* Action Buttons */}
             <View className="space-y-3">
-             <TouchableOpacity
-  className={`py-3 rounded-full px-3 ${isFormComplete ? 'bg-[#FA0000]' : 'bg-[#FA0000]/50'}`}
-  onPress={isFormComplete ? handleReplaceSubmit : undefined}
-  disabled={!isFormComplete}
+          <TouchableOpacity
+  className={`py-3 rounded-full px-3 ${
+    isFormComplete && !isReplacementPriceHigher 
+      ? 'bg-[#FA0000]' 
+      : 'bg-[#FA0000]/50'
+  }`}
+  onPress={isFormComplete && !isReplacementPriceHigher ? handleReplaceSubmit : undefined}
+  disabled={!isFormComplete || isReplacementPriceHigher}
 >
   <Text className="text-white text-center font-medium">
     {jobRole === "Distribution Center Manager" 
-      ? "Update" 
+      ? t("PendingOrderScreen.Update")
       : t("PendingOrderScreen.Send Replace Request")}
   </Text>
 </TouchableOpacity>
@@ -1517,7 +1697,28 @@ const renderReplaceModal = () => {
   );
 };
 
-  const getDynamicStatus = (): 'Pending' | 'Opened' | 'Completed' => {
+//   const getDynamicStatus = (): 'Pending' | 'Opened' | 'Completed' => {
+//   const hasFamily = familyPackItems.length > 0;
+//   const hasAdditional = additionalItems.length > 0;
+  
+//   let allSelected = false;
+//   let someSelected = false;
+  
+//   if (hasFamily && hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+//     someSelected = hasFamilyPackSelections() || hasAdditionalItemSelections();
+//   } else if (hasFamily && !hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected();
+//     someSelected = hasFamilyPackSelections();
+//   } else if (!hasFamily && hasAdditional) {
+//     allSelected = areAllAdditionalItemsSelected();
+//     someSelected = hasAdditionalItemSelections();
+//   }
+  
+//   return allSelected ? 'Completed' : someSelected ? 'Opened' : 'Pending';
+// };
+
+const getDynamicStatus = (): 'Pending' | 'Opened' | 'Completed' => {
   const hasFamily = familyPackItems.length > 0;
   const hasAdditional = additionalItems.length > 0;
   
@@ -1525,8 +1726,23 @@ const renderReplaceModal = () => {
   let someSelected = false;
   
   if (hasFamily && hasAdditional) {
-    allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
-    someSelected = hasFamilyPackSelections() || hasAdditionalItemSelections();
+    const familyAllSelected = areAllFamilyPackItemsSelected();
+    const familyHasSelections = hasFamilyPackSelections();
+    const additionalAllSelected = areAllAdditionalItemsSelected();
+    const additionalHasSelections = hasAdditionalItemSelections();
+    
+    allSelected = familyAllSelected && additionalAllSelected;
+    
+    // Check if one is completed and other is pending (no selections)
+    const oneCompletedOnePending = 
+      (familyAllSelected && !additionalHasSelections) || 
+      (additionalAllSelected && !familyHasSelections);
+    
+    if (oneCompletedOnePending) {
+      return 'Pending'; // Return Pending when one is completed and other has no selections
+    }
+    
+    someSelected = familyHasSelections || additionalHasSelections;
   } else if (hasFamily && !hasAdditional) {
     allSelected = areAllFamilyPackItemsSelected();
     someSelected = hasFamilyPackSelections();
@@ -1542,11 +1758,11 @@ const renderReplaceModal = () => {
 const getStatusText = (status: 'Pending' | 'Opened' | 'Completed') => {
   switch (status) {
     case 'Pending':
-      return selectedLanguage === 'si' ? 'අපේක්ෂාවෙන්' : 
+      return selectedLanguage === 'si' ? 'අපරිපූර්ණ' : 
              selectedLanguage === 'ta' ? 'நிலுவையில்' : 
              t("Status.Pending") || 'Pending';
     case 'Opened':
-      return selectedLanguage === 'si' ? 'විවෘත කර ඇත' : 
+      return selectedLanguage === 'si' ? 'විවෘත කළ' : 
              selectedLanguage === 'ta' ? 'திறக்கப்பட்டது' : 
              t("Status.Opened") || 'Opened';
     case 'Completed':
@@ -1661,7 +1877,102 @@ const resetCountdown = () => {
     setShowCompletionPrompt(false);
 };
 
+const getWarningMessage = (allSelected: boolean) => {
+  if (allSelected) {
+    // All items selected message
+    if (selectedLanguage === 'si') {
+      return (
+        <>
+          සියල්ල පරීක්ෂා කර ඇත. ඇණවුම සුරකින විට{' '}
+          <Text style={{ fontWeight: 'bold' }}>'සම්පූර්ණයි'</Text> තත්වයට මාරු වේ.
+        </>
+      );
+    } else if (selectedLanguage === 'ta') {
+      return (
+        <>
+          அனைத்தும் சரிபார்க்கப்பட்டது. சேமிக்கும்போது ஆர்டர்{' '}
+          <Text style={{ fontWeight: 'bold' }}>'நிறைவானது'</Text> நிலைக்கு மாறும்.
+        </>
+      );
+    } else {
+      return (
+        <>
+          All checked. Order will move to{' '}
+          <Text style={{ fontWeight: 'bold' }}>'Completed'</Text> on save.
+        </>
+      );
+    }
+  } else {
+    // Some items unchecked message
+    if (selectedLanguage === 'si') {
+      return (
+        <>
+          පරීක්ෂා නොකළ අයිතම ඉතිරිව ඇත. දැන් සුරැකීමෙන් ඇණවුම{' '}
+          <Text style={{ fontWeight: 'bold' }}>'විවෘත කර ඇත'</Text> තත්වයේ පවතී.
+        </>
+      );
+    } else if (selectedLanguage === 'ta') {
+      return (
+        <>
+          சரிபார்க்கப்படாத உருப்படிகள் உள்ளன. இப்போது சேமிப்பது ஆர்டரை{' '}
+          <Text style={{ fontWeight: 'bold' }}>'திறக்கப்பட்டது'</Text> நிலையில் வைத்திருக்கும்.
+        </>
+      );
+    } else {
+      return (
+        <>
+          Unchecked items remain. Saving now keeps the order in{' '}
+          <Text style={{ fontWeight: 'bold' }}>'Opened'</Text> Status.
+        </>
+      );
+    }
+  }
+};
 
+
+const getFinishUpMessage = () => {
+  if (selectedLanguage === 'si') {
+    return 'අවසන් කරන්න!';
+  } else if (selectedLanguage === 'ta') {
+    return 'முடிக்கவும்!';
+  } else {
+    return 'Finish up!';
+  }
+};
+
+const getMarkingAsMessage = () => {
+  if (selectedLanguage === 'si') {
+    return 'තත්පර 30 කින් සම්පූර්ණ ලෙස සලකුණු වේ.';
+  } else if (selectedLanguage === 'ta') {
+    return '30 வினாடிகளில் முழுமையானதாக குறிக்கப்படுகிறது.';
+  } else {
+    return 'Marking as completed in 30 seconds.';
+  }
+};
+
+const getTapGoBackMessage = () => {
+  if (selectedLanguage === 'si') {
+    return 'සංස්කරණය කිරීමට \'සංස්කරණය වෙත ආපසු\' ස්පර්ශ කරන්න.';
+  } else if (selectedLanguage === 'ta') {
+    return 'திருத்த \'திருத்தத்திற்கு திரும்பவும்\' என்பதைத் தொடவும்.';
+  } else {
+    return 'Tap \'Go Back\' to edit.';
+  }
+};
+// Helper function to calculate if all items are selected (extracted to avoid repetition)
+const calculateAllSelected = () => {
+  const hasFamily = familyPackItems.length > 0;
+  const hasAdditional = additionalItems.length > 0;
+  
+  if (hasFamily && hasAdditional) {
+    return areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+  } else if (hasFamily && !hasAdditional) {
+    return areAllFamilyPackItemsSelected();
+  } else if (!hasFamily && hasAdditional) {
+    return areAllAdditionalItemsSelected();
+  }
+  return false;
+};
 
 
 
@@ -1675,7 +1986,7 @@ const resetCountdown = () => {
       <View className="flex-1 bg-black/50 justify-center items-center px-6">
         <View className="bg-white rounded-2xl p-6 w-full max-w-sm">
           <Text className="text-lg font-semibold text-center mb-2">
-         You have unsubmitted changes
+         {t("PendingOrderScreen.You have unsubmitted changes")}
           </Text>
           <Text className="text-gray-600 text-center mb-6">
            {t("OpenedOrderScreen.If you leave this page now, your changes will be lost.")}{'\n'}
@@ -1799,8 +2110,8 @@ const resetCountdown = () => {
 return (
   <View className="flex-1 bg-white">
     {/* Header */}
-    <View className="bg-white px-4 py-4 flex-row items-center border-b border-gray-100">
-      <TouchableOpacity onPress={handleBackPress} className="mr-4">
+    <View className="bg-white px-4 py-4 flex-row items-center ">
+      <TouchableOpacity onPress={handleBackPress} className="absolute left-4 bg-[#F6F6F680] rounded-full p-2 z-10">
         <AntDesign name="left" size={24} color="#333" />
       </TouchableOpacity>
       <View className="flex-1 justify-center items-center">
@@ -1816,7 +2127,7 @@ return (
     </View>
 
     {/* Loading State */}
-    {isLoading ? (
+    {/* {isLoading ? (
       <View className="flex-1 justify-center items-center py-20">
         <LottieView
           source={require('../../assets/lottie/newLottie.json')}
@@ -1825,7 +2136,17 @@ return (
           style={{ width: 200, height: 200 }}
         />
       </View>
-    ) : (
+    ) : ( */}
+    {isLoading || !isDataLoaded ? (
+        <View className="flex-1 justify-center items-center py-20">
+          <LottieView
+            source={require('../../assets/lottie/newLottie.json')}
+            autoPlay
+            loop
+            style={{ width: 200, height: 200 }}
+          />
+        </View>
+      ) : (
       <>
         <ScrollView 
           className="flex-1" 
@@ -1853,7 +2174,7 @@ return (
           } ${orderStatus === 'Completed' ? 'opacity-100' : ''}`}
           onPress={() => togglePackageExpansion(packageGroup.packageId)}
         >
-          <View className="flex-row items-center">
+          {/* <View className="flex-row items-center">
             <Text className="text-[#000000] font-medium">
               {packageGroup.packageName}
             </Text>
@@ -1865,7 +2186,20 @@ return (
             {orderStatus === 'Completed' && packageGroup.allSelected && (
               <Text className="text-[#000000] font-medium ml-1">✓</Text>
             )}
-          </View>
+          </View> */}
+          <View className="flex-row items-center">
+  <Text className="text-[#000000] font-normal">
+    {packageGroup.packageName}
+  </Text>
+  {packageGroup.packageQty > 1 && (
+    <Text className="text-black font-bold ml-1">
+      (x{packageGroup.packageQty})
+    </Text>
+  )}
+  {orderStatus === 'Completed' && packageGroup.allSelected && (
+    <Text className="text-[#000000] font-medium ml-1">✓</Text>
+  )}
+</View>
           <AntDesign 
             name={isPackageExpanded(packageGroup.packageId) ? "up" : "down"} 
             size={16} 
@@ -1889,7 +2223,7 @@ return (
                         >
                           <View className="flex-row items-center flex-1">
                             {/* Don't show replace button for completed orders */}
-                            {orderStatus !== 'Completed' && (
+                            {/* {orderStatus !== 'Completed' && (
             <TouchableOpacity
               className="w-8 h-8 items-center justify-center mr-3"
               onPress={() => handleReplaceProduct(item)}
@@ -1900,7 +2234,20 @@ return (
                 <Image source={RedIcon} style={{ width: 20, height: 20 }}/>
               )}
             </TouchableOpacity>
-          )}
+          )} */}
+          {orderStatus !== 'Completed' && (
+  <View className="w-8 h-8 items-center justify-center mr-3">
+    {item.selected ? (
+      // Show disabled image (not clickable)
+      <Image source={disable} style={{ width: 20, height: 20, opacity: 0.5 }}/>
+    ) : (
+      // Show clickable red icon
+      <TouchableOpacity onPress={() => handleReplaceProduct(item)}>
+        <Image source={RedIcon} style={{ width: 20, height: 20 }}/>
+      </TouchableOpacity>
+    )}
+  </View>
+)}
                             <View className="flex-1">
                               <Text className={`font-medium text-black ${
                                 orderStatus === 'Completed' && item.selected 
@@ -2014,7 +2361,7 @@ return (
           )}
 
           {/* Warning Message - Only show for non-completed orders */}
-          {showWarning && orderStatus !== 'Completed' && (
+          {/* {showWarning && orderStatus !== 'Completed' && (
             <View className="mx-4 mb-4 bg-white px-4 py-2">
               <Text 
                 className="text-sm text-center italic"
@@ -2057,14 +2404,40 @@ return (
                         allSelected = areAllAdditionalItemsSelected();
                       }
                       
-                      return allSelected
-                        ? <>  {t("PendingOrderScreen.All checked")} <Text style={{ fontWeight: 'bold' }}> {t("PendingOrderScreen.Completed")} </Text> {t("PendingOrderScreen.onsave")}</>
-                        : <> {t("PendingOrderScreen.Unchecked items")} <Text style={{ fontWeight: 'bold' }}>{t("PendingOrderScreen.Opened")}</Text> {t("PendingOrderScreen.Status")}</>;
+                    //   return allSelected
+                    //     ? <>  {t("PendingOrderScreen.All checked")} <Text style={{ fontWeight: 'bold' }}> {t("PendingOrderScreen.Completed")} </Text> {t("PendingOrderScreen.onsave")}</>
+                    //     : <> {t("PendingOrderScreen.Unchecked items")} <Text style={{ fontWeight: 'bold' }}>{t("PendingOrderScreen.Opened")}</Text> {t("PendingOrderScreen.Status")}</>;
+                    // })()
+                     return allSelected
+                        ? <>  All checked. Order will move to <Text style={{ fontWeight: 'bold' }}> 'Completed' </Text> on save.</>
+                        : <> Unchecked items remain. Saving now keeps the order in  <Text style={{ fontWeight: 'bold' }}>'Opened'</Text> Status.</>;
                     })()
                 }
               </Text>
             </View>
-          )}
+          )} */}
+          {showWarning && orderStatus !== 'Completed' && (
+  <View className="mx-4 mb-4 bg-white px-4 py-2">
+    <Text
+      className="text-sm text-center italic"
+      style={{
+        color: (() => {
+          const allSelected = calculateAllSelected();
+          return orderStatus === 'Opened'
+            ? '#FA0000'
+            : allSelected
+              ? '#308233'
+              : '#FA0000';
+        })()
+      }}
+    >
+      {orderStatus === 'Opened'
+        ? ""
+        : getWarningMessage(calculateAllSelected())
+      }
+    </Text>
+  </View>
+)}
 
           {/* Completed Order Summary - Show completion details */}
           {/* {orderStatus === 'Completed' && (
@@ -2128,15 +2501,39 @@ return (
             >
               <View className="flex-1 bg-black/50 justify-center items-center px-6">
                 <View className="bg-white rounded-2xl p-6 w-full max-w-sm">
-                  <Text className="text-xl font-bold text-center mb-2">
-                    {t("PendingOrderScreen.FinishUp")}
-                  </Text>
-                  <Text className="text-gray-600 text-center mb-2">
-                    {t("PendingOrderScreen.MarkingAs")}
-                  </Text>
-                  <Text className="text-gray-500 text-sm text-center mb-6">
-                    {t("PendingOrderScreen.TapGoback")}
-                  </Text>
+                <Text className="text-xl font-bold text-center mb-2"
+                 style={[
+                  i18n.language === "si"
+                    ? { fontSize: 12 }
+                    : i18n.language === "ta"
+                    ? { fontSize: 12 }
+                    : { fontSize: 15 }
+                ]}
+                >
+        {getFinishUpMessage()}
+      </Text>
+      <Text className="text-gray-600 text-center mb-2"
+       style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      >
+        {getMarkingAsMessage()}
+      </Text>
+      <Text className="text-gray-500 text-sm text-center mb-6"
+       style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      >
+        {getTapGoBackMessage()}
+      </Text>
 
                   {/* Timer Component */}
                   <View className="justify-center items-center mb-6">
@@ -2158,7 +2555,15 @@ return (
                     className="bg-[#000000] py-4 rounded-full mb-3"
                     onPress={handleCompleteOrder}
                   >
-                    <Text className="text-white text-center font-bold text-base">
+                    <Text className="text-white text-center font-bold text-base"
+                     style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+                    >
                       {t("PendingOrderScreen.Mark as Completed")}
                     </Text>
                   </TouchableOpacity>
@@ -2167,7 +2572,15 @@ return (
                     className="bg-gray-200 py-4 rounded-full"
                     onPress={handleBackToEdit}
                   >
-                    <Text className="text-gray-700 text-center font-medium text-base">
+                    <Text className="text-gray-700 text-center font-medium text-base"
+                     style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+                    >
                       {t("PendingOrderScreen.Back to Edit")}
                     </Text>
                   </TouchableOpacity>

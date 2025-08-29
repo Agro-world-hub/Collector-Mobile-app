@@ -58,37 +58,37 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   const validatePassword = () => {
     // Check if all fields are filled
     if (!currentPassword || !newPassword || !confirmPassword) {
-      Alert.alert('Error', 'All fields are required');
+      Alert.alert(t("Error.error"), t("Error.All fields are required"));
       return false;
     }
 
     // Check if new password meets format requirements
     if (newPassword.length < 8) {
-      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+      Alert.alert(t("Error.error"), t("Error.Your password must contain"));
       return false;
     }
 
     // Check for at least 1 uppercase letter
     if (!/[A-Z]/.test(newPassword)) {
-      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+      Alert.alert(t("Error.error"), t("Error.Your password must contain a minimum"));
       return false;
     }
 
     // Check for at least 1 number
     if (!/[0-9]/.test(newPassword)) {
-      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+      Alert.alert(t("Error.error"), t("Error.Your password must contain"));
       return false;
     }
 
     // Check for at least 1 special character
     if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(newPassword)) {
-      Alert.alert('Error', 'Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.');
+       Alert.alert(t("Error.error"), t("Error.Your password must contain a minimum"));
       return false;
     }
 
     // Check if new password and confirm password match
     if (newPassword !== confirmPassword) {
-      Alert.alert('Error', 'New password and confirm password do not match');
+      Alert.alert(t("Error.error"), 'New password and confirm password do not match');
       return false;
     }
 
@@ -132,7 +132,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
       );
 
       console.log("Password update response:", response.data);
-      Alert.alert("Success", "Password updated successfully");
+      Alert.alert(t("Error.Success"), t("Error.Password updated successfully"));
       navigation.navigate("Login");
     } catch (error) {
       // Alert.alert(t("Error.error"), t("Error.Failed to update password."));
@@ -168,9 +168,12 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
         style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
         keyboardShouldPersistTaps="handled"
       >
-        <TouchableOpacity onPress={() => navigation.goBack()} className="bg-[#F6F6F680] rounded-full p-2">
+        {/* <TouchableOpacity onPress={() => navigation.goBack()} className="bg-[#F6F6F680] rounded-full p-2">
           <AntDesign name="left" size={24} color="#000502" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                         <AntDesign name="left" size={24} color="#000502" />
+                       </TouchableOpacity>
 
         <View className="flex-row items-center justify-center mt-[2%] space-x-[-30%] ml-[5%]">
          <Image
@@ -195,7 +198,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
         </View>
 
         <View className="items-center pt-[12%]">
-          <Text className="font-normal pb-2 ml-[-55%]">
+          <Text className="font-normal pb-2 self-start ml-4">
             {t("ChangePassword.CurrentPassword")}
           </Text>
           <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">
@@ -215,7 +218,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
             </TouchableOpacity>
           </View>
 
-          <Text className="font-normal pb-2 ml-[-60%]">
+          <Text className="font-normal pb-2 items-start self-start ml-4 ">
             {t("ChangePassword.NewPassword")}
           </Text>
              <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">
@@ -240,7 +243,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
             </TouchableOpacity>
           </View>
 
-          <Text className="font-normal pb-2 ml-[-45%]">
+          <Text className="font-normal pb-2 self-start ml-4">
             {t("ChangePassword.ConfirmNewPassword")}
           </Text>
            <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">

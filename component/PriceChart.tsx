@@ -187,10 +187,13 @@ return (
     <SafeAreaView className="flex-1 bg-whitegray-100">
       {/* Header */}
       <View className="bg-[#313131] h-20 flex-row items-center" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
-        <TouchableOpacity onPress={() => navigation.navigate("Main" as any, { screen: "SearchPriceScreen" })}>
+        {/* <TouchableOpacity onPress={() => navigation.navigate("Main" as any, { screen: "SearchPriceScreen" })}>
           <AntDesign name="left" size={24} color="#fff" />
-        </TouchableOpacity>
-        <Text className="text-white text-lg font-bold text-center flex-1">{t("PriceChart.PriceChart")}</Text>
+        </TouchableOpacity> */}
+        <TouchableOpacity  onPress={() => navigation.navigate("Main" as any, { screen: "SearchPriceScreen" })} className="bg-[#FFFFFF1A] rounded-full p-2 justify-center w-10" >
+                                                               <AntDesign name="left" size={24} color="#000502" />
+                                                             </TouchableOpacity>
+        <Text className="text-white text-lg font-bold text-center flex-1 mr-[5%]">{t("PriceChart.PriceChart")}</Text>
       </View>
 
       {/* Content */}

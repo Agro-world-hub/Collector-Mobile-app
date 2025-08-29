@@ -1,16 +1,16 @@
 {
   "SignIn": {
     "LNG": "en",
-    "Wellcome": "Welcome !",
+    "Wellcome": "Welcome!",
     "SigntoLogin": "Please Sign in to login",
     "Employee":"Employee ID",
     "Password": "Password",
-    "Sign":"Sign In"
+    "Sign":"Sign in"
   },
   "DashBoard":{
     "LNG": "en",
     "Keep": "Keep Going!",
-     "Youhavenotachieved":"You haven't achieved your daily target today",
+     "Youhavenotachieved":"You haven’t achieved your daily target today",
      "Completed":"Completed!",
      "Youhaveachieved":"You have achieved your daily target today",
     "Yourtarget": "Your Target",
@@ -20,6 +20,7 @@
   },
   "Error":{
     "error":"Sorry",
+    "Error":"Error",
     "Failed to fetch empid.":"Failed to fetch Employee ID.",
     "New password and confirm password do not match.":"New password and confirm password do not match.",
     "New password must be at least 6 characters long.":"New password must be at least 6 characters long.",
@@ -58,7 +59,7 @@
     "An unexpected error occurred.":"An unexpected error occurred.",
     "no any prices found":"No any prices found !",
     "Failed to submit crop details. Please try again.":"Failed to submit crop details. Please try again.",
-    "otpSendFailed":"OTP Send Failed",
+    "OtpverificationSendFailed":"OTP Send Failed",
     "Please fill in all required fields.":"Please fill in all required fields.",
     "Account numbers do not match.":"Account numbers do not match.",
     "Validation Errors":"Validation Errors",
@@ -81,7 +82,7 @@
     "Failed to fetch officers.":"Failed to fetch officers.",
     "No officers available.":"No officers available.",
     "An error occurred while fetching officers.":"An error occurred while fetching officers.",
-    "You have exceeded the maximum amount.":"You have exceeded the maximum amount.",
+    "You have exceeded the maximum amount.":"You have exceeded maximum amount",
     "Please select an officer.":"Please select an officer.",
     "Please enter a valid amount.":"Please enter a valid amount.",
     "You cannot transfer more than":"You cannot transfer more than",
@@ -123,7 +124,7 @@
     "Officer created successfully":"Officer created successfully!",
     "Phone numbers updated successfully":"Phone numbers updated successfully",
     "Submitted":"Submitted",
-    "Your complaint has Submit successfuly":"Your complaint has Submit successfuly!",
+    "Your complaint has Submit successfuly":"Your complaint has been submitted successfully!",
     "No Prices Available":"No Prices Available",
     "No prices are available for the selected variety.":"No prices are available for the selected variety.",
     "Prices for the selected variety were not found.":"Prices for the selected variety were not found.",
@@ -170,7 +171,50 @@
 "Invalid email address. Please enter a valid email format (e.g. example@domain.com).": "Invalid email address. Please enter a valid email format (e.g. example@domain.com).",
 "Cannot add negative values for loadIn.": "Cannot add negative values for load (kg).",
 "Phone numbers cannot be the same.": "Phone numbers cannot be the same.",
-"InvalidPhoneNumber":"Invalid Phone Number"
+"InvalidPhoneNumber":"Invalid Phone Number",
+"No Selection":"No Selection",
+"Please select at least one pending item":"Please select at least one pending item.",
+"Replace request approved successfully":"Replace request approved successfully",
+"Please select a product and enter quantity":"Please select a product and enter quantity",
+"Session expired":"Session expired. Please login again.",
+"Failed to complete order":"Failed to complete order. Please try again.",
+"Info":"Info",
+"Cannot replace products in completed orders":"Cannot replace products in completed orders",
+"Product price information is not available":"Product price information is not available. Please try again.",
+"Invalid product data":"Invalid product data. Please refresh and try again.",
+"Please fill all required fields":"Please fill all required fields",
+"Package ID not found":"Package ID not found",
+"No item selected for replacement":"No item selected for replacement",
+"Replacement request submitted successfully":"Replacement request submitted successfully!",
+"Authentication Error":"Authentication Error",
+"Your session has expired":"Your session has expired. Please login again.",
+"Invalid Request":"Invalid Request",
+"Please check your input data and try again":"Please check your input data and try again.",
+"Failed to submit replacement request":"Failed to submit replacement request. Please try again.",
+"Order updated successfully":"Order updated successfully!",
+"Locked Package":"Locked Package",
+"This package is locked and cannot be accessed":"This package is locked and cannot be accessed",
+"Invalid phone number":"Invalid phone number. Format must start with 7 (e.g., 7XXXXXXXX).",
+"Phone number must be 9 digits long":"Phone number must be 9 digits long.",
+"Invalid Gmail address":"Invalid Gmail address. Gmail addresses cannot have consecutive dots (.), leading/trailing dots, or special characters except + and .",
+"Invalid email address Example":"Invalid email address. Please enter a valid email format (e.g. example@domain.com).",
+"All fields are required":"All fields are required",
+"Your password must contain":"Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.",
+"Your password must contain a minimum":"Your password must contain a minimum of 8 characters with 1 Uppercase, Numbers & Special characters.",
+"New password and confirm password do not match":"New password and confirm password do not match",
+"Password updated successfully":"Password updated successfully",
+"Access denied":"Access denied. Your role is not authorized to use this application.",
+"Please fill all fields":"Please fill all fields",
+"Upload Image First":"Upload Image First",
+"Unsaved Crop Details":"Unsaved Crop Details",
+"You have entered crop details but":"You have entered crop details but haven't added them. Do you want to submit without adding the current crop?",
+"Yes":"Yes",
+"No":"No",
+"No Crops":"No Crops",
+"Please add at least one crop to proceed":"Please add at least one crop to proceed.",
+"Failed to generate invoice number":"Failed to generate invoice number.Please Try again later",
+"Failed to submit crop details":"Failed to submit crop details. Please try again.",
+"Please enter Employee ID in uppercase letters":"Please enter Employee ID in uppercase letters"
   },
   "EngProfile":{
     "LNG": "en",
@@ -181,8 +225,7 @@
     "Report Complaint":"Report a Complaint",
     "View Complaint History":"View Complaint History",
     "Logout": "Logout",
-    "Need Help":"Need Help?",
-    "Help Center":"Need PlantCare help? Tap Call for instant support from our Help Center."
+    "Logging out":"Logging out..."
   },
   "Profile":{
     "LNG": "en",
@@ -193,8 +236,8 @@
     "CenterCode":"Centre Code",
     "Job":"Job Role",
     "NIC":"NIC Number",
-    "Phone1":"Phone Number - 1",
-    "Phone2":"Phone Number - 2",
+    "Phone1":"Mobile Number - 1",
+    "Phone2":"Mobile Number - 2",
     "House":"House/Bulding No",
     "Street":"Street Name",
     "City":"City",
@@ -234,9 +277,9 @@
   "SearchFarmer":{
     "LNG": "en",
     "Search":"Search",
-    "EnterFarmer":"Enter Farmer's NIC number",
+    "EnterFarmer":"Enter Farmer’s NIC number",
     "Searching":"Searching...",
-    "EnterNIC":"Enter NIC number",
+    "EnterNIC":"Enter NIC Here",
     "Noregistered":"No registered farmer found",
     "RegisterFarmer":"Register Farmer",
     "Result Found":"Results Found :",
@@ -247,9 +290,9 @@
     "LNG": "en",
     "FillDetails":"Fill Personal Details",
     "FirstName":"First Name",
-    "LastName":"Last Name ",
+    "LastName":"Last Name",
     "NIC":"NIC Number",
-    "Phone":"Phone Number",
+    "Phone":"Mobile Number",
     "District":"District",
     "AccountNum":"Account Number",
     "AccountName":"Account Holder's Name",
@@ -263,8 +306,8 @@
     "Close":"Close",
     "Preferd Language":"Preferred Language",
     "Select Language":"Select Language",
-    "Select Bank":"Select Bank",
-    "Select Branch":"Select Branch",
+    "Select Bank":"--Select Bank--",
+    "Select Branch":"--Select Branch--",
     "AccountNumberError":"Please enter a valid account number",
     "InvalidNIC":"NIC must be either 12 digits or 9 digits followed by V or v",
     "OnlyDigitsAllowed":"Only Digits Allowed",
@@ -291,10 +334,12 @@
     "Didreceive":" I didn’t receive the code!",
     "Verify":"Verify",
     "Success":"Success!",
-    "Registration":"Registration Successful",
+    "Registration":"Registration Successful!",
     "OK":"OK",
     "invalidOTP":"verification code is Incorrect",
-    "completeOTP":"Please enter the full verification code"
+    "completeOTP":"Please enter the full verification code",
+    "Resend in": "Resend in",
+    "Resend again": "Resend again"
   },
   "FarmerQr":{
     "LNG": "en",
@@ -313,11 +358,22 @@
     "Variety":"Variety",
     "UnitGrades":"Unit Prices according to Grades",
     "Total":"Total (Rs.)",
-    "Add":"Add",
+    "Add":"Add item",
     "Done":"Done",
     "Select Crop":"Select Crop",
     "Select Variety":"Select Variety",
-    "Processing...":"Processing..."
+    "Processing...":"Processing...",
+    "Cancel":"Cancel",
+    "Delete":"Delete",
+    "Please upload image for Grade":"Please upload image for Grade {{gradesWithQuantityButNoImage}} before entering quantity for Grade {{grade}}",
+    "Images Required":"Images Required",
+    "Please upload images for":"Please upload images for: {{missingImages}} before adding this crop.",
+    "Add Quantity First":"Add Quantity First",
+    "Please enter quantity":"Please enter quantity for Grade {{grade}} before adding an image.",
+    "Incomplete Selection":"Incomplete Selection",
+    "Please select both a crop and a variety before adding":"Please select both a crop and a variety before adding.",
+  "Are you sure you want to delete previously added":"Are you sure you want to delete previously added {{varietyName}}?",
+  "Are you sure you want to delete grade":"Are you sure you want to delete previously added {{varietyName}} - Grade {{grade}}?"
   },
   "ReportPage":{
     "LNG": "en",
@@ -366,7 +422,7 @@
   "ChangePassword":{
     "LNG": "en",
     "ChoosePassword":"Change Password",
-    "Changepassword":" Change the password and keep it secured",
+    "Changepassword":"Change the password and keep it secured",
     "CurrentPassword":"Current Password",
     "NewPassword":"New Password",
     "ConfirmNewPassword":"Confirm New Password",
@@ -378,9 +434,10 @@
     "WeneedCamera":" We need camera access to scan QR codes. Please enable camera permissions in your device settings.",
     "Close":"Close",
     "TapScan":"Tap to Scan Again",
-    "Failed":"Failed !",
+    "Failed":"Failed!",
     "SearchNIC":"Search by User’s NIC number",
-    "Requesting for camera permission":"Requesting for camera permission"
+    "Requesting for camera permission":"Requesting for camera permission",
+    "ScantheQR": "Scan the QR"
   },
   "Registeredfarmer":{
     "LNG": "en",
@@ -388,7 +445,7 @@
     "FirstName":"First Name",
     "LastName":"Last Name ",
     "NIC":"NIC Number",
-    "Phone":"Phone Number",
+    "Phone":"Mobile Number",
     "Address":"Address",
     "AccountNum":"Account Number",
     "AccountName":"Account Holder's Name",
@@ -411,7 +468,7 @@
   "ManagerDashboard":{
     "LNG": "en",
     "Keep": "Keep Going!",
-     "Youhavenotachieved":"You haven't achieved your daily target today",
+     "Youhavenotachieved":"You haven’t achieved your daily target today",
      "Completed":"Completed!",
      "Youhaveachieved":"You have achieved your daily target today",
     "Yourtarget": "Your Target Progress",
@@ -504,7 +561,7 @@
     "Drivers List": "Drivers List",
     "Officers / Drivers List": "Officers List ",
     "Drivers": "Drivers",
-    "Not Approved":"Not Approved"
+    "Not Approved":"Not Approved yet"
   },
   "EditTargetManager":{
     "LNG": "en",
@@ -549,7 +606,6 @@
     "Save":"Save",
    "maximum amount receive":"The maximum amount you can receive:",
    "Select an officer":"--Select an officer--"
-
   },
   "ReportGenerator":{
     "LNG": "ta",
@@ -675,94 +731,6 @@
     "NoQrText": "To obtain access to your unique QR code, please register as a member by entering your bank details. This code will ensure smooth transactions and secure payments directly to your bank at our collection centres.",
     "GenerateQr": "Generate My QR"
   },
-  "Transport":{
-    "LNG": "en",
-    "Register Drivers":"Register Drivers",
-    "Add Farmer Requests":"Farm Gate Collection",
-    "View Farmer Requests":"View Farmer Requests",
-    "Driver":"Driver",
-    "Add Collection Request":"Add Farm Gate Collection",
-    "Enter Valide NIC" :"Enter Valid NIC"
-  },
-  "VehicleDetails":{
-    "LNG": "en",
-    "Driving Details":"Driving Details",
-    "Front":"Front",
-    "Back":"Back",
-    "Side-1":"Side-1",
-    "Side-2":"Side-2",
-    "--Driving License ID--":"--Driving License ID--",
-    "Vehicle Insurance Details":"Vehicle Insurance Details",
-    "--Insurance Number--": "--Insurance Number--",
-    "--Insurance Expire Date--":"--Insurance Expire Date--",
-   "Vehicle Details":"Vehicle Details",
-   "Car":"Car",
-   "Truck":"Truck",
-   "Motorcycle":"Motorcycle",
-   "--Vehicle Type--":"--Vehicle Type--",
-   "--Vehicle Capacity--":"--Vehicle Capacity--",
-   "--Vehicle Registration Number--":"--Vehicle Registration Number--",
-   "Go Back":"Go Back",
-   "Submit":"Submit",
-   "Please capture all required images":"Please capture all required images",
-    "InsuranceFront": "Insurance Front Image",
-    "InsuranceBack": "Insurance Back Image",
-    "VehicleFront": "Vehicle Front Image",
-    "VehicleBack": "Vehicle Back Image",
-    "VehicleSide1": "Vehicle Side 1 Image",
-    "VehicleSide2": "Vehicle Side 2 Image",
-    "Driver and vehicle information submitted successfully": "Driver and vehicle information submitted successfully",
-     "Failed to submit driver and vehicle information. Please try again." :"Failed to submit driver and vehicle information. Please try again."
-  },
-  "CollectionRequest":{
-    "Collection Request Form": "Collection Request Form",
-    "Building / House No": "Building / House Number",
-    "Street Name": "Street Name",
-    "City": "City",
-    "Closest Landmark": "Closest Landmark",
-    "Schedule Date": "Schedule Date",
-    "Select Schedule Date": "Select Schedule Date",
-    "Added Requests": "Added Requests",
-    "Crop": "Crop",
-    "Variety": "Variety",
-    "Load in kg (Approx)": "Load in kg (Approx)",
-    "--Select Crop--": "--Select Crop--",
-    "--Select Variety--": "--Select Variety--",
-    "Add to the List": "Add to the List",
-    "Add more": "Add more",
-    "Submit": "Submit",
-    "Collection Requests":"Collection Requests",
-    "Request ID":"Request ID",
-    "Search NIC here...": "Search NIC here...",
-    "NIC":"NIC",
-    "Date":"Date",
-    "All":"All",
-    "No collection requests found": "No collection requests found",
-    "ID":"ID",
-    "Update":"Update",
-    "Cancel Request":"Cancel Request",
-    "Are you sure?":"Are you sure?",
-    "Are you sure Massage":"This will permanently delete the request placed by farmer and cannot be undone.",
-    "Confirm":"Confirm",  
-    "Cancel":"Cancel",
-    "Reason to Cancel":"Reason to Cancel",
-    "Please mention below the reason":"Please mention below the reason.",
-    "Enter here..": "Enter here..",
-    "Processing...": "Processing...",
-    "Go Back":"Go Back",
-    "Failed to cancel request":"Failed to cancel request",
-    "Request cancelled successfully":"Request cancelled successfully",
-    "Failed to update schedule date":"Failed to update schedule date",
-    "Schedule Date has not been changed":"Schedule Date has not been changed",
-    "Schedule Date updated successfully":"Schedule Date updated successfully",
-    "Please provide a reason for cancellation":"Please provide a reason for cancellation",
-    "Not Assigned":"Not Assigned",
-    "Assigned":"Assigned",
-    "Cancelled":"Cancelled",
-    "On way":"On way",
-    "Scheduled":"Scheduled",
-    "Canceled by":"Canceled by"
-  },
   "NewReport":{
     "LNG": "en",
     "Goods Received Note":"Goods Received Note",
@@ -770,7 +738,7 @@
     "Date":"Date:",
     "Supplier Details":"Supplier Details:",
     "Name":"Name:",
-    "Phone":"Phone:",
+    "Phone":"Mobile Number:",
     "Received By":"Received By:",
     "Company Name":"Company Name:",
     "Centre":"Centre:",
@@ -778,8 +746,8 @@
     "Crop Name":"Crop Name",
     "Variety":"Variety",
     "Grade":"Grade",
-    "Unit Price(Rs.)":"Unit Price(Rs.)",
-    "Quantity(kg)":"Quantity(kg)",
+    "Unit Price(Rs.)":"Unit Prices (Rs.)",
+    "Quantity(kg)":"Quantity (kg)",
     "Sub Total(Rs.)":"Sub Total(Rs.)",
     "Full Total (Rs.) Rs.":"Full Total (Rs.): Rs.",
     "Note":"Note:",
@@ -855,7 +823,6 @@
     "Search": "Search By NIC",
     "Pending":"Pending",
      "Opened": "Opened"
-   
   },
   "TargetOrderScreen" :{
      "LNG": "en",
@@ -872,7 +839,9 @@
     "Status":"Status",
     "Date":"Date & Time",
     "Completed Time":"Completed Time",
-    "Retry":"Retry"
+    "Retry":"Retry",
+      "Pending":"Pending",
+     "Opened": "Opened"
   },
   "OpenedOrderScreen":{
     "INV No":"INV No :",
@@ -914,8 +883,12 @@
     "Selected product":"Selected product:",
     "Replace Product":"Replace Product",
     "Marking as completed in":"Marking as completed in",
-    "seconds":"seconds."
-
+    "seconds":"seconds.",
+    "You have unsubmitted changes":"You have unsubmitted changes!",
+    "Update":"Update",
+    "Failed to complete order":"Failed to complete order.Please Try again later",
+    "Selected product not found":"Selected product not found.Please Try again later",
+    "Failed to submit replacement request":"Failed to submit replacement request.Please Try again later"
   },
   "Status": {
     "Pending": "Pending",
@@ -934,7 +907,6 @@
     "Pass":"Pass",
     "Completed Time":"Completed Time",
     "Retry":"Retry"
-   
   },
   "DistributionOfficersList":{
     "EMPID":"EMP ID :"
@@ -959,7 +931,7 @@
     "Approve":"Approve",
     "Rs":"Rs."
   },
-  "ReplaceRequestsScreen":{
+    "ReplaceRequestsScreen":{
     "Order ID":"Order ID:",
     "Replacing Item":"Replacing Item:",
     "Requested Time":"Requested Time",
@@ -974,12 +946,14 @@
     "for delivery":"for delivery",
     "Centre Target":"Centre Target",
     "Select Date":"Select Date (ToDo)",
-    "All Dates":"All Dates",
+    "All Datese":"All Dates",
     "Close":"Close",
     "Select Completion Date":"Select Completion Date",
     "All Completion Dates":"All Completion Dates",
-    "Are you sure you want to send these selected":"Are you sure you want to send these selected",
-    "orders out for delivery":"orders out for delivery?",
+    "Are you sure you want to send these selected":"Are you sure you want to send this selected order out for delivery?",
+    "Are you sure you want":"Are you sure you want to send these selected {{count}} orders out for delivery?",
+    "orders out for delivery":"{{count}} orders have been sent out for delivery.",
+    "order one":"{{count}} order has been sent out for delivery.",
     "Processing orders":"Processing orders...",
     "Cancel":"Cancel",
     "Out Time":"Out Time",
@@ -992,13 +966,15 @@
      "Scheduled":"Scheduled",
      "On Time":"On Time",
      "Late":"Late",
-     "No out for delivery orders":"No out for delivery orders"
-     
+     "No out for delivery orders":"No out for delivery orders",
+     "Limit Reached":"Limit Reached",
+     "You can only select up to 5 orders at a time for delivery":"You can only select up to 5 orders at a time for delivery",
+     "OK":"OK",
+     "Processing":"Processing...",
+     "have":"have",
+     "has":"has",
+     "01 order has been sent out for delivery":"01 order has been sent out for delivery.",
+     "orders have been sent out for delivery":"{{successCount}} orders have been sent out for delivery"
   }
-
-
-
-
 }
-
 
