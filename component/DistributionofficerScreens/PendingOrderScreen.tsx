@@ -26,6 +26,7 @@ import CircularProgress from 'react-native-circular-progress-indicator';
 import TimerContainer from '@/component/DistributionofficerScreens/TimerContainer '
 import Timer from '@/component/DistributionofficerScreens/TimerContainer '
 import NetInfo from "@react-native-community/netinfo";
+import i18n from "@/i18n/i18n";
 
 
 
@@ -1296,7 +1297,7 @@ const handleSubmit = async () => {
         [{ text: t("Error.Ok"), onPress: () => navigation.goBack() }]
       );
     } else {
-      throw new Error(response.data.message || 'Failed to update order');
+      throw new Error(response.data.message || t("Error.somethingWentWrong"));
     }
     
     setHasUnsavedChanges(false);
@@ -1757,11 +1758,11 @@ const getDynamicStatus = (): 'Pending' | 'Opened' | 'Completed' => {
 const getStatusText = (status: 'Pending' | 'Opened' | 'Completed') => {
   switch (status) {
     case 'Pending':
-      return selectedLanguage === 'si' ? 'අපේක්ෂාවෙන්' : 
+      return selectedLanguage === 'si' ? 'අපරිපූර්ණ' : 
              selectedLanguage === 'ta' ? 'நிலுவையில்' : 
              t("Status.Pending") || 'Pending';
     case 'Opened':
-      return selectedLanguage === 'si' ? 'විවෘත කර ඇත' : 
+      return selectedLanguage === 'si' ? 'විවෘත කළ' : 
              selectedLanguage === 'ta' ? 'திறக்கப்பட்டது' : 
              t("Status.Opened") || 'Opened';
     case 'Completed':
@@ -1876,7 +1877,102 @@ const resetCountdown = () => {
     setShowCompletionPrompt(false);
 };
 
+const getWarningMessage = (allSelected: boolean) => {
+  if (allSelected) {
+    // All items selected message
+    if (selectedLanguage === 'si') {
+      return (
+        <>
+          සියල්ල පරීක්ෂා කර ඇත. ඇණවුම සුරකින විට{' '}
+          <Text style={{ fontWeight: 'bold' }}>'සම්පූර්ණයි'</Text> තත්වයට මාරු වේ.
+        </>
+      );
+    } else if (selectedLanguage === 'ta') {
+      return (
+        <>
+          அனைத்தும் சரிபார்க்கப்பட்டது. சேமிக்கும்போது ஆர்டர்{' '}
+          <Text style={{ fontWeight: 'bold' }}>'நிறைவானது'</Text> நிலைக்கு மாறும்.
+        </>
+      );
+    } else {
+      return (
+        <>
+          All checked. Order will move to{' '}
+          <Text style={{ fontWeight: 'bold' }}>'Completed'</Text> on save.
+        </>
+      );
+    }
+  } else {
+    // Some items unchecked message
+    if (selectedLanguage === 'si') {
+      return (
+        <>
+          පරීක්ෂා නොකළ අයිතම ඉතිරිව ඇත. දැන් සුරැකීමෙන් ඇණවුම{' '}
+          <Text style={{ fontWeight: 'bold' }}>'විවෘත කර ඇත'</Text> තත්වයේ පවතී.
+        </>
+      );
+    } else if (selectedLanguage === 'ta') {
+      return (
+        <>
+          சரிபார்க்கப்படாத உருப்படிகள் உள்ளன. இப்போது சேமிப்பது ஆர்டரை{' '}
+          <Text style={{ fontWeight: 'bold' }}>'திறக்கப்பட்டது'</Text> நிலையில் வைத்திருக்கும்.
+        </>
+      );
+    } else {
+      return (
+        <>
+          Unchecked items remain. Saving now keeps the order in{' '}
+          <Text style={{ fontWeight: 'bold' }}>'Opened'</Text> Status.
+        </>
+      );
+    }
+  }
+};
 
+
+const getFinishUpMessage = () => {
+  if (selectedLanguage === 'si') {
+    return 'අවසන් කරන්න!';
+  } else if (selectedLanguage === 'ta') {
+    return 'முடிக்கவும்!';
+  } else {
+    return 'Finish up!';
+  }
+};
+
+const getMarkingAsMessage = () => {
+  if (selectedLanguage === 'si') {
+    return 'තත්පර 30 කින් සම්පූර්ණ ලෙස සලකුණු වේ.';
+  } else if (selectedLanguage === 'ta') {
+    return '30 வினாடிகளில் முழுமையானதாக குறிக்கப்படுகிறது.';
+  } else {
+    return 'Marking as completed in 30 seconds.';
+  }
+};
+
+const getTapGoBackMessage = () => {
+  if (selectedLanguage === 'si') {
+    return 'සංස්කරණය කිරීමට \'සංස්කරණය වෙත ආපසු\' ස්පර්ශ කරන්න.';
+  } else if (selectedLanguage === 'ta') {
+    return 'திருத்த \'திருத்தத்திற்கு திரும்பவும்\' என்பதைத் தொடவும்.';
+  } else {
+    return 'Tap \'Go Back\' to edit.';
+  }
+};
+// Helper function to calculate if all items are selected (extracted to avoid repetition)
+const calculateAllSelected = () => {
+  const hasFamily = familyPackItems.length > 0;
+  const hasAdditional = additionalItems.length > 0;
+  
+  if (hasFamily && hasAdditional) {
+    return areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
+  } else if (hasFamily && !hasAdditional) {
+    return areAllFamilyPackItemsSelected();
+  } else if (!hasFamily && hasAdditional) {
+    return areAllAdditionalItemsSelected();
+  }
+  return false;
+};
 
 
 
@@ -2265,7 +2361,7 @@ return (
           )}
 
           {/* Warning Message - Only show for non-completed orders */}
-          {showWarning && orderStatus !== 'Completed' && (
+          {/* {showWarning && orderStatus !== 'Completed' && (
             <View className="mx-4 mb-4 bg-white px-4 py-2">
               <Text 
                 className="text-sm text-center italic"
@@ -2308,14 +2404,40 @@ return (
                         allSelected = areAllAdditionalItemsSelected();
                       }
                       
-                      return allSelected
-                        ? <>  {t("PendingOrderScreen.All checked")} <Text style={{ fontWeight: 'bold' }}> {t("PendingOrderScreen.Completed")} </Text> {t("PendingOrderScreen.onsave")}</>
-                        : <> {t("PendingOrderScreen.Unchecked items")} <Text style={{ fontWeight: 'bold' }}>{t("PendingOrderScreen.Opened")}</Text> {t("PendingOrderScreen.Status")}</>;
+                    //   return allSelected
+                    //     ? <>  {t("PendingOrderScreen.All checked")} <Text style={{ fontWeight: 'bold' }}> {t("PendingOrderScreen.Completed")} </Text> {t("PendingOrderScreen.onsave")}</>
+                    //     : <> {t("PendingOrderScreen.Unchecked items")} <Text style={{ fontWeight: 'bold' }}>{t("PendingOrderScreen.Opened")}</Text> {t("PendingOrderScreen.Status")}</>;
+                    // })()
+                     return allSelected
+                        ? <>  All checked. Order will move to <Text style={{ fontWeight: 'bold' }}> 'Completed' </Text> on save.</>
+                        : <> Unchecked items remain. Saving now keeps the order in  <Text style={{ fontWeight: 'bold' }}>'Opened'</Text> Status.</>;
                     })()
                 }
               </Text>
             </View>
-          )}
+          )} */}
+          {showWarning && orderStatus !== 'Completed' && (
+  <View className="mx-4 mb-4 bg-white px-4 py-2">
+    <Text
+      className="text-sm text-center italic"
+      style={{
+        color: (() => {
+          const allSelected = calculateAllSelected();
+          return orderStatus === 'Opened'
+            ? '#FA0000'
+            : allSelected
+              ? '#308233'
+              : '#FA0000';
+        })()
+      }}
+    >
+      {orderStatus === 'Opened'
+        ? ""
+        : getWarningMessage(calculateAllSelected())
+      }
+    </Text>
+  </View>
+)}
 
           {/* Completed Order Summary - Show completion details */}
           {/* {orderStatus === 'Completed' && (
@@ -2379,15 +2501,39 @@ return (
             >
               <View className="flex-1 bg-black/50 justify-center items-center px-6">
                 <View className="bg-white rounded-2xl p-6 w-full max-w-sm">
-                  <Text className="text-xl font-bold text-center mb-2">
-                    {t("PendingOrderScreen.FinishUp")}
-                  </Text>
-                  <Text className="text-gray-600 text-center mb-2">
-                    {t("PendingOrderScreen.MarkingAs")}
-                  </Text>
-                  <Text className="text-gray-500 text-sm text-center mb-6">
-                    {t("PendingOrderScreen.TapGoback")}
-                  </Text>
+                <Text className="text-xl font-bold text-center mb-2"
+                 style={[
+                  i18n.language === "si"
+                    ? { fontSize: 12 }
+                    : i18n.language === "ta"
+                    ? { fontSize: 12 }
+                    : { fontSize: 15 }
+                ]}
+                >
+        {getFinishUpMessage()}
+      </Text>
+      <Text className="text-gray-600 text-center mb-2"
+       style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      >
+        {getMarkingAsMessage()}
+      </Text>
+      <Text className="text-gray-500 text-sm text-center mb-6"
+       style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      >
+        {getTapGoBackMessage()}
+      </Text>
 
                   {/* Timer Component */}
                   <View className="justify-center items-center mb-6">
@@ -2409,7 +2555,15 @@ return (
                     className="bg-[#000000] py-4 rounded-full mb-3"
                     onPress={handleCompleteOrder}
                   >
-                    <Text className="text-white text-center font-bold text-base">
+                    <Text className="text-white text-center font-bold text-base"
+                     style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+                    >
                       {t("PendingOrderScreen.Mark as Completed")}
                     </Text>
                   </TouchableOpacity>
@@ -2418,7 +2572,15 @@ return (
                     className="bg-gray-200 py-4 rounded-full"
                     onPress={handleBackToEdit}
                   >
-                    <Text className="text-gray-700 text-center font-medium text-base">
+                    <Text className="text-gray-700 text-center font-medium text-base"
+                     style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+                    >
                       {t("PendingOrderScreen.Back to Edit")}
                     </Text>
                   </TouchableOpacity>

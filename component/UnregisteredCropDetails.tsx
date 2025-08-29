@@ -919,10 +919,13 @@ const handleDeleteGrade = () => {
         keyboardShouldPersistTaps="handled"
       >
         <View className="flex-row items-center mb-6">
-          <TouchableOpacity onPress={() => navigation.goBack()} className="">
+          {/* <TouchableOpacity onPress={() => navigation.goBack()} className="">
             <AntDesign name="left" size={24} color="#000" />
-          </TouchableOpacity>
-          <Text className="flex-1 text-center text-xl font-bold text-black">
+          </TouchableOpacity> */}
+            <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                                                       <AntDesign name="left" size={24} color="#000502" />
+                                                     </TouchableOpacity>
+          <Text className="flex-1 text-center text-xl font-bold text-black mr-[5%]">
             {t("UnregisteredCropDetails.FillDetails")}
           </Text>
         </View>

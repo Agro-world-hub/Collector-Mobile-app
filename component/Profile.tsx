@@ -1106,7 +1106,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.goBack()} className="bg-[#F6F6F680] rounded-full p-2">
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
-        <Text className="flex-1 text-center text-xl font-bold text-black">
+        <Text className="flex-1 text-center text-xl font-bold text-black mr-[6%]">
           {t("Profile.MyProfile")}
         </Text>
       </View>

@@ -23,6 +23,7 @@ import { Platform } from "react-native";
 import bankNames from "../../assets/jsons/banks.json";
 import { useTranslation } from "react-i18next";
 import NetInfo from "@react-native-community/netinfo";
+import i18n from "@/i18n/i18n";
 
 type AddOfficerAddressDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -406,6 +407,18 @@ const AddOfficerAddressDetails: React.FC = () => {
     }
   }, [bankName]);
 
+  const formatText = (text:string) => {
+  // Remove leading spaces
+  let formattedText = text.replace(/^\s+/, '');
+  
+  // Capitalize first letter if text exists
+  if (formattedText.length > 0) {
+    formattedText = formattedText.charAt(0).toUpperCase() + formattedText.slice(1);
+  }
+  
+  return formattedText;
+};
+
   // const handleBankSelection = (selectedBank: string) => {
   //   setBankName(selectedBank);
   //   setFormData((prevData) => {
@@ -452,12 +465,12 @@ const AddOfficerAddressDetails: React.FC = () => {
         <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            className="pr-4"
+            className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10"
           >
             <AntDesign name="left" size={24} color="#000502" />
           </TouchableOpacity>
           {/* <Text className="text-lg font-bold ml-[25%]">{t("AddOfficerAddressDetails.AddOfficer")}</Text> */}
-          <View className="flex-1 justify-center items-center">
+          <View className="flex-1 justify-center items-center mr-[8%]">
             <Text className="text-lg font-bold">
               {t("AddOfficerAddressDetails.AddOfficer")}
             </Text>
@@ -474,20 +487,44 @@ const AddOfficerAddressDetails: React.FC = () => {
             }
             className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
           />
-          <TextInput
+          {/* <TextInput
             placeholder={t("AddOfficerAddressDetails.Street Name")}
             value={formData.streetName}
             onChangeText={(text) =>
               setFormData({ ...formData, streetName: text })
             }
             className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
+              autoCapitalize="words"
+  autoCorrect={false}
           />
           <TextInput
             placeholder={t("AddOfficerAddressDetails.City")}
             value={formData.city}
             onChangeText={(text) => setFormData({ ...formData, city: text })}
             className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
-          />
+          /> */}
+          <TextInput
+  placeholder={t("AddOfficerAddressDetails.Street Name")}
+  value={formData.streetName}
+  onChangeText={(text) => {
+    const formattedText = formatText(text);
+    setFormData({ ...formData, streetName: formattedText });
+  }}
+  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+  autoCorrect={false}
+/>
+
+
+<TextInput
+  placeholder={t("AddOfficerAddressDetails.City")}
+  value={formData.city}
+  onChangeText={(text) => {
+    const formattedText = formatText(text);
+    setFormData({ ...formData, city: formattedText });
+  }}
+  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+  autoCorrect={false}
+/>
           <TextInput
             placeholder={t("AddOfficerAddressDetails.Country")}
             value={t("AddOfficerAddressDetails.Country")} // Always set to Sri Lanka
@@ -674,7 +711,15 @@ const AddOfficerAddressDetails: React.FC = () => {
             onPress={() => navigation.goBack()}
             className="bg-gray-300 px-8 py-3 rounded-full"
           >
-            <Text className="text-gray-800 text-center">
+            <Text className="text-gray-800 text-center"
+                                   style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 10 }
+    : { fontSize: 14 }
+]}
+            >
               {t("AddOfficerAddressDetails.Go")}
             </Text>
           </TouchableOpacity>
@@ -689,7 +734,15 @@ const AddOfficerAddressDetails: React.FC = () => {
             {loading ? (
               <ActivityIndicator color="white" size="small" />
             ) : (
-              <Text className="text-white text-center">
+              <Text className="text-white text-center"
+                                     style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 10 }
+    : { fontSize: 14 }
+]}
+              >
                 {t("AddOfficerAddressDetails.Submit")}
               </Text>
             )}

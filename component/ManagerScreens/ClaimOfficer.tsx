@@ -246,12 +246,15 @@ const ClaimOfficer: React.FC = () => {
     <ScrollView className="flex-1 bg-white" keyboardShouldPersistTaps="handled">
       {/* Header */}
       <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
-        <TouchableOpacity className="" onPress={() => navigation.goBack()}>
+        {/* <TouchableOpacity className="" onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={24} color="#000" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+             <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                                 <AntDesign name="left" size={24} color="#000502" />
+                               </TouchableOpacity>
         {/* <Text className="text-lg font-bold ml-[25%]"> {t("ClaimOfficer.ClaimOfficers")}</Text> */}
         <View className="flex-1 ">
-          <Text className="text-lg font-bold text-center">
+          <Text className="text-lg font-bold text-center mr-[5%]">
             {t("ClaimOfficer.ClaimOfficers")}
           </Text>
         </View>

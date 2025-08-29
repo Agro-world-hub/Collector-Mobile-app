@@ -168,9 +168,12 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
         style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
         keyboardShouldPersistTaps="handled"
       >
-        <TouchableOpacity onPress={() => navigation.goBack()} className="bg-[#F6F6F680] rounded-full p-2">
+        {/* <TouchableOpacity onPress={() => navigation.goBack()} className="bg-[#F6F6F680] rounded-full p-2">
           <AntDesign name="left" size={24} color="#000502" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                         <AntDesign name="left" size={24} color="#000502" />
+                       </TouchableOpacity>
 
         <View className="flex-row items-center justify-center mt-[2%] space-x-[-30%] ml-[5%]">
          <Image
