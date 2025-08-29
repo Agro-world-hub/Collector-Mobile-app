@@ -213,7 +213,8 @@
 "No Crops":"பயிர்கள் இல்லை",
 "Please add at least one crop to proceed":"தொடர குறைந்தபட்சம் ஒரு பயிரையாவது சேர்க்கவும்.",
 "Failed to generate invoice number":"விலைப்பட்டியல்(இன்வாய்ஸ்) எண்ணை உருவாக்க முடியவில்லை. பிறகு முயற்சிக்கவும்.",
-"Failed to submit crop details":"பயிர் விவரங்களைச் சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்."
+"Failed to submit crop details":"பயிர் விவரங்களைச் சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+"Please enter Employee ID in uppercase letters":"பணியாளர் ஐடியை பெரிய எழுத்துக்களில் உள்ளிடவும்."
   },
   "EngProfile":{
     "LNG": "en",
@@ -223,7 +224,8 @@
     "Complaints":"புகார்கள்",
     "Report Complaint":"புகாரைப் புகாரளிக்கவும்",
     "View Complaint History":"புகார் வரலாற்றைப் காட்டவும்",
-    "Logout": "வெளியேறு"
+    "Logout": "வெளியேறு",
+    "Logging out":"வெளியேறுகிறது..."
   },
   "Profile":{
     "LNG": "en",

@@ -26,6 +26,7 @@ import CircularProgress from 'react-native-circular-progress-indicator';
 import TimerContainer from '@/component/DistributionofficerScreens/TimerContainer '
 import Timer from '@/component/DistributionofficerScreens/TimerContainer '
 import NetInfo from "@react-native-community/netinfo";
+import i18n from "@/i18n/i18n";
 
 
 
@@ -1296,7 +1297,7 @@ const handleSubmit = async () => {
         [{ text: t("Error.Ok"), onPress: () => navigation.goBack() }]
       );
     } else {
-      throw new Error(response.data.message || 'Failed to update order');
+      throw new Error(response.data.message || t("Error.somethingWentWrong"));
     }
     
     setHasUnsavedChanges(false);
@@ -1928,6 +1929,36 @@ const getWarningMessage = (allSelected: boolean) => {
   }
 };
 
+
+const getFinishUpMessage = () => {
+  if (selectedLanguage === 'si') {
+    return 'අවසන් කරන්න!';
+  } else if (selectedLanguage === 'ta') {
+    return 'முடிக்கவும்!';
+  } else {
+    return 'Finish up!';
+  }
+};
+
+const getMarkingAsMessage = () => {
+  if (selectedLanguage === 'si') {
+    return 'තත්පර 30 කින් සම්පූර්ණ ලෙස සලකුණු වේ.';
+  } else if (selectedLanguage === 'ta') {
+    return '30 வினாடிகளில் முழுமையானதாக குறிக்கப்படுகிறது.';
+  } else {
+    return 'Marking as completed in 30 seconds.';
+  }
+};
+
+const getTapGoBackMessage = () => {
+  if (selectedLanguage === 'si') {
+    return 'සංස්කරණය කිරීමට \'සංස්කරණය වෙත ආපසු\' ස්පර්ශ කරන්න.';
+  } else if (selectedLanguage === 'ta') {
+    return 'திருத்த \'திருத்தத்திற்கு திரும்பவும்\' என்பதைத் தொடவும்.';
+  } else {
+    return 'Tap \'Go Back\' to edit.';
+  }
+};
 // Helper function to calculate if all items are selected (extracted to avoid repetition)
 const calculateAllSelected = () => {
   const hasFamily = familyPackItems.length > 0;
@@ -2470,15 +2501,39 @@ return (
             >
               <View className="flex-1 bg-black/50 justify-center items-center px-6">
                 <View className="bg-white rounded-2xl p-6 w-full max-w-sm">
-                  <Text className="text-xl font-bold text-center mb-2">
-                    {t("PendingOrderScreen.FinishUp")}
-                  </Text>
-                  <Text className="text-gray-600 text-center mb-2">
-                    {t("PendingOrderScreen.MarkingAs")}
-                  </Text>
-                  <Text className="text-gray-500 text-sm text-center mb-6">
-                    {t("PendingOrderScreen.TapGoback")}
-                  </Text>
+                <Text className="text-xl font-bold text-center mb-2"
+                 style={[
+                  i18n.language === "si"
+                    ? { fontSize: 12 }
+                    : i18n.language === "ta"
+                    ? { fontSize: 12 }
+                    : { fontSize: 15 }
+                ]}
+                >
+        {getFinishUpMessage()}
+      </Text>
+      <Text className="text-gray-600 text-center mb-2"
+       style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      >
+        {getMarkingAsMessage()}
+      </Text>
+      <Text className="text-gray-500 text-sm text-center mb-6"
+       style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      >
+        {getTapGoBackMessage()}
+      </Text>
 
                   {/* Timer Component */}
                   <View className="justify-center items-center mb-6">
@@ -2500,7 +2555,15 @@ return (
                     className="bg-[#000000] py-4 rounded-full mb-3"
                     onPress={handleCompleteOrder}
                   >
-                    <Text className="text-white text-center font-bold text-base">
+                    <Text className="text-white text-center font-bold text-base"
+                     style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+                    >
                       {t("PendingOrderScreen.Mark as Completed")}
                     </Text>
                   </TouchableOpacity>
@@ -2509,7 +2572,15 @@ return (
                     className="bg-gray-200 py-4 rounded-full"
                     onPress={handleBackToEdit}
                   >
-                    <Text className="text-gray-700 text-center font-medium text-base">
+                    <Text className="text-gray-700 text-center font-medium text-base"
+                     style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+                    >
                       {t("PendingOrderScreen.Back to Edit")}
                     </Text>
                   </TouchableOpacity>

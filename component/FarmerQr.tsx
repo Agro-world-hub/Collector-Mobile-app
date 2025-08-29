@@ -27,6 +27,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useTranslation } from "react-i18next";
 import { goBack } from "expo-router/build/global-state/routing";
+import i18n from "@/i18n/i18n";
 
 // Create API instance
 const api = axios.create({
@@ -294,7 +295,15 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
                     source={require("../assets/images/download.webp")} // Path to download icon
                     style={{ width: 24, height: 24 }}
                   />
-                  <Text className="text-sm text-cyan-50">
+                  <Text className="text-sm text-cyan-50"
+                                 style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 11 }
+    : { fontSize: 15 }
+]}
+                  >
                     {t("FarmerQr.Download")}
                   </Text>
                 </TouchableOpacity>
@@ -307,7 +316,15 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
                     source={require("../assets/images/Share.webp")} // Path to share icon
                     style={{ width: 24, height: 24 }}
                   />
-                  <Text className="text-sm text-cyan-50">
+                  <Text className="text-sm text-cyan-50"
+                                 style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 11 }
+    : { fontSize: 15 }
+]}
+                  >
                     {t("FarmerQr.Share")}
                   </Text>
                 </TouchableOpacity>

@@ -593,7 +593,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
               fontWeight: '500',
             }}
           >
-            {t("Logging out...") || "Logging out..."}
+            {t("EngProfile.Logging out") }
           </Text>
         </View>
       )}
