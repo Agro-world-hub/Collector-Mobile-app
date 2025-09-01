@@ -101,7 +101,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
         const response = await axios.get(
           `${environment.API_BASE_URL}api/collection-officer/empid/`
         );
-        console.log("Empid response:", response.data);
+      //  console.log("Empid response:", response.data);
       } catch (error) {
         Alert.alert(t("Error.error"), t("Error.Failed to fetch empid."));
       }
@@ -131,7 +131,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
         }
       );
 
-      console.log("Password update response:", response.data);
+    //  console.log("Password update response:", response.data);
       Alert.alert(t("Error.Success"), t("Error.Password updated successfully"));
       navigation.navigate("Login");
     } catch (error) {
@@ -168,9 +168,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
         style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
         keyboardShouldPersistTaps="handled"
       >
-        {/* <TouchableOpacity onPress={() => navigation.goBack()} className="bg-[#F6F6F680] rounded-full p-2">
-          <AntDesign name="left" size={24} color="#000502" />
-        </TouchableOpacity> */}
+      
         <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
                          <AntDesign name="left" size={24} color="#000502" />
                        </TouchableOpacity>
@@ -181,11 +179,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
             resizeMode="contain"
             className="w-30 h-20"
           /> 
-          {/* <Image
-            source={require("@/assets/images/Codinetflat.webp")}
-            resizeMode="contain"
-            className="w-40 h-24 mt-10"
-          /> */}
+         
         </View>
 
         <View className="items-center pt-[5%]">
@@ -224,12 +218,12 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
              <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">
             <TextInput
               className="flex-1 h-[40px] "
-           //   placeholder={t("ChangePassword.NewPassword")}
+
               secureTextEntry={secureNew}
               // onChangeText={setNewPassword}
               value={newPassword}
                  onChangeText={(text) => {
-      // Remove all spaces and prevent starting with space
+  
       const cleanText = text.replace(/\s/g, '');
       setNewPassword(cleanText);
     }}
@@ -249,11 +243,11 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
            <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">
             <TextInput
               className="flex-1 h-[40px] bg-[#F4F4F4]"
-             // placeholder={t("ChangePassword.ConfirmNewPassword")}
+          
               secureTextEntry={secureConfirm}
               // onChangeText={setConfirmPassword}
                         onChangeText={(text) => {
-      // Remove all spaces and prevent starting with space
+   
       const cleanText = text.replace(/\s/g, '');
       setConfirmPassword(cleanText);
     }}
@@ -275,7 +269,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
     className="bg-[#000000] w-[95%] p-3 rounded-full items-center justify-center"
     onPress={handleChangePassword}
   >
-    {/* 1️⃣ parent now centers its children */}
+
     <Text className="text-xl font-light text-white">
       {t("ChangePassword.Next")}
     </Text>

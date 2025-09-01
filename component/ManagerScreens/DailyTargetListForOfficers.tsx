@@ -78,20 +78,20 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
       case "C":
         return 3;
       default:
-        return 4; // Any other grades come after A, B, C
+        return 4; 
     }
   };
 
-  // Sort function that first sorts by variety name, then by grade (A, B, C)
+
   const sortByVarietyAndGrade = (data: TargetData[]) => {
     return [...data].sort((a, b) => {
-      // First sort by variety name
+ 
       const nameA = getVarietyNameForSort(a);
       const nameB = getVarietyNameForSort(b);
 
       const nameComparison = nameA.localeCompare(nameB);
 
-      // If variety names are the same, sort by grade (A, B, C)
+     
       if (nameComparison === 0) {
         return getGradePriority(a.grade) - getGradePriority(b.grade);
       }
@@ -128,16 +128,15 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
       );
 
       const allData = response.data.data;
-      console.log("hell", allData);
+     // console.log("hell", allData);
       const todoItems = allData.filter((item: TargetData) => item.todo > 0);
       const completedItems = allData.filter(
         (item: TargetData) => item.todo === 0 && item.complete !== 0
       );
-      console.log("todoItems", todoItems);
-      console.log("completedItems", completedItems);
+      // console.log("todoItems", todoItems);
+      // console.log("completedItems", completedItems);
 
-      // setTodoData(todoItems);
-      // setCompletedData(completedItems);
+    
       setTodoData(sortByVarietyAndGrade(todoItems));
       setCompletedData(sortByVarietyAndGrade(completedItems));
       setError(null);
@@ -153,18 +152,18 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
     }
   };
 
-  // ✅ Refresh Data Every Time the Screen is Focused
+
   useFocusEffect(
     React.useCallback(() => {
       fetchTargets();
     }, [])
   );
 
-  // ✅ Refreshing function for Pull-to-Refresh
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    fetchTargets(); // Re-fetch task data on refresh
-    setRefreshing(false); // Set refreshing to false once data is loaded
+    fetchTargets(); 
+    setRefreshing(false); 
   }, [collectionOfficerId]);
 
   const displayedData = selectedToggle === "ToDo" ? todoData : completedData;
@@ -191,12 +190,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
     <View className="flex-1 bg-[#282828] ">
       {/* Header */}
       <View className="bg-[#282828] px-4 py-3 flex-row justify-center items-center">
-        {/* <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          className="absolute left-4"
-        >
-          <AntDesign name="left" size={22} color="white" />
-        </TouchableOpacity> */}
+      
          <TouchableOpacity onPress={() => navigation.goBack()}
                   className="absolute top-2 left-4 bg-[#FFFFFF1A] rounded-full  p-2 justify-center w-10" >
                                                                  <AntDesign name="left" size={24} color="#000502" />

@@ -70,13 +70,13 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
           phoneNumber,
           language,
         } = response.data;
-        console.log(response.data); // Log the response to check
+      //  console.log(response.data); 
 
         setFarmerName(`${firstName} ${lastName}`);
         setFarmerNIC(NICnumber);
         if (qrCode) {
-          console.log("QR Code Data:", qrCode); // Log the qrCode Base64 string
-          setFarmerQRCode(qrCode); // Set the QR code as a base64 string
+          console.log("QR Code Data:", qrCode); 
+          setFarmerQRCode(qrCode); 
         } else {
           console.log("No QR Code data found");
         }
@@ -195,12 +195,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
         <View className="flex-1 ">
           {/* Header with Back Icon */}
           <View className="flex-row items-center  mb-6">
-            {/* <TouchableOpacity
-              onPress={() => navigation.navigate("Main" as any)}
-              className=""
-            >
-              <AntDesign name="left" size={24} color="#000" />
-            </TouchableOpacity> */}
+          
              <TouchableOpacity  onPress={() => navigation.navigate("Main" as any)} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
                                                <AntDesign name="left" size={24} color="#000502" />
                                              </TouchableOpacity>

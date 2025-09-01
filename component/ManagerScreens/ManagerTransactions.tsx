@@ -129,7 +129,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({
 
       const data = await response.json();
 
-      console.log("Transactions:", data);
+   //   console.log("Transactions:", data);
 
       if (response.ok) {
         const formattedData = data.map((transaction: any) => ({

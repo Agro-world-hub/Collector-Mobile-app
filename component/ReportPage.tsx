@@ -101,7 +101,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
       });
 
       const data = response.data.data;
-      console.log(data);
+    //  console.log(data);
 
       if (response.data.status === "success") {
         const officerDetails = {
@@ -170,7 +170,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
       });
 
       setCrops(cropsResponse.data);
-      console.log("crop response for report", cropsResponse.data);
+   //   console.log("crop response for report", cropsResponse.data);
     } catch (error) {
       console.error("Error fetching details:", error);
       Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
@@ -563,20 +563,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
         </View>
       )}
 
-      {/* QR Code Section
-      {details && details.qrCode && officer && officer.QRcode && (
-      <View className="mb-4 flex-row items-center justify-start">
-        <View className="mr-4">
-          <Image source={{ uri: details.qrCode }} style={{ width: 150, height: 150 }} />
-          <Text className="font-bold ml-5 text-sm mb-2">Farmer's QR Code</Text>
-        </View>
-
-        <View>
-          <Image source={{ uri: officer.QRcode }} style={{ width: 150, height: 150 }} />
-          <Text className="font-bold ml-5 text-sm mb-2">Officer's QR Code</Text>
-        </View>
-      </View>
-    )} */}
+   
 
       <View className="p-2 border-t border-gray-300">
         <Text className="font-bold">

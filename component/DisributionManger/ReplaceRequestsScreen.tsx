@@ -79,10 +79,10 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
         }
       );
 
-      console.log("bhdjaovm", response.data);
+    //  console.log("bhdjaovm", response.data);
 
       if (response.data.success) {
-        // Map the API response data to our frontend format
+   
         const mappedData = response.data.data.map((item: any) => ({
           id: item.id.toString(),
           orderId: item.orderId ? item.orderId.toString() : '',
@@ -128,7 +128,7 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
     navigation.navigate("ReplaceRequestsApprove" as any, {
       replaceRequestData: {
         id: item.id,
-        orderId: item.orderId || item.invNo, // Use invNo if orderId is not available
+        orderId: item.orderId || item.invNo, 
         orderPackageId: item.orderPackageId,
         productDisplayName: item.productDisplayName,
         productTypeName: item.productTypeName,

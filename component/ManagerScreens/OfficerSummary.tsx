@@ -210,13 +210,13 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
     }, [collectionOfficerId])
   );
   const getOnlineStatus = async () => {
-    console.log("Getting officer status...");
+   // console.log("Getting officer status...");
     try {
       const res = await fetch(
         `${environment.API_BASE_URL}api/collection-manager/get-officer-online/${collectionOfficerId}`
       );
       const data = await res.json();
-      console.log("Officer status:", data);
+     // console.log("Officer status:", data);
   
       if (data.success) {
         // Check OnlineStatus value and set status accordingly
@@ -253,15 +253,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
       <View className="relative">
         {/* Header Section */}
         <View className="bg-white rounded-b-[25px] px-4 pt-12 pb-6 items-center shadow-lg z-10">
-          {/* Back Icon */}
-          {/* <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("Main", { screen: "CollectionOfficersList" })
-            }
-            className="absolute top-4 left-4"
-          >
-            <AntDesign name="left" size={22} color="#000" />
-          </TouchableOpacity> */}
+         
           <TouchableOpacity onPress={() =>
               navigation.navigate("Main", { screen: "CollectionOfficersList" })
             }

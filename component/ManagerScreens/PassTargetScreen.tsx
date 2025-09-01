@@ -77,7 +77,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
     dailyTarget,
   } = route.params;
 
-  console.log("Collection Officer ID:", route.params);
+//  console.log("Collection Officer ID:", route.params);
   const maxAmount = parseFloat(todo);
 
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
@@ -117,7 +117,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
     fetchData();
   }, []);
 
-  console.log("Max Amount:", maxAmount);
+//  console.log("Max Amount:", maxAmount);
 
   const getOfficerName = (officer: Officer) => {
     switch (selectedLanguage) {
@@ -146,7 +146,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
         }
       );
 
-      console.log("Officers:", response.data.data);
+     // console.log("Officers:", response.data.data);
 
       if (response.data.status === "success") {
         const formattedOfficers = response.data.data.map((officer: any) => ({

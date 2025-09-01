@@ -8,8 +8,8 @@ import {
   Alert,
   Keyboard,
   Modal,
-  ActivityIndicator,
-  // Picker,
+  ActivityIndicator
+
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Picker } from "@react-native-picker/picker";
@@ -51,8 +51,7 @@ type ClaimOfficerNavigationProp = StackNavigationProp<
 const ClaimOfficer: React.FC = () => {
   const navigation = useNavigation<ClaimOfficerNavigationProp>();
   const [jobRole, setJobRole] = useState("Distribution Officer");
-  // const [jobRole, setJobRole] = useState('Collection Officer');
-  const [empID, setEmpID] = useState("");
+   const [empID, setEmpID] = useState("");
   const [officerFound, setOfficerFound] = useState(false);
   const [officerDetails, setOfficerDetails] = useState<OfficerDetails | null>(
     null
@@ -63,7 +62,7 @@ const ClaimOfficer: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
 
-  // const empPrefix = jobRole === 'Collection Officer' ? 'COO' : 'CUO';
+ 
   const empPrefix = "DIO";
 
 
@@ -101,12 +100,12 @@ const ClaimOfficer: React.FC = () => {
       );
 
       const data = await response.json();
-      console.log("claim pfficer", data);
+     // console.log("claim pfficer", data);
 
       if (response.ok && data.result && data.result.length > 0) {
         const officer = data.result[0];
         setOfficerDetails({
-          // name: `${officer.firstNameEnglish} ${officer.lastNameEnglish}`,
+         
           companyNameEnglish: officer.companyNameEnglish,
           companyNameSinhala: officer.companyNameSinhala,
           companyNameTamil: officer.companyNameTamil,
@@ -121,7 +120,7 @@ const ClaimOfficer: React.FC = () => {
           lastNameSinhala: officer.lastNameSinhala,
           lastNameTamil: officer.lastNameTamil,
         });
-        console.log("officer details", officerDetails);
+     //   console.log("officer details", officerDetails);
         setOfficerFound(true);
         setSearchLoading(false);
       } else {
@@ -224,7 +223,7 @@ const ClaimOfficer: React.FC = () => {
 
               <TouchableOpacity
                 onPress={onConfirm}
-                // className="p-2 py-2 bg-[#2AAD7A] rounded-lg"
+             
                 disabled={onLoading} // Disable the button when loading is true
                 className={`p-2 py-2 rounded-lg ${
                   onLoading ? "bg-gray-400" : "bg-black"
@@ -248,7 +247,7 @@ const ClaimOfficer: React.FC = () => {
         <TouchableOpacity className="bg-[#F6F6F680] rounded-full p-2" onPress={() => navigation.navigate("DistributionOfficersList")} >
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
-        {/* <Text className="text-lg font-bold ml-[25%]"> {t("ClaimOfficer.ClaimOfficers")}</Text> */}
+   
         <View className="flex-1 ">
           <Text className="text-lg font-bold text-center">
             {t("ClaimOfficer.ClaimOfficers")}
@@ -314,9 +313,9 @@ const ClaimOfficer: React.FC = () => {
       {!officerFound && empID && (
         <View className="flex items-center justify-center mt-24">
           <Image
-            source={require("../../assets/images/dd.webp")} // Replace with your PNG file path
-            className="w-28 h-28" // Adjust width and height as needed
-            resizeMode="contain" // Ensures the image scales proportionally
+            source={require("../../assets/images/dd.webp")} 
+            className="w-28 h-28"
+            resizeMode="contain" 
           />
           <Text className="text-gray-500 mt-2">
             {t("ClaimOfficer.No Disclaimed")}
@@ -324,10 +323,10 @@ const ClaimOfficer: React.FC = () => {
         </View>
       )}
 
-      {/* Officer Found */}
+
       {officerFound && (
         <View className=" mt-10 items-center">
-          {/* Officer Avatar */}
+    
 
           <Image
             source={
@@ -387,12 +386,12 @@ const ClaimOfficer: React.FC = () => {
             </>
           )}
 
-          {/* Claim Officer Button */}
+      
           <TouchableOpacity
             className="mt-6 mb-10 bg-[#000000]    py-4 rounded-full"
             onPress={() => setModalVisible(true)}
                      style={{
-    // iOS Shadow
+
     shadowColor: '#000000',
     shadowOffset: {
       width: 0,
@@ -400,7 +399,7 @@ const ClaimOfficer: React.FC = () => {
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    // Android Shadow
+ 
     elevation: 5,
   }}
           >

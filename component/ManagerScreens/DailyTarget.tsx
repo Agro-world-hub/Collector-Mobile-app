@@ -77,16 +77,16 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
     }
   };
 
-  // Sort function that first sorts by variety name, then by grade (A, B, C)
+
   const sortByVarietyAndGrade = (data: TargetData[]) => {
     return [...data].sort((a, b) => {
-      // First sort by variety name
+      
       const nameA = getVarietyNameForSort(a);
       const nameB = getVarietyNameForSort(b);
 
       const nameComparison = nameA.localeCompare(nameB);
 
-      // If variety names are the same, sort by grade (A, B, C)
+
       if (nameComparison === 0) {
         return getGradePriority(a.grade) - getGradePriority(b.grade);
       }
@@ -95,7 +95,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
     });
   };
 
-  // Helper function to get the variety name based on selected language
+
   const getVarietyNameForSort = (item: TargetData) => {
     switch (selectedLanguage) {
       case "si":
@@ -110,7 +110,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
   useEffect(() => {
     const fetchTargets = async () => {
       setLoading(true);
-      const startTime = Date.now(); // Capture the start time for the spinner
+      const startTime = Date.now(); 
       try {
         const authToken = await AsyncStorage.getItem("token");
         const response = await axios.get(
@@ -123,14 +123,13 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
         );
 
         const allData = response.data.data;
-        console.log("--------all data----------", allData);
+      //  console.log("--------all data----------", allData);
         const todoItems = allData.filter((item: TargetData) => item.todo > 0);
         const completedItems = allData.filter(
           (item: TargetData) => item.complete >= item.officerTarget
         );
 
-        // Sort the data by variety name and then by grade
-        // Sort the data by variety name and then by grade
+   
         setTodoData(sortByVarietyAndGrade(todoItems));
         setCompletedData(sortByVarietyAndGrade(completedItems));
         setError(null);
@@ -138,7 +137,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
         setError(t("Error.Failed to fetch data."));
       } finally {
         const elapsedTime = Date.now() - startTime;
-        const remainingTime = 3000 - elapsedTime; // Ensure at least 3 seconds loading time
+        const remainingTime = 3000 - elapsedTime; 
         setTimeout(
           () => setLoading(false),
           remainingTime > 0 ? remainingTime : 0
@@ -147,9 +146,9 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
     };
 
     fetchTargets();
-  }, [selectedLanguage]); // Re-fetch when language changes
+  }, [selectedLanguage]); 
 
-  // Refreshing function
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     const fetchTargets = async () => {
@@ -163,30 +162,29 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
             },
           }
         );
-        console.log(response.data);
+      //  console.log(response.data);
 
         const allData = response.data.data;
-        const todoItems = allData.filter((item: TargetData) => item.todo > 0); // Move tasks with todo > 0 to ToDo
-        // const completedItems = allData.filter((item: TargetData) => item.todo === 0); // Tasks with todo === 0 go to Completed
+        const todoItems = allData.filter((item: TargetData) => item.todo > 0); 
         const completedItems = allData.filter(
           (item: TargetData) => item.complete >= item.officerTarget
         );
-        console.log("completedItems", completedItems);
-        console.log("todoItems", todoItems);
+        // console.log("completedItems", completedItems);
+        // console.log("todoItems", todoItems);
 
         setTodoData(sortByVarietyAndGrade(todoItems));
         setCompletedData(sortByVarietyAndGrade(completedItems));
-        setRefreshing(false); // Stop refreshing once data is loaded
+        setRefreshing(false); 
       } catch (err) {
         setError(t("Error.Failed to fetch data."));
-        setRefreshing(false); // Stop refreshing on error
+        setRefreshing(false); 
       }
     };
     fetchTargets();
   }, []);
 
   const displayedData = selectedToggle === "ToDo" ? todoData : completedData;
-  console.log("--------displayedData----------", displayedData);
+ // console.log("--------displayedData----------", displayedData);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -215,53 +213,10 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
         </Text>
       </View>
 
-      {/* Toggle Buttons */}
-      {/* <View className="flex-row justify-center items-center py-4 bg-[#282828]">
-      
-        <TouchableOpacity
-          className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
-            selectedToggle === "ToDo" ? "bg-[#980775]" : "bg-white"
-          }`}
-          onPress={() => setSelectedToggle("ToDo")}
-        >
-          <Text
-            className={`font-bold mr-2 ${
-              selectedToggle === "ToDo" ? "text-white" : "text-black"
-            }`}
-          >
-            {t("DailyTarget.Todo")}
-          </Text>
-          <View className="bg-white rounded-full px-2">
-            <Text className="text-[#000000] font-bold text-xs">
-              {todoData.length}
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-     
-        <TouchableOpacity
-          className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
-            selectedToggle === "Completed" ? "bg-[#980775]" : "bg-white"
-          }`}
-          onPress={() => setSelectedToggle("Completed")}
-        >
-          <Text
-            className={`font-bold ${
-              selectedToggle === "Completed" ? "text-white" : "text-black"
-            }`}
-          >
-            {t("DailyTarget.Completed")}
-          </Text>
-          <View className="bg-white rounded-full px-2 ml-2">
-            <Text className="text-[#000000] font-bold text-xs">
-              {completedData.length}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View> */}
-      {/* Toggle Buttons */}
+  
+   
 <View className="flex-row justify-center items-center py-4 bg-[#282828]">
-  {/* To Do Button */}
+
   <Animated.View
     style={{
       transform: [{ scale: selectedToggle === "ToDo" ? 1.05 : 1 }],

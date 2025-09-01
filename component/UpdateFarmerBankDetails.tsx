@@ -217,7 +217,7 @@ If correct, share OTP only with the ${companyName} representative who contacts y
     }
   };
 
-  // Interpolating the animated value for width
+
   const loadingBarWidth = progress.interpolate({
     inputRange: [0, 100],
     outputRange: ["0%", "100%"],
@@ -231,8 +231,8 @@ If correct, share OTP only with the ${companyName} representative who contacts y
   const getTextStyle = (language: string) => {
     if (language === "si") {
       return {
-        fontSize: 14, // Smaller text size for Sinhala
-        lineHeight: 20, // Space between lines
+        fontSize: 14, 
+        lineHeight: 20, 
       };
     }
   };
@@ -246,9 +246,7 @@ If correct, share OTP only with the ${companyName} representative who contacts y
       <View className="flex-1 p-5 bg-white">
         {/* Header with Back Icon */}
         <View className="flex-row items-center mb-4">
-          {/* <TouchableOpacity onPress={() => navigation.goBack()}>
-            <AntDesign name="left" size={22} color="#000" />
-          </TouchableOpacity> */}
+        
           <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
                                    <AntDesign name="left" size={24} color="#000502" />
                                  </TouchableOpacity>

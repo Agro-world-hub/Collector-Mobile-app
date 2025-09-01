@@ -160,13 +160,13 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
       if (response.data.success && response.data.data.length > 0) {
         setCurrentReplaceRequests(response.data.data);
         
-        // Pre-populate form with current replace request data
-        const currentRequest = response.data.data[0]; // Assuming you want the first one
+   
+        const currentRequest = response.data.data[0]; 
         
         setReplaceData(prev => ({
           ...prev,
           newProduct: currentRequest.displayName || '',
-          newProductId: currentRequest.productId || '', // Set the product ID
+          newProductId: currentRequest.productId || '', 
           quantity: currentRequest.qty.toString(),
           price: `Rs.${currentRequest.price.toFixed(2)}`
         }));
@@ -178,7 +178,7 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
     }
   };
 
-  // Load retail items for dropdown
+
   const loadRetailItems = async () => {
     try {
       setLoadingRetailItems(true);
@@ -211,7 +211,7 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
     setReplaceData(prev => ({
       ...prev,
       newProduct: product.displayName,
-      newProductId: product.id, // Set the product ID
+      newProductId: product.id, 
       price: `Rs.${(currentQty * productPrice).toFixed(2)}`
     }));
     setShowDropdown(false);
@@ -219,16 +219,16 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
 
   const handleQuantityChange = (text: string) => {
     if (/^\d*\.?\d*$/.test(text)) {
-      // Find the selected product using either retail items or current replace request
+
       let selectedProduct = retailItems.find(item => 
         item.displayName === replaceData.newProduct || item.id === replaceData.newProductId
       );
       
-      // If not found in retail items, check if it's the current replace request product
+
       if (!selectedProduct && currentReplaceRequests.length > 0) {
         const currentRequest = currentReplaceRequests[0];
         if (currentRequest.displayName === replaceData.newProduct) {
-          // Use the price from current replace request
+       
           const unitPrice = currentRequest.price / currentRequest.qty;
           setReplaceData(prev => ({
             ...prev,
@@ -263,22 +263,22 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
       setSubmitting(true);
       const token = await AsyncStorage.getItem('token');
       
-      // Prepare the data to send
+
       const approvalData = {
         orderId: replaceData.orderId,
-        replaceRequestId: replaceRequestData.id, // Include the replace request ID
+        replaceRequestId: replaceRequestData.id, 
         newProduct: replaceData.newProduct,
-        newProductId: replaceData.newProductId, // Include product ID
-        quantity: parseFloat(replaceData.quantity), // Send as number
-        price: parseFloat(replaceData.price.replace('Rs.', '')), // Remove Rs. and convert to number
-        // Include original request data for reference
+        newProductId: replaceData.newProductId, 
+        quantity: parseFloat(replaceData.quantity), 
+        price: parseFloat(replaceData.price.replace('Rs.', '')), 
+
         originalProductId: replaceRequestData.productId,
         originalProductName: replaceRequestData.productDisplayName,
         originalQuantity: replaceRequestData.qty,
         originalPrice: replaceRequestData.price
       };
 
-      console.log("Approval data being sent:", approvalData);
+     // console.log("Approval data being sent:", approvalData);
       
       const response = await axios.post(
         `${environment.API_BASE_URL}api/distribution-manager/approve`,
@@ -291,7 +291,7 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
         }
       );
 
-      console.log("Approval response:", response.data);
+      //console.log("Approval response:", response.data);
 
       if (response.data.success) {
         Alert.alert(t("Error.Success"), t("Error.Replace request approved successfully"), [
@@ -323,7 +323,7 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
 
   return (
     <View className="flex-1 bg-white">
-      {/* Header */}
+
       <View className="bg-white px-4 py-4 flex-row items-center border-b border-gray-100">
         <TouchableOpacity className="mr-4 bg-[#F6F6F680] rounded-full p-2 z-50" onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={24} color="#333" />
@@ -361,23 +361,7 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
           </View>
         </View>
 
-        {/* Current Selection Display
-        {replaceData.newProduct && (
-          <View className="px-5 mb-4">
-            <View className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <Text className="text-center text-blue-800 font-medium mb-2">
-                Current Selection
-              </Text>
-              <Text className="text-center text-blue-600">
-                {replaceData.newProduct} - {replaceData.quantity} - {replaceData.price}
-              </Text>
-              <Text className="text-center text-blue-500 text-sm mt-1">
-                Product ID: {replaceData.newProductId}
-              </Text>
-            </View>
-          </View>
-        )} */}
-
+  
 
         <View className="px-2 mt-2">
           <Text className="text-center text-black mb-4 font-medium">
@@ -447,7 +431,7 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
             </View>
           </View>
 
-          {/* Approve Button */}
+     
           <TouchableOpacity
             className={`py-3 ml-3 mr-3 rounded-full ${isFormComplete ? 'bg-black' : 'bg-gray-300'}`}
             onPress={isFormComplete ? handleApprove : undefined}
