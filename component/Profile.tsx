@@ -133,7 +133,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     }
   };
   const handlePhoneNumberChange = (text: string) => {
-    console.log("Phone number changed:", text);
+   // console.log("Phone number changed:", text);
    if (text.startsWith("0")) {
     text = text.replace(/^0+/, ""); // remove all leading zeros
   }
@@ -245,7 +245,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     }
 
     const data = response.data.data;
-    console.log(data);
+//    console.log(data);
 
       setProfileData({
         firstNameEnglish: data.firstNameEnglish,
@@ -413,7 +413,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
           type: fileType,
         } as any);
       }
-      console.log(formData);
+    //  console.log(formData);
       const response = await fetch(
         `${environment.API_BASE_URL}api/collection-officer/upload-profile-image`,
         {

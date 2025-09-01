@@ -141,16 +141,11 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation, rou
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [outData, setOutData] = useState<TargetData[]>([]);
-  
-  // Filter states
-  const [showFilterModal, setShowFilterModal] = useState(false);
+    const [showFilterModal, setShowFilterModal] = useState(false);
   const [selectedStatusFilter, setSelectedStatusFilter] = useState<string | null>(null);
   const [selectedDateFilter, setSelectedDateFilter] = useState<string | null>(null);
   const [showCalendarModal, setShowCalendarModal] = useState(false);
-  // State to track if any filter is active
-  const [hasActiveFilter, setHasActiveFilter] = useState(false);
-  
-  // New state for completed section date filter
+    const [hasActiveFilter, setHasActiveFilter] = useState(false);
   const [completedDateFilter, setCompletedDateFilter] = useState<string | null>(null);
   const [showCompletedCalendarModal, setShowCompletedCalendarModal] = useState(false);
   const [hasCompletedFilter, setHasCompletedFilter] = useState(false);
@@ -159,7 +154,7 @@ const [successCount, setSuccessCount] = useState(0);
 const MAX_SELECTED_ORDERS = 5;
 const [selectionLimitReached, setSelectionLimitReached] = useState(false);
   
-  // New state for confirmation modal
+
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   console.log("------centerId--------", centerId);
@@ -389,7 +384,7 @@ const fetchTargets = useCallback(async () => {
       throw new Error("Authentication token not found. Please login again.");
     }
 
-    console.log("Making request to:", `${environment.API_BASE_URL}api/distribution-manager/get-dcenter-target`);
+   // console.log("Making request to:", `${environment.API_BASE_URL}api/distribution-manager/get-dcenter-target`);
 
     const response = await axios.get(
       `${environment.API_BASE_URL}api/distribution-manager/get-dcenter-target`,
@@ -478,25 +473,7 @@ const fetchTargets = useCallback(async () => {
     return 'bg-gray-100 border border-gray-300 text-gray-700';
   };
 
-  // const formatCompletionTime = (dateString: string | null): string | null => {
-  //   if (!dateString) return null;
-    
-  //   try {
-  //     const date = new Date(dateString);
-  //     const year = date.getFullYear();
-  //     const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  //     const day = date.getDate().toString().padStart(2, '0');
-  //     const hours = date.getHours();
-  //     const minutes = date.getMinutes().toString().padStart(2, '0');
-  //     const ampm = hours >= 12 ? 'PM' : 'AM';
-  //     const displayHours = hours % 12 || 12;
-      
-  //     return `${year}/${month}/${day} ${displayHours.toString().padStart(2, '0')}:${minutes}${ampm}`;
-  //   } catch (error) {
-  //     console.error('Error formatting date:', error);
-  //     return null;
-  //   }
-  // };
+
 
   const formatCompletionTime = (dateString: string | null): string | null => {
   if (!dateString) return null;
@@ -767,11 +744,11 @@ const getScheduleDisplayForCompleted = (scheduleDate: string, scheduleTime: stri
     return filtered;
   }, [todoData, selectedDateFilter]);
 
-  // Enhanced filtering logic for Completed
+ 
   const filteredCompletedData = useMemo(() => {
     let filtered = [...completedData];
     
-    // Apply date filter for completed items
+    
     if (completedDateFilter) {
       filtered = filtered.filter(item => filterByCompletionDate(item, completedDateFilter));
     }
@@ -819,14 +796,14 @@ const handleCheckboxToggle = (itemId: string) => {
     );
   };
 
-  // Function to handle correct icon press (confirm selected items)
+
   const handleCorrectIconPress = () => {
     if (selectedItems.length > 0) {
       setShowConfirmModal(true);
     }
   };
 
-  // Function to handle close icon press (deselect all)
+  
   const handleCloseIconPress = () => {
     setSelectedItems([]);
   };
@@ -835,18 +812,18 @@ const handleCheckboxToggle = (itemId: string) => {
   const handleRightIconPress = () => {
     if (selectedToggle === 'ToDo') {
       if (hasActiveFilter) {
-        // Clear filter if filter is active
+       
         clearAllFilters();
       } else {
-        // Show calendar modal if no filter is active
+        
         setShowCalendarModal(true);
       }
     } else if (selectedToggle === 'Completed') {
       if (hasCompletedFilter) {
-        // Clear completed filter if filter is active
+       
         clearCompletedFilters();
       } else {
-        // Show completed calendar modal if no filter is active
+        
         setShowCompletedCalendarModal(true);
       }
     } else if (selectedToggle === 'Out') {
@@ -898,7 +875,7 @@ const confirmAction = async () => {
 
     console.log("Updating orders to Out For Delivery:", orderIds);
 
-    // Step 1: Update order status to "Out For Delivery"
+    
     const statusUpdateResponse = await axios.put(
       `${environment.API_BASE_URL}api/distribution/update-outForDelivery`,
       { orderIds },
@@ -914,9 +891,9 @@ const confirmAction = async () => {
       throw new Error(statusUpdateResponse.data?.message || "Failed to update order status");
     }
 
-    console.log("Status updated successfully:", statusUpdateResponse.data);
+   // console.log("Status updated successfully:", statusUpdateResponse.data);
 
-    // Step 2: Fetch complete order details for PDF generation
+    
     console.log("Fetching complete order details for:", orderIds);
     
     const orderDetailsResult = await fetchOrderDetailsByIds(orderIds, authToken);
@@ -929,22 +906,22 @@ const confirmAction = async () => {
       throw new Error("Failed to fetch any order details for PDF generation");
     }
 
-    console.log(`Fetched ${orderDetailsResult.successful.length} complete order details`);
-    console.log("Sample order structure:", {
-      keys: Object.keys(orderDetailsResult.successful[0] || {}),
-      hasOrder: !!orderDetailsResult.successful[0]?.order,
-      hasInvoiceNumber: !!orderDetailsResult.successful[0]?.invoiceNumber
-    });
+  //  console.log(`Fetched ${orderDetailsResult.successful.length} complete order details`);
+    // console.log("Sample order structure:", {
+    //   keys: Object.keys(orderDetailsResult.successful[0] || {}),
+    //   hasOrder: !!orderDetailsResult.successful[0]?.order,
+    //   hasInvoiceNumber: !!orderDetailsResult.successful[0]?.invoiceNumber
+    // });
 
-    // Step 3: Process orders for PDF generation and email sending using complete order data
-    console.log("Processing orders for PDF generation and email sending...");
+   
+   // console.log("Processing orders for PDF generation and email sending...");
     
-    // Pass the complete order objects (not just IDs) to processOrdersForDelivery
+    
     const emailResult = await processOrdersForDelivery(orderDetailsResult.successful, authToken);
     
     console.log("Email processing result:", emailResult);
 
-    // Step 4: Show results
+   
     let successMessage = `Successfully processed ${orderIds.length} orders.`;
     
     if (emailResult.success && emailResult.emailsSent > 0) {
@@ -956,20 +933,20 @@ const confirmAction = async () => {
       successMessage += ` ${emailResult.errors.length} orders had issues with PDF generation.`;
     }
 
-    // Step 5: Show success modal
+    
     setSuccessCount(orderIds.length);
     setShowConfirmModal(false);
     setShowSuccessModal(true);
 
-    // Clear selections
+    
     setSelectedItems([]);
 
-    // Auto-hide success modal after 4 seconds
+    
     setTimeout(() => {
       setShowSuccessModal(false);
     }, 4000);
 
-    // Refresh data to reflect changes
+    
     await fetchTargets();
 
   } catch (error: unknown) {
@@ -1000,16 +977,16 @@ const confirmAction = async () => {
 const SuccessModal = () => {
   const progress = useRef(new Animated.Value(0)).current;
 
-  // Start the animation when the modal becomes visible
+  
   useEffect(() => {
     if (showSuccessModal) {
       Animated.timing(progress, {
         toValue: 100,
-        duration: 3000, // 3 seconds
-        useNativeDriver: false, // Required for width/height animations
+        duration: 3000,
+        useNativeDriver: false, 
       }).start();
     } else {
-      progress.setValue(0); // Reset on close
+      progress.setValue(0); 
     }
   }, [showSuccessModal]);
 
@@ -1022,23 +999,18 @@ const SuccessModal = () => {
     >
       <View className="flex-1 justify-center items-center bg-black/50">
         <View className="bg-white rounded-2xl p-8 w-11/12 max-w-sm items-center">
-          {/* Success Title */}
+
           <Text className="text-2xl font-bold mb-6 text-center text-gray-800">
             {t("CenterTargetScreen.Success")}
           </Text>
           
-          {/* Success Icon */}
+ 
           <Image
             source={require("../../assets/images/New/otpsuccess.png")}
             style={{ width: 100, height: 100 }}
           />
           
-          {/* Success Message */}
-          {/* <Text className="text-center text-gray-600 text-base leading-6 mb-8">
-            {successCount} {t("CenterTargetScreen.order")}{successCount !== 1 ? 's' : ''} {successCount !== 1 ? t("CenterTargetScreen.have") : t("CenterTargetScreen.has")} {t("CenterTargetScreen.been sent out")}{'\n'}{t("CenterTargetScreen.for delivery")}
-          </Text> */}
-
-
+        
 
       <Text className="text-center text-gray-600 mb-6">
   {successCount === 1    
@@ -1071,7 +1043,7 @@ const formatOutTime = (dateString: string | null): string => {
   
   try {
     const date = new Date(dateString);
-    // Add 5 hours and 30 minutes to the UTC time
+  
     date.setHours(date.getHours() + 5);
     date.setMinutes(date.getMinutes() + 30);
     
@@ -1092,10 +1064,10 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
   
   try {
     const outDate = new Date(outTime);
-    // Add 5 hours to the UTC time
+   
     outDate.setHours(outDate.getHours() + 5);
     
-    // Extract the time range from scheduleTime (e.g., "Within 12-4 PM")
+    
     const timeRangeMatch = scheduleTime.match(/(\d+)-(\d+)\s*(AM|PM)/i);
     if (!timeRangeMatch) return 'N/A';
     
@@ -1132,7 +1104,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
   <AntDesign name="left" size={22} color="white" />
 </TouchableOpacity>
 
-        {/* <Text className="text-white text-lg font-bold">{t("CenterTarget.CenterTarget")}</Text> */}
+       
   {selectedToggle === 'ToDo' && (
     <Text 
       style={[
@@ -1251,15 +1223,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
               elevation: selectedToggle === "ToDo" ? 4 : 0,
             }}
           >
-            {/* <Animated.Text
-              className={`font-bold ${
-                selectedToggle === "ToDo" ? "text-white" : "text-black"
-              } ${selectedToggle === "ToDo" ? "mr-2" : ""}`}
-              style={{
-                opacity: selectedToggle === "ToDo" ? 1 : 0.7,
-              }}
-              
-            > */}
+         
             <Animated.Text
   className={`font-bold ${
     selectedToggle === "ToDo" ? "text-white" : "text-black"
@@ -1318,9 +1282,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
               className={`font-bold ${
                 selectedToggle === "Completed" ? "text-white" : "text-black"
               }`}
-              // style={{
-              //   opacity: selectedToggle === "Completed" ? 1 : 0.7,
-              // }}
+              
                 style={[
     { opacity: selectedToggle === "ToDo" ? 1 : 0.7 },
     i18n.language === "si"
@@ -1374,9 +1336,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
               className={`font-bold ${
                 selectedToggle === "Out" ? "text-white" : "text-black"
               }`}
-              // style={{
-              //   opacity: selectedToggle === "Out" ? 1 : 0.7,
-              // }}
+             
                 style={[
     { opacity: selectedToggle === "ToDo" ? 1 : 0.7 },
     i18n.language === "si"
@@ -1576,7 +1536,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     transparent={true}
     visible={showConfirmModal}
     onRequestClose={() => {
-      // Prevent closing modal when loading
+     
       if (!loading) {
         setShowConfirmModal(false);
       }
@@ -1596,9 +1556,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
       </View>
     </View>
         
-        {/* <Text className="text-center text-gray-600 mb-6">
-          {t("CenterTargetScreen.Are you sure you want to send these selected")} {selectedItems.length}  {t("CenterTargetScreen.orders out for delivery")}
-        </Text> */}
+      
 
        <Text className="text-center text-gray-600 mb-6">
   {selectedItems.length === 1    
@@ -1608,17 +1566,10 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
 </Text>
         
      
-        {/* {loading && (
-          <View className="mb-4 items-center">
-            <ActivityIndicator size="large" color="#980775" />
-            <Text className="text-center text-gray-600 mt-2">
-              {t("CenterTargetScreen.Processing orders")}
-            </Text>
-          </View>
-        )} */}
+     
         
         <View className="flex-row justify-between">
-          {/* Cancel button - disabled when loading */}
+          
           <TouchableOpacity
             className={`px-4 py-3 rounded-lg flex-1 mr-2 ${
               loading ? 'bg-gray-200' : 'bg-gray-300'
@@ -1633,7 +1584,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
             </Text>
           </TouchableOpacity>
           
-          {/* Out button - disabled when loading with visual feedback */}
+
           <TouchableOpacity
             className={`px-4 py-3 rounded-lg flex-1 ml-2 ${
               loading ? 'bg-gray-400' : 'bg-[#980775]'
@@ -1661,13 +1612,13 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
   </Modal>
 )}
 
-      {/* Content */}
+  
    <ScrollView
   className="flex-1 bg-white"
   showsVerticalScrollIndicator={false}
   refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 >
-  {/* Table Header - Changes based on selected toggle */}
+
   {selectedToggle === 'Out' ? (
     <View className="flex-row bg-[#980775] py-3">
       <Text 
@@ -1871,22 +1822,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
               </Text>
             </View>
 
-            {/* Status */}
-            {/* <View className="flex-[2] items-center justify-center px-2">
-              <View className={`px-3 py-2 rounded-full ${getStatusColor(item.selectedStatus)}`}>
-                <Text 
-                            style={[
-  i18n.language === "si"
-    ? { fontSize: 12 }
-    : i18n.language === "ta"
-    ? { fontSize: 12 }
-    : { fontSize: 12 }
-]}
-                className="text-xs font-medium text-center">
-                  {getStatusText(item.selectedStatus)}
-                </Text>
-              </View>
-            </View> */}
+     
 
             {/* Status */}
 <View className="flex-[2] items-center justify-center px-2">
@@ -1923,15 +1859,7 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
           : t("CenterTargetScreen.No out for delivery orders")
         }
       </Text>
-      {/* {((selectedToggle === 'ToDo' && selectedDateFilter) || 
-        (selectedToggle === 'Completed' && completedDateFilter)) && (
-        // <TouchableOpacity
-        //   onPress={() => selectedToggle === 'ToDo' ? clearAllFilters() : clearCompletedFilters()}
-        //   className="mt-2 bg-[#980775] px-4 py-2 rounded-lg"
-        // >
-        //   <Text className="text-white text-sm">Clear Filter</Text>
-        // </TouchableOpacity>
-      )} */}
+     
     </View>
   )}
 </ScrollView>

@@ -76,7 +76,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
       });
 
       const data = response.data.data;
-      console.log(data);
+    //  console.log(data);
 
       if (response.data.status === "success") {
         setProfile(data);

@@ -133,63 +133,7 @@ const CollectionRequestForm: React.FC<CollectionRequestFormProps> = ({
   console.log("phoneNumber", phoneNumber);
   console.log("language", language);
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     const fetchCropNames = async () => {
-  //       try {
-  //         const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
-  //         setSelectedLanguage(lang || "en"); // Default to English if not set
-  //         const token = await AsyncStorage.getItem("token");
-  //         if (!token) {
-  //           console.error("No authentication token found");
-  //           return;
-  //         }
 
-  //         const headers = { Authorization: `Bearer ${token}` };
-  //         const response = await axios.get<Crop[]>(
-  //           `${environment.API_BASE_URL}api/unregisteredfarmercrop/get-crop-names/for-collection`,
-  //           { headers }
-  //         );
-
-  //         // Remove duplicates based on cropNameEnglish
-  //         const uniqueCropNames = response.data.reduce<Crop[]>((acc, crop) => {
-  //           if (
-  //             !acc.some((item) => item.cropNameEnglish === crop.cropNameEnglish)
-  //           ) {
-  //             acc.push(crop);
-  //           }
-  //           return acc;
-  //         }, []);
-  //         const mappedCrops = uniqueCropNames.map((crop) => {
-  //           let label = crop.cropNameEnglish; // Default to English
-  //           if (selectedLanguage === "si") {
-  //             label = crop.cropNameSinhala; // Sinhala
-  //           } else if (selectedLanguage === "ta") {
-  //             label = crop.cropNameTamil; // Tamil
-  //           }
-  //           setCropOptions(mappedCrops);
-
-  //           return {
-  //             label,
-  //             value: crop.id.toString(),
-  //           };
-  //         });
-  //         // setCropOptions(
-  //         //   uniqueCropNames.map((crop) => ({
-  //         //     label: crop.cropNameEnglish,
-  //         //     value: crop.id.toString(),
-  //         //   }))
-  //         // );
-
-  //         console.log("Unique Crop Names:", uniqueCropNames);
-  //       } catch (error) {
-  //         console.error("Error fetching crop names:", error);
-  //       }
-  //     };
-
-  //     fetchCropNames();
-  //   }, [selectedLanguage])
-  // );
 
   useFocusEffect(
     React.useCallback(() => {

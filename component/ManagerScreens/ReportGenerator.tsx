@@ -141,17 +141,17 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
       }
 
       // Define the new file name
-      const date = new Date().toISOString().slice(0, 10); // Get the current date (YYYY-MM-DD)
-      const fileName = `Report_${officerId}_${date}.pdf`; // Example file name
+      const date = new Date().toISOString().slice(0, 10); 
+      const fileName = `Report_${officerId}_${date}.pdf`; 
 
-      // Define tempFilePath here, outside the if block so it's available throughout the function
-      let tempFilePath = uri; // Default to the original URI
+   
+      let tempFilePath = uri; 
 
       if (Platform.OS === "android") {
-        // Create a temporary file in cache
+      
         tempFilePath = `${FileSystem.cacheDirectory}${fileName}`;
 
-        // Copy the PDF to the temp location
+       
         await FileSystem.copyAsync({
           from: uri,
           to: tempFilePath,
@@ -172,7 +172,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
           );
         }
       } else if (Platform.OS === "ios") {
-        // iOS approach: Use sharing dialog to let user save to Files app
+      
         if (await Sharing.isAvailableAsync()) {
           await Sharing.shareAsync(tempFilePath, {
             // Using tempFilePath which is uri for iOS
@@ -189,8 +189,8 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
         }
       }
 
-      // Log success - tempFilePath is now accessible here
-      console.log(`PDF prepared for sharing: ${tempFilePath}`);
+ 
+    //  console.log(`PDF prepared for sharing: ${tempFilePath}`);
     } catch (error) {
       console.error("Download error:", error);
       Alert.alert(
@@ -356,8 +356,8 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
                   mode="date"
                   display="inline"
                   style={{ width: 320, height: 260 }}
-                  maximumDate={getTodayInColombo()} // Disallow future dates
-                  minimumDate={startDate} // End date must not be earlier than the start date
+                  maximumDate={getTodayInColombo()} 
+                  minimumDate={startDate} 
                   onChange={(event, date) =>
                     handleDateChange(event, date, "end")
                   }
@@ -418,7 +418,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
             />
           </View>
 
-          {/* <Text className="text-lg font-semibold text-[#494949]">{t("ReportGenerator.IDNO")} {generatedReportId}</Text> */}
+      
           <Text className="text-sm text-gray-500 italic mb-6">
             {t("ReportGenerator.Report has been generated")}
           </Text>

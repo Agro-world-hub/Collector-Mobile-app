@@ -16,7 +16,7 @@ import { environment } from "@/environment/environment";
 import { useTranslation } from "react-i18next";
 import NetInfo from "@react-native-community/netinfo";
 
-// Updated PassTarget component interfaces and implementation:
+
 
 interface PassTargetProps {
   navigation: any;
@@ -70,7 +70,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
   console.log("Passed selectedItems:", passedSelectedItems);
   console.log("Passed invoiceNumbers:", invoiceNumbers);
 
-  // Helper function to get officer name based on current language
+ 
   const getOfficerName = useCallback((officer: Officer) => {
     const currentLanguage = i18n.language;
     
@@ -78,17 +78,17 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
     let lastName = "";
     
     switch (currentLanguage) {
-      case 'si': // Sinhala
+      case 'si':
       case 'sinhala':
         firstName = officer.firstNameSinhala || officer.firstNameEnglish;
         lastName = officer.lastNameSinhala || officer.lastNameEnglish;
         break;
-      case 'ta': // Tamil
+      case 'ta': 
       case 'tamil':
         firstName = officer.firstNameTamil || officer.firstNameEnglish;
         lastName = officer.lastNameTamil || officer.lastNameEnglish;
         break;
-      case 'en': // English
+      case 'en': 
       case 'english':
       default:
         firstName = officer.firstNameEnglish;
@@ -99,12 +99,11 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
     return `${firstName} ${lastName} (${officer.empId})`;
   }, [i18n.language]);
 
-  // Helper function to get status color (language independent)
+
   const getStatusColor = (status: string) => {
-    // Convert to lowercase and handle different language variations
+
     const normalizedStatus = status?.toLowerCase();
-    
-    // English
+
     if (normalizedStatus === 'completed') {
       return 'bg-[#BBFFC6]';
     }
@@ -114,8 +113,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
     if (normalizedStatus === 'pending') {
       return 'bg-[#FF070733]';
     }
-    
-    // Sinhala translations
+
     if (normalizedStatus === 'සම්පූර්ණ' || normalizedStatus === 'සම්පූර්ණයි') {
       return 'bg-[#BBFFC6]';
     }
@@ -126,7 +124,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
       return 'bg-[#FF070733]';
     }
     
-    // Tamil translations
+
     if (normalizedStatus === 'முடிக்கப்பட்டது' || normalizedStatus === 'நிறைவு') {
       return 'bg-[#BBFFC6]';
     }
@@ -184,7 +182,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
   const getStatusText = (status: string) => {
     const normalizedStatus = status?.toLowerCase();
     
-    // Return translated status based on current language
+
     switch (normalizedStatus) {
       case 'completed':
       case 'සම්පූර්ණ':
@@ -225,28 +223,27 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
       );
 
       if (response.data.success && response.data.data) {
-        console.log("All officers from API:", response.data.data);
+      //  console.log("All officers from API:", response.data.data);
         console.log("Current officerId to filter out:", officerId);
         
-        // Transform officer data for dropdown and filter out current officer
+      
         const officerDropdownData = response.data.data
           .filter((officer: Officer) => {
-            // Debug logging
+       
             console.log(`Comparing officer ID: ${officer.id} (${typeof officer.id}) with current officer: ${officerId} (${typeof officerId})`);
             console.log(`Officer empId: ${officer.empId}`);
             
-            // Try multiple comparison methods since we're not sure which field contains the matching ID
+         
             const isCurrentOfficerById = officer.id?.toString() === officerId?.toString();
             const isCurrentOfficerByEmpId = officer.empId?.toString() === officerId?.toString();
             
             console.log(`isCurrentOfficerById: ${isCurrentOfficerById}, isCurrentOfficerByEmpId: ${isCurrentOfficerByEmpId}`);
-            
-            // Exclude if either ID or empId matches the current officerId
+          
             return !isCurrentOfficerById && !isCurrentOfficerByEmpId;
           })
           .map((officer: Officer) => ({
             key: officer.id.toString(),
-            value: getOfficerName(officer) // Use the multilingual name function
+            value: getOfficerName(officer) 
           }));
         
         console.log("Filtered officers for dropdown:", officerDropdownData);
@@ -267,8 +264,8 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
     if (passedSelectedItems && passedSelectedItems.length > 0) {
       const items: TargetItem[] = passedSelectedItems.map((itemId, index) => ({
         id: index + 1,
-        invoiceNumber: invoiceNumbers[index] || `INV${itemId.toString().padStart(6, '0')}`, // Use actual invoice number
-        status: "Pending", // Default status since these are selected pending items
+        invoiceNumber: invoiceNumbers[index] || `INV${itemId.toString().padStart(6, '0')}`, 
+        status: "Pending", 
         processOrderId: itemId,
         distributedTargetItemId: itemId
       }));
@@ -276,7 +273,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
     }
   }, [passedSelectedItems, invoiceNumbers]);
 
-  // Initialize target items and fetch officers when component mounts
+
   useFocusEffect(
     useCallback(() => {
       prepareTargetItems();
@@ -284,10 +281,10 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
     }, [prepareTargetItems, fetchOfficers])
   );
 
-  // Re-fetch officers when language changes to update the dropdown
+
   useEffect(() => {
     fetchOfficers();
-    // Reset selected assignee when language changes to avoid confusion
+
     setSelectedAssignee("");
   }, [i18n.language, fetchOfficers]);
 
@@ -305,7 +302,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
     }
 
     setLoading(true);
-    setError(null); // Clear previous errors
+    setError(null); 
 
     const netState = await NetInfo.fetch();
     if (!netState.isConnected) {
@@ -315,18 +312,18 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
     try {
       const authToken = await AsyncStorage.getItem("token");
       
-      // Prepare data for API call
+    
       const saveData = {
-        assigneeOfficerId: selectedAssignee, // This is the selected officer ID from dropdown
-        targetItems: passedSelectedItems, // Array of distributedTargetItemIds
-        invoiceNumbers: invoiceNumbers, // Send invoice numbers array to API
+        assigneeOfficerId: selectedAssignee, 
+        targetItems: passedSelectedItems, 
+        invoiceNumbers: invoiceNumbers, 
         processOrderId: processOrderId
       };
 
-      console.log("Saving data:", saveData); // For debugging
-      console.log("API URL:", `${environment.API_BASE_URL}api/distribution-manager/target-pass/${officerId}`);
+     // console.log("Saving data:", saveData); 
+     // console.log("API URL:", `${environment.API_BASE_URL}api/distribution-manager/target-pass/${officerId}`);
 
-      // API call to assign targets - Using officerId as the route parameter
+  
       const response = await axios.post(
         `${environment.API_BASE_URL}api/distribution-manager/target-pass/${officerId}`,
         saveData,
@@ -338,13 +335,10 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
         }
       );
 
-      console.log("API Response:", response.data);
+    //  console.log("API Response:", response.data);
 
       if (response.data.success) {
-        // Show success message (optional)
-        // You can add a success toast here if needed
-        
-        // Navigate back on successful save
+       
         navigation.goBack();
       } else {
         setError(response.data.message || t("Error.Failed to save data."));
@@ -355,27 +349,27 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
       // Enhanced error handling
       if (axios.isAxiosError(error)) {
         if (error.response) {
-          // Server responded with error status
+    
           console.log("Error response:", error.response.data);
           const errorMessage = error.response.data?.message || 
                               error.response.data?.error || 
                               `Server error: ${error.response.status}`;
           setError(errorMessage);
         } else if (error.request) {
-          // Request was made but no response received
+      
           console.log("No response received:", error.request);
           setError(t("Error.Network error. Please check your connection."));
         } else {
-          // Something else happened in setting up the request
+       
           console.log("Request setup error:", error.message);
           setError(error.message || t("Error.Failed to save data."));
         }
       } else if (error instanceof Error) {
-        // Generic Error object
+
         console.log("Generic error:", error.message);
         setError(error.message || t("Error.Failed to save data."));
       } else {
-        // Unknown error type
+
         console.log("Unknown error:", error);
         setError(t("Error.Failed to save data."));
       }
@@ -386,7 +380,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
 
   return (
     <View className="flex-1 bg-white">
-      {/* Header */}
+   
       <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
         <TouchableOpacity 
           onPress={() => navigation.goBack()} 

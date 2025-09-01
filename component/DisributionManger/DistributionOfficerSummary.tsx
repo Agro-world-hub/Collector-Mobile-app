@@ -52,16 +52,16 @@ const DistributionOfficerSummary: React.FC<OfficerSummaryProps> = ({
   const [officerStatus, setOfficerStatus] = useState("offline");
   const [taskPercentage, setTaskPercentage] = useState<number | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [isOnline, setIsOnline] = useState(false); // Track the online status
+  const [isOnline, setIsOnline] = useState(false); 
   const { t } = useTranslation();
   const [modalVisible, setModalVisible] = useState(false);  
- const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
+ const [targetPercentage, setTargetPercentage] = useState<number | null>(null); 
 
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
         navigation.navigate("Main", { screen: "DistributionOfficersList" })
-        return true; // Prevent the default behavior
+        return true; 
       };
 
       BackHandler.addEventListener("hardwareBackPress", onBackPress);
@@ -119,8 +119,6 @@ const DistributionOfficerSummary: React.FC<OfficerSummaryProps> = ({
   };
 
 
-
-  // Replace your existing fetchTaskSummary function with this:
 const fetchTaskSummary = async () => {
   try {
     const res = await axios.get(
@@ -130,7 +128,7 @@ const fetchTaskSummary = async () => {
     console.log("\\\\\\\\\\\\\\\\\\\\\\\\", res.data);
 
     if (res.data.success) {
-      // Use the overallProgressPercentage directly from the API response
+    
       const percentage = res.data.overallProgressPercentage || 0;
       setTaskPercentage(percentage);
     } else {
@@ -144,12 +142,10 @@ const fetchTaskSummary = async () => {
 
 
 
-
-  // Refreshing function
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-   fetchTaskSummary(); // Re-fetch task summary
-  //fetchTargetPercentage()
+   fetchTaskSummary(); 
+
     setRefreshing(false);
     setShowMenu(false)
     getOnlineStatus();
@@ -160,7 +156,7 @@ const fetchTaskSummary = async () => {
   }, [collectionOfficerId]);
 
   const handleCancel = () => {
-    setModalVisible(false); // Close the modal without taking action
+    setModalVisible(false);
     setShowMenu(false)
   };
   const handleDisclaim = async () => {
@@ -198,7 +194,7 @@ const fetchTaskSummary = async () => {
       }
 
       const data = await res.json();
-      console.log(data);
+     // console.log(data);
 
       if (data.status === "success") {
         setModalVisible(false); // Close the modal
@@ -226,14 +222,14 @@ const fetchTaskSummary = async () => {
         `${environment.API_BASE_URL}api/collection-manager/get-officer-online/${collectionOfficerId}`
       );
       const data = await res.json();
-      console.log("Officer status:", data);
+     // console.log("Officer status:", data);
   
       if (data.success) {
         // Check OnlineStatus value and set status accordingly
         const { OnlineStatus } = data.result;
         
         if (OnlineStatus === 1) {
-          setOfficerStatus("online"); // Assuming you have a setStatus function to update state
+          setOfficerStatus("online"); 
           setIsOnline(true);
           console.log("Officer is online");
         } else {
@@ -262,9 +258,9 @@ const fetchTaskSummary = async () => {
     >
       {/* Header */}
       <View className="relative">
-        {/* Header Section */}
+     
         <View className="bg-white rounded-b-[25px] px-4 pt-12 pb-6 items-center shadow-lg z-10">
-          {/* Back Icon */}
+        
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("Main", { screen: "DistributionOfficersList" })
@@ -292,7 +288,7 @@ const fetchTaskSummary = async () => {
             </View>
           )}
 
-          {/* Profile Image with Green Border */}
+     
           <View className={`w-28 h-28 border-[6px] rounded-full items-center justify-center ${isOnline ? 'border-[#980775]' : 'border-gray-400'}`}>
 
             <Image
@@ -304,16 +300,16 @@ const fetchTaskSummary = async () => {
               className="w-24 h-24 rounded-full "
             />
           </View>
-          {/* Name and EMP ID */}
+      
           <Text className="mt-4 text-lg font-bold text-black">
             {officerName}
           </Text>
           <Text className="text-sm text-gray-500">{t("DistributionOfficersList.EMPID")} {officerId}</Text>
         </View>
 
-        {/* Action Buttons Section */}
+  
         <View className="bg-[#980775] rounded-b-[45px] px-8 py-4 -mt-6 flex-row justify-around shadow-md z-0">
-          {/* Phone Number 1 */}
+   
           {phoneNumber1 ? (
             <TouchableOpacity
               className="items-center mt-5"
@@ -333,7 +329,7 @@ const fetchTaskSummary = async () => {
             </TouchableOpacity>
           )}
 
-          {/* Phone Number 2 */}
+    
           {phoneNumber2 ? (
             <TouchableOpacity
               className="items-center mt-5"
@@ -353,7 +349,7 @@ const fetchTaskSummary = async () => {
             </TouchableOpacity>
           )}
 
-          {/* Report Button */}
+    
           <TouchableOpacity
             className="items-center mt-5"
             onPress={() =>
@@ -371,7 +367,7 @@ const fetchTaskSummary = async () => {
         </View>
       </View>
 
-      {/* Stats Section */}
+
       <View className="mt-6 px-6">
 
         <View className="items-center mt-4">
@@ -380,7 +376,7 @@ const fetchTaskSummary = async () => {
             <CircularProgress
               size={120}
               width={10}
-              fill={taskPercentage ?? 0} // Dynamically set fill percentage
+              fill={taskPercentage ?? 0} 
               tintColor="#21202B"
               backgroundColor="#E5E7EB"
             >
@@ -394,35 +390,7 @@ const fetchTaskSummary = async () => {
             <Text className="text-base text-gray-500 mt-4">{t("OfficerSummary.Target Coverage")}</Text>
           </View>
 
-             {/* <View className="flex items-center justify-center my-6 mt-[13%]">
-                  <View className="relative">
-                    <CircularProgress
-                      size={100}
-                      width={8}
-                      fill={targetPercentage !== null ? targetPercentage : 0} // Dynamically set progress
-                      tintColor="#34D399"
-                      backgroundColor="#E5E7EB"
-                    />
-                    <View className="absolute items-center justify-center h-24 w-24">
-                      <Text className="text-2xl font-bold ml-3  mt-1">
-                        {targetPercentage !== null ? `${targetPercentage}%` : "0%"}
-                      </Text>
-                    </View>
-                  </View>
-                  <Text
-                  //  style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-                    className="text-gray-700 font-bold text-lg mt-2"
-                  >
-                    {t("DistridutionaDashboard.Yourtarget")}{" "}
-                  </Text>
-                  <Text
-                  //  style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-                    className="text-gray-700 font-bold text-lg "
-                  >
-                    {" "}
-                    {t("DistridutionaDashboard.Progress")}
-                  </Text>
-                </View> */}
+         
 
           <View className="mt-6 mb-10 items-center">
             <TouchableOpacity

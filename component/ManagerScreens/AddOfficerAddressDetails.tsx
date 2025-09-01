@@ -75,7 +75,7 @@ const AddOfficerAddressDetails: React.FC = () => {
     profileImage: "",
   });
 
-  console.log(formData);
+  //console.log(formData);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -208,7 +208,7 @@ const AddOfficerAddressDetails: React.FC = () => {
       profileImage: basicDetails.profileImage || "", // Include the base64 image in the payload
     };
 
-    console.log("Combined data for passing to backend:", combinedData);
+  //  console.log("Combined data for passing to backend:", combinedData);
 
       const netState = await NetInfo.fetch();
       if (!netState.isConnected) {
@@ -419,25 +419,18 @@ const AddOfficerAddressDetails: React.FC = () => {
   return formattedText;
 };
 
-  // const handleBankSelection = (selectedBank: string) => {
-  //   setBankName(selectedBank);
-  //   setFormData((prevData) => {
-  //     const updatedData = { ...prevData, bankName: selectedBank }; // Update the form data with new bankName
-  //     saveDataToStorage(updatedData); // Save every time bank name changes
-  //     return updatedData;
-  //   });
-  // };
+
 
   const handleBankSelection = (selectedBank: string) => {
   setBankName(selectedBank);
-  setBranchName(""); // Clear the branch name when bank changes
+  setBranchName(""); 
   setFormData((prevData) => {
     const updatedData = { 
       ...prevData, 
       bankName: selectedBank,
-      branchName: "" // Also clear branchName in formData
+      branchName: "" 
     };
-    saveDataToStorage(updatedData); // Save every time bank name changes
+    saveDataToStorage(updatedData); 
     return updatedData;
   });
 };
@@ -469,7 +462,7 @@ const AddOfficerAddressDetails: React.FC = () => {
           >
             <AntDesign name="left" size={24} color="#000502" />
           </TouchableOpacity>
-          {/* <Text className="text-lg font-bold ml-[25%]">{t("AddOfficerAddressDetails.AddOfficer")}</Text> */}
+         
           <View className="flex-1 justify-center items-center mr-[8%]">
             <Text className="text-lg font-bold">
               {t("AddOfficerAddressDetails.AddOfficer")}
@@ -487,22 +480,7 @@ const AddOfficerAddressDetails: React.FC = () => {
             }
             className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
           />
-          {/* <TextInput
-            placeholder={t("AddOfficerAddressDetails.Street Name")}
-            value={formData.streetName}
-            onChangeText={(text) =>
-              setFormData({ ...formData, streetName: text })
-            }
-            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
-              autoCapitalize="words"
-  autoCorrect={false}
-          />
-          <TextInput
-            placeholder={t("AddOfficerAddressDetails.City")}
-            value={formData.city}
-            onChangeText={(text) => setFormData({ ...formData, city: text })}
-            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
-          /> */}
+         
           <TextInput
   placeholder={t("AddOfficerAddressDetails.Street Name")}
   value={formData.streetName}
@@ -533,7 +511,7 @@ const AddOfficerAddressDetails: React.FC = () => {
           />
 
           <View style={{ marginBottom: 10 }}>
-            {/* <Text style={{ fontSize: 18, marginBottom: 5 }}>Select Province</Text> */}
+         
             <SelectList
               setSelected={(province: any) => handleProvinceChange(province)}
               data={jsonData.provinces.map((province) => ({
@@ -563,12 +541,12 @@ const AddOfficerAddressDetails: React.FC = () => {
           {/* District Dropdown */}
           {formData.province && (
             <View style={{ marginBottom: 2 }}>
-              {/* <Text style={{ fontSize: 18, marginBottom: 5 }}>Select District</Text> */}
+          
               <SelectList
-                setSelected={handleDistrictChange} // Use the updated function to handle district change
+                setSelected={handleDistrictChange} 
                 data={districts.map((district) => ({
                   key: district.en,
-                  value: district[selectedLanguage as keyof typeof district], // Value displayed in the selected language
+                  value: district[selectedLanguage as keyof typeof district], 
                 }))}
                 boxStyles={{
                     borderColor: "#F4F4F4", // Remove the border
@@ -595,15 +573,15 @@ const AddOfficerAddressDetails: React.FC = () => {
   placeholder={t("AddOfficerAddressDetails.AccountName")}
   value={formData.accountHolderName}
   onChangeText={(text) => {
-    // Block special characters and numbers - only allow letters and spaces
+
     let filteredText = text.replace(/[^a-zA-Z\s]/g, '');
     
-    // Prevent space at the beginning
+
     if (filteredText.startsWith(' ')) {
       filteredText = filteredText.trimStart();
     }
     
-    // Capitalize first letter of each word and make rest lowercase
+
     const capitalizedText = filteredText
       .toLowerCase()
       .split(' ')

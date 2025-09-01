@@ -322,7 +322,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         destination: `${phoneNumber}`,
       };
 
-      console.log("Sending OTP Request Body:", body);
+   //   console.log("Sending OTP Request Body:", body);
 
       const response = await axios.post(apiUrl, body, { headers });
       // Check if the response contains a referenceId

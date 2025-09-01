@@ -104,7 +104,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
           `${environment.API_BASE_URL}api/complain/get-complain-category/${appName}`
         );
         if (response.data.status === "success") {
-          console.log(response.data.data);
+      //    console.log(response.data.data);
 
           // Determine which language field to use
           const categoryField =

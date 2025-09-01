@@ -94,10 +94,10 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
           },
         }
       );
-      console.log("data", response.data);
+     // console.log("data", response.data);
 
       if (response.data.status === "success") {
-        // Separate approved and not approved officers
+        
         const approvedOfficers = response.data.data.filter(
           (officer: Officer) => officer.status === "Approved"
         );
@@ -115,7 +115,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
             getOfficerName(a).localeCompare(getOfficerName(b))
         );
 
-        // Combine the sorted lists: approved officers first, then not approved
+   
         setOfficers([...sortedApprovedOfficers, ...sortedNotApprovedOfficers]);
       } else {
         setErrorMessage(t("Error.Failed to fetch officers."));
@@ -178,7 +178,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
       );
       setFilteredOfficers(filtered);
     } else {
-      setFilteredOfficers(officers); // Show all officers when no filter is selected
+      setFilteredOfficers(officers); 
     }
   }, [selectedJobRole, officers]);
 
@@ -188,7 +188,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
         item.status === "Not Approved" ? "bg-gray-100" : "bg-gray-100"
       }`}
       onPress={() => {
-        // Prevent navigation if officer status is "Not Approved"
+       
         if (item.status !== "Not Approved") {
           navigation.navigate("OfficerSummary" as any, {
             officerId: item.empId,
@@ -200,14 +200,10 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
           });
         }
       }}
-      disabled={item.status === "Not Approved"} // Disable the TouchableOpacity when status is "Not Approved"
+      disabled={item.status === "Not Approved"} 
     >
       <View className="w-14 h-14 rounded-full overflow-hidden justify-center items-center mr-4 shadow-md">
-        {/* <Image
-          source={require('../../assets/images/ava.webp')}
-          className="w-full h-full"
-          resizeMode="cover"
-        /> */}
+       
         <Image
           source={
             item.image
@@ -231,14 +227,14 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
         </Text>
       )}
 
-      {/* Conditionally render the chevron icon based on the officer's status */}
+  
       {item.status !== "Not Approved" && (
         <Ionicons name="chevron-forward" size={scale(20)} color="#9CA3AF" />
       )}
     </TouchableOpacity>
   );
 
-  // Handling the button for adding new officers
+
   <TouchableOpacity
     onPress={async () => {
       try {
@@ -256,15 +252,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
   return (
     <View className="flex-1 bg-[#313131]">
       <View className="bg-[#313131] py-6 px-4  relative">
-        {/* <TouchableOpacity
-          className="absolute top-6 left-4 z-50"
-          onPress={() => {
-            setShowFilter((prev) => !prev);
-            setShowMenu(false);
-          }}
-        >
-          <FontAwesome name="filter" size={24} color="#fff" />
-        </TouchableOpacity> */}
+       
         {showFilter && (
           <View className="absolute z-50 flex-col top-14 left-6 bg-white shadow-lg rounded-lg">
             <TouchableOpacity
