@@ -206,12 +206,12 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
   }
 
   return (
-    <KeyboardAvoidingView
+      <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
-      style={{ flex: 1 }}
+      style={{ flex: 1, backgroundColor: "#FFFFFF" }}
     >
-      <SafeAreaView className="flex-1 bg-[#FFFFFF]">
+      <SafeAreaView className="flex-1 bg-white">
         {loading ? (
           // Lottie Loader displays for 2 seconds
           <View className="flex-1 justify-center items-center">
@@ -225,18 +225,24 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
         ) : (
           <>
 
-            <ScrollView className="flex-1 " keyboardShouldPersistTaps="handled" style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}>
+            <ScrollView 
+            className="flex-1 bg-white" 
+            keyboardShouldPersistTaps="handled" 
+            style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}
+            showsVerticalScrollIndicator={false}
+          >
                        <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
                          <AntDesign name="left" size={24} color="#000502" />
                        </TouchableOpacity>
-              <View className="items-center p-2 pb-20 -mt-10">
+              {/* <View className="items-center p-2 pb-20 -mt-10 bg-white"> */}
+               <View className="items-center bg-white ">
                 <Image
                   source={require("../assets/images/complain.webp")}
                   className="w-36 h-36 "
                   resizeMode="contain"
                 />
 
-                <View className="w-[100%] items-center p-6 shadow-2xl bg-[#FFFFFF] rounded-xl">
+                <View className="w-[100%] items-center p-6 shadow-2xl bg-white rounded-xl">
                   <View className="flex-row ">
                     <Text className="text-2xl font-semibold text-center mb-4 color-[#424242]">
                       {t("ReportComplaint.Tellus")}
@@ -245,7 +251,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
                       {t("ReportComplaint.Problem")}
                     </Text>
                   </View>
-<View className="w-full rounded-full mb-4">
+<View className="w-full rounded-full mb-4 bg-white">
   {Category.length > 0 && (
     <DropDownPicker
       open={open}
@@ -286,24 +292,24 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
                  <TextInput
   className="w-full h-60 border border-[#F6F6F6] rounded-lg p-3 bg-[#F6F6F6] mb-8"
   placeholder={t("ReportComplaint.Kindlysubmit")}
-  placeholderTextColor="#434343" // ✅ Correct prop
+  placeholderTextColor="#434343" 
   multiline
   value={complain}
   onChangeText={(text) => setComplain(text)}
   onFocus={() => setOpen(false)}
   style={{
     textAlignVertical: "top",
-    color: "#424242", // ✅ Set actual input text color here
+    color: "#424242", 
   }}
 />
 
 
                   <TouchableOpacity
-                    className="w-full bg-[#000000] py-4 rounded-full items-center  "
+                    className="w-full bg-[#000000] py-4 rounded-full items-center  mb-20"
                     onPress={handleSubmit}
                   >
                     {isLoading ? (
-                      <ActivityIndicator size="small" color="#fff" />
+                      <ActivityIndicator size="small" color="white" />
                     ) : (
                       <Text className="text-white font-bold text-lg">
                         {t("ReportComplaint.Submit")}
