@@ -20,7 +20,7 @@ const FormScreen: React.FC<FormScreenProps> = ({ navigation }) => {
   };
 
   const handleSubmit = () => {
-    console.log('Form submitted:', formData);
+   // console.log('Form submitted:', formData);
     // Handle form submission logic here
   };
 

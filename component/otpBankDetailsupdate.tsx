@@ -321,7 +321,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
       };
 
       const response = await axios.post(url, body, { headers });
-      console.log("Response from Shoutout:", response.data);
+     // console.log("Response from Shoutout:", response.data);
       const { statusCode } = response.data;
 
       if (statusCode === "1000") {
@@ -473,16 +473,14 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}
       >
         <View>
-          {/* <TouchableOpacity onPress={() => navigation.goBack()}>
-            <AntDesign name="left" size={22} color="#000" />
-          </TouchableOpacity> */}
+         
           <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
                                    <AntDesign name="left" size={24} color="#000502" />
                                  </TouchableOpacity>
         </View>
         <View className="flex justify-center items-center mt-0 mr-[5%]">
           <Text className="text-black" style={{ fontSize: wp(8) }}>
-            {/* {t("OtpVerification.OTPVerification")} */}
+
           </Text>
         </View>
 

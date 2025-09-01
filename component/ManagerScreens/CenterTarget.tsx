@@ -112,7 +112,7 @@ const sortByVarietyAndGrade = (data: TargetData[]) => {
             todo: Number(item.todo || 0)
         }));
 
-        console.log('Processed data:', allData);
+       // console.log('Processed data:', allData);
 
         const todoItems = allData.filter((item: TargetData) => item.todo > 0);
         const completedItems = allData.filter((item: TargetData) => item.complete >= item.target); 

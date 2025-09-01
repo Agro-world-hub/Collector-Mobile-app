@@ -72,7 +72,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
         );
         setProfile(response.data.data);
         setEmpId(response.data.data.empId);
-        console.log("data:", response.data.data);
+    //    console.log("data:", response.data.data);
       }
     } catch (error) {
       console.error("Failed to fetch user profile:", error);
@@ -94,7 +94,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("response for percentage target", response.data);
+    //  console.log("response for percentage target", response.data);
       if (response.data.success) {
         const percentage = parseInt(
           response.data.completionPercentage.replace("%", ""),

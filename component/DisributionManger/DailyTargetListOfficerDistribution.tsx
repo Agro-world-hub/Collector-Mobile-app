@@ -36,7 +36,6 @@ interface DailyTargetListOfficerDistributionProps {
   };
 }
 
-// Updated interface to match backend data structure
 interface OrderData {
   distributedTargetId: number;
   distributedTargetItemId: number;
@@ -101,7 +100,7 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
     }
   };
 
-  // Helper function to format date
+ 
   const formatScheduleDate = (dateString: string) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
@@ -112,7 +111,7 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
     });
   };
 
-  // Helper function to format time
+
   const formatScheduleTime = (timeString: string) => {
     return timeString || 'N/A';
   };
@@ -128,7 +127,7 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
   
 
   const getStatusColor = (status: string) => {
-  // Convert to lowercase and handle different language variations
+
   const normalizedStatus = status?.toLowerCase();
   
   // English
@@ -211,12 +210,12 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
     });
   };
 
-  // Helper function to check if item can be selected (only pending orders)
+
   const canSelectItem = (item: OrderData) => {
     return item.selectedStatus?.toLowerCase() === 'pending' && selectedToggle === 'ToDo';
   };
 
-  // Helper function to handle item selection
+
   const handleItemSelect = (item: OrderData) => {
     if (!canSelectItem(item)) return;
 
@@ -228,7 +227,6 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
     }
     setSelectedItems(newSelectedItems);
 
-    // Auto-enable selection mode when first item is selected
     if (newSelectedItems.size > 0) {
       setIsSelectionMode(true);
     } else {
@@ -244,41 +242,41 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
     setIsSelectionMode(true);
   };
 
-  // Helper function to toggle select all pending items
+
   const toggleSelectAllPending = () => {
     const pendingItems = todoData.filter(item => canSelectItem(item));
     const allPendingIds = pendingItems.map(item => item.distributedTargetItemId);
     
-    // Check if all pending items are already selected
+   
     const allSelected = allPendingIds.every(id => selectedItems.has(id));
     
     if (allSelected && selectedItems.size > 0) {
-      // Deselect all
+  
       setSelectedItems(new Set());
       setIsSelectionMode(false);
     } else {
-      // Select all pending items
+    
       setSelectedItems(new Set(allPendingIds));
       setIsSelectionMode(true);
     }
   };
 
-  // Helper function to handle long press for selection
+  
   const handleLongPress = (item: OrderData) => {
     if (canSelectItem(item)) {
-      console.log("Long press detected, entering selection mode");
+      
       setIsSelectionMode(true);
       setSelectedItems(new Set([item.distributedTargetItemId]));
     }
   };
 
-  // Helper function to clear selection
+
   const clearSelection = () => {
     setSelectedItems(new Set());
     setIsSelectionMode(false);
   };
 
-  // Show confirmation modal when pass button is clicked
+  
   const handlePassButtonPress = () => {
     if (selectedItems.size === 0) {
       Alert.alert(t("Error.No Selection"), t("Error.Please select at least one pending item"));
@@ -287,8 +285,7 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
     setShowConfirmModal(true);
   };
 
-  // Handle confirmation modal pass button
-  // In DailyTargetListOfficerDistribution component, replace the handleConfirmPass function:
+
 
 const handleConfirmPass = () => {
   setShowConfirmModal(false);
@@ -296,12 +293,12 @@ const handleConfirmPass = () => {
   const selectedItemsArray = Array.from(selectedItems);
   console.log("Multiple items navigation:", selectedItemsArray);
   
-  // Get all selected items with their invoice numbers
+
   const selectedItemsWithInvoices = todoData.filter(item => 
     selectedItems.has(item.distributedTargetItemId)
   );
   
-  // Create an array of invoice numbers for the selected items
+
   const invoiceNumbers = selectedItemsWithInvoices.map(item => item.invNo);
   const processOrderId = selectedItemsWithInvoices.map(item => item.processOrderId)
   
@@ -309,44 +306,43 @@ const handleConfirmPass = () => {
     officerId: officerId,
     selectedItems: selectedItemsArray,
     collectionOfficerId: collectionOfficerId,
-    invoiceNumbers: invoiceNumbers, // Pass array of invoice numbers
+    invoiceNumbers: invoiceNumbers, 
     processOrderId:processOrderId
-    // Remove the single invNo property as it's now replaced with invoiceNumbers array
+   
   });
-  
-  // Clear selection after navigation
+
   clearSelection();
 };
 
-// Also update the handleRowPress function for single item navigation:
+
 const handleRowPress = (item: OrderData) => {
   if (isSelectionMode) {
-    // If in selection mode, toggle selection
+    
     handleItemSelect(item);
   } else if (canSelectItem(item)) {
-    // If not in selection mode and item can be selected, navigate directly
-    console.log("Single item navigation:", item);
+
+   // console.log("Single item navigation:", item);
     navigation.navigate('PassTarget' as any, { 
       officerId: officerId,
       selectedItems: [item.distributedTargetItemId],
       collectionOfficerId: collectionOfficerId,
-      invoiceNumbers: [item.invNo] // Pass as array for consistency
+      invoiceNumbers: [item.invNo] 
     });
   }
-  // No action for opened or completed items when not in selection mode
+  
 };
 
-  // Handle confirmation modal cancel button
+
   const handleCancelPass = () => {
     setShowConfirmModal(false);
   };
 
-  // Updated: Helper function to handle selected items action (now shows confirmation)
+ 
   const handleSelectedItemsAction = () => {
     handlePassButtonPress();
   };
 
-  // Fetch Targets API
+ 
   const fetchTargets = async () => {
     setLoading(true);
     const startTime = Date.now();
@@ -362,9 +358,9 @@ const handleRowPress = (item: OrderData) => {
       );
 
       const allData = response.data.data;
-      console.log("Fetched data:", allData);
+      //console.log("Fetched data:", allData);
       
-      // Filter data based on status and completion
+    
       const todoItems = allData.filter((item: OrderData) => 
         item.selectedStatus !== 'Completed' && item.complete === 0
       );
@@ -372,13 +368,13 @@ const handleRowPress = (item: OrderData) => {
         item.selectedStatus === 'Completed' || item.complete === 1
       );
       
-      console.log("Todo items:", todoItems);
-      console.log("Completed items:", completedItems);
+    //  console.log("Todo items:", todoItems);
+     // console.log("Completed items:", completedItems);
 
       setTodoData(todoItems);
       setCompletedData(completedItems);
       
-      // Set invoice number from first item
+    
       if (allData && allData.length > 0) {
         setInvoNo(allData[0].invNo || '');
       }
@@ -397,16 +393,16 @@ const handleRowPress = (item: OrderData) => {
     }
   };
 
-  // Refresh Data Every Time the Screen is Focused
+  
   useFocusEffect(
     React.useCallback(() => {
       fetchTargets();
-      // Clear selection when screen focuses
+     
       clearSelection();
     }, [collectionOfficerId])
   );
 
-  // Refreshing function for Pull-to-Refresh
+ 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchTargets();
@@ -414,10 +410,10 @@ const handleRowPress = (item: OrderData) => {
     setRefreshing(false);
   }, [collectionOfficerId]);
 
-  // Handle toggle change
+
   const handleToggleChange = (toggle: string) => {
     setSelectedToggle(toggle);
-    clearSelection(); // Clear selection when switching tabs
+    clearSelection();
   };
 
   const displayedData = selectedToggle === "ToDo" ? todoData : completedData;
@@ -667,21 +663,11 @@ const getStatusTextColor = (status: string) => {
                 <Text className="text-center font-medium text-gray-800">
                   {item.invNo || `INV${item.processOrderId.toString().padStart(6, '0')}`}
                 </Text>
-                {/* Red dot indicator for locked packages */}
-                {/* {item.packageIsLock === 1 && (
-                  <View className="absolute right-1 top-1 w-3 h-3 bg-red-500 rounded-full"></View>
-                )} */}
+        
               </View>
 
               {selectedToggle === 'ToDo' ? (
-                /* Status */
-                // <View className="flex-[2] items-center justify-center px-2">
-                //   <View className={`px-3 py-2 rounded-full border ${getStatusColor(item.selectedStatus)}`}>
-                //     <Text className="text-xs font-medium text-center text-gray-800">
-                //       {getStatusText(item.selectedStatus)}
-                //     </Text>
-                //   </View>
-                // </View>
+           
                  <View className="flex-[2] items-center justify-center px-2">
     <View className={`px-3 py-2 rounded-full border ${getStatusColor(item.selectedStatus)}`}>
       <Text className={`text-xs font-medium text-center ${getStatusTextColor(item.selectedStatus)}`}>
@@ -690,7 +676,7 @@ const getStatusTextColor = (status: string) => {
     </View>
   </View>
               ) : (
-                /* Completed Time */
+             
                 <View className="flex-[2] items-center justify-center px-2">
                   <Text className="text-center text-gray-600 text-sm">
                     {item.completeTime ? formatCompletionTime(item.completeTime) : 'N/A'}

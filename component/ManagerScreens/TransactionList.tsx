@@ -97,7 +97,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
         `${environment.API_BASE_URL}api/collection-manager/transaction-list?collectionOfficerId=${collectionOfficerId}&date=${date}`
       );
       const data = await response.json();
-      console.log("Transactions:", data);
+   //   console.log("Transactions:", data);
 
       if (response.ok) {
         const formattedData = data.map((transaction: any) => ({

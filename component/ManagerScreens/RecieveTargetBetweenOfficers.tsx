@@ -105,7 +105,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
         }
       );
 
-      console.log("Officers:", response.data.data);
+    //  console.log("Officers:", response.data.data);
 
       if (response.data.status === 'success') {
         // const formattedOfficers = response.data.data.map((officer: any) => ({
@@ -157,7 +157,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
         }
       );
   
-      console.log("Daily Target Response:", response.data);
+    //  console.log("Daily Target Response:", response.data);
   
       if (response.data.status === 'success' && response.data.data) {
         const { target, complete } = response.data.data;

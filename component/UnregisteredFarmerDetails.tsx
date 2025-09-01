@@ -223,10 +223,10 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
         NICnumber: NICnumber,
       };
 
-      console.log(checkBody);
+    //  console.log(checkBody);
       console.log("Full API URL:", `${api.defaults.baseURL}${checkApiUrl}`);
       const checkResponse = await api.post(checkApiUrl, checkBody);
-      console.log("API Response:", checkResponse.data);
+    //  console.log("API Response:", checkResponse.data);
 
       if (checkResponse.data.message === "This Phone Number already exists.") {
         Alert.alert(
@@ -437,11 +437,9 @@ const handleAccountNameChange = (text: string) => {
       style={{ flex: 1}}
     >
       <View className="flex-1 p-5 bg-white">
-        {/* Header with Back Icon */}
+  
         <View className="flex-row items-center mb-4">
-          {/* <TouchableOpacity onPress={() => navigation.goBack()}>
-            <AntDesign name="left" size={22} color="#000" />
-          </TouchableOpacity> */}
+          
            <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
                                              <AntDesign name="left" size={24} color="#000502" />
                                            </TouchableOpacity>

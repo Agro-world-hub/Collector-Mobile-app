@@ -29,9 +29,6 @@ import NetInfo from "@react-native-community/netinfo";
 import i18n from "@/i18n/i18n";
 
 
-
-
-// Define the Order interface
 interface OrderItem {
   id: string;
   invoiceNo: string;
@@ -58,12 +55,12 @@ interface FamilyPackItem {
   productType: number;
   packageQty: number;
   productTypeName: string;
-  packageId: number; // Add package reference
-  packageName: string; // Add package name reference
-  originalItemId: number; // Keep original item ID for API calls
+  packageId: number; 
+  packageName: string; 
+  originalItemId: number; 
 }
 
-// Add interface for package groups if you want to group items by package
+
 interface PackageGroup {
   packageId: number;
   packageName: string;
@@ -216,20 +213,18 @@ const [packageId, setPackageId] = useState<number | null>(null);
 const [isDataLoaded, setIsDataLoaded] = useState(false);
 
 const [typeName, setTypeeName] = useState<string>('');
-  //const [completedTime, setCompletedTime] = useState<string | null>(item.completedTime || null);
-
-  // Sample data for family pack items
+ 
   const [familyPackItems, setFamilyPackItems] = useState<FamilyPackItem[]>([
   
   ]);
 const [retailItems, setRetailItems] = useState<RetailItem[]>([]);
 const [loadingRetailItems, setLoadingRetailItems] = useState(false);
-  // Sample data for additional items
+ 
   const [additionalItems, setAdditionalItems] = useState<AdditionalItem[]>([
   
   ]);
 
-  console.log("dcbkisai",status)
+//  console.log("dcbkisai",status)
 
   console.log("ordreid",item.orderId)
 const [loading, setLoading] = useState<boolean>(true);
@@ -240,7 +235,7 @@ const [isLoading, setIsLoading] = useState(false);
 const [successModalShown, setSuccessModalShown] = useState(false);
 const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-// Add this useEffect to handle the 2-second loading delay
+
 useEffect(() => {
   const loadingTimer = setTimeout(() => {
     setIsLoading(false);
@@ -267,7 +262,7 @@ const fetchUserProfile = async () => {
       }
     );
 
-    // Safely extract jobRole with fallback to null
+   
     const role = response.data?.data?.jobRole || null;
     setJobRole(role);
     
@@ -279,7 +274,7 @@ const fetchUserProfile = async () => {
   }
 };
 
-// Usage example:
+
 useEffect(() => {
   fetchUserProfile();
 }, []);
@@ -288,7 +283,7 @@ console.log("Current job role:", jobRole);
 
 
   
-  // Fetch selected language
+  
   const fetchSelectedLanguage = async () => {
     try {
       const lang = await AsyncStorage.getItem("@user_language");
@@ -301,7 +296,7 @@ console.log("Current job role:", jobRole);
 
 const fetchOrderData = async (orderId: string) => {
   try {
-    // Get auth token from AsyncStorage
+
     const token = await AsyncStorage.getItem('token');
     
     if (!token) {
@@ -320,11 +315,11 @@ const fetchOrderData = async (orderId: string) => {
       }
     );
 
-    console.log("datakbj===================",response.data)
+   // console.log("datakbj===================",response.data)
 
     if (response.data && response.data.success) {
       setIsDataLoaded(true);
-      return response.data.data; // Assuming the API returns { success: true, data: orderData }
+      return response.data.data;
     } else {
       throw new Error(response.data.message || 'Failed to fetch order data');
     }
@@ -335,7 +330,7 @@ const fetchOrderData = async (orderId: string) => {
       if (error.response?.status === 401) {
      //   Alert.alert(t("Error"), "Session expired. Please login again.");
       Alert.alert(t("Error.Error"), t("Error.Session expired") );
-        // Navigate to login screen or handle logout
+        
         return null;
       } else if (error.response?.status === 404) {
        // Alert.alert(t("Error"), "Order not found");
@@ -351,7 +346,7 @@ const fetchOrderData = async (orderId: string) => {
 };
 
 
-// Add these debug console logs in your fetchOrderData function to see what's happening
+
 
 useEffect(() => {
   const loadOrderData = async () => {
@@ -359,45 +354,44 @@ useEffect(() => {
     const orderData = await fetchOrderData(item.orderId);
     
     if (orderData) {
-      console.log('=== DEBUG ORDER DATA ===');
-      console.log('Full Order Data:', JSON.stringify(orderData, null, 2));
+    //  console.log('=== DEBUG ORDER DATA ===');
+    //  console.log('Full Order Data:', JSON.stringify(orderData, null, 2));
       
       // Debug each package
       if (orderData.packageData && Array.isArray(orderData.packageData)) {
         orderData.packageData.forEach((packageInfo: any, packageIndex: number) => {
-          console.log(`=== PACKAGE ${packageIndex + 1} DEBUG ===`);
-          console.log('Package Info:', JSON.stringify(packageInfo, null, 2));
+     //     console.log(`=== PACKAGE ${packageIndex + 1} DEBUG ===`);
+     //     console.log('Package Info:', JSON.stringify(packageInfo, null, 2));
           
           if (packageInfo.items && Array.isArray(packageInfo.items)) {
             packageInfo.items.forEach((item: any, itemIndex: number) => {
-              console.log(`Item ${itemIndex + 1}:`, {
-                productName: item.productName,
-                isPacked: item.isPacked,
-                isPackedType: typeof item.isPacked,
-                isPackedValue: item.isPacked === 1,
-                isPackedStrictEqual: item.isPacked === "1"
-              });
+              // console.log(`Item ${itemIndex + 1}:`, {
+              //   productName: item.productName,
+              //   isPacked: item.isPacked,
+              //   isPackedType: typeof item.isPacked,
+              //   isPackedValue: item.isPacked === 1,
+              //   isPackedStrictEqual: item.isPacked === "1"
+              // });
             });
           }
         });
       }
       
-      // Debug additional items
+
       if (orderData.additionalItems && Array.isArray(orderData.additionalItems)) {
-        console.log('=== ADDITIONAL ITEMS DEBUG ===');
+      //  console.log('=== ADDITIONAL ITEMS DEBUG ===');
         orderData.additionalItems.forEach((item: any, itemIndex: number) => {
-          console.log(`Additional Item ${itemIndex + 1}:`, {
-            productName: item.productName,
-            isPacked: item.isPacked,
-            isPackedType: typeof item.isPacked,
-            isPackedValue: item.isPacked === 1,
-            isPackedStrictEqual: item.isPacked === "1"
-          });
+          // console.log(`Additional Item ${itemIndex + 1}:`, {
+          //   productName: item.productName,
+          //   isPacked: item.isPacked,
+          //   isPackedType: typeof item.isPacked,
+          //   isPackedValue: item.isPacked === 1,
+          //   isPackedStrictEqual: item.isPacked === "1"
+          // });
         });
       }
       
-      // Continue with your existing mapping logic...
-      // But update the selected mapping to handle both number and string
+      
       
       let allFamilyPackItems: FamilyPackItem[] = [];
       let packageNames: string[] = [];
@@ -410,7 +404,7 @@ useEffect(() => {
         
      
         if (packageInfo.packageName) {
-  // Display package name with quantity if > 1
+
   const displayName = packageQty > 1 
     ? `${packageInfo.packageName} (x${packageQty})`
     : packageInfo.packageName;
@@ -450,36 +444,36 @@ useEffect(() => {
       });
     }
       
-      // Fix: Handle additional items isPacked the same way
+   
       const mappedAdditionalItems: AdditionalItem[] = orderData.additionalItems?.map((item: any) => {
         const isPackedValue = item.isPacked === 1 || item.isPacked === "1" || item.isPacked === true;
         
-        console.log(`Mapping additional ${item.productName}:`, {
-          originalIsPacked: item.isPacked,
-          mappedSelected: isPackedValue
-        });
+        // console.log(`Mapping additional ${item.productName}:`, {
+        //   originalIsPacked: item.isPacked,
+        //   mappedSelected: isPackedValue
+        // });
         
         return {
           id: item.id.toString(),
           name: item.productName,
           weight: `${item.qty}`,
-          selected: isPackedValue, // Updated logic
+          selected: isPackedValue, 
           price: item.price || item.normalPrice || "0"
         };
       }) || [];
 
-      console.log('=== FINAL MAPPED DATA ===');
-      console.log('Family Pack Items:', allFamilyPackItems.map(item => ({
-        name: item.name,
-        selected: item.selected,
-        packageName: item.packageName
-      })));
-      console.log('Additional Items:', mappedAdditionalItems.map(item => ({
-        name: item.name,
-        selected: item.selected
-      })));
+      // console.log('=== FINAL MAPPED DATA ===');
+      // console.log('Family Pack Items:', allFamilyPackItems.map(item => ({
+      //   name: item.name,
+      //   selected: item.selected,
+      //   packageName: item.packageName
+      // })));
+      // console.log('Additional Items:', mappedAdditionalItems.map(item => ({
+      //   name: item.name,
+      //   selected: item.selected
+      // })));
 
-      // Rest of your existing code...
+ 
       if (packageNames.length > 0) {
         setPackageName(packageNames.join(' + '));
       }
@@ -491,7 +485,7 @@ useEffect(() => {
       setFamilyPackItems(allFamilyPackItems);
       setAdditionalItems(mappedAdditionalItems);
       
-      // Update status logic...
+     
       const allFamilyPacked = allFamilyPackItems.length === 0 || allFamilyPackItems.every(item => item.selected);
       const allAdditionalPacked = mappedAdditionalItems.length === 0 || mappedAdditionalItems.every(item => item.selected);
       const someFamilyPacked = allFamilyPackItems.some(item => item.selected);
@@ -520,38 +514,38 @@ useEffect(() => {
   fetchSelectedLanguage();
 }, [item.orderId, t]);
 
-// Also add debug logs to your toggle functions to see if they're working:
+
 
 useEffect(() => {
   if (orderStatus === 'Completed') {
-    // Disable all editing capabilities
+    
     setHasUnsavedChanges(false);
     setShowCompletionPrompt(false);
     resetCountdown();
   }
 }, [orderStatus]);
 
-// Update the toggle functions to prevent interaction when completed
+
 const toggleFamilyPackItem = (id: string) => {
-  if (orderStatus === 'Completed') return; // Prevent editing completed orders
+  if (orderStatus === 'Completed') return; 
   
-  console.log('=== TOGGLE FAMILY PACK ITEM ===');
+//  console.log('=== TOGGLE FAMILY PACK ITEM ===');
   console.log('Toggling item ID:', id);
   
   setFamilyPackItems(prev => {
     const updated = prev.map(item => {
       if (item.id === id) {
-        console.log(`Toggling ${item.name} from ${item.selected} to ${!item.selected}`);
+     //   console.log(`Toggling ${item.name} from ${item.selected} to ${!item.selected}`);
         return { ...item, selected: !item.selected };
       }
       return item;
     });
     
-    console.log('Updated family pack items:', updated.map(item => ({
-      name: item.name,
-      selected: item.selected,
-      id: item.id
-    })));
+    // console.log('Updated family pack items:', updated.map(item => ({
+    //   name: item.name,
+    //   selected: item.selected,
+    //   id: item.id
+    // })));
     
     return updated;
   });
@@ -559,10 +553,10 @@ const toggleFamilyPackItem = (id: string) => {
 };
 
 const toggleAdditionalItem = (id: string) => {
-  if (orderStatus === 'Completed') return; // Prevent editing completed orders
+  if (orderStatus === 'Completed') return; 
   
-  console.log('=== TOGGLE ADDITIONAL ITEM ===');
-  console.log('Toggling additional item ID:', id);
+  // console.log('=== TOGGLE ADDITIONAL ITEM ===');
+  // console.log('Toggling additional item ID:', id);
   
   setAdditionalItems(prev => {
     const updated = prev.map(item => {
@@ -573,49 +567,21 @@ const toggleAdditionalItem = (id: string) => {
       return item;
     });
     
-    console.log('Updated additional items:', updated.map(item => ({
-      name: item.name,
-      selected: item.selected,
-      id: item.id
-    })));
+    // console.log('Updated additional items:', updated.map(item => ({
+    //   name: item.name,
+    //   selected: item.selected,
+    //   id: item.id
+    // })));
     
     return updated;
   });
   setHasUnsavedChanges(true);
 };
 
-// Update the timer effect to not trigger for completed orders
-// useEffect(() => {
-//   // BULLETPROOF: Only check items, don't trigger multiple times
-//   if (orderCompletionState !== 'idle' || orderStatus === 'Completed') return;
-  
-//   const hasFamily = familyPackItems.length > 0;
-//   const hasAdditional = additionalItems.length > 0;
-  
-//   let allSelected = false;
-  
-//   if (hasFamily && hasAdditional) {
-//     allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
-//   } else if (hasFamily && !hasAdditional) {
-//     allSelected = areAllFamilyPackItemsSelected();
-//   } else if (!hasFamily && hasAdditional) {
-//     allSelected = areAllAdditionalItemsSelected();
-//   }
-  
-//   if (allSelected && !showCompletionPrompt && !countdownInterval) {
-//     console.log('All items selected - starting countdown');
-//     startCountdown();
-//   } else if (!allSelected && showCompletionPrompt) {
-//     console.log('Not all items selected - stopping countdown');
-//     setShowCompletionPrompt(false);
-//     resetCountdown();
-//   }
-// }, [familyPackItems, additionalItems, orderStatus]);
 
 
-// Replace the problematic useEffect with this:
 useEffect(() => {
-  // Only check completion status, don't trigger modal automatically
+  
 
   if (orderCompletionState !== 'idle' || orderStatus === 'Completed' || isUserInitiatedCompletion) return;
   
@@ -632,14 +598,14 @@ useEffect(() => {
     allSelected = areAllAdditionalItemsSelected();
   }
   
-  // ONLY update status, don't show completion prompt automatically
+ 
   if (allSelected) {
-    // Just update the visual status, don't trigger the modal
+   
     console.log('All items selected - updating status only');
   }
 }, [familyPackItems, additionalItems, orderStatus]);
 
-// Update helper functions to handle empty arrays
+
 const hasFamilyPackSelections = () => {
   return familyPackItems.length > 0 && familyPackItems.some(item => item.selected);
 };
@@ -674,7 +640,7 @@ useEffect(() => {
 
 
 
-// Clean up interval on unmount
+
 useEffect(() => {
   return () => {
     if (countdownInterval) {
@@ -686,7 +652,7 @@ useEffect(() => {
 
 
 const handleCompleteOrder = async () => {
-    // BULLETPROOF: Single state check prevents all multiple calls
+ 
     if (orderCompletionState !== 'idle') {
         console.log('handleCompleteOrder blocked - state is:', orderCompletionState);
         return;
@@ -701,13 +667,13 @@ const handleCompleteOrder = async () => {
   }
     
     try {
-        // Update UI state
+    
         setOrderStatus('Completed');
         setCompletedTime(new Date().toLocaleString());
         setShowCompletionPrompt(false);
         resetCountdown();
 
-        // Prepare API data
+       
         const flatPackageItems = familyPackItems.map(item => ({
             id: item.originalItemId,
             isPacked: 1
@@ -745,7 +711,7 @@ const handleCompleteOrder = async () => {
             setAdditionalItems(prev => prev.map(item => ({ ...item, selected: true })));
             setHasUnsavedChanges(false);
             
-            // Call distributed target API
+          
             try {
                 await axios.put(
                     `${environment.API_BASE_URL}api/distribution/update-distributed-target/${item.orderId}`,
@@ -762,10 +728,10 @@ const handleCompleteOrder = async () => {
                 console.error('Error updating distributed target:', distributedTargetError);
             }
             
-            // BULLETPROOF: Set completion state and show modal
+           
             setOrderCompletionState('completed');
             setShowSuccessModal(true);
-            console.log('Order completed successfully - modal should show');
+          //  console.log('Order completed successfully - modal should show');
             
         } else {
             throw new Error(response.data.message || t("PendingOrderScreen.Failed to complete order"));
@@ -796,13 +762,13 @@ const handleCompleteOrder = async () => {
 };
 
 const startCountdown = () => {
-    // BULLETPROOF: Don't start if already completing/completed
+    
     if (orderCompletionState !== 'idle') {
-        console.log('Countdown blocked - completion state is:', orderCompletionState);
+      //  console.log('Countdown blocked - completion state is:', orderCompletionState);
         return;
     }
     
-    console.log('Starting countdown...');
+   // console.log('Starting countdown...');
     setCountdown(30);
     setShowCompletionPrompt(true);
     
@@ -811,7 +777,7 @@ const startCountdown = () => {
             if (prev <= 1) {
                 clearInterval(interval);
                 setCountdownInterval(null);
-                // BULLETPROOF: Only call if still in idle state
+                
                 if (orderCompletionState === 'idle') {
                     handleCompleteOrder();
                 }
@@ -825,11 +791,7 @@ const startCountdown = () => {
 
 
 
-  // const handleBackToEdit = () => {
-  //   setShowCompletionPrompt(false);
-  //   resetCountdown();
-  // };
-  // Replace product form data
+
   const [replaceData, setReplaceData] = useState<ReplaceProductData>({
     selectedProduct: '',
     selectedProductPrice: '',
@@ -844,7 +806,7 @@ const startCountdown = () => {
                           replaceData.quantity && 
                           replaceData.price;
 
-  // Sample product options for replacement
+
   const productOptions = [
     'Apples',
     'Beans', 
@@ -857,7 +819,7 @@ const startCountdown = () => {
     'Tomatoes'
   ];
 
-  // Get selected items for custom section
+
   const getSelectedItems = () => {
     const selectedFamily = familyPackItems.filter(item => item.selected);
     const selectedAdditional = additionalItems.filter(item => item.selected);
@@ -875,7 +837,7 @@ const togglePackageExpansion = (packageId: number) => {
   }));
 };
 
-// Helper function to check if a package is expanded
+
 const isPackageExpanded = (packageId: number) => {
   return packageExpansions[packageId] || false;
 };
@@ -909,85 +871,7 @@ const getPackageGroups = () => {
 };
 
 
-// const handleReplaceProduct = (item: FamilyPackItem) => {
-//    if (orderStatus === 'Completed') {
-//     Alert.alert( t("Error.Info"),  t("Error.Cannot replace products in completed orders"));
-//     return;
-//   }
-  
-//   // Rest of your existing handleReplaceProduct code...
-//   if (!item) {
-//     console.log("No item provided to handleReplaceProduct");
-//     return;
-//   }
 
-//   // Add a small delay to ensure data is fully loaded
-//   setTimeout(() => {
-//     console.log("Original item data:", {
-//       name: item.name,
-//       price: item.price,
-//       weight: item.weight,
-//       productType: item.productType,
-//       id: item.id
-//     });
-
-//     // Validate required data before proceeding
-//     if (!item.price || item.price === undefined) {
-//       console.log("Price is undefined, attempting to fetch latest data");
-//       Alert.alert(
-//         t("Error.Error"),
-//         t("Error.Product price information is not available"),
-//         [{ text: t("Error.Ok") }]
-//       );
-//       return;
-//     }
-
-//     if (!item.productType || item.productType === undefined) {
-//       console.log("ProductType is undefined, using default");
-//       // You might want to set a default or fetch the latest data
-//     }
-
-//     const weightKg = parseFloat(item.weight) || 0;
-//     const itemPrice = parseFloat(item.price) || 0;
-    
-   
-//     const totalPrice = itemPrice.toFixed();
-    
-//     // If you need unit price per kg, calculate it from total price
-//     const unitPricePerKg = weightKg > 0 ? (itemPrice / weightKg) : '0.00';
-
-//     console.log("Price calculation:", {
-//       itemPrice,
-//       weightKg,
-//       totalPrice,
-//       unitPricePerKg,
-//       originalPrice: item.price,
-//       productType: item.productType
-//     });
-
-//     // Only proceed if we have valid data
-//     if (itemPrice > 0 && weightKg > 0) {
-//       setReplaceData({
-//         selectedProduct: `${item.name} - ${item.weight}Kg - Rs.${totalPrice}`,
-//         selectedProductPrice: totalPrice,
-//         productType: item.productType || 0, 
-//         newProduct: '',
-//         quantity: '',
-//         price: `Rs.${totalPrice}`, 
-//         productTypeName: item.productTypeName || ''
-//       });
-
-//       setSelectedItemForReplace(item);
-//       setShowReplaceModal(true);
-//     } else {
-//       Alert.alert(
-//         t("Error.Error"),
-//         t("Error.Invalid product data"),
-//         [{ text: t("Error.Ok") }]
-//       );
-//     }
-//   }, 100); // Small delay to ensure state is updated
-// };
 
 const handleReplaceProduct = (item: FamilyPackItem) => {
   if (orderStatus === 'Completed') {
@@ -1037,7 +921,7 @@ const handleReplaceSubmit = async () => {
   }
 
   try {
-    // Find the selected retail item to get its ID
+    
     const selectedRetailItem = retailItems.find(item => 
       item.displayName === replaceData.newProduct
     );
@@ -1046,30 +930,30 @@ const handleReplaceSubmit = async () => {
       throw new Error(t("PendingOrderScreen.Selected product not found"));
     }
 
-    // FIXED PRICE PARSING - Extract numeric price correctly
+   
     const priceValue = (() => {
-      console.log('=== PRICE PARSING DEBUG ===');
-      console.log('Original replaceData.price:', replaceData.price);
-      console.log('Type of replaceData.price:', typeof replaceData.price);
+      // console.log('=== PRICE PARSING DEBUG ===');
+      // console.log('Original replaceData.price:', replaceData.price);
+      // console.log('Type of replaceData.price:', typeof replaceData.price);
       
       if (!replaceData.price) return 0;
       
-      // Convert to string and extract all digits and decimal points
-      const priceString = replaceData.price.toString();
-      console.log('Price as string:', priceString);
       
-      // Use regex to match numbers (including decimals)
+      const priceString = replaceData.price.toString();
+    //  console.log('Price as string:', priceString);
+      
+   
       const match = priceString.match(/\d+\.?\d*/);
-      console.log('Regex match result:', match);
+   //   console.log('Regex match result:', match);
       
       if (!match) return 0;
       
       const numericValue = match[0];
-      console.log('Extracted numeric value:', numericValue);
+    //  console.log('Extracted numeric value:', numericValue);
       
       const parsed = parseFloat(numericValue);
-      console.log('Parsed float value:', parsed);
-      console.log('==============================');
+      // console.log('Parsed float value:', parsed);
+      // console.log('==============================');
       
       return isNaN(parsed) ? 0 : parsed;
     })();
@@ -1077,7 +961,7 @@ const handleReplaceSubmit = async () => {
     // Alternative simpler method (use this if the above works correctly)
     // const priceValue = parseFloat(replaceData.price.toString().replace(/[^0-9.]/g, '')) || 0;
 
-    console.log('Final priceValue that will be sent:', priceValue);
+  //  console.log('Final priceValue that will be sent:', priceValue);
 
     // Prepare the replacement request data
     const replacementRequest = {
@@ -1087,11 +971,11 @@ const handleReplaceSubmit = async () => {
       productType: selectedItemForReplace.productType,
       productId: selectedRetailItem.id,
       qty: replaceData.quantity,
-      price: priceValue, // Should be correct now (98 for "Rs.98", 2000 for "Rs.2000")
+      price: priceValue, 
       status: "Pending"
     };
 
-    console.log('Replacement request data:', replacementRequest);
+    //console.log('Replacement request data:', replacementRequest);
 
     // Get token and add validation
     const token = await AsyncStorage.getItem('token');
@@ -1106,7 +990,7 @@ const handleReplaceSubmit = async () => {
     return; 
   }
 
-    // Make API call to create replacement request
+
     const response = await axios.post(
       `${environment.API_BASE_URL}api/distribution/replace-order-package`,
       replacementRequest,
@@ -1151,7 +1035,7 @@ const handleReplaceSubmit = async () => {
   } catch (error) {
     console.error('Error submitting replacement request:', error);
     
-    // Enhanced error handling for different HTTP status codes
+
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 403) {
         console.log('403 Error Details:', error.response?.data);
@@ -1216,13 +1100,13 @@ const handleSubmit = async () => {
     return; 
   }
   try {
-    // **FIX: Create flat array of package items instead of grouped**
+
     const flatPackageItems = familyPackItems.map(item => ({
-      id: item.originalItemId, // Use original item ID for API
+      id: item.originalItemId, 
       isPacked: item.selected ? 1 : 0
     }));
 
-    // Prepare additional items update data (this was already correct)
+    
     const selectedAdditionalItems = additionalItems.map(item => ({
       id: parseInt(item.id),
       isPacked: item.selected ? 1 : 0
@@ -1237,18 +1121,18 @@ const handleSubmit = async () => {
 
     const updateData = {
       orderId: item.orderId,
-      packageItems: flatPackageItems, // **FIXED: Now sending flat array**
+      packageItems: flatPackageItems, 
       additionalItems: selectedAdditionalItems,
       status: newStatus,
       isComplete: newStatus === 'Completed' ? 1 : 0
     };
 
-    console.log('Submitting order update with flat package items:', updateData);
+ //   console.log('Submitting order update with flat package items:', updateData);
     
-    // Get auth token
+
     const token = await AsyncStorage.getItem('token');
     
-    // Make API call to update the order
+
     const response = await axios.put(
       `${environment.API_BASE_URL}api/distribution/update-order/${item.orderId}`,
       updateData,
@@ -1266,9 +1150,9 @@ const handleSubmit = async () => {
       if (newStatus === 'Completed') {
         setCompletedTime(new Date().toLocaleString());
         
-        // Call distributed target API for completed order
+    
         try {
-          console.log('Calling distributed target API for completed order...');
+          
           
           const distributedTargetResponse = await axios.put(
             `${environment.API_BASE_URL}api/distribution/update-distributed-target/${item.orderId}`,
@@ -1282,7 +1166,7 @@ const handleSubmit = async () => {
           );
 
           if (distributedTargetResponse.data.success) {
-            console.log('Distributed target updated successfully');
+            
           } else {
             console.warn('Distributed target update failed:', distributedTargetResponse.data.message);
           }
@@ -1312,61 +1196,7 @@ const handleSubmit = async () => {
 };
 
 
-// const handleSubmitPress = () => {
-//   const hasFamily = familyPackItems.length > 0;
-//   const hasAdditional = additionalItems.length > 0;
-  
-//   let allSelected = false;
-  
-//   if (hasFamily && hasAdditional) {
-//     allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
-//   } else if (hasFamily && !hasAdditional) {
-//     allSelected = areAllFamilyPackItemsSelected();
-//   } else if (!hasFamily && hasAdditional) {
-//     allSelected = areAllAdditionalItemsSelected();
-//   }
-  
-//   if (allSelected) {
-//     // If all items are selected, show completion prompt
-//     if (!showCompletionPrompt) {
-//       setShowCompletionPrompt(true);
-//       startCountdown();
-//     }
-//   } else {
-//     // If not all items are selected, submit immediately
-//     handleSubmit();
-//   }
-// }
 
-// const handleSubmitPress = () => {
-//   const hasFamily = familyPackItems.length > 0;
-//   const hasAdditional = additionalItems.length > 0;
-  
-//   let allSelected = false;
-  
-//   if (hasFamily && hasAdditional) {
-//     allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
-//   } else if (hasFamily && !hasAdditional) {
-//     allSelected = areAllFamilyPackItemsSelected();
-//   } else if (!hasFamily && hasAdditional) {
-//     allSelected = areAllAdditionalItemsSelected();
-//   }
-  
-//   if (allSelected) {
-//     // If user clicks Save AND all items are selected, show completion prompt
-//     console.log('User clicked Save with all items selected - showing completion prompt');
-//     setShowCompletionPrompt(true);
-//     startCountdown();
-//   } else {
-//     // If not all items are selected, submit immediately
-//     console.log('Not all items selected - submitting immediately');
-//     handleSubmit();
-//   }
-// }
-
-
-
-// Update handleSubmitPress
 const handleSubmitPress = () => {
   const hasFamily = familyPackItems.length > 0;
   const hasAdditional = additionalItems.length > 0;
@@ -1382,7 +1212,7 @@ const handleSubmitPress = () => {
   }
   
   if (allSelected) {
-    // Mark as user-initiated and show completion prompt
+  
     setIsUserInitiatedCompletion(true);
     setShowCompletionPrompt(true);
     startCountdown();
@@ -1392,14 +1222,8 @@ const handleSubmitPress = () => {
   }
 }
 
-// Update the useEffect to respect user initiation
-// useEffect(() => {
-//   if (orderCompletionState !== 'idle' || orderStatus === 'Completed' || isUserInitiatedCompletion) return;
-  
-//   // ... rest of the logic for automatic status update only
-// }, [familyPackItems, additionalItems, orderStatus, isUserInitiatedCompletion]);
 
-// Reset the flag when modal closes
+
 const handleBackToEdit = () => {
   setShowCompletionPrompt(false);
   setIsUserInitiatedCompletion(false); // Reset the flag
@@ -1439,11 +1263,7 @@ useEffect(() => {
   }
 };
 
-//const statusStyles = getStatusStyling();
 
-
-
-// Update the fetchRetailItems function
 const fetchRetailItems = async () => {
   try {
     setLoadingRetailItems(true);
@@ -1487,27 +1307,20 @@ const fetchRetailItems = async () => {
   }
 };
 
-// Call this when the replace modal opens
+
 useEffect(() => {
   if (showReplaceModal) {
     fetchRetailItems();
   }
 }, [showReplaceModal]);
 
-// Update the renderReplaceModal function
+
 const renderReplaceModal = () => {
   const isFormComplete = replaceData.newProduct && 
                          replaceData.quantity && 
                          replaceData.price;
 
-  // const handleProductSelect = (product: RetailItem) => {
-  //   setReplaceData(prev => ({
-  //     ...prev,
-  //     newProduct: product.displayName,
-  //     price: `Rs.${(product.discountedPrice || product.normalPrice || 0).toFixed(2)}`
-  //   }));
-  //   setShowDropdown(false);
-  // };
+ 
 
   const handleProductSelect = (product: RetailItem) => {
   const selectedProductPrice = parseFloat(replaceData.selectedProductPrice) || 0;
@@ -1544,19 +1357,7 @@ const handleQuantityChange = (text: string) => {
   }
 };
 
-  // const handleQuantityChange = (text: string) => {
-  //   if (/^\d*\.?\d*$/.test(text)) {
-  //     const selectedProduct = retailItems.find(item => 
-  //       item.displayName === replaceData.newProduct
-  //     );
-  //     const price = selectedProduct ? (selectedProduct.discountedPrice || selectedProduct.normalPrice || 0) : 0;
-  //     setReplaceData(prev => ({
-  //       ...prev,
-  //       quantity: text,
-  //       price: text ? `Rs.${(parseFloat(text) * price).toFixed(2)}` : `Rs.${price.toFixed(2)}`
-  //     }));
-  //   }
-  // };
+
 
   // Get product type name for display
   const getProductTypeName = (productType: string) => {
@@ -1697,26 +1498,7 @@ const handleQuantityChange = (text: string) => {
   );
 };
 
-//   const getDynamicStatus = (): 'Pending' | 'Opened' | 'Completed' => {
-//   const hasFamily = familyPackItems.length > 0;
-//   const hasAdditional = additionalItems.length > 0;
-  
-//   let allSelected = false;
-//   let someSelected = false;
-  
-//   if (hasFamily && hasAdditional) {
-//     allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
-//     someSelected = hasFamilyPackSelections() || hasAdditionalItemSelections();
-//   } else if (hasFamily && !hasAdditional) {
-//     allSelected = areAllFamilyPackItemsSelected();
-//     someSelected = hasFamilyPackSelections();
-//   } else if (!hasFamily && hasAdditional) {
-//     allSelected = areAllAdditionalItemsSelected();
-//     someSelected = hasAdditionalItemSelections();
-//   }
-  
-//   return allSelected ? 'Completed' : someSelected ? 'Opened' : 'Pending';
-// };
+
 
 const getDynamicStatus = (): 'Pending' | 'Opened' | 'Completed' => {
   const hasFamily = familyPackItems.length > 0;
@@ -1817,7 +1599,7 @@ const DynamicStatusBadge = () => {
         transparent={true}
         animationType="fade"
         onRequestClose={() => {
-            console.log('Modal closing...');
+            
             setShowSuccessModal(false);
            // setOrderCompletionState('idle'); // Reset for next time
             navigation.goBack();
@@ -1838,7 +1620,7 @@ const DynamicStatusBadge = () => {
                 <TouchableOpacity 
                     className="bg-black py-3 rounded-full"
                     onPress={() => {
-                        console.log('OK button pressed - closing modal');
+                        
                         setShowSuccessModal(false);
                         setOrderCompletionState('idle'); // Reset for next time
                         setTimeout(() => {
@@ -1857,7 +1639,7 @@ const DynamicStatusBadge = () => {
 
 useEffect(() => {
     return () => {
-        console.log('Component unmounting - cleaning up');
+        
         setShowSuccessModal(false);
         setShowCompletionPrompt(false);
         setOrderCompletionState('idle');
@@ -2126,17 +1908,7 @@ return (
       </View>
     </View>
 
-    {/* Loading State */}
-    {/* {isLoading ? (
-      <View className="flex-1 justify-center items-center py-20">
-        <LottieView
-          source={require('../../assets/lottie/newLottie.json')}
-          autoPlay
-          loop
-          style={{ width: 200, height: 200 }}
-        />
-      </View>
-    ) : ( */}
+  
     {isLoading || !isDataLoaded ? (
         <View className="flex-1 justify-center items-center py-20">
           <LottieView
@@ -2174,19 +1946,7 @@ return (
           } ${orderStatus === 'Completed' ? 'opacity-100' : ''}`}
           onPress={() => togglePackageExpansion(packageGroup.packageId)}
         >
-          {/* <View className="flex-row items-center">
-            <Text className="text-[#000000] font-medium">
-              {packageGroup.packageName}
-            </Text>
-            {packageGroup.packageQty > 1 && (
-              <Text className="text-black font-bold ml-1">
-                (x{packageGroup.packageQty})
-              </Text>
-            )}
-            {orderStatus === 'Completed' && packageGroup.allSelected && (
-              <Text className="text-[#000000] font-medium ml-1">✓</Text>
-            )}
-          </View> */}
+    
           <View className="flex-row items-center">
   <Text className="text-[#000000] font-normal">
     {packageGroup.packageName}
@@ -2222,19 +1982,7 @@ return (
                           className="flex-row justify-between items-center py-3 border-b border-gray-100 last:border-b-0"
                         >
                           <View className="flex-row items-center flex-1">
-                            {/* Don't show replace button for completed orders */}
-                            {/* {orderStatus !== 'Completed' && (
-            <TouchableOpacity
-              className="w-8 h-8 items-center justify-center mr-3"
-              onPress={() => handleReplaceProduct(item)}
-            >
-              {item.selected ? (
-                <Image source={disable} style={{ width: 20, height: 20 }}/>
-              ) : (
-                <Image source={RedIcon} style={{ width: 20, height: 20 }}/>
-              )}
-            </TouchableOpacity>
-          )} */}
+                         
           {orderStatus !== 'Completed' && (
   <View className="w-8 h-8 items-center justify-center mr-3">
     {item.selected ? (
@@ -2360,62 +2108,7 @@ return (
             </View>
           )}
 
-          {/* Warning Message - Only show for non-completed orders */}
-          {/* {showWarning && orderStatus !== 'Completed' && (
-            <View className="mx-4 mb-4 bg-white px-4 py-2">
-              <Text 
-                className="text-sm text-center italic"
-                style={{
-                  color: (() => {
-                    const hasFamily = familyPackItems.length > 0;
-                    const hasAdditional = additionalItems.length > 0;
-                    
-                    let allSelected = false;
-                    
-                    if (hasFamily && hasAdditional) {
-                      allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
-                    } else if (hasFamily && !hasAdditional) {
-                      allSelected = areAllFamilyPackItemsSelected();
-                    } else if (!hasFamily && hasAdditional) {
-                      allSelected = areAllAdditionalItemsSelected();
-                    }
-                    
-                    return orderStatus === 'Opened'
-                      ? '#FA0000'
-                      : allSelected
-                        ? '#308233'
-                        : '#FA0000';
-                  })()
-                }}
-              >
-                {orderStatus === 'Opened'
-                  ? ""
-                  : (() => {
-                      const hasFamily = familyPackItems.length > 0;
-                      const hasAdditional = additionalItems.length > 0;
-                      
-                      let allSelected = false;
-                      
-                      if (hasFamily && hasAdditional) {
-                        allSelected = areAllFamilyPackItemsSelected() && areAllAdditionalItemsSelected();
-                      } else if (hasFamily && !hasAdditional) {
-                        allSelected = areAllFamilyPackItemsSelected();
-                      } else if (!hasFamily && hasAdditional) {
-                        allSelected = areAllAdditionalItemsSelected();
-                      }
-                      
-                    //   return allSelected
-                    //     ? <>  {t("PendingOrderScreen.All checked")} <Text style={{ fontWeight: 'bold' }}> {t("PendingOrderScreen.Completed")} </Text> {t("PendingOrderScreen.onsave")}</>
-                    //     : <> {t("PendingOrderScreen.Unchecked items")} <Text style={{ fontWeight: 'bold' }}>{t("PendingOrderScreen.Opened")}</Text> {t("PendingOrderScreen.Status")}</>;
-                    // })()
-                     return allSelected
-                        ? <>  All checked. Order will move to <Text style={{ fontWeight: 'bold' }}> 'Completed' </Text> on save.</>
-                        : <> Unchecked items remain. Saving now keeps the order in  <Text style={{ fontWeight: 'bold' }}>'Opened'</Text> Status.</>;
-                    })()
-                }
-              </Text>
-            </View>
-          )} */}
+      
           {showWarning && orderStatus !== 'Completed' && (
   <View className="mx-4 mb-4 bg-white px-4 py-2">
     <Text
@@ -2439,35 +2132,14 @@ return (
   </View>
 )}
 
-          {/* Completed Order Summary - Show completion details */}
-          {/* {orderStatus === 'Completed' && (
-            <View className="mx-4 mb-4 bg-green-50 px-4 py-3 rounded-lg border border-green-200">
-              <Text className="text-green-800 text-center font-medium mb-2">
-                {t("This order has been completed")}
-              </Text>
-              {completedTime && (
-                <Text className="text-green-600 text-center text-sm">
-                  {t("Completed at")}: {completedTime}
-                </Text>
-              )}
-              
-      
-              <View className="mt-3 pt-3 border-t border-green-200">
-                <Text className="text-green-700 text-sm text-center">
-                  {t("Selected Items")}: {
-                    [...familyPackItems, ...additionalItems].filter(item => item.selected).length
-                  } / {familyPackItems.length + additionalItems.length}
-                </Text>
-              </View>
-            </View>
-          )} */}
+        
         </ScrollView>
 
           <UnsavedChangesModal />
         <SubmitModal />
         <SuccessModal /> 
 
-        {/* Fixed Submit Button - Hide for completed orders */}
+
         {orderStatus !== 'Completed' && (
           <View className="absolute bottom-0 left-2 right-2 bg-white px-4 py-4">
             <TouchableOpacity 

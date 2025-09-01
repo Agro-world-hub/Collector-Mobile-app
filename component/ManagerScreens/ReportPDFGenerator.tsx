@@ -1,4 +1,3 @@
-// ReportPDFGenerator.ts
 import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
 import axios from 'axios';
@@ -17,9 +16,9 @@ interface PaymentDataItem {
 }
 
 
-// sending the correct date form to the backend
+
 const normalizeDate = (dateString: string): string => {
-  // Replace slashes with dashes to normalize the format
+  
   return dateString.replace(/\//g, '-');
 };
 
@@ -30,22 +29,22 @@ const validateAndFormatDate = (dateString: string): string | null => {
     console.error(`Invalid date: ${dateString}`);
     return null;
   }
-  return date.toISOString().split('T')[0]; // Format as 'YYYY-MM-DD'
+  return date.toISOString().split('T')[0]; 
 };
 
 
-//generating the report id
+
 const reportCounters: { [key: string]: number } = {}; 
 
 const generateReportId = (officerId: string): string => {
-  // Initialize the counter for the officer if not already present
+ 
   if (!reportCounters[officerId]) {
     reportCounters[officerId] = 1;
   } else {
-    reportCounters[officerId] += 1; // Increment the counter
+    reportCounters[officerId] += 1; 
   }
 
-  // Format the report ID
+ 
   const paddedCount = reportCounters[officerId].toString().padStart(3, '0'); // Pads the count to 3 digits
   return `${officerId}M${paddedCount}`;
 };
@@ -76,7 +75,7 @@ export const handleGeneratePDF = async (
     }
     const { firstName, lastName, jobRole } = officerResponse.data.data;
 
-    // Fetch farmer payment summary with correctly formatted dates
+    
     const farmerPaymentsResponse = await axios.get(
       `${environment.API_BASE_URL}api/collection-manager/farmer-payments-summary`, {
         params: { collectionOfficerId, fromDate: formattedFromDate, toDate: formattedToDate },
@@ -90,19 +89,19 @@ export const handleGeneratePDF = async (
 
     const paymentData: PaymentDataItem[] = farmerPaymentsResponse.data.data;
 
-    // Normalize and format the response data
+   
     const formattedData = paymentData.map((item: PaymentDataItem) => ({
       ...item,
       date: normalizeResponseDate(item.date),
     }));
 
-    console.log('Formatted Payment Data:', formattedData);
+   // console.log('Formatted Payment Data:', formattedData);
 
-    // Calculate totals
+
     const totalWeight = paymentData.reduce((sum: number, item: { total: number }) => sum + item.total, 0);
     const totalFarmers = paymentData.reduce((sum: number, item: { TCount: number }) => sum + item.TCount, 0);
 
-   // Generate table rows
+  
    const tableRows = formattedData.length
    ? formattedData.map(
        item =>

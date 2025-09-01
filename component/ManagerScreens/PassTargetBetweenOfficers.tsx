@@ -95,7 +95,7 @@ const PassTargetBetweenOfficers: React.FC<
     fetchData();
   }, []);
 
-  console.log("Max Amount:", maxAmount);
+ // console.log("Max Amount:", maxAmount);
 
   // ✅ Set initial amount as max amount (`todo`)
   useEffect(() => {
@@ -133,7 +133,7 @@ const PassTargetBetweenOfficers: React.FC<
         }
       );
 
-      console.log("Officers:", response.data.data);
+     // console.log("Officers:", response.data.data);
 
       if (response.data.status === "success") {
         const filteredOfficers = response.data.data.filter(

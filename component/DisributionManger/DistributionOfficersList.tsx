@@ -62,8 +62,8 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
 
   const fetchSelectedLanguage = async () => {
     try {
-      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
-      setSelectedLanguage(lang || "en"); // Default to English if not set
+      const lang = await AsyncStorage.getItem("@user_language"); 
+      setSelectedLanguage(lang || "en"); 
     } catch (error) {
       console.error("Error fetching language preference:", error);
     }
@@ -77,8 +77,8 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
   const getTextStyle = (language: string) => {
     if (language === "si") {
       return {
-        fontSize: 14, // Smaller text size for Sinhala
-        lineHeight: 20, // Space between lines
+        fontSize: 14, 
+        lineHeight: 20, 
       };
     }
   };
@@ -96,10 +96,10 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
           },
         }
       );
-      console.log("data", response.data);
+      //console.log("data", response.data);
 
       if (response.data.status === "success") {
-        // Separate approved and not approved officers
+    
         const approvedOfficers = response.data.data.filter(
           (officer: Officer) => officer.status === "Approved"
         );
@@ -117,7 +117,7 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
             getOfficerName(a).localeCompare(getOfficerName(b))
         );
 
-        // Combine the sorted lists: approved officers first, then not approved
+       
         setOfficers([...sortedApprovedOfficers, ...sortedNotApprovedOfficers]);
       } else {
         setErrorMessage(t("Error.Failed to fetch officers."));
@@ -180,7 +180,7 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
       );
       setFilteredOfficers(filtered);
     } else {
-      setFilteredOfficers(officers); // Show all officers when no filter is selected
+      setFilteredOfficers(officers);
     }
   }, [selectedJobRole, officers]);
 
@@ -190,7 +190,7 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
         item.status === "Not Approved" ? "bg-gray-100" : "bg-gray-100"
       }`}
       onPress={() => {
-        // Prevent navigation if officer status is "Not Approved"
+   
         if (item.status !== "Not Approved") {
           navigation.navigate("DistributionOfficerSummary" as any, {
             officerId: item.empId,
@@ -202,14 +202,10 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
           });
         }
       }}
-      disabled={item.status === "Not Approved"} // Disable the TouchableOpacity when status is "Not Approved"
+      disabled={item.status === "Not Approved"}
     >
       <View className="w-14 h-14 rounded-full overflow-hidden justify-center items-center mr-4 shadow-md">
-        {/* <Image
-          source={require('../../assets/images/ava.webp')}
-          className="w-full h-full"
-          resizeMode="cover"
-        /> */}
+     
         <Image
           source={
             item.image
@@ -221,9 +217,7 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
       </View>
 
       <View className="flex-1">
-             {/* <Text className="text-red-500 text-xs font-semibold mr-2 self-end">
-          {t("CollectionOfficersList.Not Approved")}
-        </Text> */}
+          
            {item.status === "Not Approved" && (
         <Text className="text-red-500 text-xs font-semibold mr-2 self-end"
               style={[
@@ -251,13 +245,7 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
         <Text className="text-sm text-gray-500"> {t("DistributionOfficersList.EMPID")}  {item.empId}</Text>
       </View>
 
-      {/* {item.status === "Not Approved" && (
-        <Text className="text-red-500 text-xs font-semibold mr-2 mt-[-12%]">
-          {t("CollectionOfficersList.Not Approve")}
-        </Text>
-      )} */}
-
-      {/* Conditionally render the chevron icon based on the officer's status */}
+    
       {item.status !== "Not Approved" && (
         <Ionicons name="chevron-forward" size={scale(20)} color="#9CA3AF" />
       )}
@@ -382,8 +370,8 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
         <TouchableOpacity
           onPress={async () => {
             try {
-              await AsyncStorage.removeItem("officerFormData"); // Clear stored data
-              // navigation.navigate("AddOfficerBasicDetails" as any);
+              await AsyncStorage.removeItem("officerFormData"); 
+           
                             navigation.navigate("AddOfficerBasicDetails", {jobRolle:"Distribution Officer"});
 
 console.log("hirt")

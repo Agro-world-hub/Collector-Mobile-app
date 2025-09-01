@@ -88,7 +88,7 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({
           >
          <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
-        {/* <Text className="text-white text-lg font-semibold text-center w-full"> */}
+      
          <Text className="flex-1 text-center text-xl font-semibold text-white mr-[6%]">
           {getvarietyName()}
         </Text>

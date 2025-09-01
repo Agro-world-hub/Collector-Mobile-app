@@ -75,8 +75,8 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
     varietyNameSinhala,
     varietyNameTamil,
   } = route.params;
-  console.log("Hittt the page 2");
-  console.log("Initial Max Amount:", maxAmount);
+  // console.log("Hittt the page 2");
+  // console.log("Initial Max Amount:", maxAmount);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
 
   useEffect(() => {
@@ -120,7 +120,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
         }
       );
 
-      console.log("Officers:", response.data.data);
+     // console.log("Officers:", response.data.data);
 
       if (response.data.status === "success") {
         const formattedOfficers = response.data.data.map((officer: any) => ({
@@ -145,7 +145,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
 
   // ✅ Fetch Daily Target when officer is selected
   const fetchDailyTarget = async (officerId: string) => {
-    console.log("Selected Officer ID:", officerId);
+   // console.log("Selected Officer ID:", officerId);
     if (officerId === "0") {
       setAmount("");
       setMaxAmount(0);
@@ -166,10 +166,10 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
         }
       );
 
-      console.log("Daily Target Response:", response.data);
+    //  console.log("Daily Target Response:", response.data);
 
       if (response.data.status === "success" && response.data.data) {
-        console.log("Daily Target Data:", response.data.data);
+      //  console.log("Daily Target Data:", response.data.data);
         const { target, complete } = response.data.data;
         const calculatedTodo = parseFloat(target) - parseFloat(complete);
 
@@ -218,12 +218,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
   };
 
   const isSaveButtonDisabled = () => {
-    // Disable button if:
-    // 1. No officer selected or it's the default option
-    // 2. Amount is empty, not a number, or less than or equal to 0
-    // 3. Amount exceeds maxAmount
-    // 4. Loading state is active
-    // 5. Error message exists
+   
 
     const numericAmount = parseFloat(amount);
     return (

@@ -83,7 +83,7 @@ const CollectionRequests: React.FC<CollectionRequestsProps> = ({ navigation }) =
     return name;
   };
 
-  // Helper function to get route
+
   const getRoute = (route: string) => {
     return `Route: ${route}`;
   };
@@ -103,58 +103,7 @@ const CollectionRequests: React.FC<CollectionRequestsProps> = ({ navigation }) =
   };
 
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const fetchCollectionRequests = async () => {
-  //       setLoading(true); 
-  //       try {
-  //         const token = await AsyncStorage.getItem("token");
-  //         if (!token) {
-  //           Alert.alert('Error', 'Authentication token not found');
-  //           return;
-  //         }
-      
-  //         const headers = {
-  //           'Authorization': `Bearer ${token}`,
-  //           'Content-Type': 'application/json',
-  //         };
-      
-  //         // Build query params based on activeTab and selectedFilter
-  //         const queryParams = new URLSearchParams();
-  //         queryParams.append('status', activeTab);
-  //         if (selectedFilter && selectedFilter !== 'All') {
-  //           queryParams.append('requestStatus', selectedFilter); // Apply the selected filter
-  //         }
-      
-  //         const fullUrl = `${environment.API_BASE_URL}api/collectionrequest/all-collectionrequest?${queryParams.toString()}`;
-  //         console.log('Request URL:', fullUrl);
-      
-  //         const response = await axios.get(fullUrl, { headers });
-  //         const data = response.data;
-  //         console.log('Received Data:', data);
-      
-  //         if (activeTab === 'Not Assigned') {
-  //           setNotAssignedRequests(data);
-  //           setFilteredRequests(data);
-  //         } else {
-  //           setAssignedRequests(data);
-            
-  //           setFilteredRequests(
-  //             selectedFilter && selectedFilter !== 'All' 
-  //               ? data.filter((req: AssignedRequest) => req.assignedStatus === selectedFilter) 
-  //               : data
-  //           );
-  //         }
-  //       } catch (error) {
-  //         console.error('Fetch Collection Requests Error:', error);
-  //       }finally {
-  //         setLoading(false); // Set loading to false once data is fetched
-  //       }
-  //     };
 
-  //     fetchCollectionRequests();
-  //   }, [activeTab, selectedFilter])
-  // );
 useFocusEffect(
   useCallback(() => {
     setShowPicker(false); // Close the date picker when the screen is focused
@@ -311,19 +260,7 @@ useEffect(() => {
             {activeTab === 'Not Assigned' ? (
               <>
                <TouchableOpacity onPress={() => handleViewDetails(item)}>
-                {/* <TouchableOpacity 
-                  onPress={() => handleAssign(item as NotAssignedRequest)}
-                  className="bg-green-100 px-3 py-1 rounded-lg mr-2"
-                >
-                  <Text className="text-green-700 font-medium">Assign</Text>
-                </TouchableOpacity> */}
-               
-                  {/* <Image
-                    source={require("../../assets/images/View.webp")}
-                    className="h-[24px] w-[24px]"
-                    defaultSource={require("../../assets/images/View.webp")}
-                    resizeMode="contain"
-                  /> */}
+            
                 </TouchableOpacity>
               </>
             ) : (
@@ -346,12 +283,7 @@ useEffect(() => {
                   </Text>
                 </View>
                 <TouchableOpacity onPress={() => handleViewDetails(item)}>
-                  {/* <Image
-                    source={require("../../assets/images/View.webp")}
-                    className="h-[24px] w-[24px]"
-                    defaultSource={require("../../assets/images/View.webp")}
-                    resizeMode="contain"
-                  /> */}
+                
                 </TouchableOpacity>
               </>
             )}
@@ -363,18 +295,7 @@ useEffect(() => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/* <View className="p-4 bg-white">
-        <View className="flex-row items-center mb-6">
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <AntDesign name="left" size={24} color="#000" />
-          </TouchableOpacity>
-          <Text className="flex-1 text-center text-xl font-bold text-black">
-            Collection Requests
-          </Text>S
-        </View>
-      </View> */}
-            {/* <View className="p-4 bg-white">
-        {/* Navigation Header */}
+  
      <View className=" bg-white">
         <View className="flex-row items-center mb-4" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
           <TouchableOpacity onPress={() => navigation.navigate("Main" as any)}>
@@ -388,14 +309,6 @@ useEffect(() => {
           </TouchableOpacity>
     
         </View>
-        {/* {showPicker && (
-        <DateTimePicker
-          value={scheduleDate ? new Date(scheduleDate) : new Date()}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-        />
-      )} */}
 
 {showPicker && Platform.OS === "android" && (
           <DateTimePicker
@@ -420,35 +333,7 @@ useEffect(() => {
         )}
       </View>
   
-      {/* Tab Navigation */}
-      {/* <View className="flex-row justify-center py-3 bg-white">
-        <TouchableOpacity
-          className={`px-6 py-2 rounded-full mx-2 border 
-            ${activeTab === 'Not Assigned' ? 'bg-[#2AAD7A] border-[#2AAD7A]' : 'bg-white border-gray-300'}`}
-          onPress={() => { 
-            setActiveTab('Not Assigned'); 
-            setSelectedFilter(null); 
-          }}
-        >
-          <Text className={`font-semibold 
-            ${activeTab === 'Not Assigned' ? 'text-white' : 'text-black'}`}>
-            Not Assigned ({notAssignedRequests.length})
-          </Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          className={`px-6 py-2 rounded-full mx-2 border 
-            ${activeTab === 'Assigned' ? 'bg-[#2AAD7A] border-[#2AAD7A]' : 'bg-white border-gray-300'}`}
-          onPress={() => setActiveTab('Assigned')}
-        >
-          <Text className={`font-semibold 
-            ${activeTab === 'Assigned' ? 'text-white' : 'text-black'}`}>
-            Assigned ({assignedRequests.length})
-          </Text>
-        </TouchableOpacity>
-      </View> */}
-
-      {/* Search and Filter */}
       <View className="bg-white px-4  border-gray-200 ">
         <View className="flex-row items-center bg-gray-100 rounded-full px-4 mt-2">
           <TextInput 

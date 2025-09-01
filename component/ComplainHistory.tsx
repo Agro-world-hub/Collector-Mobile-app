@@ -67,7 +67,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
         }
       );
       setComplains(res.data);
-      console.log(res.data);
+  //    console.log(res.data);
     } catch (err) {
       // Alert.alert(t("ReportHistory.sorry"), t("ReportHistory.noData"));
     } finally {

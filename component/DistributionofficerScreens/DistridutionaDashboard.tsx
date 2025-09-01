@@ -50,7 +50,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
   const [jobRole, setJobeRole] = useState<string | null>(null);
   const [centerId, setCenterId] = useState<string | null>(null);
   const [targetPercentage, setTargetPercentage] = useState<number | null>(null);
-  const [isLoadingTarget, setIsLoadingTarget] = useState(true); // Add loading state
+  const [isLoadingTarget, setIsLoadingTarget] = useState(true); 
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
@@ -89,7 +89,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
   console.log("centerId--------",centerId)
 
   const fetchTargetPercentage = async () => {
-    setIsLoadingTarget(true); // Set loading to true when starting fetch
+    setIsLoadingTarget(true); 
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
@@ -103,7 +103,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("response for percentage target", response.data);
+    //  console.log("response for percentage target", response.data);
       
       if (response.data.success && response.data.data && response.data.data.length > 0) {
         const targets = response.data.data;
@@ -208,9 +208,9 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
     }
   };
 
-  // Function to render target status
+  
   const renderTargetStatus = () => {
-    // Show loading state while fetching
+  
     if (isLoadingTarget) {
       return (
         <View 
@@ -230,7 +230,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
       );
     }
 
-    // Show appropriate status based on target percentage
+   
     if (targetPercentage !== null && targetPercentage < 100) {
       return (
         <View 
@@ -287,7 +287,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      {/* Profile Section */}
+  
       <TouchableOpacity         
         className="flex-row items-center mb-4 p-4"         
         onPress={() => navigation.navigate("EngProfile")}       
@@ -324,7 +324,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
         </View>       
       </TouchableOpacity>
 
-      {/* Render target status using the new function */}
+    
       {renderTargetStatus()}
 
       <View className="flex items-center justify-center my-6 mt-[13%]">
@@ -357,7 +357,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
         </Text>
       </View>
 
-      {/* Action Buttons */}
+
       <View className="flex-row flex-wrap justify-between p-6 mt-[-5%]">
         {jobRole === "Distribution Center Manager" ? (
           <TouchableOpacity           

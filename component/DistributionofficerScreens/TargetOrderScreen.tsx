@@ -34,7 +34,7 @@ interface TargetData {
   createdAt: string;
   updatedAt: string;
   completedTime?: string | null;
-  selectedStatus: 'Pending' | 'Opened' | 'Completed'; // Changed from packageStatus to selectedStatus
+  selectedStatus: 'Pending' | 'Opened' | 'Completed'; 
   additionalItemStatus: 'Pending' | 'Opened' | 'Completed' | null;
   packageItemStatus: 'Pending' | 'Opened' | 'Completed' | null;
   totalAdditionalItems: number;
@@ -51,7 +51,7 @@ interface TargetData {
 }
 
 
-// Backend API response interface - Updated to match actual API response
+
 interface ApiTargetData {
   distributedTargetId: string;
   companycenterId: string;
@@ -83,15 +83,15 @@ interface ApiTargetData {
   packedPackageItems: number | null;
   pendingPackageItems: number | null;
   isPackage: number;
-  packageIsLock?: number; // This might not exist in API response
+  packageIsLock?: number; 
   sheduleDate: string;
   sheduleTime: string;
   
-  // Based on your actual API response, these fields are at root level
+
   totalPackages?: number;
   lockedPackages?: number; // This is the field we need to check!
   
-  // Optional nested structures (in case they exist in some responses)
+
   packageData?: {
     totalPackages: number;
     lockedPackages: number;
@@ -139,7 +139,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
         setJobeRole(response.data.data.jobRole)
   
 
-        console.log("data:", response.data.data);
+      //  console.log("data:", response.data.data);
       }
     } catch (error) {
       console.error("Failed to fetch user profile:", error);
@@ -212,15 +212,15 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
     });
   };
 
-  // Function to format schedule time (remove "Within" text)
+
   const formatScheduleTime = (timeString: string): string => {
     if (!timeString) return '';
     
-    // Remove "Within" text and trim whitespace
+
     return timeString.replace(/^Within\s*/i, '').trim();
   };
 
-  // Function to format schedule date (month and date only)
+ 
   const formatScheduleDate = (dateString: string): string => {
     if (!dateString) return '';
     
@@ -235,7 +235,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
     }
   };
 
-  // Function to check if schedule date is today
+
   const isScheduleDateToday = (dateString: string): boolean => {
     if (!dateString) return false;
     
@@ -252,8 +252,7 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
     }
   };
 
-  // Updated function to map API data to frontend format using selectedStatus
-// Updated function to map API data to frontend format using selectedStatus
+
 const mapApiDataToTargetData = (apiData: ApiTargetData[]): TargetData[] => {
   return apiData.map((item, index) => ({
     id: item.distributedTargetItemId || `${item.distributedTargetId}_${index}`,
@@ -289,7 +288,7 @@ const mapApiDataToTargetData = (apiData: ApiTargetData[]): TargetData[] => {
   }));
 };
 
-  // Map selectedStatus to display status
+
   const mapSelectedStatusToStatus = (
     selectedStatus: 'Pending' | 'Opened' | 'Completed', 
     isComplete: boolean
@@ -319,8 +318,8 @@ const fetchTargets = useCallback(async () => {
       throw new Error("Authentication token not found. Please login again.");
     }
 
-    console.log("Making request to:", `${environment.API_BASE_URL}api/distribution/officer-target`);
-    console.log("Auth token exists:", !!authToken);
+    // console.log("Making request to:", `${environment.API_BASE_URL}api/distribution/officer-target`);
+    // console.log("Auth token exists:", !!authToken);
 
     const response = await axios.get(
       `${environment.API_BASE_URL}api/distribution/officer-target`,
@@ -332,31 +331,31 @@ const fetchTargets = useCallback(async () => {
       }
     );
 
-    console.log("Response status:", response.status);
-    console.log("Response data:", response.data);
+    // console.log("Response status:", response.status);
+    // console.log("Response data:", response.data);
 
     if (response.data.success) {
       const apiData = response.data.data;
       
       // Debug: Log the first item to see its structure
       if (apiData && apiData.length > 0) {
-        console.log("First API item structure:", JSON.stringify(apiData[0], null, 2));
-        console.log("Package lock field in first item:", apiData[0].packageIsLock);
-        console.log("Package data in first item:", apiData[0].packageData);
+        // console.log("First API item structure:", JSON.stringify(apiData[0], null, 2));
+        // console.log("Package lock field in first item:", apiData[0].packageIsLock);
+        // console.log("Package data in first item:", apiData[0].packageData);
       }
       
-      // Map API data to frontend format
+     
       const mappedData = mapApiDataToTargetData(apiData);
       
-      // Debug: Log the first mapped item
+ 
       if (mappedData && mappedData.length > 0) {
-        console.log("First mapped item:", JSON.stringify(mappedData[0], null, 2));
-        console.log("Package lock in mapped item:", mappedData[0].packageIsLock);
+        // console.log("First mapped item:", JSON.stringify(mappedData[0], null, 2));
+        // console.log("Package lock in mapped item:", mappedData[0].packageIsLock);
       }
       
-      console.log("Mapped data:", mappedData);
+     // console.log("Mapped data:", mappedData);
       
-      // Filter based on selectedStatus instead of packageStatus
+      
       const todoItems = mappedData.filter((item: TargetData) => 
         ['Pending', 'Opened'].includes(item.selectedStatus) 
       );
@@ -365,8 +364,8 @@ const fetchTargets = useCallback(async () => {
         (item: TargetData) => item.selectedStatus === 'Completed' 
       );
 
-      console.log("Todo Items:", todoItems);
-      console.log("Completed Items:", completedItems);
+      // console.log("Todo Items:", todoItems);
+      // console.log("Completed Items:", completedItems);
 
       setTodoData(sortByVarietyAndGrade(todoItems));
       setCompletedData(sortByVarietyAndGrade(completedItems));
@@ -398,7 +397,7 @@ const fetchTargets = useCallback(async () => {
     setRefreshing(false);
   }
 }, [selectedLanguage, t]);
-  // Updated navigation function with lock check
+
   const handleRowPress = (item: TargetData) => {
     // Check if package is locked
     if (item.packageIsLock === 1 && jobRole ==="Distribution Officer") {
@@ -432,25 +431,7 @@ const fetchTargets = useCallback(async () => {
     }
   };
 
-  // const formatCompletionTime = (dateString: string | null): string | null => {
-  //   if (!dateString) return null;
-    
-  //   try {
-  //     const date = new Date(dateString);
-  //     const year = date.getFullYear();
-  //     const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  //     const day = date.getDate().toString().padStart(2, '0');
-  //     const hours = date.getHours();
-  //     const minutes = date.getMinutes().toString().padStart(2, '0');
-  //     const ampm = hours >= 12 ? 'PM' : 'AM';
-  //     const displayHours = hours % 12 || 12;
-      
-  //     return `${year}/${month}/${day} ${displayHours.toString().padStart(2, '0')}:${minutes}${ampm}`;
-  //   } catch (error) {
-  //     console.error('Error formatting date:', error);
-  //     return null;
-  //   }
-  // };
+
 
   const formatCompletionTime = (dateString: string | null): string | null => {
   if (!dateString) return null;
@@ -458,7 +439,7 @@ const fetchTargets = useCallback(async () => {
   try {
     const date = new Date(dateString);
     
-    // Add 6 hours and 30 minutes (6.5 hours = 6.5 * 60 * 60 * 1000 milliseconds)
+   
     const offsetMilliseconds = 6.5 * 60 * 60 * 1000;
     const adjustedDate = new Date(date.getTime() + offsetMilliseconds);
     
@@ -812,11 +793,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
                     </Text>
                   </View>
 
-                  {/* Time */}
-                  
-
-                  {/* Status */}
-                {/* Status */}
+                
 <View className="flex-[2] items-center justify-center px-2">
   <View 
     style={{

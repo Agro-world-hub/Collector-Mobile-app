@@ -50,22 +50,22 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  // Function to validate Employee ID format
+ 
   const validateEmpIdFormat = (empId: string) => {
     const trimmedEmpId = empId.trim();
     
-    // Check if empid contains lowercase letters
+
     if (trimmedEmpId !== trimmedEmpId.toUpperCase()) {
       setEmpIdError(t("Error.Please enter Employee ID in uppercase letters"));
       return false;
     }
     
-    // Clear error if validation passes
+
     setEmpIdError("");
     return true;
   };
 
-  // Function to check DCM access when password is entered
+
   const checkDCMAccess = async (empId: string, pass: string) => {
     if (!empId.trim() || !pass.trim()) return;
 
@@ -95,38 +95,37 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       const data = await response.json();
 
       if (response.ok && data.jobRole) {
-        // Check if user is DCM
+
         if (data.jobRole.toLowerCase() === "distribution center head") {
           setEmpIdError(t("Error.Distribution Center Head are not allowed to access this application"));
           return;
         } else {
-          // Clear error if user is not DCM
+        
           setEmpIdError("");
         }
       }
     } catch (error) {
-      // Silently handle errors - don't show network errors during validation
+     
       console.log("Validation check error:", error);
     }
   };
 
-  // Handle Employee ID input change
   const handleEmpIdChange = (text: string) => {
     setEmpid(text);
-    // Clear error when user starts typing
+  
     if (empIdError) {
       setEmpIdError("");
     }
-    // Re-check DCM access if password exists
+
     if (password.trim()) {
       checkDCMAccess(text, password);
     }
   };
 
-  // Handle Password input change
+
   const handlePasswordChange = (text: string) => {
     setPassword(text);
-    // Check DCM access when password is entered and empid exists
+
     if (empid.trim() && text.trim()) {
       checkDCMAccess(empid, text);
     }
@@ -162,7 +161,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       return false;
     }
 
-    // Validate Employee ID format before proceeding
+
     if (!validateEmpIdFormat(empid)) {
       return false;
     }
@@ -184,7 +183,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     
     try {
       const trimmedEmpId = empid.trim();
-      console.log("Employee ID:", trimmedEmpId);
+     // console.log("Employee ID:", trimmedEmpId);
 
       const response = await fetch(
         `${environment.API_BASE_URL}api/collection-officer/login`,
@@ -201,7 +200,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       );
 
       const data = await response.json();
-      console.log("Login response:", data);
+     // console.log("Login response:", data);
 
       if (!response.ok) {
         setLoading(false);
@@ -231,9 +230,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
         companyNameTamil,
       } = data;
 
-      // DCM check is now done during password input, so we can proceed with other validations
 
-      // Define allowed roles (excluding DCM)
     const allowedRoles = [
     "collection officer",
     "collection center manager", 
@@ -270,7 +267,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
         ]);
       }
 
-      console.log("Password update required:", passwordUpdateRequired);
+   //   console.log("Password update required:", passwordUpdateRequired);
       await status(empId, true);
       
       setTimeout(() => {
