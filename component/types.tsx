@@ -92,7 +92,7 @@ export type RootStackParamList = {
       collectionOfficerId:number;
       image:string;
     };
-    ReportGenerator:{officerId:string,collectionOfficerId:number};
+    ReportGenerator:{officerId:string,collectionOfficerId:number ,phoneNumber2:number ,officerName:string,phoneNumber1:number};
     DailyTargetList:undefined;
     ComplainHistory:undefined;
     AddOfficerBasicDetails:{jobRolle:String};

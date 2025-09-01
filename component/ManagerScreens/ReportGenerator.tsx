@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image, Alert } from "react-native";
+import React, { useCallback, useState } from "react";
+import { View, Text, TouchableOpacity, Image, Alert, BackHandler } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types";
 import { handleGeneratePDF } from "./ReportPDFGenerator";
 import * as Sharing from "expo-sharing";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useFocusEffect } from "@react-navigation/native";
 import * as MediaLibrary from "expo-media-library";
 import { Platform } from "react-native";
 import * as FileSystem from "expo-file-system";
@@ -45,7 +45,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
   const [generateAgain, setGenerateAgain] = useState(false);
   const { t } = useTranslation();
 
-  const { officerId, collectionOfficerId } = route.params;
+  const { officerId, collectionOfficerId ,phoneNumber1,officerName ,phoneNumber2} = route.params;
   console.log(officerId);
 
   const getTodayInColombo = () => {
@@ -260,17 +260,52 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
     }
   };
 
+   const handleBackPress = useCallback(() => {
+    navigation.navigate("OfficerSummary" as any, {
+      collectionOfficerId,
+      officerId,
+      phoneNumber1,
+      phoneNumber2,
+      officerName,
+    });
+    return true; // Prevent default back behavior
+  }, [navigation, collectionOfficerId, officerId, phoneNumber1, phoneNumber2, officerName]);
+
+   useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => handleBackPress();
+
+      const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => subscription.remove();
+    }, [handleBackPress])
+  );
+
   return (
     <ScrollView className="flex-1 bg-white">
       <View className="flex-row items-center  p-6 rounded-b-lg">
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
+        {/* <TouchableOpacity
+        //  onPress={() => navigation.goBack()}
+        
           className="absolute top-5 left-4 bg-[#f3f3f380] rounded-full p-2 justify-center w-10"
-        >
+        > */}
+       <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("OfficerSummary" as any, {
+                        collectionOfficerId,
+                        officerId,
+                        phoneNumber1,
+                        phoneNumber2,
+                        officerName,
+                      })
+                    }
+                    className="bg-[#FFFFFF1A] rounded-full  justify-center w-10"
+                  >
+
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
 
-        <Text className="text-black text-lg font-semibold text-center w-full">
+        <Text className="text-black text-lg pr-[20%] font-semibold text-center w-full ">
           {officerId}
         </Text>
       </View>
