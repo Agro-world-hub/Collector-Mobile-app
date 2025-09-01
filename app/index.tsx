@@ -210,6 +210,10 @@ function MainTabNavigator() {
 
                    <Tab.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} /> 
                      <Tab.Screen name="EngProfile" component={EngProfile} />
+                       <Tab.Screen
+            name="ReportGenerator"
+            component={ReportGenerator as any}
+          />
 
          <Tab.Screen
         name="DistributionOfficersList"
@@ -347,10 +351,10 @@ const [isOfflineAlertShown, setIsOfflineAlertShown] = useState(false);
           {/* <Stack.Screen name="PriceChart" component={PriceChart as any}/> */}
           {/* <Stack.Screen name="CollectionOfficersList" component={CollectionOfficersList }/> */}
           {/* <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} /> */}
-          <Stack.Screen
+          {/* <Stack.Screen
             name="ReportGenerator"
             component={ReportGenerator as any}
-          />
+          /> */}
           {/* <Stack.Screen name="DailyTargetList" component={DailyTargetList} /> */}
           <Stack.Screen
             name="AddOfficerBasicDetails"

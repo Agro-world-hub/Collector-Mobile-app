@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  BackHandler,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp, useRoute } from "@react-navigation/native";
@@ -171,6 +172,28 @@ const TransactionList: React.FC<TransactionListProps> = ({
         fetchData();
       }, [])
     );
+
+     const handleBackPress = useCallback(() => {
+        navigation.navigate("OfficerSummary" as any, {
+          collectionOfficerId,
+          officerId,
+          phoneNumber1,
+          phoneNumber2,
+          officerName,
+        });
+        return true; // Prevent default back behavior
+      }, [navigation, collectionOfficerId, officerId, phoneNumber1, phoneNumber2, officerName]);
+    
+       useFocusEffect(
+        useCallback(() => {
+          const onBackPress = () => handleBackPress();
+    
+          const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    
+          return () => subscription.remove();
+        }, [handleBackPress])
+      );
+    
 
   return (
     <KeyboardAvoidingView

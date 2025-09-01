@@ -370,7 +370,11 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
             onPress={() =>
               navigation.navigate("ReportGenerator" as any, {
                 officerId,
-                collectionOfficerId,
+                  collectionOfficerId,
+                  phoneNumber1,
+                  phoneNumber2,
+                  officerName,
+                
               })
             }
           >
