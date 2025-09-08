@@ -282,7 +282,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       //Dont cahange this massage body pretier when change it spaces of massage will be change
       if (PreferdLanguage === "Sinhala") {
         companyName =
-          (await AsyncStorage.getItem("companyNameSinhala")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameSinhala")) || "PolygonAgro";
         otpMessage = `${companyName} සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
         
 ${accHolderName}
@@ -293,7 +293,7 @@ ${branchName}
 නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා ${companyName} නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
       } else if (PreferdLanguage === "Tamil") {
         companyName =
-          (await AsyncStorage.getItem("companyNameTamil")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameTamil")) || "PolygonAgro";
         otpMessage = `${companyName} உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
         
 ${accHolderName}
@@ -304,7 +304,7 @@ ${branchName}
 சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் ${companyName} பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
       } else {
         companyName =
-          (await AsyncStorage.getItem("companyNameEnglish")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameEnglish")) || "PolygonAgro";
         otpMessage = `Your OTP for bank detail verification with ${companyName} is: {{code}}
         
 ${accHolderName}
@@ -316,7 +316,7 @@ If correct, share OTP only with the ${companyName} representative who contacts y
       }
 
       const body = {
-        source: "AgroWorld",
+        source: "PolygonAgro",
         transport: "sms",
         content: {
           sms: otpMessage,

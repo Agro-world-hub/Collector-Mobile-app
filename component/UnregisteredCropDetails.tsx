@@ -770,20 +770,20 @@ const proceedWithSubmit = async () => {
       let companyName = "";
       if (language === "Sinhala") {
         companyName =
-          (await AsyncStorage.getItem("companyNameSinhala")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameSinhala")) || "PolygonAgro";
         Message = `ඔබේ නිෂ්පාදන ${companyName} වෙත ලබා දීම ගැන ඔබට ස්තූතියි.
 පැය 48ක් ඇතුළත රු. ${formattedPrice} ඔබේ බැංකු ගිණුමට බැර කෙරේ.
 TID: ${invoiceNumber}`;
       } else if (language === "Tamil") {
         companyName =
-          (await AsyncStorage.getItem("companyNameTamil")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameTamil")) || "PolygonAgro";
         Message = `உங்கள் விளைபொருட்களை ${companyName} நிறுவனத்திற்கு வழங்கியதற்கு நன்றி.
 ரூ. ${formattedPrice} 48 மணி நேரத்திற்குள் உங்கள் வங்கிக் கணக்கில் வரவு வைக்கப்படும்.
 TID: ${invoiceNumber}
 `;
       } else {
         companyName =
-          (await AsyncStorage.getItem("companyNameEnglish")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameEnglish")) || "PolygonAgro";
         Message = `Thank you for providing your produce to ${companyName}.
 Rs. ${formattedPrice} will be credited to your bank account within 48 hours.
 TID: ${invoiceNumber}
@@ -793,7 +793,7 @@ TID: ${invoiceNumber}
       const formattedPhone = farmerPhone;
 
       const body = {
-        source: "AgroWorld",
+        source: "PolygonAgro",
         destinations: [formattedPhone],
         content: {
           sms: Message,
