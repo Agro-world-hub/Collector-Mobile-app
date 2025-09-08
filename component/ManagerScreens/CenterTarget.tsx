@@ -112,7 +112,7 @@ const sortByVarietyAndGrade = (data: TargetData[]) => {
             todo: Number(item.todo || 0)
         }));
 
-        console.log('Processed data:', allData);
+       // console.log('Processed data:', allData);
 
         const todoItems = allData.filter((item: TargetData) => item.todo > 0);
         const completedItems = allData.filter((item: TargetData) => item.complete >= item.target); 
@@ -170,7 +170,9 @@ const sortByVarietyAndGrade = (data: TargetData[]) => {
           <View className="flex-1 bg-[#282828] ">
             {/* Header */}
             <View className="bg-[#282828] px-4 py-3 flex-row justify-center items-center">
-              <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-6 left-4">
+              <TouchableOpacity onPress={() => navigation.goBack()} 
+              className="absolute top-4 left-4 bg-[#FFFFFF1A] rounded-full p-2 justify-center w-10"
+              >
                 <AntDesign name="left" size={22} color="white" />
               </TouchableOpacity>
               {/* <Text className="text-white text-lg font-bold ml-[35%] mt-[3%]">{t("CenterTarget.CenterTarget")}</Text> */}
@@ -179,41 +181,7 @@ const sortByVarietyAndGrade = (data: TargetData[]) => {
               </Text>
             </View>
       
-            {/* Toggle Buttons */}
-            {/* <View className="flex-row justify-center items-center py-4 bg-[#282828]">
-              <TouchableOpacity
-                className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
-                  selectedToggle === 'ToDo' ? 'bg-[#980775]' : 'bg-white'
-                }`}
-                style={{ height: 40 }}
-                onPress={() => setSelectedToggle('ToDo')}
-              >
-                <Text className={`font-bold mr-2 ${selectedToggle === 'ToDo' ? 'text-white' : 'text-black'}`}>
-                  {t("CenterTarget.Todo")}
-                </Text>
-                <View className="bg-white rounded-full px-2">
-                  <Text className="text-black font-bold text-xs">{todoData.length}</Text>
-                </View>
-              </TouchableOpacity>
-      
-              <TouchableOpacity
-                className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
-                  selectedToggle === 'Completed' ? 'bg-[#980775]' : 'bg-white'
-                }`}
-                style={{ height: 40 }}
-                onPress={() => setSelectedToggle('Completed')}
-              >
-                <Text
-                  className={`font-bold ${selectedToggle === 'Completed' ? 'text-white' : 'text-black'}`}
-                >
-                  {t("CenterTarget.Completed")} 
-                </Text>
-                <View className="bg-white rounded-full px-2 ml-2">
-                  <Text className="text-black font-bold text-xs">{completedData.length}</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-       */}
+          
        <View className="flex-row justify-center items-center py-4 bg-[#282828]">
   {/* To Do Button */}
   <Animated.View

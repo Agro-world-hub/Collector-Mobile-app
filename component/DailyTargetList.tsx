@@ -15,6 +15,8 @@ import LottieView from "lottie-react-native";
 import { RootStackParamList } from "./types";
 import { useTranslation } from "react-i18next";
 import { Animated } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
+
 
 type DailyTargetListNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -117,8 +119,8 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
       const completedItems = allData.filter(
         (item: TargetData) => item.todo === 0 && item.complete !== 0
       );
-      console.log("completedItems", completedItems);
-      console.log(allData);
+      // console.log("completedItems", completedItems);
+      // console.log(allData);
 
       // Sort data by variety name and grade
       setTodoData(sortData(todoItems));
@@ -172,52 +174,9 @@ const DailyTargetList: React.FC<DailyTargetListProps> = ({ navigation }) => {
         </Text>
       </View>
 
-      {/* Toggle Buttons */}
-      {/* <View className="flex-row justify-center items-center py-4 bg-[#282828]">
-        <TouchableOpacity
-          className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
-            selectedToggle === "ToDo" ? "bg-[#980775]" : "bg-white"
-          }`}
-          style={{ height: 40 }}
-          onPress={() => setSelectedToggle("ToDo")}
-        >
-          <Text
-            className={`font-bold mr-2 ${
-              selectedToggle === "ToDo" ? "text-white" : "text-black"
-            }`}
-          >
-            {t("DailyTarget.Todo")}
-          </Text>
-          <View className="bg-white rounded-full px-2">
-            <Text className="text-black font-bold text-xs">
-              {todoData.length}
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
-            selectedToggle === "Completed" ? "bg-[#980775]" : "bg-white"
-          }`}
-          style={{ height: 40 }}
-          onPress={() => setSelectedToggle("Completed")}
-        >
-          <Text
-            className={`font-bold ${
-              selectedToggle === "Completed" ? "text-white" : "text-black"
-            }`}
-          >
-            {t("DailyTarget.Completed")}
-          </Text>
-          <View className="bg-white rounded-full px-2 ml-2">
-            <Text className="text-black font-bold text-xs">
-              {completedData.length}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View> */}
+     
       <View className="flex-row justify-center items-center py-4 bg-[#282828]">
-  {/* To Do Button */}
+
   <Animated.View
     style={{
       transform: [{ scale: selectedToggle === "ToDo" ? 1.05 : 1 }],

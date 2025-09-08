@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  BackHandler,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp, useRoute } from "@react-navigation/native";
@@ -97,7 +98,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
         `${environment.API_BASE_URL}api/collection-manager/transaction-list?collectionOfficerId=${collectionOfficerId}&date=${date}`
       );
       const data = await response.json();
-      console.log("Transactions:", data);
+   //   console.log("Transactions:", data);
 
       if (response.ok) {
         const formattedData = data.map((transaction: any) => ({
@@ -172,6 +173,28 @@ const TransactionList: React.FC<TransactionListProps> = ({
       }, [])
     );
 
+     const handleBackPress = useCallback(() => {
+        navigation.navigate("OfficerSummary" as any, {
+          collectionOfficerId,
+          officerId,
+          phoneNumber1,
+          phoneNumber2,
+          officerName,
+        });
+        return true; // Prevent default back behavior
+      }, [navigation, collectionOfficerId, officerId, phoneNumber1, phoneNumber2, officerName]);
+    
+       useFocusEffect(
+        useCallback(() => {
+          const onBackPress = () => handleBackPress();
+    
+          const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    
+          return () => subscription.remove();
+        }, [handleBackPress])
+      );
+    
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -192,7 +215,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
                     officerName,
                   })
                 }
-                className="ml-2"
+                className="bg-[#FFFFFF1A] rounded-full p-2 justify-center w-10"
               >
                 <AntDesign name="left" size={22} color="white" />
               </TouchableOpacity>

@@ -13,6 +13,7 @@ import * as FileSystem from "expo-file-system";
 import { ScrollView } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
 import LottieView from "lottie-react-native";
+import NetInfo from "@react-native-community/netinfo";
 
 type DistributionOfficerReportNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -49,18 +50,18 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
 
   const getTodayInColombo = () => {
     const now = new Date();
-    const colomboOffset = 330; // Colombo is UTC+5:30
+    const colomboOffset = 330; 
     const utcOffset = now.getTimezoneOffset();
     const colomboTime = new Date(
       now.getTime() + (colomboOffset - utcOffset) * 60 * 1000
     );
-    colomboTime.setHours(0, 0, 0, 0); // Normalize to midnight
+    colomboTime.setHours(0, 0, 0, 0); 
     return colomboTime;
   };
 
   const reportCounters: { [key: string]: number } = {};
 
-  console.log("...........................................................")
+//  console.log("...........................................................")
 
   const handleGenerate = async () => {
     setReportGenerated(false);
@@ -81,7 +82,7 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
       return;
     }
 
-    // Proceed with PDF generation
+  
     const fileUri = await handleGeneratePDF(
       formatDate(startDate),
       formatDate(endDate),
@@ -93,25 +94,25 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
       const reportId = reportIdMatch ? reportIdMatch[1] : null;
 
       const generateReportId = (officerId: string): string => {
-        // Initialize the counter for the officer if not already present
+    
         if (!reportCounters[officerId]) {
           reportCounters[officerId] = 1;
         } else {
-          reportCounters[officerId] += 1; // Increment the counter
+          reportCounters[officerId] += 1; 
         }
 
-        // Format the report ID
+   
         const paddedCount = reportCounters[officerId]
           .toString()
-          .padStart(3, "0"); // Pads the count to 3 digits
+          .padStart(3, "0");
         return `${officerId}M${paddedCount}`;
       };
 
       const reportIdno = generateReportId(officerId);
-      setGeneratedReportId(reportIdno); // Store the report ID to display in the UI
+      setGeneratedReportId(reportIdno); 
       setReportGenerated(true);
       setGenerateAgain(false);
-      // Alert.alert(t("Error.Success"), t("Error.PDF Generated Successfully"));
+     
     } else {
       Alert.alert(t("Error.error"), t("Error.Failed to generate PDF"));
       setGenerateAgain(false);
@@ -128,7 +129,6 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
         return;
       }
 
-      // Generate the PDF
       const uri = await handleGeneratePDF(
         formatDate(startDate),
         formatDate(endDate),
@@ -141,35 +141,31 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
         return;
       }
 
-      // Define the new file name
-      const date = new Date().toISOString().slice(0, 10); // Get the current date (YYYY-MM-DD)
-      const fileName = `Report_${officerId}_${date}.pdf`; // Example file name
+      
+      const date = new Date().toISOString().slice(0, 10); 
+      const fileName = `Report_${officerId}_${date}.pdf`; 
 
-      // Define tempFilePath here, outside the if block so it's available throughout the function
-      let tempFilePath = uri; // Default to the original URI
+    
+      let tempFilePath = uri; 
 
       if (Platform.OS === "android") {
-        // Create a temporary file in cache
+     
         tempFilePath = `${FileSystem.cacheDirectory}${fileName}`;
 
-        // Copy the PDF to the temp location
+       
         await FileSystem.copyAsync({
           from: uri,
           to: tempFilePath,
         });
 
-        // Use the sharing API - this works in Expo Go
+      
         if (await Sharing.isAvailableAsync()) {
           await Sharing.shareAsync(tempFilePath, {
             dialogTitle: t("Save PDF"),
             mimeType: "application/pdf",
             UTI: "com.adobe.pdf",
           });
-          // Alert.alert(
-          //   t("Error.PDF Ready"),
-          //   t("Error.To save to Downloads, select 'Save to device' or similar option from the share menu"),
-          //   [{ text: "OK" }]
-          // );
+         
         } else {
           Alert.alert(
             t("Error.error"),
@@ -177,15 +173,15 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
           );
         }
       } else if (Platform.OS === "ios") {
-        // iOS approach: Use sharing dialog to let user save to Files app
+       
         if (await Sharing.isAvailableAsync()) {
           await Sharing.shareAsync(tempFilePath, {
-            // Using tempFilePath which is uri for iOS
+           
             dialogTitle: t("Save PDF"),
             mimeType: "application/pdf",
             UTI: "com.adobe.pdf",
           });
-          // Alert.alert(t("Error.Info"), t("Error.Use the 'Save to Files' option to save to Downloads"));
+         
         } else {
           Alert.alert(
             t("Error.error"),
@@ -194,7 +190,7 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
         }
       }
 
-      // Log success - tempFilePath is now accessible here
+ 
       console.log(`PDF prepared for sharing: ${tempFilePath}`);
     } catch (error) {
       console.error("Download error:", error);
@@ -348,8 +344,8 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
               value={endDate || new Date()}
               mode="date"
               display="default"
-              maximumDate={getTodayInColombo()} // Disallow future dates
-              minimumDate={startDate} // End date must not be earlier than the start date
+              maximumDate={getTodayInColombo()} 
+              minimumDate={startDate}
               onChange={(event, date) => handleDateChange(event, date, "end")}
             />
           )}
@@ -361,8 +357,8 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
                   mode="date"
                   display="inline"
                   style={{ width: 320, height: 260 }}
-                  maximumDate={getTodayInColombo()} // Disallow future dates
-                  minimumDate={startDate} // End date must not be earlier than the start date
+                  maximumDate={getTodayInColombo()} 
+                  minimumDate={startDate} 
                   onChange={(event, date) =>
                     handleDateChange(event, date, "end")
                   }
@@ -421,17 +417,17 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
             />
           </View>
 
-          {/* <Text className="text-lg font-semibold text-[#494949]">{t("ReportGenerator.IDNO")} {generatedReportId}</Text> */}
+       
           <Text className="text-sm text-gray-500 italic mb-6">
             {t("ReportGenerator.Report has been generated")}
           </Text>
 
-          {/* Download and Share Buttons */}
+
           <View className="flex-row space-x-8">
             <TouchableOpacity
               onPress={handleDownload}
               className="bg-[#A4A4A4] rounded-lg items-center justify-center"
-              style={{ width: 100, height: 70 }} // Explicit width and height
+              style={{ width: 100, height: 70 }} 
             >
               <Ionicons name="download" size={24} color="white" />
               <Text className="text-sm text-white mt-1">
@@ -442,7 +438,7 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
             <TouchableOpacity
               onPress={handleShare}
               className="bg-[#A4A4A4] rounded-lg items-center justify-center"
-              style={{ width: 100, height: 70 }} // Explicit width and height
+              style={{ width: 100, height: 70 }}
             >
               <Ionicons name="share-social" size={24} color="white" />
               <Text className="text-sm text-white mt-1">

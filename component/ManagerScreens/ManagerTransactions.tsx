@@ -129,7 +129,7 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({
 
       const data = await response.json();
 
-      console.log("Transactions:", data);
+   //   console.log("Transactions:", data);
 
       if (response.ok) {
         const formattedData = data.map((transaction: any) => ({
@@ -231,7 +231,8 @@ const ManagerTransactions: React.FC<ManagerTransactionsProps> = ({
           <View className="flex-row items-center justify-between">
             <TouchableOpacity
               onPress={() => navigation.goBack()}
-              className="ml-2"
+              className=" bg-[#FFFFFF1A] rounded-full  p-2 justify-center w-10"
+              
             >
               <AntDesign name="left" size={22} color="white" />
             </TouchableOpacity>

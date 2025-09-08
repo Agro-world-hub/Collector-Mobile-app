@@ -64,7 +64,7 @@ import RecieveTargetBetweenOfficers from "@/component/ManagerScreens/RecieveTarg
 import PassTargetBetweenOfficers from "@/component/ManagerScreens/PassTargetBetweenOfficers";
 import OTPE from "@/component/Otpverification";
 import { AppState } from "react-native";
-import NetInfo from "@react-native-community/netinfo";
+
 import ManagerDashboard from "@/component/ManagerScreens/ManagerDashboard";
 import CenterTarget from "@/component/ManagerScreens/CenterTarget";
 import ManagerTransactions from "@/component/ManagerScreens/ManagerTransactions";
@@ -89,9 +89,9 @@ import PrivacyPolicy from "@/component/PrivacyPolicy";
 
 import DistridutionaDashboard from "@/component/DistributionofficerScreens/DistridutionaDashboard"
 import TargetOrderScreen from "@/component/DistributionofficerScreens/TargetOrderScreen"
-import OpenedOrderScreen from "@/component/DistributionofficerScreens/OpenedOrderScreen"
+
 import PendingOrderScreen from "@/component/DistributionofficerScreens/PendingOrderScreen"
-import CompletedOrderScreen from "@/component/DistributionofficerScreens/CompletedOrderScreen"
+
 import Timer from "@/component/DistributionofficerScreens/TimerContainer "
 import TimerContainer from "@/component/DistributionofficerScreens/TimerContainer "
 import CenterTargetScreen from "@/component/DisributionManger/CenterTargetScreen"
@@ -111,6 +111,9 @@ import { RootState } from '../services/reducxStore';
 
 import ReplaceRequestsApprove from '@/component/DisributionManger/ReplaceRequestsApprove';
 import DistributionOfficerReport from '@/component/DisributionManger/DistributionOfficerReport'
+
+import { Alert } from "react-native";
+import NetInfo from "@react-native-community/netinfo"
 
 LogBox.ignoreAllLogs(true);
 NativeWindStyleSheet.setOutput({
@@ -207,6 +210,10 @@ function MainTabNavigator() {
 
                    <Tab.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} /> 
                      <Tab.Screen name="EngProfile" component={EngProfile} />
+                       <Tab.Screen
+            name="ReportGenerator"
+            component={ReportGenerator as any}
+          />
 
          <Tab.Screen
         name="DistributionOfficersList"
@@ -220,12 +227,39 @@ function MainTabNavigator() {
   );
 }
 
+
+
 const Index = () => {
   useEffect(() => {
     onlineStatus();
     
   }, []);
+const [isOfflineAlertShown, setIsOfflineAlertShown] = useState(false);
 
+  useEffect(() => {
+    const unsubscribeNetInfo = NetInfo.addEventListener(state => {
+      if (!state.isConnected && !isOfflineAlertShown) {
+        setIsOfflineAlertShown(true); // mark that alert is shown
+        Alert.alert(
+          "No Internet Connection",
+          "Please turn on mobile data or Wi-Fi to continue.",
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                // Reset flag after user presses OK
+                setIsOfflineAlertShown(false);
+              },
+            },
+          ]
+        );
+      }
+    });
+
+    return () => {
+      unsubscribeNetInfo();
+    };
+  }, [isOfflineAlertShown]);
   const onlineStatus = async () => {
     AppState.addEventListener("change", async (nextAppState) => {
       console.log("App state changed toooolllllll:", nextAppState);
@@ -303,7 +337,7 @@ const Index = () => {
           />
           {/* <Stack.Screen name="UnregisteredCropDetails" component={UnregisteredCropDetails as any} /> */}
 
-          <Stack.Screen name="Lanuage" component={Lanuage} />
+         <Stack.Screen name="Lanuage" component={Lanuage} /> 
 
 
 
@@ -317,10 +351,10 @@ const Index = () => {
           {/* <Stack.Screen name="PriceChart" component={PriceChart as any}/> */}
           {/* <Stack.Screen name="CollectionOfficersList" component={CollectionOfficersList }/> */}
           {/* <Stack.Screen name="OfficerSummary" component={OfficerSummary as any} /> */}
-          <Stack.Screen
+          {/* <Stack.Screen
             name="ReportGenerator"
             component={ReportGenerator as any}
-          />
+          /> */}
           {/* <Stack.Screen name="DailyTargetList" component={DailyTargetList} /> */}
           <Stack.Screen
             name="AddOfficerBasicDetails"
@@ -407,9 +441,9 @@ const Index = () => {
 
              {/* <Stack.Screen name="DistridutionaDashboard" component={DistridutionaDashboard as any} />  */}
              {/* <Stack.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} />  */}
-<Stack.Screen name="OpenedOrderScreen" component={OpenedOrderScreen as any} /> 
+
 <Stack.Screen name="PendingOrderScreen" component={PendingOrderScreen as any} /> 
-   <Stack.Screen name="CompletedOrderScreen" component={CompletedOrderScreen as any} />    
+
    <Stack.Screen name="Timer" component={Timer as any} />    
    <Stack.Screen name="TimerContainer" component={TimerContainer as any} />  
 <Stack.Screen name="CenterTargetScreen" component={CenterTargetScreen as any} /> 

@@ -48,16 +48,17 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [empId, setEmpId] = useState<string | null>(null);
   const [jobRole, setJobeRole] = useState<string | null>(null);
-    const [centerId, setCenterId] = useState<string | null>(null);
-  const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
+  const [centerId, setCenterId] = useState<string | null>(null);
+  const [targetPercentage, setTargetPercentage] = useState<number | null>(null);
+  const [isLoadingTarget, setIsLoadingTarget] = useState(true); 
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
 
   const fetchSelectedLanguage = async () => {
     try {
-      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
-      setSelectedLanguage(lang || "en"); // Default to English if not set
+      const lang = await AsyncStorage.getItem("@user_language");
+      setSelectedLanguage(lang || "en");
     } catch (error) {
       console.error("Error fetching language preference:", error);
     }
@@ -76,7 +77,6 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
         setProfile(response.data.data);
         setEmpId(response.data.data.empId);
         setJobeRole(response.data.data.jobRole)
-  
         setCenterId(response.data.data.centerId); 
         console.log("data:", response.data.data);
       }
@@ -86,44 +86,43 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
   };
 
   console.log("jobeJole-----------------",jobRole)
-   console.log("centerId--------",centerId)
+  console.log("centerId--------",centerId)
 
   const fetchTargetPercentage = async () => {
-  try {
-    const token = await AsyncStorage.getItem("token");
-    if (!token) {
-      Alert.alert(t("Error.error"), t("Error.User not authenticated."));
-      return;
-    }
-    const response = await axios.get(
-      `${environment.API_BASE_URL}api/distribution/get-distribution-target`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
+    setIsLoadingTarget(true); 
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        Alert.alert(t("Error.error"), t("Error.User not authenticated."));
+        setIsLoadingTarget(false);
+        return;
       }
-    );
-    console.log("response for percentage target", response.data);
-    
-    if (response.data.success && response.data.data && response.data.data.length > 0) {
-      const targets = response.data.data;
-      
-      // Option 1: Use first target only
-      const firstTarget = targets[0];
-      const percentage = parseInt(
-        firstTarget.completionPercentage.replace("%", ""),
-        10
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/distribution/get-distribution-target`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
-      setTargetPercentage(percentage);
+    //  console.log("response for percentage target", response.data);
       
-    
-      
-    } else {
+      if (response.data.success && response.data.data && response.data.data.length > 0) {
+        const targets = response.data.data;
+        const firstTarget = targets[0];
+        const percentage = parseInt(
+          firstTarget.completionPercentage.replace("%", ""),
+          10
+        );
+        setTargetPercentage(percentage);
+      } else {
+        setTargetPercentage(0);
+      }
+    } catch (error) {
+      console.error("Failed to fetch target percentage:", error);
       setTargetPercentage(0);
+    } finally {
+      setIsLoadingTarget(false); // Set loading to false when done
     }
-  } catch (error) {
-    console.error("Failed to fetch target percentage:", error);
-    setTargetPercentage(0);
-  }
-};
+  };
 
   useEffect(() => {
     fetchUserProfile();
@@ -176,10 +175,6 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
     }
   };
 
-
-
-  
-
   const getFullName = () => {
     if (!profile) return "Loading...";
     switch (selectedLanguage) {
@@ -191,6 +186,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
         return `${profile.firstNameEnglish} ${profile.lastNameEnglish}`;
     }
   };
+
   const getcompanyName = () => {
     if (!profile) return "Loading...";
     switch (selectedLanguage) {
@@ -206,68 +202,70 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
   const getTextStyle = (language: string) => {
     if (language === "si") {
       return {
-        fontSize: 14, // Smaller text size for Sinhala
-        lineHeight: 20, // Space between lines
+        fontSize: 14,
+        lineHeight: 20,
       };
     }
   };
+
   
-
-  return (
-    <ScrollView
-      className="flex-1 bg-white p-3"
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {/* Profile Section */}
-      <TouchableOpacity
-        className="flex-row items-center mb-4 p-4"
-        onPress={() => navigation.navigate("EngProfile")}
-      >
-        <Image
-          source={
-            profile?.image
-              ? { uri: profile.image }
-              : require("../../assets/images/mprofile.webp")
-          }
-          className="w-16 h-16 rounded-full mr-3"
-          onError={() => console.log("Failed to load image")}
-        />
-
-        <View>
-          <Text
-            style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-            className="text-lg font-bold"
-          >
-            {getFullName()}
-          </Text>
-          <Text
-            style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-            className="text-gray-500"
-          >
-            {getcompanyName()}
+  const renderTargetStatus = () => {
+  
+    if (isLoadingTarget) {
+      return (
+        <View 
+          className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4"
+          style={{
+            shadowColor: '#000000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 4,
+          }}
+        >
+          <Text className="text-center text-gray-500">
+            Loading target status...
           </Text>
         </View>
-      </TouchableOpacity>
+      );
+    }
 
-      {/* Conditional Rendering for Daily Target */}
-      {/* {targetPercentage !== null && targetPercentage < 100 ? (
-        <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#DF9301]">
+   
+    if (targetPercentage !== null && targetPercentage < 100) {
+      return (
+        <View 
+          className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4"
+          style={{
+            shadowColor: '#000000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 4,
+          }}
+        >
           <Text className="text-center text-yellow-600 font-bold">
-            {" "}
             🚀{t("DistridutionaDashboard.Keep")}
           </Text>
-
           <Text className="text-center text-gray-500">
             {t("DistridutionaDashboard.Youhavenotachieved")}
           </Text>
         </View>
-      ) : (
-        <View className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4 border-[1px] border-[#2AAD7A]">
+      );
+    } else {
+      return (
+        <View 
+          className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4"
+          style={{
+            shadowColor: '#000000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 4,
+          }}
+        >
           <View className="flex-row justify-center items-center mb-2">
             <Image
-              source={require("../../assets/images/hand.webp")} // Replace with your image path
+              source={require("../../assets/images/New/Applause.png")}
               className="w-8 h-8 mr-2"
             />
             <Text className="text-center text-[#2AAD7A] font-bold">
@@ -278,68 +276,69 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
             {t("DistridutionaDashboard.Youhaveachieved")}
           </Text>
         </View>
-      )} */}
+      );
+    }
+  };
 
+  return (
+    <ScrollView
+      className="flex-1 bg-white p-3"
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+  
+      <TouchableOpacity         
+        className="flex-row items-center mb-4 p-4"         
+        onPress={() => navigation.navigate("EngProfile")}       
+      >         
+        <Image           
+          source={             
+            profile?.image               
+              ? { uri: profile.image }               
+              : require("../../assets/images/mprofile.webp")           
+          }           
+          className="w-16 h-16 rounded-full mr-3"           
+          onError={() => console.log("Failed to load image")}         
+        />          
 
-{/* Conditional Rendering for Daily Target */}
-{targetPercentage !== null && targetPercentage < 100 ? (
-  <View 
-    className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4"
-    style={{
-      shadowColor: '#000000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 4, // For Android
-    }}
-  >
-    <Text className="text-center text-yellow-600 font-bold">
-      {" "}
-      🚀{t("DistridutionaDashboard.Keep")}
-    </Text>
+        <View style={{ flex: 1 }}>           
+          <Text             
+            style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}             
+            className="text-lg font-bold"           
+          >             
+            {getFullName()}           
+          </Text>           
+          
+          <Text             
+            style={[
+              { fontSize: 16 }, 
+              getTextStyle(selectedLanguage)
+            ]}             
+            className="text-gray-500"
+            numberOfLines={1}
+            ellipsizeMode="tail"           
+          >             
+            {getcompanyName()}           
+          </Text>         
+        </View>       
+      </TouchableOpacity>
 
-    <Text className="text-center text-gray-500">
-      {t("DistridutionaDashboard.Youhavenotachieved")}
-    </Text>
-  </View>
-) : (
-  <View 
-    className="bg-white ml-[20px] w-[90%] rounded-[35px] mt-3 p-4"
-    style={{
-      shadowColor: '#000000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 4, // For Android
-    }}
-  >
-    <View className="flex-row justify-center items-center mb-2">
-      <Image
-        source={require("../../assets/images/hand.webp")} // Replace with your image path
-        className="w-8 h-8 mr-2"
-      />
-      <Text className="text-center text-[#2AAD7A] font-bold">
-        {t("DistridutionaDashboard.Completed")}
-      </Text>
-    </View>
-    <Text className="text-center text-gray-500">
-      {t("DistridutionaDashboard.Youhaveachieved")}
-    </Text>
-  </View>
-)}
+    
+      {renderTargetStatus()}
 
       <View className="flex items-center justify-center my-6 mt-[13%]">
         <View className="relative">
           <CircularProgress
             size={100}
             width={8}
-            fill={targetPercentage !== null ? targetPercentage : 0} // Dynamically set progress
+            fill={targetPercentage !== null ? targetPercentage : 0}
             tintColor="#000000"
             backgroundColor="#E5E7EB"
           />
           <View className="absolute items-center justify-center h-24 w-24">
             <Text className="text-2xl font-bold ml-3  mt-1">
-              {targetPercentage !== null ? `${targetPercentage}%` : "0%"}
+              {isLoadingTarget ? "..." : (targetPercentage !== null ? `${targetPercentage}%` : "0%")}
             </Text>
           </View>
         </View>
@@ -358,51 +357,41 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
         </Text>
       </View>
 
-      {/* Action Buttons */}
+
       <View className="flex-row flex-wrap justify-between p-6 mt-[-5%]">
-
-        { jobRole === "Distribution Center Manager" ? (
-           <TouchableOpacity           
-  className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative border border-[#980775]"           
-  onPress={() => navigation.navigate("CenterTargetScreen", { centerId: centerId } as any)}         
->
-          <Image
-            source={require("../../assets/images/New/centertarget.png")}
-            className="w-8 h-8 absolute top-2 right-2"
-          />
-          <Text
-            style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-            className="text-gray-700 text-lg absolute bottom-2 left-2"
+        {jobRole === "Distribution Center Manager" ? (
+          <TouchableOpacity           
+            className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative border border-[#980775] mb-50"           
+            onPress={() => navigation.navigate("CenterTargetScreen", { centerId: centerId } as any)}         
           >
-            {t("CenterTarget.CenterTarget")}
-          </Text>
-        </TouchableOpacity>
-
-        ):(
-
- <TouchableOpacity
-          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg border border-[#980775] shadow-gray-500 relative"
-          onPress={() => navigation.navigate("TargetOrderScreen" as any)}
-        >
-          <Image
-            source={require("../../assets/images/New/packing.png")}
-            className="w-8 h-8 absolute top-2 right-2"
-          />
-          <Text
-            style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
-            className="text-[#555464] text-lg absolute bottom-2 left-2"
+            <Image
+              source={require("../../assets/images/New/centertarget.png")}
+              className="w-8 h-8 absolute top-2 right-2"
+            />
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-gray-700 text-lg absolute bottom-2 left-2"
+            >
+              {t("CenterTarget.CenterTarget")}
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg border border-[#980775] shadow-gray-500 relative mb-50"
+            onPress={() => navigation.navigate("TargetOrderScreen" as any)}
           >
-            {t("DistridutionaDashboard.TargetOrders")}
-          </Text>
-        </TouchableOpacity>
-        
-        
-
-
+            <Image
+              source={require("../../assets/images/New/packing.png")}
+              className="w-8 h-8 absolute top-2 right-2"
+            />
+            <Text
+              style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+              className="text-[#555464] text-lg absolute bottom-2 left-2"
+            >
+              {t("DistridutionaDashboard.TargetOrders")}
+            </Text>
+          </TouchableOpacity>
         )}
-       
-
-       
       </View>
     </ScrollView>
   );

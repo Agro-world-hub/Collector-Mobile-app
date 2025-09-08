@@ -24,6 +24,11 @@ import LottieView from "lottie-react-native"; // Import LottieView
 import { useFocusEffect } from "expo-router";
 import { setUser } from '../store/authSlice';
 import { useDispatch } from "react-redux";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import NetInfo from "@react-native-community/netinfo";
 // import socket from "@/services/socket";
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Login">;
@@ -40,43 +45,38 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
   const [empid, setEmpid] = useState("");
   const [password, setPassword] = useState("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [loading, setLoading] = useState(false); // State for showing loader
+  const [loading, setLoading] = useState(false);
+  const [empIdError, setEmpIdError] = useState(""); // New state for error message
   const { t } = useTranslation();
-const dispatch = useDispatch();
-  const handleLogin = async () => {
-    Keyboard.dismiss(); // Dismiss the keyboard
-    if (!empid && !password) {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.Password & Employee ID are not allowed to be empty")
-      );
+  const dispatch = useDispatch();
+
+ 
+  const validateEmpIdFormat = (empId: string) => {
+    const trimmedEmpId = empId.trim();
+    
+
+    if (trimmedEmpId !== trimmedEmpId.toUpperCase()) {
+      setEmpIdError(t("Error.Please enter Employee ID in uppercase letters"));
       return false;
+    }
+    
+
+    setEmpIdError("");
+    return true;
+  };
+
+
+  const checkDCMAccess = async (empId: string, pass: string) => {
+    if (!empId.trim() || !pass.trim()) return;
+
+    const trimmedEmpId = empId.trim();
+    
+    // First validate format
+    if (trimmedEmpId !== trimmedEmpId.toUpperCase()) {
+      setEmpIdError(t("Error.Please enter Employee ID in uppercase letters"));
+      return;
     }
 
-    // Second check: Only password is empty
-    if (empid && !password) {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.Password is not allowed to be empty")
-      );
-      return false;
-    }
-
-    // Third check: Only employee ID is empty
-    if (!empid && password) {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.Employee ID is not allowed to be empty")
-      );
-      return false;
-    }
-    setLoading(true); // Show loader when login starts
-    await AsyncStorage.removeItem("token");
-    await AsyncStorage.removeItem("jobRole");
-    await AsyncStorage.removeItem("companyNameEnglish");
-    await AsyncStorage.removeItem("companyNameSinhala");
-    await AsyncStorage.removeItem("companyNameTamil");
-    await AsyncStorage.removeItem("empid");
     try {
       const response = await fetch(
         `${environment.API_BASE_URL}api/collection-officer/login`,
@@ -86,14 +86,121 @@ const dispatch = useDispatch();
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            empId: empid,
+            empId: trimmedEmpId,
+            password: pass,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok && data.jobRole) {
+
+        if (data.jobRole.toLowerCase() === "distribution center head") {
+          setEmpIdError(t("Error.Distribution Center Head are not allowed to access this application"));
+          return;
+        } else {
+        
+          setEmpIdError("");
+        }
+      }
+    } catch (error) {
+     
+      console.log("Validation check error:", error);
+    }
+  };
+
+  const handleEmpIdChange = (text: string) => {
+    setEmpid(text);
+  
+    if (empIdError) {
+      setEmpIdError("");
+    }
+
+    if (password.trim()) {
+      checkDCMAccess(text, password);
+    }
+  };
+
+
+  const handlePasswordChange = (text: string) => {
+    setPassword(text);
+
+    if (empid.trim() && text.trim()) {
+      checkDCMAccess(empid, text);
+    }
+  };
+
+  const handleLogin = async () => {
+    Keyboard.dismiss();
+    
+    // Clear any existing errors
+    setEmpIdError("");
+    
+    if (!empid && !password) {
+      Alert.alert(
+        t("Error.error"),
+        t("Error.Password & Employee ID are not allowed to be empty")
+      );
+      return false;
+    }
+
+    if (empid && !password) {
+      Alert.alert(
+        t("Error.error"),
+        t("Error.Password is not allowed to be empty")
+      );
+      return false;
+    }
+
+    if (!empid && password) {
+      Alert.alert(
+        t("Error.error"),
+        t("Error.Employee ID is not allowed to be empty")
+      );
+      return false;
+    }
+
+
+    if (!validateEmpIdFormat(empid)) {
+      return false;
+    }
+    
+    setLoading(true);
+    await AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("jobRole");
+    await AsyncStorage.removeItem("companyNameEnglish");
+    await AsyncStorage.removeItem("companyNameSinhala");
+    await AsyncStorage.removeItem("companyNameTamil");
+    await AsyncStorage.removeItem("empid");
+
+    const netState = await NetInfo.fetch();
+    if (!netState.isConnected) {
+      setLoading(false);
+      Alert.alert(t("Error.error"), "No internet connection");
+      return; 
+    }
+    
+    try {
+      const trimmedEmpId = empid.trim();
+     // console.log("Employee ID:", trimmedEmpId);
+
+      const response = await fetch(
+        `${environment.API_BASE_URL}api/collection-officer/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            empId: trimmedEmpId,
             password,
           }),
         }
       );
 
       const data = await response.json();
-      console.log("Login response:", data);
+     // console.log("Login response:", data);
 
       if (!response.ok) {
         setLoading(false);
@@ -113,7 +220,6 @@ const dispatch = useDispatch();
         return;
       }
 
-      // Login successful
       const {
         token,
         passwordUpdateRequired,
@@ -123,18 +229,37 @@ const dispatch = useDispatch();
         companyNameSinhala,
         companyNameTamil,
       } = data;
+
+
+    const allowedRoles = [
+    "collection officer",
+    "collection center manager", 
+    "distribution officer",
+    "distribution center manager"  // Keep lowercase for consistency
+  ];
+
+      if (!allowedRoles.includes(jobRole.toLowerCase())) {
+        setLoading(false);
+        Alert.alert(
+          t("Error.error"),
+          t("Error.Access denied")
+        );
+        return;
+      }
+
+      // Continue with normal login flow
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("jobRole", jobRole);
       await AsyncStorage.setItem("companyNameEnglish", companyNameEnglish);
       await AsyncStorage.setItem("companyNameSinhala", companyNameSinhala);
       await AsyncStorage.setItem("companyNameTamil", companyNameTamil);
       await AsyncStorage.setItem("empid", empId.toString());
-dispatch(setUser({ token, jobRole, empId: empId.toString() }));
+      dispatch(setUser({ token, jobRole, empId: empId.toString() }));
+      
       if (token) {
         const timestamp = new Date();
         const expirationTime = new Date(
           timestamp.getTime() + 8 * 60 * 60 * 1000
-          // timestamp.getTime() + 2 * 60 * 1000
         );
         await AsyncStorage.multiSet([
           ["tokenStoredTime", timestamp.toISOString()],
@@ -142,21 +267,13 @@ dispatch(setUser({ token, jobRole, empId: empId.toString() }));
         ]);
       }
 
-      console.log("llllllll========================",passwordUpdateRequired)
+   //   console.log("Password update required:", passwordUpdateRequired);
       await status(empId, true);
+      
       setTimeout(() => {
         setLoading(false);
-//         if (passwordUpdateRequired) {
-//           navigation.navigate("ChangePassword", { empid } as any);
-//         } else {
-//           if (jobRole === "Collection Officer") {
-//             navigation.navigate("Main", { screen: "Dashboard" });
-//           } else {
-//             navigation.navigate("Main", { screen: "ManagerDashboard" });
-//           }
-//         }
-
-if (passwordUpdateRequired) {
+        
+      if (passwordUpdateRequired) {
   navigation.navigate("ChangePassword", { empid } as any);
 } else {
   // Fixed: Check for both Distribution roles individually
@@ -168,8 +285,8 @@ if (passwordUpdateRequired) {
     navigation.navigate("Main", { screen: "ManagerDashboard" });
   }
 }
-
       }, 4000);
+      
     } catch (error) {
       setLoading(false);
       console.error("Login error:", error);
@@ -191,11 +308,11 @@ if (passwordUpdateRequired) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Add token in Authorization header
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            empId: empId, // Use the passed empId
-            status: status, // Use the passed status
+            empId: empId,
+            status: status,
           }),
         }
       );
@@ -215,7 +332,7 @@ if (passwordUpdateRequired) {
     await AsyncStorage.removeItem("@user_language");
   };
 
-    useFocusEffect(
+  useFocusEffect(
     useCallback(() => {
       const onBackPress = () => true;
       BackHandler.addEventListener("hardwareBackPress", onBackPress);
@@ -228,24 +345,26 @@ if (passwordUpdateRequired) {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
-      style={{ flex: 1}}
+      style={{ flex: 1, backgroundColor: "white" }}
     >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
         className=" bg-white"
       >
-        <TouchableOpacity onPress={() => handleNavBack()} className="p-4">
-          <AntDesign name="left" size={24} color="#000502" />
-        </TouchableOpacity>
+        <View className="flex-row items-center justify-between " style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }} >
+          <TouchableOpacity  onPress={() => handleNavBack()}>
+            <AntDesign name="left" size={22} color="black" style={{ paddingHorizontal: wp(3), paddingVertical: hp(1.5), backgroundColor: "#F6F6F680" , borderRadius: 50 }}/>
+          </TouchableOpacity>
+          <View style={{ width: 22 }} />
+        </View>
 
-        <View className="items-center mt-[-6%]">
+        <View className="items-center ">
           <Image 
-          source={loginImage} 
-          style={{ width: 270, height: 270 }}
-          resizeMode="contain"
-        />
-
+            source={loginImage} 
+            style={{ width: 270, height: 270 }}
+            resizeMode="contain"
+          />
           <Text className="font-bold text-2xl pt-[7%]">
             {t("SignIn.Wellcome")}
           </Text>
@@ -253,14 +372,12 @@ if (passwordUpdateRequired) {
 
         <View className="mt-2 items-center">
           <Text>{t("SignIn.SigntoLogin")}</Text>
-          {/* <Text>Please Sign in to login</Text> */}
         </View>
 
         {loading ? (
-          // **Lottie Loader while logging in**
           <View className="flex-1 justify-center items-center ">
             <LottieView
-              source={require("../assets/lottie/newLottie.json")} // Ensure you have a valid JSON file
+              source={require("../assets/lottie/newLottie.json")}
               autoPlay
               loop
               style={{ width: 300, height: 300 }}
@@ -271,39 +388,46 @@ if (passwordUpdateRequired) {
             <Text className="text-base pb-[2%] font-light">
               {t("SignIn.Employee")}
             </Text>
-            <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">
-              {/* <Icon name="email" size={24} color="green" /> */}
-              {/* <AntDesign name="user" size={24} color="green" /> */}
+            <View className={`flex-row items-center bg-[#F4F4F4] border rounded-3xl w-[95%] h-[53px] mb-2 px-3 ${
+              empIdError ? 'border-red-500' : 'border-[#F4F4F4]'
+            }`}>
               <Image 
-              source={user} 
-               style={{ width: 24, height: 24 }}
-          resizeMode="contain"
+                source={user} 
+                style={{ width: 24, height: 24 }}
+                resizeMode="contain"
               />
               <TextInput
                 className="flex-1 h-[40px] text-base pl-2"
-              //  placeholder={t("SignIn.Employee")}
-                // onChangeText={setEmpid}
-                    onChangeText={(text) => setEmpid(text)}
-                    
-    autoCapitalize="characters"  // Automatically capitalizes all letters
+                onChangeText={handleEmpIdChange}
+                autoCapitalize="characters"
                 value={empid}
               />
             </View>
+            
+            {/* Error message for Employee ID */}
+            {empIdError ? (
+              <View className="mb-4">
+                <Text className="text-red-500 text-sm pl-3">
+                  {empIdError}
+                </Text>
+              </View>
+            ) : (
+              <View className="mb-6" />
+            )}
 
             <Text className="text-base pb-[2%] font-light">
               {t("SignIn.Password")}
             </Text>
- <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">            
-     <Image 
-              source={passwordicon} 
-               style={{ width: 24, height: 24 }}
-          resizeMode="contain"
+            <View className="flex-row items-center bg-[#F4F4F4] border border-[#F4F4F4] rounded-3xl w-[95%] h-[53px] mb-8 px-3">            
+              <Image 
+                source={passwordicon} 
+                style={{ width: 24, height: 24 }}
+                resizeMode="contain"
               />
               <TextInput
                 className="flex-1 h-[40px] text-base pl-2"
-              //  placeholder={t("SignIn.Password")}
                 secureTextEntry={secureTextEntry}
-                onChangeText={setPassword}
+                onChangeText={handlePasswordChange}
                 value={password}
               />
               <TouchableOpacity
@@ -317,10 +441,10 @@ if (passwordUpdateRequired) {
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity
+             <TouchableOpacity
               className="bg-[#000000] w-full p-3 rounded-3xl shadow-2xl items-center justify-center mb-[20%]"
               onPress={handleLogin}
-              disabled={loading} // Disable button while loading
+              disabled={loading}
             >
               {loading ? (
                 <ActivityIndicator color="white" size="small" />

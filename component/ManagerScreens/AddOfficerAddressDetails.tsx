@@ -22,6 +22,8 @@ import { KeyboardAvoidingView } from "react-native";
 import { Platform } from "react-native";
 import bankNames from "../../assets/jsons/banks.json";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
+import i18n from "@/i18n/i18n";
 
 type AddOfficerAddressDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -73,7 +75,7 @@ const AddOfficerAddressDetails: React.FC = () => {
     profileImage: "",
   });
 
-  console.log(formData);
+  //console.log(formData);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -120,26 +122,7 @@ const AddOfficerAddressDetails: React.FC = () => {
     });
   };
 
-  // Validation for matching account numbers
-  // const handleValidation = (key: string, value: string) => {
-  //   setFormData((prevState) => {
-  //     const updatedFormData = { ...prevState, [key]: value };
-  //     const { accountNumber, confirmAccountNumber } = updatedFormData;
 
-  //     if (
-  //       accountNumber &&
-  //       confirmAccountNumber &&
-  //       accountNumber !== confirmAccountNumber
-  //     ) {
-  //       setError(t("Error.Account numbers do not match."));
-  //     } else {
-  //       setError(""); // Clear error if they match
-  //     }
-
-  //     saveDataToStorage(updatedFormData); // Ensure data is saved after validation
-  //     return updatedFormData;
-  //   });
-  // };
 
   const handleValidation = (key: string, value: string) => {
   // Block special characters and letters - only allow numbers
@@ -225,7 +208,12 @@ const AddOfficerAddressDetails: React.FC = () => {
       profileImage: basicDetails.profileImage || "", // Include the base64 image in the payload
     };
 
-    console.log("Combined data for passing to backend:", combinedData);
+  //  console.log("Combined data for passing to backend:", combinedData);
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
 
     try {
       setLoading(true);
@@ -419,14 +407,33 @@ const AddOfficerAddressDetails: React.FC = () => {
     }
   }, [bankName]);
 
+  const formatText = (text:string) => {
+  // Remove leading spaces
+  let formattedText = text.replace(/^\s+/, '');
+  
+  // Capitalize first letter if text exists
+  if (formattedText.length > 0) {
+    formattedText = formattedText.charAt(0).toUpperCase() + formattedText.slice(1);
+  }
+  
+  return formattedText;
+};
+
+
+
   const handleBankSelection = (selectedBank: string) => {
-    setBankName(selectedBank);
-    setFormData((prevData) => {
-      const updatedData = { ...prevData, bankName: selectedBank }; // Update the form data with new bankName
-      saveDataToStorage(updatedData); // Save every time bank name changes
-      return updatedData;
-    });
-  };
+  setBankName(selectedBank);
+  setBranchName(""); 
+  setFormData((prevData) => {
+    const updatedData = { 
+      ...prevData, 
+      bankName: selectedBank,
+      branchName: "" 
+    };
+    saveDataToStorage(updatedData); 
+    return updatedData;
+  });
+};
 
   const handleBranchSelection = (selectedBranch: string) => {
     setBranchName(selectedBranch);
@@ -451,12 +458,12 @@ const AddOfficerAddressDetails: React.FC = () => {
         <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            className="pr-4"
+            className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10"
           >
             <AntDesign name="left" size={24} color="#000502" />
           </TouchableOpacity>
-          {/* <Text className="text-lg font-bold ml-[25%]">{t("AddOfficerAddressDetails.AddOfficer")}</Text> */}
-          <View className="flex-1 justify-center items-center">
+         
+          <View className="flex-1 justify-center items-center mr-[8%]">
             <Text className="text-lg font-bold">
               {t("AddOfficerAddressDetails.AddOfficer")}
             </Text>
@@ -473,20 +480,29 @@ const AddOfficerAddressDetails: React.FC = () => {
             }
             className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
           />
+         
           <TextInput
-            placeholder={t("AddOfficerAddressDetails.Street Name")}
-            value={formData.streetName}
-            onChangeText={(text) =>
-              setFormData({ ...formData, streetName: text })
-            }
-            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
-          />
-          <TextInput
-            placeholder={t("AddOfficerAddressDetails.City")}
-            value={formData.city}
-            onChangeText={(text) => setFormData({ ...formData, city: text })}
-            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
-          />
+  placeholder={t("AddOfficerAddressDetails.Street Name")}
+  value={formData.streetName}
+  onChangeText={(text) => {
+    const formattedText = formatText(text);
+    setFormData({ ...formData, streetName: formattedText });
+  }}
+  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+  autoCorrect={false}
+/>
+
+
+<TextInput
+  placeholder={t("AddOfficerAddressDetails.City")}
+  value={formData.city}
+  onChangeText={(text) => {
+    const formattedText = formatText(text);
+    setFormData({ ...formData, city: formattedText });
+  }}
+  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+  autoCorrect={false}
+/>
           <TextInput
             placeholder={t("AddOfficerAddressDetails.Country")}
             value={t("AddOfficerAddressDetails.Country")} // Always set to Sri Lanka
@@ -495,7 +511,7 @@ const AddOfficerAddressDetails: React.FC = () => {
           />
 
           <View style={{ marginBottom: 10 }}>
-            {/* <Text style={{ fontSize: 18, marginBottom: 5 }}>Select Province</Text> */}
+         
             <SelectList
               setSelected={(province: any) => handleProvinceChange(province)}
               data={jsonData.provinces.map((province) => ({
@@ -525,18 +541,18 @@ const AddOfficerAddressDetails: React.FC = () => {
           {/* District Dropdown */}
           {formData.province && (
             <View style={{ marginBottom: 2 }}>
-              {/* <Text style={{ fontSize: 18, marginBottom: 5 }}>Select District</Text> */}
+          
               <SelectList
-                setSelected={handleDistrictChange} // Use the updated function to handle district change
+                setSelected={handleDistrictChange} 
                 data={districts.map((district) => ({
                   key: district.en,
-                  value: district[selectedLanguage as keyof typeof district], // Value displayed in the selected language
+                  value: district[selectedLanguage as keyof typeof district], 
                 }))}
                 boxStyles={{
                     borderColor: "#F4F4F4", // Remove the border
                     borderRadius: 25,
                     width: "100%",
-                    height: 40,
+                    height: 50,
                     backgroundColor:"#F4F4F4",
                   }}
                 dropdownStyles={{
@@ -557,15 +573,15 @@ const AddOfficerAddressDetails: React.FC = () => {
   placeholder={t("AddOfficerAddressDetails.AccountName")}
   value={formData.accountHolderName}
   onChangeText={(text) => {
-    // Block special characters and numbers - only allow letters and spaces
+
     let filteredText = text.replace(/[^a-zA-Z\s]/g, '');
     
-    // Prevent space at the beginning
+
     if (filteredText.startsWith(' ')) {
       filteredText = filteredText.trimStart();
     }
     
-    // Capitalize first letter of each word and make rest lowercase
+
     const capitalizedText = filteredText
       .toLowerCase()
       .split(' ')
@@ -608,30 +624,32 @@ const AddOfficerAddressDetails: React.FC = () => {
           <View className="">
             <View className="mb-4">
               <SelectList
-                setSelected={handleBankSelection} // Handle bank selection
-                data={bankNames.map((bank) => ({
-                  key: bank.name, // Bank name as key
-                  value: bank.name, // Display name in dropdown
-                }))}
-                defaultOption={{
-                  key: formData.bankName,
-                  value: formData.bankName,
-                }}
-                placeholder={t("AddOfficerAddressDetails.BankName")}
-                boxStyles={{
-                    borderColor: "#F4F4F4", // Remove the border
-                    borderRadius: 25,
-                    width: "100%",
-                    height: 50,
-                    backgroundColor:"#F4F4F4",
-                  }}
-                dropdownStyles={{
-                  borderRadius: 5,
-                  borderWidth: 1,
-                  borderColor: "#cccccc",
-                }}
-                search={true}
-              />
+    setSelected={handleBankSelection}
+    data={bankNames
+      .sort((a, b) => a.name.localeCompare(b.name)) // Sort banks A-Z
+      .map((bank) => ({
+        key: bank.name,
+        value: bank.name,
+      }))}
+    defaultOption={{
+      key: formData.bankName,
+      value: formData.bankName,
+    }}
+    placeholder={t("AddOfficerAddressDetails.BankName")}
+    boxStyles={{
+      borderColor: "#F4F4F4",
+      borderRadius: 25,
+      width: "100%",
+      height: 50,
+      backgroundColor: "#F4F4F4",
+    }}
+    dropdownStyles={{
+      borderRadius: 5,
+      borderWidth: 1,
+      borderColor: "#cccccc",
+    }}
+    search={true}
+  />
             </View>
             <View>
               {filteredBranches.length > 0 && (
@@ -671,7 +689,15 @@ const AddOfficerAddressDetails: React.FC = () => {
             onPress={() => navigation.goBack()}
             className="bg-gray-300 px-8 py-3 rounded-full"
           >
-            <Text className="text-gray-800 text-center">
+            <Text className="text-gray-800 text-center"
+                                   style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 10 }
+    : { fontSize: 14 }
+]}
+            >
               {t("AddOfficerAddressDetails.Go")}
             </Text>
           </TouchableOpacity>
@@ -686,7 +712,15 @@ const AddOfficerAddressDetails: React.FC = () => {
             {loading ? (
               <ActivityIndicator color="white" size="small" />
             ) : (
-              <Text className="text-white text-center">
+              <Text className="text-white text-center"
+                                     style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 10 }
+    : { fontSize: 14 }
+]}
+              >
                 {t("AddOfficerAddressDetails.Submit")}
               </Text>
             )}

@@ -90,7 +90,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
     selectedDate,
   } = route.params;
 
-  console.log("Farmer Report:", route.params);
+//  console.log("Farmer Report:", route.params);
   const [crops, setCrops] = useState<Crop[]>([]);
   const totalSum = crops.reduce(
     (sum: number, crop: any) => sum + parseFloat(crop.total || 0),
@@ -113,7 +113,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
       });
 
       const data = response.data.data;
-      console.log(data);
+    //  console.log(data);
 
       if (response.data.status === "success") {
         const officerDetails = {
@@ -121,7 +121,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
           QRCode: data.QRcode, // Ensure case is correct
         };
 
-        console.log("Extracted QR Code:", officerDetails.QRCode);
+       // console.log("Extracted QR Code:", officerDetails.QRCode);
 
         // Set the officerDetails state
         setofficerDetails(officerDetails);
@@ -156,7 +156,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
       );
 
       if (response.status === 200) {
-        console.log("Crop Details:", response.data);
+      //  console.log("Crop Details:", response.data);
         return response.data;
       } else {
         console.error("Failed to fetch crop details:", response.statusText);
@@ -185,10 +185,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
         api.get(
           `api/unregisteredfarmercrop/user-crops/today/${userId}/${registeredFarmerId}`
         ),
-        // Commented out officer QR code fetching
-        // api.get(`api/collection-officer/get-officer-Qr`, {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // }),
+
       ]);
 
       const data = detailsResponse.data;
@@ -208,7 +205,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
       });
 
       setCrops(cropsResponse.data);
-      console.log("crop response for report", cropsResponse.data);
+   //   console.log("crop response for report", cropsResponse.data);
     } catch (error) {
       console.error("Error fetching details:", error);
       Alert.alert(t("Error.error"), t("Error.Failed to load details"));

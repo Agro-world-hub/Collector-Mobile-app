@@ -10,6 +10,8 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+
+import { Modal } from 'react-native';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "./types";
@@ -32,6 +34,7 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { useTranslation } from "react-i18next";
 import LottieView from "lottie-react-native";
 import { Ionicons } from "@expo/vector-icons";
+import NetInfo from "@react-native-community/netinfo";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -58,6 +61,72 @@ interface UnregisteredCropDetailsProps {
   navigation: UnregisteredCropDetailsNavigationProp;
   route: UnregisteredCropDetailsRouteProp;
 }
+
+
+
+
+interface DeleteModalProps {
+  visible: boolean;
+  title: string;
+  message: string;
+  onCancel: () => void;
+  onDelete: () => void;
+}
+
+const DeleteModal: React.FC<DeleteModalProps> = ({
+  visible,
+  title,
+  message,
+  onCancel,
+  onDelete,
+}) => {
+
+   const { t } = useTranslation();
+
+  return (
+    <Modal
+      visible={visible}
+      transparent={true}
+      animationType="fade"
+      statusBarTranslucent={true}
+    >
+      <View className="flex-1 bg-black/50 justify-center items-center px-5">
+        <View className="bg-white rounded-xl p-6 items-center min-w-[280px] max-w-[320px]">
+          {/* Warning Icon */}
+          <View className="w-10 h-10 bg-[#F6F7F9] rounded-lg justify-center items-center mb-4">
+            {/* <Text className="text-yellow-600 text-xl">⚠</Text> */}
+            <Image
+                      source={require("../assets/images/New/Errorcentertarget.png")}
+                      style={{ width: 20, height: 20 }}
+                    />
+          </View>
+          
+          {/* Modal Message */}
+          <Text className="text-gray-700 text-base text-center leading-6 mb-6">
+            {message}
+          </Text>
+          
+          {/* Buttons */}
+          <View className="flex-row gap-3">
+            <TouchableOpacity 
+              className="flex-1 py-3 px-5 border border-gray-300 rounded-lg items-center min-w-[80px]"
+              onPress={onCancel}
+            >
+              <Text className="text-gray-700 text-base font-medium">{t("UnregisteredCropDetails.Cancel")}</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              className="flex-1 py-3 px-5 bg-red-500 rounded-lg items-center min-w-[80px]"
+              onPress={onDelete}
+            >
+              <Text className="text-white text-base font-medium">{t("UnregisteredCropDetails.Delete")}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
 
 const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({
   navigation,
@@ -91,6 +160,7 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({
   const [donebutton2visibale, setdonebutton2visibale] = useState(false);
   const [donebutton1disabale, setdonebutton1disabale] = useState(true);
   const [donebutton2disabale, setdonebutton2disabale] = useState(false);
+  const [showImageAlert, setShowImageAlert] = useState(false);
   const [showCameraModels, setShowCameraModels] = useState(false);
   const [addbutton, setaddbutton] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -103,6 +173,18 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({
   const [isAtEnd, setIsAtEnd] = useState(false); // Track if we're at the end of the list
  const [usedVarietyIds, setUsedVarietyIds] = useState<string[]>([]);
  const [exhaustedCrops, setExhaustedCrops] = useState<string[]>([]); 
+   const [deleteVarietyModal, setDeleteVarietyModal] = useState({
+    visible: false,
+    index: -1,
+    varietyName: '',
+  });
+  
+  const [deleteGradeModal, setDeleteGradeModal] = useState({
+    visible: false,
+    cropIndex: -1,
+        varietyName: '',
+    grade: 'A' as 'A' | 'B' | 'C',
+  });
 const scrollToNext = () => {
   if (scrollViewRef.current) {
     const newPosition = scrollPosition + wp(70) + 20;
@@ -343,17 +425,47 @@ const onScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
     }
   };
 
-  const handleQuantityChange = (grade: string, value: string) => {
-    const quantity = parseInt(value) || 0;
-    if (quantity === 0) {
-      setImages((prev) => ({
-        ...prev,
-        [grade]: null, // Reset the image for this grade
-      }));
-    }
+
+const handleQuantityChange = (grade: "A" | "B" | "C", value: string) => {
+  const quantity = parseInt(value) || 0;
+  
+  // If setting quantity to 0, remove the image and allow
+  if (quantity === 0) {
+    setImages((prev) => ({
+      ...prev,
+      [grade]: null,
+    }));
     setQuantities((prev) => ({ ...prev, [grade]: quantity }));
     calculateTotal();
-  };
+    return;
+  }
+
+  // Check if there are any grades with quantities but no images
+  const gradesWithQuantityButNoImage = (["A", "B", "C"] as const).filter((g) => 
+    quantities[g] > 0 && !images[g] && g !== grade
+  );
+
+  if (gradesWithQuantityButNoImage.length > 0) {
+    Alert.alert(
+      t("Error.Upload Image First"),
+     // `Please upload image for Grade ${gradesWithQuantityButNoImage[0]} before entering quantity for Grade ${grade}.`,
+      t("UnregisteredCropDetails.Please upload image for Grade",
+        {
+          grade:grade,
+          gradesWithQuantityButNoImage:gradesWithQuantityButNoImage[0]
+        }
+      ),
+      [{ text: t("Error.Ok") }]
+    );
+    return;
+  }
+
+  // Allow quantity change
+  setQuantities((prev) => ({ ...prev, [grade]: quantity }));
+  calculateTotal();
+  
+//  console.log(`Grade ${grade} quantity set to ${quantity}. Image required.`);
+};
 
   useEffect(() => {
     calculateTotal();
@@ -373,54 +485,64 @@ const onScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
 
   const [resetCameraImage, setResetCameraImage] = useState(false);
 
-  const incrementCropCount = async () => {
-    if (quantities.A > 0 && !images.A) {
-      alert("Please upload an image for Grade A before submitting.");
-      return; // Stop submission if the condition is met
-    } else if (quantities.B > 0 && !images.B) {
-      alert("Please upload an image for Grade B before submitting.");
-      return; // Stop submission if the condition is met
-    } else if (quantities.C > 0 && !images.C) {
-      alert("Please upload an image for Grade C before submitting.");
-      return; // Stop submission if the condition is met
-    }
-    setaddbutton(true);
-    setSelectedCrop(null);
-    setSelectedVariety(null);
-    setdonebutton2disabale(false);
-    console.log("Incrementing crop count");
-    setdonebutton1visibale(false);
-    setdonebutton2visibale(true);
-    if (!selectedCrop || !selectedVariety) {
-      alert("Please select both a crop and a variety before adding.");
-      return;
-    }
-setUsedVarietyIds(prev => [...prev, selectedVariety]);
-    const newCrop = {
-      cropId: selectedCrop.id || "",
-      varietyId: selectedVariety || "",
-      varietyName: selectedVarietyName,
-      gradeAprice: unitPrices.A || 0,
-      gradeAquan: quantities.A || 0,
-      gradeBprice: unitPrices.B || 0,
-      gradeBquan: quantities.B || 0,
-      gradeCprice: unitPrices.C || 0,
-      gradeCquan: quantities.C || 0,
-      imageA: images.A || null, // Image for grade A
-      imageB: images.B || null, // Image for grade B
-      imageC: images.C || null, // Image for grade C
-    };
 
-    setCrops((prevCrops) => {
-      console.log("Adding new crop:", newCrop);
-      return [...prevCrops, newCrop];
-    });
-    resetCropEntry();
 
-    // Toggle resetCameraImage to trigger the useEffect in CameraComponent
-    setResetCameraImage((prev) => !prev);
-    setCropCount((prevCount) => prevCount + 1);
+const incrementCropCount = async () => {
+  // Validate images for current quantities
+  const missingImages = [];
+  if (quantities.A > 0 && !images.A) missingImages.push("Grade A");
+  if (quantities.B > 0 && !images.B) missingImages.push("Grade B");
+  if (quantities.C > 0 && !images.C) missingImages.push("Grade C");
+
+  if (missingImages.length > 0) {
+    Alert.alert(
+      t("UnregisteredCropDetails.Images Required"),
+     // `Please upload images for: ${missingImages.join(", ")} before adding this crop.`
+     t("UnregisteredCropDetails.Please upload images for",
+        {
+          missingImages:missingImages.join(", ")
+         
+        }
+      ),
+    );
+    return;
+  }
+
+  if (!selectedCrop || !selectedVariety) {
+    Alert.alert(t("UnregisteredCropDetails.Incomplete Seletcion"), t("UnregisteredCropDetails.Please select both a crop and a variety before adding"));
+    return;
+  }
+
+  setaddbutton(true);
+  setSelectedCrop(null);
+  setSelectedVariety(null);
+  setdonebutton2disabale(false);
+  setdonebutton1visibale(false);
+  setdonebutton2visibale(true);
+
+  // Add variety to used list
+  setUsedVarietyIds(prev => [...prev, selectedVariety]);
+
+  const newCrop = {
+    cropId: selectedCrop.id || "",
+    varietyId: selectedVariety || "",
+    varietyName: selectedVarietyName,
+    gradeAprice: unitPrices.A || 0,
+    gradeAquan: quantities.A || 0,
+    gradeBprice: unitPrices.B || 0,
+    gradeBquan: quantities.B || 0,
+    gradeCprice: unitPrices.C || 0,
+    gradeCquan: quantities.C || 0,
+    imageA: images.A || null,
+    imageB: images.B || null,
+    imageC: images.C || null,
   };
+
+  setCrops((prevCrops) => [...prevCrops, newCrop]);
+  resetCropEntry();
+  setResetCameraImage((prev) => !prev);
+  setCropCount((prevCount) => prevCount + 1);
+};
 
   const resetCropEntry = () => {
     setSelectedCrop(null);
@@ -432,22 +554,62 @@ setUsedVarietyIds(prev => [...prev, selectedVariety]);
     setImage(null);
   };
 
-  const handleImagePick = (
-    base64Image: string | null,
-    grade: "A" | "B" | "C"
-  ) => {
-    setImages((prevImages) => {
-      return {
-        ...prevImages,
-        [grade]: base64Image,
-      };
-    });
-    if (base64Image) {
-      console.log(`${grade} image is set.`);
-    } else {
-      console.log(`${grade} image has been removed.`);
-    }
-  };
+
+const handleImagePick = (
+  base64Image: string | null,
+  grade: "A" | "B" | "C"
+) => {
+  // Check if quantity is entered for this grade
+  if (quantities[grade] <= 0) {
+    // Alert.alert(
+    //   "Add Quantity First",
+    //   `Please enter quantity for Grade ${grade} before adding an image.`,
+    //   [{ text: "OK" }]
+    // );
+     Alert.alert(
+      t("UnregisteredCropDetails.Add Quantity First"),
+     // `Please upload image for Grade ${gradesWithQuantityButNoImage[0]} before entering quantity for Grade ${grade}.`,
+      t("UnregisteredCropDetails.Please enter quantity",
+        {
+          grade:grade
+       
+        }
+      ),
+      [{ text: t("Error.Ok") }]
+    );
+    return;
+  }
+
+  // Allow image upload
+  setImages((prevImages) => ({
+    ...prevImages,
+    [grade]: base64Image,
+  }));
+  
+  if (base64Image) {
+    console.log(`${grade} image is set.`);
+  } else {
+    console.log(`${grade} image has been removed.`);
+  }
+};
+
+const canAddCrop = () => {
+  // Check if there are any grades with quantities but no images
+  const missingImages = [];
+  if (quantities.A > 0 && !images.A) missingImages.push("Grade A");
+  if (quantities.B > 0 && !images.B) missingImages.push("Grade B");
+  if (quantities.C > 0 && !images.C) missingImages.push("Grade C");
+  
+  return missingImages.length === 0;
+};
+
+const hasUnsavedCropDetails = () => {
+  const hasQuantities = quantities.A > 0 || quantities.B > 0 || quantities.C > 0;
+  const hasCropSelection = selectedCrop !== null;
+  const hasVarietySelection = selectedVariety !== null;
+  
+  return hasCropSelection || hasVarietySelection || hasQuantities;
+};
 
   const refreshCropForms = () => {
     setSelectedCrop(null);
@@ -468,102 +630,114 @@ setUsedVarietyIds(prev => [...prev, selectedVariety]);
     setResetCameraImage((prev) => !prev);
   };
 
-  const handleSubmit = async () => {
-    try {
-      if (crops.length === 0) {
-        alert("Please add at least one crop to proceed.");
-        return;
-      }
-      if (quantities.A > 0 && !images.A) {
-        alert("Please upload an image for Grade A before submitting.");
-        return; // Stop submission if the condition is met
-      } else if (quantities.B > 0 && !images.B) {
-        alert("Please upload an image for Grade B before submitting.");
-        return; // Stop submission if the condition is met
-      } else if (quantities.C > 0 && !images.C) {
-        alert("Please upload an image for Grade C before submitting.");
-        return; // Stop submission if the condition is met
-      }
 
-      // Retrieve the token from AsyncStorage
-      const token = await AsyncStorage.getItem("token");
-
-      // Generate invoice number
-      const invoiceNumber = await generateInvoiceNumber();
-      if (!invoiceNumber) {
-        alert("Failed to generate invoice number.");
-        return;
-      }
-
-      let totalPrice = 0;
-
-      crops.forEach((crop) => {
-        // For each crop, calculate the total for each grade (A, B, C)
-        totalPrice += crop.gradeAprice * crop.gradeAquan || 0;
-        totalPrice += crop.gradeBprice * crop.gradeBquan || 0;
-        totalPrice += crop.gradeCprice * crop.gradeCquan || 0;
-      });
-
-      console.log("Total Price:", totalPrice);
-      setLoading(true);
-      // Construct the payload including invoice number
-      const payload = {
-        farmerId: userId,
-        invoiceNumber: invoiceNumber, // Include generated invoice number
-        crops: crops.map((crop) => ({
-          varietyId: crop.varietyId || "",
-          gradeAprice: crop.gradeAprice || 0,
-          gradeAquan: crop.gradeAquan || 0,
-          gradeBprice: crop.gradeBprice || 0,
-          gradeBquan: crop.gradeBquan || 0,
-          gradeCprice: crop.gradeCprice || 0,
-          gradeCquan: crop.gradeCquan || 0,
-          // image: crop.image || null,
-          imageA: crop.imageA || null, // Image for grade A
-          imageB: crop.imageB || null, // Image for grade B
-          imageC: crop.imageC || null,
-        })),
-      };
-
-      console.log("Payload before sending:", payload);
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
+const handleSubmit = async () => {
+  // Check if user has unsaved crop details
+  if (hasUnsavedCropDetails()) {
+    Alert.alert(
+      t("Error.Unsaved Crop Details"),
+      t("Error.You have entered crop details but"),
+      [
+        {
+          text: t("Error.No"),
+          style: "cancel",
+          onPress: () => console.log("User cancelled submission"),
         },
-      };
+        {
+          text: t("Error.Yes"),
+          style: "default",
+          onPress: () => proceedWithSubmit(),
+        },
+      ]
+    );
+    return;
+  }
+  
+  // If no unsaved details, proceed directly
+  proceedWithSubmit();
+};
 
-      // Make the API call to submit crop data
-      const response = await axios.post(
-        `${environment.API_BASE_URL}api/unregisteredfarmercrop/add-crops`,
-        payload,
-        config
-      );
+// Separated submit logic
+const proceedWithSubmit = async () => {
+  const netState = await NetInfo.fetch();
+  if (!netState.isConnected) {
+    return;
+  }
 
-      // Capture the registeredFarmerId from the response
-      const { registeredFarmerId } = response.data;
-      console.log("registeredFarmerId:", registeredFarmerId);
-
-      Alert.alert(
-        t("BankDetailsUpdate.Success"),
-        t("Error.All crop details submitted successfully!")
-      );
-
-      await sendSMS(farmerLanguage, farmerPhone, totalPrice, invoiceNumber);
-
-      refreshCropForms();
-      setLoading(false);
-
-      // Navigate to the ReportPage, passing registeredFarmerId and userId
-      navigation.navigate("NewReport" as any, { userId, registeredFarmerId });
-    } catch (error) {
-      console.error("Error submitting crop data:", error);
-      alert("Failed to submit crop details. Please try again.");
-      setLoading(false);
-    } finally {
-      setLoading(false);
+  try {
+    if (crops.length === 0) {
+      Alert.alert(t("Error.No Crops"), t("Error.Please add at least one crop to proceed"));
+      return;
     }
-  };
+
+    // Rest of your existing submit logic...
+    const token = await AsyncStorage.getItem("token");
+    const invoiceNumber = await generateInvoiceNumber();
+    
+    if (!invoiceNumber) {
+      Alert.alert(t("Error.error"), t("Error.Failed to generate invoice number"));
+      return;
+    }
+
+    let totalPrice = 0;
+    crops.forEach((crop) => {
+      totalPrice += crop.gradeAprice * crop.gradeAquan || 0;
+      totalPrice += crop.gradeBprice * crop.gradeBquan || 0;
+      totalPrice += crop.gradeCprice * crop.gradeCquan || 0;
+    });
+
+    console.log("Total Price:", totalPrice);
+    setLoading(true);
+
+    const payload = {
+      farmerId: userId,
+      invoiceNumber: invoiceNumber,
+      crops: crops.map((crop) => ({
+        varietyId: crop.varietyId || "",
+        gradeAprice: crop.gradeAprice || 0,
+        gradeAquan: crop.gradeAquan || 0,
+        gradeBprice: crop.gradeBprice || 0,
+        gradeBquan: crop.gradeBquan || 0,
+        gradeCprice: crop.gradeCprice || 0,
+        gradeCquan: crop.gradeCquan || 0,
+        imageA: crop.imageA || null,
+        imageB: crop.imageB || null,
+        imageC: crop.imageC || null,
+      })),
+    };
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const response = await axios.post(
+      `${environment.API_BASE_URL}api/unregisteredfarmercrop/add-crops`,
+      payload,
+      config
+    );
+
+    const { registeredFarmerId } = response.data;
+
+    Alert.alert(
+      t("BankDetailsUpdate.Success"),
+      t("Error.All crop details submitted successfully!")
+    );
+
+    await sendSMS(farmerLanguage, farmerPhone, totalPrice, invoiceNumber);
+    refreshCropForms();
+    setLoading(false);
+
+    navigation.navigate("NewReport" as any, { userId, registeredFarmerId });
+  } catch (error) {
+    console.error("Error submitting crop data:", error);
+    Alert.alert(t("Error.error"), t("Error.Failed to submit crop details"));
+    setLoading(false);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const sendSMS = async (
     language: string | null,
@@ -596,20 +770,20 @@ setUsedVarietyIds(prev => [...prev, selectedVariety]);
       let companyName = "";
       if (language === "Sinhala") {
         companyName =
-          (await AsyncStorage.getItem("companyNameSinhala")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameSinhala")) || "PolygonAgro";
         Message = `ඔබේ නිෂ්පාදන ${companyName} වෙත ලබා දීම ගැන ඔබට ස්තූතියි.
 පැය 48ක් ඇතුළත රු. ${formattedPrice} ඔබේ බැංකු ගිණුමට බැර කෙරේ.
 TID: ${invoiceNumber}`;
       } else if (language === "Tamil") {
         companyName =
-          (await AsyncStorage.getItem("companyNameTamil")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameTamil")) || "PolygonAgro";
         Message = `உங்கள் விளைபொருட்களை ${companyName} நிறுவனத்திற்கு வழங்கியதற்கு நன்றி.
 ரூ. ${formattedPrice} 48 மணி நேரத்திற்குள் உங்கள் வங்கிக் கணக்கில் வரவு வைக்கப்படும்.
 TID: ${invoiceNumber}
 `;
       } else {
         companyName =
-          (await AsyncStorage.getItem("companyNameEnglish")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameEnglish")) || "PolygonAgro";
         Message = `Thank you for providing your produce to ${companyName}.
 Rs. ${formattedPrice} will be credited to your bank account within 48 hours.
 TID: ${invoiceNumber}
@@ -619,7 +793,7 @@ TID: ${invoiceNumber}
       const formattedPhone = farmerPhone;
 
       const body = {
-        source: "AgroWorld",
+        source: "PolygonAgro",
         destinations: [formattedPhone],
         content: {
           sms: Message,
@@ -630,7 +804,7 @@ TID: ${invoiceNumber}
       const response = await axios.post(apiUrl, body, { headers });
 
       if (response.data.referenceId) {
-        Alert.alert("Success", "SMS notification sent successfully!");
+       // Alert.alert("Success", "SMS notification sent successfully!");
       }
     } catch (error) {
       console.error("Error sending SMS:", error);
@@ -644,57 +818,93 @@ TID: ${invoiceNumber}
   const isGradeBCameraEnabled = quantities.B == 0;
   const isGradeCCameraEnabled = quantities.C == 0;
   console.log("isGradeACameraEnabled:", isGradeACameraEnabled);
-  // Add this to your component's state declarations
+ 
 
-  const deleteVariety = (index: number) => {
-    const newCrops = [...crops];
-    newCrops.splice(index, 1); // Remove the crop at the given index
+const deleteVariety = (index: number) => {
+  const varietyName = crops[index].varietyName;
+  setDeleteVarietyModal({
+    visible: true,
+    index,
+    varietyName,
+  });
+};
+
+// Handle variety deletion confirmation
+const handleDeleteVariety = () => {
+  const { index } = deleteVarietyModal;
+  const deletedVarietyId = crops[index].varietyId;
+  
+  // Remove from used varieties list to make it available again
+  setUsedVarietyIds(prev => prev.filter(id => id !== deletedVarietyId));
+  
+  const newCrops = [...crops];
+  newCrops.splice(index, 1);
+  setCrops(newCrops);
+  
+  // Adjust crop count and button visibility
+  if (newCrops.length === 0) {
+    setdonebutton1visibale(true);
+    setdonebutton2visibale(false);
+    setaddbutton(true);
+  }
+  
+  setCropCount((prevCount) => prevCount - 1);
+  
+  // Close modal
+  setDeleteVarietyModal({ visible: false, index: -1, varietyName: '' });
+};
+
+// Updated deleteGrade function to use custom modal instead of Alert.alert
+const deleteGrade = (cropIndex: number, grade: "A" | "B" | "C", varietyName: string) => {
+
+  setDeleteGradeModal({
+    visible: true,
+    cropIndex,
+        
+    grade,
+    varietyName,
+  });
+};
+
+// Handle grade deletion confirmation
+const handleDeleteGrade = () => {
+  const { cropIndex, grade } = deleteGradeModal;
+  const newCrops = [...crops];
+
+  // Reset the grade details to delete the grade
+  newCrops[cropIndex][`grade${grade}quan`] = 0;
+  newCrops[cropIndex][`grade${grade}price`] = 0;
+  newCrops[cropIndex][`image${grade}`] = null;
+
+  // Check if all grades for this crop are deleted
+  const allGradesDeleted = ["A", "B", "C"].every(
+    (gradeKey) => newCrops[cropIndex][`grade${gradeKey}quan`] === 0
+  );
+
+  if (allGradesDeleted) {
+    // Remove the variety from used list and delete entire crop
+    const deletedVarietyId = newCrops[cropIndex].varietyId;
+    setUsedVarietyIds(prev => prev.filter(id => id !== deletedVarietyId));
+    
+    newCrops.splice(cropIndex, 1);
     setCrops(newCrops);
-
-    // Adjust crop count and button visibility
-    if (newCrops.length === 0) {
-      setdonebutton1visibale(true);
-      setdonebutton2visibale(false);
-      setaddbutton(true);
-    } else {
-    }
-
     setCropCount((prevCount) => prevCount - 1);
-  };
+  } else {
+    setCrops(newCrops);
+  }
 
-  const deleteGrade = (cropIndex: number, grade: "A" | "B" | "C") => {
-    const newCrops = [...crops];
+  // Update button visibility if no crops remain
+  if (newCrops.length === 0) {
+    setdonebutton1visibale(true);
+    setdonebutton2visibale(false);
+    setaddbutton(true);
+  }
+  
+  // Close modal
+  setDeleteGradeModal({ visible: false, cropIndex: -1, grade: 'A' ,    varietyName: '',
+});
+};
 
-    // Reset the grade details to delete the grade
-    newCrops[cropIndex][`grade${grade}quan`] = 0;
-    newCrops[cropIndex][`grade${grade}price`] = 0;
-    newCrops[cropIndex][`image${grade}`] = null; // Remove the associated image
-
-    // Check if all grades for this crop are deleted
-    const allGradesDeleted = ["A", "B", "C"].every(
-      (grade) => newCrops[cropIndex][`grade${grade}quan`] === 0
-    );
-    console.log("safsffsdf  fsfs", allGradesDeleted);
-
-    // If all grades are deleted for this crop, remove the entire crop
-    if (allGradesDeleted) {
-      newCrops.splice(cropIndex, 1);
-      setCrops(newCrops);
-      setCropCount((prevCount) => prevCount - 1);
-    } else {
-      // If there are still grades left, update the crop
-      setCrops(newCrops);
-    }
-
-    // Update crop count and handle button visibility if crops are deleted
-    if (newCrops.length === 0) {
-      setdonebutton1visibale(true);
-      setdonebutton2visibale(false);
-      setaddbutton(true);
-    }
-
-    // Update the crop count in the state
-  };
 
   // Then in your JSX:
   return (
@@ -709,10 +919,11 @@ TID: ${invoiceNumber}
         keyboardShouldPersistTaps="handled"
       >
         <View className="flex-row items-center mb-6">
-          <TouchableOpacity onPress={() => navigation.goBack()} className="">
-            <AntDesign name="left" size={24} color="#000" />
-          </TouchableOpacity>
-          <Text className="flex-1 text-center text-xl font-bold text-black">
+        
+            <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                                                       <AntDesign name="left" size={24} color="#000502" />
+                                                     </TouchableOpacity>
+          <Text className="flex-1 text-center text-xl font-bold text-black mr-[5%]">
             {t("UnregisteredCropDetails.FillDetails")}
           </Text>
         </View>
@@ -798,9 +1009,7 @@ TID: ${invoiceNumber}
                             {crop[`grade${grade}quan`]}kg
                           </Text>
                           <TouchableOpacity
-                            onPress={() =>
-                              deleteGrade(index, grade as "A" | "B" | "C")
-                            }
+                           onPress={() => deleteGrade(index, grade as "A" | "B" | "C", crop.varietyName)}
                             className="mr-2"
                           >
                             <MdIcons
@@ -909,12 +1118,7 @@ TID: ${invoiceNumber}
               setSelected={(itemValue: string) =>
                 selectedCrop ? handleVarietyChange(itemValue) : null
               }
-              // data={[
-              //   ...varieties.map((variety) => ({
-              //     key: variety.id,
-              //     value: variety.variety,
-              //   })),
-              // ]}
+             
                   data={[
         ...varieties
             .filter(variety => !usedVarietyIds.includes(variety.id)) // Filter out used varieties
@@ -961,16 +1165,17 @@ TID: ${invoiceNumber}
                   value={unitPrices[grade]?.toString() || ""}
                   editable={false}
                 />
+               
                 <TextInput
-                  placeholder="kg"
-                  keyboardType="numeric"
-                  className="flex-1 rounded-full p-2 mx-2 text-gray-600 bg-[#F4F4F4] text-center"
-                  value={quantities[grade].toString()}
-                  onChangeText={(value) => {
-                    const numericValue = value.replace(/[^0-9]/g, "");
-                    handleQuantityChange(grade, numericValue);
-                  }}
-                />
+  placeholder="kg"
+  keyboardType="numeric"
+  className="flex-1 rounded-full p-2 mx-2 text-gray-600 bg-[#F4F4F4] text-center"
+  value={quantities[grade].toString()}
+  onChangeText={(value) => {
+    const numericValue = value.replace(/[^0-9]/g, "");
+    handleQuantityChange(grade as "A" | "B" | "C", numericValue);
+  }}
+/>
               </View>
             ))}
           </View>
@@ -1025,28 +1230,6 @@ TID: ${invoiceNumber}
             </Text>
           </TouchableOpacity>
 
-          {/* {donebutton1visibale && 
-          <TouchableOpacity 
-            onPress={handelsubmit2} 
-            disabled={donebutton1disabale || loading} 
-            className={`bg-black rounded-full p-4 mt-4 ${(donebutton1disabale || loading) ? 'opacity-50' : ''}`}
-          >
-            {loading ? (
-              <View className="flex-row justify-center items-center">
-                <LottieView
-                  source={require('../assets/lottie/collector.json')}
-                  autoPlay
-                  loop
-                  style={{ width: 30, height: 30 }}
-                />
-                <Text className="text-center text-white font-semibold ml-2">{t("UnregisteredCropDetails.Processing...")}</Text>
-              </View>
-            ) : (
-              <Text className="text-center text-white font-semibold">{t("UnregisteredCropDetails.Done")}</Text>
-            )}
-          </TouchableOpacity>
-        } */}
-
           {donebutton2visibale && (
             <TouchableOpacity
               onPress={handleSubmit}
@@ -1075,6 +1258,31 @@ TID: ${invoiceNumber}
             </TouchableOpacity>
           )}
         </View>
+        <DeleteModal
+  visible={deleteVarietyModal.visible}
+  title="Confirm Delete"
+//  message={`Are you sure you want to delete previously added ${deleteVarietyModal.varietyName}?`}
+  message={t('UnregisteredCropDetails.Are you sure you want to delete previously added', { varietyName: deleteVarietyModal.varietyName })}
+  onCancel={() => setDeleteVarietyModal({ visible: false, index: -1, varietyName: '' })}
+  onDelete={handleDeleteVariety}
+/>
+
+{/* Delete Grade Modal */}
+{/* <DeleteModal
+  visible={deleteGradeModal.visible}
+  title="Confirm Delete"
+  message={`Are you sure you want to delete previously added ${deleteGradeModal.varietyName} - Grade ${deleteGradeModal.grade}?`}
+  onCancel={() => setDeleteGradeModal({ visible: false, cropIndex: -1, grade: 'A',    varietyName: '',
+ })}
+  onDelete={handleDeleteGrade}
+/> */}
+<DeleteModal 
+  visible={deleteGradeModal.visible}   
+  title={t('UnregisteredCropDetails.ConfirmDelete')}
+  message={t('UnregisteredCropDetails.Are you sure you want to delete grade', { varietyName: deleteGradeModal.varietyName, grade: deleteGradeModal.grade })}
+  onCancel={() => setDeleteGradeModal({ visible: false, cropIndex: -1, grade: 'A', varietyName: '' })}   
+  onDelete={handleDeleteGrade} 
+/>
       </ScrollView>
     </KeyboardAvoidingView>
   );

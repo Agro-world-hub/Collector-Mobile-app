@@ -45,15 +45,16 @@ interface ProfileData {
 const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [empId, setEmpId] = useState<string | null>(null);
-  const [targetPercentage, setTargetPercentage] = useState<number | null>(null); // State to hold progress
+  const [targetPercentage, setTargetPercentage] = useState<number | null>(null);
+  const [isLoadingTarget, setIsLoadingTarget] = useState(true); // Add loading state
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
 
   const fetchSelectedLanguage = async () => {
     try {
-      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
-      setSelectedLanguage(lang || "en"); // Default to English if not set
+      const lang = await AsyncStorage.getItem("@user_language");
+      setSelectedLanguage(lang || "en");
     } catch (error) {
       console.error("Error fetching language preference:", error);
     }
@@ -71,7 +72,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
         );
         setProfile(response.data.data);
         setEmpId(response.data.data.empId);
-        console.log("data:", response.data.data);
+    //    console.log("data:", response.data.data);
       }
     } catch (error) {
       console.error("Failed to fetch user profile:", error);
@@ -79,10 +80,12 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
   };
 
   const fetchTargetPercentage = async () => {
+    setIsLoadingTarget(true); // Set loading to true when starting fetch
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
         Alert.alert(t("Error.error"), t("Error.User not authenticated."));
+        setIsLoadingTarget(false);
         return;
       }
       const response = await axios.get(
@@ -91,7 +94,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("response for percentage target", response.data);
+    //  console.log("response for percentage target", response.data);
       if (response.data.success) {
         const percentage = parseInt(
           response.data.completionPercentage.replace("%", ""),
@@ -104,6 +107,8 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
     } catch (error) {
       console.error("Failed to fetch target percentage:", error);
       setTargetPercentage(0);
+    } finally {
+      setIsLoadingTarget(false); // Set loading to false when done
     }
   };
 
@@ -169,6 +174,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
         return `${profile.firstNameEnglish} ${profile.lastNameEnglish}`;
     }
   };
+
   const getcompanyName = () => {
     if (!profile) return "Loading...";
     switch (selectedLanguage) {
@@ -184,9 +190,90 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
   const getTextStyle = (language: string) => {
     if (language === "si") {
       return {
-        fontSize: 14, // Smaller text size for Sinhala
-        lineHeight: 20, // Space between lines
+        fontSize: 14,
+        lineHeight: 20,
       };
+    }
+  };
+
+  // Function to render target status
+  const renderTargetStatus = () => {
+    // Show loading state while fetching
+    if (isLoadingTarget) {
+      return (
+        <View 
+          className="bg-white ml-[20px] w-[90%] rounded-[15px] mt-3 p-4"
+          style={{
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+          }}
+        >
+          <Text className="text-center text-gray-500">
+            Loading target status...
+          </Text>
+        </View>
+      );
+    }
+
+    // Show appropriate status based on target percentage
+    if (targetPercentage !== null && targetPercentage < 100) {
+      return (
+        <View 
+          className="bg-white ml-[20px] w-[90%] rounded-[15px] mt-3 p-4"
+          style={{
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+          }}
+        >
+          <Text className="text-center text-yellow-600 font-bold">
+            🚀{t("DashBoard.Keep")}
+          </Text>
+          <Text className="text-center text-gray-500">
+            {t("DashBoard.Youhavenotachieved")}
+          </Text>
+        </View>
+      );
+    } else {
+      return (
+        <View 
+          className="bg-white ml-[20px] w-[90%] rounded-[15px] mt-3 p-4"
+          style={{
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+          }}
+        >
+          <View className="flex-row justify-center items-center mb-2">
+            <Image
+              source={require("../assets/images/hand.webp")}
+              className="w-8 h-8 mr-2"
+            />
+            <Text className="text-center text-[#2AAD7A] font-bold">
+              {t("DashBoard.Completed")}
+            </Text>
+          </View>
+          <Text className="text-center text-gray-500">
+            {t("DashBoard.Youhaveachieved")}
+          </Text>
+        </View>
+      );
     }
   };
 
@@ -232,71 +319,21 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
         </View>
       </TouchableOpacity>
 
-      {/* Conditional Rendering for Daily Target */}
-      {targetPercentage !== null && targetPercentage < 100 ? (
-       <View 
-  className="bg-white ml-[20px] w-[90%] rounded-[15px] mt-3 p-4"
-  style={{
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5, // for Android
-  }}
->
-          <Text className="text-center text-yellow-600 font-bold">
-            {" "}
-            🚀{t("DashBoard.Keep")}
-          </Text>
-
-          <Text className="text-center text-gray-500">
-            {t("DashBoard.Youhavenotachieved")}
-          </Text>
-        </View>
-      ) : (
-              <View 
-  className="bg-white ml-[20px] w-[90%] rounded-[15px] mt-3 p-4"
-  style={{
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5, // for Android
-  }}
->
-          <View className="flex-row justify-center items-center mb-2">
-            <Image
-              source={require("../assets/images/hand.webp")} // Replace with your image path
-              className="w-8 h-8 mr-2"
-            />
-            <Text className="text-center text-[#2AAD7A] font-bold">
-              {t("DashBoard.Completed")}
-            </Text>
-          </View>
-          <Text className="text-center text-gray-500">
-            {t("DashBoard.Youhaveachieved")}
-          </Text>
-        </View>
-      )}
+      {/* Render target status using the new function */}
+      {renderTargetStatus()}
 
       <View className="flex items-center justify-center my-6 mt-[13%]">
         <View className="relative">
           <CircularProgress
             size={100}
             width={8}
-            fill={targetPercentage !== null ? targetPercentage : 0} // Dynamically set progress
+            fill={targetPercentage !== null ? targetPercentage : 0}
             tintColor="#000000"
             backgroundColor="#E5E7EB"
           />
           <View className="absolute items-center justify-center h-24 w-24">
             <Text className="text-2xl font-bold">
-              {targetPercentage !== null ? `${targetPercentage}%` : "0%"}
+              {isLoadingTarget ? "..." : (targetPercentage !== null ? `${targetPercentage}%` : "0%")}
             </Text>
           </View>
         </View>

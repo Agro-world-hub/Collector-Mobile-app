@@ -33,6 +33,7 @@ import { ActivityIndicator } from "react-native";
 import { KeyboardAvoidingView } from "react-native";
 import { Platform } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import NetInfo from "@react-native-community/netinfo";
 import { SelectList } from "react-native-dropdown-select-list";
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -204,11 +205,17 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       !bankName ||
       !branchName // Removed trailing comma
     ) {
-      Alert.alert("Sorry", "Please fill all fields");
+      Alert.alert(t("Error.error"), t("Error.Please fill all fields"));
       setLoading(false);
       return;
     }
     await AsyncStorage.removeItem("referenceId");
+
+     const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
+
     try {
       const checkApiUrl = `api/farmer/farmer-register-checker`;
       const checkBody = {
@@ -216,10 +223,10 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
         NICnumber: NICnumber,
       };
 
-      console.log(checkBody);
+    //  console.log(checkBody);
       console.log("Full API URL:", `${api.defaults.baseURL}${checkApiUrl}`);
       const checkResponse = await api.post(checkApiUrl, checkBody);
-      console.log("API Response:", checkResponse.data);
+    //  console.log("API Response:", checkResponse.data);
 
       if (checkResponse.data.message === "This Phone Number already exists.") {
         Alert.alert(
@@ -275,7 +282,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       //Dont cahange this massage body pretier when change it spaces of massage will be change
       if (PreferdLanguage === "Sinhala") {
         companyName =
-          (await AsyncStorage.getItem("companyNameSinhala")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameSinhala")) || "PolygonAgro";
         otpMessage = `${companyName} සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
         
 ${accHolderName}
@@ -286,7 +293,7 @@ ${branchName}
 නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා ${companyName} නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
       } else if (PreferdLanguage === "Tamil") {
         companyName =
-          (await AsyncStorage.getItem("companyNameTamil")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameTamil")) || "PolygonAgro";
         otpMessage = `${companyName} உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
         
 ${accHolderName}
@@ -297,7 +304,7 @@ ${branchName}
 சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் ${companyName} பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
       } else {
         companyName =
-          (await AsyncStorage.getItem("companyNameEnglish")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameEnglish")) || "PolygonAgro";
         otpMessage = `Your OTP for bank detail verification with ${companyName} is: {{code}}
         
 ${accHolderName}
@@ -309,7 +316,7 @@ If correct, share OTP only with the ${companyName} representative who contacts y
       }
 
       const body = {
-        source: "AgroWorld",
+        source: "PolygonAgro",
         transport: "sms",
         content: {
           sms: otpMessage,
@@ -430,13 +437,14 @@ const handleAccountNameChange = (text: string) => {
       style={{ flex: 1}}
     >
       <View className="flex-1 p-5 bg-white">
-        {/* Header with Back Icon */}
+  
         <View className="flex-row items-center mb-4">
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <AntDesign name="left" size={22} color="#000" />
-          </TouchableOpacity>
+          
+           <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                                             <AntDesign name="left" size={24} color="#000502" />
+                                           </TouchableOpacity>
           <View className="w-full items-center">
-            <Text className="text-xl font-bold text-center">
+            <Text className="text-xl font-bold text-center mr-[11%]">
               {t("UnregisteredFarmerDetails.FillDetails")}
             </Text>
           </View>

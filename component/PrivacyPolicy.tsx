@@ -48,7 +48,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ navigation }) => {
     >
       {/* Header Section */}
       <View className="flex-row items-center  ">
-      <TouchableOpacity onPress={()=>navigation.goBack()}>
+      <TouchableOpacity onPress={()=>navigation.goBack()} className="absolute z-20 bg-[#F6F6F680] rounded-full p-2">
       {/* Back Button with PNG image */}
       <AntDesign name="left" size={24} color="#000000" />
     </TouchableOpacity>

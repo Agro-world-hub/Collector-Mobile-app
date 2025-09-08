@@ -24,6 +24,9 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { SelectList } from "react-native-dropdown-select-list";
 import { navigate } from "expo-router/build/global-state/routing";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NetInfo from "@react-native-community/netinfo";
+
+
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
@@ -132,6 +135,11 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
       return;
     }
 
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
+
     try {
       const apiUrl = "https://api.getshoutout.com/otpservice/send";
       const headers = {
@@ -146,7 +154,7 @@ const UnregisteredFarmerDetails: React.FC<UnregisteredFarmerDetailsProps> = ({
 
       if (PreferdLanguage === "Sinhala") {
         companyName =
-          (await AsyncStorage.getItem("companyNameSinhala")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameSinhala")) || "PolygonAgro";
         otpMessage = `${companyName} සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
       
 ${accHolderName}
@@ -157,7 +165,7 @@ ${branchName}
 නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා ${companyName} නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
       } else if (PreferdLanguage === "Tamil") {
         companyName =
-          (await AsyncStorage.getItem("companyNameTamil")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameTamil")) || "PolygonAgro";
         otpMessage = `${companyName} உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
       
 ${accHolderName}
@@ -168,7 +176,7 @@ ${branchName}
 சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் ${companyName} பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
       } else {
         companyName =
-          (await AsyncStorage.getItem("companyNameEnglish")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameEnglish")) || "PolygonAgro";
         otpMessage = `Your OTP for bank detail verification with ${companyName} is: {{code}}
       
 ${accHolderName}
@@ -180,7 +188,7 @@ If correct, share OTP only with the ${companyName} representative who contacts y
       }
 
       const body = {
-        source: "AgroWorld",
+        source: "PolygonAgro",
         transport: "sms",
         content: {
           sms: otpMessage,
@@ -209,7 +217,7 @@ If correct, share OTP only with the ${companyName} representative who contacts y
     }
   };
 
-  // Interpolating the animated value for width
+
   const loadingBarWidth = progress.interpolate({
     inputRange: [0, 100],
     outputRange: ["0%", "100%"],
@@ -223,8 +231,8 @@ If correct, share OTP only with the ${companyName} representative who contacts y
   const getTextStyle = (language: string) => {
     if (language === "si") {
       return {
-        fontSize: 14, // Smaller text size for Sinhala
-        lineHeight: 20, // Space between lines
+        fontSize: 14, 
+        lineHeight: 20, 
       };
     }
   };
@@ -238,12 +246,13 @@ If correct, share OTP only with the ${companyName} representative who contacts y
       <View className="flex-1 p-5 bg-white">
         {/* Header with Back Icon */}
         <View className="flex-row items-center mb-4">
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <AntDesign name="left" size={22} color="#000" />
-          </TouchableOpacity>
+        
+          <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                                   <AntDesign name="left" size={24} color="#000502" />
+                                 </TouchableOpacity>
           <View className="w-full items-center">
             <Text
-              className="text-xl font-bold text-center"
+              className="text-xl font-bold text-center mr-[14%]"
               style={{ fontSize: 18 }}
             >
               {t("UnregisteredFarmerDetails.FillDetails")}

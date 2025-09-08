@@ -18,6 +18,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { environment } from "@/environment/environment";
 import { useTranslation } from "react-i18next";
 import DropDownPicker from "react-native-dropdown-picker";
+import NetInfo from "@react-native-community/netinfo";
 
 type PassTargetScreenNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -76,7 +77,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
     dailyTarget,
   } = route.params;
 
-  console.log("Collection Officer ID:", route.params);
+//  console.log("Collection Officer ID:", route.params);
   const maxAmount = parseFloat(todo);
 
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
@@ -116,7 +117,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
     fetchData();
   }, []);
 
-  console.log("Max Amount:", maxAmount);
+//  console.log("Max Amount:", maxAmount);
 
   const getOfficerName = (officer: Officer) => {
     switch (selectedLanguage) {
@@ -145,7 +146,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
         }
       );
 
-      console.log("Officers:", response.data.data);
+     // console.log("Officers:", response.data.data);
 
       if (response.data.status === "success") {
         const formattedOfficers = response.data.data.map((officer: any) => ({
@@ -198,6 +199,11 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
       );
       return;
     }
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
 
     try {
       setSubmitting(true);
@@ -278,11 +284,13 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
               ],
             });
           }}
+           className="bg-[#FFFFFF1A] rounded-full p-2 justify-center w-10"
         >
-          <AntDesign name="left" size={22} color="white" />
+         <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
 
-        <Text className="text-white text-lg font-semibold text-center w-full">
+        {/* <Text className="text-white text-lg font-semibold text-center w-full"> */}
+        <Text className="flex-1 text-center text-xl font-semibold text-white mr-[6%]">
           {getvarietyName()}
         </Text>
       </View>

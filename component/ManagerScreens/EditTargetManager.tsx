@@ -6,6 +6,7 @@ import { RootStackParamList } from "../types";
 import { ScrollView } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import i18n from "@/i18n/i18n";
 
 type EditTargetManagerNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -62,7 +63,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({
     varietyNameTamil,
   } = route.params;
 
-  console.log("officers edit details", route.params);
+//  console.log("officers edit details", route.params);
   const getvarietyName = () => {
     switch (selectedLanguage) {
       case "si":
@@ -79,9 +80,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({
       <View className="flex-1 bg-white">
         {/* Header */}
         <View className="flex-row items-center bg-[#313131] p-6 rounded-b-lg">
-          {/* <TouchableOpacity onPress={() => navigation.navigate("EditTargetScreen")}>
-          <Ionicons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity> */}
+         
           <TouchableOpacity
             onPress={() => {
               navigation.reset({
@@ -106,11 +105,13 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({
                 ],
               });
             }}
+            className="bg-[#FFFFFF1A] rounded-full p-2 justify-center w-10"
           >
             <AntDesign name="left" size={22} color="white" />
           </TouchableOpacity>
 
-          <Text className="text-white text-lg font-semibold text-center w-full">
+         
+          <Text className="flex-1 text-center text-xl font-semibold text-white mr-[6%]">
             {getvarietyName()}
           </Text>
         </View>
@@ -135,12 +136,7 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({
               {t("EditTargetManager.My Target")}
             </Text>
             <View className="flex-row items-center mt-2 border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2">
-              {/* <TextInput
-            className="flex-1 text-gray-800"
-            value={target ? target.toString() : '0'}
-            editable={isEditing}
-            onChangeText={(text) => setMyTarget(text)}
-          /> */}
+             
               <Text className="flex-1 text-gray-800">
                 {" "}
                 {target ? target.toString() : "0"}{" "}
@@ -175,9 +171,17 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({
                       },
                     })
                   }
-                  // onPress={() => navigation.navigate('PassTargetScreen'as any,{varietyName, grade, target, todo, qty ,varietyId})} // Save and exit edit mode
+                 
                 >
-                  <Text className="text-white font-medium">
+                  <Text className="text-white font-medium"
+                                                     style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 14 }
+]}
+                  >
                     {t("EditTargetManager.Pass")}
                   </Text>
                 </TouchableOpacity>
@@ -199,9 +203,17 @@ const EditTargetManager: React.FC<EditTargetManagerProps> = ({
                     })
                   }
 
-                  // onPress={() => navigation.navigate('RecieveTargetScreen' as any,{varietyName, grade, target, todo, qty ,varietyId})} // Save and exit edit mode
+                
                 >
-                  <Text className="text-white font-medium">
+                  <Text className="text-white font-medium"
+                                                     style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 14 }
+]}
+                  >
                     {t("EditTargetManager.Receive")}
                   </Text>
                 </TouchableOpacity>

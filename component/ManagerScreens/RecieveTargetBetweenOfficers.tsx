@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
-import { Ionicons } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { SelectList } from "react-native-dropdown-select-list";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,6 +10,7 @@ import {environment }from '@/environment/environment';
 import { useTranslation } from "react-i18next";
 import { navigate } from 'expo-router/build/global-state/routing';
 import { ScrollView } from 'react-native-gesture-handler';
+import NetInfo from "@react-native-community/netinfo";
 
 // Define the navigation prop type
 type RecieveTargetBetweenOfficersScreenNavigationProps = StackNavigationProp<RootStackParamList, 'RecieveTargetBetweenOfficers'>;
@@ -104,7 +105,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
         }
       );
 
-      console.log("Officers:", response.data.data);
+    //  console.log("Officers:", response.data.data);
 
       if (response.data.status === 'success') {
         // const formattedOfficers = response.data.data.map((officer: any) => ({
@@ -156,7 +157,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
         }
       );
   
-      console.log("Daily Target Response:", response.data);
+    //  console.log("Daily Target Response:", response.data);
   
       if (response.data.status === 'success' && response.data.data) {
         const { target, complete } = response.data.data;
@@ -230,6 +231,11 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
             );
       return;
     }
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
   
     try {
       setFetchingTarget(true);
@@ -283,10 +289,16 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
     <View className="flex-1 bg-white mb-4">
       {/* ✅ Fixed Header */}
       <View className="flex-row items-center bg-[#313131] p-6 rounded-b-lg">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="white" />
+        <TouchableOpacity 
+        onPress={() => navigation.goBack()}
+        className="bg-[#FFFFFF1A] rounded-full p-2 justify-center w-10"
+        >
+          {/* <Ionicons name="arrow-back" size={24} color="white" /> */}
+          <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-semibold text-center w-full">{getvarietyName()}</Text>
+        {/* <Text className="text-white text-lg font-semibold text-center w-full"> */}
+         <Text className="flex-1 text-center text-xl font-semibold text-white mr-[6%]">
+          {getvarietyName()}</Text>
       </View>
 
       <View className="bg-white rounded-lg p-4">

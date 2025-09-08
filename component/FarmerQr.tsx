@@ -27,6 +27,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useTranslation } from "react-i18next";
 import { goBack } from "expo-router/build/global-state/routing";
+import i18n from "@/i18n/i18n";
 
 // Create API instance
 const api = axios.create({
@@ -69,13 +70,13 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
           phoneNumber,
           language,
         } = response.data;
-        console.log(response.data); // Log the response to check
+      //  console.log(response.data); 
 
         setFarmerName(`${firstName} ${lastName}`);
         setFarmerNIC(NICnumber);
         if (qrCode) {
-          console.log("QR Code Data:", qrCode); // Log the qrCode Base64 string
-          setFarmerQRCode(qrCode); // Set the QR code as a base64 string
+          console.log("QR Code Data:", qrCode); 
+          setFarmerQRCode(qrCode); 
         } else {
           console.log("No QR Code data found");
         }
@@ -161,9 +162,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
     }
   };
 
-  //  if (loading) {
-  //     return <FarmerQrSkeletonLoader />;
-  //   }
+ 
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
@@ -196,13 +195,11 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
         <View className="flex-1 ">
           {/* Header with Back Icon */}
           <View className="flex-row items-center  mb-6">
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Main" as any)}
-              className=""
-            >
-              <AntDesign name="left" size={24} color="#000" />
-            </TouchableOpacity>
-            <Text className="flex-1 text-center text-xl font-bold text-black">
+          
+             <TouchableOpacity  onPress={() => navigation.navigate("Main" as any)} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                                               <AntDesign name="left" size={24} color="#000502" />
+                                             </TouchableOpacity>
+            <Text className="flex-1 text-center text-xl font-bold text-black mr-[5%]">
               {t("FarmerQr.FarmerDetails")}
             </Text>
           </View>
@@ -293,7 +290,15 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
                     source={require("../assets/images/download.webp")} // Path to download icon
                     style={{ width: 24, height: 24 }}
                   />
-                  <Text className="text-sm text-cyan-50">
+                  <Text className="text-sm text-cyan-50"
+                                 style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 11 }
+    : { fontSize: 15 }
+]}
+                  >
                     {t("FarmerQr.Download")}
                   </Text>
                 </TouchableOpacity>
@@ -306,7 +311,15 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
                     source={require("../assets/images/Share.webp")} // Path to share icon
                     style={{ width: 24, height: 24 }}
                   />
-                  <Text className="text-sm text-cyan-50">
+                  <Text className="text-sm text-cyan-50"
+                                 style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 11 }
+    : { fontSize: 15 }
+]}
+                  >
                     {t("FarmerQr.Share")}
                   </Text>
                 </TouchableOpacity>

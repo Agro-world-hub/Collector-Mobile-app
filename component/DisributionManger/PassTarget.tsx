@@ -14,8 +14,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { environment } from "@/environment/environment";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
 
-// Updated PassTarget component interfaces and implementation:
+
 
 interface PassTargetProps {
   navigation: any;
@@ -23,8 +24,8 @@ interface PassTargetProps {
     params: {
       collectionOfficerId?: number;
       officerId: string;
-      selectedItems: number[]; // Array of distributedTargetItemIds
-      invoiceNumbers: string[]; // Array of invoice numbers corresponding to selectedItems
+      selectedItems: number[]; 
+      invoiceNumbers: string[]; 
       processOrderId: string[];
     };
   };
@@ -51,7 +52,12 @@ interface Officer {
 }
 
 const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
-  const { officerId, selectedItems: passedSelectedItems = [], invoiceNumbers = [] , processOrderId=[] } = route.params;
+  const { 
+    selectedItems: passedSelectedItems = [], 
+    invoiceNumbers = [], 
+    processOrderId = [],
+    officerId // Add this to get the current officer ID
+  } = route.params;
   const [loading, setLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,17 +65,45 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
   const [targetItems, setTargetItems] = useState<TargetItem[]>([]);
   const [officers, setOfficers] = useState<{key: string, value: string}[]>([]);
   const [loadingOfficers, setLoadingOfficers] = useState<boolean>(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   console.log("Passed selectedItems:", passedSelectedItems);
   console.log("Passed invoiceNumbers:", invoiceNumbers);
 
-  // Helper function to get status color (language independent)
-  const getStatusColor = (status: string) => {
-    // Convert to lowercase and handle different language variations
-    const normalizedStatus = status?.toLowerCase();
+ 
+  const getOfficerName = useCallback((officer: Officer) => {
+    const currentLanguage = i18n.language;
     
-    // English
+    let firstName = "";
+    let lastName = "";
+    
+    switch (currentLanguage) {
+      case 'si':
+      case 'sinhala':
+        firstName = officer.firstNameSinhala || officer.firstNameEnglish;
+        lastName = officer.lastNameSinhala || officer.lastNameEnglish;
+        break;
+      case 'ta': 
+      case 'tamil':
+        firstName = officer.firstNameTamil || officer.firstNameEnglish;
+        lastName = officer.lastNameTamil || officer.lastNameEnglish;
+        break;
+      case 'en': 
+      case 'english':
+      default:
+        firstName = officer.firstNameEnglish;
+        lastName = officer.lastNameEnglish;
+        break;
+    }
+    
+    return `${firstName} ${lastName} (${officer.empId})`;
+  }, [i18n.language]);
+
+
+  const getStatusColor = (status: string) => {
+
+    const normalizedStatus = status?.toLowerCase();
+
     if (normalizedStatus === 'completed') {
       return 'bg-[#BBFFC6]';
     }
@@ -79,8 +113,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
     if (normalizedStatus === 'pending') {
       return 'bg-[#FF070733]';
     }
-    
-    // Sinhala translations
+
     if (normalizedStatus === 'සම්පූර්ණ' || normalizedStatus === 'සම්පූර්ණයි') {
       return 'bg-[#BBFFC6]';
     }
@@ -91,7 +124,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
       return 'bg-[#FF070733]';
     }
     
-    // Tamil translations
+
     if (normalizedStatus === 'முடிக்கப்பட்டது' || normalizedStatus === 'நிறைவு') {
       return 'bg-[#BBFFC6]';
     }
@@ -149,7 +182,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
   const getStatusText = (status: string) => {
     const normalizedStatus = status?.toLowerCase();
     
-    // Return translated status based on current language
+
     switch (normalizedStatus) {
       case 'completed':
       case 'සම්පූර්ණ':
@@ -190,12 +223,30 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
       );
 
       if (response.data.success && response.data.data) {
-        // Transform officer data for dropdown
-        const officerDropdownData = response.data.data.map((officer: Officer) => ({
-          key: officer.id.toString(),
-          value: `${officer.firstNameEnglish} ${officer.lastNameEnglish} (${officer.empId})`
-        }));
+      //  console.log("All officers from API:", response.data.data);
+        console.log("Current officerId to filter out:", officerId);
         
+      
+        const officerDropdownData = response.data.data
+          .filter((officer: Officer) => {
+       
+            console.log(`Comparing officer ID: ${officer.id} (${typeof officer.id}) with current officer: ${officerId} (${typeof officerId})`);
+            console.log(`Officer empId: ${officer.empId}`);
+            
+         
+            const isCurrentOfficerById = officer.id?.toString() === officerId?.toString();
+            const isCurrentOfficerByEmpId = officer.empId?.toString() === officerId?.toString();
+            
+            console.log(`isCurrentOfficerById: ${isCurrentOfficerById}, isCurrentOfficerByEmpId: ${isCurrentOfficerByEmpId}`);
+          
+            return !isCurrentOfficerById && !isCurrentOfficerByEmpId;
+          })
+          .map((officer: Officer) => ({
+            key: officer.id.toString(),
+            value: getOfficerName(officer) 
+          }));
+        
+        console.log("Filtered officers for dropdown:", officerDropdownData);
         setOfficers(officerDropdownData);
       } else {
         setError(t("Error.Failed to load officers."));
@@ -206,15 +257,15 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
     } finally {
       setLoadingOfficers(false);
     }
-  }, [t]);
+  }, [t, officerId, getOfficerName]);
 
   // Convert passed selectedItems to display format with correct invoice numbers
   const prepareTargetItems = useCallback(() => {
     if (passedSelectedItems && passedSelectedItems.length > 0) {
       const items: TargetItem[] = passedSelectedItems.map((itemId, index) => ({
         id: index + 1,
-        invoiceNumber: invoiceNumbers[index] || `INV${itemId.toString().padStart(6, '0')}`, // Use actual invoice number
-        status: "Pending", // Default status since these are selected pending items
+        invoiceNumber: invoiceNumbers[index] || `INV${itemId.toString().padStart(6, '0')}`, 
+        status: "Pending", 
         processOrderId: itemId,
         distributedTargetItemId: itemId
       }));
@@ -222,13 +273,20 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
     }
   }, [passedSelectedItems, invoiceNumbers]);
 
-  // Initialize target items and fetch officers when component mounts
+
   useFocusEffect(
     useCallback(() => {
       prepareTargetItems();
       fetchOfficers();
     }, [prepareTargetItems, fetchOfficers])
   );
+
+
+  useEffect(() => {
+    fetchOfficers();
+
+    setSelectedAssignee("");
+  }, [i18n.language, fetchOfficers]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -244,23 +302,28 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
     }
 
     setLoading(true);
-    setError(null); // Clear previous errors
+    setError(null); 
+
+    const netState = await NetInfo.fetch();
+    if (!netState.isConnected) {
+      return; 
+    }
     
     try {
       const authToken = await AsyncStorage.getItem("token");
       
-      // Prepare data for API call
+    
       const saveData = {
-        assigneeOfficerId: selectedAssignee, // This is the selected officer ID from dropdown
-        targetItems: passedSelectedItems, // Array of distributedTargetItemIds
-        invoiceNumbers: invoiceNumbers, // Send invoice numbers array to API
-        processOrderId:processOrderId
+        assigneeOfficerId: selectedAssignee, 
+        targetItems: passedSelectedItems, 
+        invoiceNumbers: invoiceNumbers, 
+        processOrderId: processOrderId
       };
 
-      console.log("Saving data:", saveData); // For debugging
-      console.log("API URL:", `${environment.API_BASE_URL}api/distribution-manager/target-pass/${officerId}`);
+     // console.log("Saving data:", saveData); 
+     // console.log("API URL:", `${environment.API_BASE_URL}api/distribution-manager/target-pass/${officerId}`);
 
-      // API call to assign targets - Using officerId as the route parameter
+  
       const response = await axios.post(
         `${environment.API_BASE_URL}api/distribution-manager/target-pass/${officerId}`,
         saveData,
@@ -272,13 +335,10 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
         }
       );
 
-      console.log("API Response:", response.data);
+    //  console.log("API Response:", response.data);
 
       if (response.data.success) {
-        // Show success message (optional)
-        // You can add a success toast here if needed
-        
-        // Navigate back on successful save
+       
         navigation.goBack();
       } else {
         setError(response.data.message || t("Error.Failed to save data."));
@@ -289,27 +349,27 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
       // Enhanced error handling
       if (axios.isAxiosError(error)) {
         if (error.response) {
-          // Server responded with error status
+    
           console.log("Error response:", error.response.data);
           const errorMessage = error.response.data?.message || 
                               error.response.data?.error || 
                               `Server error: ${error.response.status}`;
           setError(errorMessage);
         } else if (error.request) {
-          // Request was made but no response received
+      
           console.log("No response received:", error.request);
           setError(t("Error.Network error. Please check your connection."));
         } else {
-          // Something else happened in setting up the request
+       
           console.log("Request setup error:", error.message);
           setError(error.message || t("Error.Failed to save data."));
         }
       } else if (error instanceof Error) {
-        // Generic Error object
+
         console.log("Generic error:", error.message);
         setError(error.message || t("Error.Failed to save data."));
       } else {
-        // Unknown error type
+
         console.log("Unknown error:", error);
         setError(t("Error.Failed to save data."));
       }
@@ -320,7 +380,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
 
   return (
     <View className="flex-1 bg-white">
-      {/* Header */}
+   
       <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
         <TouchableOpacity 
           onPress={() => navigation.goBack()} 
@@ -338,7 +398,7 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
       >
         {/* Assignee Selection */}
         <View className="bg-white mx-4 my-2 p-4 rounded-full shadow-sm">
-         {/* <Text className="text-[#475A6A] font-semibold mb-2">{t("PassTarget.Select Assignee")}</Text> */}
+       
          <View className="flex-row items-center mb-3">
           <Text className="text-[#475A6A] font-semibold flex-1">
             {selectedAssignee ? t("PassTarget.Short Stock Assignee") : t("PassTarget.Select Assignee")}
@@ -352,88 +412,86 @@ const PassTarget: React.FC<PassTargetProps> = ({ navigation, route }) => {
               <Text className="ml-2 text-gray-600">{t("PassTarget.Loading officers")}</Text>
             </View>
           ) : (
-         <SelectList
-  setSelected={setSelectedAssignee}
-  data={officers}
-  placeholder="--Select an officer--"
-  save="key"
-  search={true}
-  searchPlaceholder="Search officers..."
-  boxStyles={{
-    borderWidth: 0,
-    backgroundColor: "#f3f4f6",
-    borderRadius: 25, // Fully rounded
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    marginVertical: 0,
-  }}
-  inputStyles={{ 
-    color: "#374151",
-    fontSize: 16,
- 
-  }}
-  dropdownStyles={{
-    borderWidth: 0,
-    backgroundColor: "#f3f4f6",
-    borderRadius: 20, // Fully rounded for dropdown
-    marginTop: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  }}
-  dropdownItemStyles={{
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  }}
-  dropdownTextStyles={{
-    color: "#374151",
-    fontSize: 16,
-  }}
-  
-/>
+            <SelectList
+              setSelected={setSelectedAssignee}
+              data={officers}
+              placeholder={t("PassTargetBetweenOfficers.Select an officer")}
+              save="key"
+              search={true}
+              searchPlaceholder={t("PassTarget.Search officers")}
+              boxStyles={{
+                borderWidth: 0,
+                backgroundColor: "#f3f4f6",
+                borderRadius: 25, // Fully rounded
+                paddingHorizontal: 16,
+                paddingVertical: 14,
+                marginVertical: 0,
+              }}
+              inputStyles={{ 
+                color: "#374151",
+                fontSize: 16,
+              }}
+              dropdownStyles={{
+                borderWidth: 0,
+                backgroundColor: "#f3f4f6",
+                borderRadius: 20, // Fully rounded for dropdown
+                marginTop: 8,
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 3,
+              }}
+              dropdownItemStyles={{
+                paddingVertical: 12,
+                paddingHorizontal: 16,
+              }}
+              dropdownTextStyles={{
+                color: "#374151",
+                fontSize: 16,
+              }}
+            />
           )}
         </View>
 
-      {/* Selected Targets */}
-<View className="bg-white  my-2 rounded-lg  mb-20">
-  <View className="items-center justify-center">
-  <Text style={{ fontStyle: 'italic', color: '#2d3748', marginBottom: 12 }}>
-    --{t("PassTarget.Selected Targets")}--
-  </Text>
-  </View>
-  
-  {/* Table */}
-  <View className="border border-gray-300 rounded-md ">
-    
-    {/* Table Rows */}
-    {targetItems.map((item: TargetItem) => (
-      <View 
-        key={item.distributedTargetItemId} 
-        className="flex-row border-b border-gray-300  px-[-19]"
-      >
-        <View className="w-16 items-center justify-center border-r border-gray-300 py-3">
-          <Text className="text-[#606060] font-medium">{String(item.id).padStart(2, '0')}</Text>
-        </View>
-        <View className="flex-1 items-center justify-center border-r border-gray-300 py-3">
-          <Text className="text-[#000000] font-medium">{item.invoiceNumber}</Text>
-        </View>
-        <View className="w-36 items-center justify-center py-3">
-          <View 
-            className={`px-5 py-1 rounded-full ${getStatusColor(item.status)}`}
-          >
-            <Text 
-              className={`text-xs font-medium ${getStatusTextColor(item.status)}`}
-            >
-              {getStatusText(item.status)}
+        {/* Selected Targets */}
+        <View className="bg-white my-2 rounded-lg mb-20">
+          <View className="items-center justify-center">
+            <Text style={{ fontStyle: 'italic', color: '#2d3748', marginBottom: 12 }}>
+              --{t("PassTarget.Selected Targets")}--
             </Text>
           </View>
+          
+          {/* Table */}
+          <View className="border border-gray-300 rounded-md">
+            
+            {/* Table Rows */}
+            {targetItems.map((item: TargetItem) => (
+              <View 
+                key={item.distributedTargetItemId} 
+                className="flex-row border-b border-gray-300 px-[-19]"
+              >
+                <View className="w-16 items-center justify-center border-r border-gray-300 py-3">
+                  <Text className="text-[#606060] font-medium">{String(item.id).padStart(2, '0')}</Text>
+                </View>
+                <View className="flex-1 items-center justify-center border-r border-gray-300 py-3">
+                  <Text className="text-[#000000] font-medium">{item.invoiceNumber}</Text>
+                </View>
+                <View className="w-36 items-center justify-center py-3">
+                  <View 
+                    className={`px-5 py-1 rounded-full ${getStatusColor(item.status)}`}
+                  >
+                    <Text 
+                      className={`text-xs font-medium ${getStatusTextColor(item.status)}`}
+                    >
+                      {getStatusText(item.status)}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            ))}
+          </View>
         </View>
-      </View>
-    ))}
-  </View>
-</View>
       </ScrollView>
 
       {/* Save Button */}

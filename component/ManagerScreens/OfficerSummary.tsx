@@ -21,6 +21,7 @@ import {environment }from '@/environment/environment';
 import axios from "axios";
 import { useFocusEffect } from "expo-router";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
 
 type OfficerSummaryNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -160,6 +161,11 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
       return;
     }
 
+     const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
+
     try {
       const res = await fetch(
         `${environment.API_BASE_URL}api/collection-manager/disclaim-officer`,
@@ -204,13 +210,13 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
     }, [collectionOfficerId])
   );
   const getOnlineStatus = async () => {
-    console.log("Getting officer status...");
+   // console.log("Getting officer status...");
     try {
       const res = await fetch(
         `${environment.API_BASE_URL}api/collection-manager/get-officer-online/${collectionOfficerId}`
       );
       const data = await res.json();
-      console.log("Officer status:", data);
+     // console.log("Officer status:", data);
   
       if (data.success) {
         // Check OnlineStatus value and set status accordingly
@@ -247,15 +253,13 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
       <View className="relative">
         {/* Header Section */}
         <View className="bg-white rounded-b-[25px] px-4 pt-12 pb-6 items-center shadow-lg z-10">
-          {/* Back Icon */}
-          <TouchableOpacity
-            onPress={() =>
+         
+          <TouchableOpacity onPress={() =>
               navigation.navigate("Main", { screen: "CollectionOfficersList" })
             }
-            className="absolute top-4 left-4"
-          >
-            <AntDesign name="left" size={22} color="#000" />
-          </TouchableOpacity>
+          className="absolute top-4 left-4 bg-[#F6F6F680] rounded-full  p-2 justify-center w-10" >
+                                                         <AntDesign name="left" size={24} color="#000502" />
+                                                       </TouchableOpacity>
 
           <TouchableOpacity
             className="absolute top-4 right-4"
@@ -366,7 +370,11 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
             onPress={() =>
               navigation.navigate("ReportGenerator" as any, {
                 officerId,
-                collectionOfficerId,
+                  collectionOfficerId,
+                  phoneNumber1,
+                  phoneNumber2,
+                  officerName,
+                
               })
             }
           >

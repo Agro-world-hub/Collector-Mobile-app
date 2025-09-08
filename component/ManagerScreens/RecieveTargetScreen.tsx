@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { environment } from "@/environment/environment";
 import { ScrollView } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
 
 // Define the navigation prop type
 type RecieveTargetScreenNavigationProps = StackNavigationProp<
@@ -74,8 +75,8 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
     varietyNameSinhala,
     varietyNameTamil,
   } = route.params;
-  console.log("Hittt the page 2");
-  console.log("Initial Max Amount:", maxAmount);
+  // console.log("Hittt the page 2");
+  // console.log("Initial Max Amount:", maxAmount);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
 
   useEffect(() => {
@@ -119,7 +120,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
         }
       );
 
-      console.log("Officers:", response.data.data);
+     // console.log("Officers:", response.data.data);
 
       if (response.data.status === "success") {
         const formattedOfficers = response.data.data.map((officer: any) => ({
@@ -144,7 +145,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
 
   // ✅ Fetch Daily Target when officer is selected
   const fetchDailyTarget = async (officerId: string) => {
-    console.log("Selected Officer ID:", officerId);
+   // console.log("Selected Officer ID:", officerId);
     if (officerId === "0") {
       setAmount("");
       setMaxAmount(0);
@@ -165,10 +166,10 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
         }
       );
 
-      console.log("Daily Target Response:", response.data);
+    //  console.log("Daily Target Response:", response.data);
 
       if (response.data.status === "success" && response.data.data) {
-        console.log("Daily Target Data:", response.data.data);
+      //  console.log("Daily Target Data:", response.data.data);
         const { target, complete } = response.data.data;
         const calculatedTodo = parseFloat(target) - parseFloat(complete);
 
@@ -217,12 +218,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
   };
 
   const isSaveButtonDisabled = () => {
-    // Disable button if:
-    // 1. No officer selected or it's the default option
-    // 2. Amount is empty, not a number, or less than or equal to 0
-    // 3. Amount exceeds maxAmount
-    // 4. Loading state is active
-    // 5. Error message exists
+   
 
     const numericAmount = parseFloat(amount);
     return (
@@ -257,6 +253,11 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
       );
       return;
     }
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
 
     try {
       setFetchingTarget(true);
@@ -338,10 +339,12 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
                 ],
               });
             }}
+            className="bg-[#FFFFFF1A] rounded-full p-2 justify-center w-10"
           >
            <AntDesign name="left" size={22} color="white" />
           </TouchableOpacity>
-          <Text className="text-white text-lg font-semibold text-center w-full">
+          {/* <Text className="text-white text-lg font-semibold text-center w-full"> */}
+             <Text className="flex-1 text-center text-xl font-semibold text-white mr-[6%]">
             {getvarietyName()}
           </Text>
         </View>

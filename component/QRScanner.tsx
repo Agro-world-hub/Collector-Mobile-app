@@ -13,6 +13,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
 import { CameraView, Camera } from "expo-camera";
 import { useTranslation } from "react-i18next";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 type QRScannerNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -34,11 +35,9 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { t } = useTranslation();
 
-  // Modal visibility state for unsuccessful QR scan
   const [isUnsuccessfulModalVisible, setIsUnsuccessfulModalVisible] =
     useState<boolean>(false);
 
-  // Animated loading bar width
   const [unsuccessfulLoadingBarWidth, setUnsuccessfulLoadingBarWidth] =
     useState(new Animated.Value(100)); // Start with 100%
 
@@ -50,14 +49,14 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
 
     getCameraPermissions();
 
-    // Reset scanner when the screen is focused again
+
     const unsubscribe = navigation.addListener("focus", () => {
-      setScanned(false); // Reset scanned state when the screen is focused
-      setErrorMessage(null); // Clear error message
-      setIsUnsuccessfulModalVisible(false); // Close the unsuccessful modal
+      setScanned(false);
+      setErrorMessage(null); 
+      setIsUnsuccessfulModalVisible(false); 
     });
 
-    // Cleanup the listener on component unmount
+
     return unsubscribe;
   }, [navigation]);
 
@@ -71,19 +70,19 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
     setScanned(true); // Set the scanned flag to true
 
     try {
-      console.log("Scanned Data:", data);
-      console.log("Data Type:", typeof data);
+      // console.log("Scanned Data:", data);
+      // console.log("Data Type:", typeof data);
 
-      // Parse the QR code data as a JSON object
-      const qrData = JSON.parse(data); // Parse the JSON string into a JS object
+
+      const qrData = JSON.parse(data); 
 
       console.log("Parsed QR Code Data:", qrData);
       console.log("Parsed Type:", typeof qrData);
 
-      // Access the user information (userId in this case)
-      const userId = qrData.userInfo?.id; // Ensure userInfo and id are available
+    
+      const userId = qrData.userInfo?.id; 
 
-      console.log("User ID:", userId);
+    //  console.log("User ID:", userId);
 
       if (!userId) {
         throw new Error(t("Error.User ID not found in QR code"));
@@ -100,7 +99,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
       );
       setIsUnsuccessfulModalVisible(true);
 
-      // Start the decreasing animation
+    
       unsuccessfulLoadingBarWidth.setValue(100); // Reset width to 100%
       Animated.timing(unsuccessfulLoadingBarWidth, {
         toValue: 0, // Animate to 0 (empty bar)
@@ -191,7 +190,19 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1, position: "relative" }}>
+                    <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
+                      <TouchableOpacity  className="bg-[#F6F6F680] rounded-full p-2 justify-center w-10 z-20 " onPress={() => navigation.goBack()}>
+                        <AntDesign name="left" size={24} color="#000" />
+                      </TouchableOpacity>
+       
+                      <View className="flex-1 ">
+                        <Text className="text-lg font-bold text-center -ml-8">
+                          {t("QRScanner.ScantheQR")}
+                        </Text>
+                      </View>
+                    </View>
       <CameraView
+      className="flex-1 "
         onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
         barcodeScannerSettings={{
           barcodeTypes: ["qr", "pdf417"],
@@ -242,8 +253,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
         </View>
       )}
 
- {/* Unsuccessful Modal */}
-{/* Unsuccessful Modal */}
+
 <Modal
   transparent={true}
   visible={isUnsuccessfulModalVisible}
@@ -273,16 +283,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ navigation }) => {
         />
       </View>
       
-      {/* <TouchableOpacity
-        className="bg-red-500 p-2 rounded-xl mt-4 px-4"
-        onPress={() => {
-          setIsUnsuccessfulModalVisible(false);
-          setErrorMessage(null); // Clear error message when closing
-          navigation.navigate("SearchFarmer" as any);
-        }}
-      >
-        <Text className="text-white">{t("QRScanner.Close")}</Text>
-      </TouchableOpacity> */}
+    
     </View>
   </View>
 </Modal>

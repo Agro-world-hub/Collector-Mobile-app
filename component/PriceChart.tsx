@@ -12,6 +12,7 @@ import {
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
 
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
@@ -109,6 +110,11 @@ useFocusEffect(
         );
         return;
       }
+
+       const netState = await NetInfo.fetch();
+       if (!netState.isConnected) {
+       return; 
+       }
       
       try {
         const token = await AsyncStorage.getItem("token");
@@ -181,10 +187,11 @@ return (
     <SafeAreaView className="flex-1 bg-whitegray-100">
       {/* Header */}
       <View className="bg-[#313131] h-20 flex-row items-center" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
-        <TouchableOpacity onPress={() => navigation.navigate("Main" as any, { screen: "SearchPriceScreen" })}>
-          <AntDesign name="left" size={24} color="#fff" />
-        </TouchableOpacity>
-        <Text className="text-white text-lg font-bold text-center flex-1">{t("PriceChart.PriceChart")}</Text>
+       
+        <TouchableOpacity  onPress={() => navigation.navigate("Main" as any, { screen: "SearchPriceScreen" })} className="bg-[#FFFFFF1A] rounded-full p-2 justify-center w-10" >
+                                                               <AntDesign name="left" size={24} color="#000502" />
+                                                             </TouchableOpacity>
+        <Text className="text-white text-lg font-bold text-center flex-1 mr-[5%]">{t("PriceChart.PriceChart")}</Text>
       </View>
 
       {/* Content */}

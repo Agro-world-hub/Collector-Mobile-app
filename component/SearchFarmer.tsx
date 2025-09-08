@@ -81,12 +81,11 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
     setEre("");
   }
 
-  // Reset search button clicked state when user starts typing again
+
   if (searchButtonClicked && normalizedText.length === 0) {
     setSearchButtonClicked(false);
   }
 
-  // Reset search states when user modifies the input
   if (noResults || newQr) {
     setNoResults(false);
     setNewQr(false);
@@ -94,19 +93,18 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
   }
 };
   const handleSearch = async () => {
-    // Set search button clicked to true
+   
     setSearchButtonClicked(true);
 
     Keyboard.dismiss();
     if (NICnumber.trim().length === 0) return;
 
-    // Validate NIC and return if invalid
+    
     const isValid = validateNic(NICnumber);
     if (!isValid) {
       return;
     }
 
-    // Reset states and show searching
     setIsSearching(true);
     setNoResults(false);
     setNewQr(false);
@@ -114,11 +112,11 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
 
     try {
       const response = await api.get(`api/auth/get-users/${NICnumber}`);
-      console.log("farmerdata", response.data);
+      //console.log("farmerdata", response.data);
 
       if (response.status === 200) {
         const farmer = response.data;
-        console.log("Farmer data-----:", farmer);
+       // console.log("Farmer data-----:", farmer);
         if (farmer.farmerQr === null || farmer.farmerQr === "") {
           setIsSearching(false);
           setNewQr(true);
@@ -148,7 +146,6 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
     }
   };
 
-  // Reset all states when screen comes into focus
   useFocusEffect(
     useCallback(() => {
       setNICnumber("");
@@ -168,7 +165,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
   const getTextStyle = (language: string) => {
     if (language === "si") {
       return {
-        fontSize: 12, // Smaller text size for Sinhala
+        fontSize: 12, 
         lineHeight: 20, // Space between lines
       };
     }
@@ -199,10 +196,11 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
         >
           {/* Header */}
           <View className="flex-row items-center mb-6">
-            <TouchableOpacity onPress={() => navigation.goBack()} className="">
-              <AntDesign name="left" size={24} color="#000" />
-            </TouchableOpacity>
-            <Text className="flex-1 text-center text-xl font-bold text-black">
+ 
+            <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                         <AntDesign name="left" size={24} color="#000502" />
+                       </TouchableOpacity>
+            <Text className="flex-1 text-center text-xl font-bold text-black mr-[5%]">
               {t("SearchFarmer.Search")}
             </Text>
           </View>

@@ -26,6 +26,7 @@ import { Modal } from "react-native";
 import { Animated } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { ScrollView } from "react-native-gesture-handler";
+import NetInfo from "@react-native-community/netinfo";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -300,6 +301,11 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
       return;
     }
 
+      const netState = await NetInfo.fetch();
+       if (!netState.isConnected) {
+      return; 
+       }
+
     try {
       const refId = referenceId;
 
@@ -315,12 +321,14 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
       };
 
       const response = await axios.post(url, body, { headers });
-      console.log("Response from Shoutout:", response.data);
+     // console.log("Response from Shoutout:", response.data);
       const { statusCode } = response.data;
 
       if (statusCode === "1000") {
         setIsVerified(true);
         setModalVisible(true);
+
+   
 
         const response = await axios.post(
           `${environment.API_BASE_URL}api/farmer/FarmerBankDetails`,
@@ -375,7 +383,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
 
       if (PreferdLanguage === "Sinhala") {
         companyName =
-          (await AsyncStorage.getItem("companyNameSinhala")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameSinhala")) || "PolygonAgro";
         otpMessage = `${companyName} සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
           
   ${accHolderName}
@@ -386,7 +394,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
   නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා ${companyName} නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
       } else if (PreferdLanguage === "Tamil") {
         companyName =
-          (await AsyncStorage.getItem("companyNameTamil")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameTamil")) || "PolygonAgro";
         otpMessage = `${companyName} உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
           
   ${accHolderName}
@@ -397,7 +405,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
   சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் ${companyName} பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
       } else {
         companyName =
-          (await AsyncStorage.getItem("companyNameEnglish")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameEnglish")) || "PolygonAgro";
         otpMessage = `Your OTP for bank detail verification with ${companyName} is: {{code}}
           
   ${accHolderName}
@@ -410,7 +418,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
 
       // Prepare the body of the request
       const body = {
-        source: "AgroWorld",
+        source: "PolygonAgro",
         transport: "sms",
         content: {
           sms: otpMessage,
@@ -465,13 +473,14 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         style={{ paddingHorizontal: wp(4), paddingVertical: hp(2) }}
       >
         <View>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <AntDesign name="left" size={22} color="#000" />
-          </TouchableOpacity>
+         
+          <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                                   <AntDesign name="left" size={24} color="#000502" />
+                                 </TouchableOpacity>
         </View>
-        <View className="flex justify-center items-center mt-0">
+        <View className="flex justify-center items-center mt-0 mr-[5%]">
           <Text className="text-black" style={{ fontSize: wp(8) }}>
-            {/* {t("OtpVerification.OTPVerification")} */}
+
           </Text>
         </View>
 
@@ -559,9 +568,9 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
               onPress={disabledResend ? undefined : handleResendOTP}
               style={{ color: disabledResend ? "gray" : "black" }}
             >
-              {timer > 0
-                ? `${t("Resend in ")} ${formatTime(timer)}`
-                : `${t("Resend again")}`}
+                {timer > 0
+              ? `${t("Otpverification.Resend in")} ${formatTime(timer)}`
+              : `${t("Otpverification.Resend again")}`}
             </Text>
           </View>
 

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { SelectList } from "react-native-dropdown-select-list";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -18,6 +18,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { environment } from "@/environment/environment";
 import LottieView from "lottie-react-native";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
 
 type PassTargetBetweenOfficersScreenNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -94,7 +95,7 @@ const PassTargetBetweenOfficers: React.FC<
     fetchData();
   }, []);
 
-  console.log("Max Amount:", maxAmount);
+ // console.log("Max Amount:", maxAmount);
 
   // ✅ Set initial amount as max amount (`todo`)
   useEffect(() => {
@@ -132,7 +133,7 @@ const PassTargetBetweenOfficers: React.FC<
         }
       );
 
-      console.log("Officers:", response.data.data);
+     // console.log("Officers:", response.data.data);
 
       if (response.data.status === "success") {
         const filteredOfficers = response.data.data.filter(
@@ -198,6 +199,11 @@ const PassTargetBetweenOfficers: React.FC<
       return;
     }
 
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
+
     try {
       setSubmitting(true);
 
@@ -254,10 +260,14 @@ const PassTargetBetweenOfficers: React.FC<
     <View className="flex-1 bg-white">
       {/* ✅ Fixed Header */}
       <View className="flex-row items-center bg-[#313131] p-6 rounded-b-lg">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="white" />
+        <TouchableOpacity 
+        onPress={() => navigation.goBack()}
+        className="bg-[#FFFFFF1A] rounded-full p-2 justify-center w-10"
+        >
+          <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-semibold text-center w-full">
+        {/* <Text className="text-white text-lg font-semibold text-center w-full"> */}
+          <Text className="flex-1 text-center text-xl font-semibold text-white mr-[6%]">
           {getvarietyName()}
         </Text>
       </View>

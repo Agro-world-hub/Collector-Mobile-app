@@ -1,18 +1,19 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image, Alert } from "react-native";
+import React, { useCallback, useState } from "react";
+import { View, Text, TouchableOpacity, Image, Alert, BackHandler } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types";
 import { handleGeneratePDF } from "./ReportPDFGenerator";
 import * as Sharing from "expo-sharing";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useFocusEffect } from "@react-navigation/native";
 import * as MediaLibrary from "expo-media-library";
 import { Platform } from "react-native";
 import * as FileSystem from "expo-file-system";
 import { ScrollView } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
 import LottieView from "lottie-react-native";
+import i18n from "@/i18n/i18n";
 
 type ReportGeneratorNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -44,7 +45,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
   const [generateAgain, setGenerateAgain] = useState(false);
   const { t } = useTranslation();
 
-  const { officerId, collectionOfficerId } = route.params;
+  const { officerId, collectionOfficerId ,phoneNumber1,officerName ,phoneNumber2} = route.params;
   console.log(officerId);
 
   const getTodayInColombo = () => {
@@ -140,17 +141,17 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
       }
 
       // Define the new file name
-      const date = new Date().toISOString().slice(0, 10); // Get the current date (YYYY-MM-DD)
-      const fileName = `Report_${officerId}_${date}.pdf`; // Example file name
+      const date = new Date().toISOString().slice(0, 10); 
+      const fileName = `Report_${officerId}_${date}.pdf`; 
 
-      // Define tempFilePath here, outside the if block so it's available throughout the function
-      let tempFilePath = uri; // Default to the original URI
+   
+      let tempFilePath = uri; 
 
       if (Platform.OS === "android") {
-        // Create a temporary file in cache
+      
         tempFilePath = `${FileSystem.cacheDirectory}${fileName}`;
 
-        // Copy the PDF to the temp location
+       
         await FileSystem.copyAsync({
           from: uri,
           to: tempFilePath,
@@ -163,11 +164,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
             mimeType: "application/pdf",
             UTI: "com.adobe.pdf",
           });
-          // Alert.alert(
-          //   t("Error.PDF Ready"),
-          //   t("Error.To save to Downloads, select 'Save to device' or similar option from the share menu"),
-          //   [{ text: "OK" }]
-          // );
+       
         } else {
           Alert.alert(
             t("Error.error"),
@@ -175,7 +172,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
           );
         }
       } else if (Platform.OS === "ios") {
-        // iOS approach: Use sharing dialog to let user save to Files app
+      
         if (await Sharing.isAvailableAsync()) {
           await Sharing.shareAsync(tempFilePath, {
             // Using tempFilePath which is uri for iOS
@@ -192,8 +189,8 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
         }
       }
 
-      // Log success - tempFilePath is now accessible here
-      console.log(`PDF prepared for sharing: ${tempFilePath}`);
+ 
+    //  console.log(`PDF prepared for sharing: ${tempFilePath}`);
     } catch (error) {
       console.error("Download error:", error);
       Alert.alert(
@@ -263,17 +260,52 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
     }
   };
 
+   const handleBackPress = useCallback(() => {
+    navigation.navigate("OfficerSummary" as any, {
+      collectionOfficerId,
+      officerId,
+      phoneNumber1,
+      phoneNumber2,
+      officerName,
+    });
+    return true; // Prevent default back behavior
+  }, [navigation, collectionOfficerId, officerId, phoneNumber1, phoneNumber2, officerName]);
+
+   useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => handleBackPress();
+
+      const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => subscription.remove();
+    }, [handleBackPress])
+  );
+
   return (
     <ScrollView className="flex-1 bg-white">
       <View className="flex-row items-center  p-6 rounded-b-lg">
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          className="absolute top-6 left-4"
-        >
+        {/* <TouchableOpacity
+        //  onPress={() => navigation.goBack()}
+        
+          className="absolute top-5 left-4 bg-[#f3f3f380] rounded-full p-2 justify-center w-10"
+        > */}
+       <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("OfficerSummary" as any, {
+                        collectionOfficerId,
+                        officerId,
+                        phoneNumber1,
+                        phoneNumber2,
+                        officerName,
+                      })
+                    }
+                    className="bg-[#FFFFFF1A] rounded-full  justify-center w-10"
+                  >
+
           <AntDesign name="left" size={24} color="#000" />
         </TouchableOpacity>
 
-        <Text className="text-black text-lg font-semibold text-center w-full">
+        <Text className="text-black text-lg pr-[20%] font-semibold text-center w-full ">
           {officerId}
         </Text>
       </View>
@@ -359,8 +391,8 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
                   mode="date"
                   display="inline"
                   style={{ width: 320, height: 260 }}
-                  maximumDate={getTodayInColombo()} // Disallow future dates
-                  minimumDate={startDate} // End date must not be earlier than the start date
+                  maximumDate={getTodayInColombo()} 
+                  minimumDate={startDate} 
                   onChange={(event, date) =>
                     handleDateChange(event, date, "end")
                   }
@@ -379,6 +411,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
               className="text-gray-700 text-center"
               numberOfLines={1}
               ellipsizeMode="tail"
+          
             >
               {t("ReportGenerator.Reset")}
             </Text>
@@ -392,6 +425,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
               className="text-white font-semibold text-center"
               numberOfLines={1}
               ellipsizeMode="tail"
+
             >
               {t("ReportGenerator.Generate")}
             </Text>
@@ -419,7 +453,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
             />
           </View>
 
-          {/* <Text className="text-lg font-semibold text-[#494949]">{t("ReportGenerator.IDNO")} {generatedReportId}</Text> */}
+      
           <Text className="text-sm text-gray-500 italic mb-6">
             {t("ReportGenerator.Report has been generated")}
           </Text>
@@ -432,7 +466,15 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
               style={{ width: 100, height: 70 }} // Explicit width and height
             >
               <Ionicons name="download" size={24} color="white" />
-              <Text className="text-sm text-white mt-1">
+              <Text className="text-sm text-white mt-1"
+                                                                                       style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 14 }
+]}
+              >
                 {t("ReportGenerator.Download")}
               </Text>
             </TouchableOpacity>
@@ -443,7 +485,15 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
               style={{ width: 100, height: 70 }} // Explicit width and height
             >
               <Ionicons name="share-social" size={24} color="white" />
-              <Text className="text-sm text-white mt-1">
+              <Text className="text-sm text-white mt-1"
+                                                                                       style={[
+  i18n.language === "si"
+    ? { fontSize: 13 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 14 }
+]}
+              >
                 {t("ReportGenerator.Share")}
               </Text>
             </TouchableOpacity>

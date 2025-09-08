@@ -4,7 +4,6 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
-  ScrollView,
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
@@ -16,6 +15,8 @@ import { RootStackParamList } from "../types";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { environment } from '@/environment/environment';
+import LottieView from 'lottie-react-native';
+import i18n from "@/i18n/i18n";
 
 type ReplaceRequestsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -46,9 +47,9 @@ interface ReplaceRequestItem {
   packageId?: string;
   productNormalPrice?: string;
   productDiscountedPrice?: string;
-  replaceProductDisplayName?:string;
-  replaceQty?:string;
-  replacePrice?:string;
+  replaceProductDisplayName?: string;
+  replaceQty?: string;
+  replacePrice?: string;
 }
 
 const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
@@ -78,10 +79,10 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
         }
       );
 
-      console.log("bhdjaovm", response.data);
+    //  console.log("bhdjaovm", response.data);
 
       if (response.data.success) {
-        // Map the API response data to our frontend format
+   
         const mappedData = response.data.data.map((item: any) => ({
           id: item.id.toString(),
           orderId: item.orderId ? item.orderId.toString() : '',
@@ -99,9 +100,9 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
           packageId: item.packageId,
           productNormalPrice: item.productNormalPrice,
           productDiscountedPrice: item.productDiscountedPrice,
-          replaceProductDisplayName:item.replaceProductDisplayName,
-          replaceQty:item.replaceQty,
-          replacePrice:item.replacePrice
+          replaceProductDisplayName: item.replaceProductDisplayName,
+          replaceQty: item.replaceQty,
+          replacePrice: item.replacePrice
         }));
         
         setReplaceRequests(mappedData);
@@ -127,7 +128,7 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
     navigation.navigate("ReplaceRequestsApprove" as any, {
       replaceRequestData: {
         id: item.id,
-        orderId: item.orderId || item.invNo, // Use invNo if orderId is not available
+        orderId: item.orderId || item.invNo, 
         orderPackageId: item.orderPackageId,
         productDisplayName: item.productDisplayName,
         productTypeName: item.productTypeName,
@@ -143,9 +144,9 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
         productNormalPrice: item.productNormalPrice,
         productDiscountedPrice: item.productDiscountedPrice,
         qty: item.qty,
-        replaceProductDisplayName:item.replaceProductDisplayName,
-        replaceQty:item.replaceQty,
-          replacePrice:item.replacePrice
+        replaceProductDisplayName: item.replaceProductDisplayName,
+        replaceQty: item.replaceQty,
+        replacePrice: item.replacePrice
       }
     });
   };
@@ -165,9 +166,17 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
 
   const renderRequestItem = ({ item }: { item: ReplaceRequestItem }) => (
     <TouchableOpacity onPress={() => handleNavigateToApprove(item)}>
-      <View className="flex-row items-center bg-[#ADADAD1A] p-3 px-4 mb-4 rounded-xl">
+      <View className="flex-row items-center bg-[#ADADAD1A] p-3 px-4 mb-4 rounded-xl mx-3">
         <View className="flex-1">
-          <Text className="font-bold text-base text-gray-900">
+          <Text 
+            style={[
+              i18n.language === "si"
+                ? { fontSize: 14 }
+                : i18n.language === "ta"
+                ? { fontSize: 12 }
+                : { fontSize: 15 }
+            ]}
+            className="font-bold text-base text-gray-900">
             {t("ReplaceRequestsScreen.Order ID")} {item.invNo}
           </Text>
           <Text className="text-gray-700 text-sm">
@@ -175,15 +184,41 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
           </Text>
          
           <Text className="text-gray-500 text-sm">
-            {t("Requested Time")}: {item.createdAt}
+            {t("ReplaceRequestsScreen.Requested Time")} : {item.createdAt}
           </Text>
-        
         </View>
         <View className="p-2 rounded-full">
           <AntDesign name="right" size={20} color="#5f5c5cff" />
         </View>
       </View>
     </TouchableOpacity>
+  );
+
+  const renderHeader = () => (
+    <View className="p-4 bg-white">
+      <View className="mb-6">
+        <Text className="text-lg font-bold text-center">
+          {t("ReplaceRequestsScreen.Replace Requests")}
+        </Text>
+      </View>
+      <Text className="text-base pb-1 text-[#21202B] font-semibold">
+        {t("ReplaceRequestsScreen.All")} ({replaceRequests.length})
+      </Text>
+    </View>
+  );
+
+  const renderEmptyComponent = () => (
+    <View className="items-center justify-center py-10 mt-[40%]">
+      <LottieView
+        source={require('../../assets/lottie/NoComplaints.json')}
+        autoPlay
+        loop
+        style={{ width: 150, height: 150 }}
+      />
+      <Text className="text-center text-gray-500 mt-4">
+        {t("ReplaceRequestsScreen.No replace requests found")}
+      </Text>
+    </View>
   );
 
   if (loading) {
@@ -195,35 +230,20 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
   }
 
   return (
-    <ScrollView 
-      className="flex-1 bg-white p-4"
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      <View className="mb-6">
-        <Text className="text-lg font-bold text-center">{t("Replace Requests")}</Text>
-      </View>
-
-      <View className="px-4">
-        <Text className="text-base pb-4 text-[#21202B] font-semibold">
-          {t("All")} ({replaceRequests.length})
-        </Text>
-        
-        {replaceRequests.length === 0 ? (
-          <Text className="text-center text-gray-500 py-10">
-            {t("No replace requests found")}
-          </Text>
-        ) : (
-          <FlatList 
-            data={replaceRequests}
-            keyExtractor={(item) => item.id}
-            renderItem={renderRequestItem}
-            scrollEnabled={false}
-          />
-        )}
-      </View>
-    </ScrollView>
+    <View className="flex-1 bg-white">
+      <FlatList 
+        data={replaceRequests}
+        keyExtractor={(item) => item.id}
+        renderItem={renderRequestItem}
+        ListHeaderComponent={renderHeader}
+        ListEmptyComponent={renderEmptyComponent}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 70 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
   );
 };
 

@@ -24,6 +24,7 @@ import { Modal } from "react-native";
 import { Animated } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { ScrollView } from "react-native-gesture-handler";
+import NetInfo from "@react-native-community/netinfo";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -229,9 +230,15 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
       const response = await axios.post(url, body, { headers });
       const { statusCode } = response.data;
 
+        const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
+
       if (statusCode === "1000") {
         setIsVerified(true);
         setModalVisible(true);
+        
 
         const response1 = await axios.post(
           `${environment.API_BASE_URL}api/farmer/register-farmer`,
@@ -272,7 +279,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
 
       if (PreferdLanguage === "Sinhala") {
         companyName =
-          (await AsyncStorage.getItem("companyNameSinhala")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameSinhala")) || "PolygonAgro";
         otpMessage = `${companyName} සමඟ බැංකු විස්තර සත්‍යාපනය සඳහා ඔබගේ OTP: {{code}}
           
   ${accHolderName}
@@ -283,7 +290,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
   නිවැරදි නම්, ඔබව සම්බන්ධ කර ගන්නා ${companyName} නියෝජිතයා සමඟ පමණක් OTP අංකය බෙදා ගන්න.`;
       } else if (PreferdLanguage === "Tamil") {
         companyName =
-          (await AsyncStorage.getItem("companyNameTamil")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameTamil")) || "PolygonAgro";
         otpMessage = `${companyName} உடன் வங்கி விவர சரிபார்ப்புக்கான உங்கள் OTP: {{code}}
           
   ${accHolderName}
@@ -294,7 +301,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
   சரியாக இருந்தால், உங்களைத் தொடர்பு கொள்ளும் ${companyName} பிரதிநிதியுடன் மட்டும் OTP ஐப் பகிரவும்.`;
       } else {
         companyName =
-          (await AsyncStorage.getItem("companyNameEnglish")) || "AgroWorld";
+          (await AsyncStorage.getItem("companyNameEnglish")) || "PolygonAgro";
         otpMessage = `Your OTP for bank detail verification with ${companyName} is: {{code}}
           
   ${accHolderName}
@@ -307,7 +314,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
 
       // Prepare the body of the request
       const body = {
-        source: "AgroWorld",
+        source: "PolygonAgro",
         transport: "sms",
         content: {
           sms: otpMessage,
@@ -315,7 +322,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
         destination: `${phoneNumber}`,
       };
 
-      console.log("Sending OTP Request Body:", body);
+   //   console.log("Sending OTP Request Body:", body);
 
       const response = await axios.post(apiUrl, body, { headers });
       // Check if the response contains a referenceId
@@ -442,8 +449,8 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
             style={{ color: disabledResend ? "gray" : "black" }}
           >
             {timer > 0
-              ? `${t("Resend in ")} ${formatTime(timer)}`
-              : `${t("Resend again")}`}
+              ? `${t("Otpverification.Resend in")} ${formatTime(timer)}`
+              : `${t("Otpverification.Resend again")}`}
           </Text>
         </View>
 

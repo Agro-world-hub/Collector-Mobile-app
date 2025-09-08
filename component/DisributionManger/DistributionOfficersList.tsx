@@ -18,6 +18,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LottieView from "lottie-react-native"; // Import Lottie for animation
 import BottomNav from "../BottomNav";
 import { useTranslation } from "react-i18next";
+import NetInfo from "@react-native-community/netinfo";
+import i18n from "@/i18n/i18n";
 
 const { width } = Dimensions.get("window");
 const scale = (size: number) => (width / 375) * size;
@@ -60,8 +62,8 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
 
   const fetchSelectedLanguage = async () => {
     try {
-      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
-      setSelectedLanguage(lang || "en"); // Default to English if not set
+      const lang = await AsyncStorage.getItem("@user_language"); 
+      setSelectedLanguage(lang || "en"); 
     } catch (error) {
       console.error("Error fetching language preference:", error);
     }
@@ -75,8 +77,8 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
   const getTextStyle = (language: string) => {
     if (language === "si") {
       return {
-        fontSize: 14, // Smaller text size for Sinhala
-        lineHeight: 20, // Space between lines
+        fontSize: 14, 
+        lineHeight: 20, 
       };
     }
   };
@@ -94,10 +96,10 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
           },
         }
       );
-      console.log("data", response.data);
+      //console.log("data", response.data);
 
       if (response.data.status === "success") {
-        // Separate approved and not approved officers
+    
         const approvedOfficers = response.data.data.filter(
           (officer: Officer) => officer.status === "Approved"
         );
@@ -115,7 +117,7 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
             getOfficerName(a).localeCompare(getOfficerName(b))
         );
 
-        // Combine the sorted lists: approved officers first, then not approved
+       
         setOfficers([...sortedApprovedOfficers, ...sortedNotApprovedOfficers]);
       } else {
         setErrorMessage(t("Error.Failed to fetch officers."));
@@ -178,7 +180,7 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
       );
       setFilteredOfficers(filtered);
     } else {
-      setFilteredOfficers(officers); // Show all officers when no filter is selected
+      setFilteredOfficers(officers);
     }
   }, [selectedJobRole, officers]);
 
@@ -188,7 +190,7 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
         item.status === "Not Approved" ? "bg-gray-100" : "bg-gray-100"
       }`}
       onPress={() => {
-        // Prevent navigation if officer status is "Not Approved"
+   
         if (item.status !== "Not Approved") {
           navigation.navigate("DistributionOfficerSummary" as any, {
             officerId: item.empId,
@@ -200,14 +202,10 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
           });
         }
       }}
-      disabled={item.status === "Not Approved"} // Disable the TouchableOpacity when status is "Not Approved"
+      disabled={item.status === "Not Approved"}
     >
       <View className="w-14 h-14 rounded-full overflow-hidden justify-center items-center mr-4 shadow-md">
-        {/* <Image
-          source={require('../../assets/images/ava.webp')}
-          className="w-full h-full"
-          resizeMode="cover"
-        /> */}
+     
         <Image
           source={
             item.image
@@ -219,83 +217,47 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
       </View>
 
       <View className="flex-1">
-        <Text className="text-[18px] font-semibold text-gray-900">
+          
+           {item.status === "Not Approved" && (
+        <Text className="text-red-500 text-xs font-semibold mr-2 self-end"
+              style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 9 }
+    : { fontSize: 12 }
+]}
+        >
+          {t("CollectionOfficersList.Not Approved")}
+        </Text>
+      )}
+        <Text className="text-[18px] font-semibold text-gray-900"
+         style={[
+  i18n.language === "si"
+    ? { fontSize: 16 }
+    : i18n.language === "ta"
+    ? { fontSize: 14 }
+    : { fontSize: 17 }
+]}
+        >
           {getOfficerName(item)}
         </Text>
         <Text className="text-sm text-gray-500"> {t("DistributionOfficersList.EMPID")}  {item.empId}</Text>
       </View>
 
-      {item.status === "Not Approved" && (
-        <Text className="text-red-500 text-xs font-semibold mr-2 mt-[-12%]">
-          {t("CollectionOfficersList.Not Approved")}
-        </Text>
-      )}
-
-      {/* Conditionally render the chevron icon based on the officer's status */}
+    
       {item.status !== "Not Approved" && (
         <Ionicons name="chevron-forward" size={scale(20)} color="#9CA3AF" />
       )}
     </TouchableOpacity>
   );
 
-  // Handling the button for adding new officers
-  // <TouchableOpacity
-  //   onPress={async () => {
-  //     try {
-  //       await AsyncStorage.removeItem("officerFormData"); // Clear stored data
-  //       navigation.navigate("AddOfficerBasicDetails" as any);
-  //     } catch (error) {
-  //       console.error("Error clearing form data:", error);
-  //     }
-  //   }}
-  //   className="absolute bottom-5 right-5 bg-black w-14 h-14 rounded-full justify-center items-center shadow-lg"
-  // >
-  //   <Ionicons name="add" size={scale(24)} color="#fff" />
-  // </TouchableOpacity>;
+ 
 
   return (
     <View className="flex-1 bg-[#313131]">
       <View className="bg-[#313131] py-6 px-4  relative">
-        {/* <TouchableOpacity
-          className="absolute top-6 left-4 z-50"
-          onPress={() => {
-            setShowFilter((prev) => !prev);
-            setShowMenu(false);
-          }}
-        >
-          <FontAwesome name="filter" size={24} color="#fff" />
-        </TouchableOpacity> */}
-        {/* {showFilter && (
-          <View className="absolute z-50 flex-col top-14 left-6 bg-white shadow-lg rounded-lg">
-            <TouchableOpacity
-              className={`px-4 py-2 bg-white rounded-lg  ${
-                selectedJobRole === "Driver" ? "bg-gray-200" : ""
-              }`}
-              onPress={() => {
-                setSelectedJobRole("Driver");
-                setShowFilter(false); // Close the filter
-              }}
-            >
-              <Text className="text-gray-700 font-semibold">
-                {t("CollectionOfficersList.Drivers")}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className={`px-4 py-2 bg-white rounded-lg  ${
-                selectedJobRole === "Collection Officer" ? "bg-gray-200" : ""
-              }`}
-              onPress={() => {
-                setSelectedJobRole("Collection Officer");
-                setShowFilter(false); // Close the filter
-              }}
-            >
-              <Text className="text-gray-700 font-semibold">
-                {t("CollectionOfficersList.Collection Officers")}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )} */}
-
+    
         <Text
           style={{ fontSize: 18 }}
           className="text-white text-center font-bold"
@@ -372,10 +334,9 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
         </View>
 
         {loading ? (
-          // Lottie Loader for 4 seconds
           <View className="flex-1 justify-center items-center -mt-[25%]">
             <LottieView
-              source={require("../../assets/lottie/newLottie.json")} // Ensure JSON file is correct
+              source={require("../../assets/lottie/newLottie.json")} 
               autoPlay
               loop
               style={{ width: 350, height: 350 }}
@@ -409,8 +370,8 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
         <TouchableOpacity
           onPress={async () => {
             try {
-              await AsyncStorage.removeItem("officerFormData"); // Clear stored data
-              // navigation.navigate("AddOfficerBasicDetails" as any);
+              await AsyncStorage.removeItem("officerFormData"); 
+           
                             navigation.navigate("AddOfficerBasicDetails", {jobRolle:"Distribution Officer"});
 
 console.log("hirt")

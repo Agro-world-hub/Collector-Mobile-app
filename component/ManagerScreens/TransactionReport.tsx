@@ -91,7 +91,7 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
     selectedTime
   } = route.params;
   
-  console.log('Farmer Report:', route.params);
+//  console.log('Farmer Report:', route.params);
   const [crops, setCrops] = useState<Crop[]>([]);
   const [qrValue, setQrValue] = useState<string>("");
   const { t } = useTranslation();
@@ -99,7 +99,7 @@ const TransactionReport: React.FC<TransactionReportProps> = ({ navigation }) => 
    const [selectedLanguage, setSelectedLanguage] = useState("en");
     console.log(";;;;;;;;",selectedLanguage)
 const formattedDate = selectedDate.replace(/-/g, "/");
-console.log(formattedDate); 
+//console.log(formattedDate); 
   const fetchSelectedLanguage = async () => {
     try {
       const lang = await AsyncStorage.getItem("@user_language");
@@ -195,7 +195,7 @@ console.log(formattedDate);
       });
 
       const data = response.data.data;
-      console.log(data);
+     // console.log(data);
 
       if (response.data.status === "success") {
         const officerDetails = {
@@ -234,7 +234,7 @@ console.log(formattedDate);
         return;
       }
       
-      console.log('Fetching details for userId:', userId, 'and registeredFarmerId:', registeredFarmerId);
+     // console.log('Fetching details for userId:', userId, 'and registeredFarmerId:', registeredFarmerId);
       
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -245,7 +245,7 @@ console.log(formattedDate);
         const detailsResponse = await api.get(`api/farmer/report-user-details/${userId}`, {
           headers
         });
-        console.log('Details response successful:', detailsResponse.data);
+       // console.log('Details response successful:', detailsResponse.data);
         
         // Process details response...
         const data = detailsResponse.data;
@@ -267,9 +267,9 @@ console.log(formattedDate);
       } catch (detailsError) {
         console.error('Error fetching user details:', detailsError);
         if (axios.isAxiosError(detailsError)) {
-          console.log('Details error response:', detailsError.response?.data);
+    //      console.log('Details error response:', detailsError.response?.data);
         } else {
-          console.log('Details error:', detailsError);
+     //     console.log('Details error:', detailsError);
         }
       }
       
@@ -277,7 +277,7 @@ console.log(formattedDate);
         const cropsResponse = await api.get(`api/collection-manager/transaction-details/${userId}/${selectedDate}/${registeredFarmerId}`, {
           headers
         });
-        console.log('Crops response successful:', cropsResponse.data);
+      //  console.log('Crops response successful:', cropsResponse.data);
         
         // Process crops response...
         const cropsData = cropsResponse.data?.data || cropsResponse.data || [];
@@ -585,20 +585,20 @@ const handleDownloadPDF = async () => {
     const date = new Date().toISOString().slice(0, 10);
     const fileName = `GRN_${crops.length > 0 ? crops[0].invoiceNumber : 'N/A'}_${date}.pdf`;
     
-    // Define tempFilePath here, outside the if block so it's available throughout the function
+  
     let tempFilePath = uri; // Default to the original URI
 
     if (Platform.OS === 'android') {
-      // Create a temporary file in cache
+     
       tempFilePath = `${FileSystem.cacheDirectory}${fileName}`;
       
-      // Copy the PDF to the temp location
+     
       await FileSystem.copyAsync({
         from: uri,
         to: tempFilePath
       });
       
-      // Use the sharing API - this works in Expo Go
+    
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(tempFilePath, {
           dialogTitle: 'Save PDF',
@@ -614,9 +614,9 @@ const handleDownloadPDF = async () => {
         Alert.alert("Error", "Sharing is not available on this device");
       }
     } else if (Platform.OS === 'ios') {
-      // iOS approach: Use sharing dialog to let user save to Files app
+    
       if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(tempFilePath, { // Using tempFilePath which is uri for iOS
+        await Sharing.shareAsync(tempFilePath, { 
           dialogTitle: 'Save PDF',
           mimeType: 'application/pdf',
           UTI: 'com.adobe.pdf'
@@ -627,7 +627,7 @@ const handleDownloadPDF = async () => {
       }
     }
     
-    // Log success - tempFilePath is now accessible here
+
     console.log(`PDF prepared for sharing: ${tempFilePath}`);
     
   } catch (error) {
@@ -677,10 +677,11 @@ const handleDownloadPDF = async () => {
   return (
     <ScrollView className="flex-1 bg-white p-4">
       <View className="flex-row items-center mb-4">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign name="left" size={24} color="#000" />
-        </TouchableOpacity>
-        <Text className="text-xl font-bold text-center w-full">{t("NewReport.Goods Received Note")}</Text>
+       
+        <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                                                               <AntDesign name="left" size={24} color="#000502" />
+                                                             </TouchableOpacity>
+        <Text className="flex-1 text-center text-xl font-bold text-black mr-[6%]">{t("NewReport.Goods Received Note")}</Text>
       </View>
 
       {/* GRN Header */}

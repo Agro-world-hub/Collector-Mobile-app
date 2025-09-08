@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import DropDownPicker from "react-native-dropdown-picker";
 import i18n from "@/i18n/i18n";
 import { set } from "lodash";
+import NetInfo from "@react-native-community/netinfo";
 
 interface OfficerDetails {
   id: number;
@@ -73,6 +74,11 @@ const ClaimOfficer: React.FC = () => {
     Keyboard.dismiss();
     setSearchLoading(true);
     console.log(empID, jobRole);
+
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+    return; 
+  }
     try {
       const userToken = await AsyncStorage.getItem("token");
 
@@ -97,7 +103,7 @@ const ClaimOfficer: React.FC = () => {
       );
 
       const data = await response.json();
-      console.log("claim pfficer", data);
+     // console.log("claim pfficer", data);
 
       if (response.ok && data.result && data.result.length > 0) {
         const officer = data.result[0];
@@ -117,7 +123,7 @@ const ClaimOfficer: React.FC = () => {
           lastNameSinhala: officer.lastNameSinhala,
           lastNameTamil: officer.lastNameTamil,
         });
-        console.log("officer details", officerDetails);
+       // console.log("officer details", officerDetails);
         setOfficerFound(true);
         setSearchLoading(false);
       } else {
@@ -240,12 +246,15 @@ const ClaimOfficer: React.FC = () => {
     <ScrollView className="flex-1 bg-white" keyboardShouldPersistTaps="handled">
       {/* Header */}
       <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
-        <TouchableOpacity className="" onPress={() => navigation.goBack()}>
+        {/* <TouchableOpacity className="" onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={24} color="#000" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+             <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
+                                 <AntDesign name="left" size={24} color="#000502" />
+                               </TouchableOpacity>
         {/* <Text className="text-lg font-bold ml-[25%]"> {t("ClaimOfficer.ClaimOfficers")}</Text> */}
         <View className="flex-1 ">
-          <Text className="text-lg font-bold text-center">
+          <Text className="text-lg font-bold text-center mr-[5%]">
             {t("ClaimOfficer.ClaimOfficers")}
           </Text>
         </View>
@@ -253,54 +262,9 @@ const ClaimOfficer: React.FC = () => {
 
     
       <View className="px-8 mt-2">
-        {/* <Text className="font-semibold text-gray-800 mb-2 text-center">
-          {t("ClaimOfficer.JobRole")}
-        </Text> */}
-          {/* 
-        <View className=" rounded-lg pb-3">
-      {/* Form */}
+     
       <View className="px-8 mt-7">
-        {/* <Text className="font-semibold text-gray-800 mb-2 text-center">
-          {t("ClaimOfficer.JobRole")}
-        </Text> */}
-        {/* <View className=" rounded-lg pb-3">
-          <DropDownPicker
-            open={open}
-            setOpen={setOpen}
-            value={jobRole} // The value selected in the dropdown
-            setValue={setJobRole} // Function to update the selected value
-            items={[
-              // Array of items with value and label for dropdown
-              {
-                value: "Collection Officer",
-                label: t("ClaimOfficer.Collection Officer"),
-              },
-              {
-                value: "Customer Officer",
-                label: t("ClaimOfficer.Customer Officer"),
-              },
-            ]}
-            placeholder={t("AddOfficerBasicDetails.SelectJobRole")} // Placeholder text
-            containerStyle={{
-              borderWidth: 1,
-              borderColor: "#CFCFCF",
-              borderRadius: 5,
-            }}
-            style={{
-              borderColor: "#CFCFCF",
-              borderWidth: 0,
-            }}
-            dropDownDirection="BOTTOM"
-            dropDownContainerStyle={{
-              borderColor: "#CFCFCF",
-            }}
-            placeholderStyle={{
-              fontSize: 14,
-              color: "#888",
-            }}
-          />
-        </View>
-         */}
+      
         </View>
 
         {/* EMP ID Input */}

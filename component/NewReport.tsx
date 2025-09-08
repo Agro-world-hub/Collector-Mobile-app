@@ -151,8 +151,7 @@ const NewReport: React.FC<NewReportProps> = ({ navigation }) => {
     return sum + subTotal;
   }, 0);
 
-  // Format numbers consistently
-  // Add this formatting function at the top of your component or where other utility functions are defined
+  
   const formatNumberWithCommas = (value: number | string): string => {
     // Convert to number if it's a string
     const numValue = typeof value === "string" ? parseFloat(value) : value;
@@ -205,7 +204,7 @@ const NewReport: React.FC<NewReportProps> = ({ navigation }) => {
           }
         );
         //console.log("/////////",detailsResponse)
-        console.log("Details response successful:", detailsResponse.data);
+      //  console.log("Details response successful:", detailsResponse.data);
 
         // Process details response...
         const data = detailsResponse.data;
@@ -240,11 +239,11 @@ const NewReport: React.FC<NewReportProps> = ({ navigation }) => {
             headers,
           }
         );
-        console.log("Crops response successful:", cropsResponse.data);
+       // console.log("Crops response successful:", cropsResponse.data);
 
         // Process crops response...
         const cropsData = cropsResponse.data?.data || cropsResponse.data || [];
-        console.log("Crops data:", cropsData);
+       // console.log("Crops data:", cropsData);
         setCrops(Array.isArray(cropsData) ? cropsData : []);
       } catch (cropsError) {
         console.error("Error fetching crops:", cropsError);
