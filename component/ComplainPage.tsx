@@ -33,8 +33,6 @@ import NetInfo from "@react-native-community/netinfo";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 
 
-
-
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
@@ -70,8 +68,12 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
       setLoading(false);
     }, 2000);
 
-    return () => clearTimeout(timer); // Cleanup the timer
+    return () => clearTimeout(timer); 
   }, []);
+
+
+
+
   useEffect(() => {
     const fetchUserRole = async () => {
       try {
@@ -106,7 +108,6 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
         if (response.data.status === "success") {
       //    console.log(response.data.data);
 
-          // Determine which language field to use
           const categoryField =
             selectedLanguage === "en"
               ? "categoryEnglish"
@@ -137,69 +138,91 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
     fetchComplainCategory();
   }, [t]);
 
+
+
+
   const handleSubmit = async () => {
-    if (!complain || !selectedCategory) {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.Please select a category and add your complaint.")
-      );
-      return;
-    }
+
+  if (!complain && !selectedCategory) {
+    Alert.alert(
+      t("Error.error"),
+      t("Error.Please select a category and add your complaint.")
+    );
+    return;
+  }
+
+
+  if (!selectedCategory) {
+    Alert.alert(
+      t("Error.error"),
+      t("Error.Please select a category.")
+    );
+    return;
+  }
+
+
+  if (!complain) {
+    Alert.alert(
+      t("Error.error"),
+      t("Error.Please add your complaint.")
+    );
+    return;
+  }
 
   const netState = await NetInfo.fetch();
-    if (!netState.isConnected) {
+  if (!netState.isConnected) {
     return; 
   }
 
-    try {
-      const storedLanguage = await AsyncStorage.getItem("@user_language");
-      if (storedLanguage) {
-        setLanguage(storedLanguage);
-      }
-
-      const token = await AsyncStorage.getItem("token"); // Retrieve token if using authentication
-
-      let response;
-
-      if (userId === 0) {
-        response = await api.post(
-          "api/complain/officer-complaint", // Adjust this endpoint based on your backend route
-          {
-            complain,
-            language: storedLanguage,
-            category: selectedCategory,
-          },
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-      } else {
-        response = await api.post(
-          "api/complain/farmer-complaint",
-          {
-            complain,
-            language: farmerLanguage,
-            category: selectedCategory,
-            userId,
-          },
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-      }
-
-      Alert.alert(
-        t("Error.Success"),
-        t("Error.Your complaint has Submit successfuly")
-      );
-      setComplain("");
-      setSelectedCategory(null);
-      navigation.goBack();
-    } catch (error) {
-      console.error("Error submitting complaint:", error);
-      Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+  try {
+    const storedLanguage = await AsyncStorage.getItem("@user_language");
+    if (storedLanguage) {
+      setLanguage(storedLanguage);
     }
-  };
+
+    const token = await AsyncStorage.getItem("token");
+
+    let response;
+
+    if (userId === 0) {
+      response = await api.post(
+        "api/complain/officer-complaint",
+        {
+          complain,
+          language: storedLanguage,
+          category: selectedCategory,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+    } else {
+      response = await api.post(
+        "api/complain/farmer-complaint",
+        {
+          complain,
+          language: farmerLanguage,
+          category: selectedCategory,
+          userId,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+    }
+
+    Alert.alert(
+      t("Error.Success"),
+      t("Error.Your complaint has Submit successfuly")
+    );
+    setComplain("");
+    setSelectedCategory(null);
+    navigation.goBack();
+  } catch (error) {
+    console.error("Error submitting complaint:", error);
+    Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
+  }
+};
 
   function dismissKeyboard(): void {
     throw new Error("Function not implemented.");
@@ -213,7 +236,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
     >
       <SafeAreaView className="flex-1 bg-white">
         {loading ? (
-          // Lottie Loader displays for 2 seconds
+   
           <View className="flex-1 justify-center items-center">
             <LottieView
               source={require("../assets/lottie/newLottie.json")}
