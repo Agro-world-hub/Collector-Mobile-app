@@ -213,8 +213,11 @@ const onScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
   const itemWidth = wp(70) + 20;
   const currentIndex = Math.round(contentOffsetX / itemWidth);
 
-  setIsAtStart(currentIndex === 0);
-  setIsAtEnd(currentIndex === crops.length - 1);
+  // Make sure we don't go out of bounds
+  const safeCurrentIndex = Math.max(0, Math.min(currentIndex, crops.length - 1));
+  
+  setIsAtStart(safeCurrentIndex === 0);
+  setIsAtEnd(safeCurrentIndex === crops.length - 1);
 };
   const [images, setImages] = useState<{
     A: string | null;
@@ -855,11 +858,39 @@ const handleDeleteVariety = () => {
     newCrops.splice(index, 1);
     setCrops(newCrops);
     
+    // Fix scroll position after deletion
+    if (scrollViewRef.current && newCrops.length > 0) {
+      const itemWidth = wp(70) + 20;
+      const currentIndex = Math.round(scrollPosition / itemWidth);
+      
+      // If we deleted the last item and we're at the end, scroll back
+      if (currentIndex >= newCrops.length && newCrops.length > 0) {
+        const newScrollPosition = (newCrops.length - 1) * itemWidth;
+        scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
+        setScrollPosition(newScrollPosition);
+      }
+      // If we deleted an item in the middle, adjust scroll position
+      else if (index <= currentIndex && currentIndex > 0) {
+        const newScrollPosition = (currentIndex - 1) * itemWidth;
+        scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
+        setScrollPosition(newScrollPosition);
+      }
+      // Reset to start if only one item left
+      else if (newCrops.length === 1) {
+        scrollViewRef.current.scrollTo({ x: 0, animated: true });
+        setScrollPosition(0);
+      }
+    }
+    
     // Adjust crop count and button visibility
     if (newCrops.length === 0) {
       setdonebutton1visibale(true);
       setdonebutton2visibale(false);
       setaddbutton(true);
+      // Reset scroll position when no crops left
+      setScrollPosition(0);
+      setIsAtStart(true);
+      setIsAtEnd(false);
     }
     
     setCropCount((prevCount) => prevCount - 1);
@@ -868,6 +899,7 @@ const handleDeleteVariety = () => {
     setDeletingVariety(null);
   }, 1000); // 1 second delay to show loading
 };
+
 
 // 5. Updated deleteGrade function (NO CHANGES - just calls modal)
 const deleteGrade = (cropIndex: number, grade: "A" | "B" | "C", varietyName: string) => {
@@ -911,6 +943,30 @@ const handleDeleteGrade = () => {
       newCrops.splice(cropIndex, 1);
       setCrops(newCrops);
       setCropCount((prevCount) => prevCount - 1);
+      
+      // Fix scroll position after deletion (same logic as handleDeleteVariety)
+      if (scrollViewRef.current && newCrops.length > 0) {
+        const itemWidth = wp(70) + 20;
+        const currentIndex = Math.round(scrollPosition / itemWidth);
+        
+        // If we deleted the last item and we're at the end, scroll back
+        if (currentIndex >= newCrops.length && newCrops.length > 0) {
+          const newScrollPosition = (newCrops.length - 1) * itemWidth;
+          scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
+          setScrollPosition(newScrollPosition);
+        }
+        // If we deleted an item in the middle, adjust scroll position
+        else if (cropIndex <= currentIndex && currentIndex > 0) {
+          const newScrollPosition = (currentIndex - 1) * itemWidth;
+          scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
+          setScrollPosition(newScrollPosition);
+        }
+        // Reset to start if only one item left
+        else if (newCrops.length === 1) {
+          scrollViewRef.current.scrollTo({ x: 0, animated: true });
+          setScrollPosition(0);
+        }
+      }
     } else {
       setCrops(newCrops);
     }
@@ -920,13 +976,16 @@ const handleDeleteGrade = () => {
       setdonebutton1visibale(true);
       setdonebutton2visibale(false);
       setaddbutton(true);
+      // Reset scroll position when no crops left
+      setScrollPosition(0);
+      setIsAtStart(true);
+      setIsAtEnd(false);
     }
     
     // Stop loading
     setDeletingGrade(null);
   }, 1000); // 1 second delay to show loading
 };
-
 
   // Then in your JSX:
   return (
