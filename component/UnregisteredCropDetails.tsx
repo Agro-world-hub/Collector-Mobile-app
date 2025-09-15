@@ -9,6 +9,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 
 import { Modal } from 'react-native';
@@ -173,6 +174,10 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({
   const [isAtEnd, setIsAtEnd] = useState(false); // Track if we're at the end of the list
  const [usedVarietyIds, setUsedVarietyIds] = useState<string[]>([]);
  const [exhaustedCrops, setExhaustedCrops] = useState<string[]>([]); 
+ const [deletingVariety, setDeletingVariety] = useState<number | null>(null);
+const [deletingGrade, setDeletingGrade] = useState<{cropIndex: number, grade: string} | null>(null);
+
+
    const [deleteVarietyModal, setDeleteVarietyModal] = useState({
     visible: false,
     index: -1,
@@ -208,8 +213,11 @@ const onScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
   const itemWidth = wp(70) + 20;
   const currentIndex = Math.round(contentOffsetX / itemWidth);
 
-  setIsAtStart(currentIndex === 0);
-  setIsAtEnd(currentIndex === crops.length - 1);
+  // Make sure we don't go out of bounds
+  const safeCurrentIndex = Math.max(0, Math.min(currentIndex, crops.length - 1));
+  
+  setIsAtStart(safeCurrentIndex === 0);
+  setIsAtEnd(safeCurrentIndex === crops.length - 1);
 };
   const [images, setImages] = useState<{
     A: string | null;
@@ -832,79 +840,152 @@ const deleteVariety = (index: number) => {
 // Handle variety deletion confirmation
 const handleDeleteVariety = () => {
   const { index } = deleteVarietyModal;
-  const deletedVarietyId = crops[index].varietyId;
   
-  // Remove from used varieties list to make it available again
-  setUsedVarietyIds(prev => prev.filter(id => id !== deletedVarietyId));
+  // IMPORTANT: Set loading state IMMEDIATELY when modal confirms
+  setDeletingVariety(index);
   
-  const newCrops = [...crops];
-  newCrops.splice(index, 1);
-  setCrops(newCrops);
-  
-  // Adjust crop count and button visibility
-  if (newCrops.length === 0) {
-    setdonebutton1visibale(true);
-    setdonebutton2visibale(false);
-    setaddbutton(true);
-  }
-  
-  setCropCount((prevCount) => prevCount - 1);
-  
-  // Close modal
+  // Close modal immediately 
   setDeleteVarietyModal({ visible: false, index: -1, varietyName: '' });
+  
+  // Use setTimeout to show loading indicator and then delete
+  setTimeout(() => {
+    const deletedVarietyId = crops[index].varietyId;
+    
+    // Remove from used varieties list to make it available again
+    setUsedVarietyIds(prev => prev.filter(id => id !== deletedVarietyId));
+    
+    const newCrops = [...crops];
+    newCrops.splice(index, 1);
+    setCrops(newCrops);
+    
+    // Fix scroll position after deletion
+    if (scrollViewRef.current && newCrops.length > 0) {
+      const itemWidth = wp(70) + 20;
+      const currentIndex = Math.round(scrollPosition / itemWidth);
+      
+      // If we deleted the last item and we're at the end, scroll back
+      if (currentIndex >= newCrops.length && newCrops.length > 0) {
+        const newScrollPosition = (newCrops.length - 1) * itemWidth;
+        scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
+        setScrollPosition(newScrollPosition);
+      }
+      // If we deleted an item in the middle, adjust scroll position
+      else if (index <= currentIndex && currentIndex > 0) {
+        const newScrollPosition = (currentIndex - 1) * itemWidth;
+        scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
+        setScrollPosition(newScrollPosition);
+      }
+      // Reset to start if only one item left
+      else if (newCrops.length === 1) {
+        scrollViewRef.current.scrollTo({ x: 0, animated: true });
+        setScrollPosition(0);
+      }
+    }
+    
+    // Adjust crop count and button visibility
+    if (newCrops.length === 0) {
+      setdonebutton1visibale(true);
+      setdonebutton2visibale(false);
+      setaddbutton(true);
+      // Reset scroll position when no crops left
+      setScrollPosition(0);
+      setIsAtStart(true);
+      setIsAtEnd(false);
+    }
+    
+    setCropCount((prevCount) => prevCount - 1);
+    
+    // Stop loading
+    setDeletingVariety(null);
+  }, 1000); // 1 second delay to show loading
 };
 
-// Updated deleteGrade function to use custom modal instead of Alert.alert
-const deleteGrade = (cropIndex: number, grade: "A" | "B" | "C", varietyName: string) => {
 
+// 5. Updated deleteGrade function (NO CHANGES - just calls modal)
+const deleteGrade = (cropIndex: number, grade: "A" | "B" | "C", varietyName: string) => {
   setDeleteGradeModal({
     visible: true,
     cropIndex,
-        
     grade,
     varietyName,
   });
 };
 
-// Handle grade deletion confirmation
+// 6. FIXED handleDeleteGrade function - SET LOADING STATE IMMEDIATELY
 const handleDeleteGrade = () => {
   const { cropIndex, grade } = deleteGradeModal;
-  const newCrops = [...crops];
-
-  // Reset the grade details to delete the grade
-  newCrops[cropIndex][`grade${grade}quan`] = 0;
-  newCrops[cropIndex][`grade${grade}price`] = 0;
-  newCrops[cropIndex][`image${grade}`] = null;
-
-  // Check if all grades for this crop are deleted
-  const allGradesDeleted = ["A", "B", "C"].every(
-    (gradeKey) => newCrops[cropIndex][`grade${gradeKey}quan`] === 0
-  );
-
-  if (allGradesDeleted) {
-    // Remove the variety from used list and delete entire crop
-    const deletedVarietyId = newCrops[cropIndex].varietyId;
-    setUsedVarietyIds(prev => prev.filter(id => id !== deletedVarietyId));
-    
-    newCrops.splice(cropIndex, 1);
-    setCrops(newCrops);
-    setCropCount((prevCount) => prevCount - 1);
-  } else {
-    setCrops(newCrops);
-  }
-
-  // Update button visibility if no crops remain
-  if (newCrops.length === 0) {
-    setdonebutton1visibale(true);
-    setdonebutton2visibale(false);
-    setaddbutton(true);
-  }
   
-  // Close modal
-  setDeleteGradeModal({ visible: false, cropIndex: -1, grade: 'A' ,    varietyName: '',
-});
-};
+  // IMPORTANT: Set loading state IMMEDIATELY when modal confirms
+  setDeletingGrade({cropIndex, grade});
+  
+  // Close modal immediately
+  setDeleteGradeModal({ visible: false, cropIndex: -1, grade: 'A', varietyName: '' });
+  
+  // Use setTimeout to show loading indicator and then delete
+  setTimeout(() => {
+    const newCrops = [...crops];
 
+    // Reset the grade details to delete the grade
+    newCrops[cropIndex][`grade${grade}quan`] = 0;
+    newCrops[cropIndex][`grade${grade}price`] = 0;
+    newCrops[cropIndex][`image${grade}`] = null;
+
+    // Check if all grades for this crop are deleted
+    const allGradesDeleted = ["A", "B", "C"].every(
+      (gradeKey) => newCrops[cropIndex][`grade${gradeKey}quan`] === 0
+    );
+
+    if (allGradesDeleted) {
+      // Remove the variety from used list and delete entire crop
+      const deletedVarietyId = newCrops[cropIndex].varietyId;
+      setUsedVarietyIds(prev => prev.filter(id => id !== deletedVarietyId));
+      
+      newCrops.splice(cropIndex, 1);
+      setCrops(newCrops);
+      setCropCount((prevCount) => prevCount - 1);
+      
+      // Fix scroll position after deletion (same logic as handleDeleteVariety)
+      if (scrollViewRef.current && newCrops.length > 0) {
+        const itemWidth = wp(70) + 20;
+        const currentIndex = Math.round(scrollPosition / itemWidth);
+        
+        // If we deleted the last item and we're at the end, scroll back
+        if (currentIndex >= newCrops.length && newCrops.length > 0) {
+          const newScrollPosition = (newCrops.length - 1) * itemWidth;
+          scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
+          setScrollPosition(newScrollPosition);
+        }
+        // If we deleted an item in the middle, adjust scroll position
+        else if (cropIndex <= currentIndex && currentIndex > 0) {
+          const newScrollPosition = (currentIndex - 1) * itemWidth;
+          scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
+          setScrollPosition(newScrollPosition);
+        }
+        // Reset to start if only one item left
+        else if (newCrops.length === 1) {
+          scrollViewRef.current.scrollTo({ x: 0, animated: true });
+          setScrollPosition(0);
+        }
+      }
+    } else {
+      setCrops(newCrops);
+    }
+
+    // Update button visibility if no crops remain
+    if (newCrops.length === 0) {
+      setdonebutton1visibale(true);
+      setdonebutton2visibale(false);
+      setaddbutton(true);
+      // Reset scroll position when no crops left
+      setScrollPosition(0);
+      setIsAtStart(true);
+      setIsAtEnd(false);
+    }
+    
+    // Stop loading
+    setDeletingGrade(null);
+  }, 1000); // 1 second delay to show loading
+};
 
   // Then in your JSX:
   return (
@@ -946,90 +1027,111 @@ const handleDeleteGrade = () => {
             </TouchableOpacity>
           )}
 
-          {crops.length > 0 && (
-         <ScrollView
-  ref={scrollViewRef}
-  horizontal
-  showsHorizontalScrollIndicator={false}
-  style={{ marginBottom: 20 }}
-  contentContainerStyle={{ 
-    paddingHorizontal: wp(6), // Add padding to ensure items can be centered
-    alignItems: 'center' // Center items vertically
-  }}
-  className="flex-row"
-  onScroll={onScroll}
-  snapToInterval={wp(70) + 10} // Snap to each item's width + margin
-  decelerationRate="fast" // Makes scrolling feel more precise
-  snapToAlignment="center" // Always snap to center
->
-              {crops.map((crop, index) => {
-                const availableGrades = ["A", "B", "C"].filter(
-                  (grade) => crop[`grade${grade}quan`] > 0
-                );
+{crops.length > 0 && (
+  <ScrollView
+    ref={scrollViewRef}
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    style={{ marginBottom: 20 }}
+    contentContainerStyle={{ 
+      paddingHorizontal: wp(6),
+      alignItems: 'center'
+    }}
+    className="flex-row"
+    onScroll={onScroll}
+    snapToInterval={wp(70) + 10}
+    decelerationRate="fast"
+    snapToAlignment="center"
+  >
+    {crops.map((crop, index) => {
+      const availableGrades = ["A", "B", "C"].filter(
+        (grade) => crop[`grade${grade}quan`] > 0
+      );
 
-                return (
-               <View
-  key={index}
-  style={{
-    width: wp(70),
-    marginHorizontal: 10, // Consistent horizontal margin
-    padding: 12,
-  }}
->
-                    <View className="flex-row items-center mb-2">
-                      <Text className="font-bold text-base mr-2">
-  ({index + 1}) {crop.varietyName.length > 20 ? `${crop.varietyName.slice(0, 20)}...` : crop.varietyName}
-</Text>
+      // Check if this variety is being deleted
+      const isVarietyDeleting = deletingVariety === index;
 
-                      <TouchableOpacity onPress={() => deleteVariety(index)}>
-                        <MdIcons
-                          name="delete"
-                          size={22}
-                          style={{ color: "red" }}
-                        />
-                      </TouchableOpacity>
-                    </View>
+      return (
+        <View
+          key={index}
+          style={{
+            width: wp(70),
+            marginHorizontal: 10,
+            padding: 12,
+            opacity: isVarietyDeleting ? 0.6 : 1, // Dim while deleting
+            backgroundColor: isVarietyDeleting ? '#f5f5f5' : 'transparent',
+          }}
+        >
+          <View className="flex-row items-center mb-2">
+            <Text className="font-bold text-base mr-2 flex-1">
+              ({index + 1}) {crop.varietyName.length > 20 ? `${crop.varietyName.slice(0, 20)}...` : crop.varietyName}
+            </Text>
 
-                    <View className="border border-[#d4d4d4] rounded-lg ">
-                      {availableGrades.map((grade, gIndex) => (
-                        <View
-                          key={grade}
-                          style={{
-                            marginTop: 6,
-                            borderBottomWidth:
-                              gIndex !== availableGrades.length - 1 ? 1 : 0,
-                            borderBottomColor: "#d4d4d4",
-                            paddingBottom:
-                              gIndex !== availableGrades.length - 1 ? 6 : 0,
-                          }}
-                          className="flex-row items-center justify-between p-1 mb-1 "
-                        >
-                          <Text className="font-bold ml-2 ">{grade}</Text>
-                          <Text className="font-bold">
-                            {crop[`grade${grade}quan`]}kg
-                          </Text>
-                          <TouchableOpacity
-                           onPress={() => deleteGrade(index, grade as "A" | "B" | "C", crop.varietyName)}
-                            className="mr-2"
-                          >
-                            <MdIcons
-                              name="delete"
-                              size={22}
-                              style={{ color: "red" }}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      ))}
-                    </View>
-                  </View>
+            {isVarietyDeleting ? (
+              // Show loading indicator while deleting variety
+              <View className="w-6 h-6 justify-center items-center">
+                <ActivityIndicator size="small" color="#ff0000" />
+              </View>
+            ) : (
+              <TouchableOpacity onPress={() => deleteVariety(index)}>
+                <MdIcons
+                  name="delete"
+                  size={22}
+                  style={{ color: "red" }}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          <View className="border border-[#d4d4d4] rounded-lg">
+            {availableGrades.map((grade, gIndex) => {
+              // Check if this specific grade is being deleted
+              const isGradeDeleting = deletingGrade?.cropIndex === index && deletingGrade?.grade === grade;
+              
+              return (
+                <View
+                  key={grade}
+                  style={{
+                    marginTop: 6,
+                    borderBottomWidth: gIndex !== availableGrades.length - 1 ? 1 : 0,
+                    borderBottomColor: "#d4d4d4",
+                    paddingBottom: gIndex !== availableGrades.length - 1 ? 6 : 0,
+                    opacity: isGradeDeleting ? 0.6 : 1, // Dim while deleting
+                    backgroundColor: isGradeDeleting ? '#f5f5f5' : 'transparent',
+                  }}
+                  className="flex-row items-center justify-between p-1 mb-1"
+                >
+                  <Text className="font-bold ml-2">{grade}</Text>
+                  <Text className="font-bold">
+                    {crop[`grade${grade}quan`]}kg
+                  </Text>
                   
-                );
-                                      
-
-              })}
-
-            </ScrollView>
-          )}
+                  {isGradeDeleting ? (
+                    // Show loading indicator while deleting grade
+                    <View className="w-6 h-6 justify-center items-center mr-2">
+                      <ActivityIndicator size="small" color="#ff0000" />
+                    </View>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => deleteGrade(index, grade as "A" | "B" | "C", crop.varietyName)}
+                      className="mr-2"
+                    >
+                      <MdIcons
+                        name="delete"
+                        size={22}
+                        style={{ color: "red" }}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              );
+            })}
+          </View>
+        </View>
+      );
+    })}
+  </ScrollView>
+)}
 
           {/* Conditionally render the right arrow only if there are more than one item */}
           {crops.length > 1 && (
