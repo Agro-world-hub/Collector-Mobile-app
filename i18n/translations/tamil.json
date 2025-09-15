@@ -116,6 +116,8 @@
     "sorry":"மன்னிக்கவும்",
     "Failed to submit complaint":"புகாரைச் சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
     "Please select a category and add your complaint.":"தயவுசெய்து ஒரு வகையைத் தேர்ந்தெடுத்து உங்கள் புகாரைச் சேர்க்கவும்.",
+     "Please select a category.":"தயவுசெய்து ஒரு வகையைத் தேர்ந்தெடுக்கவும்.",
+    "Please add your complaint.":"தயவுசெய்து உங்கள் புகாரைச் சேர்க்கவும்.",
     "Failed to fetch prices":"விலைகளைப் பெற முடியவில்லை",
     "Phone number cannot exceed 9 digits.":"தொலைபேசி எண் 9 இலக்கங்களுக்கு மேல் இருக்கக்கூடாது.",
     "The scanned QR code does not contain a valid user ID or is damaged.":"ஸ்கேன் செய்யப்பட்ட QR குறியீட்டில் செல்லுபடியாகும் பயனர் எண் இல்லை அல்லது அது சேதமடைந்துள்ளது.",

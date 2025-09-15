@@ -116,6 +116,8 @@
     "sorry":"Sorry",
     "Failed to submit complaint":"Failed to submit complaint. Please try again.",
     "Please select a category and add your complaint.":"Please select a category and add your complaint.",
+    "Please select a category.":"Please select a category.",
+    "Please add your complaint.":"Please add your complaint.",
     "Failed to fetch prices":"Failed to fetch prices",
     "Phone number cannot exceed 9 digits.":"Phone number cannot exceed 9 digits.",
     "The scanned QR code does not contain a valid user ID or is damaged.":"The scanned QR code does not contain a valid user ID or is damaged.",
