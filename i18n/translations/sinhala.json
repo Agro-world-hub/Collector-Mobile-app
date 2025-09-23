@@ -116,6 +116,8 @@
     "sorry":"සමාවෙන්න",
      "Failed to submit complaint":"පැමිණිල්ල ඉදිරිපත් කිරීමට අපොහොසත් විය. කරුණාකර නැවත උත්සාහ කරන්න.",
      "Please select a category and add your complaint.":"කරුණාකර කාණ්ඩයක් තෝරා ඔබේ පැමිණිල්ල එක් කරන්න.",
+         "Please select a category.":"කරුණාකර කාණ්ඩයක් තෝරන්න.",
+    "Please add your complaint.":"කරුණාකර ඔබේ පැමිණිල්ල එක් කරන්න.",
      "Failed to fetch prices":"මිල ගණන් ලබා ගැනීමට අසමත් විය.",
      "Phone number cannot exceed 9 digits.":"දුරකථන අංකයට ඉලක්කම් 9ක් ඉක්මවිය නොහැක.",
      "The scanned QR code does not contain a valid user ID or is damaged.":"ස්කෑන් කරන ලද QR කේතයේ වලංගු පරිශීලක හැඳුනුම්පතක් නොමැත හෝ අදාල QR කේතය හානි වී ඇත.",

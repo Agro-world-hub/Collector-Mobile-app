@@ -89,7 +89,7 @@ interface ApiTargetData {
   
 
   totalPackages?: number;
-  lockedPackages?: number; // This is the field we need to check!
+  lockedPackages?: number; 
   
 
   packageData?: {
@@ -402,8 +402,8 @@ const fetchTargets = useCallback(async () => {
     // Check if package is locked
     if (item.packageIsLock === 1 && jobRole ==="Distribution Officer") {
       Alert.alert(
-       ("Error.Locked Package"),
-        ("Error.This package is locked and cannot be accessed"),
+       (t("Error.Locked Package")),
+        (t("Error.This package is locked and cannot be accessed")),
         [{ text: t("Error.Ok")  }]
       );
       return;
@@ -475,7 +475,7 @@ const fetchTargets = useCallback(async () => {
 
   const displayedData = selectedToggle === 'ToDo' ? todoData : completedData;
 
-  // Updated to use selectedStatus for styling
+ 
   const getStatusColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
     switch (selectedStatus) {
       case 'Pending': 
@@ -525,43 +525,43 @@ const getStatusBackgroundColor = (selectedStatus: 'Pending' | 'Opened' | 'Comple
 const getStatusTextColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
   switch (selectedStatus) {
     case 'Pending': 
-      return '#FF0700'; // Red text
+      return '#FF0700'; 
     case 'Opened': 
-      return '#A8A100'; // Dark yellow text
+      return '#A8A100'; 
     case 'Completed': 
-      return '#6AD16D'; // Green text
+      return '#6AD16D'; 
     default: 
-      return '#374151'; // Gray text
+      return '#374151'; 
   }
 };
 
 const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed') => {
   switch (selectedStatus) {
     case 'Pending': 
-      return '#FF070733'; // Light red border
+      return '#FF070733'; 
     case 'Opened': 
-      return '#F8FFA6'; // Light yellow border
+      return '#F8FFA6'; 
     case 'Completed': 
-      return '#B7FFB9'; // Light green border
+      return '#B7FFB9'; 
     default: 
-      return '#D1D5DB'; // Gray border
+      return '#D1D5DB'; 
   }
 };
 
-  // Function to get detailed status display for debugging/info
+
   const getDetailedStatusDisplay = (item: TargetData) => {
     if (item.isPackage === 0) {
-      // Only additional items
+   
       return `Additional: ${item.additionalItemStatus || 'N/A'}`;
     } else {
-      // Both additional and package items
+ 
       return `Add: ${item.additionalItemStatus || 'N/A'} | Pkg: ${item.packageItemStatus || 'N/A'}`;
     }
   };
 
   return (
     <View className="flex-1 bg-[#282828]">
-      {/* Header */}
+  
       <View className="bg-[#282828] px-4 py-6 flex-row justify-center items-center">
         <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4 bg-white/10 rounded-full p-2">
           <AntDesign name="left" size={22} color="white" />
@@ -571,7 +571,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
 
    
    <View className="flex-row justify-center items-center py-4 bg-[#282828]">
-     {/* To Do Button */}
+
      <Animated.View
        style={{
          transform: [{ scale: selectedToggle === "ToDo" ? 1.05 : 1 }],
@@ -620,7 +620,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
        </TouchableOpacity>
      </Animated.View>
    
-     {/* Completed Button */}
+
      <Animated.View
        style={{
          transform: [{ scale: selectedToggle === "Completed" ? 1.05 : 1 }],
@@ -670,12 +670,12 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
      </Animated.View>
    </View>
 
-      {/* Content */}
+    
       <ScrollView
         className="flex-1 bg-white"
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        {/* Table Header */}
+    
         <View className="flex-row bg-[#980775] py-3">
           <Text 
              style={[
@@ -731,7 +731,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
           )}
         </View>
 
-        {/* Error Message */}
+  
         {error && (
           <View className="bg-red-100 border border-red-400 px-4 py-3 mx-4 mt-4 rounded">
             <Text className="text-red-700 text-center">{error}</Text>
@@ -762,7 +762,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
               }`}
               onPress={() => handleRowPress(item)}
             >
-              {/* Row Number */}
+        
               <View className="flex-1 items-center justify-center relative">
                 {selectedToggle === 'ToDo' ? (
                   <Text className="text-center font-medium">{(index + 1).toString().padStart(2, '0')}</Text>
@@ -771,7 +771,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
                 )}
               </View>
 
-              {/* Invoice Number */}
+         
               <View className="flex-[2] items-center justify-center px-2">
                 <Text className="text-center font-medium text-gray-800">
                   {item.invoiceNo || `INV${item.id || (index + 1).toString().padStart(6, '0')}`}
@@ -784,7 +784,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
 
               {selectedToggle === 'ToDo' ? (
                 <>
-                  {/* Date */}
+    
                   <View className="flex-[2] items-center justify-center px-2">
                     <Text className={`text-center font-medium text-xs ${
                       isScheduleDateToday(item.sheduleDate) ? 'text-red-600' : 'text-gray-800'
@@ -825,7 +825,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
 </View>
                 </>
               ) : (
-                /* Completed Time */
+       
                 <View className="flex-[2] items-center justify-center px-2">
                   <Text className="text-center text-gray-600 text-sm">
                     {item.completedTime ? formatCompletionTime(item.completedTime) : 'N/A'}
