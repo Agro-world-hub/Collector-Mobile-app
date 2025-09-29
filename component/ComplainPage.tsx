@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
   Image,
   Alert,
   KeyboardAvoidingView,
@@ -27,7 +26,6 @@ import { AntDesign } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import DropDownPicker from "react-native-dropdown-picker";
 import { use } from "i18next";
-import { useFocusEffect } from "@react-navigation/native";
 import LottieView from "lottie-react-native";
 import NetInfo from "@react-native-community/netinfo";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
@@ -234,7 +232,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
       enabled
       style={{ flex: 1, backgroundColor: "#FFFFFF" }}
     >
-      <SafeAreaView className="flex-1 bg-white">
+      <View className="flex-1 bg-white">
         {loading ? (
    
           <View className="flex-1 justify-center items-center">
@@ -344,7 +342,7 @@ const ComplainPage: React.FC<ComplainPageProps> = () => {
             </ScrollView>
           </>
         )}
-      </SafeAreaView>
+      </View>
     </KeyboardAvoidingView>
   );
 };

@@ -25,7 +25,6 @@ import { ScrollView } from "react-native-gesture-handler";
 import { LanguageContext } from "@/context/LanguageContext";
 import LottieView from 'lottie-react-native';
 import NetInfo from "@react-native-community/netinfo";
-import { set } from "lodash";
 
 type EngProfileNavigationProp = StackNavigationProp<
   RootStackParamList,

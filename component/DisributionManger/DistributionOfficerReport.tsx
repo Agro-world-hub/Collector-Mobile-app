@@ -7,7 +7,6 @@ import { RootStackParamList } from "../types";
 import { handleGeneratePDF } from "./ReportPDF";
 import * as Sharing from "expo-sharing";
 import { RouteProp } from "@react-navigation/native";
-import * as MediaLibrary from "expo-media-library";
 import { Platform } from "react-native";
 import * as FileSystem from "expo-file-system";
 import { ScrollView } from "react-native-gesture-handler";
@@ -150,7 +149,7 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
 
       if (Platform.OS === "android") {
      
-        tempFilePath = `${FileSystem.cacheDirectory}${fileName}`;
+        tempFilePath = `${(FileSystem as any).cacheDirectory}${fileName}`;
 
        
         await FileSystem.copyAsync({

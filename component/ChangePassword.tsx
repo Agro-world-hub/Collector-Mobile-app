@@ -23,7 +23,7 @@ import {
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useTranslation } from "react-i18next";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import NetInfo from "@react-native-community/netinfo";
 
 
@@ -152,8 +152,8 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
       useCallback(() => {
         const onBackPress = () => true;
         BackHandler.addEventListener("hardwareBackPress", onBackPress);
-        return () =>
-          BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+          const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () => subscription.remove();
       }, [])
     );
 

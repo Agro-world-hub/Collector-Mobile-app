@@ -134,7 +134,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
         return;
       }
 
-      const fileUri = `${FileSystem.documentDirectory}QRCode_${Date.now()}.png`;
+      const fileUri = `${(FileSystem as any).documentDirectory}QRCode_${Date.now()}.png`;
 
       // Download the QR code image from the URL
       const response = await FileSystem.downloadAsync(QR, fileUri);
@@ -157,7 +157,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
         return;
       }
 
-      const fileUri = `${FileSystem.documentDirectory}QRCode_${Date.now()}.png`;
+      const fileUri = `${(FileSystem as any).documentDirectory}QRCode_${Date.now()}.png`;
 
       // Download the QR code image from the URL
       const response = await FileSystem.downloadAsync(QR, fileUri);

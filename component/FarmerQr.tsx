@@ -122,7 +122,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
         return;
       }
 
-      const fileUri = `${FileSystem.documentDirectory}QRCode_${Date.now()}.png`;
+      const fileUri = `${(FileSystem as any).documentDirectory}QRCode_${Date.now()}.png`;
       const response = await FileSystem.downloadAsync(farmerQRCode, fileUri);
 
       const asset = await MediaLibrary.createAssetAsync(response.uri);
@@ -142,7 +142,7 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
         return;
       }
 
-      const fileUri = `${FileSystem.documentDirectory}QRCode_${Date.now()}.png`;
+      const fileUri = `${(FileSystem as any).documentDirectory}QRCode_${Date.now()}.png`;
       const response = await FileSystem.downloadAsync(farmerQRCode, fileUri);
 
       if (await Sharing.isAvailableAsync()) {
@@ -172,9 +172,8 @@ const FarmerQr: React.FC<FarmerQrProps> = ({ navigation }) => {
 
       BackHandler.addEventListener("hardwareBackPress", onBackPress);
 
-      return () => {
-        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-      };
+         const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () => subscription.remove();
     }, [navigation])
   );
 

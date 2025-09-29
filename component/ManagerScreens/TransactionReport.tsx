@@ -590,7 +590,7 @@ const handleDownloadPDF = async () => {
 
     if (Platform.OS === 'android') {
      
-      tempFilePath = `${FileSystem.cacheDirectory}${fileName}`;
+      tempFilePath = `${(FileSystem as any).cacheDirectory}${fileName}`;
       
      
       await FileSystem.copyAsync({
@@ -645,7 +645,7 @@ const handleDownloadPDF = async () => {
       
       // Create a new file with the desired name
       const fileInfo = await FileSystem.getInfoAsync(uri);
-      const newUri = `${FileSystem.cacheDirectory}${fileName}`;
+      const newUri = `${(FileSystem as any).cacheDirectory}${fileName}`;
       
       try {
         // Copy the file to a new location with the desired name

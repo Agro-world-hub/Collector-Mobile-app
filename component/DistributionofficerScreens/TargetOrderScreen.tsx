@@ -10,7 +10,7 @@ import LottieView from 'lottie-react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useTranslation } from "react-i18next";
 import { Animated } from 'react-native';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import NetInfo from "@react-native-community/netinfo";
 import i18n from "@/i18n/i18n";
 

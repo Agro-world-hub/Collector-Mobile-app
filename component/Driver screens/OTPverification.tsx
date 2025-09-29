@@ -129,7 +129,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
   const [modalVisible, setModalVisible] = useState(false);
 
 
-  const inputRefs = useRef<TextInput[]>([]);
+const inputRefs = useRef<Array<TextInput | null>>([]);
   
   const handleSuccessCompletion = () => {
     // This function will handle navigation after success
@@ -180,9 +180,9 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
     setIsOtpValid(updatedOtpCode.length === 5 && !updatedOtpCode.includes(""));
 
     // Move to next input field if text is entered
-    if (text && inputRefs.current[index + 1]) {
-      inputRefs.current[index + 1].focus();
-    }
+if (text && inputRefs.current[index + 1]) {
+    inputRefs.current[index + 1]?.focus();
+  }
     if(updatedOtpCode.length === 5){
       Keyboard.dismiss();
     }
@@ -417,8 +417,9 @@ ${branchName}
           {Array.from({ length: 5 }).map((_, index) => (
             <TextInput
               key={index}
-              ref={(el) => (inputRefs.current[index] = el as TextInput)}
-              className={`w-12 h-12 text-lg text-center rounded-lg ${
+   ref={(el: TextInput | null) => {
+        inputRefs.current[index] = el; // assign to array
+      }}              className={`w-12 h-12 text-lg text-center rounded-lg ${
                 otpCode[index] ? "bg-[#FFFFFF] text-black pb-2" : "bg-[#FFFFFF] text-black"
               }`}
               keyboardType="numeric"
