@@ -14,7 +14,7 @@ import { CircularProgress } from "react-native-circular-progress";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { environment } from "@/environment/environment";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { RootStackParamList } from "../types";
 import { useTranslation } from "react-i18next";
 
@@ -143,8 +143,8 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
     useCallback(() => {
       const onBackPress = () => true;
       BackHandler.addEventListener("hardwareBackPress", onBackPress);
-      return () =>
-        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+       const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () => subscription.remove();
     }, [])
   );
 
@@ -359,7 +359,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
 
 
       <View className="flex-row flex-wrap justify-between p-6 mt-[-5%]">
-        {jobRole === "Distribution Center Manager" ? (
+        {jobRole === "Distribution Centre Manager" ? (
           <TouchableOpacity           
             className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative border border-[#980775] mb-50"           
             onPress={() => navigation.navigate("CenterTargetScreen", { centerId: centerId } as any)}         

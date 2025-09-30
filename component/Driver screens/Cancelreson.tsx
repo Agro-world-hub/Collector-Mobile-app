@@ -15,7 +15,6 @@ import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { environment } from '@/environment/environment';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { set } from 'lodash';
 
 type RootStackParamList = {
   Cancelreson: { requestId: string; status: string };

@@ -21,7 +21,6 @@ import { environment } from "@/environment/environment";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useTranslation } from "react-i18next";
 import { useFocusEffect } from "@react-navigation/native";
-import { set } from "lodash";
 import LottieView from "lottie-react-native";
 import { ScrollView } from "react-native-gesture-handler";
 

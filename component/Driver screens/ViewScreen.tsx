@@ -16,12 +16,10 @@ import { RootStackParamList } from "../types";
 import { environment } from '@/environment/environment';
 import { useTranslation } from "react-i18next";
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
-import { useFocusEffect } from "expo-router";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CropItemsScrollView from '../Driver screens/CropItemsScrollView';
 import moment from "moment";
-import { set } from "lodash";
 
 
 type ViewScreenNavigationProp = StackNavigationProp<

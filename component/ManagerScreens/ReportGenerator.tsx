@@ -149,7 +149,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
 
       if (Platform.OS === "android") {
       
-        tempFilePath = `${FileSystem.cacheDirectory}${fileName}`;
+        tempFilePath = `${(FileSystem as any).cacheDirectory}${fileName}`;
 
        
         await FileSystem.copyAsync({

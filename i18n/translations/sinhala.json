@@ -216,7 +216,9 @@
 "Please add at least one crop to proceed":"ඉදිරියට යාමට කරුණාකර අවම වශයෙන් එක් බෝගයක් හෝ එක් කරන්න.",
 "Failed to generate invoice number":"ඉන්වොයිස් අංකය ජනනය කිරීමට අපොහොසත් විය. කරුණාකර නැවත උත්සාහ කරන්න",
 "Failed to submit crop details":"බෝග විස්තර ඉදිරිපත් කිරීමට අපොහොසත් විය. කරුණාකර නැවත උත්සාහ කරන්න.",
-"Please enter Employee ID in uppercase letters":"කරුණාකර සේවක හැඳුනුම්පත මහකුරුවලින් ඇතුළත් කරන්න."
+"Please enter Employee ID in uppercase letters":"කරුණාකර සේවක හැඳුනුම්පත මහකුරුවලින් ඇතුළත් කරන්න.",
+"Failed to update password": "මුරපදය යාවත්කාලීන කිරීමට අසමත් විය",
+"Distribution Centre Head are not allowed to access this application": "බෙදාහැරීමේ මධ්‍යස්ථාන ප්‍රධානීන්ට මෙම යෙදුමට ප්‍රවේශ වීමට අවසර නැත"
   },
 "EngProfile":{
     "LNG": "si",

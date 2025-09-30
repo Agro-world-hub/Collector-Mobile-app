@@ -4,7 +4,6 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   Alert,
   Modal,
   ActivityIndicator,
@@ -108,7 +107,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#FFFFFF] ">
+    <View className="flex-1 bg-[#FFFFFF] ">
       <View
         className="flex-row justify-between"
         style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
@@ -226,7 +225,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 

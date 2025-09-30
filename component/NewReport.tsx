@@ -600,7 +600,7 @@ const NewReport: React.FC<NewReportProps> = ({ navigation }) => {
 
       if (Platform.OS === "android") {
         // Create a temporary file in cache
-        tempFilePath = `${FileSystem.cacheDirectory}${fileName}`;
+        tempFilePath = `${(FileSystem as any).cacheDirectory}${fileName}`;
 
         // Copy the PDF to the temp location
         await FileSystem.copyAsync({
@@ -669,7 +669,7 @@ const NewReport: React.FC<NewReportProps> = ({ navigation }) => {
 
       // Create a new file with the desired name
       const fileInfo = await FileSystem.getInfoAsync(uri);
-      const newUri = `${FileSystem.cacheDirectory}${fileName}`;
+      const newUri = `${(FileSystem as any).cacheDirectory}${fileName}`;
 
       try {
         // Copy the file to a new location with the desired name

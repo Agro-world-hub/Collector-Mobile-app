@@ -374,7 +374,7 @@ const FarmerReport: React.FC<FarmerReportProps> = ({ navigation }) => {
 
         if (status === "granted") {
           // Define a temporary path in the FileSystem's cache directory with the correct file name
-          const tempUri = `${FileSystem.cacheDirectory}${fileName}`;
+          const tempUri = `${(FileSystem as any).cacheDirectory}${fileName}`;
 
           // Copy the file to the new temporary path with the desired file name
           await FileSystem.copyAsync({

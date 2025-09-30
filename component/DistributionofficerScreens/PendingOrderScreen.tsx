@@ -786,7 +786,7 @@ const startCountdown = () => {
             return prev - 1;
         });
     }, 1000);
-    setCountdownInterval(interval);
+    setCountdownInterval(interval as any);
 };
 
 
@@ -1479,7 +1479,7 @@ const handleQuantityChange = (text: string) => {
   disabled={!isFormComplete || isReplacementPriceHigher}
 >
   <Text className="text-white text-center font-medium">
-    {jobRole === "Distribution Center Manager" 
+    {jobRole === "Distribution Centre Manager" 
       ? t("PendingOrderScreen.Update")
       : t("PendingOrderScreen.Send Replace Request")}
   </Text>
@@ -2014,9 +2014,9 @@ return (
                           {orderStatus === 'Completed' ? (
                             <View className="w-6 h-6 items-center justify-center">
                               {item.selected ? (
-                                <AntDesign name="checkcircle" size={20} color="black" />
+                                <AntDesign name="check-circle" size={20} color="black" />
                               ) : (
-                                <AntDesign name="closecircle" size={20} color="#F44336" />
+                                <AntDesign name="close-circle" size={20} color="#F44336" />
                               )}
                             </View>
                           ) : (
@@ -2091,9 +2091,9 @@ return (
                       {orderStatus === 'Completed' ? (
                         <View className="w-6 h-6 items-center justify-center">
                           {item.selected ? (
-                            <AntDesign name="checkcircle" size={20} color="black" />
+                            <AntDesign name="check-circle" size={20} color="black" />
                           ) : (
-                            <AntDesign name="closecircle" size={20} color="#F44336" />
+                            <AntDesign name="close-circle" size={20} color="#F44336" />
                           )}
                         </View>
                       ) : (
