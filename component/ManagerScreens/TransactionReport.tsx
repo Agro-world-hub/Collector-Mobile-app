@@ -262,7 +262,7 @@ const formattedDate = selectedDate.replace(/-/g, "/");
           bankName: data.bankName ?? "",
           branchName: data.branchName ?? "",
           companyNameEnglish: data.companyNameEnglish ?? "company name",
-          collectionCenterName: data.centerName ?? "Collection Center",
+          collectionCenterName: data.centerName ?? "Collection Centre",
         });
       } catch (detailsError) {
         console.error('Error fetching user details:', detailsError);
@@ -519,7 +519,7 @@ const formattedDate = selectedDate.replace(/-/g, "/");
           </div>
           <div>
             <div>&nbsp;</div>
-            <div>${t("NewReport.Centre")} ${details.collectionCenterName || 'Collection Center'}</div>
+            <div>${t("NewReport.Centre")} ${details.collectionCenterName || 'Collection Centre'}</div>
           </div>
         </div>
         
@@ -704,7 +704,7 @@ const handleDownloadPDF = async () => {
         <Text className="font-bold text-sm mb-1">{t("NewReport.Received By")}</Text>
         <View className="border border-gray-300 rounded-lg p-2">
           <Text><Text className="">{t("NewReport.Company Name")}</Text> {details?.companyNameEnglish || ''}</Text>
-          <Text><Text className="">{t("NewReport.Centre")}</Text> {details?.collectionCenterName || 'Collection Center'}</Text>
+          <Text><Text className="">{t("NewReport.Centre")}</Text> {details?.collectionCenterName || 'Collection Centre'}</Text>
         </View>
       </View>
 

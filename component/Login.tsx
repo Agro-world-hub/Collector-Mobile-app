@@ -96,7 +96,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 
       if (response.ok && data.jobRole) {
 
-        if (data.jobRole.toLowerCase() === "distribution center head") {
+        if (data.jobRole.toLowerCase() === "distribution centre head") {
           setEmpIdError(t("Error.Distribution Centre Head are not allowed to access this application"));
           return;
         } else {
@@ -277,7 +277,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
   navigation.navigate("ChangePassword");
 } else {
   // Fixed: Check for both Distribution roles individually
-  if (jobRole === "Distribution Officer" || jobRole === "Distribution Center Manager") {
+  if (jobRole === "Distribution Officer" || jobRole === "Distribution Centre Manager") {
     navigation.navigate("Main", { screen: "DistridutionaDashboard" });
   } else if (jobRole === "Collection Officer") {
     navigation.navigate("Main", { screen: "Dashboard" });

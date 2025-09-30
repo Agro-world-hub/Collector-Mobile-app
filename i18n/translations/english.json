@@ -1,4 +1,8 @@
 {
+  "Main": {
+    "No Internet Connection": "No Internet Connection",
+    "Please turn on mobile data or Wi-Fi to continue.": "Please turn on Mobile Data or Wi-Fi to continue."
+    },
   "SignIn": {
     "LNG": "en",
     "Wellcome": "Welcome!",

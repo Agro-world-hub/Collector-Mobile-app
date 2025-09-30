@@ -221,7 +221,7 @@ const NewReport: React.FC<NewReportProps> = ({ navigation }) => {
           bankName: data.bankName ?? "",
           branchName: data.branchName ?? "",
           companyNameEnglish: data.companyNameEnglish ?? "company name",
-          collectionCenterName: data.centerName ?? "Collection Center",
+          collectionCenterName: data.centerName ?? "Collection Centre",
         });
       } catch (detailsError) {
         console.error("Error fetching user details:", detailsError);
@@ -515,7 +515,7 @@ const NewReport: React.FC<NewReportProps> = ({ navigation }) => {
           <div>
             <div>&nbsp;</div>
             <div>${t("NewReport.Centre")} ${
-      details.collectionCenterName || "Collection Center"
+      details.collectionCenterName || "Collection Centre"
     }</div>
           </div>
         </div>
@@ -767,7 +767,7 @@ const NewReport: React.FC<NewReportProps> = ({ navigation }) => {
           </Text>
           <Text>
             <Text className="">{t("NewReport.Centre")}</Text>{" "}
-            {details?.collectionCenterName || "Collection Center"}
+            {details?.collectionCenterName || "Collection Centre"}
           </Text>
         </View>
       </View>
