@@ -8,7 +8,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-"image": "./assets/images/adaptive-icon2.png",
+      "image": "./assets/images/adaptive-icon2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -23,13 +23,13 @@
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "softwareKeyboardLayoutMode": "pan",
-       "package": "com.polygonagro.Collector",
-     "versionCode": 12,
+      "package": "com.polygonagro.Collector",
+      "versionCode": 12,
       "compileSdkVersion": 35,
       "targetSdkVersion": 35,
       "minSdkVersion": 24,
       "permissions": [
-       "CAMERA",
+        "CAMERA",
         "PHOTO_LIBRARY",
         "NOTIFICATIONS",
         "MICROPHONE",
@@ -53,7 +53,7 @@
     "plugins": [
       "expo-router",
       "expo-font",
-          [
+      [
         "expo-build-properties",
         {
           "android": {
@@ -71,7 +71,8 @@
               "android.useAndroidX": "true",
               "android.enableJetifier": "true",
               "ANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES": "true"
-            }
+            },
+            "enableMinifyInReleaseBuilds": true
           }
         }
       ]
@@ -84,9 +85,8 @@
         "origin": false
       },
       "eas": {
-        "projectId": ""
+        "projectId": "eb2d28db-2f05-4473-8eb1-52bc92e494bc"
       }
-       
     },
     "expo-camera": {
       "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",

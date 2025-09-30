@@ -216,7 +216,9 @@
 "Please add at least one crop to proceed":"Please add at least one crop to proceed.",
 "Failed to generate invoice number":"Failed to generate invoice number.Please Try again later",
 "Failed to submit crop details":"Failed to submit crop details. Please try again.",
-"Please enter Employee ID in uppercase letters":"Please enter Employee ID in uppercase letters"
+"Please enter Employee ID in uppercase letters":"Please enter Employee ID in uppercase letters",
+"Failed to update password": "Failed to update password",
+"Distribution Centre Head are not allowed to access this application": "Distribution Centre Head are not allowed to access this application"
   },
   "EngProfile":{
     "LNG": "en",

@@ -111,9 +111,9 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
   const route = useRoute();
   const currentScreen = route.name;
   const handleBackPress = () => {
-    if (currentScreen === "EngProfile" && profile?.jobRole === "Distribution Officer") {
+    if (currentScreen === "EngProfile" && profile?.jobRole === "Distribution Officer" || profile?.jobRole === "Distribution Centre Manager") {
       navigation.navigate("Main", { screen: "DistridutionaDashboard" })
-    } else if(currentScreen === "EngProfile" && profile?.jobRole === "Collection Officer" || profile?.jobRole === "Collection Center Manger" ){
+    } else if(currentScreen === "EngProfile" && profile?.jobRole === "Collection Officer" || profile?.jobRole === "Collection Centre Manager" ){
       navigation.navigate("Main", { screen: "Dashboard" })
     }else {
       navigation.goBack();
@@ -429,8 +429,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
           <TouchableOpacity
             className="flex-row items-center py-3"
             onPress={() =>
-              navigation.navigate("ChangePassword", { empid:profile?.empId } as any)
-            }
+              navigation.navigate("ChangePassword")}
           >
             <Ionicons name="lock-closed-outline" size={20} color="black" />
             <Text className="flex-1 text-lg ml-2">

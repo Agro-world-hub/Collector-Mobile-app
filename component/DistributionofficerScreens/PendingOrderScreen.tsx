@@ -1479,7 +1479,7 @@ const handleQuantityChange = (text: string) => {
   disabled={!isFormComplete || isReplacementPriceHigher}
 >
   <Text className="text-white text-center font-medium">
-    {jobRole === "Distribution Center Manager" 
+    {jobRole === "Distribution Centre Manager" 
       ? t("PendingOrderScreen.Update")
       : t("PendingOrderScreen.Send Replace Request")}
   </Text>

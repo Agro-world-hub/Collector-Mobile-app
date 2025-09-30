@@ -359,7 +359,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
 
 
       <View className="flex-row flex-wrap justify-between p-6 mt-[-5%]">
-        {jobRole === "Distribution Center Manager" ? (
+        {jobRole === "Distribution Centre Manager" ? (
           <TouchableOpacity           
             className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative border border-[#980775] mb-50"           
             onPress={() => navigation.navigate("CenterTargetScreen", { centerId: centerId } as any)}         

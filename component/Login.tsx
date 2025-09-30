@@ -97,7 +97,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
       if (response.ok && data.jobRole) {
 
         if (data.jobRole.toLowerCase() === "distribution center head") {
-          setEmpIdError(t("Error.Distribution Center Head are not allowed to access this application"));
+          setEmpIdError(t("Error.Distribution Centre Head are not allowed to access this application"));
           return;
         } else {
         
@@ -233,9 +233,9 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 
     const allowedRoles = [
     "collection officer",
-    "collection center manager", 
+    "collection centre manager", 
     "distribution officer",
-    "distribution center manager"  // Keep lowercase for consistency
+    "distribution centre manager"  // Keep lowercase for consistency
   ];
 
       if (!allowedRoles.includes(jobRole.toLowerCase())) {
@@ -274,7 +274,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
         setLoading(false);
         
       if (passwordUpdateRequired) {
-  navigation.navigate("ChangePassword", { empid } as any);
+  navigation.navigate("ChangePassword");
 } else {
   // Fixed: Check for both Distribution roles individually
   if (jobRole === "Distribution Officer" || jobRole === "Distribution Center Manager") {

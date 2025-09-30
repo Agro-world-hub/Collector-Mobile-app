@@ -155,7 +155,7 @@ function MainTabNavigator() {
 
   useEffect(() => {
     // Set the first tab based on user role
-    if (jobRole === 'Distribution Officer' || jobRole === 'Distribution Manager') {
+    if (jobRole === 'Distribution Officer' || jobRole === 'Distribution Centre Manager') {
       setInitialTab('DistridutionaDashboard'); // Set the first tab for Distribution Manager/Officer
     } else if (jobRole === 'Collection Officer') {
       setInitialTab('Dashboard'); // Set the first tab for Collection Officer
