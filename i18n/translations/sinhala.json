@@ -1,4 +1,8 @@
 {
+   "Main": {
+     "No Internet Connection": "අන්තර්ජාල සම්බන්ධතාවයක් නැත",
+    "Please turn on mobile data or Wi-Fi to continue.": "කරුණාකර Mobile Data හෝ Wi-Fi සක්‍රීය කරන්න."
+  },
   "SignIn": {
     "LNG": "si",
     "Wellcome": "ආයුබෝවන්!",

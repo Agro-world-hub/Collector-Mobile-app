@@ -1,4 +1,8 @@
 {
+    "Main": {
+     "No Internet Connection": "இணைய இணைப்பு இல்லை",
+    "Please turn on mobile data or Wi-Fi to continue.": "தயவுசெய்து மொபைல் தரவுகள் அல்லது Wi-Fi ஐ இயக்கவும்."
+  },
   "SignIn": {
     "LNG": "ta",
     "Wellcome": "வரவேற்கிறோம்!",
