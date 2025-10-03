@@ -7,6 +7,9 @@ import {
   Alert,
   Modal,
   ActivityIndicator,
+  StatusBar,
+  Platform,
+  Dimensions,
 } from "react-native";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
@@ -66,7 +69,6 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
         }
       );
       setComplains(res.data);
-  //    console.log(res.data);
     } catch (err) {
       // Alert.alert(t("ReportHistory.sorry"), t("ReportHistory.noData"));
     } finally {
@@ -76,7 +78,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      fetchComplaints(); // Fetch data every time the screen is focused
+      fetchComplaints();
     }, [])
   );
 
@@ -86,7 +88,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const ampm = hours >= 12 ? "PM" : "AM";
-    const hour12 = hours % 12 || 12; // Convert 0 to 12
+    const hour12 = hours % 12 || 12;
     const minuteStr = minutes.toString().padStart(2, "0");
     const timeStr = `${hour12}.${minuteStr}${ampm}`;
 
@@ -107,14 +109,17 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
   };
 
   return (
-    <View className="flex-1 bg-[#FFFFFF] ">
+    <View className="flex-1 bg-[#FFFFFF]">
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      
       <View
         className="flex-row justify-between"
         style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
       >
-        <TouchableOpacity onPress={() => navigation.navigate("EngProfile")}
+        <TouchableOpacity
+          onPress={() => navigation.navigate("EngProfile")}
           className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10"
-          >
+        >
           <AntDesign name="left" size={24} color="#000502" />
         </TouchableOpacity>
 
@@ -196,32 +201,42 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
           ))}
         </ScrollView>
       )}
+
       <Modal
         visible={modalVisible}
         animationType="slide"
-        transparent={true}
+        transparent={false}
         onRequestClose={() => setModalVisible(false)}
+        statusBarTranslucent={false}
       >
-        <View
-          className="flex-1 justify-between items-center bg-[#FFFFFF]"
-          style={{ padding: wp(4) }}
-        >
-          <View className="p-4 bg-white rounded-xl w-full">
-            <Text className="text-lg font-bold">{t("Thank You")}</Text>
-            <ScrollView className="mt-8 h-[80%] pt-2">
-              <Text className="pb-4">{complainReply || "Loading..."}</Text>
-            </ScrollView>
-          </View>
+        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+        <View className="flex-1 bg-[#FFFFFF]">
+          <View 
+            className="flex-1"
+            style={{ 
+              paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 0,
+              paddingBottom: Platform.OS === 'android' ? 20 : 0,
+            }}
+          >
+            <View className="flex-1" style={{ padding: wp(4) }}>
+              <View className="p-4 bg-white rounded-xl w-full mb-4">
+                <Text className="text-lg font-bold">{t("Thank You")}</Text>
+                <ScrollView className="mt-8" style={{ maxHeight: hp(55) }}>
+                  <Text className="pb-4">{complainReply || "Loading..."}</Text>
+                </ScrollView>
+              </View>
 
-          <View className="w-full absolute bottom-4 p-4">
-            <TouchableOpacity
-              className="bg-black py-4 rounded-lg items-center"
-              onPress={() => setModalVisible(false)}
-            >
-              <Text className="text-white text-lg">
-                {t("ReportHistory.Closed")}
-              </Text>
-            </TouchableOpacity>
+              <View className="mt-auto" style={{ paddingBottom: 20 }}>
+                <TouchableOpacity
+                  className="bg-black py-4 rounded-lg items-center"
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text className="text-white text-lg">
+                    {t("ReportHistory.Closed")}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         </View>
       </Modal>
