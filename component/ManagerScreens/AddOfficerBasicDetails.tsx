@@ -834,7 +834,7 @@ const checkEmailExists = async (email: string) => {
 
           {/* Phone Number 1 */}
        <View className="mb-4">
-  <View className="flex-row gap-2 rounded-lg">
+  <View className="flex-row items-center  gap-2 rounded-lg">
     <View style={{ flex: 3, alignItems: "center" }} className="">
       <SelectList
         setSelected={setPhoneCode1}
