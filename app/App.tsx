@@ -226,7 +226,7 @@ function MainTabNavigator() {
       {/* <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} /> */}
 
                    <Tab.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} /> 
-                     <Tab.Screen name="EngProfile" component={EngProfile} />
+                     {/* <Tab.Screen name="EngProfile" component={EngProfile} /> */}
                        <Tab.Screen
             name="ReportGenerator"
             component={ReportGenerator as any}
@@ -405,6 +405,7 @@ const onlineStatus = async () => {
             name="AddOfficerAddressDetails"
             component={AddOfficerAddressDetails}
           />
+           <Stack.Screen name="EngProfile" component={EngProfile} />
           <Stack.Screen name="ClaimOfficer" component={ClaimOfficer} />
           {/* <Stack.Screen name="TransactionList" component={TransactionList as any} /> */}
           <Stack.Screen name="OTPE" component={OTPE} />
