@@ -48,8 +48,8 @@ const Lanuage: React.FC<LanuageProps> = ({ navigation }) => {
         useCallback(() => {
           const onBackPress = () => true;
           BackHandler.addEventListener("hardwareBackPress", onBackPress);
-          return () =>
-            BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+             const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () => subscription.remove();
         }, [])
       );
 

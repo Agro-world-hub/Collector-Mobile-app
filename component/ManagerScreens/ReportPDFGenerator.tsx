@@ -1,5 +1,6 @@
 import * as Print from 'expo-print';
-import * as FileSystem from 'expo-file-system';
+//import * as FileSystem from 'expo-file-system';
+import * as FileSystem from "expo-file-system/legacy";
 import axios from 'axios';
 import {environment }from '@/environment/environment';
 
@@ -211,7 +212,7 @@ export const handleGeneratePDF = async (
 });
 
 // Move the file to app document directory for easier access
-const fileUri = `${FileSystem.documentDirectory}report_${officerId}.pdf`;
+const fileUri = `${(FileSystem as any).documentDirectory}report_${officerId}.pdf`;
 await FileSystem.moveAsync({
   from: uri,
   to: fileUri,

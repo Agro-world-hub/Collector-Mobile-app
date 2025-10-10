@@ -26,7 +26,7 @@ import { Platform } from "react-native";
 import { AppState } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import i18n from "@/i18n/i18n";
 
 
@@ -834,7 +834,7 @@ const checkEmailExists = async (email: string) => {
 
           {/* Phone Number 1 */}
        <View className="mb-4">
-  <View className="flex-row gap-2 rounded-lg">
+  <View className="flex-row items-center  gap-2 rounded-lg">
     <View style={{ flex: 3, alignItems: "center" }} className="">
       <SelectList
         setSelected={setPhoneCode1}

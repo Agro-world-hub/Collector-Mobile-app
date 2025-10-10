@@ -234,7 +234,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
       // console.log(data);
           let response;
     // Check jobRole before making the API call
-    if (jobRole === "Distribution Manager" || jobRole === "Distribution Officer") {
+    if (jobRole === "Distribution Centre Manager" || jobRole === "Distribution Officer") {
       response = await api.get("api/distribution-manager/user-profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -1085,7 +1085,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
   const jsonData1 = {
     jobRoles: [
       {
-        en: "Collection Center Manager",
+        en: "Collection Centre Manager",
         si: "එකතු කිරීමේ මධ්‍යස්ථාන කළමනාකරු",
         ta: "சேகரிப்பு மைய மேலாளர்",
       },

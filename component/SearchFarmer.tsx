@@ -21,7 +21,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 
 const api = axios.create({

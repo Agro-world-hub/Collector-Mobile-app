@@ -89,8 +89,8 @@ dispatch(setUser({ token: userToken ?? '', jobRole: role ?? '', empId: emp ?? ''
           const passwordUpdated = await checkPasswordStatus(userToken);
           
           if (passwordUpdated === 0) {
-            console.log("Password needs to be updated, navigating to password update screen.");
-            navigation.navigate('ChangePassword'); // Replace with your password update screen name
+            console.log("Password needs to be updated, navigating to Login.");
+           navigation.navigate("Login");
             return;
           }
           console.log("Token is valid, navigating to Main.");
@@ -100,12 +100,12 @@ dispatch(setUser({ token: userToken ?? '', jobRole: role ?? '', empId: emp ?? ''
               index: 0,
               routes: [{ name: 'Main', params: { screen: 'Dashboard' } }]
             });
-          } else if (jobRole === "Collection Center Manager") {
+          } else if (jobRole === "Collection Centre Manager") {
             navigation.reset({
               index: 0,
               routes: [{ name: 'Main', params: { screen: 'ManagerDashboard' } }]
             })
-          }else if (jobRole==="Distribution Officer" || "Distribution Manager"){
+          }else if (jobRole==="Distribution Officer" || "Distribution Centre Manager"){
             console.log("hit dis manager")
              navigation.reset({
               index: 0,

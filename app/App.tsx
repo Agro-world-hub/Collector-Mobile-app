@@ -1,9 +1,20 @@
-import React, {useEffect, useState, useCallback} from "react";
-import { Text, TextInput, Platform, Dimensions, StyleSheet } from "react-native";
+import React, { useEffect, useState , useCallback} from "react";
+import { Alert, BackHandler, Text, View, TextInput,Dimensions  } from "react-native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import NetInfo from '@react-native-community/netinfo';
+import { useTranslation } from "react-i18next";
+import { navigationRef } from "../navigationRef"; 
+
+
+
+
+
 import Splash from "../component/Splash";
 import Lanuage from "../component/Lanuage";
-import { createStackNavigator } from "@react-navigation/stack";
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Login from "@/component/Login";
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -15,10 +26,7 @@ import { LogBox } from 'react-native';
 
 import NavigationBar from "@/component/BottomNav";
 
-import { useNavigation } from "@react-navigation/native";
-import { BackHandler } from "react-native";
 import ChangePassword from "@/component/ChangePassword";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Registeredfarmer from "@/component/Registeredfarmer";
 import Ufarmercropdetails from "@/component/Ufarmercropdetails";
 import Dashboard from "@/component/Dashboard";
@@ -32,7 +40,6 @@ import FarmerQr from "@/component/FarmerQr";
 import ComplainPage from "@/component/ComplainPage";
 import OfficerQr from "@/component/OfficerQr";
 import Profile from "@/component/Profile";
-import * as ScreenCapture from "expo-screen-capture";
 import ReportPage from "@/component/ReportPage";
 import SearchPriceScreen from "@/component/SearchPriceScreen";
 import PriceChart from "@/component/PriceChart";
@@ -112,8 +119,6 @@ import { RootState } from '../services/reducxStore';
 import ReplaceRequestsApprove from '@/component/DisributionManger/ReplaceRequestsApprove';
 import DistributionOfficerReport from '@/component/DisributionManger/DistributionOfficerReport'
 
-import { Alert } from "react-native";
-import NetInfo from "@react-native-community/netinfo"
 
 LogBox.ignoreAllLogs(true);
 NativeWindStyleSheet.setOutput({
@@ -134,15 +139,23 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const windowDimensions = Dimensions.get("window");
 
+// Example Screens
+function HomeScreen() {
+  return (
+    <View className="flex-1 items-center justify-center bg-blue-100">
+      <Text className="text-2xl font-bold text-blue-800">Home Screen</Text>
+    </View>
+  );
+}
 
 function MainTabNavigator() {
 
-    const [initialTab, setInitialTab] = useState('Dashboard');
+      const [initialTab, setInitialTab] = useState('Dashboard');
   const jobRole = useSelector((state: RootState) => state.auth.jobRole);
 
   useEffect(() => {
     // Set the first tab based on user role
-    if (jobRole === 'Distribution Officer' || jobRole === 'Distribution Manager') {
+    if (jobRole === 'Distribution Officer' || jobRole === 'Distribution Centre Manager') {
       setInitialTab('DistridutionaDashboard'); // Set the first tab for Distribution Manager/Officer
     } else if (jobRole === 'Collection Officer') {
       setInitialTab('Dashboard'); // Set the first tab for Collection Officer
@@ -162,14 +175,18 @@ function MainTabNavigator() {
 
   return (
     <Tab.Navigator
-    initialRouteName={initialTab}
+        initialRouteName={initialTab}
       screenOptions={({ route }) => ({
-        tabBarStyle: { display: 'none' }, 
         headerShown: false,
+        tabBarHideOnKeyboard: false,
+        tabBarStyle: { position: "absolute", backgroundColor: "#fff" },
       })}
+      
+
+      
       tabBar={(props) => <NavigationBar {...props} />}
     >
-      <Tab.Screen name="Dashboard" component={Dashboard} />
+    <Tab.Screen name="Dashboard" component={Dashboard} />
       <Tab.Screen name="DistridutionaDashboard" component={DistridutionaDashboard as any} />
       <Tab.Screen name="ManagerDashboard" component={ManagerDashboard as any} />
       <Tab.Screen name="SearchPriceScreen" component={SearchPriceScreen} />
@@ -209,7 +226,7 @@ function MainTabNavigator() {
       {/* <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} /> */}
 
                    <Tab.Screen name="TargetOrderScreen" component={TargetOrderScreen as any} /> 
-                     <Tab.Screen name="EngProfile" component={EngProfile} />
+                     {/* <Tab.Screen name="EngProfile" component={EngProfile} /> */}
                        <Tab.Screen
             name="ReportGenerator"
             component={ReportGenerator as any}
@@ -222,27 +239,26 @@ function MainTabNavigator() {
                          <Tab.Screen name="ClaimDistribution" component={ClaimDistribution as any} /> 
                          <Tab.Screen name="DistributionOfficerSummary" component={DistributionOfficerSummary as any} />
                          <Tab.Screen name="ReplaceRequestsScreen" component={ReplaceRequestsScreen as any} />
-
     </Tab.Navigator>
   );
 }
 
+function AppContent() {
+  const insets = useSafeAreaInsets();
+ const { t } = useTranslation();
 
-
-const Index = () => {
-  useEffect(() => {
+  const [isOfflineAlertShown, setIsOfflineAlertShown] = useState(false);
+useEffect(() => {
     onlineStatus();
     
   }, []);
-const [isOfflineAlertShown, setIsOfflineAlertShown] = useState(false);
-
   useEffect(() => {
     const unsubscribeNetInfo = NetInfo.addEventListener(state => {
       if (!state.isConnected && !isOfflineAlertShown) {
         setIsOfflineAlertShown(true); // mark that alert is shown
         Alert.alert(
-          "No Internet Connection",
-          "Please turn on mobile data or Wi-Fi to continue.",
+          t("Main.No Internet Connection"),
+          t("Main.Please turn on mobile data or Wi-Fi to continue."),
           [
             {
               text: "OK",
@@ -260,7 +276,7 @@ const [isOfflineAlertShown, setIsOfflineAlertShown] = useState(false);
       unsubscribeNetInfo();
     };
   }, [isOfflineAlertShown]);
-  const onlineStatus = async () => {
+const onlineStatus = async () => {
     AppState.addEventListener("change", async (nextAppState) => {
       console.log("App state changed toooolllllll:", nextAppState);
       const storedEmpId = await AsyncStorage.getItem("empid");
@@ -277,8 +293,7 @@ const [isOfflineAlertShown, setIsOfflineAlertShown] = useState(false);
       }
     });
   };
-
-  const status = async (empId: string, status: boolean) => {
+ const status = async (empId: string, status: boolean) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
@@ -304,11 +319,37 @@ const [isOfflineAlertShown, setIsOfflineAlertShown] = useState(false);
       console.error("Online status error:", error);
     }
   };
+// useEffect(() => {
+//   const backAction = () => {
+//     if (!navigationRef.isReady()) {
+//       // Navigation not ready yet, let default system back handle it
+//       return false;
+//     }
+
+//     const currentRouteName = navigationRef.getCurrentRoute()?.name ?? "";
+
+//     if (currentRouteName === "Dashboard") {
+//       BackHandler.exitApp();
+//       return true;
+//     } else if (navigationRef.canGoBack()) {
+//       navigationRef.goBack();
+//       return true;
+//     }
+//     return false;
+//   };
+
+//   const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+//   return () => backHandler.remove();
+// }, []);
 
   return (
-    <Provider store={store}>
-    <LanguageProvider>
-        <Stack.Navigator
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaView
+        style={{ flex: 1, paddingBottom: insets.bottom, backgroundColor: "#fff" }}
+        edges={["top", "right", "left"]}
+      >
+        <NavigationContainer   ref={navigationRef}>
+         <Stack.Navigator
           screenOptions={{
             headerShown: false,
             gestureEnabled: false, // Disable swipe gestures globally
@@ -364,6 +405,7 @@ const [isOfflineAlertShown, setIsOfflineAlertShown] = useState(false);
             name="AddOfficerAddressDetails"
             component={AddOfficerAddressDetails}
           />
+           <Stack.Screen name="EngProfile" component={EngProfile} />
           <Stack.Screen name="ClaimOfficer" component={ClaimOfficer} />
           {/* <Stack.Screen name="TransactionList" component={TransactionList as any} /> */}
           <Stack.Screen name="OTPE" component={OTPE} />
@@ -452,23 +494,19 @@ const [isOfflineAlertShown, setIsOfflineAlertShown] = useState(false);
 <Stack.Screen name="PassTarget" component={PassTarget as any} />
 <Stack.Screen name="DistributionOfficerReport" component={DistributionOfficerReport as any} />
         </Stack.Navigator> 
-        
-    </LanguageProvider>
-    </Provider>
+        </NavigationContainer>
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
-};
-
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: windowDimensions.width * 0.05, // 5% padding
-    paddingVertical: windowDimensions.height * 0.02, // 2% padding
-  },
-  header: {
-    fontSize: windowDimensions.width * 0.05, // 5% of screen width for font size
-  },
-});
-
-export default Index;
+}
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <Provider store={store}>
+      <LanguageProvider>
+        <AppContent />
+      </LanguageProvider>
+      </Provider>
+    </SafeAreaProvider>
+  );
+}

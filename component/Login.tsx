@@ -21,7 +21,7 @@ import { environment } from "@/environment/environment";
 import { useTranslation } from "react-i18next";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import LottieView from "lottie-react-native"; // Import LottieView
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { setUser } from '../store/authSlice';
 import { useDispatch } from "react-redux";
 import {
@@ -96,8 +96,8 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 
       if (response.ok && data.jobRole) {
 
-        if (data.jobRole.toLowerCase() === "distribution center head") {
-          setEmpIdError(t("Error.Distribution Center Head are not allowed to access this application"));
+        if (data.jobRole.toLowerCase() === "distribution centre head") {
+          setEmpIdError(t("Error.Distribution Centre Head are not allowed to access this application"));
           return;
         } else {
         
@@ -233,9 +233,9 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
 
     const allowedRoles = [
     "collection officer",
-    "collection center manager", 
+    "collection centre manager", 
     "distribution officer",
-    "distribution center manager"  // Keep lowercase for consistency
+    "distribution centre manager"  // Keep lowercase for consistency
   ];
 
       if (!allowedRoles.includes(jobRole.toLowerCase())) {
@@ -274,10 +274,10 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
         setLoading(false);
         
       if (passwordUpdateRequired) {
-  navigation.navigate("ChangePassword", { empid } as any);
+  navigation.navigate("ChangePassword");
 } else {
   // Fixed: Check for both Distribution roles individually
-  if (jobRole === "Distribution Officer" || jobRole === "Distribution Center Manager") {
+  if (jobRole === "Distribution Officer" || jobRole === "Distribution Centre Manager") {
     navigation.navigate("Main", { screen: "DistridutionaDashboard" });
   } else if (jobRole === "Collection Officer") {
     navigation.navigate("Main", { screen: "Dashboard" });
@@ -336,8 +336,8 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     useCallback(() => {
       const onBackPress = () => true;
       BackHandler.addEventListener("hardwareBackPress", onBackPress);
-      return () =>
-        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+   const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () => subscription.remove();
     }, [])
   );
 

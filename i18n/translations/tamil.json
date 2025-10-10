@@ -1,4 +1,8 @@
 {
+    "Main": {
+     "No Internet Connection": "இணைய இணைப்பு இல்லை",
+    "Please turn on mobile data or Wi-Fi to continue.": "தயவுசெய்து மொபைல் தரவுகள் அல்லது Wi-Fi ஐ இயக்கவும்."
+  },
   "SignIn": {
     "LNG": "ta",
     "Wellcome": "வரவேற்கிறோம்!",
@@ -216,7 +220,9 @@
 "Please add at least one crop to proceed":"தொடர குறைந்தபட்சம் ஒரு பயிரையாவது சேர்க்கவும்.",
 "Failed to generate invoice number":"விலைப்பட்டியல்(இன்வாய்ஸ்) எண்ணை உருவாக்க முடியவில்லை. பிறகு முயற்சிக்கவும்.",
 "Failed to submit crop details":"பயிர் விவரங்களைச் சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
-"Please enter Employee ID in uppercase letters":"பணியாளர் ஐடியை பெரிய எழுத்துக்களில் உள்ளிடவும்."
+"Please enter Employee ID in uppercase letters":"பணியாளர் ஐடியை பெரிய எழுத்துக்களில் உள்ளிடவும்.",
+"Failed to update password": "கடவுச்சொல்லை புதுப்பிக்க முடியவில்லை",
+"Distribution Centre Head are not allowed to access this application": "விநியோக மையத் தலைவர்கள் இந்தப் பயன்பாட்டை அணுக அனுமதிக்கப்படவில்லை"
   },
   "EngProfile":{
     "LNG": "en",

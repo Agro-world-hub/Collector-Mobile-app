@@ -23,8 +23,9 @@ import {
 } from "react-native-responsive-screen";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useTranslation } from "react-i18next";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import NetInfo from "@react-native-community/netinfo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 type ChangePasswordNavigationProp = StackNavigationProp<
@@ -34,25 +35,19 @@ type ChangePasswordNavigationProp = StackNavigationProp<
 
 interface ChangePasswordProps {
   navigation: ChangePasswordNavigationProp;
-  route: {
-    params: {
-      empid: string;
-    };
-  };
 }
 
 const ChangePassword: React.FC<ChangePasswordProps> = ({
   navigation,
-  route,
 }) => {
-  const { empid } = route.params;
-  console.log(empid)
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [secureCurrent, setSecureCurrent] = useState(true);
   const [secureNew, setSecureNew] = useState(true);
   const [secureConfirm, setSecureConfirm] = useState(true);
+   const [passwordUpdate, setPasswordUpdate] = useState<number | null>(null); 
+   console.log(passwordUpdate)
   const { t } = useTranslation();
 
   const validatePassword = () => {
@@ -122,14 +117,19 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   }
 
     try {
-      const response = await axios.post(
-        `${environment.API_BASE_URL}api/collection-officer/change-password`,
-        {
-          empId: empid,
-          currentPassword,
-          newPassword,
-        }
-      );
+         const token = await AsyncStorage.getItem('token');
+  const response = await axios.post(
+    `${environment.API_BASE_URL}api/collection-officer/change-password`,
+    {
+      currentPassword,
+      newPassword,
+    }, 
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    } 
+  );
 
     //  console.log("Password update response:", response.data);
       Alert.alert(t("Error.Success"), t("Error.Password updated successfully"));
@@ -148,14 +148,54 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
     }
   };
 
+    //   useFocusEffect(
+    //   useCallback(() => {
+    //     const onBackPress = () => true;
+    //     BackHandler.addEventListener("hardwareBackPress", onBackPress);
+    //       const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+    //   return () => subscription.remove();
+    //   }, [])
+    // );
+ const fetchOfficer = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+
+      const response = await axios.get(`${environment.API_BASE_URL}api/collection-officer/password-update`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+         setPasswordUpdate(response.data.data.passwordUpdated);
+
+      console.log("update password status", response.data.data.passwordUpdated);
+    } catch (error) {
+      console.error("Error fetching password update status:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOfficer();
+  }, []);
+
       useFocusEffect(
-      useCallback(() => {
-        const onBackPress = () => true;
-        BackHandler.addEventListener("hardwareBackPress", onBackPress);
-        return () =>
-          BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-      }, [])
-    );
+    useCallback(() => {
+      const onBackPress = () => {
+        // If passwordUpdate is 0, prevent back navigation
+        if (passwordUpdate === 0) {
+          console.log("hitt")
+          return true; // Prevent back navigation
+          
+        }
+        // If passwordUpdate is 1, allow back navigation
+        return false; // Allow back navigation
+      };
+      
+      const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () => subscription.remove();
+    }, [passwordUpdate]) // Added passwordUpdate as dependency
+  );
+
 
   return (
     <KeyboardAvoidingView
@@ -168,12 +208,14 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
         style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
         keyboardShouldPersistTaps="handled"
       >
-      
+       {passwordUpdate === 1 && (
         <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
                          <AntDesign name="left" size={24} color="#000502" />
                        </TouchableOpacity>
-
-        <View className="flex-row items-center justify-center mt-[2%] space-x-[-30%] ml-[5%]">
+       )}
+        <View className={`flex-row items-center justify-center ${
+    passwordUpdate === 1 ? "mt-[2%]" : "mt-[12%]"
+  }  space-x-[-30%] ml-[5%]`}>
          <Image
             source={require("@/assets/images/cangepassword.png")}
             resizeMode="contain"

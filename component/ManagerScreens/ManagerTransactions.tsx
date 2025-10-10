@@ -20,8 +20,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import LottieView from "lottie-react-native";
 import { Platform } from "react-native";
-import { useFocusEffect } from "expo-router";
-import { set } from "lodash";
+import { useFocusEffect } from "@react-navigation/native";
 
 type ManagerTransactionsNavigationProp = StackNavigationProp<
   RootStackParamList,

@@ -16,7 +16,8 @@ import RNHTMLtoPDF from "react-native-html-to-pdf";
 import { RootStackParamList } from "./types";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
-import * as FileSystem from "expo-file-system";
+//import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import * as MediaLibrary from "expo-media-library";
 import QRCode from "react-native-qrcode-svg";
 import { useTranslation } from "react-i18next";
@@ -336,7 +337,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ navigation }) => {
 
         if (status === "granted") {
           // Define a temporary path in the FileSystem's cache directory with the correct file name
-          const tempUri = `${FileSystem.cacheDirectory}${fileName}`;
+          const tempUri = `${(FileSystem as any).cacheDirectory}${fileName}`;
 
           // Copy the file to the new temporary path with the desired file name
           await FileSystem.copyAsync({

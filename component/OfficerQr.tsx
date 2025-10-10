@@ -11,7 +11,8 @@ import QRCode from "react-native-qrcode-svg";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { captureRef } from "react-native-view-shot";
-import * as FileSystem from "expo-file-system";
+//import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import * as MediaLibrary from "expo-media-library";
 import * as Sharing from "expo-sharing";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -134,7 +135,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
         return;
       }
 
-      const fileUri = `${FileSystem.documentDirectory}QRCode_${Date.now()}.png`;
+      const fileUri = `${(FileSystem as any).documentDirectory}QRCode_${Date.now()}.png`;
 
       // Download the QR code image from the URL
       const response = await FileSystem.downloadAsync(QR, fileUri);
@@ -157,7 +158,7 @@ const OfficerQr: React.FC<OfficerQrProps> = ({ navigation }) => {
         return;
       }
 
-      const fileUri = `${FileSystem.documentDirectory}QRCode_${Date.now()}.png`;
+      const fileUri = `${(FileSystem as any).documentDirectory}QRCode_${Date.now()}.png`;
 
       // Download the QR code image from the URL
       const response = await FileSystem.downloadAsync(QR, fileUri);

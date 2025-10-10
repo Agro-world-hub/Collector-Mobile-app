@@ -9,7 +9,8 @@ import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import { RootStackParamList } from '../types';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
-import * as FileSystem from 'expo-file-system';
+//import * as FileSystem from 'expo-file-system';
+import * as FileSystem from "expo-file-system/legacy";
 import * as MediaLibrary from 'expo-media-library';
 import QRCode from 'react-native-qrcode-svg';
 import { useTranslation } from "react-i18next";
@@ -262,7 +263,7 @@ const formattedDate = selectedDate.replace(/-/g, "/");
           bankName: data.bankName ?? "",
           branchName: data.branchName ?? "",
           companyNameEnglish: data.companyNameEnglish ?? "company name",
-          collectionCenterName: data.centerName ?? "Collection Center",
+          collectionCenterName: data.centerName ?? "Collection Centre",
         });
       } catch (detailsError) {
         console.error('Error fetching user details:', detailsError);
@@ -519,7 +520,7 @@ const formattedDate = selectedDate.replace(/-/g, "/");
           </div>
           <div>
             <div>&nbsp;</div>
-            <div>${t("NewReport.Centre")} ${details.collectionCenterName || 'Collection Center'}</div>
+            <div>${t("NewReport.Centre")} ${details.collectionCenterName || 'Collection Centre'}</div>
           </div>
         </div>
         
@@ -590,7 +591,7 @@ const handleDownloadPDF = async () => {
 
     if (Platform.OS === 'android') {
      
-      tempFilePath = `${FileSystem.cacheDirectory}${fileName}`;
+      tempFilePath = `${(FileSystem as any).cacheDirectory}${fileName}`;
       
      
       await FileSystem.copyAsync({
@@ -645,7 +646,7 @@ const handleDownloadPDF = async () => {
       
       // Create a new file with the desired name
       const fileInfo = await FileSystem.getInfoAsync(uri);
-      const newUri = `${FileSystem.cacheDirectory}${fileName}`;
+      const newUri = `${(FileSystem as any).cacheDirectory}${fileName}`;
       
       try {
         // Copy the file to a new location with the desired name
@@ -704,7 +705,7 @@ const handleDownloadPDF = async () => {
         <Text className="font-bold text-sm mb-1">{t("NewReport.Received By")}</Text>
         <View className="border border-gray-300 rounded-lg p-2">
           <Text><Text className="">{t("NewReport.Company Name")}</Text> {details?.companyNameEnglish || ''}</Text>
-          <Text><Text className="">{t("NewReport.Centre")}</Text> {details?.collectionCenterName || 'Collection Center'}</Text>
+          <Text><Text className="">{t("NewReport.Centre")}</Text> {details?.collectionCenterName || 'Collection Centre'}</Text>
         </View>
       </View>
 

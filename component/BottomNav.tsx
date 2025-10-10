@@ -77,7 +77,7 @@ console.log('user rolllllllll', userRole)
       }
     };
 
-    if (userRole === "Collection Center Manager") {
+    if (userRole === "Collection Centre Manager") {
       checkClaimStatus(); // Call only if the user role is Collection Center Manager
     }
      if (userRole === "Distribution Officer") {
@@ -96,7 +96,7 @@ useEffect(() => {
     { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
   ];
 
-  if (userRole === "Collection Center Manager") {
+  if (userRole === "Collection Centre Manager") {
     tabs = [
       { name: "ManagerDashboard", icon: homeIcon, focusedIcon: homeIcon },
       { name: "DailyTarget", icon: qrIcon, focusedIcon: qrIcon },
@@ -111,7 +111,7 @@ useEffect(() => {
     { name: "SearchPriceScreen", icon: searchIcon, focusedIcon: searchIcon },
     ];
     setTabs(tabs); 
-  }else if (userRole === "Distribution Center Manager") {
+  }else if (userRole === "Distribution Centre Manager") {
      tabs = [
         { name: "DistridutionaDashboard", icon: homeIcon, focusedIcon: homeIcon },
            { name: "TargetOrderScreen", icon: qrIcon, focusedIcon: qrIcon },
@@ -139,7 +139,7 @@ useEffect(() => {
     currentTabName === "OfficerSummary" 
   ) {
     currentTabName = "CollectionOfficersList";
-  } else if (userRole === "Distribution Center Manager"  && currentTabName === "Dashboard"  ) {
+  } else if (userRole === "Distribution Centre Manager"  && currentTabName === "Dashboard"  ) {
     currentTabName = "DistridutionaDashboard"; 
     navigation.navigate("DistridutionaDashboard");
   } else if(currentTabName === "ClaimDistribution"){
@@ -147,7 +147,7 @@ useEffect(() => {
   }
 
   useEffect(() => {
-    if (userRole === "Collection Center Manager" && currentTabName == "Dashboard") {
+    if (userRole === "Collection Centre Manager" && currentTabName == "Dashboard") {
       navigation.navigate("ManagerDashboard");
     }
   }, [userRole, currentTabName, navigation]);
@@ -155,7 +155,7 @@ useEffect(() => {
   useEffect(() => {
     if (userRole === "Distribution Officer" && currentTabName == "Dashboard") {
       navigation.navigate("DistridutionaDashboard");
-    }else if (userRole === "Distribution Center Manager" && currentTabName === "Dashboard"){
+    }else if (userRole === "Distribution Centre Manager" && currentTabName === "Dashboard"){
       console.log("hittt")
       navigation.navigate("DistridutionaDashboard");
     }

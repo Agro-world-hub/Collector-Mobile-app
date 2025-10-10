@@ -19,7 +19,7 @@ import { RootStackParamList } from "../types";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import {environment }from '@/environment/environment';
 import axios from "axios";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import NetInfo from "@react-native-community/netinfo";
 
@@ -65,9 +65,8 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
   
         BackHandler.addEventListener("hardwareBackPress", onBackPress);
   
-        return () => {
-          BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-        };
+    const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () => subscription.remove();
       }, [navigation])
     );
   const ConfirmationModal = ({ visible, onConfirm, onCancel }: any) => {
@@ -399,7 +398,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
               tintColor="#000000"
               backgroundColor="#E5E7EB"
             >
-              {(fill) => (
+              {(fill: number) => (
                 <Text className="text-[#000000] font-bold text-xl">
                   {Math.round(fill)}%
                 </Text>
