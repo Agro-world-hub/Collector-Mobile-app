@@ -87,7 +87,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
 
       const token = await AsyncStorage.getItem("token");
       const response = await axios.get(
-        `${environment.API_BASE_URL}api/collection-manager/collection-officers`,
+        `${environment.API_BASE_URL}api/collection-manager/collection-officerslist`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -308,7 +308,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
               onPress={() => navigation.navigate("ClaimOfficer")}
             >
               <Text className="text-gray-700 font-semibold">
-                {t("CollectionOfficersList.Claim Officer")}
+                 {t("CollectionOfficersList.Claim Officer")}
               </Text>
             </TouchableOpacity>
           </View>
