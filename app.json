@@ -5,21 +5,29 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/adaptive-icon2.png",
-    "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/adaptive-icon2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true,
-      "infoPlist": {
-        "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoads": true
-        }
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon2.png",
+        "backgroundColor": "#ffffff"
       },
-      "bundleIdentifier": "com.polygonagro.Collector",
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "softwareKeyboardLayoutMode": "pan",
+      "package": "com.polygonagro.Collector",
+      "versionCode": 12,
+      "compileSdkVersion": 35,
+      "targetSdkVersion": 35,
+      "minSdkVersion": 24,
       "permissions": [
         "CAMERA",
         "PHOTO_LIBRARY",
@@ -82,11 +90,28 @@
     },
     "plugins": [
       "expo-router",
+      "expo-font",
       [
-        "expo-notifications",
+        "expo-build-properties",
         {
-          "icon": "./assets/images/favicon.png",
-          "color": "#21202b"
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "minSdkVersion": 24,
+            "ndkVersion": "28.0.12433566",
+            "enableProguardInReleaseBuilds": true,
+            "packagingOptions": {
+              "jniLibs": {
+                "useLegacyPackaging": false
+              }
+            },
+            "gradleProperties": {
+              "android.useAndroidX": "true",
+              "android.enableJetifier": "true",
+              "ANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES": "true"
+            },
+            "enableMinifyInReleaseBuilds": true
+          }
         }
       ],
       "expo-font",
@@ -104,12 +129,18 @@
     "experiments": {
       "typedRoutes": true
     },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "eb2d28db-2f05-4473-8eb1-52bc92e494bc"
+      }
+    },
     "expo-camera": {
       "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
       "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
       "recordAudioAndroid": true
-    },
-    "newArchEnabled": true,
-    "owner": ""
+    }
   }
 }

@@ -17,7 +17,8 @@ import RNHTMLtoPDF from "react-native-html-to-pdf";
 import { RootStackParamList } from "./types";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
-import * as FileSystem from "expo-file-system";
+//import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import * as MediaLibrary from "expo-media-library";
 import QRCode from "react-native-qrcode-svg";
 import { useTranslation } from "react-i18next";
@@ -221,7 +222,7 @@ const NewReport: React.FC<NewReportProps> = ({ navigation }) => {
           bankName: data.bankName ?? "",
           branchName: data.branchName ?? "",
           companyNameEnglish: data.companyNameEnglish ?? "company name",
-          collectionCenterName: data.centerName ?? "Collection Center",
+          collectionCenterName: data.centerName ?? "Collection Centre",
         });
       } catch (detailsError) {
         console.error("Error fetching user details:", detailsError);
@@ -515,7 +516,7 @@ const NewReport: React.FC<NewReportProps> = ({ navigation }) => {
           <div>
             <div>&nbsp;</div>
             <div>${t("NewReport.Centre")} ${
-      details.collectionCenterName || "Collection Center"
+      details.collectionCenterName || "Collection Centre"
     }</div>
           </div>
         </div>
@@ -600,7 +601,7 @@ const NewReport: React.FC<NewReportProps> = ({ navigation }) => {
 
       if (Platform.OS === "android") {
         // Create a temporary file in cache
-        tempFilePath = `${FileSystem.cacheDirectory}${fileName}`;
+        tempFilePath = `${(FileSystem as any).cacheDirectory}${fileName}`;
 
         // Copy the PDF to the temp location
         await FileSystem.copyAsync({
@@ -669,7 +670,7 @@ const NewReport: React.FC<NewReportProps> = ({ navigation }) => {
 
       // Create a new file with the desired name
       const fileInfo = await FileSystem.getInfoAsync(uri);
-      const newUri = `${FileSystem.cacheDirectory}${fileName}`;
+      const newUri = `${(FileSystem as any).cacheDirectory}${fileName}`;
 
       try {
         // Copy the file to a new location with the desired name
@@ -767,7 +768,7 @@ const NewReport: React.FC<NewReportProps> = ({ navigation }) => {
           </Text>
           <Text>
             <Text className="">{t("NewReport.Centre")}</Text>{" "}
-            {details?.collectionCenterName || "Collection Center"}
+            {details?.collectionCenterName || "Collection Centre"}
           </Text>
         </View>
       </View>

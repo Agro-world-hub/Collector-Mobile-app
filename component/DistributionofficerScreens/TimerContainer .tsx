@@ -94,7 +94,7 @@ const Timer: React.FC<TimerProps> = ({
 }) => {
   const [timeLeft, setTimeLeft] = useState<number>(minutes * 60 * 1000);
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+const intervalRef = useRef<number | null>(null);
   const startTimeRef = useRef<number | null>(null);
   const pausedTimeRef = useRef<number>(minutes * 60 * 1000);
   const { t } = useTranslation();
@@ -149,10 +149,10 @@ const Timer: React.FC<TimerProps> = ({
         
         setTimeLeft(newTimeLeft);
         
-        if (newTimeLeft <= 0) {
-          clearInterval(intervalRef.current as NodeJS.Timeout);
-          intervalRef.current = null;
-        }
+          if (newTimeLeft <= 0 && intervalRef.current) {
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
+  }
       }, 16); 
     } else if (!running && timeLeft > 0) {
     

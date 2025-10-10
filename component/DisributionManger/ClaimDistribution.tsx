@@ -24,8 +24,6 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { useTranslation } from "react-i18next";
 import DropDownPicker from "react-native-dropdown-picker";
 import i18n from "@/i18n/i18n";
-import { set } from "lodash";
-import { useFocusEffect } from "expo-router";
 import NetInfo from "@react-native-community/netinfo";
 
 interface OfficerDetails {

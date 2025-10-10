@@ -17,21 +17,14 @@ import { RootStackParamList } from "../types";
 import CountryPicker, { Country, CountryCode } from "react-native-country-picker-modal";
 import axios from "axios";
 import {environment }from '@/environment/environment';
-import { Picker } from "@react-native-picker/picker";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
 import { useTranslation } from "react-i18next";
 import bankNames from "../../assets/jsons/banks.json";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import LottieView from "lottie-react-native"; // Import LottieView
 import { ActivityIndicator } from "react-native";
 import { KeyboardAvoidingView } from "react-native";
 import { Platform } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { SelectList } from "react-native-dropdown-select-list";
-import { set } from "lodash";
 const api = axios.create({
   baseURL: environment.API_BASE_URL,
 });
