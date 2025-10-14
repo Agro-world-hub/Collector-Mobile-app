@@ -91,6 +91,7 @@
     "Please enter a valid amount.":"தயவுசெய்து சரியான தொகையை உள்ளிடவும்.",
     "You cannot transfer more than":"நீங்கள் இதற்கு மேல் மாற்ற முடியாது",
     "Target transferred successfully.":"இலக்கு வெற்றிகரமாக மாற்றப்பட்டது.",
+     "Target received successfully.":"இலக்கு வெற்றிகரமாகப் பெறப்பட்டது.",
     "Failed to transfer target.":"இலக்கை மாற்ற முடியவில்லை.",
     "An error occurred while transferring the target.":"இலக்கை மாற்றும்போது தவறு ஏற்பட்டது.",
     "No target data found for selected officer.":"தேர்ந்தெடுக்கப்பட்ட அதிகாரிக்கான இலக்கு தரவு எதுவும் கிடைக்கவில்லை.",
@@ -292,7 +293,8 @@
     "RegisterFarmer":"விவசாயியை பதிவு செய்யுங்கள்",
     "Result Found":"முடிவுகள் கிடைத்தன:",
     "Set QR Code":"QR குறியீட்டை அமைக்கவும்",
-    "This Farmer does not have the QR" : "இந்த விவசாயிக்கு QR குறியீடு இல்லை."
+    "This Farmer does not have the QR" : "இந்த விவசாயிக்கு QR குறியீடு இல்லை.",
+    "Enter Valide NIC":"செல்லுபடியாகும் NIC ஐ உள்ளிடவும்"
   },
   "UnregisteredFarmerDetails":{
     "LNG": "ta",
@@ -320,7 +322,17 @@
     "InvalidNIC":"NIC 12 இலக்கங்கள் அல்லது 9 இலக்கங்களைத் தொடர்ந்து V அல்லது v ஐக் கொண்டிருக்க வேண்டும்.",
     "OnlyDigitsAllowed":"இலக்கங்கள் மட்டுமே அனுமதிக்கப்படும்",
     "MustStartWith7":"தவறான தொலைபேசி எண். வடிவமைப்பு 7 உடன் தொடங்க வேண்டும் (e.g., 7XXXXXXXX)",
-    "InvalidPhoneLength":"தவறான தொலைபேசி எண்"
+    "InvalidPhoneLength":"தவறான தொலைபேசி எண்",
+      "EnterFirstName": "தயவுசெய்து முதல் பெயரை உள்ளிடவும்.",
+    "EnterLastName": "கடைசி பெயரை உள்ளிடவும்.", 
+    "SelectLanguage": "விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்.",
+    "EnterNIC": "தயவுசெய்து NIC எண்ணை உள்ளிடவும்.",
+    "EnterPhone": "தொலைபேசி எண்ணை உள்ளிடவும்.",
+    "SelectDistrict": "மாவட்டத்தைத் தேர்ந்தெடுக்கவும்.",
+    "EnterAccountNumber": "கணக்கு எண்ணை உள்ளிடவும்.",
+    "EnterAccountName": "கணக்கு வைத்திருப்பவரின் பெயரை உள்ளிடவும்.",
+    "SelectBank": "தயவுசெய்து வங்கியைத் தேர்ந்தெடுக்கவும்",
+    "SelectBranch": "தயவுசெய்து கிளையைத் தேர்ந்தெடுக்கவும்."
   },
   "PriceChart":{
     "LNG": "ta",
@@ -347,7 +359,13 @@
     "invalidOTP":"சரிபார்ப்பு குறியீடு தவறானது",
     "completeOTP":"முழு சரிபார்ப்புக் குறியீட்டை உள்ளிடவும்.",
     "Resend in": "மீண்டும் அனுப்பு",
-    "Resend again": "மீண்டும் அனுப்பவும்"
+    "Resend again": "மீண்டும் அனுப்பவும்",
+     "OTPExpired": "உங்கள் OTP காலாவதியாகிவிட்டது. புதியதைக் கோரவும்.",
+    "OTPExpiredWarning": "OTP காலாவதியாகிவிட்டது. புதிய குறியீட்டைக் கோரவும்.",
+    "OTPExpiredOrInvalid": "OTP தவறானது அல்லது காலாவதியானது. புதியதைக் கோர விரும்புகிறீர்களா?",
+    "ResendOTP": "OTP-ஐ மீண்டும் அனுப்பு",
+    "Cancel": "ரத்துசெய்",
+    "TryAgain": "மீண்டும் முயற்சிக்கவும்"
   },
   "FarmerQr":{
     "LNG": "ta",

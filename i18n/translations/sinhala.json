@@ -91,6 +91,7 @@
     "Please enter a valid amount.":"කරුණාකර වලංගු මුදලක් ඇතුළත් කරන්න.",
     "You cannot transfer more than":"ඔබට මීට වඩා ලබා දිය නොහැක",
     "Target transferred successfully.":"ඉලක්කය සාර්ථකව මාරු කරන ලදී",
+     "Target received successfully.":"ඉලක්කය සාර්ථකව ලැබුණි.",
     "Failed to transfer target.":"ඉලක්කය මාරු කරන ලදී",
     "An error occurred while transferring the target.":"ඉලක්කය මාරු කිරීමේදි ගැටළුවක් ඇති විය.",
     "No target data found for selected officer.":"තෝරාගත් නිලධාරියා සඳහා ඉලක්ක දත්ත හමු නොවීය.",
@@ -292,7 +293,8 @@
     "RegisterFarmer":"ගොවියා ලියාපදිංචි කරන්න",
     "Result Found":"හමු වූ ප්‍රතිඵල:",
     "Set QR Code":"QR කේතයක් සකසන්න",
-    "This Farmer does not have the QR" : "මෙම ගොවියාට QR කේතයක් නොමැත"
+    "This Farmer does not have the QR" : "මෙම ගොවියාට QR කේතයක් නොමැත",
+    "Enter Valide NIC":"වලංගු ජාතික හැඳුනුම්පත ඇතුළත් කරන්න"
   },
   "UnregisteredFarmerDetails":{
    "LNG": "si",
@@ -320,7 +322,17 @@
       "InvalidNIC":"NIC එක ඉලක්කම් 12 කින් හෝ ඉලක්කම් 9 කින් පසුව V ඇතුල් කල යුතුය",
       "OnlyDigitsAllowed":"ඉලක්කම් සඳහා පමණක් අවසර ඇත",
       "MustStartWith7":"අවලංගු දුරකථන අංකයකි. ආකෘතිය 7 න් ආරම්භ විය යුතුය (උදා: 7XXXXXXXXX)",
-      "InvalidPhoneLength":"වලංගු නොවන දුරකථන අංක දිග"
+      "InvalidPhoneLength":"වලංගු නොවන දුරකථන අංක දිග",
+        "EnterFirstName": "කරුණාකර මුල් නම ඇතුළත් කරන්න.",
+    "EnterLastName": "කරුණාකර අවසන් නම ඇතුළත් කරන්න.", 
+    "SelectLanguage": "කරුණාකර කැමති භාෂාව තෝරන්න.",
+    "EnterNIC": "කරුණාකර ජාතික හැඳුනුම්පත් අංකය ඇතුළත් කරන්න.",
+    "EnterPhone": "කරුණාකර දුරකථන අංකය ඇතුළත් කරන්න.",
+    "SelectDistrict": "කරුණාකර දිස්ත්‍රික්කය තෝරන්න",
+    "EnterAccountNumber": "කරුණාකර ගිණුම් අංකය ඇතුළත් කරන්න.",
+    "EnterAccountName": "කරුණාකර ගිණුම් හිමියාගේ නම ඇතුළත් කරන්න.",
+    "SelectBank": "කරුණාකර බැංකුව තෝරන්න",
+    "SelectBranch": "කරුණාකර ශාඛාව තෝරන්න"
   },
   "PriceChart":{
     "LNG": "si",
@@ -347,7 +359,13 @@
     "invalidOTP":"සත්‍යාපන කේතය වැරදියි",
     "completeOTP":"කරුණාකර සම්පූර්ණ සත්‍යාපන කේතය ඇතුළත් කරන්න.",
     "Resend in": "නැවත යැවීමට",
-    "Resend again": "නැවත යවන්න"
+    "Resend again": "නැවත යවන්න",
+     "OTPExpired": "ඔබගේ OTP කල් ඉකුත් වී ඇත. කරුණාකර අලුත් එකක් ඉල්ලන්න.",
+    "OTPExpiredWarning": "OTP කල් ඉකුත් වී ඇත. කරුණාකර නව කේතයක් ඉල්ලන්න.",
+    "OTPExpiredOrInvalid": "OTP අවලංගුයි හෝ කල් ඉකුත් වී ඇත. ඔබ අලුත් එකක් ඉල්ලා සිටීමට කැමතිද?",
+    "ResendOTP": "OTP නැවත යවන්න",
+    "Cancel": "අවලංගු කරන්න",
+    "TryAgain": "නැවත උත්සාහ කරන්න"
   },
   "FarmerQr":{
     "LNG": "si",

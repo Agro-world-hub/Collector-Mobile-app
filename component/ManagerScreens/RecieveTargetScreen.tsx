@@ -281,7 +281,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
       if (response.status === 200) {
         Alert.alert(
           t("Error.Success"),
-          t("Error.Target transferred successfully.")
+          t("Error.Target received successfully.")
         );
         navigation.goBack();
       } else {
