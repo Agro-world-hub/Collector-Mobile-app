@@ -153,7 +153,8 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation, rou
 const [successCount, setSuccessCount] = useState(0);
 const MAX_SELECTED_ORDERS = 5;
 const [selectionLimitReached, setSelectionLimitReached] = useState(false);
-  
+    const [selectAll, setSelectAll] = useState(false);
+
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
@@ -795,7 +796,31 @@ const handleCheckboxToggle = (itemId: string) => {
       </TouchableOpacity>
     );
   };
+const handleSelectAll = () => {
+  if (selectAll) {
+    // Unselect all
+    setSelectedItems([]);
+    setSelectAll(false);
+  } else {
+    // Select all
+    const allIds = displayedData.map(item => item.id);
+    setSelectedItems(allIds);
+    setSelectAll(true);
+  }
+};
 
+    const renderCheckboxForSelectAll = () => {    
+    return (
+     <TouchableOpacity 
+      className="w-5 h-5 border-2 border-white rounded flex items-center justify-center"
+      onPress={handleSelectAll} 
+    >
+      {selectAll && (
+        <View className="w-3 h-3 bg-white rounded" />
+      )}
+    </TouchableOpacity>
+    );
+  };
 
   const handleCorrectIconPress = () => {
     if (selectedItems.length > 0) {
@@ -1660,6 +1685,17 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     </View>
   ) : (
     <View className="flex-row bg-[#980775] py-3">
+      {/* <Text 
+                  style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      className="flex-1 text-center text-white font-bold">{selectedToggle === 'ToDo' ? t("TargetOrderScreen.No") : ''}</Text> */}
+
+      {selectedToggle === 'ToDo' ? (
       <Text 
                   style={[
   i18n.language === "si"
@@ -1668,7 +1704,14 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     ? { fontSize: 12 }
     : { fontSize: 15 }
 ]}
-      className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
+      className="flex-1 text-center text-white font-bold"> {t("TargetOrderScreen.No")}</Text>
+      ) : 
+      <>
+      <View className="flex-1 items-center justify-center -ml-1">
+    {renderCheckboxForSelectAll()}
+      </View>
+  
+      </>      }
       <Text 
                   style={[
   i18n.language === "si"
