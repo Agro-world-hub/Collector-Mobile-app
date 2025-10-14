@@ -28,8 +28,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 import { useFocusEffect } from "@react-navigation/native";
 import i18n from "@/i18n/i18n";
-
-
+import DropDownPicker from 'react-native-dropdown-picker';
 
 type AddOfficerBasicDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -43,11 +42,11 @@ interface AddOfficerProp {
   route: AddOfficerRouteProp;
 }
 
-const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
+const AddOfficerBasicDetails: React.FC<AddOfficerProp> = ({
   route,
   navigation,
 }) => {
-  const { jobRolle} = route.params;
+  const { jobRolle } = route.params;
   const [type, setType] = useState<"Permanent" | "Temporary">("Permanent");
   const [preferredLanguages, setPreferredLanguages] = useState({
     Sinhala: false,
@@ -55,11 +54,9 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
     Tamil: false,
   });
   const [jobRole, setJobRole] = useState<string>("Collection Officer");
-//   const [jobRole, setJobRole] = useState<string>(String(jobRolle));
-    console.log(jobRole)
 
-  const [phoneCode1, setPhoneCode1] = useState<string>("+94"); // Default Sri Lanka calling code
-  const [phoneCode2, setPhoneCode2] = useState<string>("+94"); // Default Sri Lanka calling code
+  const [phoneCode1, setPhoneCode1] = useState<string>("+94");
+  const [phoneCode2, setPhoneCode2] = useState<string>("+94");
   const [phoneNumber1, setPhoneNumber1] = useState("");
   const [phoneNumber2, setPhoneNumber2] = useState("");
   const { t } = useTranslation();
@@ -85,74 +82,106 @@ const AddOfficerBasicDetails: React.FC <AddOfficerProp> = ({
     phoneNumber2: "",
   });
 
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+ 
+
+// Use useMemo to create stable country items with guaranteed unique keys
+const countryItems1 = React.useMemo(
+  () =>
+    countryCodes.map((country, index) => ({
+      label: `${country.code} (${country.dial_code})`,
+      value: country.dial_code,
+      key: `dropdown1-${country.code}-${country.dial_code}-${index}`,
+    })),
+  []
+);
+
+const countryItems2 = React.useMemo(
+  () =>
+    countryCodes.map((country, index) => ({
+      label: `${country.code} (${country.dial_code})`,
+      value: country.dial_code,
+      key: `dropdown2-${country.code}-${country.dial_code}-${index}`,
+    })),
+  []
+);
+
+
+  
+
   const toggleLanguage = (language: keyof typeof preferredLanguages) => {
+    clearFieldError('preferredLanguages');
     setPreferredLanguages((prev) => ({
       ...prev,
       [language]: !prev[language],
     }));
   };
 
+  const clearFieldError = (fieldName: string) => {
+    setFieldErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors[fieldName];
+      return newErrors;
+    });
+  };
+
   const nicRegex = /^\d{9}[Vv]?$|^\d{10}$/;
 
   const validateNicNumber = (input: string) =>
-  /^[0-9]{9}V$|^[0-9]{12}$/.test(input);
+    /^[0-9]{9}V$|^[0-9]{12}$/.test(input);
 
-const handleNicNumberChange = (input: string) => {
-  // Block special characters and letters except V - only allow numbers and V/v
-  const filteredInput = input.replace(/[^0-9Vv]/g, '');
-  
-  // Normalize 'v' to uppercase 'V'
-  const normalizedInput = filteredInput.replace(/[vV]/g, "V");
+  const handleNicNumberChange = (input: string) => {
+    clearFieldError('nicNumber');
+    const filteredInput = input.replace(/[^0-9Vv]/g, '');
+    const normalizedInput = filteredInput.replace(/[vV]/g, "V");
 
-  setFormData({ ...formData, nicNumber: normalizedInput });
+    setFormData({ ...formData, nicNumber: normalizedInput });
 
-  // Validate NIC format
-  if (normalizedInput.length === 0) {
-    setError3(""); // Clear error when empty
-  } else if (!validateNicNumber(normalizedInput)) {
-    setError3(
-      t("Error.NIC Number must be 9 digits followed by 'V' or 12 digits.")
-    );
-  } else {
-    setError3("");
-    checkNicExists(normalizedInput);
-  }
-};
-
-const checkNicExists = async (nic: string) => {
-  if (!validateNicNumber(nic)) return;
-  if (nic.length === 0) return;
-  
-  try {
-    setIsValidating(true);
-    const token = await AsyncStorage.getItem("token");
-
-    const response = await axios.get(
-      `${environment.API_BASE_URL}api/collection-manager/driver/check-nic/${nic}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    if (response.data.exists) {
-      setError3(t("Error.This NIC is already registered in the system."));
+    if (normalizedInput.length === 0) {
+      setError3("");
+    } else if (!validateNicNumber(normalizedInput)) {
+      setError3(
+        t("Error.NIC Number must be 9 digits followed by 'V' or 12 digits.")
+      );
     } else {
       setError3("");
+      checkNicExists(normalizedInput);
     }
-  } catch (error: any) {
-    console.error("Error checking NIC:", error);
+  };
 
-    if (error.response) {
-      console.error("Status:", error.response.status);
-      console.error("Data:", error.response.data);
+  const checkNicExists = async (nic: string) => {
+    if (!validateNicNumber(nic)) return;
+    if (nic.length === 0) return;
+
+    try {
+      setIsValidating(true);
+      const token = await AsyncStorage.getItem("token");
+
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/collection-manager/driver/check-nic/${nic}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.exists) {
+        setError3(t("Error.This NIC is already registered in the system."));
+      } else {
+        setError3("");
+      }
+    } catch (error: any) {
+      console.error("Error checking NIC:", error);
+
+      if (error.response) {
+        console.error("Status:", error.response.status);
+        console.error("Data:", error.response.data);
+      }
+    } finally {
+      setIsValidating(false);
     }
-  } finally {
-    setIsValidating(false);
-  }
-};
-
+  };
 
   const fetchEmpId = async (role: string) => {
     console.log("Fetching empId for role:", role);
@@ -163,36 +192,30 @@ const checkNicExists = async (nic: string) => {
       if (response.data.status) {
         setFormData((prev) => ({
           ...prev,
-          userId: response.data.result.empId, // Automatically set empId
+          userId: response.data.result.empId,
         }));
       }
-     // console.log("EmpId:", response.data.result.empId);
     } catch (error) {
       console.error("Error fetching empId:", error);
       Alert.alert(t("Error.error"), t("Error.Failed to fetch empid."));
     }
   };
 
-
-    useFocusEffect(
+  useFocusEffect(
     useCallback(() => {
-      fetchEmpId(jobRole); 
+      fetchEmpId(jobRole);
     }, [jobRole])
   );
 
   useFocusEffect(
- 
     useCallback(() => {
-
- setJobRole(String(jobRolle));
-      fetchEmpId(String(jobRolle)); 
-       return () => {
-      //  console.log('This route is now unfocused.');
-      };
+      setJobRole(String(jobRolle));
+      fetchEmpId(String(jobRolle));
+      return () => {};
     }, [])
   );
+
   const handleImagePick = async () => {
-    
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissionResult.granted === false) {
@@ -203,16 +226,15 @@ const checkNicExists = async (nic: string) => {
       return;
     }
 
-    // Pick the image
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      base64: true, 
+      base64: true,
     });
 
     if (!result.canceled) {
       if (result.assets && result.assets.length > 0) {
         if (result.assets[0].base64) {
-          setSelectedImage(result.assets[0].base64); // Set base64 image data
+          setSelectedImage(result.assets[0].base64);
         }
       }
     }
@@ -226,41 +248,57 @@ const checkNicExists = async (nic: string) => {
     }
   };
 
+  const validateFields = () => {
+    const errors: Record<string, string> = {};
+
+    if (!formData.firstNameEnglish.trim()) {
+      errors.firstNameEnglish = t("Error.First name in English is required");
+    }
+    if (!formData.lastNameEnglish.trim()) {
+      errors.lastNameEnglish = t("Error.Last name in English is required");
+    }
+    if (!phoneNumber1.trim()) {
+      errors.phoneNumber1 = t("Error.Phone number is required");
+    }
+    if (!formData.nicNumber.trim()) {
+      errors.nicNumber = t("Error.NIC number is required");
+    }
+    if (!formData.email.trim()) {
+      errors.email = t("Error.Email is required");
+    }
+    if (!jobRole) {
+      errors.jobRole = t("Error.Job role is required");
+    }
+    if (Object.values(preferredLanguages).every((val) => !val)) {
+      errors.preferredLanguages = t("Error.Please select at least one preferred language");
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleNext = () => {
     console.log("jobRole", preferredLanguages);
+    
+    // Check for existing validation errors
     if (error1) {
-      Alert.alert(t("Error.error"), error1);
       return;
     } else if (error2 && phoneNumber2.length > 0) {
-      Alert.alert(t("Error.error"), error2);
       return;
     } else if (errorEmail) {
-      Alert.alert(t("Error.error"), errorEmail);
       return;
     } else if (error3) {
-      Alert.alert(t("Error.error"), error3);
       return;
     }
-    if (
-    
-      !formData.firstNameEnglish ||
-      !formData.lastNameEnglish ||
-      !phoneNumber1 || // Ensure phone number 1 is provided
-      !formData.nicNumber ||
-      !formData.email ||
-      !jobRole ||
-      !type ||
-      Object.values(preferredLanguages).every((val) => !val)
-    ) {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.Please fill in all required fields.")
-      );
+
+    // Validate all required fields
+    if (!validateFields()) {
       return;
     }
+
     try {
       setIsValidating(true);
-      
+
       const updatedFormData = {
         ...formData,
         phoneCode1: phoneCode1,
@@ -269,23 +307,13 @@ const checkNicExists = async (nic: string) => {
         phoneNumber2: phoneNumber2,
       };
 
-      // Set the profileImage to an empty string if no image was picked
       updatedFormData.profileImage = selectedImage || "";
-
-      // console.log(
-      //   "Form Data:",
-      //   updatedFormData,
-      //   preferredLanguages,
-      //   type,
-      //   jobRole
-      // );
 
       const prefixedUserId =
         jobRole === "Collection Officer"
           ? `COO${formData.userId}`
           : `DIO${formData.userId}`;
 
-      // Navigate to the next screen with the updated data
       navigation.navigate("AddOfficerAddressDetails", {
         formData: { ...updatedFormData },
         type,
@@ -304,327 +332,298 @@ const checkNicExists = async (nic: string) => {
   const [error2, setError2] = useState("");
   const [error3, setError3] = useState("");
   const [errorEmail, setErrorEmail] = useState("");
-
-
- 
+  const [open1, setOpen1] = useState(false);
+const [open2, setOpen2] = useState(false);
+const [countryItems, setCountryItems] = useState(
+  countryCodes.map((country) => ({
+    label: `${country.code} (${country.dial_code})`,
+    value: country.dial_code,
+  }))
+);
 
   const jobRoles = [
     { key: "2", value: "Collection Officer" },
-    // Add more roles as necessary
   ];
 
   const handleEnglishNameChange = (text: string, fieldName: string) => {
+    clearFieldError(fieldName);
+    let filteredText = text.replace(/[^a-zA-Z\s]/g, '');
 
-  let filteredText = text.replace(/[^a-zA-Z\s]/g, '');
-  
+    if (filteredText.startsWith(' ')) {
+      filteredText = filteredText.trimStart();
+    }
 
-  if (filteredText.startsWith(' ')) {
-    filteredText = filteredText.trimStart();
-  }
-  
+    const capitalizedText = filteredText
+      .toLowerCase()
+      .split(' ')
+      .map(word => {
+        if (word.length > 0) {
+          return word.charAt(0).toUpperCase() + word.slice(1);
+        }
+        return word;
+      })
+      .join(' ');
 
-  const capitalizedText = filteredText
-    .toLowerCase()
-    .split(' ')
-    .map(word => {
-      if (word.length > 0) {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      }
-      return word;
-    })
-    .join(' ');
-  
-  setFormData({ ...formData, [fieldName]: capitalizedText });
-};
+    setFormData({ ...formData, [fieldName]: capitalizedText });
+  };
 
+  const handleSinhalaNameChange = (text: string, fieldName: string) => {
+    let filteredText = text;
 
+    if (filteredText.startsWith(' ')) {
+      filteredText = filteredText.trimStart();
+    }
 
-const handleSinhalaNameChange = (text: string, fieldName: string) => {
+    setFormData({ ...formData, [fieldName]: filteredText });
+  };
 
-  let filteredText = text;
-  
+  const handleTamilNameChange = (text: string, fieldName: string) => {
+    let filteredText = text;
 
-  if (filteredText.startsWith(' ')) {
-    filteredText = filteredText.trimStart();
-  }
-  
-  setFormData({ ...formData, [fieldName]: filteredText });
-};
+    if (filteredText.startsWith(' ')) {
+      filteredText = filteredText.trimStart();
+    }
 
+    setFormData({ ...formData, [fieldName]: filteredText });
+  };
 
+  const validatePhoneNumber = (input: string) => {
+    return /^7[0-9]{8}$/.test(input);
+  };
 
-const handleTamilNameChange = (text: string, fieldName: string) => {
- 
-  let filteredText = text;
-  
-  
-  if (filteredText.startsWith(' ')) {
-    filteredText = filteredText.trimStart();
-  }
-  
-  setFormData({ ...formData, [fieldName]: filteredText });
-};
+  const handlePhoneNumber1Change = (input: string) => {
+    clearFieldError('phoneNumber1');
+    let numbersOnly = input.replace(/[^0-9]/g, '');
 
+    if (numbersOnly.startsWith("0")) {
+      numbersOnly = numbersOnly.replace(/^0+/, "");
+    }
 
-const validatePhoneNumber = (input: string) => {
-  return /^7[0-9]{8}$/.test(input); 
-};
+    setPhoneNumber1(numbersOnly);
 
-
-const handlePhoneNumber1Change = (input: string) => {
- 
-  let numbersOnly = input.replace(/[^0-9]/g, '');
-  
-  
-  if (numbersOnly.startsWith("0")) {
-    numbersOnly = numbersOnly.replace(/^0+/, "");
-  }
-  
-  setPhoneNumber1(numbersOnly);
-  
- 
-  if (numbersOnly.length === 0) {
-    setError1(""); 
-  } else if (!numbersOnly.startsWith('7')) {
-    setError1(t("Error.Invalid phone number"));
-  } else if (numbersOnly.length < 9) {
-    setError1(t("Error.Phone number must be 9 digits long"));
-  } else if (validatePhoneNumber(numbersOnly)) {
-    setError1("");
-    checkPhoneExists(numbersOnly);
-  } else {
-    setError1(t("Error.Invalid phone number"));
-  }
-};
-
-const checkPhoneExists = async (phoneNumber: string) => {
-  if (!validatePhoneNumber(phoneNumber)) return;
-
-  try {
-    setIsValidating(true);
-    const token = await AsyncStorage.getItem("token");
-    const response = await axios.get(
-      `${environment.API_BASE_URL}api/collection-manager/driver/check-phone/${phoneCode1}${phoneNumber}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    if (response.data.exists) {
-      setError1(
-        t("Error.This phone number is already registered in the system.")
-      );
-    } else {
+    if (numbersOnly.length === 0) {
       setError1("");
-    }
-  } catch (error) {
-    console.error("Error checking phone number:", error);
-  } finally {
-    setIsValidating(false);
-  }
-};
-
-
-const handlePhoneNumber2Change = (input: string) => {
-
-  let numbersOnly = input.replace(/[^0-9]/g, '');
-  
-
-  if (numbersOnly.startsWith("0")) {
-    numbersOnly = numbersOnly.replace(/^0+/, "");
-  }
-  
-  setPhoneNumber2(numbersOnly);
-  
-
-  if (numbersOnly.length === 0) {
-    setError2(""); 
-  } else if (!numbersOnly.startsWith('7')) {
-    setError2(t("Error.Invalid phone number"));
-  } else if (numbersOnly.length < 9) {
-    setError2(t("Error.Phone number must be 9 digits long"));
-  } else if (validatePhoneNumber(numbersOnly)) {
-    setError2("");
-    checkPhone2Exists(numbersOnly);
-  } else {
-    setError2(t("Error.Invalid phone number"));
-  }
-};
-
-const checkPhone2Exists = async (phoneNumber: string) => {
-  if (!validatePhoneNumber(phoneNumber)) return;
-
-  try {
-    setIsValidating(true);
-    const token = await AsyncStorage.getItem("token");
-    const response = await axios.get(
-      `${environment.API_BASE_URL}api/collection-manager/driver/check-phone/${phoneCode2}${phoneNumber}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    if (response.data.exists) {
-      setError2(
-        t("Error.This phone number is already registered in the system.")
-      );
+    } else if (!numbersOnly.startsWith('7')) {
+      setError1(t("Error.Invalid phone number"));
+    } else if (numbersOnly.length < 9) {
+      setError1(t("Error.Phone number must be 9 digits long"));
+    } else if (validatePhoneNumber(numbersOnly)) {
+      setError1("");
+      checkPhoneExists(numbersOnly);
     } else {
-      setError2("");
+      setError1(t("Error.Invalid phone number"));
     }
-  } catch (error) {
-    console.error("Error checking phone number 2:", error);
-  } finally {
-    setIsValidating(false);
-  }
-};
+  };
 
-const validateEmail = (email: string): boolean => {
+  const checkPhoneExists = async (phoneNumber: string) => {
+    if (!validatePhoneNumber(phoneNumber)) return;
 
-  const generalEmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  
-  if (!generalEmailRegex.test(email)) {
-    return false;
-  }
-  
+    try {
+      setIsValidating(true);
+      const token = await AsyncStorage.getItem("token");
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/collection-manager/driver/check-phone/${phoneCode1}${phoneNumber}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-  const emailLower = email.toLowerCase();
-  const [localPart, domain] = emailLower.split('@');
-  
+      if (response.data.exists) {
+        setError1(
+          t("Error.This phone number is already registered in the system.")
+        );
+      } else {
+        setError1("");
+      }
+    } catch (error) {
+      console.error("Error checking phone number:", error);
+    } finally {
+      setIsValidating(false);
+    }
+  };
 
-  const allowedSpecificDomains = ['gmail.com', 'googlemail.com', 'yahoo.com'];
-  const allowedTLDs = ['.com', '.gov', '.lk'];
-  
+  const handlePhoneNumber2Change = (input: string) => {
+    let numbersOnly = input.replace(/[^0-9]/g, '');
 
-  if (domain === 'gmail.com' || domain === 'googlemail.com') {
-    return validateGmailLocalPart(localPart);
-  }
-  
+    if (numbersOnly.startsWith("0")) {
+      numbersOnly = numbersOnly.replace(/^0+/, "");
+    }
 
-  if (domain === 'yahoo.com') {
-    return true;
-  }
-  
+    setPhoneNumber2(numbersOnly);
 
-  for (const tld of allowedTLDs) {
-    if (domain.endsWith(tld)) {
+    if (numbersOnly.length === 0) {
+      setError2("");
+    } else if (!numbersOnly.startsWith('7')) {
+      setError2(t("Error.Invalid phone number"));
+    } else if (numbersOnly.length < 9) {
+      setError2(t("Error.Phone number must be 9 digits long"));
+    } else if (validatePhoneNumber(numbersOnly)) {
+      setError2("");
+      checkPhone2Exists(numbersOnly);
+    } else {
+      setError2(t("Error.Invalid phone number"));
+    }
+  };
+
+  const checkPhone2Exists = async (phoneNumber: string) => {
+    if (!validatePhoneNumber(phoneNumber)) return;
+
+    try {
+      setIsValidating(true);
+      const token = await AsyncStorage.getItem("token");
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/collection-manager/driver/check-phone/${phoneCode2}${phoneNumber}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.exists) {
+        setError2(
+          t("Error.This phone number is already registered in the system.")
+        );
+      } else {
+        setError2("");
+      }
+    } catch (error) {
+      console.error("Error checking phone number 2:", error);
+    } finally {
+      setIsValidating(false);
+    }
+  };
+
+  const validateEmail = (email: string): boolean => {
+    const generalEmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!generalEmailRegex.test(email)) {
+      return false;
+    }
+
+    const emailLower = email.toLowerCase();
+    const [localPart, domain] = emailLower.split('@');
+
+    const allowedSpecificDomains = ['gmail.com', 'googlemail.com', 'yahoo.com'];
+    const allowedTLDs = ['.com', '.gov', '.lk'];
+
+    if (domain === 'gmail.com' || domain === 'googlemail.com') {
+      return validateGmailLocalPart(localPart);
+    }
+
+    if (domain === 'yahoo.com') {
       return true;
     }
-  }
-  
-  return false;
-};
 
+    for (const tld of allowedTLDs) {
+      if (domain.endsWith(tld)) {
+        return true;
+      }
+    }
 
-const validateGmailLocalPart = (localPart: string): boolean => {
- 
-  const validCharsRegex = /^[a-zA-Z0-9.+]+$/;
-  if (!validCharsRegex.test(localPart)) {
     return false;
-  }
-  
+  };
 
-  if (localPart.startsWith('.') || localPart.endsWith('.')) {
-    return false;
-  }
-  
+  const validateGmailLocalPart = (localPart: string): boolean => {
+    const validCharsRegex = /^[a-zA-Z0-9.+]+$/;
+    if (!validCharsRegex.test(localPart)) {
+      return false;
+    }
 
-  if (localPart.includes('..')) {
-    return false;
-  }
-  
+    if (localPart.startsWith('.') || localPart.endsWith('.')) {
+      return false;
+    }
 
-  if (localPart.length === 0) {
-    return false;
-  }
-  
-  return true;
-};
+    if (localPart.includes('..')) {
+      return false;
+    }
 
+    if (localPart.length === 0) {
+      return false;
+    }
 
-const handleEmailChange = (input: string) => {
-  const trimmedInput = input.trim();
-  setFormData({ ...formData, email: trimmedInput });
+    return true;
+  };
 
-  if (!trimmedInput) {
-    setErrorEmail(t("Error.Email is required"));
-    return;
-  }
+  const handleEmailChange = (input: string) => {
+    clearFieldError('email');
+    const trimmedInput = input.trim();
+    setFormData({ ...formData, email: trimmedInput });
 
-  if (!validateEmail(trimmedInput)) {
-   
-    const emailLower = trimmedInput.toLowerCase();
-    const domain = emailLower.split('@')[1];
-    
-    if (domain === 'gmail.com' || domain === 'googlemail.com') {
-      setErrorEmail(
-        t("Error.Invalid Gmail address")
-      );
-    } else {
+    if (!trimmedInput) {
+      setErrorEmail(t("Error.Email is required"));
+      return;
+    }
+
+    if (!validateEmail(trimmedInput)) {
+      const emailLower = trimmedInput.toLowerCase();
+      const domain = emailLower.split('@')[1];
+
+      if (domain === 'gmail.com' || domain === 'googlemail.com') {
+        setErrorEmail(
+          t("Error.Invalid Gmail address")
+        );
+      } else {
+        setErrorEmail(
+          t("Error.Invalid email address Example")
+        );
+      }
+      return;
+    }
+
+    setErrorEmail("");
+    checkEmailExists(trimmedInput);
+  };
+
+  const checkEmailExists = async (email: string) => {
+    if (!validateEmail(email)) {
       setErrorEmail(
         t("Error.Invalid email address Example")
       );
+      return;
     }
-    return;
-  }
 
+    try {
+      setIsValidating(true);
+      const token = await AsyncStorage.getItem("token");
+      console.log("Checking email existence:", email);
 
-  setErrorEmail("");
-  checkEmailExists(trimmedInput);
-};
-
-const checkEmailExists = async (email: string) => {
-
-  if (!validateEmail(email)) {
-    setErrorEmail(
-       t("Error.Invalid email address Example")
-    );
-    return;
-  }
-
-  try {
-    setIsValidating(true);
-    const token = await AsyncStorage.getItem("token");
-    console.log("Checking email existence:", email);
-    
-    const response = await axios.get(
-      `${environment.API_BASE_URL}api/collection-manager/driver/check-email/${email}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    
-    if (response.data.exists) {
-      setErrorEmail(
-        t("Error.This Email is already registered in the system.")
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/collection-manager/driver/check-email/${email}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-    } else {
-      setErrorEmail("");
-    }
-  } catch (error: any) {
-    console.error("Error checking Email:", error);
-    if (error.response) {
-      console.error("Status:", error.response.status);
-      console.error("Data:", error.response.data);
-    }
-  
-    setErrorEmail(t("Error.somethingWentWrong"));
-  } finally {
-    setIsValidating(false);
-  }
-};
 
+      if (response.data.exists) {
+        setErrorEmail(
+          t("Error.This Email is already registered in the system.")
+        );
+      } else {
+        setErrorEmail("");
+      }
+    } catch (error: any) {
+      console.error("Error checking Email:", error);
+      if (error.response) {
+        console.error("Status:", error.response.status);
+        console.error("Data:", error.response.data);
+      }
+
+      setErrorEmail(t("Error.somethingWentWrong"));
+    } finally {
+      setIsValidating(false);
+    }
+  };
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
-      style={{ flex: 1}}
+      style={{ flex: 1 }}
     >
       <ScrollView
         className="flex-1 bg-white"
@@ -632,11 +631,10 @@ const checkEmailExists = async (email: string) => {
       >
         {/* Header */}
         <View className="flex-row items-center px-4 py-4 bg-white shadow-sm">
-        
           <TouchableOpacity
             onPress={async () => {
               try {
-                await AsyncStorage.removeItem("officerFormData"); // Clear stored data
+                await AsyncStorage.removeItem("officerFormData");
                 navigation.goBack();
               } catch (error) {
                 console.error("Error clearing form data:", error);
@@ -656,7 +654,6 @@ const checkEmailExists = async (email: string) => {
 
         {/* Profile Avatar */}
         <View className="justify-center items-center my-4 relative">
-          {/* Profile Image */}
           <Image
             source={
               selectedImage
@@ -666,12 +663,11 @@ const checkEmailExists = async (email: string) => {
             className="w-24 h-24 rounded-full"
           />
 
-          {/* Edit Icon (Pen Icon) */}
           <TouchableOpacity
-            onPress={handleImagePick} // Handle the image picking
+            onPress={handleImagePick}
             className="absolute bottom-0 right-4 bg-[#980775] p-1 rounded-full mr-[35%] shadow-md"
             style={{
-              elevation: 5, // For shadow effect
+              elevation: 5,
             }}
           >
             <Ionicons name="pencil" size={18} color="white" />
@@ -694,14 +690,15 @@ const checkEmailExists = async (email: string) => {
               size={20}
               color="#980775"
             />
-            <Text className="ml-2 text-gray-700"
-                       style={[
-  i18n.language === "si"
-    ? { fontSize: 13 }
-    : i18n.language === "ta"
-    ? { fontSize: 10 }
-    : { fontSize: 14 }
-]}
+            <Text
+              className="ml-2 text-gray-700"
+              style={[
+                i18n.language === "si"
+                  ? { fontSize: 13 }
+                  : i18n.language === "ta"
+                  ? { fontSize: 10 }
+                  : { fontSize: 14 }
+              ]}
             >
               {t("AddOfficerBasicDetails.Permanent")}
             </Text>
@@ -717,14 +714,15 @@ const checkEmailExists = async (email: string) => {
               size={20}
               color="#980775"
             />
-            <Text className="ml-2 text-gray-700"
-                       style={[
-  i18n.language === "si"
-    ? { fontSize: 13 }
-    : i18n.language === "ta"
-    ? { fontSize: 10 }
-    : { fontSize: 14 }
-]}
+            <Text
+              className="ml-2 text-gray-700"
+              style={[
+                i18n.language === "si"
+                  ? { fontSize: 13 }
+                  : i18n.language === "ta"
+                  ? { fontSize: 10 }
+                  : { fontSize: 14 }
+              ]}
             >
               {t("AddOfficerBasicDetails.Temporary")}
             </Text>
@@ -740,7 +738,7 @@ const checkEmailExists = async (email: string) => {
         />
 
         {/* Preferred Languages */}
-        <View className="px-8 mb-4">
+        <View className="px-8 mb-1">
           <Text className="font-semibold text-sm mb-2">
             {t("AddOfficerBasicDetails.PreferredLanguages")}
           </Text>
@@ -767,6 +765,9 @@ const checkEmailExists = async (email: string) => {
             ))}
           </View>
         </View>
+        {fieldErrors.preferredLanguages ? (
+          <Text className="text-red-500 text-sm mb-3 ml-8">{fieldErrors.preferredLanguages}</Text>
+        ) : <View className="mb-3" />}
 
         <View
           style={{
@@ -778,187 +779,256 @@ const checkEmailExists = async (email: string) => {
 
         {/* Input Fields */}
         <View className="px-8">
-      
-
-         <TextInput
-  placeholder={t("AddOfficerBasicDetails.FirstNameEnglish")}
-  value={formData.firstNameEnglish}
-  onChangeText={(text) => handleEnglishNameChange(text, 'firstNameEnglish')}
-  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
-  keyboardType="default"
-  autoCapitalize="words"
-  autoCorrect={false}
-/>
-
-<TextInput
-  placeholder={t("AddOfficerBasicDetails.LastNameEnglish")}
-  value={formData.lastNameEnglish}
-  onChangeText={(text) => handleEnglishNameChange(text, 'lastNameEnglish')}
-  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
-  keyboardType="default"
-  autoCapitalize="words"
-  autoCorrect={false}
-/>
-
-<TextInput
-  placeholder={t("AddOfficerBasicDetails.FirstNameinSinhala")}
-  value={formData.firstNameSinhala}
-  onChangeText={(text) => handleSinhalaNameChange(text, 'firstNameSinhala')}
-  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
-  autoCorrect={false}
-/>
-
-<TextInput
-  placeholder={t("AddOfficerBasicDetails.LastNameSinhala")}
-  value={formData.lastNameSinhala}
-  onChangeText={(text) => handleSinhalaNameChange(text, 'lastNameSinhala')}
-  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
-  autoCorrect={false}
-/>
-
-<TextInput
-  placeholder={t("AddOfficerBasicDetails.FirstNameTamil")}
-  value={formData.firstNameTamil}
-  onChangeText={(text) => handleTamilNameChange(text, 'firstNameTamil')}
-  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
-  autoCorrect={false}
-/>
-
-<TextInput
-  placeholder={t("AddOfficerBasicDetails.LastNameTamil")}
-  value={formData.lastNameTamil}
-  onChangeText={(text) => handleTamilNameChange(text, 'lastNameTamil')}
-  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
-  autoCorrect={false}
-/>
-
-          {/* Phone Number 1 */}
-       <View className="mb-4">
-  <View className="flex-row items-center  gap-2 rounded-lg">
-    <View style={{ flex: 3, alignItems: "center" }} className="">
-      <SelectList
-        setSelected={setPhoneCode1}
-        data={countryCodes.map((country) => ({
-          key: country.code,
-          value: `${country.code} (${country.dial_code})`,
-        }))}
-        boxStyles={{
-          borderColor: "#F4F4F4", // Fixed: Removed backticks
-          borderRadius: 25,
-          width: "100%",
-          height: 45,
-          backgroundColor: "#F4F4F4", // Fixed: Removed backticks
-        }}
-        dropdownStyles={{ borderColor: "#ccc" }}
-        search={false}
-        defaultOption={{ key: phoneCode1, value: phoneCode1 }}
-      />
-    </View>
-    <View
-      style={{ flex: 7 }}
-      className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full text-gray-700" // Fixed: Removed backticks
-    >
-      <TextInput
-        placeholder="7X-XXX-XXXX"
-        keyboardType="phone-pad"
-        value={phoneNumber1}
-        onChangeText={handlePhoneNumber1Change}
-        className="px-3 py-3 text-gray-700 border-[#F4F4F4] bg-[#F4F4F4] rounded-full" // Fixed: Removed backticks
-        maxLength={9}
-      />
-    </View>
-  </View>
-  {error1 ? (
-    <Text className="mt-2" style={{ color: "red" }}>
-      {error1}
-    </Text>
-  ) : null}
-</View>
-
-{/* Phone Number 2 */}
-<View className="mb-4">
-  <View className="flex-row items-center gap-2 rounded-lg">
-    <View style={{ flex: 3, alignItems: "center" }}>
-      <SelectList
-        setSelected={setPhoneCode2}
-        data={countryCodes.map((country) => ({
-          key: country.code,
-          value: `${country.code} (${country.dial_code})`,
-        }))}
-        boxStyles={{
-          borderColor: "#F4F4F4", // Fixed: Removed backticks
-          borderRadius: 25,
-          width: "100%",
-          height: 45,
-          backgroundColor: "#F4F4F4", // Fixed: Removed backticks
-        }}
-        dropdownStyles={{ borderColor: "#ccc" }}
-        search={false}
-        defaultOption={{ key: phoneCode2, value: phoneCode2 }}
-      />
-    </View>
-    <View
-      style={{ flex: 7 }}
-      className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full text-gray-700" // Fixed: Removed backticks
-    >
-      <TextInput
-        placeholder="7X-XXX-XXXX"
-        keyboardType="phone-pad"
-        value={phoneNumber2}
-        onChangeText={handlePhoneNumber2Change}
-        className="px-3 py-3 text-gray-700"
-        maxLength={9}
-      />
-    </View>
-  </View>
-  {error2 ? (
-    <Text className="mt-2" style={{ color: "red" }}>
-      {error2}
-    </Text>
-  ) : null}
-</View>
+          <TextInput
+            placeholder={t("AddOfficerBasicDetails.FirstNameEnglish")}
+            value={formData.firstNameEnglish}
+            onChangeText={(text) => handleEnglishNameChange(text, 'firstNameEnglish')}
+            className={`border ${
+              fieldErrors.firstNameEnglish ? "border-red-500" : "border-[#F4F4F4]"
+            } bg-[#F4F4F4] rounded-full px-3 py-2 mb-1 text-gray-700`}
+            keyboardType="default"
+            autoCapitalize="words"
+            autoCorrect={false}
+          />
+          {fieldErrors.firstNameEnglish ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">{fieldErrors.firstNameEnglish}</Text>
+          ) : <View className="mb-3" />}
 
           <TextInput
-  placeholder={t("AddOfficerBasicDetails.NIC")}
-  value={formData.nicNumber}
-  onChangeText={handleNicNumberChange}
-  maxLength={12}
-  keyboardType="default"
-  autoCapitalize="characters"
-  autoCorrect={false}
-  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700" // Fixed: Removed backticks
-/>
-{error3 ? (
-  <Text className="mb-3" style={{ color: "red" }}>
-    {error3}
-  </Text>
-) : null}
+            placeholder={t("AddOfficerBasicDetails.LastNameEnglish")}
+            value={formData.lastNameEnglish}
+            onChangeText={(text) => handleEnglishNameChange(text, 'lastNameEnglish')}
+            className={`border ${
+              fieldErrors.lastNameEnglish ? "border-red-500" : "border-[#F4F4F4]"
+            } bg-[#F4F4F4] rounded-full px-3 py-2 mb-1 text-gray-700`}
+            keyboardType="default"
+            autoCapitalize="words"
+            autoCorrect={false}
+          />
+          {fieldErrors.lastNameEnglish ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">{fieldErrors.lastNameEnglish}</Text>
+          ) : <View className="mb-3" />}
 
+          <TextInput
+            placeholder={t("AddOfficerBasicDetails.FirstNameinSinhala")}
+            value={formData.firstNameSinhala}
+            onChangeText={(text) => handleSinhalaNameChange(text, 'firstNameSinhala')}
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+            autoCorrect={false}
+          />
 
-      
+          <TextInput
+            placeholder={t("AddOfficerBasicDetails.LastNameSinhala")}
+            value={formData.lastNameSinhala}
+            onChangeText={(text) => handleSinhalaNameChange(text, 'lastNameSinhala')}
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+            autoCorrect={false}
+          />
+
+          <TextInput
+            placeholder={t("AddOfficerBasicDetails.FirstNameTamil")}
+            value={formData.firstNameTamil}
+            onChangeText={(text) => handleTamilNameChange(text, 'firstNameTamil')}
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+            autoCorrect={false}
+          />
+
+          <TextInput
+            placeholder={t("AddOfficerBasicDetails.LastNameTamil")}
+            value={formData.lastNameTamil}
+            onChangeText={(text) => handleTamilNameChange(text, 'lastNameTamil')}
+            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+            autoCorrect={false}
+          />
+
+          {/* Phone Number 1 */}
+          <View className="mb-1">
+            <View className="flex-row items-center gap-2 rounded-lg">
+              <View style={{ flex: 3, alignItems: "center" }} className="">
+                {/* <SelectList
+                  setSelected={setPhoneCode1}
+                  data={countryCodes.map((country) => ({
+                    key: country.code,
+                    value: `${country.code} (${country.dial_code})`,
+                  }))}
+                  boxStyles={{
+                    borderColor: "#F4F4F4",
+                    borderRadius: 25,
+                    width: "100%",
+                    height: 45,
+                    backgroundColor: "#F4F4F4",
+                  }}
+                  dropdownStyles={{ borderColor: "#ccc" }}
+                  search={false}
+                  defaultOption={{ key: phoneCode1, value: phoneCode1 }}
+                /> */}
+              <DropDownPicker
+        open={open1}
+        value={phoneCode1}
+        items={countryItems1}
+        setOpen={setOpen1}
+        setValue={setPhoneCode1}
+        placeholder={phoneCode1}
+        style={{
+          borderColor: "#F4F4F4",
+          borderRadius: 25,
+          height: 45,
+          backgroundColor: "#F4F4F4",
+        }}
+        dropDownContainerStyle={{
+          borderColor: "#ccc",
+          backgroundColor: "white",
+          borderRadius: 10,
+          maxHeight: 200,
+        }}
+        textStyle={{
+          fontSize: 14,
+        }}
+        listMode="SCROLLVIEW"
+        scrollViewProps={{
+          nestedScrollEnabled: true,
+        }}
+        zIndex={5000}
+        zIndexInverse={1000}
+        onOpen={() => setOpen2(false)}
+      />
+              </View>
+              <View
+                style={{ flex: 7 }}
+                className={`border ${
+                  fieldErrors.phoneNumber1 ? "border-red-500" : "border-[#F4F4F4]"
+                } bg-[#F4F4F4] rounded-full text-gray-700`}
+              >
+                <TextInput
+                  placeholder="7X-XXX-XXXX"
+                  keyboardType="phone-pad"
+                  value={phoneNumber1}
+                  onChangeText={handlePhoneNumber1Change}
+                  className="px-3 py-3 text-gray-700 border-[#F4F4F4] bg-[#F4F4F4] rounded-full"
+                  maxLength={9}
+                />
+              </View>
+            </View>
+          </View>
+          {(error1 || fieldErrors.phoneNumber1) ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">
+              {fieldErrors.phoneNumber1 || error1}
+            </Text>
+          ) : <View className="mb-3" />}
+
+          {/* Phone Number 2 */}
+          <View className="mb-1">
+            <View className="flex-row items-center gap-2 rounded-lg">
+              <View style={{ flex: 3, alignItems: "center" }}>
+                {/* <SelectList
+                  setSelected={setPhoneCode2}
+                  data={countryCodes.map((country) => ({
+                    key: country.code,
+                    value: `${country.code} (${country.dial_code})`,
+                  }))}
+                  boxStyles={{
+                    borderColor: "#F4F4F4",
+                    borderRadius: 25,
+                    width: "100%",
+                    height: 45,
+                    backgroundColor: "#F4F4F4",
+                  }}
+                  dropdownStyles={{ borderColor: "#ccc" }}
+                  search={false}
+                  defaultOption={{ key: phoneCode2, value: phoneCode2 }}
+                /> */}
+              <DropDownPicker
+        open={open2}
+        value={phoneCode2}
+        items={countryItems2}
+        setOpen={setOpen2}
+        setValue={setPhoneCode2}
+        placeholder={phoneCode2}
+        style={{
+          borderColor: "#F4F4F4",
+          borderRadius: 25,
+          height: 45,
+          backgroundColor: "#F4F4F4",
+        }}
+        dropDownContainerStyle={{
+          borderColor: "#ccc",
+          backgroundColor: "white",
+          borderRadius: 10,
+          maxHeight: 200,
+        }}
+        textStyle={{
+          fontSize: 14,
+        }}
+        listMode="SCROLLVIEW"
+        scrollViewProps={{
+          nestedScrollEnabled: true,
+        }}
+        zIndex={4000}
+        zIndexInverse={2000}
+        onOpen={() => setOpen1(false)}
+      />
+              </View>
+              <View
+                style={{ flex: 7 }}
+                className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full text-gray-700"
+              >
+                <TextInput
+                  placeholder="7X-XXX-XXXX"
+                  keyboardType="phone-pad"
+                  value={phoneNumber2}
+                  onChangeText={handlePhoneNumber2Change}
+                  className="px-3 py-3 text-gray-700"
+                  maxLength={9}
+                />
+              </View>
+            </View>
+          </View>
+          {error2 ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">{error2}</Text>
+          ) : <View className="mb-3" />}
+
+          <TextInput
+            placeholder={t("AddOfficerBasicDetails.NIC")}
+            value={formData.nicNumber}
+            onChangeText={handleNicNumberChange}
+            maxLength={12}
+            keyboardType="default"
+            autoCapitalize="characters"
+            autoCorrect={false}
+            className={`border ${
+              fieldErrors.nicNumber || error3 ? "border-red-500" : "border-[#F4F4F4]"
+            } bg-[#F4F4F4] rounded-full px-3 py-2 mb-1 text-gray-700`}
+          />
+          {(error3 || fieldErrors.nicNumber) ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">
+              {fieldErrors.nicNumber || error3}
+            </Text>
+          ) : <View className="mb-3" />}
 
           <View>
-  <TextInput
-    placeholder={t("AddOfficerBasicDetails.Email")}
-    value={formData.email}
-    onChangeText={handleEmailChange}
-    className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-2 text-gray-700"
-    keyboardType="email-address"
-    autoCapitalize="none"
-    autoCorrect={false}
-    editable={!isValidating}
-  />
-  {isValidating && (
-    <Text style={{ color: "#666", fontSize: 12, marginBottom: 4 }}>
-      {t("Validating email...")}
-    </Text>
-  )}
-  {errorEmail ? (
-    <Text className="" style={{ color: "red" }}>
-      {errorEmail}
-    </Text>
-  ) : null}
-</View>
+            <TextInput
+              placeholder={t("AddOfficerBasicDetails.Email")}
+              value={formData.email}
+              onChangeText={handleEmailChange}
+              className={`border ${
+                fieldErrors.email || errorEmail ? "border-red-500" : "border-[#F4F4F4]"
+              } bg-[#F4F4F4] rounded-full px-3 py-2 mb-1 text-gray-700`}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+              editable={!isValidating}
+            />
+            {isValidating && (
+              <Text style={{ color: "#666", fontSize: 12, marginBottom: 4, marginLeft: 12 }}>
+                {t("Validating email...")}
+              </Text>
+            )}
+            {(errorEmail || fieldErrors.email) ? (
+              <Text className="text-red-500 text-sm mb-3 ml-3">
+                {fieldErrors.email || errorEmail}
+              </Text>
+            ) : <View className="mb-3" />}
+          </View>
         </View>
 
         {/* Buttons */}
