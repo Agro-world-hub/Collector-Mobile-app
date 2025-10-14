@@ -131,7 +131,7 @@ const EngProfile: React.FC<EngProfileProps> = ({ navigation }) => {
     if (complaint === t("EngProfile.Report Complaint")) {
       navigation.navigate("ComplainPage" as any, { userId: 0 });
     } else if (complaint === t("EngProfile.View Complaint History")) {
-      navigation.navigate("Main", { screen: "ComplainHistory" });
+      navigation.navigate("Main", { screen: "ComplainHistory" ,params: {fullname: getFullName }} );
     }
   };
 

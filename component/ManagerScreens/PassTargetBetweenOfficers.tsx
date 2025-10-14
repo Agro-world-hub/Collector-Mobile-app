@@ -39,6 +39,7 @@ interface PassTargetBetweenOfficersScreenProps {
       qty: string;
       collectionOfficerId: number;
       dailyTarget: number;
+      officerId:string
     };
   };
 }
@@ -76,10 +77,12 @@ const PassTargetBetweenOfficers: React.FC<
     varietyNameSinhala,
     varietyNameTamil,
     dailyTarget,
+    officerId
   } = route.params;
   console.log(collectionOfficerId);
   const maxAmount = parseFloat(todo);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+  console.log("officer id........................",officerId)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -223,14 +226,15 @@ const PassTargetBetweenOfficers: React.FC<
           },
         }
       );
+      
 
       if (response.status === 200) {
         Alert.alert(
           t("Error.Success"),
           t("Error.Target transferred successfully.")
         );
-        // navigation.navigate('DailyTargetListForOfficers'as any,{collectionOfficerId:collectionOfficerId});
-        navigation.goBack();
+        navigation.navigate('DailyTargetListForOfficers'as any,{officerId:  officerId  , collectionOfficerId: collectionOfficerId});
+     //   navigation.goBack();
       } else {
         Alert.alert(t("Error.error"), t("Error.Failed to transfer target."));
       }

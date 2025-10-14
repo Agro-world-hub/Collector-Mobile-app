@@ -63,9 +63,6 @@ interface UnregisteredCropDetailsProps {
   route: UnregisteredCropDetailsRouteProp;
 }
 
-
-
-
 interface DeleteModalProps {
   visible: boolean;
   title: string;
@@ -95,7 +92,6 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
         <View className="bg-white rounded-xl p-6 items-center min-w-[280px] max-w-[320px]">
           {/* Warning Icon */}
           <View className="w-10 h-10 bg-[#F6F7F9] rounded-lg justify-center items-center mb-4">
-            {/* <Text className="text-yellow-600 text-xl">⚠</Text> */}
             <Image
                       source={require("../assets/images/New/Errorcentertarget.png")}
                       style={{ width: 20, height: 20 }}
@@ -145,13 +141,16 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({
   const [unitPrices, setUnitPrices] = useState<{
     [key: string]: number | null;
   }>({ A: null, B: null, C: null });
-  const [quantities, setQuantities] = useState<{ [key: string]: number }>({
-    A: 0,
-    B: 0,
-    C: 0,
+  
+  // Change quantities to store string values to preserve decimal input
+  const [quantities, setQuantities] = useState<{ [key: string]: string }>({
+    A: "",
+    B: "",
+    C: "",
   });
+  
   const [total, setTotal] = useState<number>(0);
-  const [image, setImage] = useState<string | null>(null); // Store base64 image here
+  const [image, setImage] = useState<string | null>(null);
   const [crops, setCrops] = useState<any[]>([]);
   const [selectedVarietyName, setSelectedVarietyName] = useState<string | null>(
     null
@@ -168,17 +167,16 @@ const UnregisteredCropDetails: React.FC<UnregisteredCropDetailsProps> = ({
   const { t } = useTranslation();
   const [resetImage, setResetImage] = useState(false);
   const scrollViewRef = useRef<ScrollView | null>(null);
-    const [scrollPosition, setScrollPosition] = useState(0); // Track the current scroll position
-  const [isAtStart, setIsAtStart] = useState(true); // Track if we're at the start of the list
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [isAtStart, setIsAtStart] = useState(true);
   console.log(isAtStart)
-  const [isAtEnd, setIsAtEnd] = useState(false); // Track if we're at the end of the list
- const [usedVarietyIds, setUsedVarietyIds] = useState<string[]>([]);
- const [exhaustedCrops, setExhaustedCrops] = useState<string[]>([]); 
- const [deletingVariety, setDeletingVariety] = useState<number | null>(null);
-const [deletingGrade, setDeletingGrade] = useState<{cropIndex: number, grade: string} | null>(null);
+  const [isAtEnd, setIsAtEnd] = useState(false);
+  const [usedVarietyIds, setUsedVarietyIds] = useState<string[]>([]);
+  const [exhaustedCrops, setExhaustedCrops] = useState<string[]>([]); 
+  const [deletingVariety, setDeletingVariety] = useState<number | null>(null);
+  const [deletingGrade, setDeletingGrade] = useState<{cropIndex: number, grade: string} | null>(null);
 
-
-   const [deleteVarietyModal, setDeleteVarietyModal] = useState({
+  const [deleteVarietyModal, setDeleteVarietyModal] = useState({
     visible: false,
     index: -1,
     varietyName: '',
@@ -187,38 +185,38 @@ const [deletingGrade, setDeletingGrade] = useState<{cropIndex: number, grade: st
   const [deleteGradeModal, setDeleteGradeModal] = useState({
     visible: false,
     cropIndex: -1,
-        varietyName: '',
+    varietyName: '',
     grade: 'A' as 'A' | 'B' | 'C',
   });
-const scrollToNext = () => {
-  if (scrollViewRef.current) {
-    const newPosition = scrollPosition + wp(70) + 20;
-    scrollViewRef.current.scrollTo({ x: newPosition, animated: true });
-    setScrollPosition(newPosition);
-  }
-};
 
-const scrollToPrevious = () => {
-  if (scrollViewRef.current) {
-    const newPosition = scrollPosition - (wp(70) + 20);
-    scrollViewRef.current.scrollTo({ x: newPosition, animated: true });
-    setScrollPosition(newPosition);
-  }
-};
-const onScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
-  const contentOffsetX = event.nativeEvent.contentOffset.x;
-  setScrollPosition(contentOffsetX);
+  const scrollToNext = () => {
+    if (scrollViewRef.current) {
+      const newPosition = scrollPosition + wp(70) + 20;
+      scrollViewRef.current.scrollTo({ x: newPosition, animated: true });
+      setScrollPosition(newPosition);
+    }
+  };
 
-  // Calculate current index based on scroll position
-  const itemWidth = wp(70) + 20;
-  const currentIndex = Math.round(contentOffsetX / itemWidth);
+  const scrollToPrevious = () => {
+    if (scrollViewRef.current) {
+      const newPosition = scrollPosition - (wp(70) + 20);
+      scrollViewRef.current.scrollTo({ x: newPosition, animated: true });
+      setScrollPosition(newPosition);
+    }
+  };
 
-  // Make sure we don't go out of bounds
-  const safeCurrentIndex = Math.max(0, Math.min(currentIndex, crops.length - 1));
-  
-  setIsAtStart(safeCurrentIndex === 0);
-  setIsAtEnd(safeCurrentIndex === crops.length - 1);
-};
+  const onScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    setScrollPosition(contentOffsetX);
+
+    const itemWidth = wp(70) + 20;
+    const currentIndex = Math.round(contentOffsetX / itemWidth);
+    const safeCurrentIndex = Math.max(0, Math.min(currentIndex, crops.length - 1));
+    
+    setIsAtStart(safeCurrentIndex === 0);
+    setIsAtEnd(safeCurrentIndex === crops.length - 1);
+  };
+
   const [images, setImages] = useState<{
     A: string | null;
     B: string | null;
@@ -228,15 +226,6 @@ const onScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
     B: null,
     C: null,
   });
-  if (images.A != null) {
-    console.log("A");
-  }
-  if (images.B != null) {
-    console.log("B");
-  }
-  if (images.C != null) {
-    console.log("C");
-  }
 
   const route = useRoute<UnregisteredCropDetailsRouteProp>();
   const { userId, farmerPhone, farmerLanguage } = route.params;
@@ -246,15 +235,14 @@ const onScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
 
   useFocusEffect(
     useCallback(() => {
-      // Clear search query every time screen comes into focus
       setResetImage(false);
     }, [])
   );
 
   const fetchSelectedLanguage = async () => {
     try {
-      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
-      setSelectedLanguage(lang || "en"); // Default to English if not set
+      const lang = await AsyncStorage.getItem("@user_language");
+      setSelectedLanguage(lang || "en");
     } catch (error) {
       console.error("Error fetching language preference:", error);
     }
@@ -271,10 +259,7 @@ const onScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
     React.useCallback(() => {
       const fetchCropNames = async () => {
         try {
-          // Get auth token from storage
-          const token = await AsyncStorage.getItem("token"); // Adjust this to your token storage method
-
-          // Add token to request headers
+          const token = await AsyncStorage.getItem("token");
           const headers = {
             Authorization: `Bearer ${token}`,
           };
@@ -295,7 +280,7 @@ const onScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
                     item.cropNameEnglish === crop.cropNameEnglish
                 )
               ) {
-                acc.push(crop); // Push unique crop names
+                acc.push(crop);
               }
               return acc;
             },
@@ -309,17 +294,15 @@ const onScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
       };
 
       fetchCropNames();
-    }, []) // Empty dependency array to ensure the effect only depends on screen focus
+    }, [])
   );
 
-  // Modify the handleCropChange function to store all language versions
   const handleCropChange = async (crop: {
     id: string;
     cropNameEnglish: string;
     cropNameSinhala: string;
     cropNameTamil: string;
   }) => {
-    // Set selected crop with all language names
     setSelectedCrop({
       id: crop.id,
       name:
@@ -332,11 +315,10 @@ const onScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
 
     setSelectedVariety(null);
     setUnitPrices({ A: null, B: null, C: null });
-    setQuantities({ A: 0, B: 0, C: 0 });
+    setQuantities({ A: "", B: "", C: "" });
 
     try {
       const token = await AsyncStorage.getItem("token");
-
       const headers = {
         Authorization: `Bearer ${token}`,
       };
@@ -374,48 +356,41 @@ const onScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
   };
 
   const handleVarietyChange = async (varietyId: string) => {
-    setSelectedVariety(varietyId); // Set the selected variety ID
-
-    // Find the selected variety name by the ID
+    setSelectedVariety(varietyId);
     const selectedVariety = varieties.find(
       (variety) => variety.id === varietyId
     );
     if (selectedVariety) {
-      setSelectedVarietyName(selectedVariety.variety); // Store the name of the selected variety
+      setSelectedVarietyName(selectedVariety.variety);
     }
 
     try {
       const token = await AsyncStorage.getItem("token");
-      // Send the selected varietyId to fetch unit prices
-      // const pricesResponse = await api.get(`api/unregisteredfarmercrop/unitPrices/${varietyId}`);
       const pricesResponse = await api.get(
         `api/unregisteredfarmercrop/unitPrices/${varietyId}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      // Check if the response status is 404 (Not Found)
       if (pricesResponse.status === 404) {
         Alert.alert(
           t("Error.No Prices Available"),
           t("Error.Prices for the selected variety were not found.")
         );
-        setUnitPrices({}); // Clear any previously set prices
-        return; // Stop further execution
+        setUnitPrices({});
+        return;
       }
 
-      // Check if there are no prices in the response body
       if (pricesResponse.data && pricesResponse.data.length === 0) {
-        // Show an alert if no prices are available
         Alert.alert(
           t("Error.No Prices Available"),
           t("Error.No prices are available for the selected variety.")
         );
-        setUnitPrices({}); // Clear any previously set prices
-        return; // Do not proceed with setting prices or calculating the total
+        setUnitPrices({});
+        return;
       }
 
       const prices = pricesResponse.data.reduce((acc: any, curr: any) => {
@@ -425,55 +400,72 @@ const onScroll = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
 
       setUnitPrices(prices);
       setShowCameraModels(true);
-      calculateTotal(); // Recalculate total after setting prices
+      calculateTotal();
     } catch (error) {
       console.error("Error fetching unit prices for selected variety:", error);
-      // You can handle other error cases here, for example:
       Alert.alert(t("Error.error"), t("Error.no any prices found"));
     }
   };
 
+  // UPDATED: Proper decimal handling for quantity input
+  const handleQuantityChange = (grade: "A" | "B" | "C", value: string) => {
+    // Allow only numbers and decimal point
+    const cleanedValue = value.replace(/[^0-9.]/g, '');
+    
+    // Check for multiple decimal points
+    const decimalCount = (cleanedValue.match(/\./g) || []).length;
+    if (decimalCount > 1) {
+      return; // Don't allow multiple decimal points
+    }
+    
+    // Limit to 2 decimal places after the decimal point
+    if (cleanedValue.includes('.')) {
+      const parts = cleanedValue.split('.');
+      if (parts[1] && parts[1].length > 2) {
+        // If more than 2 decimal places, truncate to 2
+        const limitedValue = parts[0] + '.' + parts[1].slice(0, 2);
+        setQuantities((prev) => ({ ...prev, [grade]: limitedValue }));
+        calculateTotal();
+        return;
+      }
+    }
+    
+    // Update the quantity with the cleaned value (preserving decimal point)
+    setQuantities((prev) => ({ ...prev, [grade]: cleanedValue }));
+    
+    // Convert to number for validation and calculations
+    const numericValue = cleanedValue === '' ? 0 : parseFloat(cleanedValue) || 0;
+    
+    // If setting quantity to 0, remove the image
+    if (numericValue === 0) {
+      setImages((prev) => ({
+        ...prev,
+        [grade]: null,
+      }));
+    }
 
-const handleQuantityChange = (grade: "A" | "B" | "C", value: string) => {
-  const quantity = parseInt(value) || 0;
-  
-  // If setting quantity to 0, remove the image and allow
-  if (quantity === 0) {
-    setImages((prev) => ({
-      ...prev,
-      [grade]: null,
-    }));
-    setQuantities((prev) => ({ ...prev, [grade]: quantity }));
+    // Check if there are any grades with quantities but no images
+    const gradesWithQuantityButNoImage = (["A", "B", "C"] as const).filter((g) => {
+      const otherGradeValue = g === grade ? numericValue : parseFloat(quantities[g]) || 0;
+      return otherGradeValue > 0 && !images[g] && g !== grade;
+    });
+
+    if (gradesWithQuantityButNoImage.length > 0 && numericValue > 0) {
+      Alert.alert(
+        t("Error.Upload Image First"),
+        t("UnregisteredCropDetails.Please upload image for Grade",
+          {
+            grade: grade,
+            gradesWithQuantityButNoImage: gradesWithQuantityButNoImage[0]
+          }
+        ),
+        [{ text: t("Error.Ok") }]
+      );
+      return;
+    }
+
     calculateTotal();
-    return;
-  }
-
-  // Check if there are any grades with quantities but no images
-  const gradesWithQuantityButNoImage = (["A", "B", "C"] as const).filter((g) => 
-    quantities[g] > 0 && !images[g] && g !== grade
-  );
-
-  if (gradesWithQuantityButNoImage.length > 0) {
-    Alert.alert(
-      t("Error.Upload Image First"),
-     // `Please upload image for Grade ${gradesWithQuantityButNoImage[0]} before entering quantity for Grade ${grade}.`,
-      t("UnregisteredCropDetails.Please upload image for Grade",
-        {
-          grade:grade,
-          gradesWithQuantityButNoImage:gradesWithQuantityButNoImage[0]
-        }
-      ),
-      [{ text: t("Error.Ok") }]
-    );
-    return;
-  }
-
-  // Allow quantity change
-  setQuantities((prev) => ({ ...prev, [grade]: quantity }));
-  calculateTotal();
-  
-//  console.log(`Grade ${grade} quantity set to ${quantity}. Image required.`);
-};
+  };
 
   useEffect(() => {
     calculateTotal();
@@ -481,8 +473,9 @@ const handleQuantityChange = (grade: "A" | "B" | "C", value: string) => {
 
   const calculateTotal = () => {
     const totalPrice = Object.keys(unitPrices).reduce((acc, grade) => {
-      const price = unitPrices[grade] || 0; // default to 0 if price is null
-      const quantity = quantities[grade] || 0; // default to 0 if quantity is 0
+      const price = unitPrices[grade] || 0;
+      // Convert string quantity to number, default to 0 if empty or invalid
+      const quantity = quantities[grade] ? parseFloat(quantities[grade]) : 0;
       return acc + price * quantity;
     }, 0);
     setTotal(totalPrice);
@@ -493,137 +486,128 @@ const handleQuantityChange = (grade: "A" | "B" | "C", value: string) => {
 
   const [resetCameraImage, setResetCameraImage] = useState(false);
 
+  const incrementCropCount = async () => {
+    // Validate images for current quantities
+    const missingImages = [];
+    if ((quantities.A ? parseFloat(quantities.A) : 0) > 0 && !images.A) missingImages.push("Grade A");
+    if ((quantities.B ? parseFloat(quantities.B) : 0) > 0 && !images.B) missingImages.push("Grade B");
+    if ((quantities.C ? parseFloat(quantities.C) : 0) > 0 && !images.C) missingImages.push("Grade C");
 
+    if (missingImages.length > 0) {
+      Alert.alert(
+        t("UnregisteredCropDetails.Images Required"),
+        t("UnregisteredCropDetails.Please upload images for",
+          {
+            missingImages: missingImages.join(", ")
+          }
+        ),
+      );
+      return;
+    }
 
-const incrementCropCount = async () => {
-  // Validate images for current quantities
-  const missingImages = [];
-  if (quantities.A > 0 && !images.A) missingImages.push("Grade A");
-  if (quantities.B > 0 && !images.B) missingImages.push("Grade B");
-  if (quantities.C > 0 && !images.C) missingImages.push("Grade C");
+    if (!selectedCrop || !selectedVariety) {
+      Alert.alert(t("UnregisteredCropDetails.Incomplete Seletcion"), t("UnregisteredCropDetails.Please select both a crop and a variety before adding"));
+      return;
+    }
 
-  if (missingImages.length > 0) {
-    Alert.alert(
-      t("UnregisteredCropDetails.Images Required"),
-     // `Please upload images for: ${missingImages.join(", ")} before adding this crop.`
-     t("UnregisteredCropDetails.Please upload images for",
-        {
-          missingImages:missingImages.join(", ")
-         
-        }
-      ),
-    );
-    return;
-  }
+    setaddbutton(true);
+    setSelectedCrop(null);
+    setSelectedVariety(null);
+    setdonebutton2disabale(false);
+    setdonebutton1visibale(false);
+    setdonebutton2visibale(true);
 
-  if (!selectedCrop || !selectedVariety) {
-    Alert.alert(t("UnregisteredCropDetails.Incomplete Seletcion"), t("UnregisteredCropDetails.Please select both a crop and a variety before adding"));
-    return;
-  }
+    // Add variety to used list
+    setUsedVarietyIds(prev => [...prev, selectedVariety]);
 
-  setaddbutton(true);
-  setSelectedCrop(null);
-  setSelectedVariety(null);
-  setdonebutton2disabale(false);
-  setdonebutton1visibale(false);
-  setdonebutton2visibale(true);
+    const newCrop = {
+      cropId: selectedCrop.id || "",
+      varietyId: selectedVariety || "",
+      varietyName: selectedVarietyName,
+      gradeAprice: unitPrices.A || 0,
+      gradeAquan: quantities.A ? parseFloat(quantities.A) : 0,
+      gradeBprice: unitPrices.B || 0,
+      gradeBquan: quantities.B ? parseFloat(quantities.B) : 0,
+      gradeCprice: unitPrices.C || 0,
+      gradeCquan: quantities.C ? parseFloat(quantities.C) : 0,
+      imageA: images.A || null,
+      imageB: images.B || null,
+      imageC: images.C || null,
+    };
 
-  // Add variety to used list
-  setUsedVarietyIds(prev => [...prev, selectedVariety]);
-
-  const newCrop = {
-    cropId: selectedCrop.id || "",
-    varietyId: selectedVariety || "",
-    varietyName: selectedVarietyName,
-    gradeAprice: unitPrices.A || 0,
-    gradeAquan: quantities.A || 0,
-    gradeBprice: unitPrices.B || 0,
-    gradeBquan: quantities.B || 0,
-    gradeCprice: unitPrices.C || 0,
-    gradeCquan: quantities.C || 0,
-    imageA: images.A || null,
-    imageB: images.B || null,
-    imageC: images.C || null,
+    setCrops((prevCrops) => [...prevCrops, newCrop]);
+    resetCropEntry();
+    setResetCameraImage((prev) => !prev);
+    setCropCount((prevCount) => prevCount + 1);
   };
-
-  setCrops((prevCrops) => [...prevCrops, newCrop]);
-  resetCropEntry();
-  setResetCameraImage((prev) => !prev);
-  setCropCount((prevCount) => prevCount + 1);
-};
 
   const resetCropEntry = () => {
     setSelectedCrop(null);
     setSelectedVariety(null);
     setUnitPrices({ A: null, B: null, C: null });
     setImages({ A: null, B: null, C: null });
-    setQuantities({ A: 0, B: 0, C: 0 });
+    setQuantities({ A: "", B: "", C: "" });
     setShowCameraModels(false);
     setImage(null);
   };
 
+  const handleImagePick = (
+    base64Image: string | null,
+    grade: "A" | "B" | "C"
+  ) => {
+    // Check if quantity is entered for this grade
+    const quantityValue = quantities[grade] ? parseFloat(quantities[grade]) : 0;
+    if (quantityValue <= 0) {
+      Alert.alert(
+        t("UnregisteredCropDetails.Add Quantity First"),
+        t("UnregisteredCropDetails.Please enter quantity",
+          {
+            grade: grade
+          }
+        ),
+        [{ text: t("Error.Ok") }]
+      );
+      return;
+    }
 
-const handleImagePick = (
-  base64Image: string | null,
-  grade: "A" | "B" | "C"
-) => {
-  // Check if quantity is entered for this grade
-  if (quantities[grade] <= 0) {
-    // Alert.alert(
-    //   "Add Quantity First",
-    //   `Please enter quantity for Grade ${grade} before adding an image.`,
-    //   [{ text: "OK" }]
-    // );
-     Alert.alert(
-      t("UnregisteredCropDetails.Add Quantity First"),
-     // `Please upload image for Grade ${gradesWithQuantityButNoImage[0]} before entering quantity for Grade ${grade}.`,
-      t("UnregisteredCropDetails.Please enter quantity",
-        {
-          grade:grade
-       
-        }
-      ),
-      [{ text: t("Error.Ok") }]
-    );
-    return;
-  }
+    // Allow image upload
+    setImages((prevImages) => ({
+      ...prevImages,
+      [grade]: base64Image,
+    }));
+    
+    if (base64Image) {
+      console.log(`${grade} image is set.`);
+    } else {
+      console.log(`${grade} image has been removed.`);
+    }
+  };
 
-  // Allow image upload
-  setImages((prevImages) => ({
-    ...prevImages,
-    [grade]: base64Image,
-  }));
-  
-  if (base64Image) {
-    console.log(`${grade} image is set.`);
-  } else {
-    console.log(`${grade} image has been removed.`);
-  }
-};
+  const canAddCrop = () => {
+    // Check if there are any grades with quantities but no images
+    const missingImages = [];
+    if ((quantities.A ? parseFloat(quantities.A) : 0) > 0 && !images.A) missingImages.push("Grade A");
+    if ((quantities.B ? parseFloat(quantities.B) : 0) > 0 && !images.B) missingImages.push("Grade B");
+    if ((quantities.C ? parseFloat(quantities.C) : 0) > 0 && !images.C) missingImages.push("Grade C");
+    
+    return missingImages.length === 0;
+  };
 
-const canAddCrop = () => {
-  // Check if there are any grades with quantities but no images
-  const missingImages = [];
-  if (quantities.A > 0 && !images.A) missingImages.push("Grade A");
-  if (quantities.B > 0 && !images.B) missingImages.push("Grade B");
-  if (quantities.C > 0 && !images.C) missingImages.push("Grade C");
-  
-  return missingImages.length === 0;
-};
-
-const hasUnsavedCropDetails = () => {
-  const hasQuantities = quantities.A > 0 || quantities.B > 0 || quantities.C > 0;
-  const hasCropSelection = selectedCrop !== null;
-  const hasVarietySelection = selectedVariety !== null;
-  
-  return hasCropSelection || hasVarietySelection || hasQuantities;
-};
+  const hasUnsavedCropDetails = () => {
+    const hasQuantities = (quantities.A ? parseFloat(quantities.A) : 0) > 0 || 
+                         (quantities.B ? parseFloat(quantities.B) : 0) > 0 || 
+                         (quantities.C ? parseFloat(quantities.C) : 0) > 0;
+    const hasCropSelection = selectedCrop !== null;
+    const hasVarietySelection = selectedVariety !== null;
+    
+    return hasCropSelection || hasVarietySelection || hasQuantities;
+  };
 
   const refreshCropForms = () => {
     setSelectedCrop(null);
     setSelectedVariety(null);
     setUnitPrices({ A: null, B: null, C: null });
-    setQuantities({ A: 0, B: 0, C: 0 });
+    setQuantities({ A: "", B: "", C: "" });
     setImages({ A: null, B: null, C: null });
     setResetImage(true);
     setTotal(0);
@@ -638,114 +622,109 @@ const hasUnsavedCropDetails = () => {
     setResetCameraImage((prev) => !prev);
   };
 
-
-const handleSubmit = async () => {
-  // Check if user has unsaved crop details
-  if (hasUnsavedCropDetails()) {
-    Alert.alert(
-      t("Error.Unsaved Crop Details"),
-      t("Error.You have entered crop details but"),
-      [
-        {
-          text: t("Error.No"),
-          style: "cancel",
-          onPress: () => console.log("User cancelled submission"),
-        },
-        {
-          text: t("Error.Yes"),
-          style: "default",
-          onPress: () => proceedWithSubmit(),
-        },
-      ]
-    );
-    return;
-  }
-  
-  // If no unsaved details, proceed directly
-  proceedWithSubmit();
-};
-
-// Separated submit logic
-const proceedWithSubmit = async () => {
-  const netState = await NetInfo.fetch();
-  if (!netState.isConnected) {
-    return;
-  }
-
-  try {
-    if (crops.length === 0) {
-      Alert.alert(t("Error.No Crops"), t("Error.Please add at least one crop to proceed"));
+  const handleSubmit = async () => {
+    if (hasUnsavedCropDetails()) {
+      Alert.alert(
+        t("Error.Unsaved Crop Details"),
+        t("Error.You have entered crop details but"),
+        [
+          {
+            text: t("Error.No"),
+            style: "cancel",
+            onPress: () => console.log("User cancelled submission"),
+          },
+          {
+            text: t("Error.Yes"),
+            style: "default",
+            onPress: () => proceedWithSubmit(),
+          },
+        ]
+      );
       return;
     }
-
-    // Rest of your existing submit logic...
-    const token = await AsyncStorage.getItem("token");
-    const invoiceNumber = await generateInvoiceNumber();
     
-    if (!invoiceNumber) {
-      Alert.alert(t("Error.error"), t("Error.Failed to generate invoice number"));
+    proceedWithSubmit();
+  };
+
+  const proceedWithSubmit = async () => {
+    const netState = await NetInfo.fetch();
+    if (!netState.isConnected) {
       return;
     }
 
-    let totalPrice = 0;
-    crops.forEach((crop) => {
-      totalPrice += crop.gradeAprice * crop.gradeAquan || 0;
-      totalPrice += crop.gradeBprice * crop.gradeBquan || 0;
-      totalPrice += crop.gradeCprice * crop.gradeCquan || 0;
-    });
+    try {
+      if (crops.length === 0) {
+        Alert.alert(t("Error.No Crops"), t("Error.Please add at least one crop to proceed"));
+        return;
+      }
 
-    console.log("Total Price:", totalPrice);
-    setLoading(true);
+      const token = await AsyncStorage.getItem("token");
+      const invoiceNumber = await generateInvoiceNumber();
+      
+      if (!invoiceNumber) {
+        Alert.alert(t("Error.error"), t("Error.Failed to generate invoice number"));
+        return;
+      }
 
-    const payload = {
-      farmerId: userId,
-      invoiceNumber: invoiceNumber,
-      crops: crops.map((crop) => ({
-        varietyId: crop.varietyId || "",
-        gradeAprice: crop.gradeAprice || 0,
-        gradeAquan: crop.gradeAquan || 0,
-        gradeBprice: crop.gradeBprice || 0,
-        gradeBquan: crop.gradeBquan || 0,
-        gradeCprice: crop.gradeCprice || 0,
-        gradeCquan: crop.gradeCquan || 0,
-        imageA: crop.imageA || null,
-        imageB: crop.imageB || null,
-        imageC: crop.imageC || null,
-      })),
-    };
+      let totalPrice = 0;
+      crops.forEach((crop) => {
+        totalPrice += crop.gradeAprice * crop.gradeAquan || 0;
+        totalPrice += crop.gradeBprice * crop.gradeBquan || 0;
+        totalPrice += crop.gradeCprice * crop.gradeCquan || 0;
+      });
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
+      console.log("Total Price:", totalPrice);
+      setLoading(true);
 
-    const response = await axios.post(
-      `${environment.API_BASE_URL}api/unregisteredfarmercrop/add-crops`,
-      payload,
-      config
-    );
+      const payload = {
+        farmerId: userId,
+        invoiceNumber: invoiceNumber,
+        crops: crops.map((crop) => ({
+          varietyId: crop.varietyId || "",
+          gradeAprice: crop.gradeAprice || 0,
+          gradeAquan: crop.gradeAquan || 0,
+          gradeBprice: crop.gradeBprice || 0,
+          gradeBquan: crop.gradeBquan || 0,
+          gradeCprice: crop.gradeCprice || 0,
+          gradeCquan: crop.gradeCquan || 0,
+          imageA: crop.imageA || null,
+          imageB: crop.imageB || null,
+          imageC: crop.imageC || null,
+        })),
+      };
 
-    const { registeredFarmerId } = response.data;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
 
-    Alert.alert(
-      t("BankDetailsUpdate.Success"),
-      t("Error.All crop details submitted successfully!")
-    );
+      const response = await axios.post(
+        `${environment.API_BASE_URL}api/unregisteredfarmercrop/add-crops`,
+        payload,
+        config
+      );
 
-    await sendSMS(farmerLanguage, farmerPhone, totalPrice, invoiceNumber);
-    refreshCropForms();
-    setLoading(false);
+      const { registeredFarmerId } = response.data;
 
-    navigation.navigate("NewReport" as any, { userId, registeredFarmerId });
-  } catch (error) {
-    console.error("Error submitting crop data:", error);
-    Alert.alert(t("Error.error"), t("Error.Failed to submit crop details"));
-    setLoading(false);
-  } finally {
-    setLoading(false);
-  }
-};
+      Alert.alert(
+        t("BankDetailsUpdate.Success"),
+        t("Error.All crop details submitted successfully!")
+      );
+
+      await sendSMS(farmerLanguage, farmerPhone, totalPrice, invoiceNumber);
+      refreshCropForms();
+      setLoading(false);
+
+      navigation.navigate("NewReport" as any, { userId, registeredFarmerId });
+    } catch (error) {
+      console.error("Error submitting crop data:", error);
+      Alert.alert(t("Error.error"), t("Error.Failed to submit crop details"));
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const sendSMS = async (
     language: string | null,
@@ -753,7 +732,6 @@ const proceedWithSubmit = async () => {
     totalPrice: number,
     invoiceNumber: string
   ) => {
-    // Clear the form after successful submission
     console.log("Sending SMS with details:", {
       language,
       farmerPhone,
@@ -761,11 +739,10 @@ const proceedWithSubmit = async () => {
       invoiceNumber,
     });
     const formattedPrice = new Intl.NumberFormat("en-US", {
-      minimumFractionDigits: 2, // Ensures at least two decimal places
-      maximumFractionDigits: 2, // Limits to two decimal places
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(totalPrice);
 
-    // Log the formatted price for debugging
     console.log("Formatted Price:", formattedPrice);
     try {
       const apiUrl = "https://api.getshoutout.com/coreservice/messages";
@@ -816,178 +793,139 @@ TID: ${invoiceNumber}
       }
     } catch (error) {
       console.error("Error sending SMS:", error);
-      //   Alert.alert(
-      //     "Error",
-      //     "Failed to send notification. Please try again."
-      //   );
     }
   };
-  const isGradeACameraEnabled = quantities.A == 0;
-  const isGradeBCameraEnabled = quantities.B == 0;
-  const isGradeCCameraEnabled = quantities.C == 0;
+
+  // UPDATED: Camera enabled logic to work with string quantities
+  const isGradeACameraEnabled = !quantities.A || parseFloat(quantities.A) == 0;
+  const isGradeBCameraEnabled = !quantities.B || parseFloat(quantities.B) == 0;
+  const isGradeCCameraEnabled = !quantities.C || parseFloat(quantities.C) == 0;
   console.log("isGradeACameraEnabled:", isGradeACameraEnabled);
- 
 
-const deleteVariety = (index: number) => {
-  const varietyName = crops[index].varietyName;
-  setDeleteVarietyModal({
-    visible: true,
-    index,
-    varietyName,
-  });
-};
+  const deleteVariety = (index: number) => {
+    const varietyName = crops[index].varietyName;
+    setDeleteVarietyModal({
+      visible: true,
+      index,
+      varietyName,
+    });
+  };
 
-// Handle variety deletion confirmation
-const handleDeleteVariety = () => {
-  const { index } = deleteVarietyModal;
-  
-  // IMPORTANT: Set loading state IMMEDIATELY when modal confirms
-  setDeletingVariety(index);
-  
-  // Close modal immediately 
-  setDeleteVarietyModal({ visible: false, index: -1, varietyName: '' });
-  
-  // Use setTimeout to show loading indicator and then delete
-  setTimeout(() => {
-    const deletedVarietyId = crops[index].varietyId;
+  const handleDeleteVariety = () => {
+    const { index } = deleteVarietyModal;
+    setDeletingVariety(index);
+    setDeleteVarietyModal({ visible: false, index: -1, varietyName: '' });
     
-    // Remove from used varieties list to make it available again
-    setUsedVarietyIds(prev => prev.filter(id => id !== deletedVarietyId));
-    
-    const newCrops = [...crops];
-    newCrops.splice(index, 1);
-    setCrops(newCrops);
-    
-    // Fix scroll position after deletion
-    if (scrollViewRef.current && newCrops.length > 0) {
-      const itemWidth = wp(70) + 20;
-      const currentIndex = Math.round(scrollPosition / itemWidth);
-      
-      // If we deleted the last item and we're at the end, scroll back
-      if (currentIndex >= newCrops.length && newCrops.length > 0) {
-        const newScrollPosition = (newCrops.length - 1) * itemWidth;
-        scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
-        setScrollPosition(newScrollPosition);
-      }
-      // If we deleted an item in the middle, adjust scroll position
-      else if (index <= currentIndex && currentIndex > 0) {
-        const newScrollPosition = (currentIndex - 1) * itemWidth;
-        scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
-        setScrollPosition(newScrollPosition);
-      }
-      // Reset to start if only one item left
-      else if (newCrops.length === 1) {
-        scrollViewRef.current.scrollTo({ x: 0, animated: true });
-        setScrollPosition(0);
-      }
-    }
-    
-    // Adjust crop count and button visibility
-    if (newCrops.length === 0) {
-      setdonebutton1visibale(true);
-      setdonebutton2visibale(false);
-      setaddbutton(true);
-      // Reset scroll position when no crops left
-      setScrollPosition(0);
-      setIsAtStart(true);
-      setIsAtEnd(false);
-    }
-    
-    setCropCount((prevCount) => prevCount - 1);
-    
-    // Stop loading
-    setDeletingVariety(null);
-  }, 1000); // 1 second delay to show loading
-};
-
-
-// 5. Updated deleteGrade function (NO CHANGES - just calls modal)
-const deleteGrade = (cropIndex: number, grade: "A" | "B" | "C", varietyName: string) => {
-  setDeleteGradeModal({
-    visible: true,
-    cropIndex,
-    grade,
-    varietyName,
-  });
-};
-
-// 6. FIXED handleDeleteGrade function - SET LOADING STATE IMMEDIATELY
-const handleDeleteGrade = () => {
-  const { cropIndex, grade } = deleteGradeModal;
-  
-  // IMPORTANT: Set loading state IMMEDIATELY when modal confirms
-  setDeletingGrade({cropIndex, grade});
-  
-  // Close modal immediately
-  setDeleteGradeModal({ visible: false, cropIndex: -1, grade: 'A', varietyName: '' });
-  
-  // Use setTimeout to show loading indicator and then delete
-  setTimeout(() => {
-    const newCrops = [...crops];
-
-    // Reset the grade details to delete the grade
-    newCrops[cropIndex][`grade${grade}quan`] = 0;
-    newCrops[cropIndex][`grade${grade}price`] = 0;
-    newCrops[cropIndex][`image${grade}`] = null;
-
-    // Check if all grades for this crop are deleted
-    const allGradesDeleted = ["A", "B", "C"].every(
-      (gradeKey) => newCrops[cropIndex][`grade${gradeKey}quan`] === 0
-    );
-
-    if (allGradesDeleted) {
-      // Remove the variety from used list and delete entire crop
-      const deletedVarietyId = newCrops[cropIndex].varietyId;
+    setTimeout(() => {
+      const deletedVarietyId = crops[index].varietyId;
       setUsedVarietyIds(prev => prev.filter(id => id !== deletedVarietyId));
       
-      newCrops.splice(cropIndex, 1);
+      const newCrops = [...crops];
+      newCrops.splice(index, 1);
       setCrops(newCrops);
-      setCropCount((prevCount) => prevCount - 1);
       
-      // Fix scroll position after deletion (same logic as handleDeleteVariety)
       if (scrollViewRef.current && newCrops.length > 0) {
         const itemWidth = wp(70) + 20;
         const currentIndex = Math.round(scrollPosition / itemWidth);
         
-        // If we deleted the last item and we're at the end, scroll back
         if (currentIndex >= newCrops.length && newCrops.length > 0) {
           const newScrollPosition = (newCrops.length - 1) * itemWidth;
           scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
           setScrollPosition(newScrollPosition);
         }
-        // If we deleted an item in the middle, adjust scroll position
-        else if (cropIndex <= currentIndex && currentIndex > 0) {
+        else if (index <= currentIndex && currentIndex > 0) {
           const newScrollPosition = (currentIndex - 1) * itemWidth;
           scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
           setScrollPosition(newScrollPosition);
         }
-        // Reset to start if only one item left
         else if (newCrops.length === 1) {
           scrollViewRef.current.scrollTo({ x: 0, animated: true });
           setScrollPosition(0);
         }
       }
-    } else {
-      setCrops(newCrops);
-    }
+      
+      if (newCrops.length === 0) {
+        setdonebutton1visibale(true);
+        setdonebutton2visibale(false);
+        setaddbutton(true);
+        setScrollPosition(0);
+        setIsAtStart(true);
+        setIsAtEnd(false);
+      }
+      
+      setCropCount((prevCount) => prevCount - 1);
+      setDeletingVariety(null);
+    }, 1000);
+  };
 
-    // Update button visibility if no crops remain
-    if (newCrops.length === 0) {
-      setdonebutton1visibale(true);
-      setdonebutton2visibale(false);
-      setaddbutton(true);
-      // Reset scroll position when no crops left
-      setScrollPosition(0);
-      setIsAtStart(true);
-      setIsAtEnd(false);
-    }
+  const deleteGrade = (cropIndex: number, grade: "A" | "B" | "C", varietyName: string) => {
+    setDeleteGradeModal({
+      visible: true,
+      cropIndex,
+      grade,
+      varietyName,
+    });
+  };
+
+  const handleDeleteGrade = () => {
+    const { cropIndex, grade } = deleteGradeModal;
+    setDeletingGrade({cropIndex, grade});
+    setDeleteGradeModal({ visible: false, cropIndex: -1, grade: 'A', varietyName: '' });
     
-    // Stop loading
-    setDeletingGrade(null);
-  }, 1000); // 1 second delay to show loading
-};
+    setTimeout(() => {
+      const newCrops = [...crops];
+      newCrops[cropIndex][`grade${grade}quan`] = 0;
+      newCrops[cropIndex][`grade${grade}price`] = 0;
+      newCrops[cropIndex][`image${grade}`] = null;
 
-  // Then in your JSX:
+      const allGradesDeleted = ["A", "B", "C"].every(
+        (gradeKey) => newCrops[cropIndex][`grade${gradeKey}quan`] === 0
+      );
+
+      if (allGradesDeleted) {
+        const deletedVarietyId = newCrops[cropIndex].varietyId;
+        setUsedVarietyIds(prev => prev.filter(id => id !== deletedVarietyId));
+        
+        newCrops.splice(cropIndex, 1);
+        setCrops(newCrops);
+        setCropCount((prevCount) => prevCount - 1);
+        
+        if (scrollViewRef.current && newCrops.length > 0) {
+          const itemWidth = wp(70) + 20;
+          const currentIndex = Math.round(scrollPosition / itemWidth);
+          
+          if (currentIndex >= newCrops.length && newCrops.length > 0) {
+            const newScrollPosition = (newCrops.length - 1) * itemWidth;
+            scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
+            setScrollPosition(newScrollPosition);
+          }
+          else if (cropIndex <= currentIndex && currentIndex > 0) {
+            const newScrollPosition = (currentIndex - 1) * itemWidth;
+            scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
+            setScrollPosition(newScrollPosition);
+          }
+          else if (newCrops.length === 1) {
+            scrollViewRef.current.scrollTo({ x: 0, animated: true });
+            setScrollPosition(0);
+          }
+        }
+      } else {
+        setCrops(newCrops);
+      }
+
+      if (newCrops.length === 0) {
+        setdonebutton1visibale(true);
+        setdonebutton2visibale(false);
+        setaddbutton(true);
+        setScrollPosition(0);
+        setIsAtStart(true);
+        setIsAtEnd(false);
+      }
+      
+      setDeletingGrade(null);
+    }, 1000);
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -1000,169 +938,171 @@ const handleDeleteGrade = () => {
         keyboardShouldPersistTaps="handled"
       >
         <View className="flex-row items-center mb-6">
-        
-            <TouchableOpacity  onPress={() => navigation.goBack()} className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10" >
-                                                       <AntDesign name="left" size={24} color="#000502" />
-                                                     </TouchableOpacity>
+          <TouchableOpacity  
+            onPress={() => {
+              console.log("Direct navigation to FarmerQr with userId:", userId);
+              navigation.navigate("FarmerQr", { 
+                userId: userId 
+              } as any);
+            }}
+            className="bg-[#f3f3f380] rounded-full p-2 justify-center w-10"
+          >
+            <AntDesign name="left" size={24} color="#000502" />
+          </TouchableOpacity>
           <Text className="flex-1 text-center text-xl font-bold text-black mr-[5%]">
             {t("UnregisteredCropDetails.FillDetails")}
           </Text>
         </View>
         <View className="-mb-4">
+          <View className="justify-center items-center">
+            {crops.length > 1 && (
+              <TouchableOpacity
+                onPress={scrollToPrevious}
+                style={{
+                  position: "absolute",
+                  left: 1,
+                  zIndex: 10,
+                  opacity: isAtStart ? 0.3 : 1,
+                }}
+                disabled = {isAtStart}
+              >
+                <Entypo name="chevron-left"  size={34} color="#374151" />
+              </TouchableOpacity>
+            )}
 
-        <View className="justify-center items-center">
-          {/* Conditionally render the left arrow only if there are more than one item */}
-          {crops.length > 1 && (
-            <TouchableOpacity
-              onPress={scrollToPrevious}
-              style={{
-                position: "absolute",
-                left: 1,
-                zIndex: 10,
-                 opacity: isAtStart ? 0.3 : 1,
-              }}
-              disabled = {isAtStart}
-            >
-              <Entypo name="chevron-left"  size={34} color="#374151" />
-            </TouchableOpacity>
-          )}
+            {crops.length > 0 && (
+              <ScrollView
+                ref={scrollViewRef}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{ marginBottom: 20 }}
+                contentContainerStyle={{ 
+                  paddingHorizontal: wp(6),
+                  alignItems: 'center'
+                }}
+                className="flex-row"
+                onScroll={onScroll}
+                snapToInterval={wp(70) + 10}
+                decelerationRate="fast"
+                snapToAlignment="center"
+              >
+                {crops.map((crop, index) => {
+                  const availableGrades = ["A", "B", "C"].filter(
+                    (grade) => crop[`grade${grade}quan`] > 0
+                  );
 
-{crops.length > 0 && (
-  <ScrollView
-    ref={scrollViewRef}
-    horizontal
-    showsHorizontalScrollIndicator={false}
-    style={{ marginBottom: 20 }}
-    contentContainerStyle={{ 
-      paddingHorizontal: wp(6),
-      alignItems: 'center'
-    }}
-    className="flex-row"
-    onScroll={onScroll}
-    snapToInterval={wp(70) + 10}
-    decelerationRate="fast"
-    snapToAlignment="center"
-  >
-    {crops.map((crop, index) => {
-      const availableGrades = ["A", "B", "C"].filter(
-        (grade) => crop[`grade${grade}quan`] > 0
-      );
+                  const isVarietyDeleting = deletingVariety === index;
 
-      // Check if this variety is being deleted
-      const isVarietyDeleting = deletingVariety === index;
+                  return (
+                    <View
+                      key={index}
+                      style={{
+                        width: wp(70),
+                        marginHorizontal: 10,
+                        padding: 12,
+                        opacity: isVarietyDeleting ? 0.6 : 1,
+                        backgroundColor: isVarietyDeleting ? '#f5f5f5' : 'transparent',
+                      }}
+                    >
+                      <View className="flex-row items-center mb-2">
+                        <Text className="font-bold text-base mr-2 flex-1">
+                          ({index + 1}) {crop.varietyName.length > 20 ? `${crop.varietyName.slice(0, 20)}...` : crop.varietyName}
+                        </Text>
 
-      return (
-        <View
-          key={index}
-          style={{
-            width: wp(70),
-            marginHorizontal: 10,
-            padding: 12,
-            opacity: isVarietyDeleting ? 0.6 : 1, // Dim while deleting
-            backgroundColor: isVarietyDeleting ? '#f5f5f5' : 'transparent',
-          }}
-        >
-          <View className="flex-row items-center mb-2">
-            <Text className="font-bold text-base mr-2 flex-1">
-              ({index + 1}) {crop.varietyName.length > 20 ? `${crop.varietyName.slice(0, 20)}...` : crop.varietyName}
-            </Text>
+                        {isVarietyDeleting ? (
+                          <View className="w-6 h-6 justify-center items-center">
+                            <ActivityIndicator size="small" color="#ff0000" />
+                          </View>
+                        ) : (
+                          <TouchableOpacity onPress={() => deleteVariety(index)}>
+                            <MdIcons
+                              name="delete"
+                              size={22}
+                              style={{ color: "red" }}
+                            />
+                          </TouchableOpacity>
+                        )}
+                      </View>
 
-            {isVarietyDeleting ? (
-              // Show loading indicator while deleting variety
-              <View className="w-6 h-6 justify-center items-center">
-                <ActivityIndicator size="small" color="#ff0000" />
-              </View>
-            ) : (
-              <TouchableOpacity onPress={() => deleteVariety(index)}>
-                <MdIcons
-                  name="delete"
-                  size={22}
-                  style={{ color: "red" }}
-                />
+                      <View className="border border-[#d4d4d4] rounded-lg">
+                        {availableGrades.map((grade, gIndex) => {
+                          const isGradeDeleting = deletingGrade?.cropIndex === index && deletingGrade?.grade === grade;
+                          
+                          return (
+                            <View
+                              key={grade}
+                              style={{
+                                marginTop: 6,
+                                borderBottomWidth: gIndex !== availableGrades.length - 1 ? 1 : 0,
+                                borderBottomColor: "#d4d4d4",
+                                paddingBottom: gIndex !== availableGrades.length - 1 ? 6 : 0,
+                                opacity: isGradeDeleting ? 0.6 : 1,
+                                backgroundColor: isGradeDeleting ? '#f5f5f5' : 'transparent',
+                              }}
+                              className="flex-row items-center justify-between p-1 mb-1"
+                            >
+                              <Text className="font-bold ml-2">{grade}</Text>
+                              <Text className="font-bold">
+                                {crop[`grade${grade}quan`]}kg
+                              </Text>
+                              
+                              {isGradeDeleting ? (
+                                <View className="w-6 h-6 justify-center items-center mr-2">
+                                  <ActivityIndicator size="small" color="#ff0000" />
+                                </View>
+                              ) : (
+                                <TouchableOpacity
+                                  onPress={() => deleteGrade(index, grade as "A" | "B" | "C", crop.varietyName)}
+                                  className="mr-2"
+                                >
+                                  <MdIcons
+                                    name="delete"
+                                    size={22}
+                                    style={{ color: "red" }}
+                                  />
+                                </TouchableOpacity>
+                              )}
+                            </View>
+                          );
+                        })}
+                      </View>
+                    </View>
+                  );
+                })}
+              </ScrollView>
+            )}
+
+            {crops.length > 1 && (
+              <TouchableOpacity
+                onPress={scrollToNext}
+                style={{
+                  position: "absolute",
+                  right: 1,
+                  zIndex: 10,
+                  opacity: isAtEnd ? 0.3 : 1
+                }}
+                disabled = {isAtEnd}
+              >
+                <Entypo name="chevron-right"  size={34}   color="#000000"  />
               </TouchableOpacity>
             )}
           </View>
-
-          <View className="border border-[#d4d4d4] rounded-lg">
-            {availableGrades.map((grade, gIndex) => {
-              // Check if this specific grade is being deleted
-              const isGradeDeleting = deletingGrade?.cropIndex === index && deletingGrade?.grade === grade;
-              
-              return (
-                <View
-                  key={grade}
-                  style={{
-                    marginTop: 6,
-                    borderBottomWidth: gIndex !== availableGrades.length - 1 ? 1 : 0,
-                    borderBottomColor: "#d4d4d4",
-                    paddingBottom: gIndex !== availableGrades.length - 1 ? 6 : 0,
-                    opacity: isGradeDeleting ? 0.6 : 1, // Dim while deleting
-                    backgroundColor: isGradeDeleting ? '#f5f5f5' : 'transparent',
-                  }}
-                  className="flex-row items-center justify-between p-1 mb-1"
-                >
-                  <Text className="font-bold ml-2">{grade}</Text>
-                  <Text className="font-bold">
-                    {crop[`grade${grade}quan`]}kg
-                  </Text>
-                  
-                  {isGradeDeleting ? (
-                    // Show loading indicator while deleting grade
-                    <View className="w-6 h-6 justify-center items-center mr-2">
-                      <ActivityIndicator size="small" color="#ff0000" />
-                    </View>
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() => deleteGrade(index, grade as "A" | "B" | "C", crop.varietyName)}
-                      className="mr-2"
-                    >
-                      <MdIcons
-                        name="delete"
-                        size={22}
-                        style={{ color: "red" }}
-                      />
-                    </TouchableOpacity>
-                  )}
-                </View>
-              );
-            })}
+        </View>
+        
+        {crops.length > 0 && (
+          <View className="mt-2 mb-2">
+            <DashedLine
+              dashLength={5}
+              dashGap={4}
+              dashColor="#980775"
+            />
           </View>
-        </View>
-      );
-    })}
-  </ScrollView>
-)}
-
-          {/* Conditionally render the right arrow only if there are more than one item */}
-          {crops.length > 1 && (
-            <TouchableOpacity
-              onPress={scrollToNext}
-              style={{
-                position: "absolute",
-                right: 1,
-                zIndex: 10,
-                opacity: isAtEnd ? 0.3 : 1
-              }}
-               disabled = {isAtEnd}
-            >
-              <Entypo name="chevron-right"  size={34}   color="#000000"  />
-            </TouchableOpacity>
-          )}
-        </View>
-</View>
- {crops.length > 0 && (
-  <View className="mt-2 mb-2">
-  <DashedLine
-    dashLength={5}
-    dashGap={4}
-    dashColor="#980775"
-  />
-</View>
-
- )}
+        )}
+        
         <Text className="text-center text-md font-medium mt-2">
           {t("UnregisteredCropDetails.Crop")} {cropCount}
         </Text>
+        
         <View className="mb-6 border-b p-2 border-gray-200 pb-6">
           <Text className="text-gray-600 mt-4">
             {t("UnregisteredCropDetails.CropName")}
@@ -1193,8 +1133,8 @@ const handleDeleteGrade = () => {
                 borderColor: "#FFFFFF",
                 paddingLeft: 14,
                 paddingRight: 8,
-                backgroundColor: "#F4F4F4", // ✳️ Light gray background
-                borderRadius: 50, // ✳️ Rounded corners
+                backgroundColor: "#F4F4F4",
+                borderRadius: 50,
               }}
               data={cropNames.map((crop) => ({
                 key: crop.id,
@@ -1220,15 +1160,14 @@ const handleDeleteGrade = () => {
               setSelected={(itemValue: string) =>
                 selectedCrop ? handleVarietyChange(itemValue) : null
               }
-             
-                  data={[
-        ...varieties
-            .filter(variety => !usedVarietyIds.includes(variety.id)) // Filter out used varieties
-            .map(variety => ({
-                key: variety.id,
-                value: variety.variety,
-            }))
-    ]}
+              data={[
+                ...varieties
+                  .filter(variety => !usedVarietyIds.includes(variety.id))
+                  .map(variety => ({
+                    key: variety.id,
+                    value: variety.variety,
+                  }))
+              ]}
               save="key"
               defaultOption={
                 selectedVariety
@@ -1247,8 +1186,8 @@ const handleDeleteGrade = () => {
                 borderColor: "#FFFFFF",
                 paddingLeft: 14,
                 paddingRight: 8,
-                backgroundColor: "#F4F4F4", // ✳️ Light gray background
-                borderRadius: 50, // ✳️ Rounded corners
+                backgroundColor: "#F4F4F4",
+                borderRadius: 50,
               }}
             />
           </View>
@@ -1268,16 +1207,16 @@ const handleDeleteGrade = () => {
                   editable={false}
                 />
                
+                {/* UPDATED: TextInput for quantity with proper decimal handling */}
                 <TextInput
-  placeholder="kg"
-  keyboardType="numeric"
-  className="flex-1 rounded-full p-2 mx-2 text-gray-600 bg-[#F4F4F4] text-center"
-  value={quantities[grade].toString()}
-  onChangeText={(value) => {
-    const numericValue = value.replace(/[^0-9]/g, "");
-    handleQuantityChange(grade as "A" | "B" | "C", numericValue);
-  }}
-/>
+                  placeholder="kg"
+                  keyboardType="decimal-pad"
+                  className="flex-1 rounded-full p-2 mx-2 text-gray-600 bg-[#F4F4F4] text-center"
+                  value={quantities[grade]}
+                  onChangeText={(value) => {
+                    handleQuantityChange(grade as "A" | "B" | "C", value);
+                  }}
+                />
               </View>
             ))}
           </View>
@@ -1360,31 +1299,22 @@ const handleDeleteGrade = () => {
             </TouchableOpacity>
           )}
         </View>
+        
         <DeleteModal
-  visible={deleteVarietyModal.visible}
-  title="Confirm Delete"
-//  message={`Are you sure you want to delete previously added ${deleteVarietyModal.varietyName}?`}
-  message={t('UnregisteredCropDetails.Are you sure you want to delete previously added', { varietyName: deleteVarietyModal.varietyName })}
-  onCancel={() => setDeleteVarietyModal({ visible: false, index: -1, varietyName: '' })}
-  onDelete={handleDeleteVariety}
-/>
+          visible={deleteVarietyModal.visible}
+          title="Confirm Delete"
+          message={t('UnregisteredCropDetails.Are you sure you want to delete previously added', { varietyName: deleteVarietyModal.varietyName })}
+          onCancel={() => setDeleteVarietyModal({ visible: false, index: -1, varietyName: '' })}
+          onDelete={handleDeleteVariety}
+        />
 
-{/* Delete Grade Modal */}
-{/* <DeleteModal
-  visible={deleteGradeModal.visible}
-  title="Confirm Delete"
-  message={`Are you sure you want to delete previously added ${deleteGradeModal.varietyName} - Grade ${deleteGradeModal.grade}?`}
-  onCancel={() => setDeleteGradeModal({ visible: false, cropIndex: -1, grade: 'A',    varietyName: '',
- })}
-  onDelete={handleDeleteGrade}
-/> */}
-<DeleteModal 
-  visible={deleteGradeModal.visible}   
-  title={t('UnregisteredCropDetails.ConfirmDelete')}
-  message={t('UnregisteredCropDetails.Are you sure you want to delete grade', { varietyName: deleteGradeModal.varietyName, grade: deleteGradeModal.grade })}
-  onCancel={() => setDeleteGradeModal({ visible: false, cropIndex: -1, grade: 'A', varietyName: '' })}   
-  onDelete={handleDeleteGrade} 
-/>
+        <DeleteModal 
+          visible={deleteGradeModal.visible}   
+          title={t('UnregisteredCropDetails.ConfirmDelete')}
+          message={t('UnregisteredCropDetails.Are you sure you want to delete grade', { varietyName: deleteGradeModal.varietyName, grade: deleteGradeModal.grade })}
+          onCancel={() => setDeleteGradeModal({ visible: false, cropIndex: -1, grade: 'A', varietyName: '' })}   
+          onDelete={handleDeleteGrade} 
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );

@@ -34,6 +34,22 @@ interface complainItem {
   status: "Opened" | "Closed";
   reply?: string;
   refNo: string;
+  complainAssign?: string;
+  replyTime?: string;
+  replyByOfficerName?: string;
+  replierCenterId?: string;
+  companyName?: string;
+  replyByFirstNameEnglish?: string;
+  replyByFirstNameSinhala?: string;
+  replyByFirstNameTamil?: string;
+  replyByLastNameEnglish?: string;
+  replyByLastNameSinhala?: string;
+  replyByLastNameTamil?: string;
+  companyNameEnglish?: string;
+  companyNameSinhala?: string;
+  companyNameTamil?: string;
+  replierCenterName?: string;
+  replierCenterRegCode?: string;
 }
 
 type ComplainHistoryNavigationProp = StackNavigationProp<
@@ -43,16 +59,372 @@ type ComplainHistoryNavigationProp = StackNavigationProp<
 
 interface ComplainHistoryProps {
   navigation: ComplainHistoryNavigationProp;
+  route?: {
+    params?: {
+      fullname?: string;
+    };
+  };
 }
 
-const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
+const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation, route }) => {
   const [complains, setComplains] = useState<complainItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [userToken, setUserToken] = useState<string | null>(null);
   const [language, setLanguage] = useState("en");
   const [modalVisible, setModalVisible] = useState(false);
-  const [complainReply, setComplainReply] = useState<string | null>(null);
-  const { t } = useTranslation();
+  const [selectedComplain, setSelectedComplain] = useState<complainItem | null>(null);
+  const [userFullName, setUserFullName] = useState<string>("User");
+  const [userFullNameSi, setUserFullNameSi] = useState<string>("");
+  const [userFullNameTa, setUserFullNameTa] = useState<string>("");
+  const { t, i18n } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+
+  const LanguageSelect = (lang: string) => {
+    setLanguage(lang);
+  };
+
+  const fetchSelectedLanguage = async () => {
+    try {
+      const lang = await AsyncStorage.getItem("@user_language");
+      setSelectedLanguage(lang || "en");
+    } catch (error) {
+      console.error("Error fetching language preference:", error);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("Current language:", i18n.language);
+  
+      if (i18n.language === "en") {
+        LanguageSelect("en");
+        setSelectedLanguage("en");
+      } else if (i18n.language === "si") {
+        LanguageSelect("si");
+        setSelectedLanguage("si");
+      } else if (i18n.language === "ta") {
+        LanguageSelect("ta");
+        setSelectedLanguage("ta");
+      }
+      fetchSelectedLanguage();
+    }, [i18n.language])
+  );
+
+  // Get user's full name from route params or AsyncStorage
+  useEffect(() => {
+    const getUserName = async () => {
+      if (route?.params?.fullname) {
+        setUserFullName(route.params.fullname);
+      } else {
+        const storedName = await AsyncStorage.getItem("fullname");
+        const storedNameSi = await AsyncStorage.getItem("fullnameSi");
+        const storedNameTa = await AsyncStorage.getItem("fullnameTa");
+        
+        if (storedName) setUserFullName(storedName);
+        if (storedNameSi) setUserFullNameSi(storedNameSi);
+        if (storedNameTa) setUserFullNameTa(storedNameTa);
+      }
+    };
+    getUserName();
+  }, [route?.params?.fullname]);
+
+  // Get replier name based on APP language (not complaint language)
+  const getReplierName = (complain: complainItem): string => {
+    if (!complain.replyByFirstNameEnglish) {
+      return "";
+    }
+
+    // Use app language from i18n
+    const appLang = i18n.language || selectedLanguage;
+    
+    if (appLang === 'si') {
+      return `${complain.replyByFirstNameSinhala || ''} ${complain.replyByLastNameSinhala || ''}`.trim();
+    } else if (appLang === 'ta') {
+      return `${complain.replyByFirstNameTamil || ''} ${complain.replyByLastNameTamil || ''}`.trim();
+    } else {
+      return `${complain.replyByFirstNameEnglish || ''} ${complain.replyByLastNameEnglish || ''}`.trim();
+    }
+  };
+
+  // Get company name based on APP language (not complaint language)
+  const getCompanyName = (complain: complainItem): string => {
+    if (!complain.companyNameEnglish) {
+      return "";
+    }
+
+    // Use app language from i18n
+    const appLang = i18n.language || selectedLanguage;
+    
+    if (appLang === 'si') {
+      return complain.companyNameSinhala || '';
+    } else if (appLang === 'ta') {
+      return complain.companyNameTamil || '';
+    } else {
+      return complain.companyNameEnglish || '';
+    }
+  };
+
+  // Get officer name (recipient) based on APP language (not complaint language)
+  const getOfficerName = (complain: complainItem): string => {
+    // Use app language from i18n
+    const appLang = i18n.language || selectedLanguage;
+    
+    if (appLang === 'si') {
+      return userFullNameSi || userFullName;
+    } else if (appLang === 'ta') {
+      return userFullNameTa || userFullName;
+    } else {
+      return userFullName;
+    }
+  };
+
+  // Get signature based on APP language (not complaint language)
+  // const getSignature = (complain: complainItem): string => {
+  //   const replierName = getReplierName(complain);
+  //   const companyName = getCompanyName(complain);
+  //   const centerRegCode = complain.replierCenterRegCode || '';
+    
+  //   // Use app language from i18n
+  //   const appLang = i18n.language || selectedLanguage;
+
+  //   if (complain.complainAssign === 'Admin') {
+  //     const closingWord = (appLang === 'si')
+  //       ? 'මෙයට'
+  //       : (appLang === 'ta')
+  //       ? 'இதற்கு'
+  //       : 'Sincerely';
+      
+  //     const teamName = (appLang === 'si')
+  //       ? 'Polygon පාරිභෝගික සහාය කණ්ඩායම'
+  //       : (appLang === 'ta')
+  //       ? 'Polygon வாடிக்கையாளர் ஆதரவு குழு'
+  //       : 'Polygon Customer Support Team';
+      
+  //     return `${closingWord},\n${teamName}`;
+  //   } else if (complain.complainAssign === 'CCH' || complain.complainAssign === 'DCH') {
+  //     const headTitle = (appLang === 'si')
+  //       ? 'Collection Centre Head'
+  //       : (appLang === 'ta')
+  //       ? 'Collection Centre Head'
+  //       : 'Collection Centre Head';
+      
+  //     const closingWord = (appLang === 'si')
+  //       ? 'මෙයට'
+  //       : (appLang === 'ta')
+  //       ? 'இதற்கு'
+  //       : 'Sincerely';
+      
+  //     // Format: 
+  //     // Line 1: Sincerely, [Name]
+  //     // Line 2: Collection Centre Head
+  //     // Line 3: [Center Code]
+  //     // Line 4: [Company]
+  //     if (companyName && centerRegCode) {
+  //       return `${closingWord}, ${replierName}\n${headTitle}\n${centerRegCode}\n${companyName}`;
+  //     } else if (companyName) {
+  //       return `${closingWord}, ${replierName}\n${headTitle}\n${companyName}`;
+  //     } else if (centerRegCode) {
+  //       return `${closingWord}, ${replierName}\n${headTitle}\n${centerRegCode}`;
+  //     } else {
+  //       return `${closingWord}, ${replierName}\n${headTitle}`;
+  //     }
+  //   } else {
+  //     // CCM or DCM
+  //     const managerTitle = (appLang === 'si')
+  //       ? 'Collection Centre Manager'
+  //       : (appLang === 'ta')
+  //       ? 'Collection Centre Manager'
+  //       : 'Collection Centre Manager';
+      
+  //     const closingWord = (appLang === 'si')
+  //       ? 'මෙයට'
+  //       : (appLang === 'ta')
+  //       ? 'இதற்கු'
+  //       : 'Sincerely';
+      
+  //     // Format: 
+  //     // Line 1: Sincerely, [Name]
+  //     // Line 2: Collection Centre Manager of [center code]
+  //     // Line 3: [Company]
+  //     const line1 = `${closingWord}, ${replierName}`;
+  //     const line2 = centerRegCode 
+  //       ? `${managerTitle} of ${centerRegCode}`
+  //       : `${managerTitle}`;
+      
+  //     if (companyName) {
+  //       return `${line1}\n${line2}\n${companyName}`;
+  //     } else {
+  //       return `${line1}\n${line2}`;
+  //     }
+  //   }
+  // };
+
+  const getSignature = (complain: complainItem): string => {
+  const replierName = getReplierName(complain);
+  const companyName = getCompanyName(complain);
+  const centerRegCode = complain.replierCenterRegCode || '';
+  
+  // Use app language from i18n
+  const appLang = i18n.language || selectedLanguage;
+
+  if (complain.complainAssign === 'Admin') {
+    const closingWord = (appLang === 'si')
+      ? 'මෙයට'
+      : (appLang === 'ta')
+      ? 'இதற்கு'
+      : 'Sincerely';
+    
+    const teamName = (appLang === 'si')
+      ? 'Polygon පාරිභෝගික සහාය කණ්ඩායම'
+      : (appLang === 'ta')
+      ? 'Polygon வாடிக்கையாளர் ஆதரவு குழு'
+      : 'Polygon Customer Support Team';
+    
+    return `${closingWord},\n${teamName}`;
+  } else if (complain.complainAssign === 'CCH') {
+    // Collection Centre Head
+    const headTitle = (appLang === 'si')
+      ? 'Collection Centre Head'
+      : (appLang === 'ta')
+      ? 'Collection Centre Head'
+      : 'Collection Centre Head';
+    
+    const closingWord = (appLang === 'si')
+      ? 'මෙයට'
+      : (appLang === 'ta')
+      ? 'இதற்கு'
+      : 'Sincerely';
+    
+    if (companyName && centerRegCode) {
+      return `${closingWord}, ${replierName}\n${headTitle}\n${centerRegCode}\n${companyName}`;
+    } else if (companyName) {
+      return `${closingWord}, ${replierName}\n${headTitle}\n${companyName}`;
+    } else if (centerRegCode) {
+      return `${closingWord}, ${replierName}\n${headTitle}\n${centerRegCode}`;
+    } else {
+      return `${closingWord}, ${replierName}\n${headTitle}`;
+    }
+  } else if (complain.complainAssign === 'DCH') {
+    // Distribution Centre Head
+    const headTitle = (appLang === 'si')
+      ? 'Distribution Centre Head'
+      : (appLang === 'ta')
+      ? 'Distribution Centre Head'
+      : 'Distribution Centre Head';
+    
+    const closingWord = (appLang === 'si')
+      ? 'මෙයට'
+      : (appLang === 'ta')
+      ? 'இதற்கு'
+      : 'Sincerely';
+    
+    if (companyName && centerRegCode) {
+      return `${closingWord}, ${replierName}\n${headTitle}\n${centerRegCode}\n${companyName}`;
+    } else if (companyName) {
+      return `${closingWord}, ${replierName}\n${headTitle}\n${companyName}`;
+    } else if (centerRegCode) {
+      return `${closingWord}, ${replierName}\n${headTitle}\n${centerRegCode}`;
+    } else {
+      return `${closingWord}, ${replierName}\n${headTitle}`;
+    }
+  } else if (complain.complainAssign === 'CCM') {
+    // Collection Centre Manager
+    const managerTitle = (appLang === 'si')
+      ? 'Collection Centre Manager'
+      : (appLang === 'ta')
+      ? 'Collection Centre Manager'
+      : 'Collection Centre Manager';
+    
+    const closingWord = (appLang === 'si')
+      ? 'මෙයට'
+      : (appLang === 'ta')
+      ? 'இதற்கு'
+      : 'Sincerely';
+    
+    const line1 = `${closingWord}, ${replierName}`;
+    const line2 = centerRegCode 
+      ? `${managerTitle} of ${centerRegCode}`
+      : `${managerTitle}`;
+    
+    if (companyName) {
+      return `${line1}\n${line2}\n${companyName}`;
+    } else {
+      return `${line1}\n${line2}`;
+    }
+  } else {
+    // DCM - Distribution Centre Manager
+    const managerTitle = (appLang === 'si')
+      ? 'Distribution Centre Manager'
+      : (appLang === 'ta')
+      ? 'Distribution Centre Manager'
+      : 'Distribution Centre Manager';
+    
+    const closingWord = (appLang === 'si')
+      ? 'මෙයට'
+      : (appLang === 'ta')
+      ? 'இதற்கு'
+      : 'Sincerely';
+    
+    const line1 = `${closingWord}, ${replierName}`;
+    const line2 = centerRegCode 
+      ? `${managerTitle} of ${centerRegCode}`
+      : `${managerTitle}`;
+    
+    if (companyName) {
+      return `${line1}\n${line2}\n${companyName}`;
+    } else {
+      return `${line1}\n${line2}`;
+    }
+  }
+};
+
+  // Reply templates based on APP language (not complaint language)
+  const getReplyTemplate = (complain: complainItem): string => {
+    const message = complain.reply || '';
+    const officerName = getOfficerName(complain);
+    const signature = getSignature(complain);
+    const replyTime = complain.replyTime ? `\n\n${formatDateTime(complain.replyTime)}` : '';
+
+    // Use app language from i18n (NOT complaint language)
+    const appLang = i18n.language || selectedLanguage;
+    
+    console.log('Template language:', appLang, '(from i18n.language)');
+    console.log('Complaint backend language:', complain.language, '(IGNORED)');
+
+    const templates = {
+      si: `හිතවත් ${officerName},
+
+අපි ඔබේ පැමිණිල්ල විසඳා ඇති බව දැනුම් දීමට සතුටු වෙමු.
+
+${message}
+
+ඔබට තවත් ගැටළු හෝ ප්‍රශ්න තිබේ නම්, කරුණාකර අප හා සම්බන්ධ වන්න. ඔබේ ඉවසීම සහ අවබෝධය වෙනුවෙන් ස්තූතියි.
+
+${signature}${replyTime}`,
+      
+      en: `Dear ${officerName},
+
+We are pleased to inform you that your complaint has been resolved.
+
+${message}
+
+If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.
+
+${signature}${replyTime}`,
+      
+      ta: `அன்புள்ள ${officerName},
+
+நாங்கள் உங்கள் புகாரை தீர்க்கப்பட்டதாக தெரிவித்ததில் மகிழ்ச்சி அடைகிறோம்.
+
+${message}
+
+உங்களுக்கு மேலும் ஏதேனும் சிக்கல்கள் அல்லது கேள்விகள் இருந்தால், தயவுசெய்து எங்களைத் தொடர்பு கொள்ளவும். உங்கள் பொறுமைக்கும் புரிதலுக்கும் நன்றி.
+
+${signature}${replyTime}`
+    };
+
+    return templates[appLang as keyof typeof templates] || templates.en;
+  };
 
   const fetchComplaints = async () => {
     try {
@@ -96,12 +468,14 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
     const month = date.toLocaleString("en-US", { month: "short" });
     const year = date.getFullYear();
 
-    return `${timeStr},${day} ${month} ${year}`;
+    return `${timeStr}, ${day} ${month} ${year}`;
   };
 
-  const handleViewReply = (reply: string | undefined) => {
-    if (reply) {
-      setComplainReply(reply);
+  const handleViewReply = (complain: complainItem) => {
+    if (complain.reply) {
+      console.log("App language:", i18n.language);
+      console.log("Complaint backend language (ignored):", complain.language);
+      setSelectedComplain(complain);
       setModalVisible(true);
     } else {
       Alert.alert(t("ReportHistory.sorry"), t("ReportHistory.NoReply"));
@@ -167,8 +541,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
                 {t("ReportHistory.RefNo")} : {complain.refNo}
               </Text>
               <Text className="self-start mb-4 text-[#6E6E6E]">
-                {t("ReportHistory.Sent")} {""}
-                {formatDateTime(complain.createdAt)}
+                {t("ReportHistory.Sent")} {formatDateTime(complain.createdAt)}
               </Text>
 
               <Text className="self-start mb-4">{complain.complain}</Text>
@@ -176,7 +549,7 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
                 {complain.status === "Closed" && (
                   <TouchableOpacity
                     className="bg-black px-3 py-2 rounded"
-                    onPress={() => handleViewReply(complain.reply)}
+                    onPress={() => handleViewReply(complain)}
                   >
                     <Text className="text-white text-xs">
                       {t("ReportHistory.View")}
@@ -221,8 +594,13 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation }) => {
             <View className="flex-1" style={{ padding: wp(4) }}>
               <View className="p-4 bg-white rounded-xl w-full mb-4">
                 <Text className="text-lg font-bold">{t("Thank You")}</Text>
+
                 <ScrollView className="mt-8" style={{ maxHeight: hp(55) }}>
-                  <Text className="pb-4">{complainReply || "Loading..."}</Text>
+                  <Text className="pb-4" style={{ lineHeight: 24 }}>
+                    {selectedComplain 
+                      ? getReplyTemplate(selectedComplain)
+                      : "Loading..."}
+                  </Text>
                 </ScrollView>
               </View>
 

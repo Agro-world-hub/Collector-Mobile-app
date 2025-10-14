@@ -91,6 +91,7 @@
     "Please enter a valid amount.":"Please enter a valid amount.",
     "You cannot transfer more than":"You cannot transfer more than",
     "Target transferred successfully.":"Target transferred successfully.",
+    "Target received successfully.":"Target received successfully.",
     "Failed to transfer target.":"Failed to transfer target.",
     "An error occurred while transferring the target.":"An error occurred while transferring the target.",
     "No target data found for selected officer.":"No target data found for selected officer.",
@@ -222,7 +223,22 @@
 "Failed to submit crop details":"Failed to submit crop details. Please try again.",
 "Please enter Employee ID in uppercase letters":"Please enter Employee ID in uppercase letters",
 "Failed to update password": "Failed to update password",
-"Distribution Centre Head are not allowed to access this application": "Distribution Centre Head are not allowed to access this application"
+"Distribution Centre Head are not allowed to access this application": "Distribution Centre Head are not allowed to access this application",
+"Please select at least one preferred language":"Please select at least one preferred language",
+"First name in English is required":"First name in English is required",
+"Last name in English is required":"Last name in English is required",
+"Phone number is required":"Phone number is required",
+"NIC number is required":"NIC number is required",
+"House number is required":"House number is required",
+"Street name is required":"Street name is required",
+"City is required":"City is required",
+"Province is required":"Province is required",
+"District is required":"District is required",
+"Account holder name is required":"Account holder name is required",
+"Account number is required":"Account number is required",
+"Confirm account number is required":"Confirm account number is required",
+"Bank name is required":"Bank name is required",
+"Branch name is required":"Branch name is required"
   },
   "EngProfile":{
     "LNG": "en",
@@ -292,7 +308,8 @@
     "RegisterFarmer":"Register Farmer",
     "Result Found":"Results Found :",
     "Set QR Code":"Set QR Code",
-    "This Farmer does not have the QR" : "This Farmer does not have the QR"
+    "This Farmer does not have the QR" : "This Farmer does not have the QR",
+    "Enter Valide NIC":"Enter Valid NIC"
   },
   "UnregisteredFarmerDetails":{
     "LNG": "en",
@@ -320,7 +337,17 @@
     "InvalidNIC":"NIC must be either 12 digits or 9 digits followed by V or v",
     "OnlyDigitsAllowed":"Only Digits Allowed",
     "MustStartWith7":"Invalid phone number. Format must start with 7 (e.g., 7XXXXXXXX)",
-    "InvalidPhoneLength":"Invalid phone number"
+    "InvalidPhoneLength":"Invalid phone number",
+      "EnterFirstName": "Please enter First Name",
+    "EnterLastName": "Please enter Last Name", 
+    "SelectLanguage": "Please select Preferred Language",
+    "EnterNIC": "Please enter NIC number",
+    "EnterPhone": "Please enter Phone Number",
+    "SelectDistrict": "Please select District",
+    "EnterAccountNumber": "Please enter Account Number",
+    "EnterAccountName": "Please enter Account Holder Name",
+    "SelectBank": "Please select Bank",
+    "SelectBranch": "Please select Branch"
   },
   "PriceChart":{
     "LNG": "en",
@@ -347,7 +374,13 @@
     "invalidOTP":"verification code is Incorrect",
     "completeOTP":"Please enter the full verification code",
     "Resend in": "Resend in",
-    "Resend again": "Resend again"
+    "Resend again": "Resend again",
+     "OTPExpired": "Your OTP has expired. Please request a new one.",
+    "OTPExpiredWarning": "OTP has expired. Please request a new code.",
+    "OTPExpiredOrInvalid": "The OTP is invalid or has expired. Would you like to request a new one?",
+    "ResendOTP": "Resend OTP",
+    "Cancel": "Cancel",
+    "TryAgain": "Try Again"
   },
   "FarmerQr":{
     "LNG": "en",

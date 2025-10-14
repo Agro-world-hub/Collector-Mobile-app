@@ -10,7 +10,7 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp ,  useFocusEffect} from "@react-navigation/native";
 import { RootStackParamList } from "../types";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -118,6 +118,12 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
   useEffect(() => {
     fetchReplaceRequests();
   }, [fetchReplaceRequests]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchReplaceRequests();
+    }, [fetchReplaceRequests])
+  );
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);

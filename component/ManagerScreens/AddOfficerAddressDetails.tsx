@@ -41,20 +41,13 @@ const AddOfficerAddressDetails: React.FC = () => {
   const route =
     useRoute<RouteProp<RootStackParamList, "AddOfficerAddressDetails">>();
 
-  // Rename the destructured `formData` from route.params to avoid conflict
   const {
     formData: basicDetails,
     type,
     preferredLanguages,
     jobRole,
   } = route.params;
-  console.log(
-    "Basic details:",
-    basicDetails,
-    type,
-    preferredLanguages,
-    jobRole
-  );
+  
   const [filteredBranches, setFilteredBranches] = useState<any[]>([]);
   const [bankName, setBankName] = useState<string>("");
   const [branchName, setBranchName] = useState<string>("");
@@ -64,7 +57,7 @@ const AddOfficerAddressDetails: React.FC = () => {
     houseNumber: "",
     streetName: "",
     city: "",
-    country: "Sri Lanka", // Always set to Sri Lanka
+    country: "Sri Lanka",
     province: "",
     district: "",
     accountHolderName: "",
@@ -75,8 +68,6 @@ const AddOfficerAddressDetails: React.FC = () => {
     profileImage: "",
   });
 
-  //console.log(formData);
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [countries, setCountries] = useState<
@@ -84,11 +75,12 @@ const AddOfficerAddressDetails: React.FC = () => {
   >([]);
 
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const fetchSelectedLanguage = async () => {
     try {
-      const lang = await AsyncStorage.getItem("@user_language"); // Get stored language
-      setSelectedLanguage(lang || "en"); // Default to English if not set
+      const lang = await AsyncStorage.getItem("@user_language");
+      setSelectedLanguage(lang || "en");
     } catch (error) {
       console.error("Error fetching language preference:", error);
     }
@@ -101,7 +93,6 @@ const AddOfficerAddressDetails: React.FC = () => {
     fetchData();
   }, []);
 
-  // Function to save data to AsyncStorage whenever a field changes
   const saveDataToStorage = async (updatedData: any) => {
     try {
       await AsyncStorage.setItem(
@@ -113,42 +104,47 @@ const AddOfficerAddressDetails: React.FC = () => {
     }
   };
 
-  // Handle input changes and save to AsyncStorage
+  // Clear specific field error when user starts typing
+  const clearFieldError = (fieldName: string) => {
+    setFieldErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors[fieldName];
+      return newErrors;
+    });
+  };
+
   const handleInputChange = (key: string, value: string) => {
+    clearFieldError(key); // Clear error when user types
     setFormData((prevData) => {
       const updatedData = { ...prevData, [key]: value };
-      saveDataToStorage(updatedData); // Save every time data changes
+      saveDataToStorage(updatedData);
       return updatedData;
     });
   };
 
-
-
   const handleValidation = (key: string, value: string) => {
-  // Block special characters and letters - only allow numbers
-  const numbersOnly = value.replace(/[^0-9]/g, '');
-  
-  setFormData((prevState) => {
-    const updatedFormData = { ...prevState, [key]: numbersOnly };
-    const { accountNumber, confirmAccountNumber } = updatedFormData;
+    const numbersOnly = value.replace(/[^0-9]/g, '');
+    clearFieldError(key); // Clear error when user types
+    
+    setFormData((prevState) => {
+      const updatedFormData = { ...prevState, [key]: numbersOnly };
+      const { accountNumber, confirmAccountNumber } = updatedFormData;
 
-    if (
-      accountNumber &&
-      confirmAccountNumber &&
-      accountNumber !== confirmAccountNumber
-    ) {
-      setError(t("Error.Account numbers do not match."));
-    } else {
-      setError(""); // Clear error if they match
-    }
+      if (
+        accountNumber &&
+        confirmAccountNumber &&
+        accountNumber !== confirmAccountNumber
+      ) {
+        setError(t("Error.Account numbers do not match."));
+      } else {
+        setError("");
+      }
 
-    saveDataToStorage(updatedFormData); // Ensure data is saved after validation
-    return updatedFormData;
-  });
-};
+      saveDataToStorage(updatedFormData);
+      return updatedFormData;
+    });
+  };
 
-
-  // Load saved data when the component mounts
   useEffect(() => {
     const loadStoredData = async () => {
       try {
@@ -164,37 +160,57 @@ const AddOfficerAddressDetails: React.FC = () => {
     loadStoredData();
   }, []);
 
-  // Load country data from JSON
   useEffect(() => {
-    setCountries(countryCodes); // Assuming countryCodes is preloaded
+    setCountries(countryCodes);
   }, []);
 
-  // Clear AsyncStorage after successful submission
+  // Validate all required fields
+  const validateFields = () => {
+    const errors: Record<string, string> = {};
+
+    if (!formData.houseNumber.trim()) {
+      errors.houseNumber = t("Error.House number is required");
+    }
+    if (!formData.streetName.trim()) {
+      errors.streetName = t("Error.Street name is required");
+    }
+    if (!formData.city.trim()) {
+      errors.city = t("Error.City is required");
+    }
+    if (!formData.province) {
+      errors.province = t("Error.Province is required");
+    }
+    if (!formData.district) {
+      errors.district = t("Error.District is required");
+    }
+    if (!formData.accountHolderName.trim()) {
+      errors.accountHolderName = t("Error.Account holder name is required");
+    }
+    if (!formData.accountNumber.trim()) {
+      errors.accountNumber = t("Error.Account number is required");
+    }
+    if (!formData.confirmAccountNumber.trim()) {
+      errors.confirmAccountNumber = t("Error.Confirm account number is required");
+    } else if (formData.accountNumber !== formData.confirmAccountNumber) {
+      errors.confirmAccountNumber = t("Error.Account numbers do not match.");
+    }
+    if (!formData.bankName) {
+      errors.bankName = t("Error.Bank name is required");
+    }
+    if (!formData.branchName) {
+      errors.branchName = t("Error.Branch name is required");
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async () => {
-    if (
-      !formData.houseNumber ||
-      !formData.streetName ||
-      !formData.city ||
-      !formData.accountHolderName ||
-      !formData.accountNumber ||
-      !formData.confirmAccountNumber ||
-      !formData.bankName ||
-      !formData.branchName ||
-      !formData.province
-    ) {
-      Alert.alert(
-        t("Error.error"),
-        t("Error.Please fill in all required fields.")
-      );
+    // Validate all fields
+    if (!validateFields()) {
       return;
     }
 
-    if (formData.accountNumber !== formData.confirmAccountNumber) {
-      Alert.alert(t("Error.error"), t("Error.Account numbers do not match."));
-      return;
-    }
-
-    // Ensure 'Sri Lanka' is set as the country before submitting
     const combinedData = {
       ...basicDetails,
       ...formData,
@@ -204,16 +220,14 @@ const AddOfficerAddressDetails: React.FC = () => {
         .filter(
           (lang) => preferredLanguages[lang as keyof typeof preferredLanguages]
         )
-        .join(", "), // Convert preferred languages to a comma-separated string
-      profileImage: basicDetails.profileImage || "", // Include the base64 image in the payload
+        .join(", "),
+      profileImage: basicDetails.profileImage || "",
     };
 
-  //  console.log("Combined data for passing to backend:", combinedData);
-
-      const netState = await NetInfo.fetch();
-      if (!netState.isConnected) {
-    return; 
-  }
+    const netState = await NetInfo.fetch();
+    if (!netState.isConnected) {
+      return;
+    }
 
     try {
       setLoading(true);
@@ -235,13 +249,12 @@ const AddOfficerAddressDetails: React.FC = () => {
           t("Error.Officer created successfully")
         );
         setLoading(false);
-         // Clear saved form data after successful submission
         await AsyncStorage.removeItem("officerFormData");
-        if(jobRole==="Collection Officer"){
-        navigation.navigate("Main", { screen: "CollectionOfficersList" });
-        }else if(jobRole==="Distribution Officer"){
-                navigation.navigate("Main", { screen: "DistributionOfficersList" });
-      }
+        if (jobRole === "Collection Officer") {
+          navigation.navigate("Main", { screen: "CollectionOfficersList" });
+        } else if (jobRole === "Distribution Officer") {
+          navigation.navigate("Main", { screen: "DistributionOfficersList" });
+        }
       }
     } catch (error) {
       console.error("Error submitting officer data:", error);
@@ -251,21 +264,7 @@ const AddOfficerAddressDetails: React.FC = () => {
         error.response &&
         error.response.status === 400
       ) {
-        const serverErrors = error.response.data.error;
-        if (serverErrors) {
-          if (typeof serverErrors === "string") {
-            Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
-          } else {
-            const errorMessages = Object.values(serverErrors).join("\n");
-            // Alert.alert(t("Error.error"), errorMessages);
-            Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
-          }
-        } else {
-          Alert.alert(
-            t("Error.error"),
-            t("Error.An error occurred while creating the officer.")
-          );
-        }
+        Alert.alert(t("Error.error"), t("Error.somethingWentWrong"));
       } else {
         Alert.alert(
           t("Error.error"),
@@ -350,21 +349,24 @@ const AddOfficerAddressDetails: React.FC = () => {
     ],
   };
 
-  const [districts, setDistricts] = useState<District[]>([]); // Change from string[] to District[]
+  const [districts, setDistricts] = useState<District[]>([]);
 
   const handleProvinceChange = (provinceName: string) => {
+    clearFieldError('province');
+    clearFieldError('district');
+    
     const selectedProvince = jsonData.provinces.find(
-      (p) => p.name.en === provinceName // Use 'en' for comparison
+      (p) => p.name.en === provinceName
     );
 
     if (selectedProvince) {
       setFormData({
         ...formData,
         province: selectedProvince.name.en,
-        district: "", // Reset district when changing the province
+        district: "",
       });
 
-      if (!selectedLanguage) return; // Ensure selectedLanguage is not null
+      if (!selectedLanguage) return;
 
       setDistricts(
         selectedProvince.districts.map((d) => ({
@@ -377,7 +379,8 @@ const AddOfficerAddressDetails: React.FC = () => {
   };
 
   const handleDistrictChange = (district: string) => {
-    setFormData({ ...formData, district }); // Ensure the district is stored in formData
+    clearFieldError('district');
+    setFormData({ ...formData, district });
   };
 
   useEffect(() => {
@@ -407,39 +410,38 @@ const AddOfficerAddressDetails: React.FC = () => {
     }
   }, [bankName]);
 
-  const formatText = (text:string) => {
-  // Remove leading spaces
-  let formattedText = text.replace(/^\s+/, '');
-  
-  // Capitalize first letter if text exists
-  if (formattedText.length > 0) {
-    formattedText = formattedText.charAt(0).toUpperCase() + formattedText.slice(1);
-  }
-  
-  return formattedText;
-};
-
-
+  const formatText = (text: string) => {
+    let formattedText = text.replace(/^\s+/, '');
+    
+    if (formattedText.length > 0) {
+      formattedText = formattedText.charAt(0).toUpperCase() + formattedText.slice(1);
+    }
+    
+    return formattedText;
+  };
 
   const handleBankSelection = (selectedBank: string) => {
-  setBankName(selectedBank);
-  setBranchName(""); 
-  setFormData((prevData) => {
-    const updatedData = { 
-      ...prevData, 
-      bankName: selectedBank,
-      branchName: "" 
-    };
-    saveDataToStorage(updatedData); 
-    return updatedData;
-  });
-};
+    clearFieldError('bankName');
+    clearFieldError('branchName');
+    setBankName(selectedBank);
+    setBranchName("");
+    setFormData((prevData) => {
+      const updatedData = {
+        ...prevData,
+        bankName: selectedBank,
+        branchName: ""
+      };
+      saveDataToStorage(updatedData);
+      return updatedData;
+    });
+  };
 
   const handleBranchSelection = (selectedBranch: string) => {
+    clearFieldError('branchName');
     setBranchName(selectedBranch);
     setFormData((prevData) => {
-      const updatedData = { ...prevData, branchName: selectedBranch }; // Update the form data with new branchName
-      saveDataToStorage(updatedData); // Save every time branch name changes
+      const updatedData = { ...prevData, branchName: selectedBranch };
+      saveDataToStorage(updatedData);
       return updatedData;
     });
   };
@@ -448,7 +450,7 @@ const AddOfficerAddressDetails: React.FC = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
-      style={{ flex: 1}}
+      style={{ flex: 1 }}
     >
       <ScrollView
         className="flex-1 bg-white"
@@ -462,7 +464,7 @@ const AddOfficerAddressDetails: React.FC = () => {
           >
             <AntDesign name="left" size={24} color="#000502" />
           </TouchableOpacity>
-         
+
           <View className="flex-1 justify-center items-center mr-[8%]">
             <Text className="text-lg font-bold">
               {t("AddOfficerAddressDetails.AddOfficer")}
@@ -475,43 +477,55 @@ const AddOfficerAddressDetails: React.FC = () => {
           <TextInput
             placeholder={t("AddOfficerAddressDetails.House")}
             value={formData.houseNumber}
-            onChangeText={(text) =>
-              setFormData({ ...formData, houseNumber: text })
-            }
-            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
+            onChangeText={(text) => handleInputChange("houseNumber", text)}
+            className={`border ${
+              fieldErrors.houseNumber ? "border-red-500" : "border-[#F4F4F4]"
+            } bg-[#F4F4F4] rounded-full px-3 py-2 mb-1 text-gray-700`}
           />
-         
+          {fieldErrors.houseNumber ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">{fieldErrors.houseNumber}</Text>
+          ) : <View className="mb-3" />}
+
           <TextInput
-  placeholder={t("AddOfficerAddressDetails.Street Name")}
-  value={formData.streetName}
-  onChangeText={(text) => {
-    const formattedText = formatText(text);
-    setFormData({ ...formData, streetName: formattedText });
-  }}
-  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
-  autoCorrect={false}
-/>
+            placeholder={t("AddOfficerAddressDetails.Street Name")}
+            value={formData.streetName}
+            onChangeText={(text) => {
+              const formattedText = formatText(text);
+              handleInputChange("streetName", formattedText);
+            }}
+            className={`border ${
+              fieldErrors.streetName ? "border-red-500" : "border-[#F4F4F4]"
+            } bg-[#F4F4F4] rounded-full px-3 py-2 mb-1 text-gray-700`}
+            autoCorrect={false}
+          />
+          {fieldErrors.streetName ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">{fieldErrors.streetName}</Text>
+          ) : <View className="mb-3" />}
 
+          <TextInput
+            placeholder={t("AddOfficerAddressDetails.City")}
+            value={formData.city}
+            onChangeText={(text) => {
+              const formattedText = formatText(text);
+              handleInputChange("city", formattedText);
+            }}
+            className={`border ${
+              fieldErrors.city ? "border-red-500" : "border-[#F4F4F4]"
+            } bg-[#F4F4F4] rounded-full px-3 py-2 mb-1 text-gray-700`}
+            autoCorrect={false}
+          />
+          {fieldErrors.city ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">{fieldErrors.city}</Text>
+          ) : <View className="mb-3" />}
 
-<TextInput
-  placeholder={t("AddOfficerAddressDetails.City")}
-  value={formData.city}
-  onChangeText={(text) => {
-    const formattedText = formatText(text);
-    setFormData({ ...formData, city: formattedText });
-  }}
-  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
-  autoCorrect={false}
-/>
           <TextInput
             placeholder={t("AddOfficerAddressDetails.Country")}
-            value={t("AddOfficerAddressDetails.Country")} // Always set to Sri Lanka
-            editable={false} // Make the input non-editable
-            className="border-[#F4F4F4] bg-[#F4F4F4] rounded-full  px-3 py-2 mb-4 text-gray-700"
+            value={t("AddOfficerAddressDetails.Country")}
+            editable={false}
+            className="border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
           />
 
-          <View style={{ marginBottom: 10 }}>
-         
+          <View style={{ marginBottom: 1 }}>
             <SelectList
               setSelected={(province: any) => handleProvinceChange(province)}
               data={jsonData.provinces.map((province) => ({
@@ -522,12 +536,12 @@ const AddOfficerAddressDetails: React.FC = () => {
                   ] || province.name.en,
               }))}
               boxStyles={{
-                    borderColor: "#F4F4F4", // Remove the border
-                    borderRadius: 25,
-                    width: "100%",
-                    height: 50,
-                    backgroundColor:"#F4F4F4",
-                  }}
+                borderColor: fieldErrors.province ? "#ef4444" : "#F4F4F4",
+                borderRadius: 25,
+                width: "100%",
+                height: 50,
+                backgroundColor: "#F4F4F4",
+              }}
               dropdownStyles={{
                 borderRadius: 5,
                 borderWidth: 1,
@@ -537,139 +551,26 @@ const AddOfficerAddressDetails: React.FC = () => {
               placeholder={t("AddOfficerAddressDetails.Select Province")}
             />
           </View>
+          {fieldErrors.province ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">{fieldErrors.province}</Text>
+          ) : <View className="mb-3" />}
 
           {/* District Dropdown */}
           {formData.province && (
-            <View style={{ marginBottom: 2 }}>
-          
-              <SelectList
-                setSelected={handleDistrictChange} 
-                data={districts.map((district) => ({
-                  key: district.en,
-                  value: district[selectedLanguage as keyof typeof district], 
-                }))}
-                boxStyles={{
-                    borderColor: "#F4F4F4", // Remove the border
-                    borderRadius: 25,
-                    width: "100%",
-                    height: 50,
-                    backgroundColor:"#F4F4F4",
-                  }}
-                dropdownStyles={{
-                  borderRadius: 5,
-                  borderWidth: 1,
-                  borderColor: "#cccccc",
-                }}
-                search={true}
-                placeholder={t("AddOfficerAddressDetails.Select District")}
-              />
-            </View>
-          )}
-        </View>
-
-        {/* Bank Details */}
-        <View className="px-8 mt-4">
-       <TextInput
-  placeholder={t("AddOfficerAddressDetails.AccountName")}
-  value={formData.accountHolderName}
-  onChangeText={(text) => {
-
-    let filteredText = text.replace(/[^a-zA-Z\s]/g, '');
-    
-
-    if (filteredText.startsWith(' ')) {
-      filteredText = filteredText.trimStart();
-    }
-    
-
-    const capitalizedText = filteredText
-      .toLowerCase()
-      .split(' ')
-      .map(word => {
-        if (word.length > 0) {
-          return word.charAt(0).toUpperCase() + word.slice(1);
-        }
-        return word;
-      })
-      .join(' ');
-    
-    // Update form data
-    handleInputChange("accountHolderName", capitalizedText);
-  }}
-  keyboardType="default"
-  autoCapitalize="words"
-  autoCorrect={false}
-  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
-/>
-          <TextInput
-  placeholder={t("AddOfficerAddressDetails.AccountNum")}
-  keyboardType="numeric"
-  value={formData.accountNumber}
-  onChangeText={(text) => handleValidation("accountNumber", text)}
-  className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
-/>
-
-<TextInput
-  placeholder={t("AddOfficerAddressDetails.Confirm AccountNum")}
-  keyboardType="numeric"
-  value={formData.confirmAccountNumber}
-  onChangeText={(text) => handleValidation("confirmAccountNumber", text)}
-  className={`border ${
-    error ? "border-red-500" : "border-[#F4F4F4] bg-[#F4F4F4]"
-  } rounded-full px-3 py-2 mb-4 text-gray-700`}
-/>
-
-{error && <Text className="text-red-500 text-sm mb-4">{error}</Text>}
-
-          <View className="">
-            <View className="mb-4">
-              <SelectList
-    setSelected={handleBankSelection}
-    data={bankNames
-      .sort((a, b) => a.name.localeCompare(b.name)) // Sort banks A-Z
-      .map((bank) => ({
-        key: bank.name,
-        value: bank.name,
-      }))}
-    defaultOption={{
-      key: formData.bankName,
-      value: formData.bankName,
-    }}
-    placeholder={t("AddOfficerAddressDetails.BankName")}
-    boxStyles={{
-      borderColor: "#F4F4F4",
-      borderRadius: 25,
-      width: "100%",
-      height: 50,
-      backgroundColor: "#F4F4F4",
-    }}
-    dropdownStyles={{
-      borderRadius: 5,
-      borderWidth: 1,
-      borderColor: "#cccccc",
-    }}
-    search={true}
-  />
-            </View>
-            <View>
-              {filteredBranches.length > 0 && (
+            <>
+              <View style={{ marginBottom: 1 }}>
                 <SelectList
-                  setSelected={handleBranchSelection} // Handle branch selection
-                  data={filteredBranches.map((branch) => ({
-                    key: branch.name, // Branch name as key
-                    value: branch.name, // Display branch name in dropdown
+                  setSelected={handleDistrictChange}
+                  data={districts.map((district) => ({
+                    key: district.en,
+                    value: district[selectedLanguage as keyof typeof district],
                   }))}
-                  defaultOption={{
-                    key: formData.branchName,
-                    value: formData.branchName,
-                  }}
-                  placeholder={t("AddOfficerAddressDetails.BranchName")}
                   boxStyles={{
-                    borderColor: "#F4F4F4", // Remove the border
+                    borderColor: fieldErrors.district ? "#ef4444" : "#F4F4F4",
                     borderRadius: 25,
                     width: "100%",
                     height: 50,
-                    backgroundColor:"#F4F4F4",
+                    backgroundColor: "#F4F4F4",
                   }}
                   dropdownStyles={{
                     borderRadius: 5,
@@ -677,7 +578,146 @@ const AddOfficerAddressDetails: React.FC = () => {
                     borderColor: "#cccccc",
                   }}
                   search={true}
+                  placeholder={t("AddOfficerAddressDetails.Select District")}
                 />
+              </View>
+              {fieldErrors.district ? (
+                <Text className="text-red-500 text-sm mb-3 ml-3">{fieldErrors.district}</Text>
+              ) : <View className="mb-3" />}
+            </>
+          )}
+        </View>
+
+        {/* Bank Details */}
+        <View className="px-8 mt-4">
+          <TextInput
+            placeholder={t("AddOfficerAddressDetails.AccountName")}
+            value={formData.accountHolderName}
+            onChangeText={(text) => {
+              let filteredText = text.replace(/[^a-zA-Z\s]/g, '');
+
+              if (filteredText.startsWith(' ')) {
+                filteredText = filteredText.trimStart();
+              }
+
+              const capitalizedText = filteredText
+                .toLowerCase()
+                .split(' ')
+                .map(word => {
+                  if (word.length > 0) {
+                    return word.charAt(0).toUpperCase() + word.slice(1);
+                  }
+                  return word;
+                })
+                .join(' ');
+
+              handleInputChange("accountHolderName", capitalizedText);
+            }}
+            keyboardType="default"
+            autoCapitalize="words"
+            autoCorrect={false}
+            className={`border ${
+              fieldErrors.accountHolderName ? "border-red-500" : "border-[#F4F4F4]"
+            } bg-[#F4F4F4] rounded-full px-3 py-2 mb-1 text-gray-700`}
+          />
+          {fieldErrors.accountHolderName ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">{fieldErrors.accountHolderName}</Text>
+          ) : <View className="mb-3" />}
+
+          <TextInput
+            placeholder={t("AddOfficerAddressDetails.AccountNum")}
+            keyboardType="numeric"
+            value={formData.accountNumber}
+            onChangeText={(text) => handleValidation("accountNumber", text)}
+            className={`border ${
+              fieldErrors.accountNumber ? "border-red-500" : "border-[#F4F4F4]"
+            } bg-[#F4F4F4] rounded-full px-3 py-2 mb-1 text-gray-700`}
+          />
+          {fieldErrors.accountNumber ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">{fieldErrors.accountNumber}</Text>
+          ) : <View className="mb-3" />}
+
+          <TextInput
+            placeholder={t("AddOfficerAddressDetails.Confirm AccountNum")}
+            keyboardType="numeric"
+            value={formData.confirmAccountNumber}
+            onChangeText={(text) => handleValidation("confirmAccountNumber", text)}
+            className={`border ${
+              error || fieldErrors.confirmAccountNumber ? "border-red-500" : "border-[#F4F4F4]"
+            } bg-[#F4F4F4] rounded-full px-3 py-2 mb-1 text-gray-700`}
+          />
+          {(error || fieldErrors.confirmAccountNumber) ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">
+              {fieldErrors.confirmAccountNumber || error}
+            </Text>
+          ) : <View className="mb-3" />}
+
+          <View className="">
+            <View className="mb-1">
+              <SelectList
+                setSelected={handleBankSelection}
+                data={bankNames
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((bank) => ({
+                    key: bank.name,
+                    value: bank.name,
+                  }))}
+                defaultOption={{
+                  key: formData.bankName,
+                  value: formData.bankName,
+                }}
+                placeholder={t("AddOfficerAddressDetails.BankName")}
+                boxStyles={{
+                  borderColor: fieldErrors.bankName ? "#ef4444" : "#F4F4F4",
+                  borderRadius: 25,
+                  width: "100%",
+                  height: 50,
+                  backgroundColor: "#F4F4F4",
+                }}
+                dropdownStyles={{
+                  borderRadius: 5,
+                  borderWidth: 1,
+                  borderColor: "#cccccc",
+                }}
+                search={true}
+              />
+            </View>
+            {fieldErrors.bankName ? (
+              <Text className="text-red-500 text-sm mb-3 ml-3">{fieldErrors.bankName}</Text>
+            ) : <View className="mb-3" />}
+
+            <View>
+              {filteredBranches.length > 0 && (
+                <>
+                  <SelectList
+                    setSelected={handleBranchSelection}
+                    data={filteredBranches.map((branch) => ({
+                      key: branch.name,
+                      value: branch.name,
+                    }))}
+                    defaultOption={{
+                      key: formData.branchName,
+                      value: formData.branchName,
+                    }}
+                    placeholder={t("AddOfficerAddressDetails.BranchName")}
+                    boxStyles={{
+                      borderColor: fieldErrors.branchName ? "#ef4444" : "#F4F4F4",
+                      borderRadius: 25,
+                      width: "100%",
+                      height: 50,
+                      backgroundColor: "#F4F4F4",
+                    }}
+                    dropdownStyles={{
+                      borderRadius: 5,
+                      borderWidth: 1,
+                      borderColor: "#cccccc",
+                    }}
+                    search={true}
+                  />
+                  {fieldErrors.branchName ? (
+                    <Text className="text-red-500 text-sm mt-1 ml-3">{fieldErrors.branchName}</Text>
+                  ) : null}
+                </>
               )}
             </View>
           </View>
@@ -689,21 +729,21 @@ const AddOfficerAddressDetails: React.FC = () => {
             onPress={() => navigation.goBack()}
             className="bg-gray-300 px-8 py-3 rounded-full"
           >
-            <Text className="text-gray-800 text-center"
-                                   style={[
-  i18n.language === "si"
-    ? { fontSize: 13 }
-    : i18n.language === "ta"
-    ? { fontSize: 10 }
-    : { fontSize: 14 }
-]}
+            <Text
+              className="text-gray-800 text-center"
+              style={[
+                i18n.language === "si"
+                  ? { fontSize: 13 }
+                  : i18n.language === "ta"
+                  ? { fontSize: 10 }
+                  : { fontSize: 14 }
+              ]}
             >
               {t("AddOfficerAddressDetails.Go")}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleSubmit}
-            // className="bg-green-600 px-8 py-3 rounded-full"
             className={`bg-[#000000] px-8 py-3 rounded-full ${
               loading ? "opacity-50" : ""
             }`}
@@ -712,14 +752,15 @@ const AddOfficerAddressDetails: React.FC = () => {
             {loading ? (
               <ActivityIndicator color="white" size="small" />
             ) : (
-              <Text className="text-white text-center"
-                                     style={[
-  i18n.language === "si"
-    ? { fontSize: 13 }
-    : i18n.language === "ta"
-    ? { fontSize: 10 }
-    : { fontSize: 14 }
-]}
+              <Text
+                className="text-white text-center"
+                style={[
+                  i18n.language === "si"
+                    ? { fontSize: 13 }
+                    : i18n.language === "ta"
+                    ? { fontSize: 10 }
+                    : { fontSize: 14 }
+                ]}
               >
                 {t("AddOfficerAddressDetails.Submit")}
               </Text>
