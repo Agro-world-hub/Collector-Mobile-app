@@ -685,7 +685,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
     ? { fontSize: 12 }
     : { fontSize: 15 }
 ]}
-          className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
+          className="flex-1 text-center text-white font-bold">{selectedToggle === 'ToDo' ? t("TargetOrderScreen.No") : ''}</Text>
           <Text 
              style={[
   i18n.language === "si"

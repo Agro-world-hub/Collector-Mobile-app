@@ -234,7 +234,8 @@ const [jobRole, setJobRole] = useState<string | null>(null);
 const [isLoading, setIsLoading] = useState(false);
 const [successModalShown, setSuccessModalShown] = useState(false);
 const [showSuccessModal, setShowSuccessModal] = useState(false);
-
+const [requestLoading, setRequestLoading] = useState(false);
+const [searchQuery, setSearchQuery] = useState("");
 
 useEffect(() => {
   const loadingTimer = setTimeout(() => {
@@ -870,7 +871,9 @@ const getPackageGroups = () => {
   });
 };
 
-
+const filteredItems = retailItems.filter((product) =>
+  product.displayName.toLowerCase().includes(searchQuery.toLowerCase())
+);
 
 
 const handleReplaceProduct = (item: FamilyPackItem) => {
@@ -920,6 +923,7 @@ const handleReplaceSubmit = async () => {
     return;
   }
 
+  setRequestLoading(true);
   try {
     
     const selectedRetailItem = retailItems.find(item => 
@@ -1075,6 +1079,8 @@ const handleReplaceSubmit = async () => {
       // );
       Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") )
     }
+  } finally {
+    setRequestLoading(false);
   }
 };
 
@@ -1391,7 +1397,7 @@ const handleQuantityChange = (text: string) => {
             <Text className="text-lg font-semibold">{t("PendingOrderScreen.Replace Product")}</Text>
           </View>
 
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <View  >
             <View className="border border-red-300 rounded-lg p-3 mb-4 justify-center items-center">
               <Text className="text-sm text-[#7B7B7B] mb-1">{t("PendingOrderScreen.Selected product")}</Text>
               <Text className="font-medium mb-2">
@@ -1407,36 +1413,57 @@ const handleQuantityChange = (text: string) => {
 
             {/* Product Selection */}
             <View className="mb-4">
-              <TouchableOpacity
-                className="border border-black rounded-full p-3 flex-row justify-between items-center bg-white"
-                onPress={() => setShowDropdown(!showDropdown)}
-              >
-                <Text className={replaceData.newProduct ? "text-black" : "text-gray-400"}>
-                  {replaceData.newProduct || "--Select New Product--"}
-                </Text>
-                <AntDesign name={showDropdown ? "up" : "down"} size={16} color="#666" />
-              </TouchableOpacity>
 
-              {showDropdown && (
+              {showDropdown ? (
+                <View> 
+      <View   className="">
+        <TextInput
+          placeholder="Search products..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          className="w-full p-3 border border-black rounded-full flex-row justify-between items-center bg-white"
+          placeholderTextColor="#888"
+        />
+      </View>
                 <View className="border border-t-0 border-gray-300 rounded-b-lg bg-white max-h-32">
-                  <ScrollView>
+
+                  <ScrollView   keyboardShouldPersistTaps="handled">
                     {loadingRetailItems ? (
                       <View className="p-3 items-center">
                         <ActivityIndicator size="small" color="#000" />
                       </View>
-                    ) : retailItems.length > 0 ? (
-                      retailItems.map((product) => (
-                        <TouchableOpacity
-                          key={product.id}
-                          className="p-3 border-b border-gray-100"
-                          onPress={() => handleProductSelect(product)}
-                        >
-                          <Text className="font-medium">{product.displayName}</Text>
-                          <Text className="text-xs text-gray-500">
-                            {t("PendingOrderScreen.Rs")}.{(product.discountedPrice || product.normalPrice || 0).toFixed(2)} 
-                          </Text>
-                        </TouchableOpacity>
-                      ))
+                    // ) : retailItems.length > 0 ? (
+                    //   retailItems.map((product) => (
+                    //     <TouchableOpacity
+                    //       key={product.id}
+                    //       className="p-3 border-b border-gray-100"
+                    //       onPress={() => handleProductSelect(product)}
+                    //     >
+                    //       <Text className="font-medium">{product.displayName}</Text>
+                    //       <Text className="text-xs text-gray-500">
+                    //         {t("PendingOrderScreen.Rs")}.{(product.discountedPrice || product.normalPrice || 0).toFixed(2)} 
+                    //       </Text>
+                    //     </TouchableOpacity>
+                    //   ))
+                    ) : filteredItems.length > 0 ? (
+          filteredItems.map((product) => (
+            <TouchableOpacity
+              key={product.id}
+              className="p-3 border-b border-gray-100"
+              onPress={() => {
+                handleProductSelect(product);
+                setShowDropdown(false);
+                setSearchQuery("");
+              }}
+            >
+              <Text className="font-medium">{product.displayName}</Text>
+              <Text className="text-xs text-gray-500">
+                {t("PendingOrderScreen.Rs")}.
+                {(product.discountedPrice || product.normalPrice || 0).toFixed(2)}
+              </Text>
+            </TouchableOpacity> 
+          ))
+        
                     ) : (
                       <View className="p-3 items-center">
                         <Text className="text-gray-500">{t("PendingOrderScreen.No products available")}</Text>
@@ -1444,6 +1471,19 @@ const handleQuantityChange = (text: string) => {
                     )}
                   </ScrollView>
                 </View>
+                </View>
+              ) : (
+                              <TouchableOpacity
+                className="border border-black rounded-full p-3 flex-row justify-between items-center bg-white"
+                onPress={() => setShowDropdown(!showDropdown)}
+              >
+                
+                <Text className={replaceData.newProduct ? "text-black" : "text-gray-400"}>
+                  {replaceData.newProduct || "--Select New Product--"}
+                </Text>
+                <AntDesign name={showDropdown ? "up" : "down"} size={16} color="#666" />
+              </TouchableOpacity>
+
               )}
             </View>
 
@@ -1476,13 +1516,17 @@ const handleQuantityChange = (text: string) => {
       : 'bg-[#FA0000]/50'
   }`}
   onPress={isFormComplete && !isReplacementPriceHigher ? handleReplaceSubmit : undefined}
-  disabled={!isFormComplete || isReplacementPriceHigher}
->
+  disabled={!isFormComplete || isReplacementPriceHigher || requestLoading==true}
+>{requestLoading ? (
+  <ActivityIndicator size="small" color="#fff" />
+) : (
   <Text className="text-white text-center font-medium">
     {jobRole === "Distribution Centre Manager" 
       ? t("PendingOrderScreen.Update")
       : t("PendingOrderScreen.Send Replace Request")}
   </Text>
+)}
+
 </TouchableOpacity>
               <TouchableOpacity
                 className="bg-[#D9D9D9] py-3 rounded-full px-3"
@@ -1491,7 +1535,7 @@ const handleQuantityChange = (text: string) => {
                 <Text className="text-[#686868] text-center font-medium"> {t("PendingOrderScreen.Go Back")}</Text>
               </TouchableOpacity>
             </View>
-          </ScrollView>
+          </View>
         </View>
       </View>
     </Modal>
