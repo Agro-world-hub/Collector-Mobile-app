@@ -25,6 +25,7 @@ interface EditTargetScreenProps {
       todo: string;
       qty: string;
       collectionOfficerId: number;
+      officerId:string;
     };
   };
 }
@@ -64,6 +65,7 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({
     collectionOfficerId,
     varietyNameSinhala,
     varietyNameTamil,
+    officerId
   } = route.params;
   console.log("managers target edit details", route.params);
 
@@ -143,6 +145,7 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({
                     collectionOfficerId,
                     varietyNameSinhala,
                     varietyNameTamil,
+                    officerId
                   })
                 } // Save and exit edit mode
               >
@@ -171,6 +174,7 @@ const EditTargetScreen: React.FC<EditTargetScreenProps> = ({
                     collectionOfficerId,
                     varietyNameSinhala,
                     varietyNameTamil,
+                    officerId
                   })
                 } // Save and exit edit mode
               >

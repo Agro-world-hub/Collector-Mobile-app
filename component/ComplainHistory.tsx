@@ -179,85 +179,204 @@ const ComplainHistory: React.FC<ComplainHistoryProps> = ({ navigation, route }) 
   };
 
   // Get signature based on APP language (not complaint language)
-  const getSignature = (complain: complainItem): string => {
-    const replierName = getReplierName(complain);
-    const companyName = getCompanyName(complain);
-    const centerRegCode = complain.replierCenterRegCode || '';
+  // const getSignature = (complain: complainItem): string => {
+  //   const replierName = getReplierName(complain);
+  //   const companyName = getCompanyName(complain);
+  //   const centerRegCode = complain.replierCenterRegCode || '';
     
-    // Use app language from i18n
-    const appLang = i18n.language || selectedLanguage;
+  //   // Use app language from i18n
+  //   const appLang = i18n.language || selectedLanguage;
 
-    if (complain.complainAssign === 'Admin') {
-      const closingWord = (appLang === 'si')
-        ? 'මෙයට'
-        : (appLang === 'ta')
-        ? 'இதற்கு'
-        : 'Sincerely';
+  //   if (complain.complainAssign === 'Admin') {
+  //     const closingWord = (appLang === 'si')
+  //       ? 'මෙයට'
+  //       : (appLang === 'ta')
+  //       ? 'இதற்கு'
+  //       : 'Sincerely';
       
-      const teamName = (appLang === 'si')
-        ? 'Polygon පාරිභෝගික සහාය කණ්ඩායම'
-        : (appLang === 'ta')
-        ? 'Polygon வாடிக்கையாளர் ஆதரவு குழு'
-        : 'Polygon Customer Support Team';
+  //     const teamName = (appLang === 'si')
+  //       ? 'Polygon පාරිභෝගික සහාය කණ්ඩායම'
+  //       : (appLang === 'ta')
+  //       ? 'Polygon வாடிக்கையாளர் ஆதரவு குழு'
+  //       : 'Polygon Customer Support Team';
       
-      return `${closingWord},\n${teamName}`;
-    } else if (complain.complainAssign === 'CCH' || complain.complainAssign === 'DCH') {
-      const headTitle = (appLang === 'si')
-        ? 'Collection Centre Head'
-        : (appLang === 'ta')
-        ? 'Collection Centre Head'
-        : 'Collection Centre Head';
+  //     return `${closingWord},\n${teamName}`;
+  //   } else if (complain.complainAssign === 'CCH' || complain.complainAssign === 'DCH') {
+  //     const headTitle = (appLang === 'si')
+  //       ? 'Collection Centre Head'
+  //       : (appLang === 'ta')
+  //       ? 'Collection Centre Head'
+  //       : 'Collection Centre Head';
       
-      const closingWord = (appLang === 'si')
-        ? 'මෙයට'
-        : (appLang === 'ta')
-        ? 'இதற்கு'
-        : 'Sincerely';
+  //     const closingWord = (appLang === 'si')
+  //       ? 'මෙයට'
+  //       : (appLang === 'ta')
+  //       ? 'இதற்கு'
+  //       : 'Sincerely';
       
-      // Format: 
-      // Line 1: Sincerely, [Name]
-      // Line 2: Collection Centre Head
-      // Line 3: [Center Code]
-      // Line 4: [Company]
-      if (companyName && centerRegCode) {
-        return `${closingWord}, ${replierName}\n${headTitle}\n${centerRegCode}\n${companyName}`;
-      } else if (companyName) {
-        return `${closingWord}, ${replierName}\n${headTitle}\n${companyName}`;
-      } else if (centerRegCode) {
-        return `${closingWord}, ${replierName}\n${headTitle}\n${centerRegCode}`;
-      } else {
-        return `${closingWord}, ${replierName}\n${headTitle}`;
-      }
+  //     // Format: 
+  //     // Line 1: Sincerely, [Name]
+  //     // Line 2: Collection Centre Head
+  //     // Line 3: [Center Code]
+  //     // Line 4: [Company]
+  //     if (companyName && centerRegCode) {
+  //       return `${closingWord}, ${replierName}\n${headTitle}\n${centerRegCode}\n${companyName}`;
+  //     } else if (companyName) {
+  //       return `${closingWord}, ${replierName}\n${headTitle}\n${companyName}`;
+  //     } else if (centerRegCode) {
+  //       return `${closingWord}, ${replierName}\n${headTitle}\n${centerRegCode}`;
+  //     } else {
+  //       return `${closingWord}, ${replierName}\n${headTitle}`;
+  //     }
+  //   } else {
+  //     // CCM or DCM
+  //     const managerTitle = (appLang === 'si')
+  //       ? 'Collection Centre Manager'
+  //       : (appLang === 'ta')
+  //       ? 'Collection Centre Manager'
+  //       : 'Collection Centre Manager';
+      
+  //     const closingWord = (appLang === 'si')
+  //       ? 'මෙයට'
+  //       : (appLang === 'ta')
+  //       ? 'இதற்கු'
+  //       : 'Sincerely';
+      
+  //     // Format: 
+  //     // Line 1: Sincerely, [Name]
+  //     // Line 2: Collection Centre Manager of [center code]
+  //     // Line 3: [Company]
+  //     const line1 = `${closingWord}, ${replierName}`;
+  //     const line2 = centerRegCode 
+  //       ? `${managerTitle} of ${centerRegCode}`
+  //       : `${managerTitle}`;
+      
+  //     if (companyName) {
+  //       return `${line1}\n${line2}\n${companyName}`;
+  //     } else {
+  //       return `${line1}\n${line2}`;
+  //     }
+  //   }
+  // };
+
+  const getSignature = (complain: complainItem): string => {
+  const replierName = getReplierName(complain);
+  const companyName = getCompanyName(complain);
+  const centerRegCode = complain.replierCenterRegCode || '';
+  
+  // Use app language from i18n
+  const appLang = i18n.language || selectedLanguage;
+
+  if (complain.complainAssign === 'Admin') {
+    const closingWord = (appLang === 'si')
+      ? 'මෙයට'
+      : (appLang === 'ta')
+      ? 'இதற்கு'
+      : 'Sincerely';
+    
+    const teamName = (appLang === 'si')
+      ? 'Polygon පාරිභෝගික සහාය කණ්ඩායම'
+      : (appLang === 'ta')
+      ? 'Polygon வாடிக்கையாளர் ஆதரவு குழு'
+      : 'Polygon Customer Support Team';
+    
+    return `${closingWord},\n${teamName}`;
+  } else if (complain.complainAssign === 'CCH') {
+    // Collection Centre Head
+    const headTitle = (appLang === 'si')
+      ? 'Collection Centre Head'
+      : (appLang === 'ta')
+      ? 'Collection Centre Head'
+      : 'Collection Centre Head';
+    
+    const closingWord = (appLang === 'si')
+      ? 'මෙයට'
+      : (appLang === 'ta')
+      ? 'இதற்கு'
+      : 'Sincerely';
+    
+    if (companyName && centerRegCode) {
+      return `${closingWord}, ${replierName}\n${headTitle}\n${centerRegCode}\n${companyName}`;
+    } else if (companyName) {
+      return `${closingWord}, ${replierName}\n${headTitle}\n${companyName}`;
+    } else if (centerRegCode) {
+      return `${closingWord}, ${replierName}\n${headTitle}\n${centerRegCode}`;
     } else {
-      // CCM or DCM
-      const managerTitle = (appLang === 'si')
-        ? 'Collection Centre Manager'
-        : (appLang === 'ta')
-        ? 'Collection Centre Manager'
-        : 'Collection Centre Manager';
-      
-      const closingWord = (appLang === 'si')
-        ? 'මෙයට'
-        : (appLang === 'ta')
-        ? 'இதற்கු'
-        : 'Sincerely';
-      
-      // Format: 
-      // Line 1: Sincerely, [Name]
-      // Line 2: Collection Centre Manager of [center code]
-      // Line 3: [Company]
-      const line1 = `${closingWord}, ${replierName}`;
-      const line2 = centerRegCode 
-        ? `${managerTitle} of ${centerRegCode}`
-        : `${managerTitle}`;
-      
-      if (companyName) {
-        return `${line1}\n${line2}\n${companyName}`;
-      } else {
-        return `${line1}\n${line2}`;
-      }
+      return `${closingWord}, ${replierName}\n${headTitle}`;
     }
-  };
+  } else if (complain.complainAssign === 'DCH') {
+    // Distribution Centre Head
+    const headTitle = (appLang === 'si')
+      ? 'Distribution Centre Head'
+      : (appLang === 'ta')
+      ? 'Distribution Centre Head'
+      : 'Distribution Centre Head';
+    
+    const closingWord = (appLang === 'si')
+      ? 'මෙයට'
+      : (appLang === 'ta')
+      ? 'இதற்கு'
+      : 'Sincerely';
+    
+    if (companyName && centerRegCode) {
+      return `${closingWord}, ${replierName}\n${headTitle}\n${centerRegCode}\n${companyName}`;
+    } else if (companyName) {
+      return `${closingWord}, ${replierName}\n${headTitle}\n${companyName}`;
+    } else if (centerRegCode) {
+      return `${closingWord}, ${replierName}\n${headTitle}\n${centerRegCode}`;
+    } else {
+      return `${closingWord}, ${replierName}\n${headTitle}`;
+    }
+  } else if (complain.complainAssign === 'CCM') {
+    // Collection Centre Manager
+    const managerTitle = (appLang === 'si')
+      ? 'Collection Centre Manager'
+      : (appLang === 'ta')
+      ? 'Collection Centre Manager'
+      : 'Collection Centre Manager';
+    
+    const closingWord = (appLang === 'si')
+      ? 'මෙයට'
+      : (appLang === 'ta')
+      ? 'இதற்கு'
+      : 'Sincerely';
+    
+    const line1 = `${closingWord}, ${replierName}`;
+    const line2 = centerRegCode 
+      ? `${managerTitle} of ${centerRegCode}`
+      : `${managerTitle}`;
+    
+    if (companyName) {
+      return `${line1}\n${line2}\n${companyName}`;
+    } else {
+      return `${line1}\n${line2}`;
+    }
+  } else {
+    // DCM - Distribution Centre Manager
+    const managerTitle = (appLang === 'si')
+      ? 'Distribution Centre Manager'
+      : (appLang === 'ta')
+      ? 'Distribution Centre Manager'
+      : 'Distribution Centre Manager';
+    
+    const closingWord = (appLang === 'si')
+      ? 'මෙයට'
+      : (appLang === 'ta')
+      ? 'இதற்கு'
+      : 'Sincerely';
+    
+    const line1 = `${closingWord}, ${replierName}`;
+    const line2 = centerRegCode 
+      ? `${managerTitle} of ${centerRegCode}`
+      : `${managerTitle}`;
+    
+    if (companyName) {
+      return `${line1}\n${line2}\n${companyName}`;
+    } else {
+      return `${line1}\n${line2}`;
+    }
+  }
+};
 
   // Reply templates based on APP language (not complaint language)
   const getReplyTemplate = (complain: complainItem): string => {

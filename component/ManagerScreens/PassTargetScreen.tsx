@@ -235,7 +235,28 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
           t("Error.Success"),
           t("Error.Target transferred successfully.")
         );
-        navigation.goBack();
+        navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: "Main",
+                  params: {
+                    screen: "DailyTarget",
+                    params: {
+                      varietyId,
+                      varietyNameEnglish,
+                      grade,
+                      target,
+                      todo,
+                      qty,
+                      varietyNameSinhala,
+                      varietyNameTamil,
+                      dailyTarget,
+                    },
+                  },
+                },
+              ],
+            });
       } else {
         Alert.alert(t("Error.error"), t("Error.Failed to transfer target."));
       }
