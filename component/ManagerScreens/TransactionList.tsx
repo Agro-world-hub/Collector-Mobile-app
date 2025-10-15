@@ -130,26 +130,62 @@ const TransactionList: React.FC<TransactionListProps> = ({
     }
   };
 
+  // const handleSearch = (query: string) => {
+  //   setSearchQuery(query);
+  //   const normalizedQuery = query.trim().toLowerCase();
+  //   const filtered = transactions.filter((transaction: any) => {
+  //     const firstNameMatch = transaction.firstName
+  //       ?.toLowerCase()
+  //       .includes(normalizedQuery);
+  //     const lastNameMatch = transaction.lastName
+  //       ?.toLowerCase()
+  //       .includes(normalizedQuery);
+
+  //     const nicMatch = transaction.NICnumber?.replace(/[^\w\s]/gi, "")
+  //       .toLowerCase()
+  //       .includes(normalizedQuery);
+
+  //     return firstNameMatch || lastNameMatch || nicMatch;
+  //   });
+
+  //   setFilteredTransactions(filtered);
+  // };
+
   const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    const normalizedQuery = query.trim().toLowerCase();
-    const filtered = transactions.filter((transaction: any) => {
-      const firstNameMatch = transaction.firstName
-        ?.toLowerCase()
-        .includes(normalizedQuery);
-      const lastNameMatch = transaction.lastName
-        ?.toLowerCase()
-        .includes(normalizedQuery);
+  setSearchQuery(query);
+  // Normalize query: trim and replace multiple spaces with single space
+  const normalizedQuery = query.trim().toLowerCase().replace(/\s+/g, ' ');
+  
+  // If query is empty, show all transactions
+  if (!normalizedQuery) {
+    setFilteredTransactions(transactions);
+    return;
+  }
+  
+  const filtered = transactions.filter((transaction: any) => {
+    // Get individual fields with fallbacks and normalize whitespace
+    const firstName = (transaction.firstName || "").trim().toLowerCase();
+    const lastName = (transaction.lastName || "").trim().toLowerCase();
+    const nicNumber = (transaction.NICnumber || "").replace(/[^\w\s]/gi, "").toLowerCase();
+    
+    // Create full name and normalize multiple spaces to single space
+    const fullName = `${firstName} ${lastName}`.trim().replace(/\s+/g, ' ');
+    
+    // Check if query matches any of these:
+    // 1. First name alone
+    // 2. Last name alone  
+    // 3. Full name (first + last)
+    // 4. NIC number
+    const firstNameMatch = firstName.includes(normalizedQuery);
+    const lastNameMatch = lastName.includes(normalizedQuery);
+    const fullNameMatch = fullName.includes(normalizedQuery);
+    const nicMatch = nicNumber.includes(normalizedQuery);
 
-      const nicMatch = transaction.NICnumber?.replace(/[^\w\s]/gi, "")
-        .toLowerCase()
-        .includes(normalizedQuery);
+    return firstNameMatch || lastNameMatch || fullNameMatch || nicMatch;
+  });
 
-      return firstNameMatch || lastNameMatch || nicMatch;
-    });
-
-    setFilteredTransactions(filtered);
-  };
+  setFilteredTransactions(filtered);
+};
 
   useEffect(() => {
     fetchTransactions(getCurrentDate());

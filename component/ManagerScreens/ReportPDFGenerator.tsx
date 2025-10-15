@@ -192,11 +192,11 @@ export const handleGeneratePDF = async (
             <div class="header-item"><span>First Name</span><span>${firstName}</span></div>
             <div class="header-item"><span>Last Name</span><span>${lastName}</span></div>
             <div class="header-item"><span>Weight</span><span>${totalWeight}kg</span></div>
-            <div class="header-item"><span>Farmers</span><span>${totalFarmers}</span></div>
+            <div class="header-item"><span>Collections</span><span>${totalFarmers}</span></div>
           </div>
 
           <table>
-          <tr><th>Date</th><th>Total Weight</th><th>Total Farmers</th></tr>
+          <tr><th>Date</th><th>Total Weight</th><th>Total Collections</th></tr>
           ${tableRows}
           </table>
 

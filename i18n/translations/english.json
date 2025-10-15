@@ -223,7 +223,22 @@
 "Failed to submit crop details":"Failed to submit crop details. Please try again.",
 "Please enter Employee ID in uppercase letters":"Please enter Employee ID in uppercase letters",
 "Failed to update password": "Failed to update password",
-"Distribution Centre Head are not allowed to access this application": "Distribution Centre Head are not allowed to access this application"
+"Distribution Centre Head are not allowed to access this application": "Distribution Centre Head are not allowed to access this application",
+"Please select at least one preferred language":"Please select at least one preferred language",
+"First name in English is required":"First name in English is required",
+"Last name in English is required":"Last name in English is required",
+"Phone number is required":"Phone number is required",
+"NIC number is required":"NIC number is required",
+"House number is required":"House number is required",
+"Street name is required":"Street name is required",
+"City is required":"City is required",
+"Province is required":"Province is required",
+"District is required":"District is required",
+"Account holder name is required":"Account holder name is required",
+"Account number is required":"Account number is required",
+"Confirm account number is required":"Confirm account number is required",
+"Bank name is required":"Bank name is required",
+"Branch name is required":"Branch name is required"
   },
   "EngProfile":{
     "LNG": "en",

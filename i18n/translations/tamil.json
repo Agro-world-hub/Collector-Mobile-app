@@ -223,7 +223,22 @@
 "Failed to submit crop details":"பயிர் விவரங்களைச் சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
 "Please enter Employee ID in uppercase letters":"பணியாளர் ஐடியை பெரிய எழுத்துக்களில் உள்ளிடவும்.",
 "Failed to update password": "கடவுச்சொல்லை புதுப்பிக்க முடியவில்லை",
-"Distribution Centre Head are not allowed to access this application": "விநியோக மையத் தலைவர்கள் இந்தப் பயன்பாட்டை அணுக அனுமதிக்கப்படவில்லை"
+"Distribution Centre Head are not allowed to access this application": "விநியோக மையத் தலைவர்கள் இந்தப் பயன்பாட்டை அணுக அனுமதிக்கப்படவில்லை",
+"Please select at least one preferred language":"குறைந்தபட்சம் ஒரு விருப்பமான மொழியையாவது தேர்ந்தெடுக்கவும்.",
+"First name in English is required":"ஆங்கிலத்தில் பெயரின் முற்பகுதி அவசியம்.",
+"Last name in English is required":"ஆங்கிலத்தில் கடைசி பெயர் அவசியம்.",
+"Phone number is required":"தொலைபேசி எண் தேவை.",
+"NIC number is required":"தேசிய அடையாள அட்டை எண் அவசியம்.",
+"House number is required":"வீட்டு எண் தேவை.",
+"Street name is required":"தெருவின் பெயர் அவசியம்.",
+"City is required":"நகரம் அவசியம்",
+"Province is required":"மாகாணம் தேவை.",
+"District is required":"மாவட்டம் தேவை.",
+"Account holder name is required":"கணக்கு வைத்திருப்பவரின் பெயர் அவசியம்.",
+"Account number is required":"கணக்கு எண் தேவை.",
+"Confirm account number is required":"கணக்கு எண்ணை உறுதிப்படுத்துவது அவசியம்.",
+"Bank name is required":"வங்கியின் பெயர் அவசியம்",
+"Branch name is required":"கிளையின் பெயர் அவசியம்."
   },
   "EngProfile":{
     "LNG": "en",

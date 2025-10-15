@@ -323,6 +323,7 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
                     collectionOfficerId,
                     varietyNameSinhala: item.varietyNameSinhala,
                     varietyNameTamil: item.varietyNameTamil,
+                    officerId: officerId
                   });
                 }}
               >
