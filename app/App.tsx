@@ -1,5 +1,5 @@
 import React, { useEffect, useState , useCallback} from "react";
-import { Alert, BackHandler, Text, View, TextInput,Dimensions  } from "react-native";
+import { Alert, BackHandler, Text, View, TextInput,Dimensions, StatusBar  } from "react-native";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -348,6 +348,7 @@ const onlineStatus = async () => {
         style={{ flex: 1, paddingBottom: insets.bottom, backgroundColor: "#fff" }}
         edges={["top", "right", "left"]}
       >
+        <StatusBar barStyle="light-content" />
         <NavigationContainer   ref={navigationRef}>
          <Stack.Navigator
           screenOptions={{
