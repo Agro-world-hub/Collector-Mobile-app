@@ -595,7 +595,9 @@ ${signature}${replyTime}`
               <View className="p-4 bg-white rounded-xl w-full mb-4">
                 <Text className="text-lg font-bold">{t("Thank You")}</Text>
 
-                <ScrollView className="mt-8" style={{ maxHeight: hp(55) }}>
+                {/* <ScrollView className="mt-8" style={{ maxHeight: hp(55) }}> */}
+                <ScrollView className="mt-8" style={{ maxHeight: Dimensions.get('window').height * 0.7 }}>
+
                   <Text className="pb-4" style={{ lineHeight: 24 }}>
                     {selectedComplain 
                       ? getReplyTemplate(selectedComplain)
