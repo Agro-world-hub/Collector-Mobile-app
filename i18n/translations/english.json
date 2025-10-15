@@ -929,7 +929,8 @@
     "Update":"Update",
     "Failed to complete order":"Failed to complete order.Please Try again later",
     "Selected product not found":"Selected product not found.Please Try again later",
-    "Failed to submit replacement request":"Failed to submit replacement request.Please Try again later"
+    "Failed to submit replacement request":"Failed to submit replacement request.Please Try again later",
+    "Search products...": "Search products..."
   },
   "Status": {
     "Pending": "Pending",
