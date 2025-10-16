@@ -1418,7 +1418,7 @@ const handleQuantityChange = (text: string) => {
                 <View> 
       <View   className="">
         <TextInput
-          placeholder="Search products..."
+          placeholder={t("PendingOrderScreen.Search products...")}
           value={searchQuery}
           onChangeText={setSearchQuery}
           className="w-full p-3 border border-black rounded-full flex-row justify-between items-center bg-white"

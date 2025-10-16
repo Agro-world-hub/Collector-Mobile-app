@@ -311,6 +311,10 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
   };
 
   const isFormComplete = replaceData.newProduct && replaceData.quantity;
+  const [searchQuery, setSearchQuery] = useState("");
+const filteredItems = retailItems.filter((product) =>
+  product.displayName.toLowerCase().includes(searchQuery.toLowerCase())
+);
 
   if (loadingCurrentReplace) {
     return (
@@ -370,7 +374,68 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
 
 
           <View className="mb-4">
-            <TouchableOpacity
+
+
+            {showDropdown ? (
+                              <View> 
+                    <View   className="">
+                      <TextInput
+                        placeholder={t("PendingOrderScreen.Search products...")}
+                        value={searchQuery}
+                        onChangeText={setSearchQuery}
+                        className="w-full p-3 border border-gray-300 rounded-full flex-row justify-between items-center bg-white"
+                        placeholderTextColor="#888"
+                      />
+                    </View>
+              <View className="border border-t-0 border-gray-300 rounded-b-lg bg-white max-h-40 mt-1">
+                <ScrollView>
+                  {loadingRetailItems ? (
+                    <View className="p-4 items-center">
+                      <ActivityIndicator size="small" color="#000" />
+                    </View>
+                  // ) : retailItems.length > 0 ? (
+                  //   retailItems.map((product) => (
+                  //     <TouchableOpacity
+                  //       key={product.id}
+                  //       className={`p-4 border-b border-gray-100 ${
+                  //         replaceData.newProductId === product.id ? 'bg-blue-50' : ''
+                  //       }`}
+                  //       onPress={() => handleProductSelect(product)}
+                  //     >
+                  //       <Text className="font-medium">{product.displayName}</Text>
+                  //       <Text className="text-xs text-gray-500">
+                  //         {t("ReplaceRequestsApprove.ID")} {product.id} | {t("ReplaceRequestsApprove.Rs")}{(product.discountedPrice || product.normalPrice || 0).toFixed(2)} ({product.unitType})
+                  //       </Text>
+                  //     </TouchableOpacity>
+                  //   ))
+                  ) : filteredItems.length > 0 ? (
+                            filteredItems.map((product) => (
+                              <TouchableOpacity
+                                key={product.id}
+                                className="p-3 border-b border-gray-100"
+                                onPress={() => {
+                                  handleProductSelect(product);
+                                  setShowDropdown(false);
+                                  setSearchQuery("");
+                                }}
+                              >
+                                <Text className="font-medium">{product.displayName}</Text>
+                                <Text className="text-xs text-gray-500">
+                                  {t("PendingOrderScreen.Rs")}.
+                                  {(product.discountedPrice || product.normalPrice || 0).toFixed(2)}
+                                </Text>
+                              </TouchableOpacity> 
+                            ))
+                  ) : (
+                    <View className="p-4 items-center">
+                      <Text className="text-gray-500">{t("ReplaceRequestsApprove.No products available")}</Text>
+                    </View>
+                  )}
+                </ScrollView>
+              </View>
+              </View>
+            ) : (
+                         <TouchableOpacity
               className="border border-gray-300 rounded-full p-4 flex-row justify-between items-center bg-white"
               onPress={() => setShowDropdown(!showDropdown)}
             >
@@ -379,36 +444,6 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
               </Text>
               <AntDesign name={showDropdown ? "up" : "down"} size={16} color="#666" />
             </TouchableOpacity>
-
-            {showDropdown && (
-              <View className="border border-t-0 border-gray-300 rounded-b-lg bg-white max-h-40 mt-1">
-                <ScrollView>
-                  {loadingRetailItems ? (
-                    <View className="p-4 items-center">
-                      <ActivityIndicator size="small" color="#000" />
-                    </View>
-                  ) : retailItems.length > 0 ? (
-                    retailItems.map((product) => (
-                      <TouchableOpacity
-                        key={product.id}
-                        className={`p-4 border-b border-gray-100 ${
-                          replaceData.newProductId === product.id ? 'bg-blue-50' : ''
-                        }`}
-                        onPress={() => handleProductSelect(product)}
-                      >
-                        <Text className="font-medium">{product.displayName}</Text>
-                        <Text className="text-xs text-gray-500">
-                          {t("ReplaceRequestsApprove.ID")} {product.id} | {t("ReplaceRequestsApprove.Rs")}{(product.discountedPrice || product.normalPrice || 0).toFixed(2)} ({product.unitType})
-                        </Text>
-                      </TouchableOpacity>
-                    ))
-                  ) : (
-                    <View className="p-4 items-center">
-                      <Text className="text-gray-500">{t("ReplaceRequestsApprove.No products available")}</Text>
-                    </View>
-                  )}
-                </ScrollView>
-              </View>
             )}
           </View>
 
