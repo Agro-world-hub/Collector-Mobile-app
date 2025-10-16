@@ -94,7 +94,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-    //  console.log("response for percentage target", response.data);
+     console.log("response for percentage target", response.data);
       if (response.data.success) {
         const percentage = parseInt(
           response.data.completionPercentage.replace("%", ""),

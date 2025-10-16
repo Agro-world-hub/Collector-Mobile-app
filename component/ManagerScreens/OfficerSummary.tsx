@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -17,7 +17,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../types";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import {environment }from '@/environment/environment';
+import { environment } from '@/environment/environment';
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
@@ -51,24 +51,24 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
   const [officerStatus, setOfficerStatus] = useState("offline");
   const [taskPercentage, setTaskPercentage] = useState<number | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [isOnline, setIsOnline] = useState(false); // Track the online status
+  const [isOnline, setIsOnline] = useState(false);
   const { t } = useTranslation();
-  const [modalVisible, setModalVisible] = useState(false);  
+  const [modalVisible, setModalVisible] = useState(false);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        navigation.navigate("Main", { screen: "CollectionOfficersList" })
+        return true;
+      };
 
-    useFocusEffect(
-      React.useCallback(() => {
-        const onBackPress = () => {
-             navigation.navigate("Main", { screen: "CollectionOfficersList" })
-          return true; // Prevent the default behavior
-        };
-  
-        BackHandler.addEventListener("hardwareBackPress", onBackPress);
-  
-    const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
       return () => subscription.remove();
-      }, [navigation])
-    );
+    }, [navigation])
+  );
+
   const ConfirmationModal = ({ visible, onConfirm, onCancel }: any) => {
     return (
       <Modal
@@ -79,22 +79,21 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
       >
         <View className="flex-1 justify-center items-center bg-black/60 bg-opacity-50">
           <View className="bg-white items-center rounded-lg w-80 p-6">
-           <View className="flex items-center justify-center mb-4 rounded-lg bg-[#f7f8fa] p-2 w-12 h-12 ">
-        <Ionicons name="warning" size={30} color="#6c7e8c" />
-      </View>
+            <View className="flex items-center justify-center mb-4 rounded-lg bg-[#f7f8fa] p-2 w-12 h-12 ">
+              <Ionicons name="warning" size={30} color="#6c7e8c" />
+            </View>
             <Text className="text-center text-sm font-semibold mb-4">
               {t("DisclaimOfficer.Are you sure you want to disclaim this officer?")}
             </Text>
-          
-            
-            <View className="flex-row  justify-center gap-4">
+
+            <View className="flex-row justify-center gap-4">
               <TouchableOpacity
                 onPress={onCancel}
                 className="p-2 py-2 bg-gray-300 rounded-lg"
               >
                 <Text className="text-sm text-gray-700">{t("ClaimOfficer.Cancel")}</Text>
               </TouchableOpacity>
-  
+
               <TouchableOpacity
                 onPress={onConfirm}
                 className="p-2 py-2 bg-[#FF0700] rounded-lg"
@@ -107,6 +106,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
       </Modal>
     );
   };
+
   const handleDial = (phoneNumber: string) => {
     const phoneUrl = `tel:${phoneNumber}`;
     Linking.openURL(phoneUrl).catch((err) =>
@@ -121,26 +121,42 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
         `${environment.API_BASE_URL}api/target/officer-task-summary/${collectionOfficerId}`
       );
 
+      console.log("////////////", res.data);
+
       if (res.data.success) {
-        const { totalTasks, completedTasks } = res.data;
-        const percentage =
-          totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-        setTaskPercentage(percentage);
+        // Use the percentage directly from the API response
+        // OR calculate it from totalComplete and totalTarget
+        const { totalTarget, totalComplete, completionPercentage } = res.data;
+        
+        // Option 1: Use the percentage from API (remove the '%' sign)
+        const percentageFromAPI = parseInt(completionPercentage.replace('%', ''), 10);
+        
+        // Option 2: Calculate it yourself for accuracy
+        const calculatedPercentage = totalTarget > 0 
+          ? Math.round((totalComplete / totalTarget) * 100) 
+          : 0;
+        
+        // Use either one - I recommend using the API value since backend is corrected
+        setTaskPercentage(percentageFromAPI);
+        
+        console.log('Target percentage set to:', percentageFromAPI);
       } else {
         Alert.alert(t("Error.error"), t("Error.No task summary found for this officer."));
+        setTaskPercentage(0);
       }
     } catch (error) {
       console.error("Error fetching task summary:", error);
       Alert.alert(t("Error.error"), t("Error.Failed to fetch task summary."));
+      setTaskPercentage(0);
     }
   };
 
   // Refreshing function
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    fetchTaskSummary(); // Re-fetch task summary
+    fetchTaskSummary();
     setRefreshing(false);
-    setShowMenu(false)
+    setShowMenu(false);
     getOnlineStatus();
   }, [collectionOfficerId]);
 
@@ -149,9 +165,10 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
   }, [collectionOfficerId]);
 
   const handleCancel = () => {
-    setModalVisible(false); // Close the modal without taking action
-    setShowMenu(false)
+    setModalVisible(false);
+    setShowMenu(false);
   };
+
   const handleDisclaim = async () => {
     setShowMenu(false);
 
@@ -160,10 +177,10 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
       return;
     }
 
-     const netState = await NetInfo.fetch();
-      if (!netState.isConnected) {
-    return; 
-  }
+    const netState = await NetInfo.fetch();
+    if (!netState.isConnected) {
+      return;
+    }
 
     try {
       const res = await fetch(
@@ -173,7 +190,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ collectionOfficerId, jobRole:"Collection Officer" }),
+          body: JSON.stringify({ collectionOfficerId, jobRole: "Collection Officer" }),
         }
       );
 
@@ -190,7 +207,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
       console.log(data);
 
       if (data.status === "success") {
-        setModalVisible(false); // Close the modal
+        setModalVisible(false);
         Alert.alert(t("Error.Success"), t("DisclaimOfficer.Officer disclaimed successfully."));
         navigation.navigate("Main", { screen: "CollectionOfficersList" });
       } else {
@@ -204,25 +221,23 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
 
   useFocusEffect(
     useCallback(() => {
-      setShowMenu(false)
+      setShowMenu(false);
       getOnlineStatus();
     }, [collectionOfficerId])
   );
+
   const getOnlineStatus = async () => {
-   // console.log("Getting officer status...");
     try {
       const res = await fetch(
         `${environment.API_BASE_URL}api/collection-manager/get-officer-online/${collectionOfficerId}`
       );
       const data = await res.json();
-     // console.log("Officer status:", data);
-  
+
       if (data.success) {
-        // Check OnlineStatus value and set status accordingly
         const { OnlineStatus } = data.result;
-        
+
         if (OnlineStatus === 1) {
-          setOfficerStatus("online"); // Assuming you have a setStatus function to update state
+          setOfficerStatus("online");
           setIsOnline(true);
           console.log("Officer is online");
         } else {
@@ -239,7 +254,6 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
       Alert.alert(t("Error.error"), t("Error.Failed to get officer status."));
     }
   };
-  
 
   return (
     <ScrollView
@@ -252,13 +266,13 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
       <View className="relative">
         {/* Header Section */}
         <View className="bg-white rounded-b-[25px] px-4 pt-12 pb-6 items-center shadow-lg z-10">
-         
+
           <TouchableOpacity onPress={() =>
-              navigation.navigate("Main", { screen: "CollectionOfficersList" })
-            }
-          className="absolute top-4 left-4 bg-[#F6F6F680] rounded-full  p-2 justify-center w-10" >
-                                                         <AntDesign name="left" size={24} color="#000502" />
-                                                       </TouchableOpacity>
+            navigation.navigate("Main", { screen: "CollectionOfficersList" })
+          }
+            className="absolute top-4 left-4 bg-[#F6F6F680] rounded-full  p-2 justify-center w-10" >
+            <AntDesign name="left" size={24} color="#000502" />
+          </TouchableOpacity>
 
           <TouchableOpacity
             className="absolute top-4 right-4"
@@ -278,9 +292,8 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
             </View>
           )}
 
-          {/* Profile Image with Green Border */}
+          {/* Profile Image with Border */}
           <View className={`w-28 h-28 border-[6px] rounded-full items-center justify-center ${isOnline ? 'border-[#980775]' : 'border-gray-400'}`}>
-
             <Image
               source={
                 image
@@ -290,6 +303,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
               className="w-24 h-24 rounded-full "
             />
           </View>
+
           {/* Name and EMP ID */}
           <Text className="mt-4 text-lg font-bold text-black">
             {officerName}
@@ -356,8 +370,8 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
           >
             <View className="w-12 h-12 bg-[#FFFFFF66] rounded-full items-center justify-center shadow-md">
               <Image
-                source={require("../../assets/images/lf.webp")} // Replace with your image path
-                style={{ width: 28, height: 28, resizeMode: "contain" }} // Adjust dimensions as needed
+                source={require("../../assets/images/lf.webp")}
+                style={{ width: 28, height: 28, resizeMode: "contain" }}
               />
             </View>
             <Text className="text-white mt-2 text-xs">{t("OfficerSummary.Collection")}</Text>
@@ -369,11 +383,11 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
             onPress={() =>
               navigation.navigate("ReportGenerator" as any, {
                 officerId,
-                  collectionOfficerId,
-                  phoneNumber1,
-                  phoneNumber2,
-                  officerName,
-                
+                collectionOfficerId,
+                phoneNumber1,
+                phoneNumber2,
+                officerName,
+
               })
             }
           >
@@ -387,14 +401,13 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
 
       {/* Stats Section */}
       <View className="mt-6 px-6">
-
         <View className="items-center mt-4">
           {/* Total Weight */}
           <View className="items-center mb-8">
             <CircularProgress
               size={120}
               width={10}
-              fill={taskPercentage ?? 0} // Dynamically set fill percentage
+              fill={taskPercentage ?? 0}
               tintColor="#000000"
               backgroundColor="#E5E7EB"
             >
@@ -419,7 +432,7 @@ const OfficerSummary: React.FC<OfficerSummaryProps> = ({
               }
             >
               <Text className="text-white text-center font-medium">
-              {t("OfficerSummary.OpenTarget")}
+                {t("OfficerSummary.OpenTarget")}
               </Text>
             </TouchableOpacity>
           </View>
