@@ -348,7 +348,7 @@ const onlineStatus = async () => {
         style={{ flex: 1, paddingBottom: insets.bottom, backgroundColor: "#fff" }}
         edges={["top", "right", "left"]}
       >
-        <StatusBar barStyle="light-content" />
+        <StatusBar barStyle="dark-content" />
         <NavigationContainer   ref={navigationRef}>
          <Stack.Navigator
           screenOptions={{
