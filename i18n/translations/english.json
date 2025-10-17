@@ -238,7 +238,8 @@
 "Account number is required":"Account number is required",
 "Confirm account number is required":"Confirm account number is required",
 "Bank name is required":"Bank name is required",
-"Branch name is required":"Branch name is required"
+"Branch name is required":"Branch name is required",
+"Price updated successfully":"Price updated successfully"
   },
   "EngProfile":{
     "LNG": "en",
@@ -359,7 +360,10 @@
     "Cancel":"Cancel",
     "Grade":"Grade",
     "Request Price Update":"Request Price Update",
-    "Submit Request":"Submit Request"
+    "Submit Request":"Submit Request",
+    "Edit Price":"Edit Price",
+    "Update":"Update",
+   "AllowedRange": "Allowed Rs.{{minPrice}} - Rs.{{maxPrice}}"
   },
   "Otpverification":{
     "LNG": "en",

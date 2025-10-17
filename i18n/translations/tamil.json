@@ -238,7 +238,8 @@
 "Account number is required":"கணக்கு எண் தேவை.",
 "Confirm account number is required":"கணக்கு எண்ணை உறுதிப்படுத்துவது அவசியம்.",
 "Bank name is required":"வங்கியின் பெயர் அவசியம்",
-"Branch name is required":"கிளையின் பெயர் அவசியம்."
+"Branch name is required":"கிளையின் பெயர் அவசியம்.",
+"Price updated successfully":"விலை வெற்றிகரமாக புதுப்பிக்கப்பட்டது."
   },
   "EngProfile":{
     "LNG": "en",
@@ -359,7 +360,10 @@
     "Cancel":"ரத்து செய்",
     "Grade":"தரம்",
     "Request Price Update":"விலை புதுப்பிப்பைக் கோரவும்",
-    "Submit Request":"கோரிக்கையை சமர்ப்பிக்கவும்"
+    "Submit Request":"கோரிக்கையை சமர்ப்பிக்கவும்",
+     "Edit Price":"விலையைத் திருத்து",
+     "Update":"புதுப்பிக்கவும்",
+      "AllowedRange": "அனுமதிக்கப்பட்டது ரூ.{{minPrice}} - ரூ.{{maxPrice}}"
   },
   "Otpverification":{
     "LNG": "ta",
