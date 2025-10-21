@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { View, Text, TextInput, TouchableOpacity, SafeAreaView, ActivityIndicator, Alert, ScrollView } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, SafeAreaView, ActivityIndicator, Alert, ScrollView, BackHandler } from "react-native";
 import axios from "axios";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useFocusEffect } from "@react-navigation/native";
@@ -181,6 +181,20 @@ useFocusEffect(
     }
    
   };
+
+     useFocusEffect(
+    useCallback(() => {
+      const handleBackPress = () => {
+        navigation.navigate("Main" as any, { screen: "SearchPriceScreen" })
+        return true;
+      };
+  
+      
+               const subscription = BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+          
+                return () => subscription.remove();
+    }, [navigation])
+  );
   
 
 return (

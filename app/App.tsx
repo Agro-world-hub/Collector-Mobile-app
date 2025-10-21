@@ -43,6 +43,7 @@ import Profile from "@/component/Profile";
 import ReportPage from "@/component/ReportPage";
 import SearchPriceScreen from "@/component/SearchPriceScreen";
 import PriceChart from "@/component/PriceChart";
+import PriceChartManager from "@/component/ManagerScreens/PriceChartManager";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import BottomNav from "@/component/BottomNav";
@@ -192,6 +193,7 @@ function MainTabNavigator() {
       <Tab.Screen name="SearchPriceScreen" component={SearchPriceScreen} />
       <Tab.Screen name="QRScanner" component={QRScanner} />
       <Tab.Screen name="PriceChart" component={PriceChart as any} />
+       <Tab.Screen name="PriceChartManager" component={PriceChartManager as any} />
       <Tab.Screen
         name="UnregisteredCropDetails"
         component={UnregisteredCropDetails as any}

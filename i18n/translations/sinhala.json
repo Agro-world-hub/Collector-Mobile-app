@@ -238,7 +238,8 @@
 "Account number is required":"ගිණුම් අංකය අවශ්‍යයි",
 "Confirm account number is required":"ගිණුම් අංකය තහවුරු කිරීම අවශ්‍යයි.",
 "Bank name is required":"බැංකුවේ නම අවශ්‍යයි",
-"Branch name is required":"ශාඛාවේ නම අවශ්‍යයි"
+"Branch name is required":"ශාඛාවේ නම අවශ්‍යයි",
+"Price updated successfully":"මිල සාර්ථකව යාවත්කාලීන කරන ලදී"
   },
 "EngProfile":{
     "LNG": "si",
@@ -359,7 +360,10 @@
     "Cancel":"අවලංගු කරන්න",
     "Grade":"ශ්‍රේණිය",
     "Request Price Update":"මිල සංශෝධන ඉල්ලන්න",
-    "Submit Request":"ඉල්ලීම ඉදිරිපත් කරන්න"
+    "Submit Request":"ඉල්ලීම ඉදිරිපත් කරන්න",
+     "Edit Price":"මිල සංස්කරණය කරන්න",
+     "Update":"යාවත්කාලීන කරන්න",
+     "AllowedRange": "අවසර ඇත රු.{{minPrice}} - රු.{{maxPrice}}"
   },
   "Otpverification":{
     "LNG": "si",
