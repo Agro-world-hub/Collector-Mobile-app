@@ -210,9 +210,20 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
       setError('');
     }
   };
+
+  // ✅ Fixed: Proper save button disabling logic
   const isSaveDisabled = () => {
-    // Disable button if no assignee is selected OR assignee is the default option ('0') OR submitting
-    return !assignee || assignee === '0' || fetchingTarget;
+    const numericAmount = parseFloat(amount);
+    
+    return !assignee || 
+           assignee === '0' || 
+           fetchingTarget || 
+           loading ||
+           !amount || 
+           isNaN(numericAmount) || 
+           numericAmount <= 0 || 
+           numericAmount > maxAmount ||
+           error !== ''; // Also disable if there's an error
   };
   
   
@@ -368,7 +379,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
                 <TouchableOpacity
                   className={`rounded-full w-64 py-3 ${isSaveDisabled() ? 'bg-gray-400' : 'bg-[#313131]'}`}
                   onPress={receiveTarget}
-        disabled={loading || fetchingTarget}
+                  disabled={isSaveDisabled()} // ✅ Use the same disabled logic here
                 >
                   {fetchingTarget ? (
                     <ActivityIndicator size="small" color="white" />

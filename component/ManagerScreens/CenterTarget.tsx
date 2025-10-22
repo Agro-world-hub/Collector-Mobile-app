@@ -287,7 +287,10 @@ const sortByVarietyAndGrade = (data: TargetData[]) => {
             >
               <View>
                 <View className="flex-row bg-[#980775] h-[7%]">
-                  <Text className="w-16 p-2  text-center text-white"> {t("CenterTarget.No")} </Text>
+                  <Text className="w-16 p-2  text-center text-white"> 
+
+                     {selectedToggle === 'ToDo' ? t("CenterTarget.No") : ""}
+                  </Text>
                   <Text className="w-40 p-2  text-center text-white"> {t("CenterTarget.Variety")} </Text>
                   <Text className="w-32 p-2  text-center text-white"> {t("CenterTarget.Grade")}</Text>
                   <Text className="w-32 p-2  text-center text-white"> {t("CenterTarget.Target")}</Text>

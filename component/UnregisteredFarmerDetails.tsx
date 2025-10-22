@@ -560,7 +560,7 @@ If correct, share OTP only with the ${companyName} representative who contacts y
             <View
               className={`flex-row items-center border ${
                 fieldErrors.phone || phoneError ? "border-red-500" : "border-[#F4F4F4]"
-              } bg-[#F4F4F4] p-3 rounded-full`}
+              } bg-[#F4F4F4] p-1  rounded-full`}
             >
               <TextInput
                 placeholder="7XXXXXXXX"

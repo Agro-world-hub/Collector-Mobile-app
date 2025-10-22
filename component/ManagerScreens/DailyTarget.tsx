@@ -326,7 +326,7 @@ const DailyTarget: React.FC<DailyTargetProps> = ({ navigation }) => {
           {/* Table Header */}
           <View className="flex-row bg-[#980775] h-[7%]">
             <Text className="w-16 p-2 text-center text-white">
-              {t("DailyTarget.No")}
+               {selectedToggle === 'ToDo' ? t("CenterTarget.No") : ""}
             </Text>
             <Text className="w-40 p-2 text-center text-white">
               {t("DailyTarget.Variety")}
