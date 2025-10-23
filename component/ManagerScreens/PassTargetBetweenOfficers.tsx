@@ -157,7 +157,7 @@ const PassTargetBetweenOfficers: React.FC<
         // Format the officers to be displayed
         const formattedOfficers = filteredOfficers.map((officer: any) => ({
           key: officer.collectionOfficerId.toString(),
-          value: getOfficerName(officer),
+          value: `${getOfficerName(officer)}  (${(officer.empId)})`,
         }));
         setOfficers([...formattedOfficers]);
       } else {

@@ -224,7 +224,7 @@ const [loadingRetailItems, setLoadingRetailItems] = useState(false);
   
   ]);
 
-//  console.log("dcbkisai",status)
+ console.log("dcbkisai",status)
 
   console.log("ordreid",item.orderId)
 const [loading, setLoading] = useState<boolean>(true);
@@ -1006,10 +1006,15 @@ const handleReplaceSubmit = async () => {
       }
     );
 
-    if (response.data.success) {
+  if (response.data.success) {
+      // Determine success message based on job role
+      const successMessage = jobRole === "Distribution Centre Manager" 
+        ? t("Error.Product replacement successful!")
+        : t("Error.Replacement request submitted successfully");
+      
       Alert.alert(
         t("Error.Success"),
-         t("Error.Replacement request submitted successfully"),
+        successMessage,
         [{ 
           text: t("Error.Ok"), 
           onPress: () => {
@@ -1027,9 +1032,9 @@ const handleReplaceSubmit = async () => {
               productTypeName: '',
             });
 
-            setTimeout(() => {
-              navigation.goBack();
-            }, 100);
+            // setTimeout(() => {
+            //   navigation.goBack();
+            // }, 100);
           }
         }]
       );

@@ -126,7 +126,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
       if (response.data.status === "success") {
         const formattedOfficers = response.data.data.map((officer: any) => ({
           key: officer.collectionOfficerId.toString(),
-          value: getOfficerName(officer),
+          value: `${getOfficerName(officer)}  (${(officer.empId)})`,
         }));
 
         setOfficers([...formattedOfficers]);

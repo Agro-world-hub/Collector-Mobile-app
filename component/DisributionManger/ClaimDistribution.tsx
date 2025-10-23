@@ -63,6 +63,13 @@ const ClaimOfficer: React.FC = () => {
  
   const empPrefix = "DIO";
 
+  // Function to handle text input and prevent leading spaces
+  const handleEmpIDChange = (text: string) => {
+    // Remove any leading spaces
+    const trimmedText = text.replace(/^\s+/, '');
+    setEmpID(trimmedText);
+    setOfficerFound(false);
+  };
 
   const handleSearch = async () => {
     Keyboard.dismiss();
@@ -267,11 +274,7 @@ const ClaimOfficer: React.FC = () => {
             placeholder="ex: 0122"
             value={empID}
             keyboardType="numeric"
-            // onChangeText={setEmpID}
-            onChangeText={(text) => {
-              setEmpID(text);
-              setOfficerFound(false);
-            }}
+            onChangeText={handleEmpIDChange}
             className="flex-1 px-4 py-2 text-gray-700"
           />
         </View>

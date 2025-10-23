@@ -587,7 +587,12 @@ const getStatusTextColor = (status: string) => {
               />
             </TouchableOpacity>
           )}
-          <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
+          {/* <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text> */}
+           {selectedToggle === 'ToDo' ? (
+            <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
+          ) : (
+            <Text className="flex-1 text-center text-white font-bold"></Text>
+          )}
           <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
           
           {selectedToggle === 'ToDo' ? (
