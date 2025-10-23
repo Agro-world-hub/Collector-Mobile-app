@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -29,6 +29,7 @@ import { useTranslation } from "react-i18next";
 import { useFocusEffect } from "@react-navigation/native";
 import i18n from "@/i18n/i18n";
 import DropDownPicker from 'react-native-dropdown-picker';
+import countryData from '../../assets/jsons/countryflag.json';
 
 type AddOfficerBasicDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -41,6 +42,16 @@ interface AddOfficerProp {
   navigation: AddOfficerBasicDetailsNavigationProp;
   route: AddOfficerRouteProp;
 }
+
+interface CountryItem {
+  label: string;
+  value: string;
+  countryName: string;
+  flag: string;
+  dialCode: string;
+}
+
+
 
 const AddOfficerBasicDetails: React.FC<AddOfficerProp> = ({
   route,
@@ -83,31 +94,79 @@ const AddOfficerBasicDetails: React.FC<AddOfficerProp> = ({
   });
 
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
- 
-
-// Use useMemo to create stable country items with guaranteed unique keys
-const countryItems1 = React.useMemo(
-  () =>
-    countryCodes.map((country, index) => ({
-      label: `${country.code} (${country.dial_code})`,
-      value: country.dial_code,
-      key: `dropdown1-${country.code}-${country.dial_code}-${index}`,
-    })),
-  []
-);
-
-const countryItems2 = React.useMemo(
-  () =>
-    countryCodes.map((country, index) => ({
-      label: `${country.code} (${country.dial_code})`,
-      value: country.dial_code,
-      key: `dropdown2-${country.code}-${country.dial_code}-${index}`,
-    })),
-  []
-);
-
-
   
+  const [countryItems1, setCountryItems1] = useState<CountryItem[]>([]);
+  const [countryItems2, setCountryItems2] = useState<CountryItem[]>([]);
+  const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
+
+  // Initialize country items
+  useMemo(() => {
+    const initialItems = countryData.map((country) => ({
+      label: `${country.emoji}  ${country.dial_code}`,
+      value: country.dial_code,
+      countryName: country.name,
+      flag: country.emoji,
+      dialCode: country.dial_code,
+    }));
+    
+    setCountryItems1(initialItems);
+    setCountryItems2(initialItems);
+  }, []);
+
+  // Handle dropdown open/close for phone 1
+  const handleOpen1 = (isOpen: boolean) => {
+    if (isOpen) {
+      setCountryItems1(
+        countryData.map((country) => ({
+          label: `${country.emoji} ${country.name} (${country.dial_code})`,
+          value: country.dial_code,
+          countryName: country.name,
+          flag: country.emoji,
+          dialCode: country.dial_code,
+        }))
+      );
+    } else {
+      setCountryItems1(
+        countryData.map((country) => ({
+          label: country.emoji,
+          value: country.dial_code,
+          countryName: country.name,
+          flag: country.emoji,
+          dialCode: country.dial_code,
+        }))
+      );
+    }
+    setOpen1(isOpen);
+    if (isOpen) setOpen2(false);
+  };
+
+  // Handle dropdown open/close for phone 2
+  const handleOpen2 = (isOpen: boolean) => {
+    if (isOpen) {
+      setCountryItems2(
+        countryData.map((country) => ({
+          label: `${country.emoji} ${country.name} (${country.dial_code})`,
+          value: country.dial_code,
+          countryName: country.name,
+          flag: country.emoji,
+          dialCode: country.dial_code,
+        }))
+      );
+    } else {
+      setCountryItems2(
+        countryData.map((country) => ({
+          label: country.emoji + country.dial_code,
+          value: country.dial_code,
+          countryName: country.name,
+          flag: country.emoji + country.dial_code,
+          dialCode: country.dial_code,
+        }))
+      );
+    }
+    setOpen2(isOpen);
+    if (isOpen) setOpen1(false);
+  };
 
   const toggleLanguage = (language: keyof typeof preferredLanguages) => {
     clearFieldError('preferredLanguages');
@@ -257,6 +316,20 @@ const countryItems2 = React.useMemo(
     if (!formData.lastNameEnglish.trim()) {
       errors.lastNameEnglish = t("Error.Last name in English is required");
     }
+    // Add validation for Sinhala names
+    if (!formData.firstNameSinhala?.trim()) {  // Add optional chaining
+    errors.firstNameSinhala = t("Error.First name in Sinhala is required");
+  }
+     if (!formData.lastNameSinhala?.trim()) {  // Add optional chaining
+    errors.lastNameSinhala = t("Error.Last name in Sinhala is required");
+  }
+  // Add validation for Tamil names
+  if (!formData.firstNameTamil?.trim()) {  // Add optional chaining
+    errors.firstNameTamil = t("Error.First name in Tamil is required");
+  }
+  if (!formData.lastNameTamil?.trim()) {  // Add optional chaining
+    errors.lastNameTamil = t("Error.Last name in Tamil is required");
+  }
     if (!phoneNumber1.trim()) {
       errors.phoneNumber1 = t("Error.Phone number is required");
     }
@@ -332,14 +405,6 @@ const countryItems2 = React.useMemo(
   const [error2, setError2] = useState("");
   const [error3, setError3] = useState("");
   const [errorEmail, setErrorEmail] = useState("");
-  const [open1, setOpen1] = useState(false);
-const [open2, setOpen2] = useState(false);
-const [countryItems, setCountryItems] = useState(
-  countryCodes.map((country) => ({
-    label: `${country.code} (${country.dial_code})`,
-    value: country.dial_code,
-  }))
-);
 
   const jobRoles = [
     { key: "2", value: "Collection Officer" },
@@ -368,6 +433,7 @@ const [countryItems, setCountryItems] = useState(
   };
 
   const handleSinhalaNameChange = (text: string, fieldName: string) => {
+    clearFieldError(fieldName);
     let filteredText = text;
 
     if (filteredText.startsWith(' ')) {
@@ -378,6 +444,7 @@ const [countryItems, setCountryItems] = useState(
   };
 
   const handleTamilNameChange = (text: string, fieldName: string) => {
+    clearFieldError(fieldName);
     let filteredText = text;
 
     if (filteredText.startsWith(' ')) {
@@ -813,38 +880,58 @@ const [countryItems, setCountryItems] = useState(
             placeholder={t("AddOfficerBasicDetails.FirstNameinSinhala")}
             value={formData.firstNameSinhala}
             onChangeText={(text) => handleSinhalaNameChange(text, 'firstNameSinhala')}
-            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+            className={`border ${
+              fieldErrors.firstNameSinhala ? "border-red-500" : "border-[#F4F4F4]"
+            } bg-[#F4F4F4] rounded-full px-3 py-2 mb-1 text-gray-700`}
             autoCorrect={false}
           />
+          {fieldErrors.firstNameSinhala ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">{fieldErrors.firstNameSinhala}</Text>
+          ) : <View className="mb-3" />}
 
           <TextInput
             placeholder={t("AddOfficerBasicDetails.LastNameSinhala")}
             value={formData.lastNameSinhala}
             onChangeText={(text) => handleSinhalaNameChange(text, 'lastNameSinhala')}
-            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+            className={`border ${
+              fieldErrors.lastNameSinhala ? "border-red-500" : "border-[#F4F4F4]"
+            } bg-[#F4F4F4] rounded-full px-3 py-2 mb-1 text-gray-700`}
             autoCorrect={false}
           />
+          {fieldErrors.lastNameSinhala ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">{fieldErrors.lastNameSinhala}</Text>
+          ) : <View className="mb-3" />}
 
           <TextInput
             placeholder={t("AddOfficerBasicDetails.FirstNameTamil")}
             value={formData.firstNameTamil}
             onChangeText={(text) => handleTamilNameChange(text, 'firstNameTamil')}
-            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+            className={`border ${
+              fieldErrors.firstNameTamil ? "border-red-500" : "border-[#F4F4F4]"
+            } bg-[#F4F4F4] rounded-full px-3 py-2 mb-1 text-gray-700`}
             autoCorrect={false}
           />
+          {fieldErrors.firstNameTamil ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">{fieldErrors.firstNameTamil}</Text>
+          ) : <View className="mb-3" />}
 
           <TextInput
             placeholder={t("AddOfficerBasicDetails.LastNameTamil")}
             value={formData.lastNameTamil}
             onChangeText={(text) => handleTamilNameChange(text, 'lastNameTamil')}
-            className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full px-3 py-2 mb-4 text-gray-700"
+            className={`border ${
+              fieldErrors.lastNameTamil ? "border-red-500" : "border-[#F4F4F4]"
+            } bg-[#F4F4F4] rounded-full px-3 py-2 mb-1 text-gray-700`}
             autoCorrect={false}
           />
+          {fieldErrors.lastNameTamil ? (
+            <Text className="text-red-500 text-sm mb-3 ml-3">{fieldErrors.lastNameTamil}</Text>
+          ) : <View className="mb-3" />}
 
           {/* Phone Number 1 */}
           <View className="mb-1">
             <View className="flex-row items-center gap-2 rounded-lg">
-              <View style={{ flex: 3, alignItems: "center" }} className="">
+              <View style={{ flex: 4, alignItems: "center" }} className="">
                 {/* <SelectList
                   setSelected={setPhoneCode1}
                   data={countryCodes.map((country) => ({
@@ -894,7 +981,7 @@ const [countryItems, setCountryItems] = useState(
       />
               </View>
               <View
-                style={{ flex: 7 }}
+                style={{ flex: 6 }}
                 className={`border ${
                   fieldErrors.phoneNumber1 ? "border-red-500" : "border-[#F4F4F4]"
                 } bg-[#F4F4F4] rounded-full text-gray-700`}
@@ -919,7 +1006,7 @@ const [countryItems, setCountryItems] = useState(
           {/* Phone Number 2 */}
           <View className="mb-1">
             <View className="flex-row items-center gap-2 rounded-lg">
-              <View style={{ flex: 3, alignItems: "center" }}>
+              <View style={{ flex: 4, alignItems: "center" }}>
                 {/* <SelectList
                   setSelected={setPhoneCode2}
                   data={countryCodes.map((country) => ({
@@ -969,7 +1056,7 @@ const [countryItems, setCountryItems] = useState(
       />
               </View>
               <View
-                style={{ flex: 7 }}
+                style={{ flex: 6 }}
                 className="border border-[#F4F4F4] bg-[#F4F4F4] rounded-full text-gray-700"
               >
                 <TextInput

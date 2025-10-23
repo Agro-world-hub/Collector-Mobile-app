@@ -227,6 +227,10 @@
 "Please select at least one preferred language":"Please select at least one preferred language",
 "First name in English is required":"First name in English is required",
 "Last name in English is required":"Last name in English is required",
+"First name in Sinhala is required":"First name in Sinhala is required",
+"Last name in Sinhala is required":"Last name in Sinhala is required",
+"First name in Tamil is required":"First name in Tamil is required",
+"Last name in Tamil is required":"Last name in Tamil is required",
 "Phone number is required":"Phone number is required",
 "NIC number is required":"NIC number is required",
 "House number is required":"House number is required",
@@ -238,7 +242,8 @@
 "Account number is required":"Account number is required",
 "Confirm account number is required":"Confirm account number is required",
 "Bank name is required":"Bank name is required",
-"Branch name is required":"Branch name is required"
+"Branch name is required":"Branch name is required",
+"Price updated successfully":"Price updated successfully"
   },
   "EngProfile":{
     "LNG": "en",
@@ -359,7 +364,10 @@
     "Cancel":"Cancel",
     "Grade":"Grade",
     "Request Price Update":"Request Price Update",
-    "Submit Request":"Submit Request"
+    "Submit Request":"Submit Request",
+    "Edit Price":"Edit Price",
+    "Update":"Update",
+   "AllowedRange": "Allowed Rs.{{minPrice}} - Rs.{{maxPrice}}"
   },
   "Otpverification":{
     "LNG": "en",

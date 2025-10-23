@@ -43,6 +43,12 @@ export type RootStackParamList = {
         cropName: string;
         varietyName: string;
       };
+
+      PriceChartManager:{
+        varietyId: string;
+        cropName: string;
+        varietyName: string;
+      }
    // Main:{screen: keyof RootStackParamList};
    Main: { screen: keyof RootStackParamList; params?: any };
     CollectionOfficersList:undefined;

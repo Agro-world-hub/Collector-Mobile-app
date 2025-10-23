@@ -227,6 +227,10 @@
 "Please select at least one preferred language":"කරුණාකර අවම වශයෙන් එක් කැමති භාෂාවක් තෝරන්න.",
 "First name in English is required":"ඉංග්‍රීසියෙන් මුල් නම අවශ්‍යයි.",
 "Last name in English is required":"ඉංග්‍රීසියෙන් අවසාන නම අවශ්‍යයි.",
+"First name in Sinhala is required":"සිංහලෙන් මුල් නම අවශ්‍යයි.",
+"Last name in Sinhala is required":"සිංහලෙන් අවසාන නම අවශ්‍යයි.",
+"First name in Tamil is required":"දෙමළ භාෂාවෙන් මුල් නම අවශ්‍යයි.",
+"Last name in Tamil is required":"දෙමළ භාෂාවෙන් අවසන් නම අවශ්‍යයි.",
 "Phone number is required":"දුරකථන අංකය අවශ්‍යයි",
 "NIC number is required":"ජාතික හැඳුනුම්පත් අංකය අවශ්‍යයි",
 "House number is required":"නිවසේ අංකය අවශ්‍යයි",
@@ -238,7 +242,8 @@
 "Account number is required":"ගිණුම් අංකය අවශ්‍යයි",
 "Confirm account number is required":"ගිණුම් අංකය තහවුරු කිරීම අවශ්‍යයි.",
 "Bank name is required":"බැංකුවේ නම අවශ්‍යයි",
-"Branch name is required":"ශාඛාවේ නම අවශ්‍යයි"
+"Branch name is required":"ශාඛාවේ නම අවශ්‍යයි",
+"Price updated successfully":"මිල සාර්ථකව යාවත්කාලීන කරන ලදී"
   },
 "EngProfile":{
     "LNG": "si",
@@ -359,7 +364,10 @@
     "Cancel":"අවලංගු කරන්න",
     "Grade":"ශ්‍රේණිය",
     "Request Price Update":"මිල සංශෝධන ඉල්ලන්න",
-    "Submit Request":"ඉල්ලීම ඉදිරිපත් කරන්න"
+    "Submit Request":"ඉල්ලීම ඉදිරිපත් කරන්න",
+     "Edit Price":"මිල සංස්කරණය කරන්න",
+     "Update":"යාවත්කාලීන කරන්න",
+     "AllowedRange": "අවසර ඇත රු.{{minPrice}} - රු.{{maxPrice}}"
   },
   "Otpverification":{
     "LNG": "si",

@@ -280,73 +280,94 @@ const sortByVarietyAndGrade = (data: TargetData[]) => {
   </Animated.View>
 </View>
             {/* Table Header */}
-            <ScrollView
-              horizontal
-              className=" bg-white"
-              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+
+
+<ScrollView
+  className="flex-1 bg-white"
+  refreshControl={
+    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+  }
+  contentContainerStyle={{ paddingBottom: 20 }}
+>
+  <ScrollView 
+    horizontal 
+    showsHorizontalScrollIndicator={true}
+  >
+    <View style={{ minWidth: '100%' }}>
+      {/* Table Header */}
+      <View className="flex-row bg-[#980775] h-[50px]">
+        <Text className="w-16 p-2 text-center text-white"> 
+          {selectedToggle === 'ToDo' ? t("CenterTarget.No") : ""}
+        </Text>
+        <Text className="w-40 p-2 text-center text-white">
+          {t("CenterTarget.Variety")}
+        </Text>
+        <Text className="w-32 p-2 text-center text-white">
+          {t("CenterTarget.Grade")}
+        </Text>
+        <Text className="w-32 p-2 text-center text-white">
+          {t("CenterTarget.Target")}
+        </Text>
+        <Text className="w-32 p-2 text-center text-white">
+          {selectedToggle === 'ToDo' ? t("DailyTarget.Todo") : t("DailyTarget.Completed")}
+        </Text>
+      </View>
+
+      {/* Table Content */}
+      {loading ? (
+        <View className="flex-1 justify-center items-center py-10">
+          <LottieView
+            source={require('../../assets/lottie/newLottie.json')}
+            autoPlay
+            loop
+            style={{ width: 350, height: 350 }}
+          />
+        </View>
+      ) : displayedData.length > 0 ? (
+        displayedData.map((item, index) => (
+          <View
+            key={index}
+            className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
+          >
+            <Text className="w-16 p-2 border-r border-gray-300 text-center">
+              {selectedToggle === 'ToDo' ? index + 1 : <Ionicons name="flag" size={20} color="purple" />}
+            </Text>
+            <Text
+              className="w-40 p-2 border-r border-gray-300 text-center"
+              numberOfLines={2}
             >
-              <View>
-                <View className="flex-row bg-[#980775] h-[7%]">
-                  <Text className="w-16 p-2  text-center text-white"> {t("CenterTarget.No")} </Text>
-                  <Text className="w-40 p-2  text-center text-white"> {t("CenterTarget.Variety")} </Text>
-                  <Text className="w-32 p-2  text-center text-white"> {t("CenterTarget.Grade")}</Text>
-                  <Text className="w-32 p-2  text-center text-white"> {t("CenterTarget.Target")}</Text>
-                  <Text className="w-32 p-2 text-center text-white">
-                    {selectedToggle === 'ToDo' ? t("DailyTarget.Todo") : t("DailyTarget.Completed")}
-                  </Text>
-                </View>
-      
-                {loading ? (
-                  <View className="flex-1 justify-center items-center mr-[40%] ">
-                    <LottieView
-                      source={require('../../assets/lottie/newLottie.json')}
-                      autoPlay
-                      loop
-                      style={{ width: 350, height: 350 }}
-                    />
-                  </View>
-                ) : displayedData.length > 0 ? (
-                  displayedData.map((item, index) => (
-                    <View
-                      key={index}
-                      className={`flex-row ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
-                    >
-                      <Text className="w-16 p-2 border-r border-gray-300 text-center">
-                        {selectedToggle === 'ToDo' ? index + 1 : <Ionicons name="flag" size={20} color="purple" />}
-                      </Text>
-                      <Text
-                        className="w-40 p-2 border-r border-gray-300 text-center flex-wrap"
-                        numberOfLines={2}
-                      >
-                        {getvarietyName(item)}
-                      </Text>
-                      <Text className="w-32 p-2 border-r border-gray-300 text-center">{item.grade}</Text>
-                      <Text className="w-32 p-2 border-r border-gray-300 text-center">
-                        {item.target.toFixed(2)}
-                      </Text>
-                      <Text className="w-32 p-2 text-center">
-                        {selectedToggle === 'Completed' ? item.complete.toFixed(2) : item.todo.toFixed(2)}
-                      </Text>
-                    </View>
-                  ))
-                ) : (
-                  <View className="flex-1 justify-center items-center mr-[35%]">
-                    <LottieView
-                      source={require('../../assets/lottie/NoComplaints.json')} 
-                      autoPlay
-                      loop
-                      style={{ width: 150, height: 150 }}
-                    />
-                    <Text className="text-gray-500 mt-4">
-                      {selectedToggle === 'ToDo' 
-                        ? t("DailyTarget.NoTodoItems") || "No items to do"
-                        : t("DailyTarget.noCompletedTargets") || "No completed items"
-                      }
-                    </Text>
-                  </View>
-                )}
-              </View>
-            </ScrollView>
+              {getvarietyName(item)}
+            </Text>
+            <Text className="w-32 p-2 border-r border-gray-300 text-center">
+              {item.grade}
+            </Text>
+            <Text className="w-32 p-2 border-r border-gray-300 text-center">
+              {item.target.toFixed(2)}
+            </Text>
+            <Text className="w-32 p-2 text-center">
+              {selectedToggle === 'Completed' ? item.complete.toFixed(2) : item.todo.toFixed(2)}
+            </Text>
+          </View>
+        ))
+      ) : (
+        <View className="flex-1 justify-center items-center py-10">
+          <LottieView
+            source={require('../../assets/lottie/NoComplaints.json')} 
+            autoPlay
+            loop
+            style={{ width: 150, height: 150 }}
+          />
+          <Text className="text-gray-500 mt-4">
+            {selectedToggle === 'ToDo' 
+              ? t("DailyTarget.NoTodoItems") || "No items to do"
+              : t("DailyTarget.noCompletedTargets") || "No completed items"
+            }
+          </Text>
+        </View>
+      )}
+    </View>
+  </ScrollView>
+</ScrollView>
           </View>
         );
 };

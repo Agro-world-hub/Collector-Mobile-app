@@ -187,20 +187,20 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
   };
 
   return (
-    <View className="flex-1 bg-[#282828] ">
+    <View className="flex-1 bg-[#282828]">
       {/* Header */}
       <View className="bg-[#282828] px-4 py-3 flex-row justify-center items-center">
-      
-         <TouchableOpacity onPress={() => navigation.goBack()}
-                  className="absolute top-2 left-4 bg-[#FFFFFF1A] rounded-full  p-2 justify-center w-10" >
-                                                                 <AntDesign name="left" size={24} color="#000502" />
-                                                               </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          className="absolute top-2 left-4 bg-[#FFFFFF1A] rounded-full p-2 justify-center w-10"
+        >
+          <AntDesign name="left" size={24} color="#000502" />
+        </TouchableOpacity>
         <Text className="text-white text-lg font-bold">{officerId}</Text>
       </View>
 
       {/* Toggle Buttons */}
       <View className="flex-row justify-center items-center py-4 bg-[#282828]">
-        {/* To Do Button */}
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center justify-center ${
             selectedToggle === "ToDo" ? "bg-[#980775]" : "bg-white"
@@ -222,7 +222,6 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
           </View>
         </TouchableOpacity>
 
-        {/* Completed Button */}
         <TouchableOpacity
           className={`px-4 py-2 rounded-full mx-2 flex-row items-center ${
             selectedToggle === "Completed" ? "bg-[#980775]" : "bg-white"
@@ -245,93 +244,87 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Scrollable Table */}
+      {/* Scrollable Table - FIXED STRUCTURE */}
       <ScrollView
-        horizontal
-        className="bg-white"
+        className="flex-1 bg-white"
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <View>
-          {/* Table Header */}
-          <View className="flex-row bg-[#980775] h-[7%]">
-            <Text className="w-16 p-2 text-center text-white">
-              {t("DailyTarget.No")}
-            </Text>
-            <Text className="w-40 p-2 text-center text-white">
-              {t("DailyTarget.Variety")}
-            </Text>
-            <Text className="w-32 p-2 text-center text-white">
-              {t("DailyTarget.Grade")}
-            </Text>
-            <Text className="w-32 p-2 text-center text-white">
-              {t("DailyTarget.Target")}
-            </Text>
-            <Text className="w-32 p-2 text-center text-white">
-              {selectedToggle === "Completed"
-                ? t("DailyTarget.Completedkg")
-                : t("DailyTarget.Todo()")}
-            </Text>
-          </View>
-
-          {loading ? (
-            <View className="flex-1 justify-center items-center mr-[40%] -mt-[10%]">
-              <LottieView
-                source={require("../../assets/lottie/newLottie.json")} // Ensure you have a valid JSON file
-                autoPlay
-                loop
-                style={{ width: 350, height: 350 }}
-              />
+        <ScrollView horizontal showsHorizontalScrollIndicator={true}>
+          <View>
+            {/* Table Header */}
+            <View className="flex-row bg-[#980775]">
+              <Text className="w-16 p-2 text-center text-white">
+                {selectedToggle === "ToDo" ? t("CenterTarget.No") : ""}
+              </Text>
+              <Text className="w-40 p-2 text-center text-white">
+                {t("DailyTarget.Variety")}
+              </Text>
+              <Text className="w-32 p-2 text-center text-white">
+                {t("DailyTarget.Grade")}
+              </Text>
+              <Text className="w-32 p-2 text-center text-white">
+                {t("DailyTarget.Target")}
+              </Text>
+              <Text className="w-32 p-2 text-center text-white">
+                {selectedToggle === "Completed"
+                  ? t("DailyTarget.Completedkg")
+                  : t("DailyTarget.Todo()")}
+              </Text>
             </View>
-          ) : displayedData.length > 0 ? (
-            displayedData.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                className={`flex-row ${
-                  index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                }`}
-                onPress={() => {
-                  let qty = 0;
-                  if (item.centerTarget) {
-                    if (
-                      item.grade === "A" &&
-                      item.centerTarget.total_qtyA !== undefined
-                    ) {
-                      qty = parseFloat(item.centerTarget.total_qtyA);
-                    } else if (
-                      item.grade === "B" &&
-                      item.centerTarget.total_qtyB !== undefined
-                    ) {
-                      qty = parseFloat(item.centerTarget.total_qtyB);
-                    } else if (
-                      item.grade === "C" &&
-                      item.centerTarget.total_qtyC !== undefined
-                    ) {
-                      qty = parseFloat(item.centerTarget.total_qtyC);
-                    }
-                  }
-                  if (selectedToggle === "Completed") return;
 
-                  navigation.navigate("EditTargetScreen" as any, {
-                    varietyNameEnglish: item.varietyNameEnglish,
-                    varietyId: item.varietyId,
-                    grade: item.grade,
-                    target: item.officerTarget,
-                    todo: item.todo,
-                    qty: item.dailyTarget,
-                    collectionOfficerId,
-                    varietyNameSinhala: item.varietyNameSinhala,
-                    varietyNameTamil: item.varietyNameTamil,
-                    officerId: officerId
-                  });
-                }}
-              >
-                <View
+            {loading ? (
+              <View className="flex-1 justify-center items-center py-16">
+                <LottieView
+                  source={require("../../assets/lottie/newLottie.json")}
+                  autoPlay
+                  loop
+                  style={{ width: 350, height: 350 }}
+                />
+              </View>
+            ) : displayedData.length > 0 ? (
+              displayedData.map((item, index) => (
+                <TouchableOpacity
                   key={index}
                   className={`flex-row ${
                     index % 2 === 0 ? "bg-gray-100" : "bg-white"
                   }`}
+                  onPress={() => {
+                    let qty = 0;
+                    if (item.centerTarget) {
+                      if (
+                        item.grade === "A" &&
+                        item.centerTarget.total_qtyA !== undefined
+                      ) {
+                        qty = parseFloat(item.centerTarget.total_qtyA);
+                      } else if (
+                        item.grade === "B" &&
+                        item.centerTarget.total_qtyB !== undefined
+                      ) {
+                        qty = parseFloat(item.centerTarget.total_qtyB);
+                      } else if (
+                        item.grade === "C" &&
+                        item.centerTarget.total_qtyC !== undefined
+                      ) {
+                        qty = parseFloat(item.centerTarget.total_qtyC);
+                      }
+                    }
+                    if (selectedToggle === "Completed") return;
+
+                    navigation.navigate("EditTargetScreen" as any, {
+                      varietyNameEnglish: item.varietyNameEnglish,
+                      varietyId: item.varietyId,
+                      grade: item.grade,
+                      target: item.officerTarget,
+                      todo: item.todo,
+                      qty: item.dailyTarget,
+                      collectionOfficerId,
+                      varietyNameSinhala: item.varietyNameSinhala,
+                      varietyNameTamil: item.varietyNameTamil,
+                      officerId: officerId,
+                    });
+                  }}
                 >
                   <Text className="w-16 p-2 border-r border-gray-300 text-center">
                     {selectedToggle === "ToDo" ? (
@@ -350,28 +343,28 @@ const DailyTargetListForOfficers: React.FC<DailyTargetListForOfficersProps> = ({
                     {item.officerTarget}
                   </Text>
                   <Text className="w-32 p-2 text-center">
-                    {" "}
                     {selectedToggle === "Completed" ? item.complete : item.todo}
                   </Text>
-                </View>
-              </TouchableOpacity>
-            ))
-          ) : (
-            <View className="flex-1 justify-center items-center py-16 w-screen">
-              <LottieView
-                source={require("../../assets/lottie/NoComplaints.json")}
-                autoPlay
-                loop
-                style={{ width: 150, height: 150 }}
-              />
-              <Text className="text-gray-500  mt-4">
-                {selectedToggle === "ToDo"
-                  ? t("DailyTarget.NoTodoItems") || "No items to do"
-                  : t("DailyTarget.noCompletedTargets") || "No completed items"}
-              </Text>
-            </View>
-          )}
-        </View>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <View className="flex-1 justify-center items-center py-16 w-screen">
+                <LottieView
+                  source={require("../../assets/lottie/NoComplaints.json")}
+                  autoPlay
+                  loop
+                  style={{ width: 150, height: 150 }}
+                />
+                <Text className="text-gray-500 mt-4">
+                  {selectedToggle === "ToDo"
+                    ? t("DailyTarget.NoTodoItems") || "No items to do"
+                    : t("DailyTarget.noCompletedTargets") ||
+                      "No completed items"}
+                </Text>
+              </View>
+            )}
+          </View>
+        </ScrollView>
       </ScrollView>
     </View>
   );

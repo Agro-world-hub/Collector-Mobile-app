@@ -227,6 +227,10 @@
 "Please select at least one preferred language":"குறைந்தபட்சம் ஒரு விருப்பமான மொழியையாவது தேர்ந்தெடுக்கவும்.",
 "First name in English is required":"ஆங்கிலத்தில் பெயரின் முற்பகுதி அவசியம்.",
 "Last name in English is required":"ஆங்கிலத்தில் கடைசி பெயர் அவசியம்.",
+"First name in Sinhala is required":"சிங்கள மொழியில் முதல் பெயர் அவசியம்.",
+"Last name in Sinhala is required":"சிங்கள மொழியில் கடைசி பெயர் அவசியம்.",
+"First name in Tamil is required":"தமிழில் முதல் பெயர் அவசியம்.",
+"Last name in Tamil is required":"தமிழில் கடைசி பெயர் அவசியம்.",
 "Phone number is required":"தொலைபேசி எண் தேவை.",
 "NIC number is required":"தேசிய அடையாள அட்டை எண் அவசியம்.",
 "House number is required":"வீட்டு எண் தேவை.",
@@ -238,7 +242,8 @@
 "Account number is required":"கணக்கு எண் தேவை.",
 "Confirm account number is required":"கணக்கு எண்ணை உறுதிப்படுத்துவது அவசியம்.",
 "Bank name is required":"வங்கியின் பெயர் அவசியம்",
-"Branch name is required":"கிளையின் பெயர் அவசியம்."
+"Branch name is required":"கிளையின் பெயர் அவசியம்.",
+"Price updated successfully":"விலை வெற்றிகரமாக புதுப்பிக்கப்பட்டது."
   },
   "EngProfile":{
     "LNG": "en",
@@ -359,7 +364,10 @@
     "Cancel":"ரத்து செய்",
     "Grade":"தரம்",
     "Request Price Update":"விலை புதுப்பிப்பைக் கோரவும்",
-    "Submit Request":"கோரிக்கையை சமர்ப்பிக்கவும்"
+    "Submit Request":"கோரிக்கையை சமர்ப்பிக்கவும்",
+     "Edit Price":"விலையைத் திருத்து",
+     "Update":"புதுப்பிக்கவும்",
+      "AllowedRange": "அனுமதிக்கப்பட்டது ரூ.{{minPrice}} - ரூ.{{maxPrice}}"
   },
   "Otpverification":{
     "LNG": "ta",

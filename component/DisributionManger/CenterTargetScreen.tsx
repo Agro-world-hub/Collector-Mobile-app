@@ -397,6 +397,8 @@ const fetchTargets = useCallback(async () => {
       }
     );
 
+    console.log("target [[[[[[[[[[[[[[[[[",response.data)
+
     if (response.data.success) {
       const apiData = response.data.data;
       const mappedData = mapApiDataToTargetData(apiData);
@@ -1788,7 +1790,9 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
         {/* Invoice Number */}
         <View className="flex-[2] items-center justify-center px-2">
           <Text className="text-center font-medium text-gray-800">
-            {item.invoiceNo || `INV${item.id || (index + 1).toString().padStart(6, '0')}`}
+            {/* {item.invoiceNo || `INV${item.id || (index + 1).toString().padStart(6, '0')}`} */}
+            {item.invoiceNo }
+            
           </Text>
         </View>
         
