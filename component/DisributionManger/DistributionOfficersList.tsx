@@ -89,7 +89,7 @@ const DistributionOfficersList: React.FC<CollectionOfficersListProps> = ({
 
       const token = await AsyncStorage.getItem("token");
       const response = await axios.get(
-        `${environment.API_BASE_URL}api/collection-manager/collection-officers`,
+        `${environment.API_BASE_URL}api/collection-manager/collection-officerslist`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

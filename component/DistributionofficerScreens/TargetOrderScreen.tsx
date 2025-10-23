@@ -332,7 +332,7 @@ const fetchTargets = useCallback(async () => {
     );
 
     // console.log("Response status:", response.status);
-    // console.log("Response data:", response.data);
+   //  console.log("Response data:", response.data);
 
     if (response.data.success) {
       const apiData = response.data.data;
@@ -566,7 +566,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
         <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4 bg-white/10 rounded-full p-2">
           <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-bold">{t("TargetOrderScreen.My Daily Target")}</Text>
+        <Text className="text-white text-lg font-bold">{t("TargetOrderScreen.My Daily Target")} </Text>
       </View>
 
    
@@ -671,10 +671,11 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
    </View>
 
     
-      <ScrollView
-        className="flex-1 bg-white"
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      >
+     <ScrollView
+  className="flex-1 bg-white"
+  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+  contentContainerStyle={{ paddingBottom: 100 }} // Add bottom padding
+>
     
         <View className="flex-row bg-[#980775] py-3">
           <Text 

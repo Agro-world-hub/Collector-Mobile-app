@@ -115,9 +115,20 @@ const PassTargetBetweenOfficers: React.FC<
         return officer.fullNameEnglish;
     }
   };
+
+  // ✅ Fixed: Enhanced save button disabling logic
   const isSaveDisabled = () => {
-    // Disable button if no assignee is selected OR assignee is the default option ('0') OR submitting
-    return !assignee || assignee === "0" || submitting;
+    const numericAmount = parseFloat(amount);
+    
+    return !assignee || 
+           assignee === "0" || 
+           submitting ||
+           loading ||
+           !amount || 
+           isNaN(numericAmount) || 
+           numericAmount <= 0 || 
+           numericAmount > maxAmount ||
+           error !== ""; // Also disable if there's an error
   };
 
   // Fetch officers from API
