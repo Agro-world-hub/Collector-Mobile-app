@@ -211,9 +211,27 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
   };
 
 
+  // const canSelectItem = (item: OrderData) => {
+  //   return item.selectedStatus?.toLowerCase() === 'pending' && selectedToggle === 'ToDo';
+  // };
+
   const canSelectItem = (item: OrderData) => {
-    return item.selectedStatus?.toLowerCase() === 'pending' && selectedToggle === 'ToDo';
-  };
+  // Only allow selection in ToDo tab
+  if (selectedToggle !== 'ToDo') return false;
+  
+  // Check if item has package
+  if (item.isPackage === 1) {
+    // If it's a package, check both packageItemStatus and additionalItemStatus
+    const packagePending = item.packageItemStatus?.toLowerCase() === 'pending';
+    const additionalPending = item.additionalItemStatus?.toLowerCase() === 'pending';
+    
+    // Both must be pending to allow selection
+    return packagePending && additionalPending;
+  } else {
+    // If no package, only check additionalItemStatus
+    return item.additionalItemStatus?.toLowerCase() === 'pending';
+  }
+};
 
 
   const handleItemSelect = (item: OrderData) => {
@@ -358,7 +376,7 @@ const handleRowPress = (item: OrderData) => {
       );
 
       const allData = response.data.data;
-      //console.log("Fetched data:", allData);
+      console.log("Fetched data:::::::::::::::::", allData);
       
     
       const todoItems = allData.filter((item: OrderData) => 
