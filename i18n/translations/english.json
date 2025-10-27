@@ -193,6 +193,7 @@
 "Package ID not found":"Package ID not found",
 "No item selected for replacement":"No item selected for replacement",
 "Replacement request submitted successfully":"Replacement request submitted successfully!",
+"Product replacement successful!":"Product replacement successful!",
 "Authentication Error":"Authentication Error",
 "Your session has expired":"Your session has expired. Please login again.",
 "Invalid Request":"Invalid Request",
@@ -1000,8 +1001,8 @@
     "Close":"Close",
     "Select Completion Date":"Select Completion Date",
     "All Completion Dates":"All Completion Dates",
-    "Are you sure you want to send these selected":"Are you sure you want to send this selected order out for delivery?",
-    "Are you sure you want":"Are you sure you want to send these selected {{count}} orders out for delivery?",
+    "Are you sure you want to send these selected":"Are you sure you want to release this selected order for delivery or pickup?",
+    "Are you sure you want":"Are you sure you want to release these {{count}} selected orders for delivery or pickup?",
     "orders out for delivery":"{{count}} orders have been sent out for delivery.",
     "order one":"{{count}} order has been sent out for delivery.",
     "Processing orders":"Processing orders...",
@@ -1023,8 +1024,8 @@
      "Processing":"Processing...",
      "have":"have",
      "has":"has",
-     "01 order has been sent out for delivery":"01 order has been sent out for delivery.",
-     "orders have been sent out for delivery":"{{successCount}} orders have been sent out for delivery"
+     "01 order has been sent out for delivery":"01 order has been released to the next stage.",
+     "orders have been sent out for delivery":"{{successCount}} orders have been released to the next stage."
   }
 }
 
