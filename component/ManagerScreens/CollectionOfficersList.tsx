@@ -94,7 +94,7 @@ const CollectionOfficersList: React.FC<CollectionOfficersListProps> = ({
           },
         }
       );
-     // console.log("data", response.data);
+      console.log("data", response.data);
 
       if (response.data.status === "success") {
         

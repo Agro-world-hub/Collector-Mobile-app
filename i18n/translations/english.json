@@ -969,7 +969,8 @@
     "Selected Targets":"Selected Targets",
     "Save":"Save",
     "Dismiss":"Dismiss",
-    "Short Stock Assignee":"Short Stock Assignee"
+    "Short Stock Assignee":"Short Stock Assignee",
+    "Search officers":"Search officers"
   },
   "ReplaceRequestsApprove":{
     "Loading replace request":"Loading replace request...",
@@ -1003,8 +1004,8 @@
     "All Completion Dates":"All Completion Dates",
     "Are you sure you want to send these selected":"Are you sure you want to release this selected order for delivery or pickup?",
     "Are you sure you want":"Are you sure you want to release these {{count}} selected orders for delivery or pickup?",
-    "orders out for delivery":"{{count}} orders have been sent out for delivery.",
-    "order one":"{{count}} order has been sent out for delivery.",
+    "orders out for delivery":"{{count}} orders have been released to the next stage.",
+    "order one":"{{count}} order has been released to the next stage.",
     "Processing orders":"Processing orders...",
     "Cancel":"Cancel",
     "Out Time":"Out Time",
