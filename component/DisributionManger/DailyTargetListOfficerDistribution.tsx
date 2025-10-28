@@ -63,7 +63,8 @@ interface OrderData {
   packedPackageItems: number;
   pendingAdditionalItems: number;
   pendingPackageItems: number;
-  complete: number;
+  complete: number;  // This is target-level completion
+  isComplete: number | null;  // ADD THIS LINE - Item-level completion
   completeTime: string | null;
   target: number;
   targetCreatedAt: string;
@@ -216,22 +217,49 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
   // };
 
   const canSelectItem = (item: OrderData) => {
-  // Only allow selection in ToDo tab
+  // RULE 1: Only allow selection in ToDo tab
   if (selectedToggle !== 'ToDo') return false;
   
-  // Check if item has package
+  // RULE 2: selectedStatus MUST be 'Pending' (MANDATORY)
+  if (item.selectedStatus?.toLowerCase() !== 'pending') return false;
+  
+  // RULE 3: Check item-specific statuses based on order type
+  
+  // For PACKAGE orders (isPackage === 1)
   if (item.isPackage === 1) {
-    // If it's a package, check both packageItemStatus and additionalItemStatus
-    const packagePending = item.packageItemStatus?.toLowerCase() === 'pending';
-    const additionalPending = item.additionalItemStatus?.toLowerCase() === 'pending';
+    // Case 1: Order has BOTH additional items AND package items
+    if (item.totalAdditionalItems > 0 && item.totalPackageItems > 0) {
+      // BOTH must be pending
+      const additionalIsPending = item.additionalItemStatus?.toLowerCase() === 'pending';
+      const packageIsPending = item.packageItemStatus?.toLowerCase() === 'pending';
+      return additionalIsPending && packageIsPending;
+    }
     
-    // Both must be pending to allow selection
-    return packagePending && additionalPending;
-  } else {
-    // If no package, only check additionalItemStatus
-    return item.additionalItemStatus?.toLowerCase() === 'pending';
+    // Case 2: Order has ONLY package items (no additional items)
+    if (item.totalPackageItems > 0 && item.totalAdditionalItems === 0) {
+      return item.packageItemStatus?.toLowerCase() === 'pending';
+    }
+    
+    // Case 3: Order has ONLY additional items (no package items)
+    if (item.totalAdditionalItems > 0 && item.totalPackageItems === 0) {
+      return item.additionalItemStatus?.toLowerCase() === 'pending';
+    }
+    
+    // Case 4: No items at all (shouldn't happen but handle it)
+    return false;
+  } 
+  
+  // For NON-PACKAGE orders (isPackage === 0)
+  else {
+    // Must have additional items and they must be pending
+    if (item.totalAdditionalItems > 0) {
+      return item.additionalItemStatus?.toLowerCase() === 'pending';
+    }
+    // No items to select
+    return false;
   }
 };
+
 
 
   const handleItemSelect = (item: OrderData) => {
@@ -361,56 +389,61 @@ const handleRowPress = (item: OrderData) => {
   };
 
  
-  const fetchTargets = async () => {
-    setLoading(true);
-    const startTime = Date.now();
-    try {
-      const authToken = await AsyncStorage.getItem("token");
-      const response = await axios.get(
-        `${environment.API_BASE_URL}api/distribution-manager/distribution-officer/${collectionOfficerId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
+  // Replace the fetchTargets function's filtering logic with this:
 
-      const allData = response.data.data;
-      console.log("Fetched data:::::::::::::::::", allData);
-      
-    
-      const todoItems = allData.filter((item: OrderData) => 
-        item.selectedStatus !== 'Completed' && item.complete === 0
-      );
-      const completedItems = allData.filter((item: OrderData) => 
-        item.selectedStatus === 'Completed' || item.complete === 1
-      );
-      
-    //  console.log("Todo items:", todoItems);
-     // console.log("Completed items:", completedItems);
-
-      setTodoData(todoItems);
-      setCompletedData(completedItems);
-      
-    
-      if (allData && allData.length > 0) {
-        setInvoNo(allData[0].invNo || '');
+const fetchTargets = async () => {
+  setLoading(true);
+  const startTime = Date.now();
+  try {
+    const authToken = await AsyncStorage.getItem("token");
+    const response = await axios.get(
+      `${environment.API_BASE_URL}api/distribution-manager/distribution-officer/${collectionOfficerId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
       }
-      
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching targets:", err);
-      setError(t("Error.Failed to fetch data."));
-    } finally {
-      const elapsedTime = Date.now() - startTime;
-      const remainingTime = 3000 - elapsedTime;
-      setTimeout(
-        () => setLoading(false),
-        remainingTime > 0 ? remainingTime : 0
-      );
-    }
-  };
+    );
 
+    const allData = response.data.data;
+    console.log("Total data fetched from API:", allData.length);
+    
+    // FIXED: Filter based on individual item completion status (isComplete)
+    // and selectedStatus to ensure proper categorization
+    const todoItems = allData.filter((item: OrderData) => 
+      item.selectedStatus !== 'Completed' && 
+      (item.isComplete === null || item.isComplete === 0)
+    );
+    
+    const completedItems = allData.filter((item: OrderData) => 
+      item.selectedStatus === 'Completed' && 
+      item.isComplete === 1
+    );
+    
+    console.log("Todo items count:", todoItems.length);
+    console.log("Completed items count:", completedItems.length);
+
+    setTodoData(todoItems);
+    setCompletedData(completedItems);
+    
+    // Set invoice number from first item if available
+    if (allData && allData.length > 0) {
+      setInvoNo(allData[0].invNo || '');
+    }
+    
+    setError(null);
+  } catch (err) {
+    console.error("Error fetching targets:", err);
+    setError(t("Error.Failed to fetch data."));
+  } finally {
+    const elapsedTime = Date.now() - startTime;
+    const remainingTime = 3000 - elapsedTime;
+    setTimeout(
+      () => setLoading(false),
+      remainingTime > 0 ? remainingTime : 0
+    );
+  }
+};
   
   useFocusEffect(
     React.useCallback(() => {
