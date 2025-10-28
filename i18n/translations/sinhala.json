@@ -193,6 +193,7 @@
 "Package ID not found":"පැකේජ හැඳුනුම්පත හමු නොවීය",
 "No item selected for replacement":"ප්‍රතිස්ථාපනය සඳහා කිසිදු අයිතමයක් තෝරාගෙන නොමැත",
 "Replacement request submitted successfully":"ප්‍රතිස්ථාපන ඉල්ලීම සාර්ථකව ඉදිරිපත් කරන ලදී!",
+"Product replacement successful":"නිෂ්පාදන ප්‍රතිස්ථාපනය සාර්ථකයි!",
 "Authentication Error":"සත්‍යාපන දෝෂය",
 "Your session has expired":"ඇතුල්වීම කල් ඉකුත් විය. කරුණාකර නැවත පුරනය වන්න.",
 "Invalid Request":"සපුරාලිය නොහැකි ඉල්ලීම",
@@ -968,7 +969,8 @@
     "Selected Targets":"තෝරාගත් ඉලක්කය",
     "Save":"සුරකින්න",
     "Dismiss":"ඉවත් කරන්න",
-    "Short Stock Assignee":"කෙටිකාලීන භාරකරු"
+    "Short Stock Assignee":"කෙටිකාලීන භාරකරු",
+    "Search officers":"පරීක්ෂක නිලධාරීන් සොයන්න"
   },
     "ReplaceRequestsApprove":{
     "Loading replace request":"ප්‍රතිස්ථාපන ඉල්ලීම පූරණය වෙමින් පවතී...",

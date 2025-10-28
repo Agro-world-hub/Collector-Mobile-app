@@ -152,10 +152,11 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
           },
         }
       );
+      console.log("---------------------------",response.data)
 
       if (response.data.status === "success") {
         const formattedOfficers = response.data.data.map((officer: any) => ({
-          label: getOfficerName(officer),
+          label: `${getOfficerName(officer)} (${officer.empId})`,
           value: officer.collectionOfficerId.toString(),
         }));
 

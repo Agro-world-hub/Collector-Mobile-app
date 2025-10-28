@@ -224,7 +224,7 @@ const [loadingRetailItems, setLoadingRetailItems] = useState(false);
   
   ]);
 
-//  console.log("dcbkisai",status)
+ console.log("dcbkisai",status)
 
   console.log("ordreid",item.orderId)
 const [loading, setLoading] = useState<boolean>(true);
@@ -1006,17 +1006,23 @@ const handleReplaceSubmit = async () => {
       }
     );
 
-    if (response.data.success) {
+  if (response.data.success) {
+      // Determine success message based on job role
+      const successMessage = jobRole === "Distribution Centre Manager" 
+        ? t("Error.Product replacement successful!")
+        : t("Error.Replacement request submitted successfully");
+      
       Alert.alert(
         t("Error.Success"),
-         t("Error.Replacement request submitted successfully"),
+        successMessage,
         [{ 
           text: t("Error.Ok"), 
           onPress: () => {
             // Reset state before navigation
-            setShowReplaceModal(false);
-            setShowDropdown(false);
-            setSelectedItemForReplace(null);
+             setShowReplaceModal(false);
+      setShowDropdown(false);
+      setSelectedItemForReplace(null);
+      setSearchQuery("");
             setReplaceData({
               selectedProduct: '',
               selectedProductPrice: '',
@@ -1027,9 +1033,9 @@ const handleReplaceSubmit = async () => {
               productTypeName: '',
             });
 
-            setTimeout(() => {
-              navigation.goBack();
-            }, 100);
+            // setTimeout(() => {
+            //   navigation.goBack();
+            // }, 100);
           }
         }]
       );
@@ -1544,10 +1550,48 @@ const handleQuantityChange = (text: string) => {
 
 
 
+// const getDynamicStatus = (): 'Pending' | 'Opened' | 'Completed' => {
+//   const hasFamily = familyPackItems.length > 0;
+//   const hasAdditional = additionalItems.length > 0;
+
+
+  
+//   let allSelected = false;
+//   let someSelected = false;
+  
+//   if (hasFamily && hasAdditional) {
+//     const familyAllSelected = areAllFamilyPackItemsSelected();
+//     const familyHasSelections = hasFamilyPackSelections();
+//     const additionalAllSelected = areAllAdditionalItemsSelected();
+//     const additionalHasSelections = hasAdditionalItemSelections();
+    
+//     allSelected = familyAllSelected && additionalAllSelected;
+    
+//     // Check if one is completed and other is pending (no selections)
+//     const oneCompletedOnePending = 
+//       (familyAllSelected && !additionalHasSelections) || 
+//       (additionalAllSelected && !familyHasSelections);
+    
+//     if (oneCompletedOnePending) {
+//       return 'Pending'; // Return Pending when one is completed and other has no selections
+//     }
+    
+//     someSelected = familyHasSelections || additionalHasSelections;
+//   } else if (hasFamily && !hasAdditional) {
+//     allSelected = areAllFamilyPackItemsSelected();
+//     someSelected = hasFamilyPackSelections();
+//   } else if (!hasFamily && hasAdditional) {
+//     allSelected = areAllAdditionalItemsSelected();
+//     someSelected = hasAdditionalItemSelections();
+//   }
+  
+//   return allSelected ? 'Completed' : someSelected ? 'Opened' : 'Pending';
+// };
+
 const getDynamicStatus = (): 'Pending' | 'Opened' | 'Completed' => {
   const hasFamily = familyPackItems.length > 0;
   const hasAdditional = additionalItems.length > 0;
-  
+
   let allSelected = false;
   let someSelected = false;
   
@@ -1566,6 +1610,15 @@ const getDynamicStatus = (): 'Pending' | 'Opened' | 'Completed' => {
     
     if (oneCompletedOnePending) {
       return 'Pending'; // Return Pending when one is completed and other has no selections
+    }
+    
+    // NEW: Check if one has partial progress (Opened) and other is pending (no selections)
+    const oneOpenedOnePending = 
+      (familyHasSelections && !familyAllSelected && !additionalHasSelections) || 
+      (additionalHasSelections && !additionalAllSelected && !familyHasSelections);
+    
+    if (oneOpenedOnePending) {
+      return 'Pending'; // Return Pending when one is opened and other has no selections
     }
     
     someSelected = familyHasSelections || additionalHasSelections;

@@ -413,13 +413,13 @@ const fetchTargets = useCallback(async () => {
       
       // Updated completed items filter to exclude "Out For Delivery" status
       const completedItems = mappedData.filter((item: TargetData) => {
-        const isCompleted = item.selectedStatus === 'Completed' && item.status !== 'Out For Delivery';
+        const isCompleted = item.selectedStatus === 'Completed' && item.status !== 'Out For Delivery' && item.status !== 'Ready to Pickup';
         console.log(`Completed filter - Item ${item.invoiceNo}: selectedStatus="${item.selectedStatus}", status="${item.status}", isCompleted=${isCompleted}`);
         return isCompleted;
       });
 
       const outItems = mappedData.filter((item: TargetData) => {
-        const isOutStatus = item.status === 'Out For Delivery';
+        const isOutStatus = item.status === 'Out For Delivery' || item.status === 'Ready to Pickup';
         console.log(`Out filter - Item ${item.invoiceNo}: status="${item.status}", isOutStatus=${isOutStatus}`);
         return isOutStatus;
       });
