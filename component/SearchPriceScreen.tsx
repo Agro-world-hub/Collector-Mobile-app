@@ -240,15 +240,16 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
         varietyOptions.find((option) => option.value === selectedVariety)?.label || "";
 
       // Navigate based on job role
-      if (jobRole === "Collection Officer") {
-        navigation.navigate("PriceChart", {
+      if (jobRole === "Collection Centre Manager") {
+     navigation.navigate("PriceChartManager", {
           cropName: cropName,
           varietyId: selectedVariety,
           varietyName: varietyName,
         });
       } else {
         // For Distribution Officer, Distribution Centre Manager, and other roles
-        navigation.navigate("PriceChartManager", {
+        
+           navigation.navigate("PriceChart", {
           cropName: cropName,
           varietyId: selectedVariety,
           varietyName: varietyName,
