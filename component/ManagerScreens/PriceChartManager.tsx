@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { View, Text, TextInput, TouchableOpacity, SafeAreaView, ActivityIndicator, Alert, ScrollView, BackHandler } from "react-native";
+import { View, Text, TextInput, TouchableOpacity,  ActivityIndicator, Alert, ScrollView, BackHandler } from "react-native";
 import axios from "axios";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useFocusEffect } from "@react-navigation/native";
@@ -277,7 +277,7 @@ const PriceChartManager: React.FC<PriceChartManagerProps> = ({ navigation, route
 
 
   return (
-    <SafeAreaView className="flex-1 bg-whitegray-100">
+    <View className="flex-1 bg-whitegray-100">
       {/* Header */}
       <View className="bg-[#313131] h-20 flex-row items-center" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
         <TouchableOpacity onPress={() => navigation.navigate("Main" as any, { screen: "SearchPriceScreen" })} className="bg-[#FFFFFF1A] rounded-full p-2 justify-center w-10">
@@ -377,7 +377,8 @@ const PriceChartManager: React.FC<PriceChartManagerProps> = ({ navigation, route
           </Text>
         </TouchableOpacity>
       </ScrollView>
-    </SafeAreaView>
+    </View>
+
   );
 };
 
