@@ -112,7 +112,8 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
 
       const token = await AsyncStorage.getItem("token");
       const response = await axios.get(
-        `${environment.API_BASE_URL}api/collection-manager/collection-officers`,
+        //`${environment.API_BASE_URL}api/collection-manager/collection-officers`,
+        `${environment.API_BASE_URL}api/collection-manager/collection-officers-recieve/${varietyId}/${grade}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -125,7 +126,7 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
       if (response.data.status === "success") {
         const formattedOfficers = response.data.data.map((officer: any) => ({
           key: officer.collectionOfficerId.toString(),
-          value: getOfficerName(officer),
+          value: `${getOfficerName(officer)}  (${(officer.empId)})`,
         }));
 
         setOfficers([...formattedOfficers]);
@@ -281,9 +282,29 @@ const RecieveTargetScreen: React.FC<RecieveTargetScreenProps> = ({
       if (response.status === 200) {
         Alert.alert(
           t("Error.Success"),
-          t("Error.Target transferred successfully.")
+          t("Error.Target received successfully.")
         );
-        navigation.goBack();
+         navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: "Main",
+                  params: {
+                    screen: "DailyTarget",
+                    params: {
+                      varietyId,
+                      varietyNameEnglish,
+                      grade,
+                      target,
+                      qty,
+                      varietyNameSinhala,
+                      varietyNameTamil,
+                      dailyTarget,
+                    },
+                  },
+                },
+              ],
+            });
       } else {
         Alert.alert(t("Error.error"), t("Error.Failed to receive target."));
       }

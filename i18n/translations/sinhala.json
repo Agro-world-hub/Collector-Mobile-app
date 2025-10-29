@@ -91,6 +91,7 @@
     "Please enter a valid amount.":"කරුණාකර වලංගු මුදලක් ඇතුළත් කරන්න.",
     "You cannot transfer more than":"ඔබට මීට වඩා ලබා දිය නොහැක",
     "Target transferred successfully.":"ඉලක්කය සාර්ථකව මාරු කරන ලදී",
+     "Target received successfully.":"ඉලක්කය සාර්ථකව ලැබුණි.",
     "Failed to transfer target.":"ඉලක්කය මාරු කරන ලදී",
     "An error occurred while transferring the target.":"ඉලක්කය මාරු කිරීමේදි ගැටළුවක් ඇති විය.",
     "No target data found for selected officer.":"තෝරාගත් නිලධාරියා සඳහා ඉලක්ක දත්ත හමු නොවීය.",
@@ -192,6 +193,7 @@
 "Package ID not found":"පැකේජ හැඳුනුම්පත හමු නොවීය",
 "No item selected for replacement":"ප්‍රතිස්ථාපනය සඳහා කිසිදු අයිතමයක් තෝරාගෙන නොමැත",
 "Replacement request submitted successfully":"ප්‍රතිස්ථාපන ඉල්ලීම සාර්ථකව ඉදිරිපත් කරන ලදී!",
+"Product replacement successful":"නිෂ්පාදන ප්‍රතිස්ථාපනය සාර්ථකයි!",
 "Authentication Error":"සත්‍යාපන දෝෂය",
 "Your session has expired":"ඇතුල්වීම කල් ඉකුත් විය. කරුණාකර නැවත පුරනය වන්න.",
 "Invalid Request":"සපුරාලිය නොහැකි ඉල්ලීම",
@@ -222,7 +224,27 @@
 "Failed to submit crop details":"බෝග විස්තර ඉදිරිපත් කිරීමට අපොහොසත් විය. කරුණාකර නැවත උත්සාහ කරන්න.",
 "Please enter Employee ID in uppercase letters":"කරුණාකර සේවක හැඳුනුම්පත මහකුරුවලින් ඇතුළත් කරන්න.",
 "Failed to update password": "මුරපදය යාවත්කාලීන කිරීමට අසමත් විය",
-"Distribution Centre Head are not allowed to access this application": "බෙදාහැරීමේ මධ්‍යස්ථාන ප්‍රධානීන්ට මෙම යෙදුමට ප්‍රවේශ වීමට අවසර නැත"
+"Distribution Centre Head are not allowed to access this application": "බෙදාහැරීමේ මධ්‍යස්ථාන ප්‍රධානීන්ට මෙම යෙදුමට ප්‍රවේශ වීමට අවසර නැත",
+"Please select at least one preferred language":"කරුණාකර අවම වශයෙන් එක් කැමති භාෂාවක් තෝරන්න.",
+"First name in English is required":"ඉංග්‍රීසියෙන් මුල් නම අවශ්‍යයි.",
+"Last name in English is required":"ඉංග්‍රීසියෙන් අවසාන නම අවශ්‍යයි.",
+"First name in Sinhala is required":"සිංහලෙන් මුල් නම අවශ්‍යයි.",
+"Last name in Sinhala is required":"සිංහලෙන් අවසාන නම අවශ්‍යයි.",
+"First name in Tamil is required":"දෙමළ භාෂාවෙන් මුල් නම අවශ්‍යයි.",
+"Last name in Tamil is required":"දෙමළ භාෂාවෙන් අවසන් නම අවශ්‍යයි.",
+"Phone number is required":"දුරකථන අංකය අවශ්‍යයි",
+"NIC number is required":"ජාතික හැඳුනුම්පත් අංකය අවශ්‍යයි",
+"House number is required":"නිවසේ අංකය අවශ්‍යයි",
+"Street name is required":"වීදි නාමය අවශ්‍යයි",
+"City is required":"නගරය අවශ්‍යයි",
+"Province is required":"පළාත අවශ්‍යයි",
+"District is required":"දිස්ත්‍රික්කය අවශ්‍යයි",
+"Account holder name is required":"ගිණුම් හිමියාගේ නම අවශ්‍යයි",
+"Account number is required":"ගිණුම් අංකය අවශ්‍යයි",
+"Confirm account number is required":"ගිණුම් අංකය තහවුරු කිරීම අවශ්‍යයි.",
+"Bank name is required":"බැංකුවේ නම අවශ්‍යයි",
+"Branch name is required":"ශාඛාවේ නම අවශ්‍යයි",
+"Price updated successfully":"මිල සාර්ථකව යාවත්කාලීන කරන ලදී"
   },
 "EngProfile":{
     "LNG": "si",
@@ -292,7 +314,8 @@
     "RegisterFarmer":"ගොවියා ලියාපදිංචි කරන්න",
     "Result Found":"හමු වූ ප්‍රතිඵල:",
     "Set QR Code":"QR කේතයක් සකසන්න",
-    "This Farmer does not have the QR" : "මෙම ගොවියාට QR කේතයක් නොමැත"
+    "This Farmer does not have the QR" : "මෙම ගොවියාට QR කේතයක් නොමැත",
+    "Enter Valide NIC":"වලංගු ජාතික හැඳුනුම්පත ඇතුළත් කරන්න"
   },
   "UnregisteredFarmerDetails":{
    "LNG": "si",
@@ -320,7 +343,17 @@
       "InvalidNIC":"NIC එක ඉලක්කම් 12 කින් හෝ ඉලක්කම් 9 කින් පසුව V ඇතුල් කල යුතුය",
       "OnlyDigitsAllowed":"ඉලක්කම් සඳහා පමණක් අවසර ඇත",
       "MustStartWith7":"අවලංගු දුරකථන අංකයකි. ආකෘතිය 7 න් ආරම්භ විය යුතුය (උදා: 7XXXXXXXXX)",
-      "InvalidPhoneLength":"වලංගු නොවන දුරකථන අංක දිග"
+      "InvalidPhoneLength":"වලංගු නොවන දුරකථන අංක දිග",
+        "EnterFirstName": "කරුණාකර මුල් නම ඇතුළත් කරන්න.",
+    "EnterLastName": "කරුණාකර අවසන් නම ඇතුළත් කරන්න.", 
+    "SelectLanguage": "කරුණාකර කැමති භාෂාව තෝරන්න.",
+    "EnterNIC": "කරුණාකර ජාතික හැඳුනුම්පත් අංකය ඇතුළත් කරන්න.",
+    "EnterPhone": "කරුණාකර දුරකථන අංකය ඇතුළත් කරන්න.",
+    "SelectDistrict": "කරුණාකර දිස්ත්‍රික්කය තෝරන්න",
+    "EnterAccountNumber": "කරුණාකර ගිණුම් අංකය ඇතුළත් කරන්න.",
+    "EnterAccountName": "කරුණාකර ගිණුම් හිමියාගේ නම ඇතුළත් කරන්න.",
+    "SelectBank": "කරුණාකර බැංකුව තෝරන්න",
+    "SelectBranch": "කරුණාකර ශාඛාව තෝරන්න"
   },
   "PriceChart":{
     "LNG": "si",
@@ -332,7 +365,10 @@
     "Cancel":"අවලංගු කරන්න",
     "Grade":"ශ්‍රේණිය",
     "Request Price Update":"මිල සංශෝධන ඉල්ලන්න",
-    "Submit Request":"ඉල්ලීම ඉදිරිපත් කරන්න"
+    "Submit Request":"ඉල්ලීම ඉදිරිපත් කරන්න",
+     "Edit Price":"මිල සංස්කරණය කරන්න",
+     "Update":"යාවත්කාලීන කරන්න",
+     "AllowedRange": "අවසර ඇත රු.{{minPrice}} - රු.{{maxPrice}}"
   },
   "Otpverification":{
     "LNG": "si",
@@ -347,7 +383,13 @@
     "invalidOTP":"සත්‍යාපන කේතය වැරදියි",
     "completeOTP":"කරුණාකර සම්පූර්ණ සත්‍යාපන කේතය ඇතුළත් කරන්න.",
     "Resend in": "නැවත යැවීමට",
-    "Resend again": "නැවත යවන්න"
+    "Resend again": "නැවත යවන්න",
+     "OTPExpired": "ඔබගේ OTP කල් ඉකුත් වී ඇත. කරුණාකර අලුත් එකක් ඉල්ලන්න.",
+    "OTPExpiredWarning": "OTP කල් ඉකුත් වී ඇත. කරුණාකර නව කේතයක් ඉල්ලන්න.",
+    "OTPExpiredOrInvalid": "OTP අවලංගුයි හෝ කල් ඉකුත් වී ඇත. ඔබ අලුත් එකක් ඉල්ලා සිටීමට කැමතිද?",
+    "ResendOTP": "OTP නැවත යවන්න",
+    "Cancel": "අවලංගු කරන්න",
+    "TryAgain": "නැවත උත්සාහ කරන්න"
   },
   "FarmerQr":{
     "LNG": "si",
@@ -896,7 +938,8 @@
      "Update":"යාවත්කාලීන කරන්න",
      "Failed to complete order":"ඇණවුම සම්පූර්ණ කිරීමට අසමත් විය. කරුණාකර නැවත උත්සාහ කරන්න.",
      "Selected product not found":"තෝරාගත් නිෂ්පාදනය හමු නොවීය. කරුණාකර නැවත උත්සාහ කරන්න.",
-      "Failed to submit replacement request":"ප්‍රතිස්ථාපන ඉල්ලීම ඉදිරිපත් කිරීමට අපොහොසත් විය. කරුණාකර නැවත උත්සාහ කරන්න."
+      "Failed to submit replacement request":"ප්‍රතිස්ථාපන ඉල්ලීම ඉදිරිපත් කිරීමට අපොහොසත් විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+       "Search products...": "නිෂ්පාදන සොයන්න..."
   },
    "Status": {
     "Pending": "අපරිපූර්ණ",
@@ -926,7 +969,8 @@
     "Selected Targets":"තෝරාගත් ඉලක්කය",
     "Save":"සුරකින්න",
     "Dismiss":"ඉවත් කරන්න",
-    "Short Stock Assignee":"කෙටිකාලීන භාරකරු"
+    "Short Stock Assignee":"කෙටිකාලීන භාරකරු",
+    "Search officers":"පරීක්ෂක නිලධාරීන් සොයන්න"
   },
     "ReplaceRequestsApprove":{
     "Loading replace request":"ප්‍රතිස්ථාපන ඉල්ලීම පූරණය වෙමින් පවතී...",

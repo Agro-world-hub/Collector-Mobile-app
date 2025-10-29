@@ -45,27 +45,29 @@ interface userItem {
   branchName: string;
   PreferdLanguage: string;
 }
+
 interface SuccessModalProps {
   visible: boolean;
   onClose: () => void;
 }
+
 const ShowSuccessModal: React.FC<SuccessModalProps> = ({
   visible,
   onClose,
 }) => {
-  const progress = useRef(new Animated.Value(0)).current; // Start from 0
+  const progress = useRef(new Animated.Value(0)).current;
   const { t } = useTranslation();
 
   useEffect(() => {
     if (visible) {
-      progress.setValue(0); // Reset progress
+      progress.setValue(0);
       Animated.timing(progress, {
-        toValue: 100, // Full progress
-        duration: 2000, // Adjust timing
+        toValue: 100,
+        duration: 2000,
         useNativeDriver: false,
       }).start(() => {
         setTimeout(() => {
-          onClose(); // Auto-close after completion
+          onClose();
         }, 500);
       });
     }
@@ -76,7 +78,6 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({
       <View className="flex-1 justify-center items-center bg-black/50">
         <View className="bg-white p-6 rounded-2xl items-center w-72 h-80 shadow-lg relative">
           <Text className="text-xl font-bold mt-4 text-center">
-            {" "}
             {t("Otpverification.Success")}
           </Text>
 
@@ -89,16 +90,6 @@ const ShowSuccessModal: React.FC<SuccessModalProps> = ({
             {t("Otpverification.Registration")}
           </Text>
 
-          {/* <TouchableOpacity
-            className="bg-[#2AAD7A] px-6 py-2 rounded-full mt-6"
-            onPress={onClose}
-          >
-            <Text className="text-white font-semibold">
-              {t("Otpverification.OK")}
-            </Text>
-          </TouchableOpacity> */}
-
-          {/* Progress Bar - Fixed to Bottom */}
           <View className="absolute bottom-0 left-0 right-0 h-2 bg-gray-200 rounded-b-2xl overflow-hidden">
             <Animated.View
               style={{
@@ -130,6 +121,7 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
     branchName,
     PreferdLanguage,
   } = route.params;
+  
   const [otpCode, setOtpCode] = useState<string>("");
   const [maskedCode, setMaskedCode] = useState<string>("XXXXX");
   const [referenceId, setReferenceId] = useState<string | null>(null);
@@ -140,8 +132,11 @@ const Otpverification: React.FC = ({ navigation, route }: any) => {
   const [language, setLanguage] = useState("en");
   const [isOtpValid, setIsOtpValid] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [verificationAttempts, setVerificationAttempts] = useState<number>(0);
+  const [isOtpExpired, setIsOtpExpired] = useState<boolean>(false);
 
-const inputRefs = useRef<Array<TextInput | null>>([]);
+  const inputRefs = useRef<Array<TextInput | null>>([]);
+
   useEffect(() => {
     const selectedLanguage = t("Otpverification.LNG");
     setLanguage(selectedLanguage);
@@ -170,19 +165,17 @@ const inputRefs = useRef<Array<TextInput | null>>([]);
       return () => clearInterval(interval);
     } else if (timer === 0 && !isVerified) {
       setDisabledResend(false);
+      setIsOtpExpired(true); // Mark OTP as expired when timer reaches 0
     }
   }, [timer, isVerified]);
 
   const handleOtpChange = (text: string, index: number) => {
-    // Update the OTP code based on input change
     const updatedOtpCode = otpCode.split("");
-    updatedOtpCode[index] = text; // Modify the specific index
+    updatedOtpCode[index] = text;
     setOtpCode(updatedOtpCode.join(""));
 
-    // Check if OTP is valid (all 5 digits filled)
     setIsOtpValid(updatedOtpCode.length === 5 && !updatedOtpCode.includes(""));
 
-    // Move to next input field if text is entered
     if (text && inputRefs.current[index + 1]) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -194,8 +187,28 @@ const inputRefs = useRef<Array<TextInput | null>>([]);
   const handleVerify = async () => {
     const code = otpCode;
     Keyboard.dismiss();
+    
     if (code.length !== 5) {
       Alert.alert(t("Error.Sorry"), t("Otpverification.completeOTP"));
+      return;
+    }
+
+    // Check if OTP is expired
+    if (isOtpExpired) {
+      Alert.alert(
+        t("Error.Sorry"), 
+        t("Otpverification.OTPExpired"),
+        [
+          {
+            text: t("Otpverification.ResendOTP"),
+            onPress: handleResendOTP
+          },
+          {
+            text: t("Otpverification.Cancel"),
+            style: "cancel"
+          }
+        ]
+      );
       return;
     }
 
@@ -214,7 +227,7 @@ const inputRefs = useRef<Array<TextInput | null>>([]);
         branchName: branchName,
         PreferdLanguage: PreferdLanguage,
       };
-      // Shoutout verify endpoint
+
       const url = "https://api.getshoutout.com/otpservice/verify";
       const headers = {
         Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
@@ -227,45 +240,113 @@ const inputRefs = useRef<Array<TextInput | null>>([]);
       };
 
       const response = await axios.post(url, body, { headers });
-      const { statusCode } = response.data;
+      const { statusCode, message } = response.data;
 
-        const netState = await NetInfo.fetch();
+      const netState = await NetInfo.fetch();
       if (!netState.isConnected) {
-    return; 
-  }
+        return; 
+      }
 
-      if (statusCode === "1000") {
-        setIsVerified(true);
-        setModalVisible(true);
-        
+      // Handle different OTP verification responses
+      switch (statusCode) {
+        case "1000": // Success
+          setIsVerified(true);
+          setModalVisible(true);
+          
+          const response1 = await axios.post(
+            `${environment.API_BASE_URL}api/farmer/register-farmer`,
+            data
+          );
+          await AsyncStorage.removeItem("referenceId");
+          
+          setTimeout(() => {
+            navigation.navigate("FarmerQr" as any, {
+              NICnumber: response1.data.NICnumber,
+              userId: response1.data.userId,
+            });
+          }, 2000);
+          break;
 
-        const response1 = await axios.post(
-          `${environment.API_BASE_URL}api/farmer/register-farmer`,
-          data
+        case "1001": // Invalid or expired OTP
+          setVerificationAttempts(prev => prev + 1);
+          
+          if (verificationAttempts >= 2) {
+            // After multiple failed attempts, suggest resending
+            Alert.alert(
+              t("Error.Sorry"),
+              t("Otpverification.OTPExpiredOrInvalid"),
+              [
+                {
+                  text: t("Otpverification.ResendOTP"),
+                  onPress: handleResendOTP
+                },
+                {
+                  text: t("Otpverification.TryAgain"),
+                  onPress: () => {
+                    setOtpCode("");
+                    setIsOtpValid(false);
+                    // Focus first input
+                    if (inputRefs.current[0]) {
+                      inputRefs.current[0]?.focus();
+                    }
+                  }
+                }
+              ]
+            );
+          } else {
+            Alert.alert(
+              t("Error.Sorry"), 
+              t("Otpverification.invalidOTP")
+            );
+          }
+          break;
+
+        case "1002": // OTP expired
+          setIsOtpExpired(true);
+          Alert.alert(
+            t("Error.Sorry"),
+            t("Otpverification.OTPExpired"),
+            [
+              {
+                text: t("Otpverification.ResendOTP"),
+                onPress: handleResendOTP
+              }
+            ]
+          );
+          break;
+
+        default:
+          Alert.alert(t("Error.Sorry"), message || t("Error.somethingWentWrong"));
+      }
+    } catch (error: any) {
+      console.error("OTP Verification Error:", error);
+      
+      if (error.response?.data?.statusCode === "1002") {
+        // OTP expired
+        setIsOtpExpired(true);
+        Alert.alert(
+          t("Error.Sorry"),
+          t("Otpverification.OTPExpired"),
+          [
+            {
+              text: t("Otpverification.ResendOTP"),
+              onPress: handleResendOTP
+            }
+          ]
         );
-        await AsyncStorage.removeItem("referenceId");
-        //Alert.alert("Success","Farmer Registration successful");
-        <ShowSuccessModal
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-        />;
-        navigation.navigate("FarmerQr" as any, {
-          NICnumber: response1.data.NICnumber,
-          userId: response1.data.userId,
-        });
-      } else if (statusCode === "1001") {
+      } else if (error.response?.data?.statusCode === "1001") {
+        // Invalid OTP
         Alert.alert(t("Error.Sorry"), t("Otpverification.invalidOTP"));
       } else {
         Alert.alert(t("Error.Sorry"), t("Error.somethingWentWrong"));
       }
-    } catch (error) {
-      Alert.alert(t("Error.Sorry"), t("Error.somethingWentWrong"));
     }
   };
 
   const handleResendOTP = async () => {
     await AsyncStorage.removeItem("referenceId");
-    console.log("Phone Number:", phoneNumber); // Log phone number for debugging
+    console.log("Phone Number:", phoneNumber);
+    
     try {
       const apiUrl = "https://api.getshoutout.com/otpservice/send";
       const headers = {
@@ -311,7 +392,6 @@ const inputRefs = useRef<Array<TextInput | null>>([]);
   If correct, share OTP only with the ${companyName} representative who contacts you.`;
       }
 
-      // Prepare the body of the request
       const body = {
         source: "PolygonAgro",
         transport: "sms",
@@ -321,28 +401,30 @@ const inputRefs = useRef<Array<TextInput | null>>([]);
         destination: `${phoneNumber}`,
       };
 
-   //   console.log("Sending OTP Request Body:", body);
-
       const response = await axios.post(apiUrl, body, { headers });
-      // Check if the response contains a referenceId
+      
       if (response.data.referenceId) {
         await AsyncStorage.setItem("referenceId", response.data.referenceId);
         setReferenceId(response.data.referenceId);
-
-        Alert.alert(t("Otpverification.Success"), t("Error.otpResent"));
+        
+        // Reset states for new OTP
+        setIsOtpExpired(false);
+        setVerificationAttempts(0);
+        setOtpCode("");
+        setIsOtpValid(false);
         setTimer(240);
         setDisabledResend(true);
+
+        Alert.alert(t("Otpverification.Success"), t("Error.otpResent"));
       } else {
         Alert.alert(t("Error.Sorry"), t("Error.otpResendFailed"));
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
-
       Alert.alert(t("Error.Sorry"), t("Error.otpResendFailed"));
     }
   };
 
-  // Format the timer for display
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
@@ -366,6 +448,7 @@ const inputRefs = useRef<Array<TextInput | null>>([]);
           <AntDesign name="left" size={22} color="#000" />
         </TouchableOpacity>
       </View>
+      
       <View className="flex justify-center items-center mt-0">
         <Text className="text-black" style={{ fontSize: wp(8) }}>
           {/* {t("OtpVerification.OTPVerification")} */}
@@ -389,11 +472,9 @@ const inputRefs = useRef<Array<TextInput | null>>([]);
             {t("Otpverification.EnterCode")}
           </Text>
         </View>
+
         {language === "en" ? (
           <View className="mt-5">
-            <Text className="text-md text-gray-400">
-              {/* {t("OtpVerification.OTPCode")} */}
-            </Text>
             <Text className="text-md text-[#0085FF] text-center pt-1 ">
               {phoneNumber}
             </Text>
@@ -403,12 +484,10 @@ const inputRefs = useRef<Array<TextInput | null>>([]);
             <Text className="text-md text-[#0085FF] text-center ">
               {phoneNumber}
             </Text>
-
-            <Text className="text-md text-gray-400 pt-1">
-              {/* {t("OtpVerification.OTPCode")} */}
-            </Text>
           </View>
         )}
+
+       
 
         <View className="flex-row justify-center gap-3 mt-4 px-4">
           {Array.from({ length: 5 }).map((_, index) => (
@@ -439,7 +518,6 @@ const inputRefs = useRef<Array<TextInput | null>>([]);
 
         <View className="mt-5">
           <Text className="text-md text-[#707070] pt-1">
-            {/* {t("OtpVerification.OTPCode")} */}
             {t("Otpverification.Didreceive")}
           </Text>
         </View>
@@ -465,13 +543,12 @@ const inputRefs = useRef<Array<TextInput | null>>([]);
           <TouchableOpacity
             style={{ height: hp(7), width: wp(80) }}
             className={`flex items-center justify-center mx-auto rounded-full ${
-              !isOtpValid || isVerified ? "bg-[#000000]" : "bg-[#000000]"
+              !isOtpValid || isVerified ? "bg-gray-400" : "bg-[#000000]"
             }`}
             onPress={handleVerify}
-            disabled={isVerified}
+            disabled={!isOtpValid || isVerified}
           >
             <Text className="text-white text-lg">
-              {/* {t("OtpVerification.Verify")} */}
               {t("Otpverification.Verify")}
             </Text>
           </TouchableOpacity>

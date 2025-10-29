@@ -39,6 +39,7 @@ interface PassTargetBetweenOfficersScreenProps {
       qty: string;
       collectionOfficerId: number;
       dailyTarget: number;
+      officerId:string
     };
   };
 }
@@ -76,10 +77,12 @@ const PassTargetBetweenOfficers: React.FC<
     varietyNameSinhala,
     varietyNameTamil,
     dailyTarget,
+    officerId
   } = route.params;
   console.log(collectionOfficerId);
   const maxAmount = parseFloat(todo);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+  console.log("officer id........................",officerId)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -112,9 +115,20 @@ const PassTargetBetweenOfficers: React.FC<
         return officer.fullNameEnglish;
     }
   };
+
+  // ✅ Fixed: Enhanced save button disabling logic
   const isSaveDisabled = () => {
-    // Disable button if no assignee is selected OR assignee is the default option ('0') OR submitting
-    return !assignee || assignee === "0" || submitting;
+    const numericAmount = parseFloat(amount);
+    
+    return !assignee || 
+           assignee === "0" || 
+           submitting ||
+           loading ||
+           !amount || 
+           isNaN(numericAmount) || 
+           numericAmount <= 0 || 
+           numericAmount > maxAmount ||
+           error !== ""; // Also disable if there's an error
   };
 
   // Fetch officers from API
@@ -143,7 +157,7 @@ const PassTargetBetweenOfficers: React.FC<
         // Format the officers to be displayed
         const formattedOfficers = filteredOfficers.map((officer: any) => ({
           key: officer.collectionOfficerId.toString(),
-          value: getOfficerName(officer),
+          value: `${getOfficerName(officer)}  (${(officer.empId)})`,
         }));
         setOfficers([...formattedOfficers]);
       } else {
@@ -223,14 +237,15 @@ const PassTargetBetweenOfficers: React.FC<
           },
         }
       );
+      
 
       if (response.status === 200) {
         Alert.alert(
           t("Error.Success"),
           t("Error.Target transferred successfully.")
         );
-        // navigation.navigate('DailyTargetListForOfficers'as any,{collectionOfficerId:collectionOfficerId});
-        navigation.goBack();
+        navigation.navigate('DailyTargetListForOfficers'as any,{officerId:  officerId  , collectionOfficerId: collectionOfficerId});
+     //   navigation.goBack();
       } else {
         Alert.alert(t("Error.error"), t("Error.Failed to transfer target."));
       }

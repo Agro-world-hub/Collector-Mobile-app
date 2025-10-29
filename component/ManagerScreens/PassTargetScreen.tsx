@@ -31,8 +31,8 @@ interface PassTargetScreenProps {
     params: {
       varietyId: number;
       varietyNameEnglish: string;
-      varietyNameSinhala: string; // ✅ Added this
-      varietyNameTamil: string; // ✅ Added this
+      varietyNameSinhala: string;
+      varietyNameTamil: string;
       grade: string;
       target: string;
       todo: string;
@@ -77,7 +77,6 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
     dailyTarget,
   } = route.params;
 
-//  console.log("Collection Officer ID:", route.params);
   const maxAmount = parseFloat(todo);
 
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
@@ -85,7 +84,17 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
 
   // Determine if the Save button should be disabled
   const isSaveDisabled = () => {
-    return !assignee || dropdownOpen || submitting;
+    const numericAmount = parseFloat(amount);
+    
+    // Disable if: no assignee, dropdown is open, submitting, or amount equals max amount
+    return (
+      !assignee || 
+      dropdownOpen || 
+      submitting || 
+      numericAmount > maxAmount ||
+      isNaN(numericAmount) ||
+      numericAmount <= 0
+    );
   };
 
   // Reset dropdown selection when screen comes into focus
@@ -117,8 +126,6 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
     fetchData();
   }, []);
 
-//  console.log("Max Amount:", maxAmount);
-
   const getOfficerName = (officer: Officer) => {
     switch (selectedLanguage) {
       case "si":
@@ -145,12 +152,11 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
           },
         }
       );
-
-     // console.log("Officers:", response.data.data);
+      console.log("---------------------------",response.data)
 
       if (response.data.status === "success") {
         const formattedOfficers = response.data.data.map((officer: any) => ({
-          label: getOfficerName(officer),
+          label: `${getOfficerName(officer)} (${officer.empId})`,
           value: officer.collectionOfficerId.toString(),
         }));
 
@@ -174,6 +180,7 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
     const numericValue = parseFloat(text);
     if (numericValue > maxAmount) {
       setError(t("Error.You have exceeded the maximum amount."));
+  
     } else {
       setError("");
     }
@@ -192,18 +199,18 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
       return;
     }
 
-    if (numericAmount > maxAmount) {
+    if (numericAmount >= maxAmount) {
       Alert.alert(
         t("Error.error"),
-        `${t("Error.You cannot transfer more than")} ${maxAmount}kg.`
+        `${t("Error.You cannot transfer the maximum amount of")} ${maxAmount}kg.`
       );
       return;
     }
 
-      const netState = await NetInfo.fetch();
-      if (!netState.isConnected) {
-    return; 
-  }
+    const netState = await NetInfo.fetch();
+    if (!netState.isConnected) {
+      return; 
+    }
 
     try {
       setSubmitting(true);
@@ -229,7 +236,28 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
           t("Error.Success"),
           t("Error.Target transferred successfully.")
         );
-        navigation.goBack();
+        navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: "Main",
+                  params: {
+                    screen: "DailyTarget",
+                    params: {
+                      varietyId,
+                      varietyNameEnglish,
+                      grade,
+                      target,
+                      todo,
+                      qty,
+                      varietyNameSinhala,
+                      varietyNameTamil,
+                      dailyTarget,
+                    },
+                  },
+                },
+              ],
+            });
       } else {
         Alert.alert(t("Error.error"), t("Error.Failed to transfer target."));
       }
@@ -289,7 +317,6 @@ const PassTargetScreen: React.FC<PassTargetScreenProps> = ({
          <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
 
-        {/* <Text className="text-white text-lg font-semibold text-center w-full"> */}
         <Text className="flex-1 text-center text-xl font-semibold text-white mr-[6%]">
           {getvarietyName()}
         </Text>

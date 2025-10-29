@@ -91,6 +91,7 @@
     "Please enter a valid amount.":"தயவுசெய்து சரியான தொகையை உள்ளிடவும்.",
     "You cannot transfer more than":"நீங்கள் இதற்கு மேல் மாற்ற முடியாது",
     "Target transferred successfully.":"இலக்கு வெற்றிகரமாக மாற்றப்பட்டது.",
+     "Target received successfully.":"இலக்கு வெற்றிகரமாகப் பெறப்பட்டது.",
     "Failed to transfer target.":"இலக்கை மாற்ற முடியவில்லை.",
     "An error occurred while transferring the target.":"இலக்கை மாற்றும்போது தவறு ஏற்பட்டது.",
     "No target data found for selected officer.":"தேர்ந்தெடுக்கப்பட்ட அதிகாரிக்கான இலக்கு தரவு எதுவும் கிடைக்கவில்லை.",
@@ -192,6 +193,7 @@
 "Package ID not found":"தொகுப்பு எண் கிடைக்கவில்லை",
 "No item selected for replacement":"மாற்றுவதற்கு எந்த உருப்படியும் தேர்ந்தெடுக்கப்படவில்லை.",
 "Replacement request submitted successfully":"மாற்று கோரிக்கை வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது!",
+"Product replacement successful":"தயாரிப்பு மாற்றீடு வெற்றிகரமாக முடிந்தது!",
 "Authentication Error":"அங்கீகாரப் பிழை",
 "Your session has expired":"உங்கள் அமர்வு காலாவதியாகிவிட்டது. மீண்டும் உள்நுழையவும்.",
 "Invalid Request":"தவறான கோரிக்கை",
@@ -222,7 +224,27 @@
 "Failed to submit crop details":"பயிர் விவரங்களைச் சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
 "Please enter Employee ID in uppercase letters":"பணியாளர் ஐடியை பெரிய எழுத்துக்களில் உள்ளிடவும்.",
 "Failed to update password": "கடவுச்சொல்லை புதுப்பிக்க முடியவில்லை",
-"Distribution Centre Head are not allowed to access this application": "விநியோக மையத் தலைவர்கள் இந்தப் பயன்பாட்டை அணுக அனுமதிக்கப்படவில்லை"
+"Distribution Centre Head are not allowed to access this application": "விநியோக மையத் தலைவர்கள் இந்தப் பயன்பாட்டை அணுக அனுமதிக்கப்படவில்லை",
+"Please select at least one preferred language":"குறைந்தபட்சம் ஒரு விருப்பமான மொழியையாவது தேர்ந்தெடுக்கவும்.",
+"First name in English is required":"ஆங்கிலத்தில் பெயரின் முற்பகுதி அவசியம்.",
+"Last name in English is required":"ஆங்கிலத்தில் கடைசி பெயர் அவசியம்.",
+"First name in Sinhala is required":"சிங்கள மொழியில் முதல் பெயர் அவசியம்.",
+"Last name in Sinhala is required":"சிங்கள மொழியில் கடைசி பெயர் அவசியம்.",
+"First name in Tamil is required":"தமிழில் முதல் பெயர் அவசியம்.",
+"Last name in Tamil is required":"தமிழில் கடைசி பெயர் அவசியம்.",
+"Phone number is required":"தொலைபேசி எண் தேவை.",
+"NIC number is required":"தேசிய அடையாள அட்டை எண் அவசியம்.",
+"House number is required":"வீட்டு எண் தேவை.",
+"Street name is required":"தெருவின் பெயர் அவசியம்.",
+"City is required":"நகரம் அவசியம்",
+"Province is required":"மாகாணம் தேவை.",
+"District is required":"மாவட்டம் தேவை.",
+"Account holder name is required":"கணக்கு வைத்திருப்பவரின் பெயர் அவசியம்.",
+"Account number is required":"கணக்கு எண் தேவை.",
+"Confirm account number is required":"கணக்கு எண்ணை உறுதிப்படுத்துவது அவசியம்.",
+"Bank name is required":"வங்கியின் பெயர் அவசியம்",
+"Branch name is required":"கிளையின் பெயர் அவசியம்.",
+"Price updated successfully":"விலை வெற்றிகரமாக புதுப்பிக்கப்பட்டது."
   },
   "EngProfile":{
     "LNG": "en",
@@ -292,7 +314,8 @@
     "RegisterFarmer":"விவசாயியை பதிவு செய்யுங்கள்",
     "Result Found":"முடிவுகள் கிடைத்தன:",
     "Set QR Code":"QR குறியீட்டை அமைக்கவும்",
-    "This Farmer does not have the QR" : "இந்த விவசாயிக்கு QR குறியீடு இல்லை."
+    "This Farmer does not have the QR" : "இந்த விவசாயிக்கு QR குறியீடு இல்லை.",
+    "Enter Valide NIC":"செல்லுபடியாகும் NIC ஐ உள்ளிடவும்"
   },
   "UnregisteredFarmerDetails":{
     "LNG": "ta",
@@ -320,7 +343,17 @@
     "InvalidNIC":"NIC 12 இலக்கங்கள் அல்லது 9 இலக்கங்களைத் தொடர்ந்து V அல்லது v ஐக் கொண்டிருக்க வேண்டும்.",
     "OnlyDigitsAllowed":"இலக்கங்கள் மட்டுமே அனுமதிக்கப்படும்",
     "MustStartWith7":"தவறான தொலைபேசி எண். வடிவமைப்பு 7 உடன் தொடங்க வேண்டும் (e.g., 7XXXXXXXX)",
-    "InvalidPhoneLength":"தவறான தொலைபேசி எண்"
+    "InvalidPhoneLength":"தவறான தொலைபேசி எண்",
+      "EnterFirstName": "தயவுசெய்து முதல் பெயரை உள்ளிடவும்.",
+    "EnterLastName": "கடைசி பெயரை உள்ளிடவும்.", 
+    "SelectLanguage": "விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்.",
+    "EnterNIC": "தயவுசெய்து NIC எண்ணை உள்ளிடவும்.",
+    "EnterPhone": "தொலைபேசி எண்ணை உள்ளிடவும்.",
+    "SelectDistrict": "மாவட்டத்தைத் தேர்ந்தெடுக்கவும்.",
+    "EnterAccountNumber": "கணக்கு எண்ணை உள்ளிடவும்.",
+    "EnterAccountName": "கணக்கு வைத்திருப்பவரின் பெயரை உள்ளிடவும்.",
+    "SelectBank": "தயவுசெய்து வங்கியைத் தேர்ந்தெடுக்கவும்",
+    "SelectBranch": "தயவுசெய்து கிளையைத் தேர்ந்தெடுக்கவும்."
   },
   "PriceChart":{
     "LNG": "ta",
@@ -332,7 +365,10 @@
     "Cancel":"ரத்து செய்",
     "Grade":"தரம்",
     "Request Price Update":"விலை புதுப்பிப்பைக் கோரவும்",
-    "Submit Request":"கோரிக்கையை சமர்ப்பிக்கவும்"
+    "Submit Request":"கோரிக்கையை சமர்ப்பிக்கவும்",
+     "Edit Price":"விலையைத் திருத்து",
+     "Update":"புதுப்பிக்கவும்",
+      "AllowedRange": "அனுமதிக்கப்பட்டது ரூ.{{minPrice}} - ரூ.{{maxPrice}}"
   },
   "Otpverification":{
     "LNG": "ta",
@@ -347,7 +383,13 @@
     "invalidOTP":"சரிபார்ப்பு குறியீடு தவறானது",
     "completeOTP":"முழு சரிபார்ப்புக் குறியீட்டை உள்ளிடவும்.",
     "Resend in": "மீண்டும் அனுப்பு",
-    "Resend again": "மீண்டும் அனுப்பவும்"
+    "Resend again": "மீண்டும் அனுப்பவும்",
+     "OTPExpired": "உங்கள் OTP காலாவதியாகிவிட்டது. புதியதைக் கோரவும்.",
+    "OTPExpiredWarning": "OTP காலாவதியாகிவிட்டது. புதிய குறியீட்டைக் கோரவும்.",
+    "OTPExpiredOrInvalid": "OTP தவறானது அல்லது காலாவதியானது. புதியதைக் கோர விரும்புகிறீர்களா?",
+    "ResendOTP": "OTP-ஐ மீண்டும் அனுப்பு",
+    "Cancel": "ரத்துசெய்",
+    "TryAgain": "மீண்டும் முயற்சிக்கவும்"
   },
   "FarmerQr":{
     "LNG": "ta",
@@ -896,7 +938,8 @@
     "Update": "புதுப்பிக்கவும்",
     "Failed to complete order": "ஆணையை முடிக்க முடியவில்லை",
     "Selected product not found": "தேர்ந்தெடுக்கப்பட்ட பொருள் கிடைக்கவில்லை",
-    "Failed to submit replacement request": "மாற்று கோரிக்கையை சமர்ப்பிக்க முடியவில்லை. தயவுசெய்து பின்னர் மீண்டும் முயற்சிக்கவும்"
+    "Failed to submit replacement request": "மாற்று கோரிக்கையை சமர்ப்பிக்க முடியவில்லை. தயவுசெய்து பின்னர் மீண்டும் முயற்சிக்கவும்",
+    "Search products...": "தயாரிப்புகளைத் தேடு..."
   },
   "Status": {
     "Pending": "நிலுவையில் உள்ளது",
@@ -926,7 +969,8 @@
     "Selected Targets":"தேர்ந்தெடுக்கப்பட்ட குறிக்கோள்",
     "Save":"சேமிக்க",
     "Dismiss":"நிராகரி",
-    "Short Stock Assignee":"குறுகிய பங்கு ஒதுக்கீட்டாளர்"
+    "Short Stock Assignee":"குறுகிய பங்கு ஒதுக்கீட்டாளர்",
+    "Search officers":"தேடல் அதிகாரிகள்"
   },
   "ReplaceRequestsApprove":{
     "Loading replace request":"மாற்று கோரிக்கையை ஏற்றுகிறது...",

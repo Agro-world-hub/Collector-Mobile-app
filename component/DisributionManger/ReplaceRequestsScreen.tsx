@@ -10,7 +10,7 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp ,  useFocusEffect} from "@react-navigation/native";
 import { RootStackParamList } from "../types";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -119,13 +119,21 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
     fetchReplaceRequests();
   }, [fetchReplaceRequests]);
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchReplaceRequests();
+    }, [fetchReplaceRequests])
+  );
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchReplaceRequests();
   }, [fetchReplaceRequests]);
 
   const handleNavigateToApprove = (item: ReplaceRequestItem) => {
+     console.log("price================",   item.qty)
     navigation.navigate("ReplaceRequestsApprove" as any, {
+     
       replaceRequestData: {
         id: item.id,
         orderId: item.orderId || item.invNo, 
@@ -148,6 +156,7 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
         replaceQty: item.replaceQty,
         replacePrice: item.replacePrice
       }
+      
     });
   };
 

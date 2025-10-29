@@ -153,7 +153,8 @@ const CenterTargetScreen: React.FC<CenterTargetScreenProps> = ({ navigation, rou
 const [successCount, setSuccessCount] = useState(0);
 const MAX_SELECTED_ORDERS = 5;
 const [selectionLimitReached, setSelectionLimitReached] = useState(false);
-  
+    const [selectAll, setSelectAll] = useState(false);
+
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
@@ -396,6 +397,8 @@ const fetchTargets = useCallback(async () => {
       }
     );
 
+    console.log("target [[[[[[[[[[[[[[[[[",response.data)
+
     if (response.data.success) {
       const apiData = response.data.data;
       const mappedData = mapApiDataToTargetData(apiData);
@@ -410,13 +413,13 @@ const fetchTargets = useCallback(async () => {
       
       // Updated completed items filter to exclude "Out For Delivery" status
       const completedItems = mappedData.filter((item: TargetData) => {
-        const isCompleted = item.selectedStatus === 'Completed' && item.status !== 'Out For Delivery';
+        const isCompleted = item.selectedStatus === 'Completed' && item.status !== 'Out For Delivery' && item.status !== 'Ready to Pickup';
         console.log(`Completed filter - Item ${item.invoiceNo}: selectedStatus="${item.selectedStatus}", status="${item.status}", isCompleted=${isCompleted}`);
         return isCompleted;
       });
 
       const outItems = mappedData.filter((item: TargetData) => {
-        const isOutStatus = item.status === 'Out For Delivery';
+        const isOutStatus = item.status === 'Out For Delivery' || item.status === 'Ready to Pickup';
         console.log(`Out filter - Item ${item.invoiceNo}: status="${item.status}", isOutStatus=${isOutStatus}`);
         return isOutStatus;
       });
@@ -795,7 +798,31 @@ const handleCheckboxToggle = (itemId: string) => {
       </TouchableOpacity>
     );
   };
+const handleSelectAll = () => {
+  if (selectAll) {
+    // Unselect all
+    setSelectedItems([]);
+    setSelectAll(false);
+  } else {
+    // Select all
+    const allIds = displayedData.map(item => item.id);
+    setSelectedItems(allIds);
+    setSelectAll(true);
+  }
+};
 
+    const renderCheckboxForSelectAll = () => {    
+    return (
+     <TouchableOpacity 
+      className="w-5 h-5 border-2 border-white rounded flex items-center justify-center"
+      onPress={handleSelectAll} 
+    >
+      {selectAll && (
+        <View className="w-3 h-3 bg-white rounded" />
+      )}
+    </TouchableOpacity>
+    );
+  };
 
   const handleCorrectIconPress = () => {
     if (selectedItems.length > 0) {
@@ -1660,6 +1687,17 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     </View>
   ) : (
     <View className="flex-row bg-[#980775] py-3">
+      {/* <Text 
+                  style={[
+  i18n.language === "si"
+    ? { fontSize: 12 }
+    : i18n.language === "ta"
+    ? { fontSize: 12 }
+    : { fontSize: 15 }
+]}
+      className="flex-1 text-center text-white font-bold">{selectedToggle === 'ToDo' ? t("TargetOrderScreen.No") : ''}</Text> */}
+
+      {selectedToggle === 'ToDo' ? (
       <Text 
                   style={[
   i18n.language === "si"
@@ -1668,7 +1706,14 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
     ? { fontSize: 12 }
     : { fontSize: 15 }
 ]}
-      className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
+      className="flex-1 text-center text-white font-bold"> {t("TargetOrderScreen.No")}</Text>
+      ) : 
+      <>
+      <View className="flex-1 items-center justify-center -ml-1">
+    {renderCheckboxForSelectAll()}
+      </View>
+  
+      </>      }
       <Text 
                   style={[
   i18n.language === "si"
@@ -1745,7 +1790,9 @@ const getOutingStatus = (outTime: string | null, scheduleTime: string | null): s
         {/* Invoice Number */}
         <View className="flex-[2] items-center justify-center px-2">
           <Text className="text-center font-medium text-gray-800">
-            {item.invoiceNo || `INV${item.id || (index + 1).toString().padStart(6, '0')}`}
+            {/* {item.invoiceNo || `INV${item.id || (index + 1).toString().padStart(6, '0')}`} */}
+            {item.invoiceNo }
+            
           </Text>
         </View>
         

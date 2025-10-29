@@ -72,7 +72,7 @@ interface ReplaceData {
   selectedProduct: string;
   productTypeName: string;
   newProduct: string;
-  newProductId: string; // Added product ID
+  newProductId: string;
   quantity: string;
   price: string;
   invNo: string;
@@ -110,7 +110,6 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
   const [ordreId, setOrdreId] = useState('');
   const [id, setId] = useState('');
   
-  // Get passed data from navigation
   const replaceRequestData = route.params?.replaceRequestData as ReplaceRequestData;
   
   const [replaceData, setReplaceData] = useState<ReplaceData>({
@@ -118,7 +117,7 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
     selectedProduct: replaceRequestData?.productDisplayName || "N/A",
     productTypeName: replaceRequestData?.productTypeName || "N/A",
     newProduct: "",
-    newProductId: "", // Initialize product ID
+    newProductId: "",
     quantity: "",
     price: replaceRequestData?.price || "N/A",
     invNo: replaceRequestData?.invNo || "N/A",
@@ -128,7 +127,6 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
     replacePrice: replaceRequestData?.replacePrice
   });
 
-  // Load current replace request data and retail items when component mounts
   useEffect(() => {
     loadCurrentReplaceRequest();
     loadRetailItems();
@@ -141,44 +139,83 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
 
   console.log("////////////////////////////", ordreId, id);
 
-  // Load current replace request data
-  const loadCurrentReplaceRequest = async () => {
-    try {
-      setLoadingCurrentReplace(true);
-      const token = await AsyncStorage.getItem('token');
-      const response = await axios.get(
-        `${environment.API_BASE_URL}api/distribution-manager/ordre-replace/${replaceRequestData.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+ const loadCurrentReplaceRequest = async () => {
+  try {
+    setLoadingCurrentReplace(true);
+    const token = await AsyncStorage.getItem('token');
+    const response = await axios.get(
+      `${environment.API_BASE_URL}api/distribution-manager/ordre-replace/${replaceRequestData.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      );
-      
-      console.log("Current replace request data:", response.data);
-      
-      if (response.data.success && response.data.data.length > 0) {
-        setCurrentReplaceRequests(response.data.data);
-        
-   
-        const currentRequest = response.data.data[0]; 
-        
-        setReplaceData(prev => ({
-          ...prev,
-          newProduct: currentRequest.displayName || '',
-          newProductId: currentRequest.productId || '', 
-          quantity: currentRequest.qty.toString(),
-          price: `Rs.${currentRequest.price.toFixed(2)}`
-        }));
       }
-    } catch (error) {
-      console.error('Error loading current replace request:', error);
-    } finally {
-      setLoadingCurrentReplace(false);
+    );
+    
+    console.log("Current replace request data:", response.data);
+    
+    if (response.data.success && response.data.data.length > 0) {
+      setCurrentReplaceRequests(response.data.data);
+      
+      const currentRequest = response.data.data[0]; 
+      
+      // Format quantity to 2 decimal places
+      // const formatQuantity = (qty: string | number): string => {
+      //   const num = typeof qty === 'string' ? parseFloat(qty) : qty;
+      //   return num.toFixed(2);
+      // };
+      // Helper function to format quantity - remove trailing zeros but keep actual decimals
+const formatQuantity = (qty: string | number): string => {
+  if (!qty && qty !== 0) return "0";
+  
+  const num = typeof qty === 'string' ? parseFloat(qty) : qty;
+  
+  // Handle NaN cases
+  if (isNaN(num)) return "0";
+  
+  // Convert to string and remove trailing zeros
+  let formatted = num.toString();
+  
+  // If it has decimal part
+  if (formatted.includes('.')) {
+    // Remove trailing zeros
+    formatted = formatted.replace(/\.?0+$/, '');
+    
+    // If we removed all decimals but still have the dot, remove the dot too
+    if (formatted.endsWith('.')) {
+      formatted = formatted.slice(0, -1);
     }
-  };
-
-
+    
+    // Special case: if it ends with .00 or similar, show 2 decimal places
+    const decimalPart = formatted.split('.')[1];
+    if (!decimalPart) {
+      // No decimal part left, return as integer
+      return formatted;
+    } else if (decimalPart.length === 1 && decimalPart === '0') {
+      // Single zero after decimal, show one decimal
+      return formatted + '0';
+    }
+  }
+  
+  return formatted;
+};
+      
+      const quantity = formatQuantity(replaceRequestData.qty || "0");
+      
+      setReplaceData(prev => ({
+        ...prev,
+        newProduct: currentRequest.displayName || '',
+        newProductId: currentRequest.productId || '', 
+        quantity: quantity,
+        price: `Rs.${currentRequest.price.toFixed(2)}`
+      }));
+    }
+  } catch (error) {
+    console.error('Error loading current replace request:', error);
+  } finally {
+    setLoadingCurrentReplace(false);
+  }
+};
   const loadRetailItems = async () => {
     try {
       setLoadingRetailItems(true);
@@ -217,35 +254,50 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
     setShowDropdown(false);
   };
 
-  const handleQuantityChange = (text: string) => {
-    if (/^\d*\.?\d*$/.test(text)) {
-
-      let selectedProduct = retailItems.find(item => 
-        item.displayName === replaceData.newProduct || item.id === replaceData.newProductId
-      );
-      
-
-      if (!selectedProduct && currentReplaceRequests.length > 0) {
-        const currentRequest = currentReplaceRequests[0];
-        if (currentRequest.displayName === replaceData.newProduct) {
-       
-          const unitPrice = currentRequest.price / currentRequest.qty;
-          setReplaceData(prev => ({
-            ...prev,
-            quantity: text,
-            price: text ? `Rs.${(parseFloat(text) * unitPrice).toFixed(2)}` : `Rs.${unitPrice.toFixed(2)}`
-          }));
-          return;
-        }
+ const handleQuantityChange = (text: string) => {
+  // Allow empty string, digits, and decimal point
+  if (text === '' || /^\d*\.?\d*$/.test(text)) {
+    let selectedProduct = retailItems.find(item => 
+      item.displayName === replaceData.newProduct || item.id === replaceData.newProductId
+    );
+    
+    if (!selectedProduct && currentReplaceRequests.length > 0) {
+      const currentRequest = currentReplaceRequests[0];
+      if (currentRequest.displayName === replaceData.newProduct) {
+        const unitPrice = currentRequest.price / currentRequest.qty;
+        // Parse quantity, but keep original text for display
+        const qty = (text === '' || text === '.') ? 0 : parseFloat(text) || 0;
+        setReplaceData(prev => ({
+          ...prev,
+          quantity: text, // Keep the original text input
+          price: `Rs.${(qty * unitPrice).toFixed(2)}`
+        }));
+        return;
       }
-      
-      const price = selectedProduct ? (selectedProduct.discountedPrice || selectedProduct.normalPrice || 0) : 0;
-      setReplaceData(prev => ({
-        ...prev,
-        quantity: text,
-        price: text ? `Rs.${(parseFloat(text) * price).toFixed(2)}` : `Rs.${price.toFixed(2)}`
-      }));
     }
+    
+    const price = selectedProduct ? (selectedProduct.discountedPrice || selectedProduct.normalPrice || 0) : 0;
+    // Parse quantity, but keep original text for display
+    const qty = (text === '' || text === '.') ? 0 : parseFloat(text) || 0;
+    setReplaceData(prev => ({
+      ...prev,
+      quantity: text, // Keep the original text input
+      price: `Rs.${(qty * price).toFixed(2)}`
+    }));
+  }
+};
+  // Helper function to extract numeric price from string
+  const getNumericPrice = (priceString: string): number => {
+    if (!priceString) return 0;
+    const cleanPrice = priceString.replace(/Rs\.?/gi, '').trim();
+    return parseFloat(cleanPrice) || 0;
+  };
+
+  // Check if current price exceeds defined product price
+  const isPriceExceeded = (): boolean => {
+    const currentPrice = getNumericPrice(replaceData.price);
+    const definedPrice = getNumericPrice(replaceRequestData.replacePrice || '0');
+    return currentPrice > definedPrice;
   };
 
   const handleApprove = async () => {
@@ -254,16 +306,24 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
       return;
     }
 
-      const netState = await NetInfo.fetch();
-      if (!netState.isConnected) {
-    return; 
-  }
+    // Check if price exceeds defined product price
+    if (isPriceExceeded()) {
+      Alert.alert(
+        t("Error.Error"), 
+        t("Error.Price exceeds defined product price")
+      );
+      return;
+    }
+
+    const netState = await NetInfo.fetch();
+    if (!netState.isConnected) {
+      return; 
+    }
 
     try {
       setSubmitting(true);
       const token = await AsyncStorage.getItem('token');
       
-
       const approvalData = {
         orderId: replaceData.orderId,
         replaceRequestId: replaceRequestData.id, 
@@ -271,14 +331,11 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
         newProductId: replaceData.newProductId, 
         quantity: parseFloat(replaceData.quantity), 
         price: parseFloat(replaceData.price.replace('Rs.', '')), 
-
         originalProductId: replaceRequestData.productId,
         originalProductName: replaceRequestData.productDisplayName,
         originalQuantity: replaceRequestData.qty,
         originalPrice: replaceRequestData.price
       };
-
-     // console.log("Approval data being sent:", approvalData);
       
       const response = await axios.post(
         `${environment.API_BASE_URL}api/distribution-manager/approve`,
@@ -291,26 +348,28 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
         }
       );
 
-      //console.log("Approval response:", response.data);
-
       if (response.data.success) {
         Alert.alert(t("Error.Success"), t("Error.Replace request approved successfully"), [
           { text: 'OK', onPress: () => navigation.goBack() }
         ]);
       } else {
-        //Alert.alert('Error', response.data.message || 'Failed to approve replace request');
-         Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") );
+        Alert.alert(t("Error.Error"), t("Error.somethingWentWrong"));
       }
     } catch (error) {
       console.error('Error approving replace request:', error);
-     // Alert.alert('Error', 'Failed to approve replace request');
-     Alert.alert(t("Error.Error"), t("Error.somethingWentWrong") );
+      Alert.alert(t("Error.Error"), t("Error.somethingWentWrong"));
     } finally {
       setSubmitting(false);
     }
   };
 
-  const isFormComplete = replaceData.newProduct && replaceData.quantity;
+  // Updated validation: form complete AND price does not exceed defined product price
+  const isFormComplete = replaceData.newProduct && replaceData.quantity && !isPriceExceeded();
+  
+  const [searchQuery, setSearchQuery] = useState("");
+  const filteredItems = retailItems.filter((product) =>
+    product.displayName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   if (loadingCurrentReplace) {
     return (
@@ -323,29 +382,31 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
 
   return (
     <View className="flex-1 bg-white">
-
       <View className="bg-white px-4 py-4 flex-row items-center border-b border-gray-100">
         <TouchableOpacity className="mr-4 bg-[#F6F6F680] rounded-full p-2 z-50" onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={24} color="#333" />
         </TouchableOpacity>
         <View className="flex-1 justify-center items-center">
           <Text 
-                                      style={[
-  i18n.language === "si"
-    ? { fontSize: 14 }
-    : i18n.language === "ta"
-    ? { fontSize: 12 }
-    : { fontSize: 15 }
-]}
-          className="text-gray-800 text-lg font-medium">{t("ReplaceRequestsApprove.Order ID")} {replaceData.invNo}</Text>
+            style={[
+              i18n.language === "si"
+                ? { fontSize: 14 }
+                : i18n.language === "ta"
+                ? { fontSize: 12 }
+                : { fontSize: 15 }
+            ]}
+            className="text-gray-800 text-lg font-medium"
+          >
+            {t("ReplaceRequestsApprove.Order ID")} {replaceData.invNo}
+          </Text>
         </View>
       </View>
 
-      <ScrollView className="flex-1 bg-white"
+      <ScrollView 
+        className="flex-1 bg-white"
         style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}
-        keyboardShouldPersistTaps="handled">
-        
-        {/* Defined Product Section */}
+        keyboardShouldPersistTaps="handled"
+      >
         <View className="px-5">
           <View className="border border-dashed border-[#FA0000] rounded-lg p-4 mb-6">
             <Text className="text-center text-gray-600 mb-3">{t("ReplaceRequestsApprove.Defined product")}</Text>
@@ -361,79 +422,97 @@ const ReplaceRequestsApprove: React.FC<ReplaceRequestsProps> = ({
           </View>
         </View>
 
-  
-
         <View className="px-2 mt-2">
           <Text className="text-center text-black mb-4 font-medium">
             -- {t("ReplaceRequestsApprove.Replacing Product Details")}--
           </Text>
 
-
           <View className="mb-4">
-            <TouchableOpacity
-              className="border border-gray-300 rounded-full p-4 flex-row justify-between items-center bg-white"
-              onPress={() => setShowDropdown(!showDropdown)}
-            >
-              <Text className={replaceData.newProduct ? "text-black" : "text-gray-400"}>
-                {replaceData.newProduct || "Select Product"}
-              </Text>
-              <AntDesign name={showDropdown ? "up" : "down"} size={16} color="#666" />
-            </TouchableOpacity>
-
-            {showDropdown && (
-              <View className="border border-t-0 border-gray-300 rounded-b-lg bg-white max-h-40 mt-1">
-                <ScrollView>
-                  {loadingRetailItems ? (
-                    <View className="p-4 items-center">
-                      <ActivityIndicator size="small" color="#000" />
-                    </View>
-                  ) : retailItems.length > 0 ? (
-                    retailItems.map((product) => (
-                      <TouchableOpacity
-                        key={product.id}
-                        className={`p-4 border-b border-gray-100 ${
-                          replaceData.newProductId === product.id ? 'bg-blue-50' : ''
-                        }`}
-                        onPress={() => handleProductSelect(product)}
-                      >
-                        <Text className="font-medium">{product.displayName}</Text>
-                        <Text className="text-xs text-gray-500">
-                          {t("ReplaceRequestsApprove.ID")} {product.id} | {t("ReplaceRequestsApprove.Rs")}{(product.discountedPrice || product.normalPrice || 0).toFixed(2)} ({product.unitType})
-                        </Text>
-                      </TouchableOpacity>
-                    ))
-                  ) : (
-                    <View className="p-4 items-center">
-                      <Text className="text-gray-500">{t("ReplaceRequestsApprove.No products available")}</Text>
-                    </View>
-                  )}
-                </ScrollView>
+            {showDropdown ? (
+              <View> 
+                <View className="">
+                  <TextInput
+                    placeholder={t("PendingOrderScreen.Search products...")}
+                    value={searchQuery}
+                    onChangeText={setSearchQuery}
+                    className="w-full p-3 border border-gray-300 rounded-full flex-row justify-between items-center bg-white"
+                    placeholderTextColor="#888"
+                  />
+                </View>
+                <View className="border border-t-0 border-gray-300 rounded-b-lg bg-white max-h-40 mt-1">
+                  <ScrollView>
+                    {loadingRetailItems ? (
+                      <View className="p-4 items-center">
+                        <ActivityIndicator size="small" color="#000" />
+                      </View>
+                    ) : filteredItems.length > 0 ? (
+                      filteredItems.map((product) => (
+                        <TouchableOpacity
+                          key={product.id}
+                          className="p-3 border-b border-gray-100"
+                          onPress={() => {
+                            handleProductSelect(product);
+                            setShowDropdown(false);
+                            setSearchQuery("");
+                          }}
+                        >
+                          <Text className="font-medium">{product.displayName}</Text>
+                          <Text className="text-xs text-gray-500">
+                            {t("PendingOrderScreen.Rs")}.
+                            {(product.discountedPrice || product.normalPrice || 0).toFixed(2)}
+                          </Text>
+                        </TouchableOpacity> 
+                      ))
+                    ) : (
+                      <View className="p-4 items-center">
+                        <Text className="text-gray-500">{t("ReplaceRequestsApprove.No products available")}</Text>
+                      </View>
+                    )}
+                  </ScrollView>
+                </View>
               </View>
+            ) : (
+              <TouchableOpacity
+                className="border border-gray-300 rounded-full p-4 flex-row justify-between items-center bg-white"
+                onPress={() => setShowDropdown(!showDropdown)}
+              >
+                <Text className={replaceData.newProduct ? "text-black" : "text-gray-400"}>
+                  {replaceData.newProduct || "Select Product"}
+                </Text>
+                <AntDesign name={showDropdown ? "up" : "down"} size={16} color="#666" />
+              </TouchableOpacity>
             )}
           </View>
 
-  
           <View className="mb-4">
             <TextInput
               className="border border-gray-300 rounded-full p-4 bg-white"
               placeholder="Enter Quantity"
               value={replaceData.quantity}
               onChangeText={handleQuantityChange}
-              keyboardType="numeric"
+              keyboardType="decimal-pad"
             />
           </View>
 
-          <View className="mb-8">
-            <View className="border border-gray-300 rounded-full p-4 bg-gray-50">
-              <Text className="text-black">
+          <View className="mb-2">
+            <View className={`border border-gray-300 rounded-full p-4 ${isPriceExceeded() ? 'bg-red-50' : 'bg-gray-50'}`}>
+              <Text className={isPriceExceeded() ? "text-red-600" : "text-black"}>
                 {replaceData.newProduct && replaceData.quantity ? replaceData.price : "Rs.0.00"}
               </Text>
             </View>
           </View>
 
-     
+          {/* Price warning message */}
+          {isPriceExceeded() && (
+            <View className="mb-4 px-2">
+              <Text className="text-red-600 text-sm text-center">
+                Price must match defined product price ({replaceData.replacePrice})
+              </Text>
+            </View>
+          )}
+
           <TouchableOpacity
-            className={`py-3 ml-3 mr-3 rounded-full ${isFormComplete ? 'bg-black' : 'bg-gray-300'}`}
+            className={`py-3 ml-3 mr-3 rounded-full mb-4 ${isFormComplete ? 'bg-black' : 'bg-gray-300'}`}
             onPress={isFormComplete ? handleApprove : undefined}
             disabled={!isFormComplete || submitting}
           >

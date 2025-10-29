@@ -28,6 +28,7 @@ interface RecieveTargetBetweenOfficersScreenProps {
       todo: string;
       qty: string;
       collectionOfficerId: number;
+      officerId:string
     };
   };
 }
@@ -53,10 +54,12 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
   const [maxAmount, setMaxAmount] = useState<number>(0);
   const { t } = useTranslation();
 
-  const {  varietyNameEnglish, grade, target, qty, varietyId,collectionOfficerId,varietyNameSinhala, varietyNameTamil } = route.params;
+  const {  varietyNameEnglish, grade, target, qty, varietyId,collectionOfficerId,varietyNameSinhala, varietyNameTamil,officerId } = route.params;
   console.log(collectionOfficerId)
   
   const toOfficerId = collectionOfficerId;
+
+  
   console.log('toOfficerId',toOfficerId);  // The officer transferring the target
 
   console.log("Initial Max Amount:", maxAmount);
@@ -97,7 +100,8 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
 
       const token = await AsyncStorage.getItem('token');
       const response = await axios.get(
-        `${environment.API_BASE_URL}api/collection-manager/collection-officers`,
+     //   `${environment.API_BASE_URL}api/collection-manager/collection-officers`,
+       `${environment.API_BASE_URL}api/collection-manager/collection-officers-recieve/${varietyId}/${grade}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -119,7 +123,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
         // Format the officers to be displayed
         const formattedOfficers = filteredOfficers.map((officer: any) => ({
           key: officer.collectionOfficerId.toString(),
-          value: getOfficerName(officer),
+          value: `${getOfficerName(officer)}  (${(officer.empId)})`,
         }));
 
         setOfficers([ ...formattedOfficers]);
@@ -206,9 +210,20 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
       setError('');
     }
   };
+
+  // ✅ Fixed: Proper save button disabling logic
   const isSaveDisabled = () => {
-    // Disable button if no assignee is selected OR assignee is the default option ('0') OR submitting
-    return !assignee || assignee === '0' || fetchingTarget;
+    const numericAmount = parseFloat(amount);
+    
+    return !assignee || 
+           assignee === '0' || 
+           fetchingTarget || 
+           loading ||
+           !amount || 
+           isNaN(numericAmount) || 
+           numericAmount <= 0 || 
+           numericAmount > maxAmount ||
+           error !== ''; // Also disable if there's an error
   };
   
   
@@ -258,8 +273,9 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
       );
   
       if (response.status === 200) {
-        Alert.alert(t("Error.Success"), t("Error.Target transferred successfully."));
-        navigation.goBack()
+        Alert.alert(t("Error.Success"), t("Error.Target received successfully."));
+       // navigation.goBack()
+                      navigation.navigate('DailyTargetListForOfficers'as any,{officerId:  officerId  , collectionOfficerId: collectionOfficerId});
       } else {
          Alert.alert(t("Error.error"), t("Error.Failed to transfer target."));
       }
@@ -363,7 +379,7 @@ const RecieveTargetBetweenOfficers: React.FC<RecieveTargetBetweenOfficersScreenP
                 <TouchableOpacity
                   className={`rounded-full w-64 py-3 ${isSaveDisabled() ? 'bg-gray-400' : 'bg-[#313131]'}`}
                   onPress={receiveTarget}
-        disabled={loading || fetchingTarget}
+                  disabled={isSaveDisabled()} // ✅ Use the same disabled logic here
                 >
                   {fetchingTarget ? (
                     <ActivityIndicator size="small" color="white" />

@@ -331,8 +331,9 @@ const fetchTargets = useCallback(async () => {
       }
     );
 
-    // console.log("Response status:", response.status);
-    // console.log("Response data:", response.data);
+     console.log("Response status:", response.status);
+ //   console.log("Response data:", response.data);
+ console.log("sttaus=============",response.data.data.selectedStatus )
 
     if (response.data.success) {
       const apiData = response.data.data;
@@ -417,6 +418,8 @@ const fetchTargets = useCallback(async () => {
       invoiceNo: item.invoiceNo,
       allData: selectedToggle === 'ToDo' ? todoData : completedData
     };
+
+    console.log("=======================",item.selectedStatus)
 
     // Navigate based on selectedStatus
     switch (item.selectedStatus) {
@@ -566,7 +569,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
         <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4 bg-white/10 rounded-full p-2">
           <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-bold">{t("TargetOrderScreen.My Daily Target")}</Text>
+        <Text className="text-white text-lg font-bold">{t("TargetOrderScreen.My Daily Target")} </Text>
       </View>
 
    
@@ -671,10 +674,11 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
    </View>
 
     
-      <ScrollView
-        className="flex-1 bg-white"
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      >
+     <ScrollView
+  className="flex-1 bg-white"
+  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+  contentContainerStyle={{ paddingBottom: 100 }} // Add bottom padding
+>
     
         <View className="flex-row bg-[#980775] py-3">
           <Text 
@@ -685,7 +689,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
     ? { fontSize: 12 }
     : { fontSize: 15 }
 ]}
-          className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
+          className="flex-1 text-center text-white font-bold">{selectedToggle === 'ToDo' ? t("TargetOrderScreen.No") : ''}</Text>
           <Text 
              style={[
   i18n.language === "si"

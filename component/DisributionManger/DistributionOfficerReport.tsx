@@ -426,7 +426,7 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
           <View className="flex-row space-x-8">
             <TouchableOpacity
               onPress={handleDownload}
-              className="bg-[#A4A4A4] rounded-lg items-center justify-center"
+              className="bg-[#000000] rounded-lg items-center justify-center"
               style={{ width: 100, height: 70 }} 
             >
               <Ionicons name="download" size={24} color="white" />
@@ -437,7 +437,7 @@ const DistributionOfficerReport: React.FC<DistributionOfficerReportProps> = ({
 
             <TouchableOpacity
               onPress={handleShare}
-              className="bg-[#A4A4A4] rounded-lg items-center justify-center"
+              className="bg-[#000000] rounded-lg items-center justify-center"
               style={{ width: 100, height: 70 }}
             >
               <Ionicons name="share-social" size={24} color="white" />

@@ -56,6 +56,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
   const [vopen, setVopen] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [jobRole, setJobRole] = useState<string | null>(null);
 
   const { t, i18n } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState("en");
@@ -72,6 +73,19 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
     fetchLanguage();
   }, []);
 
+  // Fetch job role from AsyncStorage
+  useEffect(() => {
+    const fetchJobRole = async () => {
+      try {
+        const role = await AsyncStorage.getItem("jobRole");
+        setJobRole(role);
+      } catch (error) {
+        console.error("Error fetching job role:", error);
+      }
+    };
+    fetchJobRole();
+  }, []);
+
   const resetForm = useCallback(() => {
     setSelectedCrop(null);
     setSelectedVariety(null);
@@ -84,26 +98,24 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     resetForm();
-    // After refreshing is done, set refreshing to false
     setTimeout(() => {
       setRefreshing(false);
     }, 1000);
   }, [resetForm]);
 
-  // Use both navigation listener and useFocusEffect for complete reset
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", resetForm);
     return unsubscribe;
   }, [navigation, resetForm]);
 
-  // Also use useFocusEffect to ensure reset happens when screen gains focus
   useFocusEffect(
     useCallback(() => {
       setLoading(false);
       resetForm();
-      return () => {}; // Cleanup function
+      return () => {};
     }, [resetForm])
   );
+
   useEffect(() => {
     if (selectedLanguage) {
       fetchCropNames();
@@ -135,7 +147,6 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
       fetchLanguage();
 
       const formattedData = response.data.map((crop: any) => {
-        console.log("kkk", selectedLanguage);
         let cropName;
         switch (selectedLanguage) {
           case "si":
@@ -215,15 +226,47 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
     }
   };
 
-  // Fetch varieties when selectedCrop changes
   useEffect(() => {
     fetchVarieties();
   }, [selectedCrop]);
 
+  // Handle navigation based on job role
+  const handleSearch = () => {
+    if (selectedCrop && selectedVariety) {
+      setLoading(true);
+      const cropName =
+        cropOptions.find((option) => option.value === selectedCrop)?.label || "";
+      const varietyName =
+        varietyOptions.find((option) => option.value === selectedVariety)?.label || "";
+
+      // Navigate based on job role
+      if (jobRole === "Collection Officer") {
+        navigation.navigate("PriceChart", {
+          cropName: cropName,
+          varietyId: selectedVariety,
+          varietyName: varietyName,
+        });
+      } else {
+        // For Distribution Officer, Distribution Centre Manager, and other roles
+        navigation.navigate("PriceChartManager", {
+          cropName: cropName,
+          varietyId: selectedVariety,
+          varietyName: varietyName,
+        });
+      }
+    } else {
+      setLoading(false);
+      Alert.alert(
+        t("SearchPrice.Selection Required"),
+        t("SearchPrice.Please select both Crop and Variety to continue"),
+        [{ text: t("SearchPrice.OK") }]
+      );
+    }
+  };
+
   if (loadingCrops) {
     return (
       <View className="flex-1 bg-white items-center justify-center">
-        {/* <ActivityIndicator size="large" color="#26D041" /> */}
         <LottieView
           source={require("../assets/lottie/newLottie.json")}
           autoPlay
@@ -283,10 +326,10 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
                 }}
                 setItems={setCropOptions}
                 placeholder={t("SearchPrice.SelectCrop")}
-                  style={{
+                style={{
                   backgroundColor: "#F4F4F4",
                   borderColor: "#F4F4F4",
-                  borderRadius:25
+                  borderRadius: 25
                 }}
                 placeholderStyle={{ color: "#9CA3AF" }}
                 textStyle={{
@@ -326,7 +369,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
                 style={{
                   backgroundColor: "#F4F4F4",
                   borderColor: "#F4F4F4",
-                  borderRadius:25
+                  borderRadius: 25
                 }}
                 textStyle={{
                   color: "#000",
@@ -339,7 +382,6 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
                 scrollViewProps={{
                   nestedScrollEnabled: true,
                 }}
-                //  disabled={!selectedCrop}
                 zIndex={1000}
                 zIndexInverse={3000}
               />
@@ -349,33 +391,7 @@ const SearchPriceScreen: React.FC<SearchPriceScreenProps> = ({
           {/* Search Button */}
           <TouchableOpacity
             className="bg-[#000000] w-full py-3 mb-4 rounded-[35px] items-center"
-            onPress={() => {
-              if (selectedCrop && selectedVariety) {
-                setLoading(true);
-                const cropName =
-                  cropOptions.find((option) => option.value === selectedCrop)
-                    ?.label || "";
-                const varietyName =
-                  varietyOptions.find(
-                    (option) => option.value === selectedVariety
-                  )?.label || "";
-
-                navigation.navigate("PriceChart", {
-                  cropName: cropName,
-                  varietyId: selectedVariety,
-                  varietyName: varietyName,
-                });
-              } else {
-                setLoading(false);
-                Alert.alert(
-                  t("SearchPrice.Selection Required"),
-                  t(
-                    "SearchPrice.Please select both Crop and Variety to continue"
-                  ),
-                  [{ text: t("SearchPrice.OK") }]
-                );
-              }
-            }}
+            onPress={handleSearch}
           >
             {loading ? (
               <ActivityIndicator color="white" size="small" />

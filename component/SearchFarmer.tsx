@@ -59,7 +59,7 @@ const SearchFarmer: React.FC<SearchFarmerProps> = ({ navigation }) => {
     console.log("Validating NIC:", nic);
     const regex = /^(\d{12}|\d{9}V|\d{9}X|\d{9}v|\d{9}x)$/;
     if (!regex.test(nic)) {
-      setEre(t("Transport.Enter Valide NIC"));
+      setEre(t("SearchFarmer.Enter Valide NIC"));
       return false;
     } else {
       setEre("");

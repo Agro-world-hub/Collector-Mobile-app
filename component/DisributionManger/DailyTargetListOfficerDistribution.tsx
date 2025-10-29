@@ -63,7 +63,8 @@ interface OrderData {
   packedPackageItems: number;
   pendingAdditionalItems: number;
   pendingPackageItems: number;
-  complete: number;
+  complete: number;  // This is target-level completion
+  isComplete: number | null;  // ADD THIS LINE - Item-level completion
   completeTime: string | null;
   target: number;
   targetCreatedAt: string;
@@ -211,9 +212,54 @@ const DailyTargetListOfficerDistribution: React.FC<DailyTargetListOfficerDistrib
   };
 
 
+  // const canSelectItem = (item: OrderData) => {
+  //   return item.selectedStatus?.toLowerCase() === 'pending' && selectedToggle === 'ToDo';
+  // };
+
   const canSelectItem = (item: OrderData) => {
-    return item.selectedStatus?.toLowerCase() === 'pending' && selectedToggle === 'ToDo';
-  };
+  // RULE 1: Only allow selection in ToDo tab
+  if (selectedToggle !== 'ToDo') return false;
+  
+  // RULE 2: selectedStatus MUST be 'Pending' (MANDATORY)
+  if (item.selectedStatus?.toLowerCase() !== 'pending') return false;
+  
+  // RULE 3: Check item-specific statuses based on order type
+  
+  // For PACKAGE orders (isPackage === 1)
+  if (item.isPackage === 1) {
+    // Case 1: Order has BOTH additional items AND package items
+    if (item.totalAdditionalItems > 0 && item.totalPackageItems > 0) {
+      // BOTH must be pending
+      const additionalIsPending = item.additionalItemStatus?.toLowerCase() === 'pending';
+      const packageIsPending = item.packageItemStatus?.toLowerCase() === 'pending';
+      return additionalIsPending && packageIsPending;
+    }
+    
+    // Case 2: Order has ONLY package items (no additional items)
+    if (item.totalPackageItems > 0 && item.totalAdditionalItems === 0) {
+      return item.packageItemStatus?.toLowerCase() === 'pending';
+    }
+    
+    // Case 3: Order has ONLY additional items (no package items)
+    if (item.totalAdditionalItems > 0 && item.totalPackageItems === 0) {
+      return item.additionalItemStatus?.toLowerCase() === 'pending';
+    }
+    
+    // Case 4: No items at all (shouldn't happen but handle it)
+    return false;
+  } 
+  
+  // For NON-PACKAGE orders (isPackage === 0)
+  else {
+    // Must have additional items and they must be pending
+    if (item.totalAdditionalItems > 0) {
+      return item.additionalItemStatus?.toLowerCase() === 'pending';
+    }
+    // No items to select
+    return false;
+  }
+};
+
 
 
   const handleItemSelect = (item: OrderData) => {
@@ -343,56 +389,61 @@ const handleRowPress = (item: OrderData) => {
   };
 
  
-  const fetchTargets = async () => {
-    setLoading(true);
-    const startTime = Date.now();
-    try {
-      const authToken = await AsyncStorage.getItem("token");
-      const response = await axios.get(
-        `${environment.API_BASE_URL}api/distribution-manager/distribution-officer/${collectionOfficerId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
+  // Replace the fetchTargets function's filtering logic with this:
 
-      const allData = response.data.data;
-      //console.log("Fetched data:", allData);
-      
-    
-      const todoItems = allData.filter((item: OrderData) => 
-        item.selectedStatus !== 'Completed' && item.complete === 0
-      );
-      const completedItems = allData.filter((item: OrderData) => 
-        item.selectedStatus === 'Completed' || item.complete === 1
-      );
-      
-    //  console.log("Todo items:", todoItems);
-     // console.log("Completed items:", completedItems);
-
-      setTodoData(todoItems);
-      setCompletedData(completedItems);
-      
-    
-      if (allData && allData.length > 0) {
-        setInvoNo(allData[0].invNo || '');
+const fetchTargets = async () => {
+  setLoading(true);
+  const startTime = Date.now();
+  try {
+    const authToken = await AsyncStorage.getItem("token");
+    const response = await axios.get(
+      `${environment.API_BASE_URL}api/distribution-manager/distribution-officer/${collectionOfficerId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
       }
-      
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching targets:", err);
-      setError(t("Error.Failed to fetch data."));
-    } finally {
-      const elapsedTime = Date.now() - startTime;
-      const remainingTime = 3000 - elapsedTime;
-      setTimeout(
-        () => setLoading(false),
-        remainingTime > 0 ? remainingTime : 0
-      );
-    }
-  };
+    );
 
+    const allData = response.data.data;
+    console.log("Total data fetched from API:", allData.length);
+    
+    // FIXED: Filter based on individual item completion status (isComplete)
+    // and selectedStatus to ensure proper categorization
+    const todoItems = allData.filter((item: OrderData) => 
+      item.selectedStatus !== 'Completed' && 
+      (item.isComplete === null || item.isComplete === 0)
+    );
+    
+    const completedItems = allData.filter((item: OrderData) => 
+      item.selectedStatus === 'Completed' && 
+      item.isComplete === 1
+    );
+    
+    console.log("Todo items count:", todoItems.length);
+    console.log("Completed items count:", completedItems.length);
+
+    setTodoData(todoItems);
+    setCompletedData(completedItems);
+    
+    // Set invoice number from first item if available
+    if (allData && allData.length > 0) {
+      setInvoNo(allData[0].invNo || '');
+    }
+    
+    setError(null);
+  } catch (err) {
+    console.error("Error fetching targets:", err);
+    setError(t("Error.Failed to fetch data."));
+  } finally {
+    const elapsedTime = Date.now() - startTime;
+    const remainingTime = 3000 - elapsedTime;
+    setTimeout(
+      () => setLoading(false),
+      remainingTime > 0 ? remainingTime : 0
+    );
+  }
+};
   
   useFocusEffect(
     React.useCallback(() => {
@@ -566,6 +617,7 @@ const getStatusTextColor = (status: string) => {
       showsVerticalScrollIndicator= {false}
         className="flex-1 bg-white"
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        contentContainerStyle={{ paddingBottom: 100 }}
       >
         {/* Table Header */}
         <View className="flex-row bg-[#980775] py-3">
@@ -586,7 +638,12 @@ const getStatusTextColor = (status: string) => {
               />
             </TouchableOpacity>
           )}
-          <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
+          {/* <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text> */}
+           {selectedToggle === 'ToDo' ? (
+            <Text className="flex-1 text-center text-white font-bold">{t("TargetOrderScreen.No")}</Text>
+          ) : (
+            <Text className="flex-1 text-center text-white font-bold"></Text>
+          )}
           <Text className="flex-[2] text-center text-white font-bold">{t("TargetOrderScreen.Invoice No")}</Text>
           
           {selectedToggle === 'ToDo' ? (
