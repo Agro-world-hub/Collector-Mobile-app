@@ -42,6 +42,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
  
 
   // Fetch prices
+ // Fetch prices
   const fetchPrices = async () => {
     setLoading(true);
     setError(null);
@@ -56,8 +57,14 @@ const PriceChart: React.FC<PriceChartProps> = ({ navigation, route }) => {
         }
       });
       
-      setPriceData(response.data);
-      setEditedPrices(response.data);
+      // Deep clone the data to avoid reference issues
+      const originalData = response.data.map((item: any) => ({
+        ...item,
+        price: String(item.price).trim()
+      }));
+      
+      setPriceData(originalData);
+      setEditedPrices(JSON.parse(JSON.stringify(originalData))); // Deep clone
          } else {
       setError(t("Error.Failed to fetch prices"));
       console.log("Token not found")
@@ -116,17 +123,30 @@ useFocusEffect(
        return; 
        }
       
-      try {
+     try {
         const token = await AsyncStorage.getItem("token");
         if (!token) {
           throw new Error("No authentication token found.");
         }
   
-        const requestData = editedPrices.map((priceItem) => ({
-          varietyId,
-          grade: priceItem.grade,
-          requestPrice: priceItem.price,
-        }));
+        // Only send prices that have been changed
+        const requestData = editedPrices
+          .filter((editedItem, index) => {
+            const originalItem = priceData[index];
+            // Convert both to strings and trim to ensure proper comparison
+            const editedPrice = String(editedItem.price).trim();
+            const originalPrice = String(originalItem.price).trim();
+            console.log(`Comparing Grade ${editedItem.grade}: edited="${editedPrice}" vs original="${originalPrice}"`);
+            return editedPrice !== originalPrice;
+          })
+          .map((priceItem) => ({
+            varietyId,
+            grade: priceItem.grade,
+            requestPrice: priceItem.price,
+          }));
+
+        console.log("request data", requestData);
+        console.log("Number of changed prices:", requestData.length);
   
         if (requestData.length === 0) {
           Alert.alert(t("Error.error"), t("Error.No prices to update"));

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { View, Text, TextInput, TouchableOpacity, SafeAreaView, ActivityIndicator, Alert, ScrollView, BackHandler } from "react-native";
+import { View, Text, TextInput, TouchableOpacity,  ActivityIndicator, Alert, ScrollView, BackHandler } from "react-native";
 import axios from "axios";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useFocusEffect } from "@react-navigation/native";
@@ -178,17 +178,42 @@ const PriceChartManager: React.FC<PriceChartManagerProps> = ({ navigation, route
       
       setIsSubmitting(true);
       
-      try {
+      // try {
+      //   const token = await AsyncStorage.getItem("token");
+      //   if (!token) {
+      //     throw new Error("No authentication token found.");
+      //   }
+  
+      //   const requestData = editedPrices.map((priceItem) => ({
+      //     varietyId,
+      //     grade: priceItem.grade,
+      //     requestPrice: priceItem.price,
+      //   }));
+
+          try {
         const token = await AsyncStorage.getItem("token");
         if (!token) {
           throw new Error("No authentication token found.");
         }
   
-        const requestData = editedPrices.map((priceItem) => ({
-          varietyId,
-          grade: priceItem.grade,
-          requestPrice: priceItem.price,
-        }));
+        // Only send prices that have been changed
+        const requestData = editedPrices
+          .filter((editedItem, index) => {
+            const originalItem = priceData[index];
+            // Convert both to strings and trim to ensure proper comparison
+            const editedPrice = String(editedItem.price).trim();
+            const originalPrice = String(originalItem.price).trim();
+            console.log(`Comparing Grade ${editedItem.grade}: edited="${editedPrice}" vs original="${originalPrice}"`);
+            return editedPrice !== originalPrice;
+          })
+          .map((priceItem) => ({
+            varietyId,
+            grade: priceItem.grade,
+            requestPrice: priceItem.price,
+          }));
+
+        console.log("request data", requestData);
+        console.log("Number of changed prices:", requestData.length);
   
         if (requestData.length === 0) {
           Alert.alert(t("Error.error"), t("Error.No prices to update"));
@@ -208,7 +233,7 @@ const PriceChartManager: React.FC<PriceChartManagerProps> = ({ navigation, route
 
         console.log("response status",response.status)
   
-       if (response.status === 200) {
+       if (response.status === 201) {
   // SUCCESS: Show enhanced success alert
   Alert.alert(
     t("Error.Success"), 
@@ -277,7 +302,7 @@ const PriceChartManager: React.FC<PriceChartManagerProps> = ({ navigation, route
 
 
   return (
-    <SafeAreaView className="flex-1 bg-whitegray-100">
+    <View className="flex-1 bg-whitegray-100">
       {/* Header */}
       <View className="bg-[#313131] h-20 flex-row items-center" style={{ paddingHorizontal: wp(6), paddingVertical: hp(2) }}>
         <TouchableOpacity onPress={() => navigation.navigate("Main" as any, { screen: "SearchPriceScreen" })} className="bg-[#FFFFFF1A] rounded-full p-2 justify-center w-10">
@@ -377,7 +402,8 @@ const PriceChartManager: React.FC<PriceChartManagerProps> = ({ navigation, route
           </Text>
         </TouchableOpacity>
       </ScrollView>
-    </SafeAreaView>
+    </View>
+
   );
 };
 
