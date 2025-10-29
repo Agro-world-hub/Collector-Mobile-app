@@ -131,7 +131,9 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
   }, [fetchReplaceRequests]);
 
   const handleNavigateToApprove = (item: ReplaceRequestItem) => {
+     console.log("price================",   item.qty)
     navigation.navigate("ReplaceRequestsApprove" as any, {
+     
       replaceRequestData: {
         id: item.id,
         orderId: item.orderId || item.invNo, 
@@ -154,6 +156,7 @@ const ReplaceRequestsScreen: React.FC<ReplaceRequestsProps> = ({
         replaceQty: item.replaceQty,
         replacePrice: item.replacePrice
       }
+      
     });
   };
 
