@@ -39,7 +39,7 @@ interface OrderItem {
   target: number;
   complete: number;
   todo: number;
-  status: 'Pending' | 'Opened' | 'Completed' | 'In Progress';
+  status: 'Pending' | 'Opened' | 'Completed' | 'In Progress'; // Add 'In Progress' here
   createdAt: string;
   updatedAt: string;
   completedTime?: string | null;
@@ -349,68 +349,46 @@ const fetchOrderData = async (orderId: string) => {
 
 
 
-useEffect(() => {
-  const loadOrderData = async () => {
+// Move loadOrderData function outside of useEffect
+const loadOrderData = async (isRefreshing = false) => {
+  if (!isRefreshing) {
     setLoading(true);
-    const orderData = await fetchOrderData(item.orderId);
-    
-    if (orderData) {
-    //  console.log('=== DEBUG ORDER DATA ===');
-    //  console.log('Full Order Data:', JSON.stringify(orderData, null, 2));
-      
-      // Debug each package
-      if (orderData.packageData && Array.isArray(orderData.packageData)) {
-        orderData.packageData.forEach((packageInfo: any, packageIndex: number) => {
-     //     console.log(`=== PACKAGE ${packageIndex + 1} DEBUG ===`);
-     //     console.log('Package Info:', JSON.stringify(packageInfo, null, 2));
-          
-          if (packageInfo.items && Array.isArray(packageInfo.items)) {
-            packageInfo.items.forEach((item: any, itemIndex: number) => {
-              // console.log(`Item ${itemIndex + 1}:`, {
-              //   productName: item.productName,
-              //   isPacked: item.isPacked,
-              //   isPackedType: typeof item.isPacked,
-              //   isPackedValue: item.isPacked === 1,
-              //   isPackedStrictEqual: item.isPacked === "1"
-              // });
-            });
-          }
-        });
-      }
-      
+  }
 
-      if (orderData.additionalItems && Array.isArray(orderData.additionalItems)) {
-      //  console.log('=== ADDITIONAL ITEMS DEBUG ===');
-        orderData.additionalItems.forEach((item: any, itemIndex: number) => {
-          // console.log(`Additional Item ${itemIndex + 1}:`, {
-          //   productName: item.productName,
-          //   isPacked: item.isPacked,
-          //   isPackedType: typeof item.isPacked,
-          //   isPackedValue: item.isPacked === 1,
-          //   isPackedStrictEqual: item.isPacked === "1"
-          // });
-        });
-      }
-      
-      
-      
-      let allFamilyPackItems: FamilyPackItem[] = [];
-      let packageNames: string[] = [];
-      let typeNames: string[] = [];
-      
-     if (orderData.packageData && Array.isArray(orderData.packageData)) {
+  const orderData = await fetchOrderData(item.orderId);
+  
+  if (orderData) {
+    // Your existing data processing logic...
+    
+    // Debug each package
+    if (orderData.packageData && Array.isArray(orderData.packageData)) {
       orderData.packageData.forEach((packageInfo: any, packageIndex: number) => {
-        // Get package quantity
+        if (packageInfo.items && Array.isArray(packageInfo.items)) {
+          packageInfo.items.forEach((item: any, itemIndex: number) => {
+            // Debug code...
+          });
+        }
+      });
+    }
+
+    if (orderData.additionalItems && Array.isArray(orderData.additionalItems)) {
+      // Debug code...
+    }
+    
+    let allFamilyPackItems: FamilyPackItem[] = [];
+    let packageNames: string[] = [];
+    let typeNames: string[] = [];
+    
+    if (orderData.packageData && Array.isArray(orderData.packageData)) {
+      orderData.packageData.forEach((packageInfo: any, packageIndex: number) => {
         const packageQty = packageInfo.packageQty || 1;
         
-     
         if (packageInfo.packageName) {
-
-  const displayName = packageQty > 1 
-    ? `${packageInfo.packageName} (x${packageQty})`
-    : packageInfo.packageName;
-  packageNames.push(displayName);
-}
+          const displayName = packageQty > 1 
+            ? `${packageInfo.packageName} (x${packageQty})`
+            : packageInfo.packageName;
+          packageNames.push(displayName);
+        }
         
         if (packageIndex === 0 && packageInfo.id) {
           setPackageId(packageInfo.id);
@@ -430,7 +408,7 @@ useEffect(() => {
               productTypeName: item.productTypeName,
               packageId: packageInfo.id,
               packageName: packageInfo.packageName,
-              packageQty: packageQty, // Add package quantity
+              packageQty: packageQty,
               originalItemId: item.id
             };
           });
@@ -444,76 +422,88 @@ useEffect(() => {
         }
       });
     }
-      
-   
-      const mappedAdditionalItems: AdditionalItem[] = orderData.additionalItems?.map((item: any) => {
-        const isPackedValue = item.isPacked === 1 || item.isPacked === "1" || item.isPacked === true;
-        
-        // console.log(`Mapping additional ${item.productName}:`, {
-        //   originalIsPacked: item.isPacked,
-        //   mappedSelected: isPackedValue
-        // });
-        
-        return {
-          id: item.id.toString(),
-          name: item.productName,
-          weight: `${item.qty}`,
-          selected: isPackedValue, 
-          price: item.price || item.normalPrice || "0"
-        };
-      }) || [];
-
-      // console.log('=== FINAL MAPPED DATA ===');
-      // console.log('Family Pack Items:', allFamilyPackItems.map(item => ({
-      //   name: item.name,
-      //   selected: item.selected,
-      //   packageName: item.packageName
-      // })));
-      // console.log('Additional Items:', mappedAdditionalItems.map(item => ({
-      //   name: item.name,
-      //   selected: item.selected
-      // })));
-
- 
-      if (packageNames.length > 0) {
-        setPackageName(packageNames.join(' + '));
-      }
-
-      if (typeNames.length > 0) {
-        setTypeeName(typeNames.join(', '));
-      }
-
-      setFamilyPackItems(allFamilyPackItems);
-      setAdditionalItems(mappedAdditionalItems);
-      
-     
-      const allFamilyPacked = allFamilyPackItems.length === 0 || allFamilyPackItems.every(item => item.selected);
-      const allAdditionalPacked = mappedAdditionalItems.length === 0 || mappedAdditionalItems.every(item => item.selected);
-      const someFamilyPacked = allFamilyPackItems.some(item => item.selected);
-      const someAdditionalPacked = mappedAdditionalItems.some(item => item.selected);
-
-      if (allFamilyPackItems.length === 0 && mappedAdditionalItems.length === 0) {
-        setOrderStatus('Pending');
-      } else if (allFamilyPacked && allAdditionalPacked) {
-        setOrderStatus('Completed');
-        setCompletedTime(new Date().toLocaleString());
-      } else if (someFamilyPacked || someAdditionalPacked) {
-        setOrderStatus('Opened');
-      } else {
-        setOrderStatus('Pending');
-      }
-
-      setError(null);
-    } else {
-      setError(t('Failed to load order data'));
-    }
     
-    setLoading(false);
-  };
+    const mappedAdditionalItems: AdditionalItem[] = orderData.additionalItems?.map((item: any) => {
+      const isPackedValue = item.isPacked === 1 || item.isPacked === "1" || item.isPacked === true;
+      
+      return {
+        id: item.id.toString(),
+        name: item.productName,
+        weight: `${item.qty}`,
+        selected: isPackedValue, 
+        price: item.price || item.normalPrice || "0"
+      };
+    }) || [];
 
+    if (packageNames.length > 0) {
+      setPackageName(packageNames.join(' + '));
+    }
+
+    if (typeNames.length > 0) {
+      setTypeeName(typeNames.join(', '));
+    }
+
+    setFamilyPackItems(allFamilyPackItems);
+    setAdditionalItems(mappedAdditionalItems);
+    
+    const allFamilyPacked = allFamilyPackItems.length === 0 || allFamilyPackItems.every(item => item.selected);
+    const allAdditionalPacked = mappedAdditionalItems.length === 0 || mappedAdditionalItems.every(item => item.selected);
+    const someFamilyPacked = allFamilyPackItems.some(item => item.selected);
+    const someAdditionalPacked = mappedAdditionalItems.some(item => item.selected);
+
+    if (allFamilyPackItems.length === 0 && mappedAdditionalItems.length === 0) {
+      setOrderStatus('Pending');
+    } else if (allFamilyPacked && allAdditionalPacked) {
+      setOrderStatus('Completed');
+      setCompletedTime(new Date().toLocaleString());
+    } else if (someFamilyPacked || someAdditionalPacked) {
+      setOrderStatus('Opened');
+    } else {
+      setOrderStatus('Pending');
+    }
+
+    setError(null);
+  } else {
+    setError(t('Failed to load order data'));
+  }
+  
+  if (!isRefreshing) {
+    setLoading(false);
+  }
+};
+
+// First useEffect - initial load
+useEffect(() => {
   loadOrderData();
   fetchSelectedLanguage();
 }, [item.orderId, t]);
+
+// Second useEffect - refresh when order is completed
+useEffect(() => {
+  if (orderStatus === 'Completed') {
+    // Refresh data when order is completed
+    const timer = setTimeout(() => {
+      loadOrderData(true); // Pass true to indicate it's a refresh
+    }, 2000);
+    return () => clearTimeout(timer);
+  }
+}, [orderStatus]);
+
+// Add pull-to-refresh functionality
+const [refreshing, setRefreshing] = useState(false);
+
+const onRefresh = React.useCallback(async () => {
+  setRefreshing(true);
+  await loadOrderData(true);
+  setRefreshing(false);
+}, []);
+
+// Use useFocusEffect to refresh when screen comes into focus
+useFocusEffect(
+  React.useCallback(() => {
+    loadOrderData();
+  }, [])
+);
 
 
 
@@ -1634,7 +1624,7 @@ const getDynamicStatus = (): 'Pending' | 'Opened' | 'Completed' => {
 };
 
 // Updated getStatusText function with proper translations
-const getStatusText = (status: 'Pending' | 'Opened' | 'Completed') => {
+const getStatusText = (status: 'Pending' | 'Opened' | 'Completed' | 'In Progress') => {
   switch (status) {
     case 'Pending':
       return selectedLanguage === 'si' ? 'අපරිපූර්ණ' : 
@@ -1644,6 +1634,10 @@ const getStatusText = (status: 'Pending' | 'Opened' | 'Completed') => {
       return selectedLanguage === 'si' ? 'විවෘත කළ' : 
              selectedLanguage === 'ta' ? 'திறக்கப்பட்டது' : 
              t("Status.Opened") || 'Opened';
+    case 'In Progress':
+      return selectedLanguage === 'si' ? 'සිදු කෙරේ' : 
+             selectedLanguage === 'ta' ? 'செயல்பாட்டில்' : 
+             t("Status.InProgress") || 'In Progress';
     case 'Completed':
       return selectedLanguage === 'si' ? 'සම්පූර්ණයි' : 
              selectedLanguage === 'ta' ? 'நிறைவானது' : 
@@ -1653,8 +1647,9 @@ const getStatusText = (status: 'Pending' | 'Opened' | 'Completed') => {
   }
 };
 
+
 // Get styling based on status
-const getStatusStyling = (status: 'Pending' | 'Opened' | 'Completed') => {
+const getStatusStyling = (status: 'Pending' | 'Opened' | 'Completed' | 'In Progress') => {
   switch (status) {
     case 'Completed':
       return {
@@ -1666,6 +1661,11 @@ const getStatusStyling = (status: 'Pending' | 'Opened' | 'Completed') => {
         badge: 'bg-[#FFF9C4] border border-[#F9CC33]',
         text: 'text-[#B8860B]'
       };
+    case 'In Progress':
+      return {
+        badge: 'bg-[#E3F2FD] border border-[#2196F3]',
+        text: 'text-[#1565C0]'
+      };
     default: // Pending
       return {
         badge: 'bg-[#FFB9B7] border border-[#FFB9B7]',
@@ -1674,10 +1674,13 @@ const getStatusStyling = (status: 'Pending' | 'Opened' | 'Completed') => {
   }
 };
 
+
+
 const DynamicStatusBadge = () => {
-  const dynamicStatus = getDynamicStatus();
-  const styling = getStatusStyling(dynamicStatus);
-  const statusText = getStatusText(dynamicStatus);
+  // Use the status from route.params instead of orderStatus state
+  const statusFromParams = status || item.status || 'Pending';
+  const styling = getStatusStyling(statusFromParams);
+  const statusText = getStatusText(statusFromParams);
   
   return (
     <View className="mx-4 mt-4 mb-3 justify-center items-center">
@@ -1689,6 +1692,7 @@ const DynamicStatusBadge = () => {
     </View>
   );
 };
+
 
   const SuccessModal = () => (
     <Modal
@@ -2018,10 +2022,18 @@ return (
       ) : (
       <>
         <ScrollView 
-          className="flex-1" 
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1, paddingBottom: orderStatus === 'Completed' ? 20 : 100 }}
-        >
+  className="flex-1" 
+  showsVerticalScrollIndicator={false}
+  contentContainerStyle={{ flexGrow: 1, paddingBottom: orderStatus === 'Completed' ? 20 : 100 }}
+  refreshControl={
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+      colors={['#000000']}
+      tintColor={'#000000'}
+    />
+  }
+>
           
           {/* Dynamic Status Badge */}
           <View className="mx-4 mt-4 mb-3 justify-center items-center">
