@@ -236,6 +236,21 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
   };
 
 
+  // const isScheduleDateToday = (dateString: string): boolean => {
+  //   if (!dateString) return false;
+    
+  //   try {
+  //     const scheduleDate = new Date(dateString);
+  //     const today = new Date();
+      
+  //     return scheduleDate.getFullYear() === today.getFullYear() &&
+  //            scheduleDate.getMonth() === today.getMonth() &&
+  //            scheduleDate.getDate() === today.getDate();
+  //   } catch (error) {
+  //     console.error('Error checking if date is today:', error);
+  //     return false;
+  //   }
+  // };
   const isScheduleDateToday = (dateString: string): boolean => {
     if (!dateString) return false;
     
@@ -249,6 +264,29 @@ const TargetOrderScreen: React.FC<TargetOrderScreenProps> = ({ navigation }) => 
     } catch (error) {
       console.error('Error checking if date is today:', error);
       return false;
+    }
+  };
+
+  const getScheduleDateColor = (dateString: string): string => {
+    if (!dateString) return '#606060';
+    
+    try {
+      const scheduleDate = new Date(dateString);
+      scheduleDate.setHours(0, 0, 0, 0);
+      
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      if (scheduleDate.getTime() === today.getTime()) {
+        return '#FF0000'; // Red for today
+      } else if (scheduleDate < today) {
+        return '#AC0003'; // Dark red for past dates
+      } else {
+        return '#606060'; // Gray for future dates
+      }
+    } catch (error) {
+      console.error('Error getting schedule date color:', error);
+      return '#606060';
     }
   };
 
@@ -569,7 +607,7 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
         <TouchableOpacity onPress={() => navigation.goBack()} className="absolute left-4 bg-white/10 rounded-full p-2">
           <AntDesign name="left" size={22} color="white" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-bold">{t("TargetOrderScreen.My Daily Target")} </Text>
+        <Text className="text-white text-lg font-bold">{t("TargetOrderScreen.My Daily Target")}</Text>
       </View>
 
    
@@ -789,10 +827,11 @@ const getStatusBorderColor = (selectedStatus: 'Pending' | 'Opened' | 'Completed'
               {selectedToggle === 'ToDo' ? (
                 <>
     
-                  <View className="flex-[2] items-center justify-center px-2">
-                    <Text className={`text-center font-medium text-xs ${
-                      isScheduleDateToday(item.sheduleDate) ? 'text-red-600' : 'text-gray-800'
-                    }`}>
+                 <View className="flex-[2] items-center justify-center px-2">
+                    <Text 
+                      className="text-center font-medium text-xs"
+                      style={{ color: getScheduleDateColor(item.sheduleDate) }}
+                    >
                       {formatScheduleDate(item.sheduleDate)}  {formatScheduleTime(item.sheduleTime) || 'N/A'}
                     </Text>
                   </View>
