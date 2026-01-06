@@ -17,6 +17,7 @@ import { environment } from "@/environment/environment";
 import { useFocusEffect } from "@react-navigation/native";
 import { RootStackParamList } from "../types";
 import { useTranslation } from "react-i18next";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 
 type DistridutionaDashboardNavigationProps = StackNavigationProp<
@@ -359,6 +360,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
 
 
       <View className="flex-row flex-wrap justify-between p-6 mt-[-5%]">
+        {/* Conditional First Button - Center Target OR Target Orders */}
         {jobRole === "Distribution Centre Manager" ? (
           <TouchableOpacity           
             className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg shadow-gray-500 relative border border-[#980775] mb-50"           
@@ -380,10 +382,11 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
             className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg border border-[#980775] shadow-gray-500 relative mb-50"
             onPress={() => navigation.navigate("TargetOrderScreen" as any)}
           >
-            <Image
+            {/* <Image
               source={require("../../assets/images/New/packing.png")}
               className="w-8 h-8 absolute top-2 right-2"
-            />
+            /> */}
+      
             <Text
               style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
               className="text-[#555464] text-lg absolute bottom-2 left-2"
@@ -392,6 +395,50 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
             </Text>
           </TouchableOpacity>
         )}
+
+        {/* Received Cash Button - For Both Roles */}
+        <TouchableOpacity
+          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg border border-[#980775] shadow-gray-500 relative mb-50"
+          onPress={() => navigation.navigate("ReceivedCashScreen" as any)}
+        >
+          {/* <Image
+            source={require("../../assets/images/New/receivedcash.png")}
+            className="w-8 h-8 absolute top-2 right-2"
+          /> */}
+          <View className="absolute top-2 right-2">
+                <FontAwesome6 name="hand-holding-hand" size={24} color="#980775" 
+              
+                />
+                </View>
+          <Text
+            style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+            className="text-[#555464] text-lg absolute bottom-2 left-2"
+          >
+            {t("DistridutionaDashboard.Received Cash")}
+          </Text>
+        </TouchableOpacity>
+
+        {/* Pickup Order Scan Button - For Both Roles */}
+        <TouchableOpacity
+          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg border border-[#980775] shadow-gray-500 relative mb-50"
+          onPress={() => navigation.navigate("ReadytoPickupOrders" as any)}
+        >
+          {/* <Image
+            source={require("../../assets/images/New/pickuporder.png")}
+            className="w-8 h-8 absolute top-2 right-2"
+          /> */}
+           <View className="absolute top-2 right-2">
+                <FontAwesome6 name="qrcode" size={24} color="#980775" 
+              
+                />
+                </View>
+          <Text
+            style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
+            className="text-[#555464] text-lg absolute bottom-2 left-2"
+          >
+            {t("DistridutionaDashboard.Pickup Order Scan")}
+          </Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

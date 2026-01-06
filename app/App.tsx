@@ -118,7 +118,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../services/reducxStore';
 
 import ReplaceRequestsApprove from '@/component/DisributionManger/ReplaceRequestsApprove';
-import DistributionOfficerReport from '@/component/DisributionManger/DistributionOfficerReport'
+import DistributionOfficerReport from '@/component/DisributionManger/DistributionOfficerReport';
+import  ReadytoPickupOrders  from '@/component/DisributionManger/ReadytoPickupOrders';
+import ViewPickupOrders from '@/component/DisributionManger/ViewPickupOrders';
 
 
 LogBox.ignoreAllLogs(true);
@@ -222,7 +224,9 @@ function MainTabNavigator() {
       />
        
       <Tab.Screen name="TransactionList" component={TransactionList as any} />
+      <Tab.Screen name="ReadytoPickupOrders" component={ReadytoPickupOrders as any} />
       <Tab.Screen name="OfficerSummary" component={OfficerSummary as any} />
+       <Tab.Screen name="ViewPickupOrders" component={ViewPickupOrders as any} />
      {/* <Stack.Screen name="RegisterDriver" component={RegisterDriver as any} /> */}
       {/* <Stack.Screen name="AddDriverAddressDetails" component={AddDriverAddressDetails as any} /> */}
       {/* <Stack.Screen name="AddVehicleDetails" component={AddVehicleDetails as any} /> */}

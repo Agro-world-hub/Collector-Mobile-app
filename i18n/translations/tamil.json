@@ -872,7 +872,9 @@
     "TargetOrders":"இலக்கு ஆர்டர்கள்",
     "Search": "NIC மூலம் தேடவும்",
     "Pending":"நிலுவையில் உள்ளது",
-     "Opened": "திறக்கப்பட்டது"
+     "Opened": "திறக்கப்பட்டது",
+     "Received Cash":"பெறப்பட்ட பணம்",
+     "Pickup Order Scan":"பிக்அப் ஆர்டர் ஸ்கேன்"
   },
   "TargetOrderScreen" :{
      "LNG": "ta",
@@ -1027,5 +1029,20 @@
 "has": "உள்ளது",
 "01 order has been sent out for delivery": "01 ஆர்டர் டெலிவரிக்கு  அனுப்பப்பட்டுள்ளது.",
 "orders have been sent out for delivery": "{{successCount}} ஆர்டர்கள் டெலிவரிக்கு  அனுப்பப்பட்டுள்ளன"
+  },
+    "ReadytoPickupOrders_ta": {
+    "No orders to be picked up": "பறிமுதல் செய்ய வேண்டிய ஆர்டர்கள் இல்லை",
+    "Ready to Pickup Orders": "பறிமுதல் செய்ய தயாரான ஆர்டர்கள்",
+    "Search by phone number": "தொலைபேசி எண்ணால் தேடு...",
+    "All": "அனைத்தும்",
+    "No orders from this user for pickup": "இந்த பயனரிடமிருந்து பறிமுதல் செய்ய ஆர்டர்கள் இல்லை",
+    "No registered customer using this phone number": "இந்த தொலைபேசி எண்ணைப் பயன்படுத்தும் பதிவுசெய்த வாடிக்கையாளர் இல்லை",
+    "No orders matching your search": "உங்கள் தேடலுடன் பொருந்தும் ஆர்டர்கள் இல்லை",
+    "Order ID": "ஆர்டர் ஐடி",
+    "Phone": "தொலைபேசி",
+    "Cash": "பணம் : ரூ.",
+    "Scheduled": "திட்டமிடப்பட்டது",
+    "Ready Time": "தயார் நேரம்",
+    "Clear Search": "தேடலை அழி"
   }
  }

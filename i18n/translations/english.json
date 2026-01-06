@@ -872,7 +872,9 @@
     "TargetOrders":"Target Orders",
     "Search": "Search By NIC",
     "Pending":"Pending",
-     "Opened": "Opened"
+     "Opened": "Opened",
+     "Received Cash":"Received Cash",
+     "Pickup Order Scan":"Pickup Order Scan"
   },
   "TargetOrderScreen" :{
      "LNG": "en",
@@ -1027,6 +1029,21 @@
      "has":"has",
      "01 order has been sent out for delivery":"01 order has been released to the next stage.",
      "orders have been sent out for delivery":"{{successCount}} orders have been released to the next stage."
+  },
+  "ReadytoPickupOrders":{
+    "No orders to be picked up":"No orders to be picked up",
+    "Ready to Pickup Orders":"Ready to Pickup Orders",
+    "Search by phone number":"Search by phone number...",
+    "All":"All",
+    "No orders from this user for pickup":"No orders from this user for pickup",
+    "No registered customer using this phone number":"No registered customer using this phone number",
+    "No orders matching your search":"No orders matching your search",
+    "Order ID":"Order ID",
+    "Phone":"Phone",
+    "Cash":"Cash : Rs.",
+    "Scheduled":"Scheduled",
+    "Ready Time":"Ready Time",
+    "Clear Search":"Clear Search"
   }
 }
 

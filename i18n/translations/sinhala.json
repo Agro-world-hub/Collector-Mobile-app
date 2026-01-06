@@ -872,7 +872,9 @@
      "TargetOrders":"ඉලක්කගත ඇණවුම්",
     "Search": "NIC මගින් සොයන්න",
     "Pending":"අපරිපූර්ණ",
-     "Opened": "විවෘත කළ"
+     "Opened": "විවෘත කළ",
+     "Received Cash":"ලැබුණු මුදල්",
+     "Pickup Order Scan":"පිකප් ඇණවුම් ස්කෑන් කිරීම"
   },
   "TargetOrderScreen" :{
        "LNG": "si",
@@ -1027,5 +1029,20 @@
      "has":"ඇත",
       "01 order has been sent out for delivery":"ඇණවුම් 01ක් බෙදා හැරීම සඳහා යවා ඇත.",
       "orders have been sent out for delivery":"බෙදා හැරීම සඳහා ඇණවුම් {{successCount}} යවා ඇත."
+  },
+      "ReadytoPickupOrders_si": {
+    "No orders to be picked up": "අත්පත් කර ගැනීමට නියමිත ඇණවුම් නැත",
+    "Ready to Pickup Orders": "අත්පත් කර ගැනීමට සූදානම් ඇණවුම්",
+    "Search by phone number": "දුරකථන අංකයෙන් සොයන්න...",
+    "All": "සියල්ල",
+    "No orders from this user for pickup": "මෙම පරිශීලකයාගෙන් අත්පත් කර ගැනීමට ඇණවුම් නැත",
+    "No registered customer using this phone number": "මෙම දුරකථන අංකය භාවිතා කරන ලියාපදිංචි පාරිභෝගිකයෙකු නැත",
+    "No orders matching your search": "ඔබේ සෙවුමට ගැලපෙන ඇණවුම් නැත",
+    "Order ID": "ඇණවුම් අංකය",
+    "Phone": "දුරකථනය",
+    "Cash": "මුදල් : රු.",
+    "Scheduled": "සැලසුම් කරන ලද",
+    "Ready Time": "සූදානම් වන වේලාව",
+    "Clear Search": "සෙවුම මකන්න"
   }
 }

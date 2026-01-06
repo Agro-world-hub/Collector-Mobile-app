@@ -261,6 +261,8 @@ ReplaceRequestsScreen: undefined,
 DailyTargetListOfficerDistribution:{officerId:string,collectionOfficerId:number};
 PassTarget:undefined
 DistributionOfficerReport:{officerId:string,collectionOfficerId:number};
+ReadytoPickupOrders:undefined;
+ViewPickupOrders: { order: Order }; 
 };
 
 export interface OrderItem {
@@ -273,6 +275,15 @@ export interface OrderItem {
   status: string;
   completedTime?: string | null;
   // Add any other properties that your order item has
+}
+
+export interface Order {
+  id: string;
+  phone: string;
+  cashAmount: string;
+  scheduled: string;
+  readyTime: string;
+  status: string;
 }
 
 
