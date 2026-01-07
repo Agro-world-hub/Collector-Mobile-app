@@ -29,6 +29,8 @@ interface Order {
   scheduled: string;
   readyTime: string;
   status: string;
+  customerName:string;
+  timeSlot:string;
 }
 
 interface OrderCardProps {
@@ -49,6 +51,8 @@ const mockOrders: Order[] = [
     scheduled: "2025/01/02 (8:00AM - 2:00PM)",
     readyTime: "At 6:05AM on 2025/01/02",
     status: "Partly Paid",
+    customerName:"Hashinika Dilrukshi",
+  timeSlot:"12/21/2025"
   },
   {
     id: "241205000021",
@@ -57,6 +61,8 @@ const mockOrders: Order[] = [
     scheduled: "2025/01/02 (12:00PM - 8:00PM)",
     readyTime: "At 6:20AM on 2025/01/02",
     status: "Already Paid!",
+    customerName:"Nishara",
+  timeSlot:"01/05/2026"
   },
 ];
 
@@ -131,7 +137,7 @@ const ReadytoPickupOrders: React.FC<CollectionOfficersListProps> = ({
             style={{ width: 150, height: 150 }}
           />
         </View>
-        <Text className="text-[#828282] mb-2 text-center">
+        <Text className="text-[#828282] mb-2 text-center italic">
           - {t("ReadytoPickupOrders.No orders to be picked up")} -
         </Text>
       </View>

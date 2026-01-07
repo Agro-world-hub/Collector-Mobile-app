@@ -258,10 +258,26 @@ export type RootStackParamList = {
 CompletedOrderScreen:{item: string ,centerCode:string};
 DistributionOfficersList:undefined,
 ReplaceRequestsScreen: undefined,
+ReceivedCash:undefined;
+ReceivedCashOfficer:undefined;
+// Update in RootStackParamList
+ReceivedCashQrCode: {
+  selectedTransactions?: Array<{
+    id: string;
+    orderId: string;
+    cash: number;
+  }>;
+  fromScreen?: string;
+};
 DailyTargetListOfficerDistribution:{officerId:string,collectionOfficerId:number};
 PassTarget:undefined
+DigitalSignature:undefined;
 DistributionOfficerReport:{officerId:string,collectionOfficerId:number};
 ReadytoPickupOrders:undefined;
+qrcode: {
+    expectedOrderId?: string;
+    fromScreen?: string;
+  };
 ViewPickupOrders: { order: Order }; 
 };
 
@@ -284,6 +300,8 @@ export interface Order {
   scheduled: string;
   readyTime: string;
   status: string;
+  customerName:string;
+  timeSlot:string;
 }
 
 

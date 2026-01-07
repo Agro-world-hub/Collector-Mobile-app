@@ -1044,6 +1044,22 @@
     "Scheduled":"Scheduled",
     "Ready Time":"Ready Time",
     "Clear Search":"Clear Search"
+  },
+  "ReceivedCash":{
+    "Order ID":"Order ID",
+    "Cash":"Cash",
+    "Received Time":"Received Time",
+    "No cash was received today":"No cash was received today",
+    "Received Cash":"Received Cash",
+    "On":"On",
+    "All":"All",
+    "Full Total":"Full Total",
+    "Cancel":"Cancel",
+    "Select Date":"Select Date",
+    "Done":"Done",
+    "Deselect All":"Deselect All",
+    "Select All":"Select All",
+    "Hand Over":"Hand Over"
   }
 }
 

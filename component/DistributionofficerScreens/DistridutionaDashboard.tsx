@@ -290,7 +290,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
     >
   
       <TouchableOpacity         
-        className="flex-row items-center mb-4 p-4"         
+        className="flex-row items-center  p-4"         
         onPress={() => navigation.navigate("EngProfile")}       
       >         
         <Image           
@@ -328,7 +328,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
     
       {renderTargetStatus()}
 
-      <View className="flex items-center justify-center my-6 mt-[13%]">
+      <View className="flex items-center justify-center  mt-[8%]">
         <View className="relative">
           <CircularProgress
             size={100}
@@ -382,10 +382,10 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
             className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg border border-[#980775] shadow-gray-500 relative mb-50"
             onPress={() => navigation.navigate("TargetOrderScreen" as any)}
           >
-            {/* <Image
+            <Image
               source={require("../../assets/images/New/packing.png")}
               className="w-8 h-8 absolute top-2 right-2"
-            /> */}
+            />
       
             <Text
               style={[{ fontSize: 16 }, getTextStyle(selectedLanguage)]}
@@ -398,9 +398,18 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
 
         {/* Received Cash Button - For Both Roles */}
         <TouchableOpacity
-          className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg border border-[#980775] shadow-gray-500 relative mb-50"
-          onPress={() => navigation.navigate("ReceivedCashScreen" as any)}
-        >
+  className="bg-white p-4 rounded-lg w-[45%] h-28 mt-4 shadow-lg border border-[#980775] shadow-gray-500 relative mb-50"
+  onPress={() => {
+    if (jobRole === "Distribution Centre Manager") {
+      navigation.navigate("ReceivedCash" as any);
+    } else if (jobRole === "Distribution Officer") {
+      navigation.navigate("ReceivedCashOfficer" as any);
+    } else {
+      // Fallback or default navigation
+      navigation.navigate("ReceivedCash" as any);
+    }
+  }}
+>
           {/* <Image
             source={require("../../assets/images/New/receivedcash.png")}
             className="w-8 h-8 absolute top-2 right-2"

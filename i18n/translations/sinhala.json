@@ -1044,5 +1044,23 @@
     "Scheduled": "සැලසුම් කරන ලද",
     "Ready Time": "සූදානම් වන වේලාව",
     "Clear Search": "සෙවුම මකන්න"
-  }
+  },
+  
+  "ReceivedCash": {
+    "Order ID": "ඇණවුම් අංකය",
+    "Cash": "මුදල්",
+    "Received Time": "ලැබුනු වේලාව",
+    "No cash was received today": "අද මුදල් ලැබුනේ නැත",
+    "Received Cash": "ලැබුනු මුදල්",
+    "On": "දිනය",
+    "All": "සියල්ල",
+    "Full Total": "සම්පූර්ණ එකතුව",
+    "Cancel": "අවලංගු කරන්න",
+    "Select Date": "දිනය තෝරන්න",
+    "Done": "සම්පූර්ණයි",
+    "Deselect All": "සියල්ල ඉවත් කරන්න",
+    "Select All": "සියල්ල තෝරන්න",
+    "Hand Over": "භාර දෙන්න"
+  
+}
 }
