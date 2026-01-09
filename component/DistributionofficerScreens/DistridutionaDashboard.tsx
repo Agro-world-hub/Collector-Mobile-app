@@ -328,7 +328,7 @@ const DistridutionaDashboard: React.FC<DistridutionaDashboardProps> = ({ navigat
     
       {renderTargetStatus()}
 
-      <View className="flex items-center justify-center  mt-[8%]">
+      <View className="flex items-center justify-center  mt-[5%]">
         <View className="relative">
           <CircularProgress
             size={100}

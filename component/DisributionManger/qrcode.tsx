@@ -476,19 +476,74 @@ const qrcode: React.FC<qrcodeProps> = ({ navigation, route }) => {
   };
 
   // Extract order ID from QR data
+  // const extractOrderId = (qrData: string): string | null => {
+  //   try {
+  //     console.log("Raw QR Data:", qrData);
+
+  //     // Method 1: Check if QR contains order ID pattern (numbers only or with prefix)
+  //     const orderIdPattern = /\b\d{12,15}\b/g; // 12-15 digit numbers
+  //     const match = qrData.match(orderIdPattern);
+  //     if (match) {
+  //       console.log("Found order ID pattern:", match[0]);
+  //       return match[0];
+  //     }
+
+  //     // Method 2: Check if QR is JSON containing order ID
+  //     if (qrData.startsWith("{") && qrData.endsWith("}")) {
+  //       try {
+  //         const parsed = JSON.parse(qrData);
+  //         console.log("Parsed JSON:", parsed);
+  //         if (
+  //           parsed.orderId ||
+  //           parsed.id ||
+  //           parsed.orderNumber ||
+  //           parsed.order_id
+  //         ) {
+  //           const orderId =
+  //             parsed.orderId ||
+  //             parsed.id ||
+  //             parsed.orderNumber ||
+  //             parsed.order_id;
+  //           console.log("Found order ID in JSON:", orderId);
+  //           return String(orderId);
+  //         }
+  //       } catch (e) {
+  //         console.log("Not valid JSON");
+  //       }
+  //     }
+
+  //     // Method 3: Check if it's just the order ID (numeric, 12-15 chars)
+  //     const simplePattern = /^\d{12,15}$/;
+  //     if (simplePattern.test(qrData)) {
+  //       console.log("Simple pattern matched:", qrData);
+  //       return qrData;
+  //     }
+
+  //     // Method 4: Try to extract any long numeric code
+  //     const numericPattern = /\d{12,}/g;
+  //     const numericMatches = qrData.match(numericPattern);
+  //     if (numericMatches && numericMatches.length > 0) {
+  //       console.log("Numeric matches:", numericMatches);
+  //       // Return the longest match (likely to be the order ID)
+  //       const longestMatch = numericMatches.reduce((a, b) =>
+  //         a.length > b.length ? a : b
+  //       );
+  //       return longestMatch;
+  //     }
+
+  //     console.log("No order ID found in QR data");
+  //     return null;
+  //   } catch (error) {
+  //     console.error("Error extracting order ID:", error);
+  //     return null;
+  //   }
+  // };
+  // Extract order ID from QR data (including invoice numbers)
   const extractOrderId = (qrData: string): string | null => {
     try {
       console.log("Raw QR Data:", qrData);
 
-      // Method 1: Check if QR contains order ID pattern (numbers only or with prefix)
-      const orderIdPattern = /\b\d{12,15}\b/g; // 12-15 digit numbers
-      const match = qrData.match(orderIdPattern);
-      if (match) {
-        console.log("Found order ID pattern:", match[0]);
-        return match[0];
-      }
-
-      // Method 2: Check if QR is JSON containing order ID
+      // Method 1: Check if QR is JSON containing order ID or invoice
       if (qrData.startsWith("{") && qrData.endsWith("}")) {
         try {
           const parsed = JSON.parse(qrData);
@@ -497,13 +552,17 @@ const qrcode: React.FC<qrcodeProps> = ({ navigation, route }) => {
             parsed.orderId ||
             parsed.id ||
             parsed.orderNumber ||
-            parsed.order_id
+            parsed.order_id ||
+            parsed.invNo ||
+            parsed.invoiceNo
           ) {
             const orderId =
               parsed.orderId ||
               parsed.id ||
               parsed.orderNumber ||
-              parsed.order_id;
+              parsed.order_id ||
+              parsed.invNo ||
+              parsed.invoiceNo;
             console.log("Found order ID in JSON:", orderId);
             return String(orderId);
           }
@@ -512,15 +571,23 @@ const qrcode: React.FC<qrcodeProps> = ({ navigation, route }) => {
         }
       }
 
-      // Method 3: Check if it's just the order ID (numeric, 12-15 chars)
-      const simplePattern = /^\d{12,15}$/;
+      // Method 2: Check if it's just the order/invoice ID (numeric, 6-15 chars)
+      const simplePattern = /^\d{6,15}$/;
       if (simplePattern.test(qrData)) {
         console.log("Simple pattern matched:", qrData);
         return qrData;
       }
 
-      // Method 4: Try to extract any long numeric code
-      const numericPattern = /\d{12,}/g;
+      // Method 3: Check if QR contains order ID pattern (numbers only)
+      const orderIdPattern = /\b\d{6,15}\b/g; // 6-15 digit numbers
+      const match = qrData.match(orderIdPattern);
+      if (match) {
+        console.log("Found order ID pattern:", match[0]);
+        return match[0];
+      }
+
+      // Method 4: Try to extract any numeric code (6+ digits)
+      const numericPattern = /\d{6,}/g;
       const numericMatches = qrData.match(numericPattern);
       if (numericMatches && numericMatches.length > 0) {
         console.log("Numeric matches:", numericMatches);

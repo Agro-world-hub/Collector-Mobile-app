@@ -1030,7 +1030,7 @@
       "01 order has been sent out for delivery":"ඇණවුම් 01ක් බෙදා හැරීම සඳහා යවා ඇත.",
       "orders have been sent out for delivery":"බෙදා හැරීම සඳහා ඇණවුම් {{successCount}} යවා ඇත."
   },
-      "ReadytoPickupOrders_si": {
+      "ReadytoPickupOrders": {
     "No orders to be picked up": "අත්පත් කර ගැනීමට නියමිත ඇණවුම් නැත",
     "Ready to Pickup Orders": "අත්පත් කර ගැනීමට සූදානම් ඇණවුම්",
     "Search by phone number": "දුරකථන අංකයෙන් සොයන්න...",
@@ -1043,7 +1043,8 @@
     "Cash": "මුදල් : රු.",
     "Scheduled": "සැලසුම් කරන ලද",
     "Ready Time": "සූදානම් වන වේලාව",
-    "Clear Search": "සෙවුම මකන්න"
+    "Clear Search": "සෙවුම මකන්න",
+      "Loading orders":"ඇණවුම් පූරණය වෙමින්..."
   },
   
   "ReceivedCash": {
@@ -1062,5 +1063,14 @@
     "Select All": "සියල්ල තෝරන්න",
     "Hand Over": "භාර දෙන්න"
   
-}
+},
+ "ViewPickupOrders":{
+    "Order Details":"ඇණවුම් විස්තර",
+    "Ready":"සූදානම්",
+    "Already Paid":"දැනටමත් ගෙවා ඇත!",
+    "Rs":"රු",
+    "Make Phone Call":"දුරකථන ඇමතුමක් ගන්න",
+    "Scan Order":"ස්කෑන් ඇණවුම"
+
+  }
 }

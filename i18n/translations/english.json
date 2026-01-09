@@ -1043,7 +1043,8 @@
     "Cash":"Cash : Rs.",
     "Scheduled":"Scheduled",
     "Ready Time":"Ready Time",
-    "Clear Search":"Clear Search"
+    "Clear Search":"Clear Search",
+    "Loading orders":"Loading orders..."
   },
   "ReceivedCash":{
     "Order ID":"Order ID",
@@ -1060,6 +1061,15 @@
     "Deselect All":"Deselect All",
     "Select All":"Select All",
     "Hand Over":"Hand Over"
+  },
+  "ViewPickupOrders":{
+    "Order Details":"Order Details",
+    "Ready":"Ready",
+    "Already Paid":"Already Paid!",
+    "Rs":"Rs",
+    "Make Phone Call":"Make Phone Call",
+    "Scan Order":"Scan Order"
+
   }
 }
 

@@ -5,13 +5,17 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
-  Image
+  Image,
+  ActivityIndicator
 } from "react-native";
 import { FontAwesome, FontAwesome5, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types";
 import LottieView from 'lottie-react-native';
 import { useTranslation } from "react-i18next";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { environment } from "@/environment/environment";
 
 type CollectionOfficersListNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -23,14 +27,56 @@ interface CollectionOfficersListProps {
 }
 
 interface Order {
-  id: string;
-  phone: string;
-  cashAmount: string;
-  scheduled: string;
-  readyTime: string;
+  orderId: string;
+  userId: number;
+  orderApp: string;
+  createdAt: string;
+  delivaryMethod: string;
+  fullTotal: number;
+  total: number;
+  buildingType: string;
+  sheduleDate: string;
+  sheduleTime: string;
+  processOrderId: number;
+  invNo: string;
+  transactionId: string;
+  paymentMethod: string;
+  isPaid: boolean;
+  amount: number;
   status: string;
-  customerName:string;
-  timeSlot:string;
+  cusId: string;
+  title: string;
+  firstName: string;
+  lastName: string;
+  phoneCode: string;
+  phoneNumber: string;
+  phoneCode2: string;
+  phoneNumber2: string;
+  email: string;
+  buyerType: string;
+  companyName: string;
+  companyPhoneCode: string;
+  companyPhone: string;
+  customerCity: string;
+  houseNo: string;
+  streetName: string;
+  distributionDistrict: string;
+  centerName: string;
+  regCode: string;
+  officerFirstName: string;
+  officerLastName: string;
+}
+
+interface Customer {
+  id: number;
+  cusId: string;
+  title: string;
+  firstName: string;
+  lastName: string;
+  phoneCode: string;
+  phoneCode2: string;
+  phoneNumber: string;
+  phoneNumber2: string;
 }
 
 interface OrderCardProps {
@@ -43,46 +89,110 @@ interface EmptyStateProps {
   onClear: () => void;
 }
 
-const mockOrders: Order[] = [
-    {
-    id: "241205000020",
-    phone: "+94 781212800, +94 711232800",
-    cashAmount: "1,200.00",
-    scheduled: "2025/01/02 (8:00AM - 2:00PM)",
-    readyTime: "At 6:05AM on 2025/01/02",
-    status: "Partly Paid",
-    customerName:"Hashinika Dilrukshi",
-  timeSlot:"12/21/2025"
-  },
-  {
-    id: "241205000021",
-    phone: "+94 781212800",
-    cashAmount: "1,200.00",
-    scheduled: "2025/01/02 (12:00PM - 8:00PM)",
-    readyTime: "At 6:20AM on 2025/01/02",
-    status: "Already Paid!",
-    customerName:"Nishara",
-  timeSlot:"01/05/2026"
-  },
-];
-
 const ReadytoPickupOrders: React.FC<CollectionOfficersListProps> = ({
   navigation,
 }) => {
   const [searchPhone, setSearchPhone] = useState("");
   const { t } = useTranslation();
-  const [filteredOrders, setFilteredOrders] = useState<Order[]>(mockOrders);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [searchState, setSearchState] = useState<"initial" | "results" | "no-orders" | "no-user" | "no-orders-at-all">("initial");
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    if (mockOrders.length === 0) {
-      setSearchState("no-orders-at-all");
-      setFilteredOrders([]);
-    } else {
-      setSearchState("initial");
-      setFilteredOrders(mockOrders);
-    }
+    fetchInitialData();
   }, []);
+
+  const fetchInitialData = async () => {
+    await Promise.all([fetchOrders(), fetchCustomers()]);
+  };
+
+  const fetchCustomers = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      
+      if (!token) {
+        console.error("No authentication token found");
+        return;
+      }
+
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/pickup/check-customer`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Customers response:", response.data);
+
+      if (response.data.status === "success" && response.data.data) {
+        setCustomers(response.data.data);
+      }
+    } catch (error: any) {
+      console.error("Error fetching customers:", error);
+    }
+  };
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      setErrorMessage("");
+
+      const token = await AsyncStorage.getItem("token");
+      
+      if (!token) {
+        setErrorMessage(t("Error.No authentication token found"));
+        return;
+      }
+
+      const response = await axios.get(
+        `${environment.API_BASE_URL}api/pickup/get-pickupOrders`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Pickup orders response:", response.data);
+
+      if (response.data.success && response.data.data) {
+        const ordersData = response.data.data;
+        setOrders(ordersData);
+        setFilteredOrders(ordersData);
+        
+        if (ordersData.length === 0) {
+          setSearchState("no-orders-at-all");
+        } else {
+          setSearchState("initial");
+        }
+      } else {
+        setOrders([]);
+        setFilteredOrders([]);
+        setSearchState("no-orders-at-all");
+        setErrorMessage(response.data.message || t("Error.Failed to fetch orders"));
+      }
+    } catch (error: any) {
+      console.error("Error fetching pickup orders:", error);
+      setOrders([]);
+      setFilteredOrders([]);
+      setSearchState("no-orders-at-all");
+      
+      if (error.response?.status === 404) {
+        setErrorMessage(t("Error.No pickup orders available"));
+      } else if (error.response?.status === 401) {
+        setErrorMessage(t("Error.Authentication failed"));
+      } else {
+        setErrorMessage(t("Error.An error occurred while fetching orders"));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const normalizePhone = (phone: string): string => {
     return phone
@@ -98,28 +208,59 @@ const ReadytoPickupOrders: React.FC<CollectionOfficersListProps> = ({
 
     if (text.trim()) {
       const normalizedSearch = normalizePhone(text);
-      const results = mockOrders.filter((order) => {
-        const phoneNumbers = order.phone.split(",").map((p) => normalizePhone(p.trim()));
-        return phoneNumbers.some((phone) => phone.includes(normalizedSearch));
+      
+      // First, search for orders with this phone number (exact or partial match)
+      const results = orders.filter((order) => {
+        // Check phone number only (without code) for matching
+        const phone1 = normalizePhone(order.phoneNumber);
+        const phone2 = order.phoneNumber2 
+          ? normalizePhone(order.phoneNumber2)
+          : "";
+        
+        // Use exact match or starts with for better accuracy
+        return phone1 === normalizedSearch || phone2 === normalizedSearch ||
+               phone1.startsWith(normalizedSearch) || phone2.startsWith(normalizedSearch);
       });
 
       if (results.length > 0) {
+        // Orders found - display them
         setFilteredOrders(results);
         setSearchState("results");
-      } else {
+        return;
+      }
+
+      // No orders found - now check if customer exists
+      const customerExists = customers.some((customer) => {
+        // Check phone number only (without code) for matching
+        const phone1 = normalizePhone(customer.phoneNumber);
+        const phone2 = customer.phoneNumber2 
+          ? normalizePhone(customer.phoneNumber2)
+          : "";
+        
+        // Use exact match or starts with for better accuracy
+        return phone1 === normalizedSearch || phone2 === normalizedSearch ||
+               phone1.startsWith(normalizedSearch) || phone2.startsWith(normalizedSearch);
+      });
+
+      if (customerExists) {
+        // Customer exists but has no pickup orders
         setFilteredOrders([]);
-        setSearchState(mockOrders.length === 0 ? "no-orders-at-all" : "no-user");
+        setSearchState("no-orders");
+      } else {
+        // Customer doesn't exist in the system
+        setFilteredOrders([]);
+        setSearchState("no-user");
       }
     } else {
-      setFilteredOrders(mockOrders);
-      setSearchState(mockOrders.length === 0 ? "no-orders-at-all" : "initial");
+      setFilteredOrders(orders);
+      setSearchState(orders.length === 0 ? "no-orders-at-all" : "initial");
     }
   };
 
   const handleClearSearch = () => {
     setSearchPhone("");
-    setFilteredOrders(mockOrders);
-    setSearchState(mockOrders.length === 0 ? "no-orders-at-all" : "initial");
+    setFilteredOrders(orders);
+    setSearchState(orders.length === 0 ? "no-orders-at-all" : "initial");
   };
 
   const handleOrderClick = (order: Order) => {
@@ -140,9 +281,25 @@ const ReadytoPickupOrders: React.FC<CollectionOfficersListProps> = ({
         <Text className="text-[#828282] mb-2 text-center italic">
           - {t("ReadytoPickupOrders.No orders to be picked up")} -
         </Text>
+        {errorMessage && (
+          <Text className="text-red-500 text-sm mt-2 text-center">
+            {errorMessage}
+          </Text>
+        )}
       </View>
     );
   };
+
+  if (loading) {
+    return (
+      <View className="flex-1 bg-white justify-center items-center">
+        <ActivityIndicator size="large" color="#000" />
+        <Text className="mt-4 text-gray-600">
+          {t("ReadytoPickupOrders.Loading orders")}
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View className="flex-1 bg-white">
@@ -182,7 +339,7 @@ const ReadytoPickupOrders: React.FC<CollectionOfficersListProps> = ({
         )}
       </View>
 
-      {mockOrders.length > 0 && !searchPhone && (
+      {orders.length > 0 && !searchPhone && (
         <Text className="text-sm text-gray-600 mx-4 mt-3">
           {t("ReadytoPickupOrders.All")} ({filteredOrders.length})
         </Text>
@@ -194,11 +351,11 @@ const ReadytoPickupOrders: React.FC<CollectionOfficersListProps> = ({
           <NoOrdersState />
         )}
 
-        {(searchState === "initial" || searchState === "results") && mockOrders.length > 0 && (
+        {(searchState === "initial" || searchState === "results") && orders.length > 0 && (
           <View className="p-4">
             {filteredOrders.map((order, index) => (
               <OrderCard
-                key={index}
+                key={`${order.orderId}-${index}`}
                 order={order}
                 onPress={() => handleOrderClick(order)}
               />
@@ -219,13 +376,6 @@ const ReadytoPickupOrders: React.FC<CollectionOfficersListProps> = ({
             onClear={handleClearSearch}
           />
         )}
-
-        {mockOrders.length > 0 && filteredOrders.length === 0 && searchPhone && searchState === "results" && (
-          <EmptyState
-            message={t("ReadytoPickupOrders.No orders matching your search")}
-            onClear={handleClearSearch}
-          />
-        )}
       </ScrollView>
     </View>
   );
@@ -233,6 +383,32 @@ const ReadytoPickupOrders: React.FC<CollectionOfficersListProps> = ({
 
 const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
   const { t } = useTranslation();
+
+  const formatPhoneNumber = (code: string, number: string) => {
+    return `${code} ${number}`;
+  };
+
+  const phone1 = formatPhoneNumber(order.phoneCode, order.phoneNumber);
+  const phone2 = order.phoneCode2 && order.phoneNumber2 
+    ? formatPhoneNumber(order.phoneCode2, order.phoneNumber2)
+    : null;
+  const phoneDisplay = phone2 ? `${phone1}, ${phone2}` : phone1;
+
+  const scheduledDate = new Date(order.sheduleDate).toLocaleDateString('en-US');
+  const scheduledDisplay = `${scheduledDate} (${order.sheduleTime})`;
+
+  const readyDate = new Date(order.createdAt);
+  const readyTimeDisplay = `At ${readyDate.toLocaleTimeString('en-US', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: true 
+  })} on ${readyDate.toLocaleDateString('en-US')}`;
+
+  const shouldShowAmount = !order.isPaid;
+  const cashAmount = order.fullTotal.toLocaleString('en-US', { 
+    minimumFractionDigits: 2, 
+    maximumFractionDigits: 2 
+  });
 
   return (
     <TouchableOpacity
@@ -246,38 +422,42 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
         elevation: 2,
       }}
     >
-      {/* Order ID */}
       <View className="flex-row mb-2">
         <Text className="text-sm font-semibold">{t("ReadytoPickupOrders.Order ID")} :</Text>
-        <Text className="text-sm font-semibold ml-1">{order.id}</Text>
+        <Text className="text-sm font-semibold ml-1">{order.invNo}</Text>
       </View>
 
-      {/* Phone */}
       <View className="flex-row mb-2 items-center">
         <FontAwesome5 name="phone-alt" size={16} color="black" style={{ marginRight: 8 }} />
         <Text className="text-sm text-[#565559]">{t("ReadytoPickupOrders.Phone")} : </Text>
-        <Text className="text-sm font-semibold ml-1">{order.phone}</Text>
+        <Text className="text-sm font-semibold ml-1">{phoneDisplay}</Text>
       </View>
 
-      {/* Cash/Status */}
       <View className="flex-row items-center mb-2">
-        <FontAwesome5 name="coins" size={16} color="black" style={{ marginRight: 8 }} />
-        <Text className="text-sm text-[#565559]">{t("ReadytoPickupOrders.Cash")} : Rs. </Text>
-        <Text className="text-sm font-semibold ml-1">{order.cashAmount}</Text>
+        {shouldShowAmount ? (
+          <>
+            <FontAwesome5 name="coins" size={16} color="black" style={{ marginRight: 8 }} />
+            <Text className="text-sm text-[#565559]">{t("ReadytoPickupOrders.Cash")} :  </Text>
+            <Text className="text-sm font-semibold ml-1">{t("ViewPickupOrders.Rs")}. {cashAmount}</Text>
+          </>
+        ) : (
+          <>
+            <Ionicons name="checkmark-circle" size={20} color="black" style={{ marginRight: 8 }} />
+            <Text className="text-sm font-semibold text-[#565559]"> {t("ViewPickupOrders.Already Paid") || "Already Paid!"}</Text>
+          </>
+        )}
       </View>
 
-      {/* Scheduled */}
       <View className="flex-row mb-2 items-center">
         <FontAwesome5 name="clock" size={16} color="black" style={{ marginRight: 8 }} />
         <Text className="text-sm text-[#565559]">{t("ReadytoPickupOrders.Scheduled")} : </Text>
-        <Text className="text-sm font-semibold ml-1">{order.scheduled}</Text>
+        <Text className="text-sm font-semibold ml-1">{scheduledDisplay}</Text>
       </View>
 
-      {/* Ready Time */}
-      <View className="flex-row items-center">
+      <View className="flex-row items-center mb-2">
         <FontAwesome6 name="clock-rotate-left" size={16} color="black" style={{ marginRight: 8 }} />
         <Text className="text-sm text-[#565559]">{t("ReadytoPickupOrders.Ready Time")} : </Text>
-        <Text className="text-sm font-semibold ml-1">{order.readyTime}</Text>
+        <Text className="text-sm font-semibold ml-1">{readyTimeDisplay}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -288,7 +468,6 @@ const EmptyState: React.FC<EmptyStateProps> = ({ message, onClear }) => {
 
   return (
     <View className="flex-1 justify-center items-center mt-20 px-4">
-      {/* Icon Container */}
       <View className="relative">
         <Image
           source={require("../../assets/images/notfound.webp")}

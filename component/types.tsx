@@ -294,14 +294,44 @@ export interface OrderItem {
 }
 
 export interface Order {
-  id: string;
-  phone: string;
-  cashAmount: string;
-  scheduled: string;
-  readyTime: string;
+  orderId: string;
+  userId: number;
+  orderApp: string;
+  createdAt: string;
+  delivaryMethod: string;
+  fullTotal: number;
+  total: number;
+  buildingType: string;
+  sheduleDate: string;
+  sheduleTime: string;
+  processOrderId: number;
+  invNo: string;
+  transactionId: string;
+  paymentMethod: string;
+  isPaid: boolean;
+  amount: number;
   status: string;
-  customerName:string;
-  timeSlot:string;
+  cusId: string;
+  title: string;
+  firstName: string;
+  lastName: string;
+  phoneCode: string;
+  phoneNumber: string;
+  phoneCode2: string;
+  phoneNumber2: string;
+  email: string;
+  buyerType: string;
+  companyName: string;
+  companyPhoneCode: string;
+  companyPhone: string;
+  customerCity: string;
+  houseNo: string;
+  streetName: string;
+  distributionDistrict: string;
+  centerName: string;
+  regCode: string;
+  officerFirstName: string;
+  officerLastName: string;
 }
 
 

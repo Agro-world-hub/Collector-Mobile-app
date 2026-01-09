@@ -14,6 +14,7 @@ import { FontAwesome5, FontAwesome6, Foundation, Ionicons, MaterialIcons, Octico
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp, useFocusEffect } from "@react-navigation/native";
 import { RootStackParamList } from "../types";
+import { useTranslation } from "react-i18next";
 
 type ViewPickupOrdersNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -25,27 +26,47 @@ interface ViewPickupOrdersProps {
   route: RouteProp<RootStackParamList, "ViewPickupOrders">;
 }
 
-interface Order {
-  id: string;
-  customerName: string;
-  phone: string;
-  cashAmount?: string;
-  isPaid: boolean;
-  scheduled: string;
-  readyTime: string;
-  timeSlot: string;
-  status: string;
-}
-
 const ViewPickupOrders: React.FC<ViewPickupOrdersProps> = ({
   route,
   navigation,
 }) => {
   const { order } = route.params;
+  const { t } = useTranslation();
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Split phone numbers by comma and trim whitespace
-  const phoneNumbers = order.phone.split(",").map(phone => phone.trim());
+  // Format customer name
+  const customerName = `${order.firstName} ${order.lastName}`;
+
+  // Format phone numbers
+  const formatPhoneNumber = (code: string, number: string) => {
+    return `${code} ${number}`;
+  };
+
+  const phone1 = formatPhoneNumber(order.phoneCode, order.phoneNumber);
+  const phone2 = order.phoneCode2 && order.phoneNumber2 
+    ? formatPhoneNumber(order.phoneCode2, order.phoneNumber2)
+    : null;
+
+  const phoneNumbers = phone2 ? [phone1, phone2] : [phone1];
+
+  // Format scheduled time
+  const scheduledDate = new Date(order.sheduleDate).toLocaleDateString('en-US');
+  const timeSlot = `${scheduledDate} (${order.sheduleTime})`;
+
+  // Format ready time
+  const readyDate = new Date(order.createdAt);
+  const readyTime = `At ${readyDate.toLocaleTimeString('en-US', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: true 
+  })} on ${readyDate.toLocaleDateString('en-US')}`;
+
+  // Determine payment status
+  const isPaid = order.isPaid;
+  const cashAmount = order.fullTotal.toLocaleString('en-US', { 
+    minimumFractionDigits: 2, 
+    maximumFractionDigits: 2 
+  });
 
   const makePhoneCall = (phoneNumber: string) => {
     const url = `tel:${phoneNumber}`;
@@ -54,49 +75,29 @@ const ViewPickupOrders: React.FC<ViewPickupOrdersProps> = ({
         if (supported) {
           return Linking.openURL(url);
         } else {
-          Alert.alert("Error", "Phone call is not supported on this device");
+          Alert.alert(
+            t("Error.Error") || "Error", 
+            t("Error.Phone call is not supported on this device") || "Phone call is not supported on this device"
+          );
         }
       })
       .catch((err) => console.error("An error occurred", err));
   };
 
   const handleScanOrder = () => {
-    // Navigate to QR scanner with the expected order ID
+  console.log("invoice number--------------",order.invNo)
     navigation.navigate("qrcode", { 
-      expectedOrderId: order.id,
+      expectedOrderId: order.invNo,
       fromScreen: "ViewPickupOrders"
     });
-  };
-
-  const handleAcceptOrder = () => {
-    Alert.alert(
-      "Accept Order",
-      "Do you want to accept this order?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Accept",
-          onPress: () => {
-            Alert.alert("Success", "Order accepted successfully!");
-            navigation.goBack();
-          },
-        },
-      ],
-      { cancelable: false }
-    );
   };
 
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
-        navigation.navigate("ReadytoPickupOrders")
+        navigation.navigate("ReadytoPickupOrders");
         return true; 
       };
-
-      BackHandler.addEventListener("hardwareBackPress", onBackPress);
 
       const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
       return () => subscription.remove();
@@ -117,18 +118,18 @@ const ViewPickupOrders: React.FC<ViewPickupOrdersProps> = ({
             <Ionicons name="chevron-back" size={24} color="#000" />
           </TouchableOpacity>
           <Text className="text-lg font-bold text-gray-800">
-            Order Details
+            {t("ViewPickupOrders.Order Details") || "Order Details"}
           </Text>
         </View>
         
         {/* Ready Time Badge */}
-        <View className="flex-row items-center justify-center ">
-          <View className=" px-3 py-1.5 rounded-full flex-row items-center">
-            <Text className=" font-semibold text-[#565559] mr-2">
-              Ready
+        <View className="flex-row items-center justify-center">
+          <View className="px-3 py-1.5 rounded-full flex-row items-center">
+            <Text className="font-semibold text-[#565559] mr-2">
+              {t("ViewPickupOrders.Ready") || "Ready"}
             </Text>
-            <Text className=" font-semibold text-[#000000]">
-              {order.readyTime}
+            <Text className="font-semibold text-[#000000]">
+              {readyTime}
             </Text>
           </View>
         </View>
@@ -145,26 +146,26 @@ const ViewPickupOrders: React.FC<ViewPickupOrdersProps> = ({
                 resizeMode="contain"
               />
               <Text className="text-lg font-bold text-gray-800 mt-2">
-                {order.customerName}
+                {customerName}
               </Text>
             </View>
 
             {/* Payment Status */}
             <View className="bg-[#F7F7F7] rounded-xl p-4 items-center mb-4">
               <View className="mb-2">
-                {order.status === "Already Paid!" ? (
+                {isPaid ? (
                   <MaterialIcons name="check-circle" size={28} color="#980775" />
                 ) : (
                   <FontAwesome5 name="coins" size={28} color="#980775" />
                 )}
               </View>
-              {order.status === "Already Paid!" ? (
-                <Text className=" font-bold text-[#980775]">
-                  Already Paid!
+              {isPaid ? (
+                <Text className="font-bold text-[#980775]">
+                  {t("ViewPickupOrders.Already Paid") || "Already Paid!"}
                 </Text>
               ) : (
-                <Text className=" font-bold text-[#980775]">
-                  Rs.{order.cashAmount}
+                <Text className="font-bold text-[#980775]">
+                  {t("ViewPickupOrders.Rs")}. {cashAmount}
                 </Text>
               )}
             </View>
@@ -173,7 +174,7 @@ const ViewPickupOrders: React.FC<ViewPickupOrdersProps> = ({
             <View className="bg-[#F7F7F7] rounded-xl p-4 items-center">
               <Octicons name="clock-fill" size={28} color="black" />
               <Text className="text-sm font-semibold text-gray-800 mt-2">
-                {order.timeSlot}
+                {timeSlot}
               </Text>
             </View>
           </View>
@@ -191,8 +192,8 @@ const ViewPickupOrders: React.FC<ViewPickupOrdersProps> = ({
               >
                 <Text className="text-base font-semibold text-black">
                   {phoneNumbers.length === 1 
-                    ? "Make Phone Call" 
-                    : `Make Phone Call - ${index + 1}`}
+                    ? t("ViewPickupOrders.Make Phone Call") || "Make Phone Call"
+                    : `${t("ViewPickupOrders.Make Phone Call") || "Make Phone Call"} - ${index + 1}`}
                 </Text>
                 <View className="bg-[#980775] rounded-full py-2 px-3">
                   <Foundation name="telephone" size={18} color="#fff" />
@@ -211,7 +212,7 @@ const ViewPickupOrders: React.FC<ViewPickupOrdersProps> = ({
             <View className="flex-row items-center justify-center">
               <FontAwesome6 name="qrcode" size={24} color="white" />
               <Text className="text-white text-base font-bold ml-3">
-                Scan Order
+                {t("ViewPickupOrders.Scan Order") || "Scan Order"}
               </Text>
             </View>
           </TouchableOpacity>
